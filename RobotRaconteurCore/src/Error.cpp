@@ -47,7 +47,7 @@ RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, con
 RobotRaconteurException::RobotRaconteurException(const std::string& message, std::exception& innerexception)
     : std::runtime_error(message.c_str())
 {
-
+    RR_UNUSED(innerexception);
     InitializeInstanceFields();
 }
 
@@ -82,7 +82,7 @@ RR_EXCEPTION_TYPES_INIT(RR_EXCEPTION_DEF_1, RR_EXCEPTION_DEF_2)
 #undef RR_EXCEPTION_DEF_2
 
 void RobotRaconteurExceptionUtil::ExceptionToMessageEntry(std::exception& exception,
-                                                          RR_INTRUSIVE_PTR<MessageEntry> entry)
+                                                          const RR_INTRUSIVE_PTR<MessageEntry>& entry)
 {
     if (dynamic_cast<RobotRaconteurException*>(&exception) != 0)
     {
@@ -124,7 +124,7 @@ void RobotRaconteurExceptionUtil::ExceptionToMessageEntry(std::exception& except
         return RR_MAKE_SHARED<exp_cpp_type>(error_name, error_string, error_sub_name, error_param);
 
 RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::MessageEntryToException(
-    RR_INTRUSIVE_PTR<MessageEntry> entry)
+    const RR_INTRUSIVE_PTR<MessageEntry>& entry)
 {
     std::string error_name = entry->FindElement("errorname")->CastDataToString();
     std::string error_string = entry->FindElement("errorstring")->CastDataToString();
@@ -167,7 +167,7 @@ RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::MessageEntry
     case exp_code:                                                                                                     \
         throw exp_cpp_type(error_name, error_string, error_sub_name, error_param);
 
-void RobotRaconteurExceptionUtil::ThrowMessageEntryException(RR_INTRUSIVE_PTR<MessageEntry> entry)
+void RobotRaconteurExceptionUtil::ThrowMessageEntryException(const RR_INTRUSIVE_PTR<MessageEntry>& entry)
 {
     std::string error_name = entry->FindElement("errorname")->CastDataToString();
     std::string error_string = entry->FindElement("errorstring")->CastDataToString();
@@ -224,7 +224,7 @@ RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::DownCastExce
 }
 
 RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::DownCastException(
-    RR_SHARED_PTR<RobotRaconteurException> err)
+    const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     RobotRaconteurException* err1 = err.get();
     return DownCastException(*err1);
@@ -273,7 +273,7 @@ void RobotRaconteurExceptionUtil::DownCastAndThrowException(RobotRaconteurExcept
     throw RobotRaconteurException(err.ErrorCode, err.Error, err.Message, err.ErrorSubName, err.ErrorParam);
 }
 
-void RobotRaconteurExceptionUtil::DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurException> err)
+void RobotRaconteurExceptionUtil::DownCastAndThrowException(const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     RobotRaconteurException* err1 = err.get();
     DownCastAndThrowException(*err1);

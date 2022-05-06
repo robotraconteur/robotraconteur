@@ -14,7 +14,7 @@ using std::exception;
 namespace RobotRaconteurTest
 {
 
-RobotRaconteurTest_testroot::RobotRaconteurTest_testroot(RR_SHARED_PTR<TcpTransport> tcptransport)
+RobotRaconteurTest_testroot::RobotRaconteurTest_testroot(const RR_SHARED_PTR<TcpTransport>& tcptransport)
 {
     this->tcptransport = tcptransport;
     o1 = RR_MAKE_SHARED<sub1_impl>();
@@ -2135,7 +2135,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, teststruct2> > RobotRaconteu
 }
 
 void RobotRaconteurTest_testroot::set_is_struct2(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, teststruct2> > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, teststruct2> >& value)
 {
     double is_struct2_2_1a[] = {6.931327e-21,  4.527137e-02,  1.260822e-18,  3.592805e-12,  1.088317e-05,
                                 3.305865e+03,  -9.798828e-20, 1.497504e+18,  -3.653592e+01, 1.473952e+10,
@@ -3101,14 +3101,14 @@ void sub3_impl::set_data3(double value) { data3 = value; }
 double sub3_impl::add(double d) { return d + 42; }
 
 void sub3_impl::async_get_ind(
-    boost::function<void(const std::string&, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    boost::function<void(const std::string&, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
         boost::bind(rr_handler, ind, RR_SHARED_PTR<RobotRaconteurException>()));
 }
 void sub3_impl::async_set_ind(const std::string& value,
-                              boost::function<void(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+                              boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
                               int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
@@ -3116,7 +3116,7 @@ void sub3_impl::async_set_ind(const std::string& value,
 }
 
 void sub3_impl::async_get_data2(
-    boost::function<void(const std::string&, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    boost::function<void(const std::string&, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
@@ -3124,7 +3124,7 @@ void sub3_impl::async_get_data2(
 }
 
 void sub3_impl::async_set_data2(
-    const std::string& value, boost::function<void(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    const std::string& value, boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     data2 = value;
@@ -3132,14 +3132,14 @@ void sub3_impl::async_set_data2(
 }
 
 void sub3_impl::async_get_data3(
-    boost::function<void(double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    boost::function<void(double, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
         boost::bind(rr_handler, data3, RR_SHARED_PTR<RobotRaconteurException>()));
 }
 void sub3_impl::async_set_data3(
-    double value, boost::function<void(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    double value, boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     data3 = value;
@@ -3147,7 +3147,7 @@ void sub3_impl::async_set_data3(
 }
 
 void sub3_impl::async_add(
-    double d, boost::function<void(double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    double d, boost::function<void(double, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     double res = d + 42;
@@ -3161,7 +3161,7 @@ double TestService2SubObj::add_val(double v) { return v + 1; }
 
 // support
 
-void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTransport> tcptransport)
+void RobotRaconteurTestServiceSupport::RegisterServices(const RR_SHARED_PTR<TcpTransport>& tcptransport)
 {
     testservice = RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
     testservice_auth = RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
@@ -3188,7 +3188,7 @@ void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTranspo
                                              "com.robotraconteur.testing.TestService1", testservice_auth, s);
 }
 
-void RobotRaconteurTestServiceSupport::RegisterSecureServices(RR_SHARED_PTR<TcpTransport> tcptransport,
+void RobotRaconteurTestServiceSupport::RegisterSecureServices(const RR_SHARED_PTR<TcpTransport>& tcptransport,
                                                               const std::vector<NodeID>& allowed_clients)
 {
     testservice_auth = RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);

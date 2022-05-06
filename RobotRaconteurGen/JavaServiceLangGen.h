@@ -77,7 +77,7 @@ class JavaServiceLangGen
 
     static void GeneratePod(ServiceEntryDefinition* e, ostream* w);
 
-    static void GenerateNamedArray(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w);
 
     static void GenerateInterface(ServiceEntryDefinition* e, ostream* w);
 
@@ -89,7 +89,7 @@ class JavaServiceLangGen
 
     static void GeneratePodStub(ServiceEntryDefinition* e, ostream* w);
 
-    static void GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GenerateNamedArrayStub(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w);
 
     static void GenerateStub(ServiceEntryDefinition* e, ostream* w);
 
@@ -121,11 +121,11 @@ class JavaServiceLangGen
 
     static void GeneratePodFile(ServiceEntryDefinition* d, ostream* w);
 
-    static void GenerateNamedArrayFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
+    static void GenerateNamedArrayFile(const RR_SHARED_PTR<ServiceEntryDefinition>& d, ostream* w);
 
     static void GeneratePodStubFile(ServiceEntryDefinition* d, ostream* w);
 
-    static void GenerateNamedArrayStubFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w);
+    static void GenerateNamedArrayStubFile(const RR_SHARED_PTR<ServiceEntryDefinition>& d, ostream* w);
 
     static void GenerateStubFile(ServiceEntryDefinition* d, ostream* w);
 
@@ -135,7 +135,7 @@ class JavaServiceLangGen
 
     static void GenerateConstantsFile(ServiceDefinition* d, ostream* w);
 
-    static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path = ".");
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, std::string path = ".");
 };
 
 } // namespace RobotRaconteurGen

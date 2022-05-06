@@ -42,21 +42,21 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
   public:
     friend class TcpTransport;
 
-    TcpTransportConnection(RR_SHARED_PTR<TcpTransport> parent, boost::string_ref url, bool server,
+    TcpTransportConnection(const RR_SHARED_PTR<TcpTransport>& parent, boost::string_ref url, bool server,
                            uint32_t local_endpoint);
 
     void AsyncAttachSocket(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
-                           boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+                           boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     void AsyncAttachWebSocket(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
                               RR_SHARED_PTR<detail::websocket_stream<boost::asio::ip::tcp::socket&> > websocket,
-                              boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+                              boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
     void AsyncAttachWSSWebSocket(
         RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<detail::TlsSchannelAsyncStreamAdapter> wss_websocket_tls,
         RR_SHARED_PTR<detail::websocket_stream<detail::TlsSchannelAsyncStreamAdapter_ASIO_adapter&> > wss_websocket,
-        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 #endif
 
 #ifdef ROBOTRACONTEUR_USE_OPENSSL
@@ -66,36 +66,36 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
         RR_SHARED_PTR<detail::websocket_stream<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&>&> >
             wss_websocket,
         RR_SHARED_PTR<boost::asio::ssl::context> wss_context,
-        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 #endif
 
   protected:
     void do_starttls1(const std::string& noden, const boost::system::error_code& error,
-                      boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+                      boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    void do_starttls2(RR_SHARED_PTR<RobotRaconteurException> error,
-                      boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    void do_starttls2(const RR_SHARED_PTR<RobotRaconteurException>& error,
+                      boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    // void do_starttls3(RR_SHARED_PTR<RobotRaconteurException> error,
-    // boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    // void do_starttls3(const RR_SHARED_PTR<RobotRaconteurException>& error,
+    // boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     void do_starttls4(const std::string& servername, const boost::system::error_code& error);
 
     void do_starttls5(const boost::system::error_code& error);
 
-    void do_starttls5_1(RR_SHARED_PTR<RRObject> parameter, RR_SHARED_PTR<RobotRaconteurException> err,
-                        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    void do_starttls5_1(const RR_SHARED_PTR<RRObject>& parameter, const RR_SHARED_PTR<RobotRaconteurException>& err,
+                        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     void do_starttls6(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request);
 
     void do_starttls7(const boost::system::error_code& error, RR_INTRUSIVE_PTR<Message> request);
 
-    void do_starttls8(RR_SHARED_PTR<RobotRaconteurException> error, RR_INTRUSIVE_PTR<Message> request);
+    void do_starttls8(const RR_SHARED_PTR<RobotRaconteurException>& error, RR_INTRUSIVE_PTR<Message> request);
 
     void do_starttls9(const boost::system::error_code& error);
 
   public:
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
   protected:
     virtual void async_write_some(
@@ -149,14 +149,14 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     boost::recursive_mutex close_lock;
     bool closing;
 
-    virtual void StreamOpMessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    virtual void StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
     // Stuff to support TLS
 
     bool is_tls;
     bool require_tls;
     RR_SHARED_PTR<boost::asio::deadline_timer> starttls_timer;
-    boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> starttls_handler;
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> starttls_handler;
 
     bool tls_mutual_auth;
     bool tls_handshaking;
@@ -189,15 +189,15 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 };
 
 void TcpTransport_attach_transport(
-    RR_SHARED_PTR<TcpTransport> parent, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::string_ref url,
+    const RR_SHARED_PTR<TcpTransport>& parent, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::string_ref url,
     bool server, uint32_t endpoint,
-    boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>,
-                         RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
+                         const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-void TcpTransport_connected_callback2(RR_SHARED_PTR<TcpTransport> parent,
+void TcpTransport_connected_callback2(const RR_SHARED_PTR<TcpTransport>& parent,
                                       RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
-                                      RR_SHARED_PTR<ITransportConnection> connection,
-                                      RR_SHARED_PTR<RobotRaconteurException> err);
+                                      const RR_SHARED_PTR<ITransportConnection>& connection,
+                                      const RR_SHARED_PTR<RobotRaconteurException>& err);
 
 namespace detail
 {
@@ -205,11 +205,11 @@ namespace detail
 class TcpConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpConnector>
 {
   public:
-    TcpConnector(RR_SHARED_PTR<TcpTransport> parent);
+    TcpConnector(const RR_SHARED_PTR<TcpTransport>& parent);
 
     void Connect(
         std::vector<std::string> url, uint32_t endpoint,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> callback);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> callback);
 
   protected:
     // void attach_transport(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, boost::function<void(
@@ -218,11 +218,11 @@ class TcpConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpConnector>
     void connect2(
         int32_t key, const boost::system::error_code& err,
         boost::asio::ip::basic_resolver_iterator<boost::asio::ip::tcp> endpoint_iterator,
-        boost::function<void(RR_SHARED_PTR<TcpTransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> callback);
+        boost::function<void(const RR_SHARED_PTR<TcpTransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> callback);
 #else
     void connect2(
         int32_t key, const boost::system::error_code& err, boost::asio::ip::tcp::resolver::results_type results,
-        boost::function<void(RR_SHARED_PTR<TcpTransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> callback);
+        boost::function<void(const RR_SHARED_PTR<TcpTransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> callback);
 #endif
 
     void connect3(RR_SHARED_PTR<std::list<boost::asio::ip::tcp::endpoint> > candidate_endpoints, int32_t key,
@@ -235,8 +235,8 @@ class TcpConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpConnector>
                             const boost::system::error_code& error);
 
     void connected_callback2(RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, int32_t key,
-                             RR_SHARED_PTR<ITransportConnection> connection,
-                             RR_SHARED_PTR<RobotRaconteurException> err);
+                             const RR_SHARED_PTR<ITransportConnection>& connection,
+                             const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void connect_timer_callback(const boost::system::error_code& e);
 
@@ -248,7 +248,7 @@ class TcpConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpConnector>
 
     boost::mutex connecting_lock;
 
-    boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> callback;
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> callback;
 
     RR_SHARED_PTR<boost::asio::ip::tcp::resolver> _resolver;
 
@@ -262,7 +262,7 @@ class TcpConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpConnector>
     std::list<RR_SHARED_PTR<RobotRaconteurException> > errors;
 
     void handle_error(const int32_t& key, const boost::system::error_code& err);
-    void handle_error(const int32_t& key, RR_SHARED_PTR<RobotRaconteurException> err);
+    void handle_error(const int32_t& key, const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     bool socket_connected;
 
@@ -291,41 +291,41 @@ class TcpAcceptor : public RR_ENABLE_SHARED_FROM_THIS<TcpAcceptor>
 
   protected:
     void AcceptSocket6(
-        RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
-        RR_SHARED_PTR<TcpTransportConnection> t,
-        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>,
-                             RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+        const RR_SHARED_PTR<RobotRaconteurException>& err, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
+        const RR_SHARED_PTR<TcpTransportConnection>& t,
+        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     void AcceptSocket5(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > websocket,
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer,
-        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>,
-                             RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
-    static void AcceptSocket4(RR_SHARED_PTR<std::string> dat, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
+    static void AcceptSocket4(const RR_SHARED_PTR<std::string>& dat, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
                               RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer);
 
     void AcceptSocket3(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::deadline_timer> timer,
         RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer,
-        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>,
-                             RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     void AcceptSocket2(
         const boost::system::error_code& ec, size_t n, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer,
-        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>,
-                             RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
   public:
-    TcpAcceptor(RR_SHARED_PTR<TcpTransport> parent, boost::string_ref url, uint32_t local_endpoint);
+    TcpAcceptor(const RR_SHARED_PTR<TcpTransport>& parent, boost::string_ref url, uint32_t local_endpoint);
 
     void AcceptSocket(
         RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
-        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, RR_SHARED_PTR<ITransportConnection>,
-                             RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 };
 
 class TcpWebSocketConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpWebSocketConnector>
@@ -339,28 +339,28 @@ class TcpWebSocketConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpWebSocketConn
 
   protected:
     void Connect4(
-        RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<ITransportConnection> connection,
+        const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<ITransportConnection>& connection,
         RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > websocket,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
     void Connect3(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > websocket,
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
     void Connect2(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
-        RR_SHARED_PTR<websocket_tcp_connector> socket_connector,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        const RR_SHARED_PTR<websocket_tcp_connector>& socket_connector,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
   public:
-    TcpWebSocketConnector(RR_SHARED_PTR<TcpTransport> parent);
+    TcpWebSocketConnector(const RR_SHARED_PTR<TcpTransport>& parent);
 
     void Connect(
         boost::string_ref url, uint32_t endpoint,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 };
 
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
@@ -376,35 +376,35 @@ class TcpWSSWebSocketConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpWSSWebSock
 
   protected:
     void Connect4(
-        RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<ITransportConnection> connection,
-        RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter> tls_stream,
+        const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<ITransportConnection>& connection,
+        RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket, const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& tls_stream,
         RR_SHARED_PTR<websocket_stream<TlsSchannelAsyncStreamAdapter_ASIO_adapter&> > websocket,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
     void Connect3(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer,
-        RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter> tls_stream,
+        const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& tls_stream,
         RR_SHARED_PTR<websocket_stream<TlsSchannelAsyncStreamAdapter_ASIO_adapter&> > websocket,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
     void Connect2_1(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer,
-        RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter> tls_stream,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& tls_stream,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
     void Connect2(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
-        RR_SHARED_PTR<websocket_tcp_connector> socket_connector,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        const RR_SHARED_PTR<websocket_tcp_connector>& socket_connector,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
   public:
-    TcpWSSWebSocketConnector(RR_SHARED_PTR<TcpTransport> parent);
+    TcpWSSWebSocketConnector(const RR_SHARED_PTR<TcpTransport>& parent);
 
     void Connect(
         boost::string_ref url, uint32_t endpoint,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 };
 #endif
 
@@ -423,39 +423,39 @@ class TcpWSSWebSocketConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpWSSWebSock
 
   protected:
     void Connect4(
-        RR_SHARED_PTR<RobotRaconteurException> err, RR_SHARED_PTR<ITransportConnection> connection,
+        const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<ITransportConnection>& connection,
         RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&> > tls_stream,
         RR_SHARED_PTR<websocket_stream<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&>&> > websocket,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
     void Connect3(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer,
         RR_SHARED_PTR<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&> > tls_stream,
         RR_SHARED_PTR<websocket_stream<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&>&> > websocket,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
     void Connect2_1(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer,
         RR_SHARED_PTR<boost::asio::ssl::stream<boost::asio::ip::tcp::socket&> > tls_stream,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
 #ifdef ROBOTRACONTEUR_APPLE
     static bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx, boost::string_ref servername);
 #endif
     void Connect2(
         const boost::system::error_code& ec, RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
-        RR_SHARED_PTR<websocket_tcp_connector> socket_connector,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        const RR_SHARED_PTR<websocket_tcp_connector>& socket_connector,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 
   public:
-    TcpWSSWebSocketConnector(RR_SHARED_PTR<TcpTransport> parent);
+    TcpWSSWebSocketConnector(const RR_SHARED_PTR<TcpTransport>& parent);
 
     void Connect(
         boost::string_ref url, uint32_t endpoint,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 };
 #endif
 
@@ -466,9 +466,9 @@ namespace detail
 class IPNodeDiscovery : public RR_ENABLE_SHARED_FROM_THIS<IPNodeDiscovery>
 {
   public:
-    IPNodeDiscovery(RR_SHARED_PTR<TcpTransport> parent);
+    IPNodeDiscovery(const RR_SHARED_PTR<TcpTransport>& parent);
 
-    IPNodeDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    IPNodeDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     /// <summary>
     /// Starts listening for nodes
@@ -587,7 +587,7 @@ class TcpTransportPortSharerClient : public RR_ENABLE_SHARED_FROM_THIS<TcpTransp
     bool sharer_connected;
 
   public:
-    TcpTransportPortSharerClient(RR_SHARED_PTR<TcpTransport> parent);
+    TcpTransportPortSharerClient(const RR_SHARED_PTR<TcpTransport>& parent);
 
     void Start();
     int32_t GetListenPort();

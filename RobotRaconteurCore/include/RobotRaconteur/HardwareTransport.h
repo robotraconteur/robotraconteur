@@ -72,7 +72,7 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
      *
      * @param node The node that will use the transport. Default is the singleton node
      */
-    HardwareTransport(RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp());
+    HardwareTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
 
     virtual ~HardwareTransport();
 
@@ -83,28 +83,28 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
 
     virtual std::string GetUrlSchemeString() const;
 
-    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
-    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void AsyncCreateTransportConnection(
-        boost::string_ref url, RR_SHARED_PTR<Endpoint> e,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                          RR_SHARED_PTR<Endpoint> e);
+                                                                          const RR_SHARED_PTR<Endpoint>& e);
 
-    virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e);
+    virtual void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e);
 
   protected:
     virtual void AsyncCreateTransportConnection2(
-        const std::string& noden, RR_SHARED_PTR<ITransportConnection> transport,
-        RR_SHARED_PTR<RobotRaconteurException> err,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+        const std::string& noden, const RR_SHARED_PTR<ITransportConnection>& transport,
+        const RR_SHARED_PTR<RobotRaconteurException>& err,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    virtual void CloseTransportConnection_timed(const boost::system::error_code& err, RR_SHARED_PTR<Endpoint> e,
-                                                RR_SHARED_PTR<void> timer);
+    virtual void CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
+                                                const RR_SHARED_PTR<void>& timer);
 
   public:
     virtual bool CanConnectService(boost::string_ref url);
@@ -117,10 +117,10 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
 
     uint32_t TransportCapability(boost::string_ref name);
 
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
     virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                       boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler,
+                                       boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
                                        int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /** @copydoc TcpTransport::GetMaxMessageSize() */
@@ -172,11 +172,11 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
      */
     virtual bool IsValidUsbDevice(uint16_t vid, uint16_t pid, uint8_t interface_);
 
-    virtual void register_transport(RR_SHARED_PTR<ITransportConnection> connection);
-    virtual void erase_transport(RR_SHARED_PTR<ITransportConnection> connection);
+    virtual void register_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
+    virtual void erase_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
 
     template <typename T, typename F>
-    boost::signals2::connection AddCloseListener(RR_SHARED_PTR<T> t, const F& f)
+    boost::signals2::connection AddCloseListener(const RR_SHARED_PTR<T>& t, const F& f)
     {
         boost::mutex::scoped_lock lock(closed_lock);
         if (closed)

@@ -649,7 +649,7 @@ bool MessageEntry::TryFindElement(MessageStringRef name, RR_INTRUSIVE_PTR<Messag
 }
 
 RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(MessageStringRef name,
-                                                          RR_INTRUSIVE_PTR<MessageElementData> data)
+                                                          const RR_INTRUSIVE_PTR<MessageElementData>& data)
 {
     RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
     m->ElementName = name;
@@ -660,7 +660,7 @@ RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(MessageStringRef name,
     return m;
 }
 
-RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(RR_INTRUSIVE_PTR<MessageElement> m)
+RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(const RR_INTRUSIVE_PTR<MessageElement>& m)
 {
 
     elements.push_back(m);
@@ -994,7 +994,7 @@ MessageElement::MessageElement()
     Extended.clear();
 }
 
-MessageElement::MessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin)
+MessageElement::MessageElement(MessageStringRef name, const RR_INTRUSIVE_PTR<MessageElementData>& datin)
 {
     ElementSize = 0;
     DataCount = 0;
@@ -1013,7 +1013,7 @@ MessageElement::MessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageEl
 
 RR_INTRUSIVE_PTR<MessageElementData> MessageElement::GetData() { return dat; }
 
-void MessageElement::SetData(const RR_INTRUSIVE_PTR<MessageElementData> value)
+void MessageElement::SetData(const RR_INTRUSIVE_PTR<MessageElementData>& value)
 {
     dat = value;
 
@@ -1796,12 +1796,12 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(Messag
 }
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement() { return new MessageElement(); }
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(
-    MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin)
+    MessageStringRef name, const RR_INTRUSIVE_PTR<MessageElementData>& datin)
 {
     return new MessageElement(name, datin);
 }
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(
-    int32_t number, RR_INTRUSIVE_PTR<MessageElementData> datin)
+    int32_t number, const RR_INTRUSIVE_PTR<MessageElementData>& datin)
 {
     MessageElement* m = new MessageElement("", datin);
     m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
@@ -1821,7 +1821,7 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> Create
     return new MessageElementNestedElementList(type_, type_name_, std::move(elements_));
 }
 #endif
-RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m)
+RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(const RR_INTRUSIVE_PTR<Message>& m)
 {
     if (!m)
         return RR_INTRUSIVE_PTR<Message>();
@@ -1857,7 +1857,7 @@ RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m)
     return m2;
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> mm)
+RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& mm)
 {
     if (!mm)
         return RR_INTRUSIVE_PTR<MessageEntry>();
@@ -1883,7 +1883,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageE
     return mm2;
 }
 
-RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(RR_INTRUSIVE_PTR<MessageElement> mm)
+RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(const RR_INTRUSIVE_PTR<MessageElement>& mm)
 {
     if (!mm)
         return RR_INTRUSIVE_PTR<MessageElement>();
@@ -1936,7 +1936,7 @@ RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(RR_INTRUSIVE_PTR<Mess
     return mm2;
 }
 
-bool MessageElement_GetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t& number)
+bool MessageElement_GetElementNumber(const RR_INTRUSIVE_PTR<MessageElement>& m, int32_t& number)
 {
     if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
     {
@@ -1959,14 +1959,14 @@ bool MessageElement_GetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t
     }
 }
 
-void MessageElement_SetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t number)
+void MessageElement_SetElementNumber(const RR_INTRUSIVE_PTR<MessageElement>& m, int32_t number)
 {
     m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
     m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
     m->ElementNumber = number;
 }
 
-bool MessageElement_GetElementName(RR_INTRUSIVE_PTR<MessageElement> m, MessageStringPtr& name)
+bool MessageElement_GetElementName(const RR_INTRUSIVE_PTR<MessageElement>& m, MessageStringPtr& name)
 {
     if (!(m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR))
     {

@@ -21,15 +21,15 @@ namespace RobotRaconteur
 {
 BroadcastDownsampler::BroadcastDownsampler() { step_count = 0; }
 
-void BroadcastDownsampler::Init(RR_SHARED_PTR<ServerContext> context, uint32_t default_downsample)
+void BroadcastDownsampler::Init(const RR_SHARED_PTR<ServerContext>& context, uint32_t default_downsample)
 {
     this->context = context;
     this->default_downsample = default_downsample;
     RR_WEAK_PTR<BroadcastDownsampler> weak_this = shared_from_this();
 
     context->ServerServiceListener.connect(
-        boost::signals2::signal<void(RR_SHARED_PTR<ServerContext>, ServerServiceListenerEventType,
-                                     RR_SHARED_PTR<void>)>::slot_type(boost::bind(&BroadcastDownsampler::server_event,
+        boost::signals2::signal<void(const RR_SHARED_PTR<ServerContext>&, ServerServiceListenerEventType,
+                                     const RR_SHARED_PTR<void>&)>::slot_type(boost::bind(&BroadcastDownsampler::server_event,
                                                                                   weak_this, RR_BOOST_PLACEHOLDERS(_1),
                                                                                   RR_BOOST_PLACEHOLDERS(_2),
                                                                                   RR_BOOST_PLACEHOLDERS(_3)))
@@ -59,7 +59,7 @@ void BroadcastDownsampler::BeginStep()
 
 void BroadcastDownsampler::EndStep() {}
 
-void BroadcastDownsampler::AddPipeBroadcaster(RR_SHARED_PTR<PipeBroadcasterBase> broadcaster)
+void BroadcastDownsampler::AddPipeBroadcaster(const RR_SHARED_PTR<PipeBroadcasterBase>& broadcaster)
 {
     RR_WEAK_PTR<BroadcastDownsampler> weak_this = shared_from_this();
     boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> pred =
@@ -69,7 +69,7 @@ void BroadcastDownsampler::AddPipeBroadcaster(RR_SHARED_PTR<PipeBroadcasterBase>
     broadcaster->SetPredicate(pred);
 }
 
-void BroadcastDownsampler::AddWireBroadcaster(RR_SHARED_PTR<WireBroadcasterBase> broadcaster)
+void BroadcastDownsampler::AddWireBroadcaster(const RR_SHARED_PTR<WireBroadcasterBase>& broadcaster)
 {
     RR_WEAK_PTR<BroadcastDownsampler> weak_this = shared_from_this();
     boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> pred = boost::bind(
@@ -81,6 +81,7 @@ void BroadcastDownsampler::AddWireBroadcaster(RR_SHARED_PTR<WireBroadcasterBase>
 bool BroadcastDownsampler::wire_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_,
                                           RR_SHARED_PTR<WireBroadcasterBase>& wire, uint32_t ep)
 {
+    RR_UNUSED(wire);
     RR_SHARED_PTR<BroadcastDownsampler> this1 = this_.lock();
     if (!this1)
         return true;
@@ -102,6 +103,8 @@ bool BroadcastDownsampler::wire_predicate(RR_WEAK_PTR<BroadcastDownsampler> this
 bool BroadcastDownsampler::pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_,
                                           RR_SHARED_PTR<PipeBroadcasterBase>& wire, uint32_t ep, uint32_t index)
 {
+    RR_UNUSED(wire);
+    RR_UNUSED(index);
     RR_SHARED_PTR<BroadcastDownsampler> this1 = this_.lock();
     if (!this1)
         return true;
@@ -120,9 +123,10 @@ bool BroadcastDownsampler::pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this
     return drop;
 }
 
-void BroadcastDownsampler::server_event(RR_WEAK_PTR<BroadcastDownsampler> this_, RR_SHARED_PTR<ServerContext> ctx,
-                                        ServerServiceListenerEventType evt, RR_SHARED_PTR<void> p)
+void BroadcastDownsampler::server_event(RR_WEAK_PTR<BroadcastDownsampler> this_, const RR_SHARED_PTR<ServerContext>& ctx,
+                                        ServerServiceListenerEventType evt, const RR_SHARED_PTR<void>& p)
 {
+    RR_UNUSED(ctx);
     if (evt != ServerServiceListenerEventType_ClientDisconnected)
         return;
 

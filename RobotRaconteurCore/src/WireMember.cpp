@@ -40,7 +40,7 @@
                 e = listeners.erase(e);                                                                                \
                 continue;                                                                                              \
             }                                                                                                          \
-            command;                                                                                                   \
+            command;  /* NOLINT */                                                                                                 \
             e++;                                                                                                       \
         }                                                                                                              \
     }                                                                                                                  \
@@ -87,7 +87,7 @@ void WireConnectionBase::Close()
     t->end_void();
 }
 
-void WireConnectionBase::AsyncClose(RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+void WireConnectionBase::AsyncClose(RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
                                     int32_t timeout)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
@@ -107,7 +107,7 @@ void WireConnectionBase::AsyncClose(RR_MOVE_ARG(boost::function<void(RR_SHARED_P
     }
 }
 
-WireConnectionBase::WireConnectionBase(RR_SHARED_PTR<WireBase> parent, uint32_t endpoint,
+WireConnectionBase::WireConnectionBase(const RR_SHARED_PTR<WireBase>& parent, uint32_t endpoint,
                                        MemberDefinition_Direction direction)
 {
     this->parent = parent;
@@ -186,7 +186,7 @@ void WireConnectionBase::WirePacketReceived(TimeSpec timespec, RR_INTRUSIVE_PTR<
     }
 }
 
-void WireConnectionBase_RemoteClose_emptyhandler(RR_SHARED_PTR<RobotRaconteurException> err) {}
+void WireConnectionBase_RemoteClose_emptyhandler(const RR_SHARED_PTR<RobotRaconteurException>& err) {}
 
 void WireConnectionBase::RemoteClose()
 {
@@ -445,7 +445,7 @@ void WireConnectionBase::SetIgnoreInValue(bool ignore)
                                             "IgnoreInValue set to " << ignore)
 }
 
-void WireConnectionBase::AddListener(RR_SHARED_PTR<WireConnectionBaseListener> listener)
+void WireConnectionBase::AddListener(const RR_SHARED_PTR<WireConnectionBaseListener>& listener)
 {
     boost::mutex::scoped_lock lock(listeners_lock);
     listeners.push_back(listener);
@@ -514,7 +514,7 @@ void WireConnectionBase::SetOutValueLifespan(int32_t millis)
     outval_lifespan = millis;
 }
 
-RR_INTRUSIVE_PTR<RRValue> WireBase::UnpackPacket(RR_INTRUSIVE_PTR<MessageEntry> me, TimeSpec& ts)
+RR_INTRUSIVE_PTR<RRValue> WireBase::UnpackPacket(const RR_INTRUSIVE_PTR<MessageEntry>& me, TimeSpec& ts)
 {
 
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> s =
@@ -538,7 +538,7 @@ RR_INTRUSIVE_PTR<RRValue> WireBase::UnpackPacket(RR_INTRUSIVE_PTR<MessageEntry> 
     return data;
 }
 
-void WireBase::DispatchPacket(RR_INTRUSIVE_PTR<MessageEntry> me, RR_SHARED_PTR<WireConnectionBase> e)
+void WireBase::DispatchPacket(const RR_INTRUSIVE_PTR<MessageEntry>& me, const RR_SHARED_PTR<WireConnectionBase>& e)
 {
     TimeSpec timespec;
     RR_INTRUSIVE_PTR<RRValue> data = UnpackPacket(me, timespec);
@@ -587,8 +587,9 @@ std::string WireClientBase::GetMemberName() { return m_MemberName; }
 
 std::string WireClientBase::GetServicePath() { return service_path; }
 
-void WireClientBase::WirePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void WireClientBase::WirePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
+    RR_UNUSED(e);
     // boost::shared_lock<boost::shared_mutex> lock2(stub_lock);
 
     if (m->EntryType == MessageEntryType_WireClosed)
@@ -673,16 +674,18 @@ RR_SHARED_PTR<ServiceStub> WireClientBase::GetStub()
 
 void WireClientBase::SendWirePacket(RR_INTRUSIVE_PTR<RRValue> packet, TimeSpec time, uint32_t endpoint)
 {
+    RR_UNUSED(endpoint);
     RR_INTRUSIVE_PTR<MessageEntry> m = PackPacket(packet, time);
 
     GetStub()->SendWireMessage(m);
 }
 
-void WireClientBase::AsyncClose(RR_SHARED_PTR<WireConnectionBase> endpoint, bool remote, uint32_t ee,
-                                RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+void WireClientBase::AsyncClose(const RR_SHARED_PTR<WireConnectionBase>& endpoint, bool remote, uint32_t ee,
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
                                 int32_t timeout)
 {
-
+    RR_UNUSED(endpoint);
+    RR_UNUSED(ee);
     {
         boost::mutex::scoped_lock lock(connection_lock);
         if (!remote)
@@ -695,7 +698,7 @@ void WireClientBase::AsyncClose(RR_SHARED_PTR<WireConnectionBase> endpoint, bool
 }
 
 void WireClientBase::AsyncConnect_internal(
-    RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<WireConnectionBase>, RR_SHARED_PTR<RobotRaconteurException>)>)
+    RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<WireConnectionBase>&, const RR_SHARED_PTR<RobotRaconteurException>&)>)
         handler,
     int32_t timeout)
 {
@@ -732,9 +735,10 @@ void WireClientBase::AsyncConnect_internal(
 }
 
 void WireClientBase::AsyncConnect_internal1(
-    RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err,
-    boost::function<void(RR_SHARED_PTR<WireConnectionBase>, RR_SHARED_PTR<RobotRaconteurException>)>& handler)
+    const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& err,
+    boost::function<void(const RR_SHARED_PTR<WireConnectionBase>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
+    RR_UNUSED(ret);
     if (err)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
@@ -774,7 +778,7 @@ std::string WireServerBase::GetMemberName() { return m_MemberName; }
 
 std::string WireServerBase::GetServicePath() { return service_path; }
 
-WireClientBase::WireClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub,
+WireClientBase::WireClientBase(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub,
                                MemberDefinition_Direction direction)
 {
     this->stub = stub;
@@ -817,10 +821,10 @@ void WireClientBase::PokeOutValueBase(RR_INTRUSIVE_PTR<RRValue> value)
     RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> mr = GetStub()->ProcessRequest(m);
 }
 
-void WireClientBase::AsyncPeekValueBaseEnd1(RR_INTRUSIVE_PTR<MessageEntry> m,
-                                            RR_SHARED_PTR<RobotRaconteurException> err,
+void WireClientBase::AsyncPeekValueBaseEnd1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                            const RR_SHARED_PTR<RobotRaconteurException>& err,
                                             boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&, const TimeSpec&,
-                                                                 RR_SHARED_PTR<RobotRaconteurException>)>& handler)
+                                                                 const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     TimeSpec ts;
     RR_INTRUSIVE_PTR<RRValue> value;
@@ -854,7 +858,7 @@ void WireClientBase::AsyncPeekValueBaseEnd1(RR_INTRUSIVE_PTR<MessageEntry> m,
 
 void WireClientBase::AsyncPeekInValueBase(
     RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&, const TimeSpec&,
-                                     RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+                                     const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
     int32_t timeout)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
@@ -870,7 +874,7 @@ void WireClientBase::AsyncPeekInValueBase(
 
 void WireClientBase::AsyncPeekOutValueBase(
     RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&, const TimeSpec&,
-                                     RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+                                     const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
     int32_t timeout)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
@@ -885,8 +889,8 @@ void WireClientBase::AsyncPeekOutValueBase(
 }
 
 void WireClientBase_AsyncPokeValueBaseEnd(
-    RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> m, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> err,
-    boost::function<void(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> handler)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> handler)
 {
     if (err)
     {
@@ -902,7 +906,7 @@ void WireClientBase_AsyncPokeValueBaseEnd(
 }
 
 void WireClientBase::AsyncPokeOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value,
-                                           RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>)
+                                           RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
                                                handler,
                                            int32_t timeout)
 {
@@ -917,7 +921,7 @@ void WireClientBase::AsyncPokeOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& valu
                                    timeout);
 }
 
-void WireServerBase::WirePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void WireServerBase::WirePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     if (m->EntryType == MessageEntryType_WirePacket)
     {
@@ -941,10 +945,10 @@ void WireServerBase::WirePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
     }
 }
 
-void WireServerBase::ClientDisconnected(RR_SHARED_PTR<ServerContext> context, ServerServiceListenerEventType ev,
-                                        RR_SHARED_PTR<void> param)
+void WireServerBase::ClientDisconnected(const RR_SHARED_PTR<ServerContext>& context, ServerServiceListenerEventType ev,
+                                        const RR_SHARED_PTR<void>& param)
 {
-
+    RR_UNUSED(context);
     if (ev == ServerServiceListenerEventType_ClientDisconnected)
     {
         uint32_t ep = *RR_STATIC_POINTER_CAST<uint32_t>(param);
@@ -970,7 +974,7 @@ void WireServerBase::ClientDisconnected(RR_SHARED_PTR<ServerContext> context, Se
             }
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<WireConnectionBase> ee, c)
+        BOOST_FOREACH (const RR_SHARED_PTR<WireConnectionBase>& ee, c)
         {
             try
             {
@@ -1043,10 +1047,11 @@ void WireServerBase::SendWirePacket(RR_INTRUSIVE_PTR<RRValue> packet, TimeSpec t
     GetSkel()->SendWireMessage(m, e);
 }
 
-void WireServerBase::AsyncClose(RR_SHARED_PTR<WireConnectionBase> c, bool remote, uint32_t ee,
-                                RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+void WireServerBase::AsyncClose(const RR_SHARED_PTR<WireConnectionBase>& c, bool remote, uint32_t ee,
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
                                 int32_t timeout)
 {
+    RR_UNUSED(timeout);
 
     if (!remote)
     {
@@ -1070,8 +1075,8 @@ void WireServerBase::AsyncClose(RR_SHARED_PTR<WireConnectionBase> c, bool remote
     detail::PostHandler(node, handler, true);
 }
 
-void wire_server_client_disconnected(RR_SHARED_PTR<ServerContext> context, ServerServiceListenerEventType ev,
-                                     RR_SHARED_PTR<void> param, RR_WEAK_PTR<WireServerBase> w)
+void wire_server_client_disconnected(const RR_SHARED_PTR<ServerContext>& context, ServerServiceListenerEventType ev,
+                                     const RR_SHARED_PTR<void>& param, RR_WEAK_PTR<WireServerBase> w)
 {
     RR_SHARED_PTR<WireServerBase> p = w.lock();
     if (!p)
@@ -1079,7 +1084,7 @@ void wire_server_client_disconnected(RR_SHARED_PTR<ServerContext> context, Serve
     p->ClientDisconnected(context, ev, param);
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> WireServerBase::WireCommand(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<MessageEntry> WireServerBase::WireCommand(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
 
     {
@@ -1218,7 +1223,7 @@ RR_INTRUSIVE_PTR<MessageEntry> WireServerBase::WireCommand(RR_INTRUSIVE_PTR<Mess
     }
 }
 
-WireServerBase::WireServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel,
+WireServerBase::WireServerBase(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel,
                                MemberDefinition_Direction direction)
 {
     this->skel = skel;
@@ -1237,7 +1242,7 @@ namespace detail
 class WireBroadcaster_connected_connection
 {
   public:
-    WireBroadcaster_connected_connection(RR_SHARED_PTR<WireConnectionBase> connection)
+    WireBroadcaster_connected_connection(const RR_SHARED_PTR<WireConnectionBase>& connection)
     {
         this->connection = connection;
     }
@@ -1254,7 +1259,7 @@ WireBroadcasterBase::WireBroadcasterBase()
     out_value_lifespan = -1;
 }
 
-void WireBroadcasterBase::InitBase(RR_SHARED_PTR<WireBase> wire)
+void WireBroadcasterBase::InitBase(const RR_SHARED_PTR<WireBase>& wire)
 {
     RR_SHARED_PTR<WireServerBase> wire1 = RR_DYNAMIC_POINTER_CAST<WireServerBase>(wire);
     if (!wire1)
@@ -1272,8 +1277,8 @@ void WireBroadcasterBase::InitBase(RR_SHARED_PTR<WireBase> wire)
     AttachWireServerEvents(wire1);
 
     wire1->GetSkel()->GetContext()->ServerServiceListener.connect(
-        boost::signals2::signal<void(RR_SHARED_PTR<ServerContext>, ServerServiceListenerEventType,
-                                     RR_SHARED_PTR<void>)>::slot_type(boost::bind(&WireBroadcasterBase::ServiceEvent,
+        boost::signals2::signal<void(const RR_SHARED_PTR<ServerContext>&, ServerServiceListenerEventType,
+                                     const RR_SHARED_PTR<void>&)>::slot_type(boost::bind(&WireBroadcasterBase::ServiceEvent,
                                                                                   this, RR_BOOST_PLACEHOLDERS(_2)))
             .track(shared_from_this()));
 
@@ -1313,7 +1318,7 @@ void WireBroadcasterBase::ConnectionClosedBase(RR_SHARED_PTR<detail::WireBroadca
                                             "WireBroadcaster wire connection closed");
 }
 
-void WireBroadcasterBase::ConnectionConnectedBase(RR_SHARED_PTR<WireConnectionBase> ep)
+void WireBroadcasterBase::ConnectionConnectedBase(const RR_SHARED_PTR<WireConnectionBase>& ep)
 {
     boost::mutex::scoped_lock lock(connected_wires_lock);
     ep->SetIgnoreInValue(true);
@@ -1405,9 +1410,9 @@ size_t WireBroadcasterBase::GetActiveWireConnectionCount()
     return connected_wires.size();
 }
 
-void WireBroadcasterBase::AttachWireServerEvents(RR_SHARED_PTR<WireServerBase> p) {}
+void WireBroadcasterBase::AttachWireServerEvents(const RR_SHARED_PTR<WireServerBase>& p) {}
 
-void WireBroadcasterBase::AttachWireConnectionEvents(RR_SHARED_PTR<WireConnectionBase> p,
+void WireBroadcasterBase::AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& p,
                                                      RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> cep)
 {}
 

@@ -70,7 +70,7 @@ class ROBOTRACONTEUR_CORE_API MessageTap
      *
      * @param message
      */
-    virtual void RecordMessage(RR_INTRUSIVE_PTR<Message> message) = 0;
+    virtual void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message) = 0;
 
     virtual ~MessageTap() {}
 };
@@ -114,7 +114,7 @@ class ROBOTRACONTEUR_CORE_API LocalMessageTap : public MessageTap
     virtual void Close();
 
     virtual void RecordLogRecord(const RRLogRecord& log_record);
-    virtual void RecordMessage(RR_INTRUSIVE_PTR<Message> message);
+    virtual void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message);
 };
 
 }; // namespace RobotRaconteur

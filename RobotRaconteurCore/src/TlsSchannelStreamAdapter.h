@@ -281,7 +281,7 @@ class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsS
 
   public:
     TlsSchannelAsyncStreamAdapter(
-        RR_BOOST_ASIO_IO_CONTEXT& _io_context, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context,
+        RR_BOOST_ASIO_IO_CONTEXT& _io_context, const boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext>& context,
         direction_type direction, boost::string_ref servername,
         boost::function<void(mutable_buffers&,
                              boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)>

@@ -464,7 +464,7 @@ void AsyncMessageReaderImpl::Reset()
 }
 
 #define R(res)                                                                                                         \
-    if (!res)                                                                                                          \
+    if (!(res))                                                                                                          \
     {                                                                                                                  \
         prepare_continue(other_bufs, other_bufs_used);                                                                 \
         return ReadReturn_continue_nobuffers;                                                                          \

@@ -56,7 +56,7 @@ class RRDirectorExceptionHelper
 
 public:
 	static void Reset();
-	static void SetError(boost::intrusive_ptr<RobotRaconteur::MessageEntry> err, const std::string& exception_str);
+	static void SetError(const boost::intrusive_ptr<RobotRaconteur::MessageEntry>& err, const std::string& exception_str);
 	static bool IsErrorPending();
 	static boost::intrusive_ptr<RobotRaconteur::MessageEntry> GetError();
 

@@ -20,7 +20,7 @@ public:
 	std::string noden;
 	uint32_t endpoint;
 
-	//boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler;
+	//boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&) > handler;
 };
 
 %typemap(javaclassmodifiers) AndroidHardwareDirector "class"
@@ -35,7 +35,7 @@ public:
 	AndroidHardwareDirector();
 	virtual ~AndroidHardwareDirector();
 
-	//static void ConnectBluetooth(RR_SHARED_PTR<HardwareTransport> parent, const ParseConnectionURLResult& url, const std::string& noden, uint32_t endpoint, boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>) > handler);
+	//static void ConnectBluetooth(const RR_SHARED_PTR<HardwareTransport>& parent, const ParseConnectionURLResult& url, const std::string& noden, uint32_t endpoint, boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&) > handler);
 
 protected:
 	virtual void ConnectBluetooth2(void* p) = 0;
@@ -47,10 +47,10 @@ class AndroidHardwareHelper
 {
 public:
 
-	static int32_t ConnectBluetooth_success(boost::shared_ptr<AndroidBluetoothConnector_params> p);
-	static void ConnectBluetooth_error(boost::shared_ptr<AndroidBluetoothConnector_params> p, const std::string& message);
+	static int32_t ConnectBluetooth_success(const boost::shared_ptr<AndroidBluetoothConnector_params>& p);
+	static void ConnectBluetooth_error(const boost::shared_ptr<AndroidBluetoothConnector_params>& p, const std::string& message);
 	static boost::shared_ptr<AndroidBluetoothConnector_params> VoidToAndroidBluetoothConnector_params(void* p);
-	static std::vector<int8_t> MessageToVector(boost::shared_ptr<Message> m);
+	static std::vector<int8_t> MessageToVector(const boost::shared_ptr<Message>& m);
 	static boost::shared_ptr<Message> VectorToMessage(std::vector<int8_t> v);
 };
 

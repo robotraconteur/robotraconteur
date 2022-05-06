@@ -157,7 +157,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      *
      * @param node The node that will use the transport. Default is the singleton node
      */
-    TcpTransport(RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp());
+    TcpTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
 
     virtual ~TcpTransport();
 
@@ -215,23 +215,23 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
 
     virtual int32_t GetListenPort();
 
-    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
-    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void AsyncCreateTransportConnection(
-        boost::string_ref url, RR_SHARED_PTR<Endpoint> e,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                          RR_SHARED_PTR<Endpoint> e);
+                                                                          const RR_SHARED_PTR<Endpoint>& e);
 
-    virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e);
+    virtual void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e);
 
   protected:
-    virtual void CloseTransportConnection_timed(const boost::system::error_code& err, RR_SHARED_PTR<Endpoint> e,
-                                                RR_SHARED_PTR<void> timer);
+    virtual void CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
+                                                const RR_SHARED_PTR<void>& timer);
 
   public:
     /**
@@ -324,7 +324,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
 
     static void GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::address>& addresses);
 
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
     /**
      * @brief Get the default heartbeat period
@@ -429,13 +429,13 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     virtual bool IsTransportConnectionSecure(uint32_t endpoint);
 
     /** @copydoc IsTransportConnectionSecure(uint32_t) */
-    virtual bool IsTransportConnectionSecure(RR_SHARED_PTR<Endpoint> endpoint);
+    virtual bool IsTransportConnectionSecure(const RR_SHARED_PTR<Endpoint>& endpoint);
 
     /** @copydoc IsTransportConnectionSecure(uint32_t) */
-    virtual bool IsTransportConnectionSecure(RR_SHARED_PTR<RRObject> obj);
+    virtual bool IsTransportConnectionSecure(const RR_SHARED_PTR<RRObject>& obj);
 
     /** @copydoc IsTransportConnectionSecure(uint32_t) */
-    virtual bool IsTransportConnectionSecure(RR_SHARED_PTR<ITransportConnection> transport);
+    virtual bool IsTransportConnectionSecure(const RR_SHARED_PTR<ITransportConnection>& transport);
 
     /**
      * @brief Check if specified endpoint peer is using TLS and has been
@@ -454,11 +454,11 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     virtual bool IsSecurePeerIdentityVerified(uint32_t endpoint);
 
     /** @copydoc IsSecurePeerIdentityVerified(uint32_t endpoint)*/
-    virtual bool IsSecurePeerIdentityVerified(RR_SHARED_PTR<Endpoint> endpoint);
+    virtual bool IsSecurePeerIdentityVerified(const RR_SHARED_PTR<Endpoint>& endpoint);
     /** @copydoc IsSecurePeerIdentityVerified(uint32_t endpoint)*/
-    virtual bool IsSecurePeerIdentityVerified(RR_SHARED_PTR<RRObject> obj);
+    virtual bool IsSecurePeerIdentityVerified(const RR_SHARED_PTR<RRObject>& obj);
     /** @copydoc IsSecurePeerIdentityVerified(uint32_t endpoint)*/
-    virtual bool IsSecurePeerIdentityVerified(RR_SHARED_PTR<ITransportConnection> tranpsort);
+    virtual bool IsSecurePeerIdentityVerified(const RR_SHARED_PTR<ITransportConnection>& tranpsort);
 
     /**
      * @brief Get the identity of the peer if secured using TLS
@@ -472,11 +472,11 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     virtual std::string GetSecurePeerIdentity(uint32_t endpoint);
 
     /** @copydoc GetSecurePeerIdentity(uint32_t) */
-    virtual std::string GetSecurePeerIdentity(RR_SHARED_PTR<Endpoint> endpoint);
+    virtual std::string GetSecurePeerIdentity(const RR_SHARED_PTR<Endpoint>& endpoint);
     /** @copydoc GetSecurePeerIdentity(uint32_t) */
-    virtual std::string GetSecurePeerIdentity(RR_SHARED_PTR<RRObject> obj);
+    virtual std::string GetSecurePeerIdentity(const RR_SHARED_PTR<RRObject>& obj);
     /** @copydoc GetSecurePeerIdentity(uint32_t) */
-    virtual std::string GetSecurePeerIdentity(RR_SHARED_PTR<ITransportConnection> transport);
+    virtual std::string GetSecurePeerIdentity(const RR_SHARED_PTR<ITransportConnection>& transport);
 
     /**
      * @brief Get if the transport will accept incoming HTTP WebSocket connections
@@ -626,7 +626,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     virtual void SetDisableAsyncMessageIO(bool d);
 
     template <typename T, typename F>
-    boost::signals2::connection AddCloseListener(RR_SHARED_PTR<T> t, const F& f)
+    boost::signals2::connection AddCloseListener(const RR_SHARED_PTR<T>& t, const F& f)
     {
         boost::mutex::scoped_lock lock(closed_lock);
         if (closed)
@@ -652,19 +652,19 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     bool ipv4_acceptor_paused;
     bool ipv6_acceptor_paused;
 
-    static void handle_v4_accept(RR_SHARED_PTR<TcpTransport> parent,
+    static void handle_v4_accept(const RR_SHARED_PTR<TcpTransport>& parent,
                                  RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> acceptor,
                                  RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
                                  const boost::system::error_code& error);
 
-    static void handle_v6_accept(RR_SHARED_PTR<TcpTransport> parent,
+    static void handle_v6_accept(const RR_SHARED_PTR<TcpTransport>& parent,
                                  RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> acceptor,
                                  RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
                                  const boost::system::error_code& error);
 
-    virtual void register_transport(RR_SHARED_PTR<ITransportConnection> connection);
-    virtual void erase_transport(RR_SHARED_PTR<ITransportConnection> connection);
-    virtual void incoming_transport(RR_SHARED_PTR<ITransportConnection> connection);
+    virtual void register_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
+    virtual void erase_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
+    virtual void incoming_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
 
     boost::mutex parameter_lock;
     int32_t heartbeat_period;

@@ -470,7 +470,7 @@ class websocket_stream : private boost::noncopyable
     }
 
     void end_send_server_error(
-        boost::shared_ptr<std::string> data, std::size_t n, const boost::system::error_code& ec,
+        const boost::shared_ptr<std::string>& data, std::size_t n, const boost::system::error_code& ec,
         boost::function<void(const std::string& protocol, const boost::system::error_code& ec)> handler)
     {
 
@@ -512,7 +512,7 @@ class websocket_stream : private boost::noncopyable
     }
 
     void end_send_server_success_response(
-        boost::shared_ptr<std::string> data, std::string protocol, std::size_t n, const boost::system::error_code& ec,
+        const boost::shared_ptr<std::string>& data, std::string protocol, std::size_t n, const boost::system::error_code& ec,
         boost::function<void(const std::string& protocol, const boost::system::error_code& ec)> handler)
     {
 
@@ -1148,6 +1148,8 @@ class websocket_stream : private boost::noncopyable
                               size_t ping_data_len2, size_t ping_data_pos2, boost::asio::const_buffer buffer,
                               boost::function<void(const boost::system::error_code&, std::size_t)> handler)
     {
+        RR_UNUSED(ping_data2);
+        RR_UNUSED(ping_data_pos2);
         if (ec || (n == 0 && ping_data_len2 != 0))
         {
             handler(ec, 0);

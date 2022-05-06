@@ -142,7 +142,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
     return true;
 }
 
-LinuxLocalTransportDiscovery::LinuxLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node)
+LinuxLocalTransportDiscovery::LinuxLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node)
     : LocalTransportDiscovery(node)
 {
     public_wd = -1;

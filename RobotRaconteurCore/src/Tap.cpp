@@ -165,7 +165,7 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
 
     uint8_t recv_buf[1024];
 
-    LocalMessageTapConnectionImpl(RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT> io_context, bool log_all)
+    LocalMessageTapConnectionImpl(const RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT>& io_context, bool log_all)
     {
         this->LogAll = log_all;
         this->io_context = io_context;
@@ -184,7 +184,7 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
 
     void Close() { socket.reset(); }
 
-    void RecordMessage(RR_INTRUSIVE_PTR<Message> message)
+    void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message)
     {
         boost::mutex::scoped_lock lock(this_lock);
 
@@ -199,7 +199,7 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
         }
     }
 
-    void start_send(RR_INTRUSIVE_PTR<Message> message)
+    void start_send(const RR_INTRUSIVE_PTR<Message>& message)
     {
         message_len = message->header->MessageSize;
         message_pos = 0;
@@ -260,6 +260,7 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
 
     void end_recv(const boost::system::error_code& ec, std::size_t bytes_transferred)
     {
+        RR_UNUSED(bytes_transferred);
         if (ec)
         {
             return;
@@ -398,8 +399,8 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
                                                     acceptor, log_socket1, boost::asio::placeholders::error));
     }
 
-    static void thread_func(RR_SHARED_PTR<LocalMessageTapImpl> this1,
-                            RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT> io_context1, boost::filesystem::path all_tap_fname1,
+    static void thread_func(RR_SHARED_PTR<LocalMessageTapImpl>& this1,
+                            const RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT>& io_context1, boost::filesystem::path all_tap_fname1,
                             boost::filesystem::path log_tap_fname1)
     {
         RR_WEAK_PTR<LocalMessageTapImpl> this2 = this1;
@@ -483,7 +484,7 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
         }
     }
 
-    void RecordMessage(RR_INTRUSIVE_PTR<Message> message)
+    void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message)
     {
         RR_INTRUSIVE_PTR<Message> message2 = ShallowCopyMessage(message);
         boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
@@ -542,7 +543,7 @@ void LocalMessageTap::RecordLogRecord(const RRLogRecord& log_record)
     }
 }
 
-void LocalMessageTap::RecordMessage(RR_INTRUSIVE_PTR<Message> message)
+void LocalMessageTap::RecordMessage(const RR_INTRUSIVE_PTR<Message>& message)
 {
     RR_SHARED_PTR<detail::LocalMessageTapImpl> tap = tap_impl.lock();
     if (tap)

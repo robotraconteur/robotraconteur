@@ -236,7 +236,7 @@ namespace detail
 #define LIBUSB_FUNCTIONS_PTR_VOID(t) t = NULL;
 #define LIBUSB_FUNCTIONS_PTR_INIT(t)                                                                                   \
     t = reinterpret_cast<t##_t>(dlsym(lib_handle, #t));                                                                \
-    if (t == NULL)                                                                                                     \
+    if ((t) == NULL)                                                                                                     \
         return false;
 
 class LibUsb_Functions : public boost::noncopyable
@@ -274,8 +274,8 @@ class LibUsb_Transfer
 
     virtual void CompleteTransfer() = 0;
 
-    LibUsb_Transfer(RR_SHARED_PTR<LibUsb_Functions> f, RR_SHARED_PTR<libusb_device_handle> device_handle,
-                    RR_SHARED_PTR<LibUsbDeviceManager> device_manager);
+    LibUsb_Transfer(const RR_SHARED_PTR<LibUsb_Functions>& f, const RR_SHARED_PTR<libusb_device_handle>& device_handle,
+                    const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager);
     virtual ~LibUsb_Transfer();
 };
 
@@ -295,8 +295,8 @@ class LibUsb_Transfer_control : public LibUsb_Transfer
 
     virtual void CompleteTransfer();
 
-    LibUsb_Transfer_control(RR_SHARED_PTR<LibUsb_Functions> f, RR_SHARED_PTR<libusb_device_handle> device_handle,
-                            RR_SHARED_PTR<LibUsbDeviceManager> device_manager);
+    LibUsb_Transfer_control(const RR_SHARED_PTR<LibUsb_Functions>& f, const RR_SHARED_PTR<libusb_device_handle>& device_handle,
+                            const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager);
     virtual ~LibUsb_Transfer_control();
 };
 
@@ -312,8 +312,8 @@ class LibUsb_Transfer_bulk : public LibUsb_Transfer
 
     virtual void CompleteTransfer();
 
-    LibUsb_Transfer_bulk(RR_SHARED_PTR<LibUsb_Functions> f, RR_SHARED_PTR<libusb_device_handle> device_handle,
-                         RR_SHARED_PTR<LibUsbDeviceManager> device_manager);
+    LibUsb_Transfer_bulk(const RR_SHARED_PTR<LibUsb_Functions>& f, const RR_SHARED_PTR<libusb_device_handle>& device_handle,
+                         const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager);
     virtual ~LibUsb_Transfer_bulk();
 };
 
@@ -326,7 +326,7 @@ class LibUsbDeviceManager : public UsbDeviceManager
     friend class LibUsb_Transfer_control;
     friend class LibUsb_Transfer_bulk;
 
-    LibUsbDeviceManager(RR_SHARED_PTR<HardwareTransport> parent);
+    LibUsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>& parent);
     virtual ~LibUsbDeviceManager();
 
     virtual void Shutdown();
@@ -351,7 +351,7 @@ class LibUsbDeviceManager : public UsbDeviceManager
                                  void* user_data);
 
   public:
-    static void LibUsbCloseDevice(RR_WEAK_PTR<LibUsbDeviceManager> d, RR_SHARED_PTR<LibUsb_Functions> f,
+    static void LibUsbCloseDevice(RR_WEAK_PTR<LibUsbDeviceManager> d, const RR_SHARED_PTR<LibUsb_Functions>& f,
                                   libusb_device_handle* h);
 
   protected:
@@ -364,36 +364,36 @@ class LibUsbDeviceManager : public UsbDeviceManager
 
     std::map<libusb_device_handle*, boost::function<void()> > closing_device_handles;
 
-    void DrawDownRequests(RR_SHARED_PTR<libusb_device_handle> h, boost::function<void()> handler);
+    void DrawDownRequests(const RR_SHARED_PTR<libusb_device_handle>& h, boost::function<void()> handler);
 };
 
 class LibUsbDevice_Initialize : public UsbDevice_Initialize
 {
   public:
-    LibUsbDevice_Initialize(RR_SHARED_PTR<UsbDevice> parent, RR_SHARED_PTR<LibUsb_Functions> f,
+    LibUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
                             const UsbDeviceManager_detected_device& detected_device);
     virtual ~LibUsbDevice_Initialize() {}
 
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
                                       boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     // Call with lock
     virtual void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                             boost::asio::mutable_buffer& buf,
                                             boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     // Call with lock
     virtual UsbDeviceStatus OpenDevice(RR_SHARED_PTR<void>& dev_h);
 
     // Call with lock
-    virtual UsbDeviceStatus ReadPipeSettings(RR_SHARED_PTR<void> dev_h, RR_SHARED_PTR<UsbDevice_Settings>& settings);
+    virtual UsbDeviceStatus ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h, RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
     // Call with lock
 
-    virtual UsbDeviceStatus ReadInterfaceSettings(RR_SHARED_PTR<void> dev_h,
+    virtual UsbDeviceStatus ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
                                                   RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
   protected:
@@ -404,7 +404,7 @@ class LibUsbDevice_Initialize : public UsbDevice_Initialize
 class LibUsbDevice_Claim : public UsbDevice_Claim
 {
   public:
-    LibUsbDevice_Claim(RR_SHARED_PTR<UsbDevice> parent, RR_SHARED_PTR<LibUsb_Functions> f,
+    LibUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
                        const UsbDeviceManager_detected_device& detected_device);
     virtual ~LibUsbDevice_Claim();
 
@@ -412,12 +412,12 @@ class LibUsbDevice_Claim : public UsbDevice_Claim
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
                                       boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     virtual void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                             boost::asio::mutable_buffer& buf,
                                             boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     virtual void AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf,
                                boost::function<void(const boost::system::error_code&, size_t)> handler);
@@ -457,7 +457,7 @@ class LibUsbDevice : public UsbDevice
     RR_SHARED_PTR<LibUsb_Functions> f;
 
   public:
-    LibUsbDevice(RR_SHARED_PTR<LibUsbDeviceManager> parent, RR_SHARED_PTR<LibUsb_Functions> f,
+    LibUsbDevice(const RR_SHARED_PTR<LibUsbDeviceManager>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
                  const UsbDeviceManager_detected_device& device);
     virtual ~LibUsbDevice();
 

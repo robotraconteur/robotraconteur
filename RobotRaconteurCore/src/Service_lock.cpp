@@ -45,7 +45,7 @@ std::string ServerContext_ObjectLock::GetRootServicePath() const { return m_Root
 
 uint32_t ServerContext_ObjectLock::GetEndpoint() const { return m_Endpoint; }
 
-void ServerContext_ObjectLock::AddSkel(RR_SHARED_PTR<ServiceSkel> skel)
+void ServerContext_ObjectLock::AddSkel(const RR_SHARED_PTR<ServiceSkel>& skel)
 {
 
     {
@@ -86,7 +86,7 @@ void ServerContext_ObjectLock::AddSkel(RR_SHARED_PTR<ServiceSkel> skel)
     }
 }
 
-void ServerContext_ObjectLock::ReleaseSkel(RR_SHARED_PTR<ServiceSkel> skel)
+void ServerContext_ObjectLock::ReleaseSkel(const RR_SHARED_PTR<ServiceSkel>& skel)
 {
 
     {
@@ -189,7 +189,7 @@ uint32_t ServerContext_MonitorObjectSkel::GetLocalEndpoint() const { return loca
 
 bool ServerContext_MonitorObjectSkel::IsLocked() const { return monitor_acquired; }
 
-ServerContext_MonitorObjectSkel::ServerContext_MonitorObjectSkel(RR_SHARED_PTR<ServiceSkel> skel)
+ServerContext_MonitorObjectSkel::ServerContext_MonitorObjectSkel(const RR_SHARED_PTR<ServiceSkel>& skel)
 {
     InitializeInstanceFields();
     this->monitor_thread_event = skel->RRGetNode()->CreateAutoResetEvent();
@@ -243,6 +243,7 @@ std::string ServerContext_MonitorObjectSkel::MonitorEnter(uint32_t local_endpoin
 
 std::string ServerContext_MonitorObjectSkel::MonitorContinueEnter(uint32_t localendpoint)
 {
+    RR_UNUSED(localendpoint);
     if (monitor_acquired)
         return "OK";
 
@@ -269,11 +270,11 @@ std::string ServerContext_MonitorObjectSkel::MonitorContinueEnter(uint32_t local
     return (monitor_acquired ? "OK" : "Continue");
 }
 
-void ServerContext_MonitorObjectSkel::MonitorRefresh(uint32_t localendpoint) { monitor_thread_event->Set(); }
+void ServerContext_MonitorObjectSkel::MonitorRefresh(uint32_t localendpoint) { RR_UNUSED(localendpoint); monitor_thread_event->Set(); }
 
 std::string ServerContext_MonitorObjectSkel::MonitorExit(uint32_t local_endpoint)
 {
-
+    RR_UNUSED(local_endpoint);
     maintain_lock = false;
     monitor_thread_event->Set();
     while (monitor_acquired)

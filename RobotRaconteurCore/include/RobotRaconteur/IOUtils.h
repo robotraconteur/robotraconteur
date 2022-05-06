@@ -37,16 +37,16 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
 
     size_t Length();
 
-    virtual size_t Position();
-    virtual void Seek(size_t position);
+    size_t Position();
+    void Seek(size_t position);
 
-    virtual size_t Read(void* buffer, size_t index, size_t length);
+    size_t Read(void* buffer, size_t index, size_t length);
 
     template <typename T>
     T ReadNumber()
     {
         T out;
-        Read(reinterpret_cast<uint8_t*>(&out), 0, sizeof(T));
+        Read(reinterpret_cast<uint8_t*>(&out), 0, sizeof(T)); // NOLINT
 #if BOOST_ENDIAN_BIG_BYTE
         if (!nativeorder)
             std::reverse(reinterpret_cast<uint8_t*>(&out), (reinterpret_cast<uint8_t*>(&out)) + sizeof(T));
@@ -68,15 +68,15 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
     // length of reads.  This will detect errors
     // in binary messages.
 
-    virtual size_t CurrentLimit();
+    size_t CurrentLimit();
 
-    virtual void PushRelativeLimit(size_t limit);
+    void PushRelativeLimit(size_t limit);
 
-    virtual void PushAbsoluteLimit(size_t limit);
+    void PushAbsoluteLimit(size_t limit);
 
-    virtual void PopLimit();
+    void PopLimit();
 
-    virtual int32_t DistanceFromLimit();
+    int32_t DistanceFromLimit();
 
   private:
     const uint8_t* buffer;
@@ -140,15 +140,15 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryWriter : private boost::noncopyable
     // length of reads.  This will detect errors
     // in binary messages.
 
-    virtual size_t CurrentLimit();
+    size_t CurrentLimit();
 
-    virtual void PushRelativeLimit(size_t limit);
+    void PushRelativeLimit(size_t limit);
 
-    virtual void PushAbsoluteLimit(size_t limit);
+    void PushAbsoluteLimit(size_t limit);
 
-    virtual void PopLimit();
+    void PopLimit();
 
-    virtual int32_t DistanceFromLimit();
+    int32_t DistanceFromLimit();
 
   private:
     uint8_t* buffer;

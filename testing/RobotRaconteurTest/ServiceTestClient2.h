@@ -22,9 +22,9 @@ class ServiceTestClient2
 
     void TestWirePeekPoke();
     void AsyncTestWirePeekPoke();
-    void AsyncTestWirePeekPoke1(const int32_t& value, const TimeSpec& ts, RR_SHARED_PTR<RobotRaconteurException> err);
-    void AsyncTestWirePeekPoke2(RR_SHARED_PTR<RobotRaconteurException> err);
-    void AsyncTestWirePeekPoke3(const int32_t& value, const TimeSpec& ts, RR_SHARED_PTR<RobotRaconteurException> err);
+    void AsyncTestWirePeekPoke1(const int32_t& value, const TimeSpec& ts, const RR_SHARED_PTR<RobotRaconteurException>& err);
+    void AsyncTestWirePeekPoke2(const RR_SHARED_PTR<RobotRaconteurException>& err);
+    void AsyncTestWirePeekPoke3(const int32_t& value, const TimeSpec& ts, const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void TestEnums();
     void TestPods();

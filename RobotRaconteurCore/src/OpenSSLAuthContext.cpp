@@ -96,7 +96,7 @@ void add_certificate_authority_x509(boost::shared_ptr<boost::asio::ssl::context>
 
 bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
 {
-
+    RR_UNUSED(preverified);
     int cert_error = X509_STORE_CTX_get_error(ctx.native_handle());
 
     if (cert_error && cert_error != X509_V_ERR_UNHANDLED_CRITICAL_EXTENSION)
@@ -340,6 +340,7 @@ void OpenSSLAuthContext::InitCA(boost::shared_ptr<boost::asio::ssl::context> con
 
 void OpenSSLAuthContext::LoadPKCS12FromBuffer(boost::asio::mutable_buffer& buf)
 {
+    RR_UNUSED(buf);
     throw NotImplementedException("Not implemented");
 }
 

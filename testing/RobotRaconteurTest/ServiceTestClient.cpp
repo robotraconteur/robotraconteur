@@ -16,8 +16,8 @@ using std::exception;
 namespace RobotRaconteurTest
 {
 
-static void ServiceTestClient_Service_Listener(RR_SHARED_PTR<ClientContext> ctx, ClientServiceListenerEventType evt,
-                                               RR_SHARED_PTR<void> p)
+static void ServiceTestClient_Service_Listener(const RR_SHARED_PTR<ClientContext>& ctx, ClientServiceListenerEventType evt,
+                                               const RR_SHARED_PTR<void>& p)
 {
     std::cout << evt;
     if (evt == ClientServiceListenerEventType_ServicePathReleased)
@@ -3232,7 +3232,7 @@ void ServiceTestClient::test_monitor_lock_thread()
     }
 }
 
-void ServiceTestClient::TestAsync_err(RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync_err(const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     boost::mutex::scoped_lock lock(async_err_lock);
     async_err = exp;
@@ -3255,14 +3255,14 @@ void ServiceTestClient::TestAsync(string url)
     }
 }
 
-void ServiceTestClient::TestAsync1(RR_SHARED_PTR<RRObject> r, RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync1(const RR_SHARED_PTR<RRObject>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(RR_SHARED_PTR<async_testroot> r1 = rr_cast<async_testroot>(r); r1->async_get_d2(
         boost::bind(&ServiceTestClient::TestAsync2, this, r1, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2))););
 }
 
-void ServiceTestClient::TestAsync2(RR_SHARED_PTR<async_testroot> r, RR_INTRUSIVE_PTR<RRArray<double> > ret,
-                                   RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync2(const RR_SHARED_PTR<async_testroot>& r, RR_INTRUSIVE_PTR<RRArray<double> > ret,
+                                   const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -3432,26 +3432,26 @@ void ServiceTestClient::TestAsync2(RR_SHARED_PTR<async_testroot> r, RR_INTRUSIVE
     }
 }
 
-void ServiceTestClient::TestAsync3(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync3(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(r->async_func1(boost::bind(&ServiceTestClient::TestAsync4, this, r, RR_BOOST_PLACEHOLDERS(_1))););
 }
 
-void ServiceTestClient::TestAsync4(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync4(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(r->async_func3(
         2, 3.45,
         boost::bind(&ServiceTestClient::TestAsync5, this, r, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2))););
 }
 
-void ServiceTestClient::TestAsync5(RR_SHARED_PTR<async_testroot> r, double ret,
-                                   RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync5(const RR_SHARED_PTR<async_testroot>& r, double ret,
+                                   const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(if (ret != 5.45) throw std::runtime_error(""); r->async_func_errtest(
         boost::bind(&ServiceTestClient::TestAsync6, this, r, RR_BOOST_PLACEHOLDERS(_1))););
 }
 
-void ServiceTestClient::TestAsync6(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync6(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     try
     {
@@ -3466,8 +3466,8 @@ void ServiceTestClient::TestAsync6(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PT
     }
 }
 
-void ServiceTestClient::TestAsync7(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<sub1> o1,
-                                   RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync7(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<async_testroot>& r1,
+                                   const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(if (!o1) throw std::runtime_error(""); o1->get_d1();
 
@@ -3478,9 +3478,9 @@ void ServiceTestClient::TestAsync7(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PT
     );
 }
 
-void ServiceTestClient::TestAsync8(RR_SHARED_PTR<testroot> r,
+void ServiceTestClient::TestAsync8(const RR_SHARED_PTR<testroot>& r,
                                    RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1,
-                                   RR_SHARED_PTR<RobotRaconteurException> exp)
+                                   const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     double d1[] = {1, 2, 3, 4};
     ASYNC_TEST_CALL(
@@ -3490,42 +3490,42 @@ void ServiceTestClient::TestAsync8(RR_SHARED_PTR<testroot> r,
                                         RR_BOOST_PLACEHOLDERS(_2)));)
 }
 
-void ServiceTestClient::TestAsync9(RR_SHARED_PTR<testroot> r,
+void ServiceTestClient::TestAsync9(const RR_SHARED_PTR<testroot>& r,
                                    RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1, uint32_t pnum,
-                                   RR_SHARED_PTR<RobotRaconteurException> exp)
+                                   const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(
         e1->AsyncClose(boost::bind(&ServiceTestClient::TestAsync10, this, r, e1, RR_BOOST_PLACEHOLDERS(_1))););
 }
 
-void ServiceTestClient::TestAsync10(RR_SHARED_PTR<testroot> r,
+void ServiceTestClient::TestAsync10(const RR_SHARED_PTR<testroot>& r,
                                     RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1,
-                                    RR_SHARED_PTR<RobotRaconteurException> exp)
+                                    const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(r->get_w1()->AsyncConnect(
         boost::bind(&ServiceTestClient::TestAsync11, this, r, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2))));
 }
 
-void ServiceTestClient::TestAsync11(RR_SHARED_PTR<testroot> r,
+void ServiceTestClient::TestAsync11(const RR_SHARED_PTR<testroot>& r,
                                     RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1,
-                                    RR_SHARED_PTR<RobotRaconteurException> exp)
+                                    const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     double d0[] = {0.0};
     ASYNC_TEST_CALL(w1->SetOutValue(AttachRRArrayCopy(d0, 1)); w1->AsyncClose(
         boost::bind(&ServiceTestClient::TestAsync12, this, r, w1, RR_BOOST_PLACEHOLDERS(_1))););
 }
 
-void ServiceTestClient::TestAsync12(RR_SHARED_PTR<testroot> r,
+void ServiceTestClient::TestAsync12(const RR_SHARED_PTR<testroot>& r,
                                     RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1,
-                                    RR_SHARED_PTR<RobotRaconteurException> exp)
+                                    const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(RobotRaconteurNode::s()->AsyncRequestObjectLock(
         r, RobotRaconteurObjectLockFlags_CLIENT_LOCK,
         boost::bind(&ServiceTestClient::TestAsync13, this, r, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2))););
 }
 
-void ServiceTestClient::TestAsync13(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<std::string> res,
-                                    RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync13(const RR_SHARED_PTR<testroot>& r, const RR_SHARED_PTR<std::string>& res,
+                                    const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(if (!res) throw std::runtime_error(""); if (*res != "OK") throw std::runtime_error("");
                     RobotRaconteurNode::s()->AsyncReleaseObjectLock(r, boost::bind(&ServiceTestClient::TestAsync14,
@@ -3533,8 +3533,8 @@ void ServiceTestClient::TestAsync13(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<std
                                                                                    RR_BOOST_PLACEHOLDERS(_2))););
 }
 
-void ServiceTestClient::TestAsync14(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<std::string> res,
-                                    RR_SHARED_PTR<RobotRaconteurException> exp)
+void ServiceTestClient::TestAsync14(const RR_SHARED_PTR<testroot>& r, const RR_SHARED_PTR<std::string>& res,
+                                    const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(if (!res) throw std::runtime_error(""); if (*res != "OK") throw std::runtime_error("");
                     RobotRaconteurNode::s()->AsyncDisconnectService(

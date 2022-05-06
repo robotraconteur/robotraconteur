@@ -91,7 +91,7 @@ class ROBOTRACONTEUR_CORE_API ThreadPool : public RR_ENABLE_SHARED_FROM_THIS<Thr
      *
      * @param node The node that owns the thread pool
      */
-    ThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node);
+    ThreadPool(const RR_SHARED_PTR<RobotRaconteurNode>& node);
     virtual ~ThreadPool();
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
@@ -126,7 +126,7 @@ class ROBOTRACONTEUR_CORE_API ThreadPool : public RR_ENABLE_SHARED_FROM_THIS<Thr
      * @return true The function was posted to the thread pool
      * @return false An error ocurred and the function was not posted
      */
-    virtual bool TryPost(RR_MOVE_ARG(boost::function<void()>) function);
+    virtual bool TryPost(boost::function<void()> function);
 
     virtual void Shutdown();
 
@@ -163,7 +163,7 @@ class ROBOTRACONTEUR_CORE_API ThreadPoolFactory : private boost::noncopyable
      * @param node The node owning the thread pool
      * @return RR_SHARED_PTR<ThreadPool>
      */
-    virtual RR_SHARED_PTR<ThreadPool> NewThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node)
+    virtual RR_SHARED_PTR<ThreadPool> NewThreadPool(const RR_SHARED_PTR<RobotRaconteurNode>& node)
     {
         return RR_MAKE_SHARED<ThreadPool>(node);
     }
@@ -200,7 +200,7 @@ class ROBOTRACONTEUR_CORE_API IOContextThreadPool : public ThreadPool
      * @param external_io_context
      * @param multithreaded
      */
-    IOContextThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node, RR_BOOST_ASIO_IO_CONTEXT& external_io_context,
+    IOContextThreadPool(const RR_SHARED_PTR<RobotRaconteurNode>& node, RR_BOOST_ASIO_IO_CONTEXT& external_io_context,
                         bool multithreaded);
     virtual ~IOContextThreadPool();
 
@@ -259,7 +259,7 @@ struct IOContextThreadPool_AsyncResultAdapter_data
 ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<RobotRaconteurNode> IOContextThreadPool_RobotRaconteurNode_sp();
 
 ROBOTRACONTEUR_CORE_API void IOContextThreadPool_RobotRaconteurNode_DownCastAndThrowException(
-    RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteurException& exp);
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, RobotRaconteurException& exp);
 } // namespace detail
 
 /**
@@ -317,14 +317,14 @@ class IOContextThreadPool_AsyncResultAdapter
           _data(RR_MAKE_SHARED<detail::IOContextThreadPool_AsyncResultAdapter_data<T> >())
     {}
 
-    void operator()(result_type res, RR_SHARED_PTR<RobotRaconteurException> exp)
+    void operator()(result_type res, const RR_SHARED_PTR<RobotRaconteurException>& exp)
     {
         _data->_complete.data() = true;
         _data->_result.data() = res;
         _data->_exp = exp;
     }
 
-    void operator()(RR_SHARED_PTR<RobotRaconteurException> exp)
+    void operator()(const RR_SHARED_PTR<RobotRaconteurException>& exp)
     {
         _data->_complete.data() = true;
         _data->_exp = exp;

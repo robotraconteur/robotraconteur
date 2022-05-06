@@ -62,7 +62,7 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageWriter : private boost::noncopyable
     };
 
     virtual void Reset() = 0;
-    virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version) = 0;
+    virtual void BeginWrite(const RR_INTRUSIVE_PTR<Message>& m, uint16_t version) = 0;
 
     virtual return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used,
                               const_buffers& write_bufs) = 0;

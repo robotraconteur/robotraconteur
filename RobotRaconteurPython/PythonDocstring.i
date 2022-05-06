@@ -320,7 +320,7 @@ calling init.
 :type thread_count: int
 """
 
-%feature("docstring") RobotRaconteur::RobotRaconteurNode::RegisterTransport(boost::shared_ptr<Transport> transport) """
+%feature("docstring") RobotRaconteur::RobotRaconteurNode::RegisterTransport(const boost::shared_ptr<Transport>& transport) """
 
 Register a transport for use by the node
 
@@ -521,7 +521,7 @@ If None, records are sent to ``stdout``
 :rtype: LogRecordHandler
 """
 
-%feature("docstring") RobotRaconteur::RobotRaconteurNode::SetLogRecordHandler(boost::shared_ptr<RobotRaconteur::LogRecordHandler> handler) """
+%feature("docstring") RobotRaconteur::RobotRaconteurNode::SetLogRecordHandler(const boost::shared_ptr<RobotRaconteur::LogRecordHandler>& handler) """
 
 Set the handler for log records
 

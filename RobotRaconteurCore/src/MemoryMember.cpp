@@ -31,6 +31,7 @@ ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::v
                                                    std::vector<uint64_t>& block_count_edge)
 {
 
+    RR_UNUSED(element_size);
     split_elem_count = 1;
     split_dim = -1;
     split_dim_block = 0;
@@ -81,7 +82,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ArrayMemoryServiceSkelBase::GetNode()
 
 std::string ArrayMemoryServiceSkelBase::GetMemberName() const { return m_MemberName; }
 
-ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel,
+ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
                                                        DataTypes element_type, size_t element_size,
                                                        MemberDefinition_Direction direction)
 {
@@ -95,9 +96,9 @@ ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membern
 
 ArrayMemoryServiceSkelBase::~ArrayMemoryServiceSkelBase() {}
 
-RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m,
-                                                                              RR_SHARED_PTR<Endpoint> e,
-                                                                              RR_SHARED_PTR<ArrayMemoryBase> mem)
+RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                                                              const RR_SHARED_PTR<Endpoint>& e,
+                                                                              const RR_SHARED_PTR<ArrayMemoryBase>& mem)
 {
 
     switch (m->EntryType)
@@ -199,7 +200,7 @@ RR_SHARED_PTR<RobotRaconteurNode> MultiDimArrayMemoryServiceSkelBase::GetNode()
 std::string MultiDimArrayMemoryServiceSkelBase::GetMemberName() const { return m_MemberName; }
 
 MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(boost::string_ref membername,
-                                                                       RR_SHARED_PTR<ServiceSkel> skel,
+                                                                       const RR_SHARED_PTR<ServiceSkel>& skel,
                                                                        DataTypes element_type, size_t element_size,
                                                                        MemberDefinition_Direction direction)
 {
@@ -215,7 +216,7 @@ MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(boost::st
 MultiDimArrayMemoryServiceSkelBase::~MultiDimArrayMemoryServiceSkelBase() {}
 
 RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFunction(
-    RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e, const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
 {
 
     switch (m->EntryType)
@@ -342,7 +343,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ArrayMemoryClientBase::GetNode()
     return n;
 }
 
-ArrayMemoryClientBase::ArrayMemoryClientBase(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub,
+ArrayMemoryClientBase::ArrayMemoryClientBase(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub,
                                              DataTypes element_type, size_t element_size,
                                              MemberDefinition_Direction direction)
 {
@@ -562,7 +563,7 @@ RR_SHARED_PTR<RobotRaconteurNode> MultiDimArrayMemoryClientBase::GetNode()
 const std::string MultiDimArrayMemoryClientBase::GetMemberName() const { return m_MemberName; }
 
 MultiDimArrayMemoryClientBase::MultiDimArrayMemoryClientBase(boost::string_ref membername,
-                                                             RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type,
+                                                             const RR_SHARED_PTR<ServiceStub>& stub, DataTypes element_type,
                                                              size_t element_size, MemberDefinition_Direction direction)
 {
     this->stub = stub;

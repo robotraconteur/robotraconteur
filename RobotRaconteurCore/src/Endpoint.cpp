@@ -67,7 +67,7 @@ RR_SHARED_PTR<ITransportConnection> Endpoint::GetTransportConnection()
     boost::mutex::scoped_lock lock(m_TransportConnection_lock);
     return m_TransportConnection.lock();
 }
-void Endpoint::SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c)
+void Endpoint::SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c)
 {
     boost::mutex::scoped_lock lock(m_TransportConnection_lock);
     m_TransportConnection = c;
@@ -81,8 +81,8 @@ boost::posix_time::ptime Endpoint::GetLastMessageSentTime() { return m_LastMessa
 
 void Endpoint::SetLastMessageSentTime(boost::posix_time::ptime time) { m_LastMessageSentTime.store(time); }
 
-void Endpoint::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void Endpoint::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     if (!m->header)
         m->header = CreateMessageHeader();
@@ -110,7 +110,7 @@ void Endpoint::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
     GetNode()->AsyncSendMessage(m, callback);
 }
 
-void Endpoint::SendMessage(RR_INTRUSIVE_PTR<Message> m)
+void Endpoint::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
 {
     if (!m->header)
         m->header = CreateMessageHeader();
@@ -139,7 +139,7 @@ void Endpoint::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 
 void Endpoint::PeriodicCleanupTask() {}
 
-void Endpoint::CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m)
+void Endpoint::CheckEndpointCapabilityMessage(const RR_INTRUSIVE_PTR<Message>& m)
 {
     uint32_t capability = 0;
     RR_INTRUSIVE_PTR<MessageEntry> e;
@@ -181,9 +181,9 @@ void Endpoint::CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m)
     SendMessage(ret);
 }
 
-uint32_t Endpoint::EndpointCapability(boost::string_ref name) { return static_cast<uint32_t>(0); }
+uint32_t Endpoint::EndpointCapability(boost::string_ref name) { RR_UNUSED(name); return static_cast<uint32_t>(0); }
 
-Endpoint::Endpoint(RR_SHARED_PTR<RobotRaconteurNode> node)
+Endpoint::Endpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
     m_LocalEndpoint.store(0);
     m_RemoteEndpoint.store(0);

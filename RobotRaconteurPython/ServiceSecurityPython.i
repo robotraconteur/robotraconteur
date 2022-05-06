@@ -1,4 +1,4 @@
-%feature("shadow") RobotRaconteur::ServiceSecurityPolicy::ServiceSecurityPolicy(boost::shared_ptr<RobotRaconteur::UserAuthenticator> Authenticator, std::map<std::string, std::string> Policies)
+%feature("shadow") RobotRaconteur::ServiceSecurityPolicy::ServiceSecurityPolicy(const boost::shared_ptr<RobotRaconteur::UserAuthenticator>& Authenticator, std::map<std::string, std::string> Policies)
 %{
 	def __init__(self,*args):
 		#This is a shadowed function

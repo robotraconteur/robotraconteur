@@ -49,9 +49,9 @@
 
 namespace RobotRaconteur
 {
-void PipeMember_empty_handler(RR_SHARED_PTR<RobotRaconteurException>) {}
+void PipeMember_empty_handler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
 
-PipeEndpointBase::PipeEndpointBase(RR_SHARED_PTR<PipeBase> parent, int32_t index, uint32_t endpoint, bool unreliable,
+PipeEndpointBase::PipeEndpointBase(const RR_SHARED_PTR<PipeBase>& parent, int32_t index, uint32_t endpoint, bool unreliable,
                                    MemberDefinition_Direction direction)
 {
     send_packet_number = 0;
@@ -93,7 +93,7 @@ void PipeEndpointBase::Close()
     t->end_void();
 }
 
-void PipeEndpointBase::AsyncClose(RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+void PipeEndpointBase::AsyncClose(RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
                                   int32_t timeout)
 {
 
@@ -117,7 +117,7 @@ bool PipeEndpointBase::IsUnreliable() { return unreliable; }
 
 MemberDefinition_Direction PipeEndpointBase::Direction() { return direction; }
 
-void PipeEndpointBase_RemoteClose_emptyhandler(RR_SHARED_PTR<RobotRaconteurException> err) {}
+void PipeEndpointBase_RemoteClose_emptyhandler(const RR_SHARED_PTR<RobotRaconteurException>& err) {}
 
 void PipeEndpointBase::RemoteClose()
 {
@@ -151,7 +151,7 @@ void PipeEndpointBase::RemoteClose()
 
 void PipeEndpointBase::AsyncSendPacketBase(
     RR_INTRUSIVE_PTR<RRValue> packet,
-    RR_MOVE_ARG(boost::function<void(uint32_t, RR_SHARED_PTR<RobotRaconteurException>)>) handler)
+    RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler)
 {
     if (direction == MemberDefinition_Direction_readonly)
     {
@@ -425,7 +425,7 @@ void PipeEndpointBase::SetIgnoreReceived(bool ignore)
                                                                             << index);
 }
 
-void PipeEndpointBase::AddListener(RR_SHARED_PTR<PipeEndpointBaseListener> listener)
+void PipeEndpointBase::AddListener(const RR_SHARED_PTR<PipeEndpointBaseListener>& listener)
 {
     boost::mutex::scoped_lock lock(listeners_lock);
     listeners.push_back(listener);
@@ -462,14 +462,14 @@ void PipeEndpointBase::Shutdown()
                                             "PipeEndpointBase shut down");
 }
 
-void PipeBase::DispatchPacketAck(RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e)
+void PipeBase::DispatchPacketAck(const RR_INTRUSIVE_PTR<MessageElement>& me, const RR_SHARED_PTR<PipeEndpointBase>& e)
 {
     uint32_t pnum;
     pnum = RRArrayToScalar(me->CastData<RRArray<uint32_t> >());
     e->PipePacketAckReceived(pnum);
 }
 
-bool PipeBase::DispatchPacket(RR_INTRUSIVE_PTR<MessageElement> me, RR_SHARED_PTR<PipeEndpointBase> e,
+bool PipeBase::DispatchPacket(const RR_INTRUSIVE_PTR<MessageElement>& me, const RR_SHARED_PTR<PipeEndpointBase>& e,
                               uint32_t& packetnumber)
 {
     // int32_t index=boost::lexical_cast<int32_t>(me->ElementName);
@@ -545,8 +545,9 @@ bool PipeBase::IsUnreliable() { return unreliable; }
 
 std::string PipeClientBase::GetMemberName() { return m_MemberName; }
 
-void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void PipeClientBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
+    RR_UNUSED(e);
     // boost::shared_lock<boost::shared_mutex> lock(stub_lock);
 
     if (m->EntryType == MessageEntryType_PipeClosed)
@@ -682,7 +683,7 @@ void PipeClientBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32
                         mack->MetaData = "unreliable\n";
                     }
                 }
-                boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+                boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
                     boost::bind(&PipeMember_empty_handler, RR_BOOST_PLACEHOLDERS(_1));
                 GetStub()->AsyncSendPipeMessage(mack, unreliable, h);
             }
@@ -760,8 +761,9 @@ void PipeClientBase::Shutdown()
 
 void PipeClientBase::AsyncSendPipePacket(
     RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint,
-    bool unreliable, RR_MOVE_ARG(boost::function<void(uint32_t, RR_SHARED_PTR<RobotRaconteurException>)>) handler)
+    bool unreliable, RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler)
 {
+    RR_UNUSED(endpoint);
     RR_INTRUSIVE_PTR<MessageElement> me = PackPacket(data, index, packetnumber, requestack);
     RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipePacket, GetMemberName());
     m->AddElement(me);
@@ -769,16 +771,16 @@ void PipeClientBase::AsyncSendPipePacket(
     if (unreliable)
         m->MetaData = "unreliable\n";
 
-    boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
         boost::bind(handler, packetnumber, RR_BOOST_PLACEHOLDERS(_1));
     GetStub()->AsyncSendPipeMessage(m, unreliable, h);
 }
 
-void PipeClientBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> endpoint, bool remote, uint32_t ee,
-                                RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+void PipeClientBase::AsyncClose(const RR_SHARED_PTR<PipeEndpointBase>& endpoint, bool remote, uint32_t ee,
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
                                 int32_t timeout)
 {
-
+    RR_UNUSED(ee);
     if (!remote)
     {
         RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeDisconnectReq, GetMemberName());
@@ -789,7 +791,7 @@ void PipeClientBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> endpoint, bool r
 
 void PipeClientBase::AsyncConnect_internal(
     int32_t index,
-    RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PipeEndpointBase>, RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+    RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<PipeEndpointBase>&, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
     int32_t timeout)
 {
 
@@ -820,8 +822,8 @@ void PipeClientBase::AsyncConnect_internal(
 }
 
 void PipeClientBase::AsyncConnect_internal1(
-    RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, int32_t key,
-    boost::function<void(RR_SHARED_PTR<PipeEndpointBase>, RR_SHARED_PTR<RobotRaconteurException>)>& handler)
+    const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& err, int32_t index, int32_t key,
+    boost::function<void(const RR_SHARED_PTR<PipeEndpointBase>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     boost::mutex::scoped_lock lock2(pipeendpoints_lock);
 
@@ -948,7 +950,7 @@ void PipeClientBase::AsyncConnect_internal1(
     }
 }
 
-PipeClientBase::PipeClientBase(boost::string_ref name, RR_SHARED_PTR<ServiceStub> stub, bool unreliable,
+PipeClientBase::PipeClientBase(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub, bool unreliable,
                                MemberDefinition_Direction direction)
 {
     m_MemberName = RR_MOVE(name.to_string());
@@ -973,7 +975,7 @@ RR_SHARED_PTR<ServiceStub> PipeClientBase::GetStub()
 
 std::string PipeClientBase::GetServicePath() { return GetStub()->ServicePath; }
 
-void PipeClientBase::DeleteEndpoint(RR_SHARED_PTR<PipeEndpointBase> e)
+void PipeClientBase::DeleteEndpoint(const RR_SHARED_PTR<PipeEndpointBase>& e)
 {
 
     boost::mutex::scoped_lock lock2(pipeendpoints_lock);
@@ -982,7 +984,7 @@ void PipeClientBase::DeleteEndpoint(RR_SHARED_PTR<PipeEndpointBase> e)
 
 std::string PipeServerBase::GetMemberName() { return m_MemberName; }
 
-void PipeServerBase::PipePacketReceived(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void PipeServerBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     // boost::shared_lock<boost::shared_mutex> lock2(skel_lock);
 
@@ -1144,7 +1146,7 @@ void PipeServerBase::Shutdown()
 
 void PipeServerBase::AsyncSendPipePacket(
     RR_INTRUSIVE_PTR<RRValue> data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t e, bool unreliable,
-    RR_MOVE_ARG(boost::function<void(uint32_t, RR_SHARED_PTR<RobotRaconteurException>)>) handler)
+    RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler)
 {
 
     {
@@ -1164,11 +1166,11 @@ void PipeServerBase::AsyncSendPipePacket(
     GetSkel()->AsyncSendPipeMessage(m, e, unreliable, boost::bind(handler, packetnumber, RR_BOOST_PLACEHOLDERS(_1)));
 }
 
-void PipeServerBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> e, bool remote, uint32_t ee,
-                                RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+void PipeServerBase::AsyncClose(const RR_SHARED_PTR<PipeEndpointBase>& e, bool remote, uint32_t ee,
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
                                 int32_t timeout)
 {
-
+    RR_UNUSED(timeout);
     if (!remote)
     {
         RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeClosed, GetMemberName());
@@ -1182,17 +1184,17 @@ void PipeServerBase::AsyncClose(RR_SHARED_PTR<PipeEndpointBase> e, bool remote, 
     detail::PostHandler(node, handler, true);
 }
 
-void PipeServerBase::DeleteEndpoint(RR_SHARED_PTR<PipeEndpointBase> e)
+void PipeServerBase::DeleteEndpoint(const RR_SHARED_PTR<PipeEndpointBase>& e)
 {
     boost::mutex::scoped_lock lock(pipeendpoints_lock);
     // if (pipeendpoints.count(pipe_endpoint_server_id(e->GetEndpoint(),e->GetIndex()))==0) return;
     pipeendpoints.erase(pipe_endpoint_server_id(e->GetEndpoint(), e->GetIndex()));
 }
 
-void PipeServerBase::ClientDisconnected(RR_SHARED_PTR<ServerContext> context, ServerServiceListenerEventType ev,
-                                        RR_SHARED_PTR<void> param)
+void PipeServerBase::ClientDisconnected(const RR_SHARED_PTR<ServerContext>& context, ServerServiceListenerEventType ev,
+                                        const RR_SHARED_PTR<void>& param)
 {
-
+    RR_UNUSED(context);
     if (ev == ServerServiceListenerEventType_ClientDisconnected)
     {
 
@@ -1238,8 +1240,8 @@ void PipeServerBase::ClientDisconnected(RR_SHARED_PTR<ServerContext> context, Se
     }
 }
 
-void pipe_server_client_disconnected(RR_SHARED_PTR<ServerContext> context, ServerServiceListenerEventType ev,
-                                     RR_SHARED_PTR<void> param, RR_WEAK_PTR<PipeServerBase> w)
+void pipe_server_client_disconnected(const RR_SHARED_PTR<ServerContext>& context, ServerServiceListenerEventType ev,
+                                     const RR_SHARED_PTR<void>& param, RR_WEAK_PTR<PipeServerBase> w)
 {
     RR_SHARED_PTR<PipeServerBase> p = w.lock();
     if (!p)
@@ -1247,7 +1249,7 @@ void pipe_server_client_disconnected(RR_SHARED_PTR<ServerContext> context, Serve
     p->ClientDisconnected(context, ev, param);
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     {
         boost::mutex::scoped_lock lock(pipeendpoints_lock);
@@ -1377,7 +1379,7 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(RR_INTRUSIVE_PTR<Mess
     }
 }
 
-PipeServerBase::PipeServerBase(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel, bool unreliable,
+PipeServerBase::PipeServerBase(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel, bool unreliable,
                                MemberDefinition_Direction direction)
 {
     m_MemberName = RR_MOVE(name.to_string());
@@ -1406,7 +1408,7 @@ namespace detail
 class PipeBroadcasterBase_connected_endpoint
 {
   public:
-    PipeBroadcasterBase_connected_endpoint(RR_SHARED_PTR<PipeEndpointBase> ep)
+    PipeBroadcasterBase_connected_endpoint(const RR_SHARED_PTR<PipeEndpointBase>& ep)
     {
         // backlog=0;
         endpoint = ep;
@@ -1432,7 +1434,7 @@ PipeBroadcasterBase::PipeBroadcasterBase() { copy_element = false; }
 
 PipeBroadcasterBase::~PipeBroadcasterBase() {}
 
-void PipeBroadcasterBase::InitBase(RR_SHARED_PTR<PipeBase> pipe, int32_t maximum_backlog)
+void PipeBroadcasterBase::InitBase(const RR_SHARED_PTR<PipeBase>& pipe, int32_t maximum_backlog)
 {
 
     RR_SHARED_PTR<PipeServerBase> pipe1 = RR_DYNAMIC_POINTER_CAST<PipeServerBase>(pipe);
@@ -1454,7 +1456,7 @@ void PipeBroadcasterBase::InitBase(RR_SHARED_PTR<PipeBase> pipe, int32_t maximum
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, -1, service_path, member_name, "PipeBroadcaster initialized");
 }
 
-void PipeBroadcasterBase::EndpointConnectedBase(RR_SHARED_PTR<PipeEndpointBase> ep)
+void PipeBroadcasterBase::EndpointConnectedBase(const RR_SHARED_PTR<PipeEndpointBase>& ep)
 {
     boost::mutex::scoped_lock lock(endpoints_lock);
 
@@ -1519,12 +1521,12 @@ void PipeBroadcasterBase::PacketAckReceivedBase(RR_SHARED_PTR<detail::PipeBroadc
     {}
 }
 
-void PipeBroadcasterBase::handle_send(int32_t id, RR_SHARED_PTR<RobotRaconteurException> err,
+void PipeBroadcasterBase::handle_send(int32_t id, const RR_SHARED_PTR<RobotRaconteurException>& err,
                                       RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> ep,
                                       RR_SHARED_PTR<detail::PipeBroadcasterBase_async_send_operation> op, int32_t key,
                                       int32_t send_key, boost::function<void()>& handler)
 {
-
+    RR_UNUSED(err);
     {
         boost::mutex::scoped_lock lock(endpoints_lock);
         ep->active_sends.remove(send_key);
@@ -1666,9 +1668,9 @@ size_t PipeBroadcasterBase::GetActivePipeEndpointCount()
     return endpoints.size();
 }
 
-void PipeBroadcasterBase::AttachPipeServerEvents(RR_SHARED_PTR<PipeServerBase> p) {}
+void PipeBroadcasterBase::AttachPipeServerEvents(const RR_SHARED_PTR<PipeServerBase>& p) {}
 
-void PipeBroadcasterBase::AttachPipeEndpointEvents(RR_SHARED_PTR<PipeEndpointBase> p,
+void PipeBroadcasterBase::AttachPipeEndpointEvents(const RR_SHARED_PTR<PipeEndpointBase>& p,
                                                    RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep)
 {}
 

@@ -431,7 +431,7 @@ void MessageSerializationTest::Test()
     CompareMessage(m, m2);
 }
 
-void MessageSerializationTest::CompareMessage(RR_INTRUSIVE_PTR<Message> m1, RR_INTRUSIVE_PTR<Message> m2)
+void MessageSerializationTest::CompareMessage(const RR_INTRUSIVE_PTR<Message>& m1, const RR_INTRUSIVE_PTR<Message>& m2)
 {
     RR_INTRUSIVE_PTR<MessageHeader> h1 = m1->header;
     RR_INTRUSIVE_PTR<MessageHeader> h2 = m2->header;
@@ -506,7 +506,7 @@ void MessageSerializationTest::CompareMessage(RR_INTRUSIVE_PTR<Message> m1, RR_I
     }
 }
 
-void MessageSerializationTest::CompareMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m1, RR_INTRUSIVE_PTR<MessageEntry> m2)
+void MessageSerializationTest::CompareMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& m1, const RR_INTRUSIVE_PTR<MessageEntry>& m2)
 {
     if (m1->EntrySize != m2->EntrySize)
         throw std::runtime_error("");
@@ -570,8 +570,8 @@ void MessageSerializationTest::CompareMessageEntry(RR_INTRUSIVE_PTR<MessageEntry
     }
 }
 
-static void MessageSerializationTest_CompareSubElements(RR_INTRUSIVE_PTR<MessageElement> m1,
-                                                        RR_INTRUSIVE_PTR<MessageElement> m2)
+static void MessageSerializationTest_CompareSubElements(const RR_INTRUSIVE_PTR<MessageElement>& m1,
+                                                        const RR_INTRUSIVE_PTR<MessageElement>& m2)
 {
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat1 = m1->CastDataToNestedList();
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat2 = m1->CastDataToNestedList();
@@ -584,8 +584,8 @@ static void MessageSerializationTest_CompareSubElements(RR_INTRUSIVE_PTR<Message
     }
 }
 
-void MessageSerializationTest::CompareMessageElement(RR_INTRUSIVE_PTR<MessageElement> m1,
-                                                     RR_INTRUSIVE_PTR<MessageElement> m2)
+void MessageSerializationTest::CompareMessageElement(const RR_INTRUSIVE_PTR<MessageElement>& m1,
+                                                     const RR_INTRUSIVE_PTR<MessageElement>& m2)
 {
     if (m1->ElementSize != m2->ElementSize)
         throw std::runtime_error("");

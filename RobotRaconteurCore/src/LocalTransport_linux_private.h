@@ -34,7 +34,7 @@ class LinuxLocalTransportDiscovery : public LocalTransportDiscovery,
                                      public RR_ENABLE_SHARED_FROM_THIS<LinuxLocalTransportDiscovery>
 {
   public:
-    LinuxLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    LinuxLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node);
     virtual void Init();
     virtual void Shutdown();
     virtual ~LinuxLocalTransportDiscovery();

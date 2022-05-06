@@ -25,7 +25,7 @@ using namespace std;
 namespace RobotRaconteur
 {
 
-ServiceIndexer::ServiceIndexer(RR_SHARED_PTR<RobotRaconteurNode> node) { this->node = node; }
+ServiceIndexer::ServiceIndexer(const RR_SHARED_PTR<RobotRaconteurNode>& node) { this->node = node; }
 
 RR_SHARED_PTR<RobotRaconteurNode> ServiceIndexer::GetNode()
 {

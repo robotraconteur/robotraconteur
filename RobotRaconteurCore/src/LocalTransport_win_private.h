@@ -76,7 +76,7 @@ class WinLocalTransportDiscovery : public LocalTransportDiscovery,
                                    public RR_ENABLE_SHARED_FROM_THIS<WinLocalTransportDiscovery>
 {
   public:
-    WinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    WinLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node);
     virtual void Init();
     virtual void Shutdown();
     virtual ~WinLocalTransportDiscovery();

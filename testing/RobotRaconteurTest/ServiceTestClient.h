@@ -134,46 +134,46 @@ class ServiceTestClient
     AutoResetEvent async_wait;
     RR_SHARED_PTR<RobotRaconteurException> async_err;
     boost::mutex async_err_lock;
-    void TestAsync_err(RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync_err(const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
     void TestAsync(string url);
 
-    void TestAsync1(RR_SHARED_PTR<RRObject> r, RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync1(const RR_SHARED_PTR<RRObject>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync2(RR_SHARED_PTR<async_testroot> r, RR_INTRUSIVE_PTR<RRArray<double> > ret,
-                    RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync2(const RR_SHARED_PTR<async_testroot>& r, RR_INTRUSIVE_PTR<RRArray<double> > ret,
+                    const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync3(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync3(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync4(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync4(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync5(RR_SHARED_PTR<async_testroot> r, double ret, RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync5(const RR_SHARED_PTR<async_testroot>& r, double ret, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync6(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync6(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync7(RR_SHARED_PTR<async_testroot> r, RR_SHARED_PTR<sub1> o1,
-                    RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync7(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<async_testroot>& r1,
+                    const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync8(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1,
-                    RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync8(const RR_SHARED_PTR<testroot>& r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1,
+                    const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync9(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1,
-                    uint32_t pnum, RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync9(const RR_SHARED_PTR<testroot>& r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1,
+                    uint32_t pnum, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync10(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1,
-                     RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync10(const RR_SHARED_PTR<testroot>& r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1,
+                     const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync11(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1,
-                     RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync11(const RR_SHARED_PTR<testroot>& r, RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1,
+                     const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync12(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1,
-                     RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync12(const RR_SHARED_PTR<testroot>& r, RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1,
+                     const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync13(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<std::string> res,
-                     RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync13(const RR_SHARED_PTR<testroot>& r, const RR_SHARED_PTR<std::string>& res,
+                     const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync14(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<std::string> res,
-                     RR_SHARED_PTR<RobotRaconteurException> exp);
+    void TestAsync14(const RR_SHARED_PTR<testroot>& r, const RR_SHARED_PTR<std::string>& res,
+                     const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
     void TestAsync15();
 };

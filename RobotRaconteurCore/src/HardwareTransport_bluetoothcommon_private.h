@@ -103,7 +103,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
         btaddr addr;
     };
 
-    BluetoothConnector(RR_SHARED_PTR<HardwareTransport> parent)
+    BluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent)
     {
         this->parent = parent;
         this->connecting = false;
@@ -115,7 +115,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
 
     void Connect(
         const ParseConnectionURLResult& url, boost::string_ref noden, uint32_t endpoint,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
     {
         target_nodeid = url.nodeid;
         target_nodename = url.nodename;
@@ -190,7 +190,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
     }
 
     void DoConnect(
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
     {
         boost::mutex::scoped_lock lock(this_lock);
 
@@ -215,8 +215,8 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
 
         BOOST_FOREACH (btaddr& a1, devices)
         {
-            boost::thread(boost::bind(&BluetoothConnector::DoConnect1, this->shared_from_this(), a1,
-                                      boost::protect(handler), key));
+            boost::thread(boost::bind(&BluetoothConnector::DoConnect1, this->shared_from_this(), a1, // NOLINT
+                                      boost::protect(handler), key)); //NOLINT
             active_keys.push_back(key);
             key++;
         }
@@ -224,7 +224,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
 
     void DoConnect1(
         btaddr addr,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t key)
     {
         {
@@ -297,7 +297,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
             connecting = false;
 
             c = RR_MAKE_SHARED<HardwareTransportConnection_bluetooth>(parent, false, endpoint);
-            boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+            boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
                 boost::bind(handler, c, RR_BOOST_PLACEHOLDERS(_1));
             c->AsyncAttachSocket(sock, noden, h);
             parent->AddCloseListener(c, &HardwareTransportConnection_bluetooth::Close);
@@ -310,8 +310,8 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
     }
 
     void DoConnect_err(
-        RR_SHARED_PTR<RobotRaconteurException> exp,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        const RR_SHARED_PTR<RobotRaconteurException>& exp,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t key)
     {
         boost::mutex::scoped_lock lock(this_lock);

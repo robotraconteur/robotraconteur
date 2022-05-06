@@ -38,9 +38,9 @@ class ROBOTRACONTEUR_CORE_API StructureStub
   public:
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRValue> s) = 0;
 
-    virtual RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementNestedElementList> m) = 0;
+    virtual RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& m) = 0;
 
-    StructureStub(RR_SHARED_PTR<RobotRaconteurNode> node);
+    StructureStub(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
     RR_SHARED_PTR<RobotRaconteurNode> RRGetNode() { return GetNode(); }
@@ -160,7 +160,7 @@ void RRArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_INT
         }                                                                                                              \
                                                                                                                        \
         template <typename U>                                                                                          \
-        static void UnpackField(type& v, MessageStringRef name, U& in)                                                 \
+        static void UnpackField(type& v, MessageStringRef name, U& in) /*NOLINT*/                                      \
         {                                                                                                              \
             v = RRArrayToScalar<type>(MessageElement::FindElement(in, name)->template CastData<RRArray<type> >());     \
         }                                                                                                              \
@@ -201,8 +201,8 @@ RR_INTRUSIVE_PTR<RRNamedArray<T> > pod_field_array_ToRRNamedArray(const pod_fiel
 {
     typedef typename RRPrimUtil<T>::ElementArrayType element_type;
     typename RR_INTRUSIVE_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>(
-        reinterpret_cast<const element_type*>(&i[0]), i.size() * RRPrimUtil<T>::GetElementArrayCount());
-    return new RRNamedArray<T>(a);
+        reinterpret_cast<const element_type*>(&i[0]), i.size() * RRPrimUtil<T>::GetElementArrayCount()); // NOLINT
+    return new RRNamedArray<T>(a); // NOLINT
 }
 
 template <typename T, size_t N, bool varlength>
@@ -230,7 +230,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
         }                                                                                                              \
                                                                                                                        \
         template <typename U>                                                                                          \
-        static void UnpackField(type& v, MessageStringRef name, U& in)                                                 \
+        static void UnpackField(type& v, MessageStringRef name, U& in) /*NOLINT*/                                      \
         {                                                                                                              \
             typedef typename RRPrimUtil<type>::ElementArrayType element_type;                                          \
             RR_INTRUSIVE_PTR<MessageElementNestedElementList> m =                                                      \
@@ -307,7 +307,7 @@ class PodStub<pod_field_array<T, N, varlength> >
         for (int32_t i = 0; i < boost::numeric_cast<int32_t>(a->Elements.size()); i++)
         {
             RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(i);
-            int32_t key;
+            int32_t key; // NOLINT
             if (!MessageElement_GetElementNumber(m, key))
             {
                 throw DataTypeException("Invalid pod array format");
@@ -346,7 +346,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodToArray(const T
 }
 
 template <typename T>
-void PodStub_UnpackPodFromArray(T& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+void PodStub_UnpackPodFromArray(T& v, const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     if (!a)
         throw DataTypeException("Pod scalar array must not be null");
@@ -371,7 +371,7 @@ void PodStub_UnpackPodFromArray(T& v, RR_INTRUSIVE_PTR<MessageElementNestedEleme
 }
 
 template <typename T>
-T PodStub_UnpackPodFromArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+T PodStub_UnpackPodFromArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     T v;
     PodStub_UnpackPodFromArray<T>(v, a);
@@ -396,7 +396,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodArray(RR_INTRUS
 }
 
 template <typename T>
-RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<RRPodArray<T> >();
@@ -440,7 +440,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodMultiDimArray(
 
 template <typename T>
 RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > PodStub_UnpackPodMultiDimArray(
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)
+    const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& m)
 {
     if (!m)
         return RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >();
@@ -573,7 +573,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArrayT
 }
 
 template <typename T>
-void NamedArrayStub_UnpackNamedArrayFromArray(T& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+void NamedArrayStub_UnpackNamedArrayFromArray(T& v, const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     typedef typename RRPrimUtil<T>::ElementArrayType element_type;
     if (!a)
@@ -593,7 +593,7 @@ void NamedArrayStub_UnpackNamedArrayFromArray(T& v, RR_INTRUSIVE_PTR<MessageElem
 }
 
 template <typename T>
-T NamedArrayStub_UnpackNamedArrayFromArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+T NamedArrayStub_UnpackNamedArrayFromArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     T o;
     NamedArrayStub_UnpackNamedArrayFromArray(o, a);
@@ -612,7 +612,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArray(
 }
 
 template <typename T>
-RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     typedef typename RRPrimUtil<T>::ElementArrayType element_type;
     if (!a)
@@ -645,7 +645,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedMultiD
 
 template <typename T>
 RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > NamedArrayStub_UnpackNamedMultiDimArray(
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)
+    const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& m)
 {
     if (!m)
         return RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >();

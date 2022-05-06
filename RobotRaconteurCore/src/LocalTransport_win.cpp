@@ -399,7 +399,7 @@ static RR_SHARED_PTR<void> WinLocalTransportDiscovery_find_first(const boost::fi
     return o;
 }
 
-WinLocalTransportDiscovery::WinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node)
+WinLocalTransportDiscovery::WinLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node)
     : LocalTransportDiscovery(node)
 {}
 

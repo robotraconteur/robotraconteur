@@ -28,7 +28,7 @@
 namespace RobotRaconteur
 {
 
-Transport::Transport(RR_SHARED_PTR<RobotRaconteurNode> node) { this->node = node; }
+Transport::Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node) { this->node = node; }
 
 RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode()
 {
@@ -61,15 +61,15 @@ RR_SHARED_PTR<ITransportConnection> Transport::GetCurrentThreadTransport()
 
 void Transport::PeriodicCleanupTask() {}
 
-uint32_t Transport::TransportCapability(boost::string_ref name) { return 0; }
+uint32_t Transport::TransportCapability(boost::string_ref name) { RR_UNUSED(name); return 0; }
 
-void Transport::FireTransportEventListener(RR_SHARED_PTR<Transport> shared_this, TransportListenerEventType ev,
-                                           RR_SHARED_PTR<void> parameter)
+void Transport::FireTransportEventListener(const RR_SHARED_PTR<Transport>& shared_this, TransportListenerEventType ev,
+                                           const RR_SHARED_PTR<void>& parameter)
 {
     TransportListeners(shared_this, ev, parameter);
 }
 
-RR_INTRUSIVE_PTR<Message> Transport::SpecialRequest(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc)
+RR_INTRUSIVE_PTR<Message> Transport::SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m, const RR_SHARED_PTR<ITransportConnection>& tc)
 {
     if (m->entries.size() >= 1)
     {
@@ -92,7 +92,7 @@ std::vector<NodeDiscoveryInfo> Transport::GetDetectedNodes(const std::vector<std
 
     RR_SHARED_PTR<detail::sync_async_handler<std::vector<NodeDiscoveryInfo> > > t =
         RR_MAKE_SHARED<detail::sync_async_handler<std::vector<NodeDiscoveryInfo> > >();
-    boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> h =
+    boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> h =
         boost::bind(&detail::sync_async_handler<std::vector<NodeDiscoveryInfo> >::operator(), t,
                     RR_BOOST_PLACEHOLDERS(_1), RR_SHARED_PTR<RobotRaconteurException>());
     AsyncGetDetectedNodes(schemes, h);
@@ -100,9 +100,11 @@ std::vector<NodeDiscoveryInfo> Transport::GetDetectedNodes(const std::vector<std
 }
 
 void Transport::AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                      boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler,
+                                      boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
                                       int32_t timeout)
 {
+    RR_UNUSED(schemes);
+    RR_UNUSED(timeout);
     RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > n = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
     RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, n), true);
 }

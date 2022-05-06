@@ -80,7 +80,7 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
      *
      * @param node The node that will use the transport. Default is the singleton node
      */
-    IntraTransport(RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp());
+    IntraTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
 
     virtual ~IntraTransport();
 
@@ -91,19 +91,19 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
 
     virtual std::string GetUrlSchemeString() const;
 
-    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
-    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void AsyncCreateTransportConnection(
-        boost::string_ref url, RR_SHARED_PTR<Endpoint> e,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                          RR_SHARED_PTR<Endpoint> e);
+                                                                          const RR_SHARED_PTR<Endpoint>& e);
 
-    virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e);
+    virtual void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e);
 
     /**
      * @brief Start the server to listen for incoming client connections
@@ -112,8 +112,8 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
     virtual void StartServer();
 
   protected:
-    virtual void CloseTransportConnection_timed(const boost::system::error_code& err, RR_SHARED_PTR<Endpoint> e,
-                                                RR_SHARED_PTR<void> timer);
+    virtual void CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
+                                                const RR_SHARED_PTR<void>& timer);
 
   public:
     virtual bool CanConnectService(boost::string_ref url);
@@ -126,14 +126,14 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
 
     uint32_t TransportCapability(boost::string_ref name);
 
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
     virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                       boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler,
+                                       boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
                                        int32_t timeout = RR_TIMEOUT_INFINITE);
 
     template <typename T, typename F>
-    boost::signals2::connection AddCloseListener(RR_SHARED_PTR<T> t, const F& f)
+    boost::signals2::connection AddCloseListener(const RR_SHARED_PTR<T>& t, const F& f)
     {
         boost::mutex::scoped_lock lock(closed_lock);
         if (closed)
@@ -153,8 +153,8 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
     void SendNodeDiscovery();
 
   protected:
-    virtual void register_transport(RR_SHARED_PTR<ITransportConnection> connection);
-    virtual void erase_transport(RR_SHARED_PTR<ITransportConnection> connection);
+    virtual void register_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
+    virtual void erase_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
 
     void NodeDetected(const NodeDiscoveryInfo& info);
 

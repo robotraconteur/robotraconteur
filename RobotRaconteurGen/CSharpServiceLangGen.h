@@ -71,9 +71,9 @@ class CSharpServiceLangGen
 
     static void GenerateStructure(ServiceEntryDefinition* e, ostream* w);
 
-    static void GeneratePod(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GeneratePod(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w);
 
-    static void GenerateNamedArrayExtensions(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GenerateNamedArrayExtensions(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w);
 
     static void GenerateInterface(ServiceEntryDefinition* e, ostream* w);
 
@@ -85,7 +85,7 @@ class CSharpServiceLangGen
 
     static void GenerateStructureStub(ServiceEntryDefinition* e, ostream* w);
 
-    static void GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GenerateNamedArrayStub(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w);
 
     static void GeneratePodStub(ServiceEntryDefinition* e, ostream* w);
 
@@ -104,11 +104,11 @@ class CSharpServiceLangGen
     static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
 
     // File generators
-    static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path = ".");
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, std::string path = ".");
 
     static void GenerateOneFileHeader(ostream* w);
 
-    static void GenerateOneFilePart(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, ostream* w);
+    static void GenerateOneFilePart(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, ostream* w);
 };
 
 } // namespace RobotRaconteurGen

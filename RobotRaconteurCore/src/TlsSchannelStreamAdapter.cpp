@@ -671,7 +671,7 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCER
 void TlsSchannelAsyncStreamAdapter_ASIO_adapter::close() { next_layer_.close(); }
 
 TlsSchannelAsyncStreamAdapter::TlsSchannelAsyncStreamAdapter(
-    RR_BOOST_ASIO_IO_CONTEXT& _io_context_, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context,
+    RR_BOOST_ASIO_IO_CONTEXT& _io_context_, const boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext>& context,
     direction_type direction, boost::string_ref servername,
     boost::function<void(mutable_buffers&,
                          boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)>
@@ -1266,7 +1266,7 @@ void TlsSchannelAsyncStreamAdapter::do_handshake6(const boost::system::error_cod
 }
 
 static void TlsSchannelAsyncStreamAdapter_async_write_some_buf_adaptor(
-    RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter> t, RR_SHARED_PTR<const_buffers> b,
+    const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& t, const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& t,
     boost::function<void(const boost::system::error_code&, size_t)> handler)
 {
     t->async_write_some(*b, handler);

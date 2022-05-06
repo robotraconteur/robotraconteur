@@ -283,7 +283,7 @@ std::string CSharpServiceLangGen::str_pack_parameters(const std::vector<RR_SHARE
 }
 
 std::string CSharpServiceLangGen::str_pack_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
-                                                    boost::shared_ptr<TypeDefinition> rettype)
+                                                    const boost::shared_ptr<TypeDefinition>& rettype)
 {
     if (!rettype || rettype->Type == DataTypes_void_t)
     {
@@ -660,7 +660,7 @@ static RR_SHARED_PTR<TypeDefinition> CSharpServiceLangGen_RemoveMultiDimArray(co
     return t2;
 }
 
-void CSharpServiceLangGen::GeneratePod(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
+void CSharpServiceLangGen::GeneratePod(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -783,7 +783,7 @@ void CSharpServiceLangGen::GeneratePod(RR_SHARED_PTR<ServiceEntryDefinition> e, 
     w2 << "}" << endl << endl;
 }
 
-void CSharpServiceLangGen::GenerateNamedArrayExtensions(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
+void CSharpServiceLangGen::GenerateNamedArrayExtensions(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -997,7 +997,7 @@ void CSharpServiceLangGen::GenerateInterfaceFile(ServiceDefinition* d, ostream* 
 
     GenerateConstants(d, w);
 
-    BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e, d->Exceptions)
+    BOOST_FOREACH (const RR_SHARED_PTR<ExceptionDefinition>& e, d->Exceptions)
     {
         GenerateDocString(e->DocString, "    ", w);
         w2 << "public class " << fix_name(e->Name) << " : RobotRaconteurRemoteException" << endl << "{" << endl;
@@ -1225,7 +1225,7 @@ void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::str
     w2 << "    if (!rr_type.Contains(\".\")) return rr_exp;" << endl;
     w2 << "    string rr_stype;" << endl;
     w2 << "    if (CompareNamespace(rr_type, out rr_stype)) {" << endl;
-    BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e, d->Exceptions)
+    BOOST_FOREACH (const RR_SHARED_PTR<ExceptionDefinition>& e, d->Exceptions)
     {
         w2 << "    if (rr_stype==\"" << e->Name << "\") return new " << fix_name(e->Name)
            << "(rr_exp.Message,rr_exp.ErrorSubName,rr_exp.ErrorParam);" << endl;
@@ -1343,7 +1343,7 @@ void CSharpServiceLangGen::GeneratePodStub(ServiceEntryDefinition* e, ostream* w
     w2 << "}" << endl;
 }
 
-void CSharpServiceLangGen::GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
+void CSharpServiceLangGen::GenerateNamedArrayStub(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -2957,7 +2957,7 @@ void CSharpServiceLangGen::GenerateConstants(ServiceDefinition* d, ostream* w)
     }
 }
 
-void CSharpServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path)
+void CSharpServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, std::string path)
 {
 #ifdef _WIN32
     const std::string os_pathsep("\\");
@@ -2987,7 +2987,7 @@ void CSharpServiceLangGen::GenerateOneFileHeader(ostream* w)
     w2 << "#pragma warning disable 0108" << endl << endl;
 }
 
-void CSharpServiceLangGen::GenerateOneFilePart(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, ostream* w)
+void CSharpServiceLangGen::GenerateOneFilePart(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, ostream* w)
 {
     GenerateInterfaceFile(d.get(), w, false);
     GenerateStubSkelFile(d.get(), servicedef, w, false);

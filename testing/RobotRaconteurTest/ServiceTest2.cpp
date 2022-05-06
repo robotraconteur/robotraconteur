@@ -7,7 +7,7 @@
 namespace RobotRaconteurTest
 {
 
-void RobotRaconteurTestService2Support::RegisterServices(RR_SHARED_PTR<TcpTransport> transport)
+void RobotRaconteurTestService2Support::RegisterServices(const RR_SHARED_PTR<TcpTransport>& transport)
 {
     testservice2 = RR_MAKE_SHARED<testroot3_impl>();
     RR_SHARED_PTR<ServerContext> c = RobotRaconteurNode::s()->RegisterService(

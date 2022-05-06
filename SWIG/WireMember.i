@@ -35,7 +35,7 @@ class WrappedWireConnectionDirector
 {
 public:
 	virtual ~WrappedWireConnectionDirector() {}
-	virtual void WireValueChanged(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& time);
+	virtual void WireValueChanged(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& value, const TimeSpec& time);
 	virtual void WireConnectionClosedCallback();
 };
 
@@ -43,14 +43,14 @@ class AsyncWireConnectionReturnDirector
 {
 public:
 	virtual ~AsyncWireConnectionReturnDirector();
-	virtual void handler(boost::shared_ptr<RobotRaconteur::WrappedWireConnection> ep, HandlerErrorInfo& error);
+	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedWireConnection>& ep, HandlerErrorInfo& error);
 };
 
 class AsyncWirePeekReturnDirector
 {
 public:
 	virtual ~AsyncWirePeekReturnDirector() {}
-	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& ts, HandlerErrorInfo& error) {};
+	virtual void handler(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& value, const TimeSpec& ts, HandlerErrorInfo& error) {};
 };
 
 class TryGetValueResult
@@ -68,7 +68,7 @@ public:
 
 	virtual boost::intrusive_ptr<MessageElement> GetInValue();
 	virtual boost::intrusive_ptr<MessageElement> GetOutValue();
-	virtual void SetOutValue(boost::intrusive_ptr<MessageElement> value);
+	virtual void SetOutValue(const boost::intrusive_ptr<MessageElement>& value);
 	
 	//WrappedWireConnectionDirector* RR_Director;
 	
@@ -151,7 +151,7 @@ class WrappedWireServerConnectDirector
 {
 public:
 	virtual ~WrappedWireServerConnectDirector() {}
-	virtual void WireConnectCallback(boost::shared_ptr<WrappedWireConnection> c) {};	
+	virtual void WireConnectCallback(const boost::shared_ptr<WrappedWireConnection>& c) {};	
 };
 
 class WrappedWireServerPeekValueDirector
@@ -165,7 +165,7 @@ class WrappedWireServerPokeValueDirector
 {
 public:	
     virtual ~WrappedWireServerPokeValueDirector() {}
-	virtual void PokeValue(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const RobotRaconteur::TimeSpec& ts, const uint32_t& ep) = 0;
+	virtual void PokeValue(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& value, const RobotRaconteur::TimeSpec& ts, const uint32_t& ep) = 0;
 };
 
 %nodefaultctor WrappedWireServer;
@@ -201,9 +201,9 @@ class WrappedWireBroadcaster
 {
 public:		
 
-	void Init(boost::shared_ptr<WrappedWireServer> wire);
+	void Init(const boost::shared_ptr<WrappedWireServer>& wire);
 
-	void SetOutValue(boost::intrusive_ptr<MessageElement> value);
+	void SetOutValue(const boost::intrusive_ptr<MessageElement>& value);
 	
 	size_t GetActiveWireConnectionCount();
 
@@ -220,7 +220,7 @@ public:
 class WrappedWireUnicastReceiver
 {
 public:
-	void Init(boost::shared_ptr<WrappedWireServer> wire);
+	void Init(const boost::shared_ptr<WrappedWireServer>& wire);
 
 	boost::intrusive_ptr<MessageElement> GetInValue(TimeSpec& ts, uint32_t& ep);	
 

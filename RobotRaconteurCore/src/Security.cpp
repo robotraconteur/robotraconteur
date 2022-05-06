@@ -46,7 +46,7 @@ ServiceSecurityPolicy::ServiceSecurityPolicy()
     Policies.clear();
 }
 
-ServiceSecurityPolicy::ServiceSecurityPolicy(RR_SHARED_PTR<UserAuthenticator> Authenticator,
+ServiceSecurityPolicy::ServiceSecurityPolicy(const RR_SHARED_PTR<UserAuthenticator>& Authenticator,
                                              const std::map<std::string, std::string>& Policies)
 {
     this->Authenticator = Authenticator;
@@ -68,7 +68,7 @@ boost::posix_time::ptime AuthenticatedUser::GetLastAccessTime()
 }
 
 AuthenticatedUser::AuthenticatedUser(boost::string_ref username, const std::vector<std::string>& privileges,
-                                     const std::vector<std::string>& properties, RR_SHARED_PTR<ServerContext> context)
+                                     const std::vector<std::string>& properties, const RR_SHARED_PTR<ServerContext>& context)
 {
     this->m_Username = RR_MOVE(username.to_string());
     this->m_Privileges = privileges;
@@ -141,7 +141,7 @@ void PasswordFileUserAuthenticator::load(boost::string_ref data)
 
 RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser(
     boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& credentials,
-    RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> transport)
+    const RR_SHARED_PTR<ServerContext>& context, const RR_SHARED_PTR<ITransportConnection>& transport)
 {
 
     std::map<std::string, RR_SHARED_PTR<PasswordFileUserAuthenticator::User> >::iterator u =

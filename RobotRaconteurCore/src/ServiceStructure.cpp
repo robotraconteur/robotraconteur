@@ -20,7 +20,7 @@
 
 namespace RobotRaconteur
 {
-StructureStub::StructureStub(RR_SHARED_PTR<RobotRaconteurNode> node) { this->node = node; }
+StructureStub::StructureStub(const RR_SHARED_PTR<RobotRaconteurNode>& node) { this->node = node; }
 
 RR_SHARED_PTR<RobotRaconteurNode> StructureStub::GetNode()
 {

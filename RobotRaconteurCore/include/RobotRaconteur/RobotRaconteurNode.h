@@ -287,7 +287,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param factory The service factory implementing the type to register
      */
-    void RegisterServiceType(RR_SHARED_PTR<ServiceFactory> factory);
+    void RegisterServiceType(const RR_SHARED_PTR<ServiceFactory>& factory);
 
     /**
      * @brief Unregister a previously registered service type
@@ -338,7 +338,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param structure
      * @return RR_INTRUSIVE_PTR<RRStructure>
      */
-    RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure);
+    RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure);
 
     /**
      * @internal
@@ -374,7 +374,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param pod_array
      * @return RR_INTRUSIVE_PTR<RRPodBaseArray>
      */
-    RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> pod_array);
+    RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& pod_array);
 
     /**
      * @internal
@@ -410,7 +410,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>
      */
     RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
-        RR_INTRUSIVE_PTR<MessageElementNestedElementList> pod_multiarray);
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& pod_multiarray);
 
     /**
      * @internal
@@ -446,7 +446,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param namedarray
      * @return RR_INTRUSIVE_PTR<RRNamedBaseArray>
      */
-    RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> namedarray);
+    RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& namedarray);
 
     /**
      * @internal
@@ -482,7 +482,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>
      */
     RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
-        RR_INTRUSIVE_PTR<MessageElementNestedElementList> named_multiarray);
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& named_multiarray);
 
     /**
      * @internal
@@ -512,7 +512,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<RRMultiDimArray<T> >
      */
     template <typename T>
-    RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> ar)
+    RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& ar)
     {
         return detail::packing::UnpackMultiDimArray<T>(ar);
     }
@@ -543,7 +543,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param mvardata
      * @return RR_INTRUSIVE_PTR<RRValue>
      */
-    RR_INTRUSIVE_PTR<RRValue> UnpackVarType(RR_INTRUSIVE_PTR<MessageElement> mvardata);
+    RR_INTRUSIVE_PTR<RRValue> UnpackVarType(const RR_INTRUSIVE_PTR<MessageElement>& mvardata);
 
   public:
     /**
@@ -705,7 +705,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param transport
      * @return uint32_t The transport internal id
      */
-    uint32_t RegisterTransport(RR_SHARED_PTR<Transport> transport);
+    uint32_t RegisterTransport(const RR_SHARED_PTR<Transport>& transport);
 
     /**
      * @internal
@@ -721,8 +721,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param m The message to send
      * @param handler The handler called after the message has been sent
      */
-    void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                          boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+    void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                          boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     /**
      * @internal
@@ -739,7 +739,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param m The message to send
      *
      */
-    void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
     /**
      * @internal
@@ -752,7 +752,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param m The received message
      */
-    void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
   protected:
     /**
@@ -903,7 +903,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param f The DynamicServiceFactory instance
      */
-    void SetDynamicServiceFactory(RR_SHARED_PTR<RobotRaconteur::DynamicServiceFactory> f);
+    void SetDynamicServiceFactory(const RR_SHARED_PTR<RobotRaconteur::DynamicServiceFactory>& f);
 
     /**
      * @internal
@@ -920,7 +920,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param errdesc A human readible description
      * @return RR_INTRUSIVE_PTR<Message>
      */
-    RR_INTRUSIVE_PTR<Message> GenerateErrorReturnMessage(RR_INTRUSIVE_PTR<Message> m, MessageErrorType err,
+    RR_INTRUSIVE_PTR<Message> GenerateErrorReturnMessage(const RR_INTRUSIVE_PTR<Message>& m, MessageErrorType err,
                                                          boost::string_ref errname, boost::string_ref errdesc);
 
     /**
@@ -944,8 +944,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *    by the node and the return can be safely ignored.
      */
     RR_SHARED_PTR<ServerContext> RegisterService(
-        boost::string_ref name, boost::string_ref servicetype, RR_SHARED_PTR<RRObject> obj,
-        RR_SHARED_PTR<ServiceSecurityPolicy> securitypolicy = RR_SHARED_PTR<ServiceSecurityPolicy>());
+        boost::string_ref name, boost::string_ref servicetype, const RR_SHARED_PTR<RRObject>& obj,
+        const RR_SHARED_PTR<ServiceSecurityPolicy>& securitypolicy = RR_SHARED_PTR<ServiceSecurityPolicy>());
 
     /**
      * @brief Registers a service using a previously instantiated ServerContext
@@ -956,7 +956,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param c The ServerContext to register
      * @return RR_SHARED_PTR<ServerContext>
      */
-    RR_SHARED_PTR<ServerContext> RegisterService(RR_SHARED_PTR<ServerContext> c);
+    RR_SHARED_PTR<ServerContext> RegisterService(const RR_SHARED_PTR<ServerContext>& c);
 
     /**
      * @brief Closes a previously registered service
@@ -998,8 +998,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param tc The transport connection that received the message
      * @return RR_INTRUSIVE_PTR<Message> message to return to the sender
      */
-    RR_INTRUSIVE_PTR<Message> SpecialRequest(RR_INTRUSIVE_PTR<Message> m, uint32_t transportid,
-                                             RR_SHARED_PTR<ITransportConnection> tc);
+    RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m, uint32_t transportid,
+                                             const RR_SHARED_PTR<ITransportConnection>& tc);
 
     /**
      * @brief Create a client connection to a remote service using a URL
@@ -1030,8 +1030,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<RRObject> ConnectService(
         boost::string_ref url, boost::string_ref username = "",
-        RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
-        boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)>
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > &credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
             listener = 0,
         boost::string_ref objecttype = "");
 
@@ -1054,11 +1054,11 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
      */
     void AsyncConnectService(
-        boost::string_ref url, boost::string_ref username, RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials,
-        boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)>
+        boost::string_ref url, boost::string_ref username, const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
             listener,
         boost::string_ref objecttype,
-        boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
@@ -1079,8 +1079,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<RRObject> ConnectService(
         const std::vector<std::string>& urls, boost::string_ref username = "",
-        RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
-        boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)>
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
             listener = 0,
         boost::string_ref objecttype = "");
 
@@ -1101,11 +1101,11 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     void AsyncConnectService(
         const std::vector<std::string>& url, boost::string_ref username,
-        RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials,
-        boost::function<void(RR_SHARED_PTR<ClientContext>, ClientServiceListenerEventType, RR_SHARED_PTR<void>)>
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
             listener,
         boost::string_ref objecttype,
-        boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
@@ -1119,7 +1119,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param obj The root object of the service to disconnect
      */
-    void DisconnectService(RR_SHARED_PTR<RRObject> obj);
+    void DisconnectService(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Asynchronously disconnects a client connection to a service
@@ -1129,7 +1129,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The root object of the client to disconnect
      * @param handler The handler to call when complete
      */
-    void AsyncDisconnectService(RR_SHARED_PTR<RRObject> obj, boost::function<void()> handler);
+    void AsyncDisconnectService(const RR_SHARED_PTR<RRObject>& obj, boost::function<void()> handler);
 
     /**
      * @brief Get the service attributes of a client connection
@@ -1140,7 +1140,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The root object of the client to use to retrieve service attributes
      * @return std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > The service attributes
      */
-    std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > GetServiceAttributes(RR_SHARED_PTR<RRObject> obj);
+    std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > GetServiceAttributes(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Get the service NodeID of the remote node from a client connection
@@ -1150,7 +1150,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The root object of the client to use to retrieve service attributes
      * @return NodeID The NodeID
      */
-    RobotRaconteur::NodeID GetServiceNodeID(RR_SHARED_PTR<RRObject> obj);
+    RobotRaconteur::NodeID GetServiceNodeID(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Get the service NodeName of the remote node from a client connection
@@ -1160,7 +1160,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The root object of the client to use to retrieve service attributes
      * @return std::string The NodeName
      */
-    std::string GetServiceNodeName(RR_SHARED_PTR<RRObject> obj);
+    std::string GetServiceNodeName(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Get the name of a service from a client connection
@@ -1170,7 +1170,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The root object of the client to use to retrieve service attributes
      * @return std::string The service name
      */
-    std::string GetServiceName(RR_SHARED_PTR<RRObject> obj);
+    std::string GetServiceName(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Get the service path of a client object
@@ -1178,7 +1178,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The object to get the service path for
      * @return std::string The object's service path
      */
-    std::string GetObjectServicePath(RR_SHARED_PTR<RRObject> obj);
+    std::string GetObjectServicePath(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Get the Robot Raconteur type of a connected service object
@@ -1187,7 +1187,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The object to query
      * @return std::string The Robot Raconteur type of the object
      */
-    virtual std::string GetObjectType(RR_SHARED_PTR<RRObject> obj);
+    virtual std::string GetObjectType(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @internal
@@ -1199,7 +1199,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param e The endpoint to register
      * @return uint32_t The LocalEndpoint identifier
      */
-    uint32_t RegisterEndpoint(RR_SHARED_PTR<Endpoint> e);
+    uint32_t RegisterEndpoint(const RR_SHARED_PTR<Endpoint>& e);
 
     /**
      * @internal
@@ -1210,7 +1210,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param e The Endpoint to delete
      */
-    void DeleteEndpoint(RR_SHARED_PTR<Endpoint> e);
+    void DeleteEndpoint(const RR_SHARED_PTR<Endpoint>& e);
 
     /**
      *
@@ -1436,7 +1436,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<ServiceInfo2Subscription> SubscribeServiceInfo2(
         const std::vector<std::string>& service_types,
-        RR_SHARED_PTR<ServiceSubscriptionFilter> filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
+        const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
 
     /**
      * @brief Subscribe to listen for available services and automatically connect
@@ -1450,7 +1450,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<ServiceSubscription> SubscribeServiceByType(
         const std::vector<std::string>& service_types,
-        RR_SHARED_PTR<ServiceSubscriptionFilter> filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
+        const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
 
     /**
      * @brief Subscribe to a service using one or more URL. Used to create robust connections to services
@@ -1466,7 +1466,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<ServiceSubscription> SubscribeService(
         const std::vector<std::string>& url, boost::string_ref username = "",
-        RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
         boost::string_ref objecttype = "");
 
     /**
@@ -1483,7 +1483,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<ServiceSubscription> SubscribeService(
         const std::string& url, boost::string_ref username = "",
-        RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
         boost::string_ref objecttype = "");
 
   protected:
@@ -1504,7 +1504,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param node
      * @param services
      */
-    void FireNodeDetected(RR_SHARED_PTR<NodeDiscoveryInfo> node, RR_SHARED_PTR<std::vector<ServiceInfo2> > services);
+    void FireNodeDetected(const RR_SHARED_PTR<NodeDiscoveryInfo>& node, RR_SHARED_PTR<std::vector<ServiceInfo2> > services);
 
     /**
      * @internal
@@ -1513,7 +1513,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param node
      */
-    void FireNodeLost(RR_SHARED_PTR<NodeDiscoveryInfo> node);
+    void FireNodeLost(const RR_SHARED_PTR<NodeDiscoveryInfo>& node);
 
   public:
     /**
@@ -1573,7 +1573,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.
      */
     void AsyncFindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& transportschemes,
-                                boost::function<void(RR_SHARED_PTR<std::vector<ServiceInfo2> >)> handler,
+                                boost::function<void(const RR_SHARED_PTR<std::vector<ServiceInfo2> >&)> handler,
                                 int32_t timeout = 5000);
 
     /**
@@ -1602,7 +1602,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.
      */
     void AsyncFindNodeByID(const RobotRaconteur::NodeID& id, const std::vector<std::string>& transportschemes,
-                           boost::function<void(RR_SHARED_PTR<std::vector<NodeInfo2> >)> handler,
+                           boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)> handler,
                            int32_t timeout = 5000);
 
     /**
@@ -1630,7 +1630,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.
      */
     void AsyncFindNodeByName(boost::string_ref name, const std::vector<std::string>& transportschemes,
-                             boost::function<void(RR_SHARED_PTR<std::vector<NodeInfo2> >)> handler,
+                             boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)> handler,
                              int32_t timeout = 5000);
 
   public:
@@ -1648,7 +1648,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param flags Select either a "User" or "Session" lock
      * @return std::string "OK" on success
      */
-    std::string RequestObjectLock(RR_SHARED_PTR<RRObject> obj, RobotRaconteurObjectLockFlags flags);
+    std::string RequestObjectLock(const RR_SHARED_PTR<RRObject>& obj, RobotRaconteurObjectLockFlags flags);
 
     /**
      * @brief Asynchronously request an exclusive access lock to a service object
@@ -1661,8 +1661,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE
      */
     void AsyncRequestObjectLock(
-        RR_SHARED_PTR<RRObject> obj, RobotRaconteurObjectLockFlags flags,
-        boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        const RR_SHARED_PTR<RRObject>& obj, RobotRaconteurObjectLockFlags flags,
+        boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
@@ -1677,7 +1677,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The object previously locked
      * @return std::string "OK" on success
      */
-    std::string ReleaseObjectLock(RR_SHARED_PTR<RRObject> obj);
+    std::string ReleaseObjectLock(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Asynchronously release an excluse access lock previously locked
@@ -1690,8 +1690,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE
      */
     void AsyncReleaseObjectLock(
-        RR_SHARED_PTR<RRObject> obj,
-        boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        const RR_SHARED_PTR<RRObject>& obj,
+        boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
@@ -1712,7 +1712,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout The timeout in milliseconds to acquire the monitor lock,
      * or RR_TIMEOUT_INFINITE
      */
-    void MonitorEnter(RR_SHARED_PTR<RRObject> obj, int32_t timeout = RR_TIMEOUT_INFINITE);
+    void MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
      * @brief Releases a monitor lock
@@ -1724,7 +1724,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param obj The object previously locked by MonitorEnter()
      */
-    void MonitorExit(RR_SHARED_PTR<RRObject> obj);
+    void MonitorExit(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Wrapper for RobotRaconteurNode::MonitorEnter() and
@@ -1755,7 +1755,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
          * @param timeout The timeout in milliseconds to acquire the monitor lock,
          * or RR_TIMEOUT_INFINITE
          */
-        ScopedMonitorLock(RR_SHARED_PTR<RRObject> obj, int32_t timeout = -1);
+        ScopedMonitorLock(const RR_SHARED_PTR<RRObject>& obj, int32_t timeout = -1);
 
         /**
          * @brief Relock the object after calling unlock()
@@ -1790,7 +1790,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     RR_SHARED_PTR<Timer> PeriodicCleanupTask_timer;
     boost::shared_mutex PeriodicCleanupTask_timer_lock;
 
-    static void StartPeriodicCleanupTask(RR_SHARED_PTR<RobotRaconteurNode> node);
+    static void StartPeriodicCleanupTask(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     void PeriodicCleanupTask(const TimerEvent& err);
     bool PeriodicCleanupTask_timerstarted;
@@ -1810,14 +1810,14 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param task The task to call periodically
      */
-    void AddPeriodicCleanupTask(RR_SHARED_PTR<IPeriodicCleanupTask> task);
+    void AddPeriodicCleanupTask(const RR_SHARED_PTR<IPeriodicCleanupTask>& task);
 
     /**
      * @brief Remove a task previously registered with AddPeriodicCleanupTask()
      *
      * @param task The task to remove
      */
-    void RemovePeriodicCleanupTask(RR_SHARED_PTR<IPeriodicCleanupTask> task);
+    void RemovePeriodicCleanupTask(const RR_SHARED_PTR<IPeriodicCleanupTask>& task);
 
   public:
     /**
@@ -1839,7 +1839,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_SHARED_PTR<RRObject> The object with the specified interface type. Must be cast to the desired type
      */
 
-    RR_SHARED_PTR<RRObject> FindObjRefTyped(RR_SHARED_PTR<RRObject> obj, boost::string_ref objref,
+    RR_SHARED_PTR<RRObject> FindObjRefTyped(const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref,
                                             boost::string_ref objecttype);
 
     /**
@@ -1855,7 +1855,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param objecttype The desired service object type
      * @return RR_SHARED_PTR<RRObject> The object with the specified interface type. Must be cast to the desired type
      */
-    RR_SHARED_PTR<RRObject> FindObjRefTyped(RR_SHARED_PTR<RRObject> obj, boost::string_ref objref,
+    RR_SHARED_PTR<RRObject> FindObjRefTyped(const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref,
                                             boost::string_ref index, boost::string_ref objecttype);
 
     /**
@@ -1870,8 +1870,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     void AsyncFindObjRefTyped(
-        RR_SHARED_PTR<RRObject> obj, boost::string_ref objref, boost::string_ref objecttype,
-        boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref, boost::string_ref objecttype,
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
@@ -1887,8 +1887,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     void AsyncFindObjRefTyped(
-        RR_SHARED_PTR<RRObject> obj, boost::string_ref objref, boost::string_ref index, boost::string_ref objecttype,
-        boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref, boost::string_ref index, boost::string_ref objecttype,
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
@@ -1902,7 +1902,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param objref The name of the `objref` member
      * @return std::string The fully qaulified object type
      */
-    std::string FindObjectType(RR_SHARED_PTR<RRObject> obj, boost::string_ref objref);
+    std::string FindObjectType(const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref);
 
     /**
      * @brief Returns the type of a service object
@@ -1916,7 +1916,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param index The index for the `objref`, convert int to string for int32 index type
      * @return std::string The fully qaulified object type
      */
-    std::string FindObjectType(RR_SHARED_PTR<RRObject> obj, boost::string_ref objref, boost::string_ref index);
+    std::string FindObjectType(const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref, boost::string_ref index);
 
     /**
      * @brief Asynchronously returns the type of a service object
@@ -1929,8 +1929,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     void AsyncFindObjectType(
-        RR_SHARED_PTR<RRObject> obj, boost::string_ref objref,
-        boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref,
+        boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
@@ -1945,8 +1945,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     void AsyncFindObjectType(
-        RR_SHARED_PTR<RRObject> obj, boost::string_ref objref, boost::string_ref index,
-        boost::function<void(RR_SHARED_PTR<std::string>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref, boost::string_ref index,
+        boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
   private:
@@ -1990,7 +1990,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param pool The ThreadPool for the node
      */
-    void SetThreadPool(RR_SHARED_PTR<ThreadPool> pool);
+    void SetThreadPool(const RR_SHARED_PTR<ThreadPool>& pool);
 
     /**
      * @brief Get the current ThreadPoolFactory for the node
@@ -2012,7 +2012,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param factory The ThreadPoolFactory for the node
      */
-    void SetThreadPoolFactory(RR_SHARED_PTR<ThreadPoolFactory> factory);
+    void SetThreadPoolFactory(const RR_SHARED_PTR<ThreadPoolFactory>& factory);
 
     /**
      * @brief Get the number of threads for the node ThreadPool
@@ -2064,7 +2064,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
         RR_SHARED_PTR<ThreadPool> t;
         if (!node1->TryGetThreadPool(t))
             return false;
-        return t->TryPost(RR_MOVE(h));
+        return t->TryPost(h);
     }
 
     /**
@@ -2102,7 +2102,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * AsyncConnectService()
      * @return std::vector<std::string> The names of the pulled service types
      */
-    std::vector<std::string> GetPulledServiceTypes(RR_SHARED_PTR<RRObject> obj);
+    std::vector<std::string> GetPulledServiceTypes(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
      * @brief Get a ServiceFactory created from a service type pulled by a client
@@ -2118,7 +2118,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param type The name of the service type
      * @return RR_SHARED_PTR<ServiceFactory> The pulled service factory
      */
-    RR_SHARED_PTR<ServiceFactory> GetPulledServiceType(RR_SHARED_PTR<RRObject> obj, boost::string_ref type);
+    RR_SHARED_PTR<ServiceFactory> GetPulledServiceType(const RR_SHARED_PTR<RRObject>& obj, boost::string_ref type);
 
     /**
      * @brief Set an exception handler function
@@ -2317,7 +2317,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param exp The RobotRaconteurException to downcast
      */
-    RR_SHARED_PTR<RobotRaconteurException> DownCastException(RR_SHARED_PTR<RobotRaconteurException> exp);
+    RR_SHARED_PTR<RobotRaconteurException> DownCastException(const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
     /**
      * @brief Check if the endpoint is authorized for large message transfer
@@ -2530,7 +2530,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param handler The log record handler function
      */
-    void SetLogRecordHandler(RR_SHARED_PTR<LogRecordHandler> handler);
+    void SetLogRecordHandler(const RR_SHARED_PTR<LogRecordHandler>& handler);
 
   protected:
     boost::shared_mutex tap_lock;
@@ -2549,7 +2549,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param message_tap The message tap to use
      */
-    void SetMessageTap(RR_SHARED_PTR<MessageTap> message_tap);
+    void SetMessageTap(const RR_SHARED_PTR<MessageTap>& message_tap);
 
   protected:
     /**

@@ -461,9 +461,9 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNodeSetup : boost::noncopyable
 
     bool release_node;
 
-    void DoSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
-                 const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
-                 RR_SHARED_PTR<CommandLineConfigParser>& config);
+    void DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
+                 const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types,
+                 const RR_SHARED_PTR<CommandLineConfigParser>& config);
 
   public:
     /**
@@ -482,7 +482,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNodeSetup : boost::noncopyable
      * @param tcp_port The port to listen for incoming TCP clients
      * @param flags The configuration flags
      */
-    RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                             const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                             const std::string& node_name, uint16_t tcp_port, uint32_t flags);
 
@@ -506,7 +506,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNodeSetup : boost::noncopyable
      * @param argc The number of command line arguments in argv vector
      * @param argv The command line argument vector
      */
-    RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                             const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                             const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides,
                             int argc, char* argv[]);
@@ -530,7 +530,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNodeSetup : boost::noncopyable
      * @param allowed_overrides The allowed override flags
      * @param args The command line arguments as an STL vector
      */
-    RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                             const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                             const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides,
                             const std::vector<std::string>& args);
@@ -555,9 +555,9 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNodeSetup : boost::noncopyable
      * @param tcp_port The port to listen for incoming TCP clients
      * @param config The command line config parser object
      */
-    RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                             const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
-                            RR_SHARED_PTR<CommandLineConfigParser> config);
+                            const RR_SHARED_PTR<CommandLineConfigParser>& config);
 
     /**
      * @brief Get the LocalTransport
@@ -670,7 +670,7 @@ class ROBOTRACONTEUR_CORE_API ClientNodeSetup : public RobotRaconteurNodeSetup
      * @param node_name Node name to use if `RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT` flag is set
      * @param flags The node configuration flags
      */
-    ClientNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    ClientNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                     const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name = "",
                     uint32_t flags = RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT);
 
@@ -701,7 +701,7 @@ class ROBOTRACONTEUR_CORE_API ClientNodeSetup : public RobotRaconteurNodeSetup
      * @param argc The number of command line arguments in argv vector
      * @param argv The command line argument vector
      */
-    ClientNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    ClientNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                     const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, int argc, char* argv[]);
 
     /**
@@ -730,7 +730,7 @@ class ROBOTRACONTEUR_CORE_API ClientNodeSetup : public RobotRaconteurNodeSetup
      * @param service_types The service types to register
      * @param args The command line options as a string vector
      */
-    ClientNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    ClientNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                     const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                     const std::vector<std::string>& args);
 
@@ -814,7 +814,7 @@ class ROBOTRACONTEUR_CORE_API ServerNodeSetup : public RobotRaconteurNodeSetup
      * @param tcp_port The port to listen on for TcpTransport
      * @param flags The node configuration flags
      */
-    ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    ServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                     const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
                     uint16_t tcp_port = 0, uint32_t flags = RobotRaconteurNodeSetupFlags_SERVER_DEFAULT);
 
@@ -848,7 +848,7 @@ class ROBOTRACONTEUR_CORE_API ServerNodeSetup : public RobotRaconteurNodeSetup
      * @param argc The number of command line arguments in argv vector
      * @param argv The command line argument vector
      */
-    ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    ServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                     const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
                     uint16_t tcp_port, int argc, char* argv[]);
 
@@ -881,7 +881,7 @@ class ROBOTRACONTEUR_CORE_API ServerNodeSetup : public RobotRaconteurNodeSetup
      * @param tcp_port The port to listen on for TcpTransport
      * @param args The command line options as a string vector
      */
-    ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    ServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                     const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
                     uint16_t tcp_port, const std::vector<std::string>& args);
 
@@ -967,7 +967,7 @@ class ROBOTRACONTEUR_CORE_API SecureServerNodeSetup : public RobotRaconteurNodeS
      * @param tcp_port The port to listen on for TcpTransport
      * @param flags The node configuration flags
      */
-    SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    SecureServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                           const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
                           uint16_t tcp_port = 0, uint32_t flags = RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT);
 
@@ -1002,7 +1002,7 @@ class ROBOTRACONTEUR_CORE_API SecureServerNodeSetup : public RobotRaconteurNodeS
      * @param argc The number of command line arguments in argv vector
      * @param argv The command line argument vector
      */
-    SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    SecureServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                           const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
                           uint16_t tcp_port, int argc, char* argv[]);
 
@@ -1037,7 +1037,7 @@ class ROBOTRACONTEUR_CORE_API SecureServerNodeSetup : public RobotRaconteurNodeS
      * @param tcp_port The port to listen on for TcpTransport
      * @param args The command line options as a string vector
      */
-    SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+    SecureServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                           const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, const std::string& node_name,
                           uint16_t tcp_port, const std::vector<std::string>& args);
 

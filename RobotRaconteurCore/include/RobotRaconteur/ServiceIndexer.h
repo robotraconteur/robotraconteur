@@ -32,7 +32,7 @@ class ServiceIndexer : public virtual RobotRaconteurServiceIndex::ServiceIndex
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
   public:
-    ServiceIndexer(RR_SHARED_PTR<RobotRaconteurNode> node);
+    ServiceIndexer(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 

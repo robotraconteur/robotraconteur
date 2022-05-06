@@ -95,15 +95,20 @@ void WallTimer::timer_handler(const boost::system::error_code& ec)
 }
 
 WallTimer::WallTimer(const boost::posix_time::time_duration& period, boost::function<void(const TimerEvent&)> handler,
-                     bool oneshot, RR_SHARED_PTR<RobotRaconteurNode> node)
+                     bool oneshot, const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
     this->period = period;
     this->oneshot = oneshot;
     this->handler = handler;
     running = false;
     if (!node)
-        node = RobotRaconteurNode::sp();
-    this->node = node;
+    {
+        this->node = RobotRaconteurNode::sp();
+    }
+    else
+    {
+        this->node = node;
+    }
 }
 
 void WallTimer::Start()
@@ -177,12 +182,17 @@ void WallTimer::Clear()
     handler.clear();
 }
 
-WallRate::WallRate(double frequency, RR_SHARED_PTR<RobotRaconteurNode> node)
+WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node)
     : timer(node->GetThreadPool()->get_io_context())
 {
     if (!node)
-        node = RobotRaconteurNode::sp();
-    this->node = node;
+    {
+        this->node = RobotRaconteurNode::sp();
+    }
+    else
+    {
+        this->node = node;
+    }
     this->period = boost::posix_time::microseconds(boost::lexical_cast<int64_t>(1000000.0 / frequency));
     start_time = node->NowNodeTime();
     last_time = node->NowNodeTime();

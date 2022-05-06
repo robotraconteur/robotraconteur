@@ -130,7 +130,7 @@ void servicetest7(RR_SHARED_PTR<PipeEndpoint<double> > p)
     }
 }
 
-void servicetest6(uint32_t pnum, RR_SHARED_PTR<RobotRaconteurException> e) {}
+void servicetest6(uint32_t pnum, const RR_SHARED_PTR<RobotRaconteurException>& e) {}
 
 void servicetest5(RR_SHARED_PTR<PipeEndpoint<double> > p, RR_SHARED_PTR<WireConnection<double> > w,
                   const TimerEvent& ev)
@@ -148,7 +148,7 @@ void servicetest5(RR_SHARED_PTR<PipeEndpoint<double> > p, RR_SHARED_PTR<WireConn
     servicetest_count++;
 }
 
-void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp);
+void servicetest3(std::string url1, const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
 void servicetest4(std::string url1)
 {
@@ -157,7 +157,7 @@ void servicetest4(std::string url1)
         boost::bind(&servicetest3, url1, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 }
 
-void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
+void servicetest3(std::string url1, const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -170,7 +170,7 @@ void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<R
     RobotRaconteurNode::s()->AsyncDisconnectService(obj, boost::bind(&servicetest4, url1));
 }
 
-void servicetest2(RR_SHARED_PTR<async_testroot> o, double d, RR_SHARED_PTR<RobotRaconteurException> exp)
+void servicetest2(const RR_SHARED_PTR<async_testroot>& o, double d, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -183,7 +183,7 @@ void servicetest2(RR_SHARED_PTR<async_testroot> o, double d, RR_SHARED_PTR<Robot
     o->async_func3(1, 2, boost::bind(&servicetest2, o, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 }
 
-void servicetest1(RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
+void servicetest1(const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -208,9 +208,9 @@ void servicetest1(RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurExcep
 int latencyitercount = 0;
 RR_SHARED_PTR<AutoResetEvent> latency_event;
 
-void latencytest1(RR_SHARED_PTR<async_testroot> obj, RR_SHARED_PTR<RobotRaconteurException> exp);
+void latencytest1(const RR_SHARED_PTR<async_testroot>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-void latencytest1(RR_SHARED_PTR<async_testroot> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
+void latencytest1(const RR_SHARED_PTR<async_testroot>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -238,25 +238,25 @@ void latencytest1(RR_SHARED_PTR<async_testroot> obj, RR_SHARED_PTR<RobotRaconteu
     }
 }
 
-void servicesubscription_connected(RR_SHARED_PTR<ServiceSubscription> sub, const ServiceSubscriptionClientID& noden,
-                                   RR_SHARED_PTR<RRObject> obj)
+void servicesubscription_connected(const RR_SHARED_PTR<ServiceSubscription>& sub, const ServiceSubscriptionClientID& noden,
+                                   const RR_SHARED_PTR<RRObject>& obj)
 {
     cout << "Subscription Connected: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
 
-void servicesubscription_disconnected(RR_SHARED_PTR<ServiceSubscription> sub, const ServiceSubscriptionClientID& noden,
-                                      RR_SHARED_PTR<RRObject> obj)
+void servicesubscription_disconnected(const RR_SHARED_PTR<ServiceSubscription>& sub, const ServiceSubscriptionClientID& noden,
+                                      const RR_SHARED_PTR<RRObject>& obj)
 {
     cout << "Subscription Disconnected: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
 
-void serviceinfo2subscription_detected(RR_SHARED_PTR<ServiceInfo2Subscription> sub,
+void serviceinfo2subscription_detected(const RR_SHARED_PTR<ServiceInfo2Subscription>& sub,
                                        const ServiceSubscriptionClientID& noden, const ServiceInfo2& info)
 {
     cout << "ServiceInfo2 detected: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
 
-void serviceinfo2subscription_lost(RR_SHARED_PTR<ServiceInfo2Subscription> sub,
+void serviceinfo2subscription_lost(const RR_SHARED_PTR<ServiceInfo2Subscription>& sub,
                                    const ServiceSubscriptionClientID& noden, const ServiceInfo2& info)
 {
     cout << "ServiceInfo2 lost: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
@@ -309,15 +309,15 @@ void singlethreadserver_quit_thread_func()
     singlethreadserver_keep_going = false;
 }
 
-static void asyncgetdefaultclient_handler(RR_SHARED_PTR<testroot> obj, RR_SHARED_PTR<RobotRaconteurException> err)
+static void asyncgetdefaultclient_handler(const RR_SHARED_PTR<testroot>& obj, const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     std::cout << "Got default client callback" << std::endl;
 }
 
-static void asyncgetdefaultclient_failed_handler(RR_SHARED_PTR<ServiceSubscription> sub,
+static void asyncgetdefaultclient_failed_handler(const RR_SHARED_PTR<ServiceSubscription>& sub,
                                                  const ServiceSubscriptionClientID& id,
                                                  const std::vector<std::string>& url,
-                                                 RR_SHARED_PTR<RobotRaconteurException> err)
+                                                 const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     std::cout << "Connect to " << id.NodeID.ToString() << " with url: " << boost::join(url, ",")
               << " failed: " << err->ToString() << std::endl;
@@ -1815,14 +1815,14 @@ int main(int argc, char* argv[])
             }
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition> def, defs)
+        BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& def, defs)
         {
             cout << def->ToString() << endl;
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition> def, defs)
+        BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& def, defs)
         {
-            BOOST_FOREACH (RR_SHARED_PTR<ConstantDefinition> c, def->Constants)
+            BOOST_FOREACH (const RR_SHARED_PTR<ConstantDefinition>& c, def->Constants)
             {
                 if (c->Name == "strconst")
                 {

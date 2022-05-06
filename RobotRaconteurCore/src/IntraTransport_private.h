@@ -22,17 +22,17 @@ class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnec
                                                          public boost::enable_shared_from_this<IntraTransportConnection>
 {
   public:
-    IntraTransportConnection(RR_SHARED_PTR<IntraTransport> parent, bool server, uint32_t local_endpoint);
+    IntraTransportConnection(const RR_SHARED_PTR<IntraTransport>& parent, bool server, uint32_t local_endpoint);
 
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
-    virtual void AcceptMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual void AcceptMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
   public:
-    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
-    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     virtual void Close();
 
@@ -48,7 +48,7 @@ class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnec
 
     virtual bool CheckCapabilityActive(uint32_t flag);
 
-    void SetPeer(RR_SHARED_PTR<IntraTransportConnection> peer);
+    void SetPeer(const RR_SHARED_PTR<IntraTransportConnection>& peer);
 
     bool IsConnected();
 
@@ -57,7 +57,7 @@ class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnec
   protected:
     static void ProcessNextRecvMessage(RR_WEAK_PTR<IntraTransportConnection> c);
 
-    void SimpleAsyncEndSendMessage(RR_SHARED_PTR<RobotRaconteurException> err);
+    void SimpleAsyncEndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void RemoteClose();
 

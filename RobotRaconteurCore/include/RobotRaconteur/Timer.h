@@ -141,7 +141,7 @@ class ROBOTRACONTEUR_CORE_API WallRate : public Rate
     boost::asio::deadline_timer timer;
 
   public:
-    WallRate(double frequency, RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>());
+    WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>());
 
     virtual void Sleep();
 
@@ -170,7 +170,7 @@ class ROBOTRACONTEUR_CORE_API WallTimer : public Timer, public RR_ENABLE_SHARED_
 
   public:
     WallTimer(const boost::posix_time::time_duration& period, boost::function<void(const TimerEvent&)> handler,
-              bool oneshot, RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>());
+              bool oneshot, const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>());
 
     virtual void Start();
 

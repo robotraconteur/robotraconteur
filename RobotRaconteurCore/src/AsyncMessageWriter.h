@@ -189,7 +189,7 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageWriterImpl : public AsyncMessageWriter
     bool write_string4(MessageStringPtr& str); // next_state=state()++
 
     virtual void Reset();
-    virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version);
+    virtual void BeginWrite(const RR_INTRUSIVE_PTR<Message>& m, uint16_t version);
 
     virtual return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used,
                               const_buffers& write_bufs);

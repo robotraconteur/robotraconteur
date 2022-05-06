@@ -13,7 +13,7 @@ class testroot3_impl;
 class RobotRaconteurTestService2Support
 {
   public:
-    void RegisterServices(RR_SHARED_PTR<TcpTransport> transport);
+    void RegisterServices(const RR_SHARED_PTR<TcpTransport>& transport);
     void UnregisterServices();
 
   protected:

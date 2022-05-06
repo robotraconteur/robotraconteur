@@ -32,22 +32,22 @@ namespace RobotRaconteur
 class ROBOTRACONTEUR_CORE_API RobotRaconteurExceptionUtil
 {
   public:
-    static void ExceptionToMessageEntry(std::exception& exception, RR_INTRUSIVE_PTR<MessageEntry> entry);
+    static void ExceptionToMessageEntry(std::exception& exception, const RR_INTRUSIVE_PTR<MessageEntry>& entry);
 
-    static RR_SHARED_PTR<RobotRaconteurException> MessageEntryToException(RR_INTRUSIVE_PTR<MessageEntry> entry);
+    static RR_SHARED_PTR<RobotRaconteurException> MessageEntryToException(const RR_INTRUSIVE_PTR<MessageEntry>& entry);
 
-    static void ThrowMessageEntryException(RR_INTRUSIVE_PTR<MessageEntry> entry);
+    static void ThrowMessageEntryException(const RR_INTRUSIVE_PTR<MessageEntry>& entry);
 
     static RR_SHARED_PTR<RobotRaconteurException> DownCastException(RobotRaconteurException& err);
 
-    static RR_SHARED_PTR<RobotRaconteurException> DownCastException(RR_SHARED_PTR<RobotRaconteurException> err);
+    static RR_SHARED_PTR<RobotRaconteurException> DownCastException(const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     static RR_SHARED_PTR<RobotRaconteurException> ExceptionToSharedPtr(
         std::exception& err, MessageErrorType default_type = MessageErrorType_UnknownError);
 
     static void DownCastAndThrowException(RobotRaconteurException& err);
 
-    static void DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurException> err);
+    static void DownCastAndThrowException(const RR_SHARED_PTR<RobotRaconteurException>& err);
 };
 
 } // namespace RobotRaconteur

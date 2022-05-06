@@ -39,16 +39,16 @@
 
 namespace RobotRaconteur
 {
-static void rr_context_emptyhandler(RR_SHARED_PTR<RobotRaconteurException>) {}
+static void rr_context_emptyhandler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
 
-static void rr_context_node_handler(RR_SHARED_PTR<RobotRaconteurNode> n, RR_SHARED_PTR<RobotRaconteurException> e)
+static void rr_context_node_handler(const RR_SHARED_PTR<RobotRaconteurNode>& n, const RR_SHARED_PTR<RobotRaconteurException>& e)
 {
     n->HandleException(e.get());
 }
 
 ServiceSkel::ServiceSkel() { ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Service, -1, "ServiceSkel created"); }
 
-void ServiceSkel::Init(boost::string_ref s, RR_SHARED_PTR<RRObject> o, RR_SHARED_PTR<ServerContext> c)
+void ServiceSkel::Init(boost::string_ref s, const RR_SHARED_PTR<RRObject>& o, const RR_SHARED_PTR<ServerContext>& c)
 {
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, s, "",
@@ -139,7 +139,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ServiceSkel::RRGetNode()
 
 RR_WEAK_PTR<RobotRaconteurNode> ServiceSkel::RRGetNodeWeak() { return node; }
 
-void ServiceSkel::InitCallbackServers(RR_SHARED_PTR<RRObject> o) {}
+void ServiceSkel::InitCallbackServers(const RR_SHARED_PTR<RRObject>& o) {}
 
 std::string ServiceSkel::GetServicePath() const { return m_ServicePath; }
 
@@ -169,13 +169,13 @@ RR_SHARED_PTR<RRObject> ServiceSkel::GetSubObj(boost::string_ref name)
     }
 }
 
-void ServiceSkel::RegisterEvents(RR_SHARED_PTR<RRObject> obj1) {}
+void ServiceSkel::RegisterEvents(const RR_SHARED_PTR<RRObject>& obj1) {}
 
-void ServiceSkel::UnregisterEvents(RR_SHARED_PTR<RRObject> obj1) {}
+void ServiceSkel::UnregisterEvents(const RR_SHARED_PTR<RRObject>& obj1) {}
 
-void ServiceSkel::InitPipeServers(RR_SHARED_PTR<RRObject> obj1) {}
+void ServiceSkel::InitPipeServers(const RR_SHARED_PTR<RRObject>& obj1) {}
 
-void ServiceSkel::InitWireServers(RR_SHARED_PTR<RRObject> obj1) {}
+void ServiceSkel::InitWireServers(const RR_SHARED_PTR<RRObject>& obj1) {}
 
 void ServiceSkel::ObjRefChanged(boost::string_ref name)
 {
@@ -183,9 +183,9 @@ void ServiceSkel::ObjRefChanged(boost::string_ref name)
     GetContext()->ReplaceObject(path);
 }
 
-void ServiceSkel::EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageElement> value,
-                                          RR_SHARED_PTR<RobotRaconteurException> err, RR_INTRUSIVE_PTR<MessageEntry> m,
-                                          RR_SHARED_PTR<ServerEndpoint> ep)
+void ServiceSkel::EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, const RR_INTRUSIVE_PTR<MessageElement>& value,
+                                          const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                          const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
     RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
     if (!skel1)
@@ -215,7 +215,7 @@ void ServiceSkel::EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_INTR
             ret->AddElement(value);
         }
 
-        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
             boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
         skel1->GetContext()->AsyncSendMessage(ret, ep, h);
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath,
@@ -229,8 +229,8 @@ void ServiceSkel::EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_INTR
     }
 }
 
-void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHARED_PTR<RobotRaconteurException> err,
-                                          RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
+void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                          const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
     RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
     if (!skel1)
@@ -253,7 +253,7 @@ void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHAR
             RobotRaconteurExceptionUtil::ExceptionToMessageEntry(*err, ret);
         }
 
-        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
             boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
         skel1->GetContext()->AsyncSendMessage(ret, ep, h);
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath,
@@ -267,9 +267,9 @@ void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, RR_SHAR
     }
 }
 
-void ServiceSkel::EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageElement> ret,
-                                       RR_SHARED_PTR<RobotRaconteurException> err, RR_INTRUSIVE_PTR<MessageEntry> m,
-                                       RR_SHARED_PTR<ServerEndpoint> ep)
+void ServiceSkel::EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, const RR_INTRUSIVE_PTR<MessageElement>& ret,
+                                       const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                       const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
     RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
     if (!skel1)
@@ -307,7 +307,7 @@ void ServiceSkel::EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSI
             }
         }
 
-        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
             boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
         skel1->GetContext()->AsyncSendMessage(ret1, ep, h);
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(skel1->node, Service, ep->GetLocalEndpoint(), skel1->m_ServicePath,
@@ -321,7 +321,7 @@ void ServiceSkel::EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSI
     }
 }
 
-void ServiceSkel::SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m)
+void ServiceSkel::SendEvent(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
     m->ServicePath = GetServicePath();
     GetContext()->SendEvent(m);
@@ -344,8 +344,8 @@ void ServiceSkel::ReleaseObject()
     uncastobj.reset();
 }
 
-void ServiceSkel::AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, bool unreliable,
-                                       RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>)
+void ServiceSkel::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
+                                       RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
                                            handler)
 {
     m->ServicePath = GetServicePath();
@@ -356,38 +356,38 @@ void ServiceSkel::AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_
     }
     else
     {
-        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
             boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
         GetContext()->AsyncSendPipeMessage(m, e, unreliable, h);
     }
 }
 
-void ServiceSkel::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void ServiceSkel::SendWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     m->ServicePath = GetServicePath();
     GetContext()->SendWireMessage(m, e);
 }
 
-void ServiceSkel::DispatchPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void ServiceSkel::DispatchPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m_ServicePath, m->MemberName,
                                             "Pipe packet received for nonexistant member");
 }
 
-void ServiceSkel::DispatchWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void ServiceSkel::DispatchWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m_ServicePath, m->MemberName,
                                             "Wire packet received for nonexistant member");
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallPipeFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallPipeFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m_ServicePath, m->MemberName,
                                             "Pipe command received for nonexistant member");
     throw MemberNotFoundException("Pipe " + m->MemberName.str() + " not found");
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallWireFunction(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallWireFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m_ServicePath, m->MemberName,
                                             "Wire command received for nonexistant member");
@@ -401,8 +401,8 @@ RR_SHARED_PTR<void> ServiceSkel::GetCallbackFunction(uint32_t endpoint, boost::s
     throw MemberNotFoundException("Callback " + membername + " not found");
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m,
-                                                               RR_SHARED_PTR<Endpoint> e)
+RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallMemoryFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                                               const RR_SHARED_PTR<Endpoint>& e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), m_ServicePath, m->MemberName,
                                             "Memory request received for nonexistant member");
@@ -419,7 +419,7 @@ bool ServiceSkel::IsLocked()
     return lock->IsLocked();
 }
 
-bool ServiceSkel::IsRequestNoLock(RR_INTRUSIVE_PTR<MessageEntry> m) { return false; }
+bool ServiceSkel::IsRequestNoLock(const RR_INTRUSIVE_PTR<MessageEntry>& m) { RR_UNUSED(m); return false; }
 
 bool ServiceSkel::IsMonitorLocked()
 {
@@ -465,7 +465,7 @@ std::string ServiceSkel::GetObjectType(RobotRaconteurVersion client_version)
     throw ObjectNotFoundException("Service requires newer client version");
 }
 
-void ServiceSkel::CallGeneratorNext(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> ep)
+void ServiceSkel::CallGeneratorNext(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& ep)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, m->MemberName,
                                             "CallGeneratorNext");
@@ -489,8 +489,8 @@ void ServiceSkel::CallGeneratorNext(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_
     gen->CallNext(m);
 }
 
-void ServiceSkel::SendGeneratorResponse(int32_t index, RR_INTRUSIVE_PTR<MessageEntry> m,
-                                        RR_SHARED_PTR<ServerEndpoint> ep)
+void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                        const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, m->MemberName,
                                             "SendGeneratorResponse generator id: " << index);
@@ -508,7 +508,7 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, RR_INTRUSIVE_PTR<MessageE
         }
     }
 
-    boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
         boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
     GetContext()->AsyncSendMessage(m, ep, h);
 }
@@ -603,7 +603,7 @@ std::string ServerContext::GetRootObjectType(RobotRaconteurVersion client_versio
     return GetObjectType(m_ServiceName, client_version);
 }
 
-ServerContext::ServerContext(RR_SHARED_PTR<ServiceFactory> f, RR_SHARED_PTR<RobotRaconteurNode> node)
+ServerContext::ServerContext(const RR_SHARED_PTR<ServiceFactory>& f, const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
     InitializeInstanceFields();
     m_ServiceDef = f;
@@ -621,7 +621,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ServerContext::GetNode()
     return n;
 }
 
-void ServerContext::SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m)
+void ServerContext::SendEvent(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
 
     try
@@ -677,7 +677,7 @@ void ServerContext::SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m)
                 try
                 {
                     GetNode()->CheckConnection(c->GetLocalEndpoint());
-                    boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+                    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
                         boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
                     AsyncSendMessage(m2, c, h);
                 }
@@ -704,7 +704,7 @@ void ServerContext::SendEvent(RR_INTRUSIVE_PTR<MessageEntry> m)
 }
 #undef SendMessage
 
-void ServerContext::SendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void ServerContext::SendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
 
     RR_SHARED_PTR<ServerEndpoint> s;
@@ -722,7 +722,7 @@ void ServerContext::SendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
     SendMessage(m, s);
 }
 
-void ServerContext::SendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e)
+void ServerContext::SendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e)
 {
     // m.ServicePath = ServiceName;
 
@@ -734,8 +734,8 @@ void ServerContext::SendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<
     e->SendMessage(mm);
 }
 
-void ServerContext::AsyncSendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e,
-                                     boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void ServerContext::AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e,
+                                     boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
     RR_SHARED_PTR<ServerEndpoint> s;
@@ -754,8 +754,8 @@ void ServerContext::AsyncSendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t 
     AsyncSendMessage(m, s, (callback));
 }
 
-void ServerContext::AsyncSendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e,
-                                     boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void ServerContext::AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e,
+                                     boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
     // m.ServicePath = ServiceName;
@@ -768,8 +768,8 @@ void ServerContext::AsyncSendMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED
     e->AsyncSendMessage(mm, callback);
 }
 
-void ServerContext::AsyncSendUnreliableMessage(RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> e,
-                                               boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void ServerContext::AsyncSendUnreliableMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& e,
+                                               boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
     mm->header = CreateMessageHeader();
@@ -779,8 +779,8 @@ void ServerContext::AsyncSendUnreliableMessage(RR_INTRUSIVE_PTR<MessageEntry> m,
     e->AsyncSendMessage(mm, callback);
 }
 
-void ServerContext::AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e, bool unreliable,
-                                         boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void ServerContext::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
+                                         boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     if (!unreliable)
     {
@@ -809,7 +809,7 @@ void ServerContext::AsyncSendPipeMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint3
     }
 }
 
-void ServerContext::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e)
+void ServerContext::SendWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m->ServicePath, m->MemberName,
                                             "Service sending reliable wire packet EntryType " << m->EntryType);
@@ -825,12 +825,12 @@ void ServerContext::SendWireMessage(RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t e
         }
         s = e1->second;
     }
-    boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
         boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
     AsyncSendUnreliableMessage(m, s, h);
 }
 
-void ServerContext::SetSecurityPolicy(RR_SHARED_PTR<ServiceSecurityPolicy> policy)
+void ServerContext::SetSecurityPolicy(const RR_SHARED_PTR<ServiceSecurityPolicy>& policy)
 {
     user_authenticator = policy->Authenticator;
     security_policies = policy->Policies;
@@ -856,8 +856,8 @@ void ServerContext::SetSecurityPolicy(RR_SHARED_PTR<ServiceSecurityPolicy> polic
     }
 }
 
-void ServerContext::SetBaseObject(boost::string_ref name, RR_SHARED_PTR<RRObject> o,
-                                  RR_SHARED_PTR<ServiceSecurityPolicy> policy)
+void ServerContext::SetBaseObject(boost::string_ref name, const RR_SHARED_PTR<RRObject>& o,
+                                  const RR_SHARED_PTR<ServiceSecurityPolicy>& policy)
 {
     if (base_object_set)
     {
@@ -1046,8 +1046,8 @@ std::string ServerContext::GetCurrentServicePath()
 
 boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
 
-RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m,
-                                                                  RR_SHARED_PTR<ServerEndpoint> c)
+RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                                                  const RR_SHARED_PTR<ServerEndpoint>& c)
 {
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName,
@@ -1362,8 +1362,8 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(RR_INTRUSIVE_P
 }
 
 void ServerContext::AsyncProcessCallbackRequest(
-    RR_INTRUSIVE_PTR<MessageEntry> m, uint32_t endpoint,
-    RR_MOVE_ARG(boost::function<void(RR_INTRUSIVE_PTR<MessageEntry>, RR_SHARED_PTR<RobotRaconteurException>)>) handler,
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t endpoint,
+    RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>&, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
     int32_t timeout)
 {
     try
@@ -1404,7 +1404,7 @@ void ServerContext::AsyncProcessCallbackRequest(
                                                 "AsyncProcessCallbackRequest sending message with requestid "
                                                     << myrequestid << " EntryType " << m->EntryType);
 
-        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
             boost::bind(&ServerContext::AsyncProcessCallbackRequest_err, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                         endpoint, myrequestid);
         AsyncSendMessage(m, endpoint, h);
@@ -1417,7 +1417,7 @@ void ServerContext::AsyncProcessCallbackRequest(
     }
 }
 
-void ServerContext::AsyncProcessCallbackRequest_err(RR_SHARED_PTR<RobotRaconteurException> error, uint32_t endpoint,
+void ServerContext::AsyncProcessCallbackRequest_err(const RR_SHARED_PTR<RobotRaconteurException>& error, uint32_t endpoint,
                                                     uint32_t requestid)
 {
 
@@ -1501,7 +1501,7 @@ void ServerContext::Close()
 
     {
         boost::mutex::scoped_lock lock(outstanding_requests_lock);
-        BOOST_FOREACH (RR_SHARED_PTR<outstanding_request> e, outstanding_requests | boost::adaptors::map_values)
+        BOOST_FOREACH (const RR_SHARED_PTR<outstanding_request>& e, outstanding_requests | boost::adaptors::map_values)
         {
             e->evt->Set();
         }
@@ -1576,7 +1576,7 @@ void ServerContext::Close()
                                             "Close service complete \"" << GetServiceName() << "\"");
 }
 
-void ServerContext::MessageReceived(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ServerEndpoint> e)
+void ServerContext::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m, const RR_SHARED_PTR<ServerEndpoint>& e)
 {
 
     RR_INTRUSIVE_PTR<Message> mret = CreateMessage();
@@ -1599,13 +1599,13 @@ void ServerContext::MessageReceived(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<S
     }
     if (mret->entries.size() > 0)
     {
-        boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
             boost::bind(&rr_context_node_handler, GetNode(), RR_BOOST_PLACEHOLDERS(_1));
         e->AsyncSendMessage(mret, h);
     }
 }
 
-void ServerContext::AddClient(RR_SHARED_PTR<ServerEndpoint> cendpoint)
+void ServerContext::AddClient(const RR_SHARED_PTR<ServerEndpoint>& cendpoint)
 {
 
     {
@@ -1639,7 +1639,7 @@ void ServerContext::AddClient(RR_SHARED_PTR<ServerEndpoint> cendpoint)
     }
 }
 
-void ServerContext::RemoveClient(RR_SHARED_PTR<ServerEndpoint> cendpoint)
+void ServerContext::RemoveClient(const RR_SHARED_PTR<ServerEndpoint>& cendpoint)
 {
 
     // TODO: possible deadlock
@@ -1773,8 +1773,8 @@ void ServerContext::KickUser(boost::string_ref username)
     }
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ClientSessionOp(RR_INTRUSIVE_PTR<MessageEntry> m,
-                                                              RR_SHARED_PTR<ServerEndpoint> e)
+RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ClientSessionOp(const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                                              const RR_SHARED_PTR<ServerEndpoint>& e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), m->ServicePath, m->MemberName,
                                             "ClientSessionOp");
@@ -1842,7 +1842,7 @@ bool ServerContext::RequireValidUser() { return m_RequireValidUser; }
 
 RR_SHARED_PTR<AuthenticatedUser> ServerContext::AuthenticateUser(
     boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& credentials,
-    RR_SHARED_PTR<ServerEndpoint> ep)
+    const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
 
     if (!user_authenticator)
@@ -1857,7 +1857,7 @@ RR_SHARED_PTR<AuthenticatedUser> ServerContext::AuthenticateUser(
     return user_authenticator->AuthenticateUser(username, credentials, shared_from_this(), tc);
 }
 
-void ServerContext::ClientLockOp(RR_INTRUSIVE_PTR<MessageEntry> m, RR_INTRUSIVE_PTR<MessageEntry> ret)
+void ServerContext::ClientLockOp(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_INTRUSIVE_PTR<MessageEntry>& ret)
 {
 
     {
@@ -2078,7 +2078,7 @@ std::string ServerContext::GetObjectLockUsername(boost::string_ref servicepath)
     return lock->GetUsername();
 }
 
-void ServerContext::check_lock(RR_SHARED_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageEntry> m)
+void ServerContext::check_lock(const RR_SHARED_PTR<ServiceSkel>& skel, const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
     check_monitor_lock(skel);
     if (skel->IsLocked())
@@ -2104,7 +2104,7 @@ void ServerContext::check_lock(RR_SHARED_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR
     }
 }
 
-void ServerContext::check_monitor_lock(RR_SHARED_PTR<ServiceSkel> skel)
+void ServerContext::check_monitor_lock(const RR_SHARED_PTR<ServiceSkel>& skel)
 {
     boost::mutex::scoped_lock lock2(skel->monitorlocks_lock);
     if (skel->IsMonitorLocked())
@@ -2124,15 +2124,16 @@ void ServerContext::check_monitor_lock(RR_SHARED_PTR<ServiceSkel> skel)
 void ServerContext::PeriodicCleanupTask()
 {
     boost::mutex::scoped_lock lock(skels_lock);
-    BOOST_FOREACH (RR_SHARED_PTR<ServiceSkel> s, skels | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<ServiceSkel>& s, skels | boost::adaptors::map_values)
     {
         s->CleanupGenerators();
     }
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> ServerContext::CheckServiceCapability(RR_INTRUSIVE_PTR<MessageEntry> m,
-                                                                     RR_SHARED_PTR<ServerEndpoint> c)
+RR_INTRUSIVE_PTR<MessageEntry> ServerContext::CheckServiceCapability(const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                                                     const RR_SHARED_PTR<ServerEndpoint>& c)
 {
+    RR_UNUSED(c);
     RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_ServiceCheckCapabilityRet, m->MemberName);
     ret->ServicePath = m->ServicePath;
     ret->RequestID = m->RequestID;
@@ -2259,7 +2260,7 @@ void ServerContext::ReleaseServicePath(boost::string_ref path, const std::vector
             try
             {
                 GetNode()->CheckConnection(c->GetLocalEndpoint());
-                boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> h =
+                boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
                     boost::bind(&rr_context_emptyhandler, RR_BOOST_PLACEHOLDERS(_1));
                 AsyncSendMessage(ShallowCopyMessageEntry(m), c, h);
             }
@@ -2279,7 +2280,7 @@ void ServerContext::ReleaseServicePath(boost::string_ref path, const std::vector
     }
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(RR_INTRUSIVE_PTR<MessageEntry> m,
+RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                                                                      uint32_t endpointid)
 {
     ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
@@ -2498,7 +2499,7 @@ const std::string ServerEndpoint::GetAuthenticatedUsername() const
     return endpoint_authenticated_user->GetUsername();
 }
 
-void ServerEndpoint::MessageReceived(RR_INTRUSIVE_PTR<Message> m)
+void ServerEndpoint::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
 {
     if (m->entries.size() > 0)
     {
@@ -2545,7 +2546,7 @@ void ServerEndpoint::PeriodicCleanupTask()
     }
 }
 
-void ServerEndpoint::SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c)
+void ServerEndpoint::SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c)
 {
     Endpoint::SetTransportConnection(c);
     bool m = c->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE |

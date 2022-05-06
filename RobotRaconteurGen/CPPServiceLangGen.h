@@ -153,7 +153,7 @@ class CPPServiceLangGen
     static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
 
     // File generators
-    static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef,
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef,
                               std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
                               const std::vector<std::string>& extra_include, std::string path = ".");
 

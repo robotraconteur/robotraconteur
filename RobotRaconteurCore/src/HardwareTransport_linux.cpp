@@ -93,8 +93,8 @@ Sdp_Functions::~Sdp_Functions()
 
 // BluezBluetoothConnector
 
-BluezBluetoothConnector::BluezBluetoothConnector(RR_SHARED_PTR<HardwareTransport> parent, RR_SHARED_PTR<void> dbus_f,
-                                                 RR_SHARED_PTR<void> sdp_f)
+BluezBluetoothConnector::BluezBluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent, const RR_SHARED_PTR<void>& dbus_f,
+                                                 const RR_SHARED_PTR<void>& sdp_f)
     : BluetoothConnector(parent)
 {
     this->dbus_f = RR_STATIC_POINTER_CAST<DBus_Functions>(dbus_f);
@@ -413,10 +413,10 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
 
 // HardwareTransport_linux_discovery
 
-HardwareTransport_linux_discovery::HardwareTransport_linux_discovery(RR_SHARED_PTR<HardwareTransport> parent,
+HardwareTransport_linux_discovery::HardwareTransport_linux_discovery(const RR_SHARED_PTR<HardwareTransport>& parent,
                                                                      const std::vector<std::string>& schemes,
-                                                                     RR_SHARED_PTR<LibUsbDeviceManager> usb,
-                                                                     RR_SHARED_PTR<BluezBluetoothConnector> bt)
+                                                                     const RR_SHARED_PTR<LibUsbDeviceManager>& usb,
+                                                                     const RR_SHARED_PTR<BluezBluetoothConnector>& bt)
     : HardwareTransport_discovery(parent, schemes, usb, bt)
 {
     running = false;

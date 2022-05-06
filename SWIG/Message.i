@@ -95,8 +95,8 @@ public:
 	MessageEntry(MessageEntryType t, const std::string& n);
 	uint32_t ComputeSize();
 	boost::intrusive_ptr<MessageElement> FindElement(const std::string& name);
-	//boost::intrusive_ptr<MessageElement> AddElement(const std::string& name, boost::intrusive_ptr<RobotRaconteur::MessageElementData> data);
-	boost::intrusive_ptr<MessageElement> AddElement(boost::intrusive_ptr<RobotRaconteur::MessageElement> m);
+	//boost::intrusive_ptr<MessageElement> AddElement(const std::string& name, const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& data);
+	boost::intrusive_ptr<MessageElement> AddElement(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& m);
 	//void Write(ArrayBinaryWriter &w);
 	//void Read(ArrayBinaryReader &r);
 
@@ -121,13 +121,13 @@ public:
 	std::vector<uint8_t> Extended;
 	uint32_t DataCount;
 	MessageElement();
-	//MessageElement(std::string name, boost::intrusive_ptr<RobotRaconteur::MessageElementData> datin);
+	//MessageElement(std::string name, const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& datin);
 
 
 	RR_MAKE_METHOD_PRIVATE(GetData);
 	RR_MAKE_METHOD_PRIVATE(SetData);
 	boost::intrusive_ptr<RobotRaconteur::MessageElementData> GetData();
-	void SetData(boost::intrusive_ptr<RobotRaconteur::MessageElementData> value);
+	void SetData(const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& value);
 
 	uint32_t ComputeSize();
 	void UpdateData();
@@ -161,12 +161,12 @@ public:
 class MessageElementDataUtil
 {
 public:
-	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> ToRRBaseArray(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
+	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> ToRRBaseArray(const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& m)
 	{
 		return boost::dynamic_pointer_cast<RRBaseArray>(m);
 	}
 		
-	static boost::intrusive_ptr<RobotRaconteur::MessageElementNestedElementList> ToMessageElementNestedElementList(boost::intrusive_ptr<RobotRaconteur::MessageElementData> m)
+	static boost::intrusive_ptr<RobotRaconteur::MessageElementNestedElementList> ToMessageElementNestedElementList(const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& m)
 	{
 		return boost::dynamic_pointer_cast<MessageElementNestedElementList>(m);
 	}

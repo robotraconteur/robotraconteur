@@ -353,7 +353,7 @@ std::string JavaServiceLangGen::str_pack_parameters_delegate(const std::vector<R
 }
 
 std::string JavaServiceLangGen::str_pack_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
-                                                  boost::shared_ptr<TypeDefinition> rettype)
+                                                  const boost::shared_ptr<TypeDefinition>& rettype)
 {
     if (!rettype || rettype->Type == DataTypes_void_t)
     {
@@ -816,7 +816,7 @@ void JavaServiceLangGen::GeneratePod(ServiceEntryDefinition* e, ostream* w)
     w2 << "}" << endl << endl;
 }
 
-void JavaServiceLangGen::GenerateNamedArray(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
+void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -1451,7 +1451,7 @@ void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::strin
     w2 << "    String[] rr_stype = RobotRaconteurNode.splitQualifiedName(rr_type);" << endl;
     w2 << "    if (!rr_stype[0].equals(\"" << d->Name << "\")) return RobotRaconteurNode.s().downCastException(rr_exp);"
        << endl;
-    BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e, d->Exceptions)
+    BOOST_FOREACH (const RR_SHARED_PTR<ExceptionDefinition>& e, d->Exceptions)
     {
         w2 << "    if (rr_stype[1].equals(\"" << e->Name << "\")) return new " << fix_name(e->Name)
            << "(rr_exp.getMessage(),rr_exp.errorSubName,rr_exp.errorParam);" << endl;
@@ -1584,7 +1584,7 @@ void JavaServiceLangGen::GeneratePodStub(ServiceEntryDefinition* e, ostream* w)
     w2 << "}" << endl;
 }
 
-void JavaServiceLangGen::GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w)
+void JavaServiceLangGen::GenerateNamedArrayStub(const RR_SHARED_PTR<ServiceEntryDefinition>& e, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -3036,7 +3036,7 @@ void JavaServiceLangGen::GeneratePodFile(ServiceEntryDefinition* d, ostream* w)
     GeneratePod(d, w);
 }
 
-void JavaServiceLangGen::GenerateNamedArrayFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w)
+void JavaServiceLangGen::GenerateNamedArrayFile(const RR_SHARED_PTR<ServiceEntryDefinition>& d, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -3062,7 +3062,7 @@ void JavaServiceLangGen::GeneratePodStubFile(ServiceEntryDefinition* d, ostream*
     GeneratePodStub(d, w);
 }
 
-void JavaServiceLangGen::GenerateNamedArrayStubFile(RR_SHARED_PTR<ServiceEntryDefinition> d, ostream* w)
+void JavaServiceLangGen::GenerateNamedArrayStubFile(const RR_SHARED_PTR<ServiceEntryDefinition>& d, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -3476,7 +3476,7 @@ void JavaServiceLangGen::GenerateDefaultImplFile(ServiceEntryDefinition* d, ostr
     GenerateDefaultImpl(d, w);
 }
 
-void JavaServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path)
+void JavaServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, std::string path)
 {
 #ifdef _WIN32
     const std::string os_pathsep("\\");
@@ -3502,7 +3502,7 @@ void JavaServiceLangGen::GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::
     GenerateServiceFactoryFile(d.get(), servicedef, &f1);
     f1.close();
 
-    BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> e, d->Exceptions)
+    BOOST_FOREACH (const RR_SHARED_PTR<ExceptionDefinition>& e, d->Exceptions)
     {
         ofstream f2((p.string() + os_pathsep + fix_name((e->Name)) + ".java").c_str());
         GenerateExceptionFile(e.get(), d.get(), &f2);

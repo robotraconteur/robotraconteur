@@ -64,7 +64,7 @@ boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLo
 RR_SHARED_PTR<LocalTransportFD> CreatePidFile(const boost::filesystem::path& path, bool for_name = false);
 RR_SHARED_PTR<LocalTransportFD> CreateInfoFile(const boost::filesystem::path& path,
                                                std::map<std::string, std::string> info, bool for_name = false);
-void RefreshInfoFile(RR_SHARED_PTR<LocalTransportFD> h_info, boost::string_ref service_nonce);
+void RefreshInfoFile(const RR_SHARED_PTR<LocalTransportFD>& h_info, boost::string_ref service_nonce);
 
 void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path,
                           boost::string_ref scheme, const boost::posix_time::ptime& now,
@@ -95,12 +95,12 @@ class FD
 class LocalTransportConnection : public detail::ASIOStreamBaseTransport
 {
   public:
-    LocalTransportConnection(RR_SHARED_PTR<LocalTransport> parent, bool server, uint32_t local_endpoint);
+    LocalTransportConnection(const RR_SHARED_PTR<LocalTransport>& parent, bool server, uint32_t local_endpoint);
 
     void AsyncAttachSocket(RR_SHARED_PTR<detail::LocalTransport_socket> socket, std::string noden,
-                           boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+                           boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
   protected:
     virtual void async_write_some(
@@ -139,15 +139,15 @@ class LocalTransportConnection : public detail::ASIOStreamBaseTransport
 };
 
 void LocalTransport_attach_transport(
-    RR_SHARED_PTR<LocalTransport> parent, RR_SHARED_PTR<detail::LocalTransport_socket> socket, bool server,
+    const RR_SHARED_PTR<LocalTransport>& parent, RR_SHARED_PTR<detail::LocalTransport_socket> socket, bool server,
     uint32_t endpoint, std::string noden,
-    boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, RR_SHARED_PTR<ITransportConnection>,
-                         RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
+                         const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-void LocalTransport_connected_callback2(RR_SHARED_PTR<LocalTransport> parent,
+void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& parent,
                                         RR_SHARED_PTR<detail::LocalTransport_socket> socket,
-                                        RR_SHARED_PTR<ITransportConnection> connection,
-                                        RR_SHARED_PTR<RobotRaconteurException> err);
+                                        const RR_SHARED_PTR<ITransportConnection>& connection,
+                                        const RR_SHARED_PTR<RobotRaconteurException>& err);
 
 namespace detail
 {

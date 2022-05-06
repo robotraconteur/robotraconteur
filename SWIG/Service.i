@@ -32,13 +32,13 @@ class WrappedServiceSkelDirector
 {
 public:
 	virtual ~WrappedServiceSkelDirector() {}
-	virtual void Init(boost::shared_ptr<RobotRaconteur::WrappedServiceSkel> skel);
+	virtual void Init(const boost::shared_ptr<RobotRaconteur::WrappedServiceSkel>& skel);
 	%rename (_CallGetProperty) CallGetProperty;
-	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallGetProperty(const std::string& name, boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adaptor);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallGetProperty(const std::string& name, const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
 	%rename (_CallSetProperty) CallSetProperty;
-	virtual void CallSetProperty(const std::string& name, boost::intrusive_ptr<RobotRaconteur::MessageElement> m, boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adaptor);
+	virtual void CallSetProperty(const std::string& name, const boost::intrusive_ptr<RobotRaconteur::MessageElement>& m, const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
 	%rename (_CallFunction) CallFunction;
-	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallFunction(const std::string& name, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m, boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adaptor);
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallFunction(const std::string& name, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m, const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
 	%rename (_GetSubObj) GetSubObj;
 	virtual boost::shared_ptr<RobotRaconteur::WrappedRRObject> GetSubObj(const std::string& name, const std::string& index);
 	%rename (_GetArrayMemory) GetArrayMemory;
@@ -111,7 +111,7 @@ public:
 		objectheapid=0;
 	}
 	
-	void OuterCallback(boost::shared_ptr<ServerContext> c,ServerServiceListenerEventType code,boost::shared_ptr<void> p)
+	void OuterCallback(const boost::shared_ptr<ServerContext>& c,ServerServiceListenerEventType code,const boost::shared_ptr<void>& p)
 	{
 		if (code==ServerServiceListenerEventType_ClientConnected || code==ServerServiceListenerEventType_ClientDisconnected)
 		{
@@ -163,7 +163,7 @@ public:
 		
 	}
 	
-	void SetServiceAttributes(boost::intrusive_ptr<MessageElement> attributes)
+	void SetServiceAttributes(const boost::intrusive_ptr<MessageElement>& attributes)
 	{
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteur::detail::packing::UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementNestedElementList >(),NULL));
 		$self->SetAttributes(mmap->GetStorageContainer());		
@@ -232,7 +232,7 @@ public:
 	void MakeAsync();
 	bool IsAsync();
 	void End(const HandlerErrorInfo& err);
-	void End(boost::intrusive_ptr<RobotRaconteur::MessageElement> ret, const HandlerErrorInfo& err);
+	void End(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& ret, const HandlerErrorInfo& err);
 };
 
 }

@@ -813,7 +813,7 @@ ServiceDefinition::ServiceDefinition()
     Imports = std::vector<std::string>();
 }
 
-ServiceEntryDefinition::ServiceEntryDefinition(RR_SHARED_PTR<ServiceDefinition> def)
+ServiceEntryDefinition::ServiceEntryDefinition(const RR_SHARED_PTR<ServiceDefinition>& def)
 {
     Members.clear();
     EntryType = DataTypes_structure_t;
@@ -925,7 +925,7 @@ void ServiceEntryDefinition::FromString(boost::string_ref s, const ServiceDefini
 
 template <typename member_type>
 static void ServiceEntryDefinition_FromString_DoMember(boost::string_ref l, const std::string& docstring,
-                                                       RR_SHARED_PTR<ServiceEntryDefinition> entry,
+                                                       const RR_SHARED_PTR<ServiceEntryDefinition>& entry,
                                                        const ServiceDefinitionParseInfo& parse_info)
 {
     RR_SHARED_PTR<member_type> member = RR_MAKE_SHARED<member_type>(entry);
@@ -1408,7 +1408,7 @@ static bool MemberDefinition_ParseFormat_common(boost::string_ref s, MemberDefin
 
 static void MemberDefinition_FromStringFormat_common(MemberDefiniton_ParseResults& parse_res, boost::string_ref s1,
                                                      const std::vector<std::string>& member_types,
-                                                     RR_SHARED_PTR<MemberDefinition> def,
+                                                     const RR_SHARED_PTR<MemberDefinition>& def,
                                                      ServiceDefinitionParseInfo parse_info)
 {
 
@@ -1428,7 +1428,7 @@ static void MemberDefinition_FromStringFormat_common(MemberDefiniton_ParseResult
 }
 
 static void MemberDefinition_FromStringFormat1(boost::string_ref s1, const std::vector<std::string>& member_types,
-                                               RR_SHARED_PTR<MemberDefinition> def, RR_SHARED_PTR<TypeDefinition>& type,
+                                               const RR_SHARED_PTR<MemberDefinition>& def, RR_SHARED_PTR<TypeDefinition>& type,
                                                const ServiceDefinitionParseInfo& parse_info)
 {
     MemberDefiniton_ParseResults parse_res;
@@ -1447,7 +1447,7 @@ static void MemberDefinition_FromStringFormat1(boost::string_ref s1, const std::
     }
 }
 static void MemberDefinition_FromStringFormat1(boost::string_ref s1, boost::string_ref member_type,
-                                               RR_SHARED_PTR<MemberDefinition> def, RR_SHARED_PTR<TypeDefinition>& type,
+                                               const RR_SHARED_PTR<MemberDefinition>& def, RR_SHARED_PTR<TypeDefinition>& type,
                                                const ServiceDefinitionParseInfo& parse_info)
 {
     std::vector<std::string> member_types;
@@ -1468,7 +1468,7 @@ static std::string MemberDefinition_ToStringFormat1(boost::string_ref member_typ
 
 static void MemberDefinition_ParamatersFromStrings(const std::vector<std::string>& s,
                                                    std::vector<RR_SHARED_PTR<TypeDefinition> >& params,
-                                                   RR_SHARED_PTR<MemberDefinition> def,
+                                                   const RR_SHARED_PTR<MemberDefinition>& def,
                                                    const ServiceDefinitionParseInfo& parse_info)
 {
     BOOST_FOREACH (const std::string& s1, s)
@@ -1483,7 +1483,7 @@ static void MemberDefinition_ParamatersFromStrings(const std::vector<std::string
 static std::string MemberDefinition_ParametersToString(const std::vector<RR_SHARED_PTR<TypeDefinition> >& params)
 {
     std::vector<std::string> params2;
-    BOOST_FOREACH (RR_SHARED_PTR<TypeDefinition> p, params)
+    BOOST_FOREACH (const RR_SHARED_PTR<TypeDefinition>& p, params)
     {
         TypeDefinition p2;
         p->CopyTo(p2);
@@ -1495,7 +1495,7 @@ static std::string MemberDefinition_ParametersToString(const std::vector<RR_SHAR
 }
 
 static void MemberDefinition_FromStringFormat2(boost::string_ref s1, boost::string_ref member_type,
-                                               RR_SHARED_PTR<MemberDefinition> def,
+                                               const RR_SHARED_PTR<MemberDefinition>& def,
                                                RR_SHARED_PTR<TypeDefinition>& return_type,
                                                std::vector<RR_SHARED_PTR<TypeDefinition> >& params,
                                                const ServiceDefinitionParseInfo& parse_info)
@@ -1537,7 +1537,7 @@ static std::string MemberDefinition_ToStringFormat2(boost::string_ref member_typ
 }
 
 static void MemberDefinition_FromStringFormat3(boost::string_ref s1, boost::string_ref member_type,
-                                               RR_SHARED_PTR<MemberDefinition> def,
+                                               const RR_SHARED_PTR<MemberDefinition>& def,
                                                std::vector<RR_SHARED_PTR<TypeDefinition> >& params,
                                                const ServiceDefinitionParseInfo& parse_info)
 {
@@ -1581,7 +1581,7 @@ static MemberDefinition_Direction MemberDefinition_GetDirection(const std::vecto
     return MemberDefinition_Direction_both;
 }
 
-MemberDefinition::MemberDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry)
+MemberDefinition::MemberDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
 {
     this->ServiceEntry = ServiceEntry;
 }
@@ -1609,7 +1609,7 @@ void MemberDefinition::Reset()
     ParseInfo.Reset();
 }
 
-PropertyDefinition::PropertyDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry)
+PropertyDefinition::PropertyDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
     : MemberDefinition(ServiceEntry)
 {}
 
@@ -1646,7 +1646,7 @@ void PropertyDefinition::Reset()
 
 MemberDefinition_Direction PropertyDefinition::Direction() { return MemberDefinition_GetDirection(Modifiers); }
 
-FunctionDefinition::FunctionDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry)
+FunctionDefinition::FunctionDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
     : MemberDefinition(ServiceEntry)
 {
     Reset();
@@ -1692,7 +1692,7 @@ bool FunctionDefinition::IsGenerator()
     return false;
 }
 
-EventDefinition::EventDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry) : MemberDefinition(ServiceEntry)
+EventDefinition::EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
     Reset();
 }
@@ -1718,7 +1718,7 @@ void EventDefinition::Reset()
     Parameters.clear();
 }
 
-ObjRefDefinition::ObjRefDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry) : MemberDefinition(ServiceEntry)
+ObjRefDefinition::ObjRefDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
     Reset();
 }
@@ -1842,7 +1842,7 @@ void ObjRefDefinition::Reset()
     ContainerType = DataTypes_ContainerTypes_none;
 }
 
-PipeDefinition::PipeDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry) : MemberDefinition(ServiceEntry)
+PipeDefinition::PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
     Reset();
 }
@@ -1893,7 +1893,7 @@ bool PipeDefinition::IsUnreliable()
     return false;
 }
 
-CallbackDefinition::CallbackDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry)
+CallbackDefinition::CallbackDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
     : MemberDefinition(ServiceEntry)
 {
     Reset();
@@ -1924,7 +1924,7 @@ void CallbackDefinition::Reset()
     ReturnType.reset();
 }
 
-WireDefinition::WireDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry) : MemberDefinition(ServiceEntry)
+WireDefinition::WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
     Reset();
 }
@@ -1952,7 +1952,7 @@ void WireDefinition::Reset()
 
 MemberDefinition_Direction WireDefinition::Direction() { return MemberDefinition_GetDirection(Modifiers); }
 
-MemoryDefinition::MemoryDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry) : MemberDefinition(ServiceEntry)
+MemoryDefinition::MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
     Reset();
 }
@@ -1986,7 +1986,7 @@ TypeDefinition::TypeDefinition()
     this->member.reset();
 }
 
-TypeDefinition::TypeDefinition(RR_SHARED_PTR<MemberDefinition> member)
+TypeDefinition::TypeDefinition(const RR_SHARED_PTR<MemberDefinition>& member)
 {
     Reset();
     this->member = member;
@@ -2425,8 +2425,8 @@ void TypeDefinition::UnqualifyTypeStringWithUsing()
 }
 
 RR_SHARED_PTR<NamedTypeDefinition> TypeDefinition::ResolveNamedType(
-    std::vector<RR_SHARED_PTR<ServiceDefinition> > imported_defs, RR_SHARED_PTR<RobotRaconteurNode> node,
-    RR_SHARED_PTR<RRObject> client)
+    const std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs, const RR_SHARED_PTR<RobotRaconteurNode>& node,
+    const RR_SHARED_PTR<RRObject>& client)
 {
     RR_SHARED_PTR<NamedTypeDefinition> o = ResolveNamedType_cache.lock();
     if (o)
@@ -2523,7 +2523,7 @@ RR_SHARED_PTR<NamedTypeDefinition> TypeDefinition::ResolveNamedType(
 
 ExceptionDefinition::~ExceptionDefinition() {}
 
-ExceptionDefinition::ExceptionDefinition(RR_SHARED_PTR<ServiceDefinition> service) { this->service = service; }
+ExceptionDefinition::ExceptionDefinition(const RR_SHARED_PTR<ServiceDefinition>& service) { this->service = service; }
 
 std::string ExceptionDefinition::ToString() { return "exception " + Name; }
 
@@ -2550,7 +2550,7 @@ void ExceptionDefinition::Reset()
 
 UsingDefinition::~UsingDefinition() {}
 
-UsingDefinition::UsingDefinition(RR_SHARED_PTR<ServiceDefinition> service) { this->service = service; }
+UsingDefinition::UsingDefinition(const RR_SHARED_PTR<ServiceDefinition>& service) { this->service = service; }
 
 std::string UsingDefinition::ToString()
 {
@@ -2602,8 +2602,8 @@ void UsingDefinition::FromString(boost::string_ref s, const ServiceDefinitionPar
 
 ConstantDefinition::~ConstantDefinition() {}
 
-ConstantDefinition::ConstantDefinition(RR_SHARED_PTR<ServiceDefinition> service) { this->service = service; }
-ConstantDefinition::ConstantDefinition(RR_SHARED_PTR<ServiceEntryDefinition> service_entry)
+ConstantDefinition::ConstantDefinition(const RR_SHARED_PTR<ServiceDefinition>& service) { this->service = service; }
+ConstantDefinition::ConstantDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& service_entry)
 {
     this->service_entry = service_entry;
 }
@@ -2961,7 +2961,7 @@ std::vector<ConstantDefinition_StructField> ConstantDefinition::ValueToStructFie
 
 EnumDefinition::~EnumDefinition() {}
 
-EnumDefinition::EnumDefinition(RR_SHARED_PTR<ServiceDefinition> service)
+EnumDefinition::EnumDefinition(const RR_SHARED_PTR<ServiceDefinition>& service)
 {
     this->service = service;
     Reset();
@@ -3296,7 +3296,7 @@ const char* ServiceDefinitionVerifyException::what() const throw() { return what
 
 // Code to verify the service definition.  Most of these functions are not made available in the header.
 
-static void VerifyVersionSupport(RR_SHARED_PTR<ServiceDefinition>& def, int32_t major, int32_t minor, const char* msg)
+static void VerifyVersionSupport(const RR_SHARED_PTR<ServiceDefinition>& def, int32_t major, int32_t minor, const char* msg)
 {
     RobotRaconteurVersion def_version = def->StdVer;
     if (!def_version)
@@ -3316,10 +3316,10 @@ static void VerifyVersionSupport(RR_SHARED_PTR<ServiceDefinition>& def, int32_t 
     }
 }
 
-void VerifyName(std::string name, RR_SHARED_PTR<ServiceDefinition> def, const ServiceDefinitionParseInfo& parse_info,
+void VerifyName(std::string name, const RR_SHARED_PTR<ServiceDefinition>& def, const ServiceDefinitionParseInfo& parse_info,
                 bool allowdot = false, bool ignorereserved = false)
 {
-
+    RR_UNUSED(def);
     if (name.length() == 0)
         throw ServiceDefinitionVerifyException("name must not be empty", parse_info);
 
@@ -3366,7 +3366,7 @@ void VerifyName(std::string name, RR_SHARED_PTR<ServiceDefinition> def, const Se
     }
 }
 
-std::string VerifyConstant(boost::string_ref constant, RR_SHARED_PTR<ServiceDefinition> def,
+std::string VerifyConstant(boost::string_ref constant, const RR_SHARED_PTR<ServiceDefinition>& def,
                            const ServiceDefinitionParseInfo& parse_info)
 {
     RR_SHARED_PTR<ConstantDefinition> c = RR_MAKE_SHARED<ConstantDefinition>(def);
@@ -3390,7 +3390,7 @@ std::string VerifyConstant(boost::string_ref constant, RR_SHARED_PTR<ServiceDefi
     return c->Name;
 }
 
-void VerifyConstantStruct(const RR_SHARED_PTR<ConstantDefinition>& c, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyConstantStruct(const RR_SHARED_PTR<ConstantDefinition>& c, const RR_SHARED_PTR<ServiceDefinition>& def,
                           std::vector<RR_SHARED_PTR<ConstantDefinition> >& constants,
                           std::vector<std::string> parent_types)
 {
@@ -3426,7 +3426,7 @@ void VerifyConstantStruct(const RR_SHARED_PTR<ConstantDefinition>& c, RR_SHARED_
     }
 }
 
-std::string VerifyConstant(const RR_SHARED_PTR<ConstantDefinition>& c, RR_SHARED_PTR<ServiceDefinition> def,
+std::string VerifyConstant(const RR_SHARED_PTR<ConstantDefinition>& c, const RR_SHARED_PTR<ServiceDefinition>& def,
                            std::vector<RR_SHARED_PTR<ConstantDefinition> >& constants)
 {
     if (!c->VerifyValue())
@@ -3441,7 +3441,7 @@ std::string VerifyConstant(const RR_SHARED_PTR<ConstantDefinition>& c, RR_SHARED
     return c->Name;
 }
 
-void VerifyEnum(EnumDefinition& e, RR_SHARED_PTR<ServiceDefinition> def)
+void VerifyEnum(EnumDefinition& e, const RR_SHARED_PTR<ServiceDefinition>& def)
 {
     if (!e.VerifyValues())
     {
@@ -3455,7 +3455,7 @@ void VerifyEnum(EnumDefinition& e, RR_SHARED_PTR<ServiceDefinition> def)
     }
 }
 
-std::vector<std::string> GetServiceNames(RR_SHARED_PTR<ServiceDefinition>& def)
+std::vector<std::string> GetServiceNames(const RR_SHARED_PTR<ServiceDefinition>& def)
 {
     std::vector<std::string> o;
     BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& e, def->Objects)
@@ -3490,7 +3490,7 @@ std::vector<std::string> GetServiceNames(RR_SHARED_PTR<ServiceDefinition>& def)
     return o;
 }
 
-void VerifyUsing(UsingDefinition& e, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyUsing(UsingDefinition& e, const RR_SHARED_PTR<ServiceDefinition>& def,
                  std::vector<RR_SHARED_PTR<ServiceDefinition> >& importeddefs)
 {
     VerifyName(e.UnqualifiedName, def, e.ParseInfo);
@@ -3502,7 +3502,7 @@ void VerifyUsing(UsingDefinition& e, RR_SHARED_PTR<ServiceDefinition> def,
 
     boost::tuple<boost::string_ref, boost::string_ref> s1 = SplitQualifiedName(e.QualifiedName);
 
-    BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition> d1, importeddefs)
+    BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& d1, importeddefs)
     {
         if (s1.get<0>() == d1->Name)
         {
@@ -3519,7 +3519,7 @@ void VerifyUsing(UsingDefinition& e, RR_SHARED_PTR<ServiceDefinition> def,
 }
 
 RR_SHARED_PTR<NamedTypeDefinition> VerifyResolveNamedType(
-    RR_SHARED_PTR<TypeDefinition> tdef, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs)
+    const RR_SHARED_PTR<TypeDefinition>& tdef, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs)
 {
     try
     {
@@ -3532,9 +3532,10 @@ RR_SHARED_PTR<NamedTypeDefinition> VerifyResolveNamedType(
     }
 }
 
-void VerifyType(RR_SHARED_PTR<TypeDefinition> t, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyType(const RR_SHARED_PTR<TypeDefinition>& t, const RR_SHARED_PTR<ServiceDefinition>& def,
                 std::vector<RR_SHARED_PTR<ServiceDefinition> > defs)
 {
+    RR_UNUSED(def);
     switch (t->ArrayType)
     {
     case DataTypes_ArrayTypes_none:
@@ -3592,7 +3593,7 @@ void VerifyType(RR_SHARED_PTR<TypeDefinition> t, RR_SHARED_PTR<ServiceDefinition
     throw ServiceDefinitionVerifyException("Invalid Robot Raconteur data type \"" + t->ToString() + "\"", t->ParseInfo);
 }
 
-void VerifyReturnType(RR_SHARED_PTR<TypeDefinition> t, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyReturnType(const RR_SHARED_PTR<TypeDefinition>& t, const RR_SHARED_PTR<ServiceDefinition>& def,
                       std::vector<RR_SHARED_PTR<ServiceDefinition> > defs)
 {
     if (t->Type == DataTypes_void_t)
@@ -3610,7 +3611,7 @@ void VerifyReturnType(RR_SHARED_PTR<TypeDefinition> t, RR_SHARED_PTR<ServiceDefi
     }
 }
 
-void VerifyParameters(std::vector<RR_SHARED_PTR<TypeDefinition> > p, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyParameters(std::vector<RR_SHARED_PTR<TypeDefinition> > p, const RR_SHARED_PTR<ServiceDefinition>& def,
                       std::vector<RR_SHARED_PTR<ServiceDefinition> > defs)
 {
     std::vector<std::string*> names;
@@ -3623,7 +3624,7 @@ void VerifyParameters(std::vector<RR_SHARED_PTR<TypeDefinition> > p, RR_SHARED_P
     }
 }
 
-void VerifyModifier(boost::string_ref modifier_str, RR_SHARED_PTR<MemberDefinition>& m,
+void VerifyModifier(boost::string_ref modifier_str, const RR_SHARED_PTR<MemberDefinition>& m,
                     std::vector<ServiceDefinitionParseException>& warnings)
 {
     static boost::regex r_modifier("^[ \\t]*" RR_NAME_REGEX "(?:\\([ \\t]*((?:" RR_NUMBER_REGEX "|" RR_NAME_REGEX
@@ -3671,7 +3672,7 @@ void VerifyModifier(boost::string_ref modifier_str, RR_SHARED_PTR<MemberDefiniti
     }
 }
 
-void VerifyModifiers(RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, bool nolock, bool nolockread,
+void VerifyModifiers(const RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, bool nolock, bool nolockread,
                      bool perclient, bool urgent, std::vector<ServiceDefinitionParseException>& warnings)
 {
     bool direction_found = false;
@@ -3786,7 +3787,7 @@ void VerifyModifiers(RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool un
     }
 }
 
-std::string VerifyMember(RR_SHARED_PTR<MemberDefinition> m, RR_SHARED_PTR<ServiceDefinition> def,
+std::string VerifyMember(const RR_SHARED_PTR<MemberDefinition>& m, const RR_SHARED_PTR<ServiceDefinition>& def,
                          std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
                          std::vector<ServiceDefinitionParseException>& warnings)
 {
@@ -4006,7 +4007,7 @@ struct rrimplements
     std::vector<rrimplements> implements;
 };
 
-rrimplements get_implements(RR_SHARED_PTR<ServiceEntryDefinition> obj, RR_SHARED_PTR<ServiceDefinition> def,
+rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj, const RR_SHARED_PTR<ServiceDefinition>& def,
                             std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                             ServiceDefinitionParseInfo& parse_info, std::string rootobj = "")
 {
@@ -4110,8 +4111,8 @@ rrimplements get_implements(RR_SHARED_PTR<ServiceEntryDefinition> obj, RR_SHARED
     return out;
 }
 
-bool CompareTypeDefinition(RR_SHARED_PTR<ServiceDefinition> d1, RR_SHARED_PTR<TypeDefinition> t1,
-                           RR_SHARED_PTR<ServiceDefinition> d2, RR_SHARED_PTR<TypeDefinition> t2)
+bool CompareTypeDefinition(const RR_SHARED_PTR<ServiceDefinition>& d1, const RR_SHARED_PTR<TypeDefinition>& t1,
+                           const RR_SHARED_PTR<ServiceDefinition>& d2, const RR_SHARED_PTR<TypeDefinition>& t2)
 {
     if (t1->Name != t2->Name)
         return false;
@@ -4163,8 +4164,8 @@ bool CompareTypeDefinition(RR_SHARED_PTR<ServiceDefinition> d1, RR_SHARED_PTR<Ty
     return st1 == st2;
 }
 
-bool CompareTypeDefinitions(RR_SHARED_PTR<ServiceDefinition> d1, std::vector<RR_SHARED_PTR<TypeDefinition> >& t1,
-                            RR_SHARED_PTR<ServiceDefinition> d2, std::vector<RR_SHARED_PTR<TypeDefinition> >& t2)
+bool CompareTypeDefinitions(const RR_SHARED_PTR<ServiceDefinition>& d1, std::vector<RR_SHARED_PTR<TypeDefinition> >& t1,
+                            const RR_SHARED_PTR<ServiceDefinition>& d2, std::vector<RR_SHARED_PTR<TypeDefinition> >& t2)
 {
     if (t1.size() != t2.size())
         return false;
@@ -4177,7 +4178,7 @@ bool CompareTypeDefinitions(RR_SHARED_PTR<ServiceDefinition> d1, std::vector<RR_
     return true;
 }
 
-bool CompareMember(RR_SHARED_PTR<MemberDefinition> m1, RR_SHARED_PTR<MemberDefinition> m2)
+bool CompareMember(const RR_SHARED_PTR<MemberDefinition>& m1, const RR_SHARED_PTR<MemberDefinition>& m2)
 {
     if (m1->Name != m2->Name)
         return false;
@@ -4307,7 +4308,7 @@ bool CompareMember(RR_SHARED_PTR<MemberDefinition> m1, RR_SHARED_PTR<MemberDefin
     return false;
 }
 
-void VerifyObject(RR_SHARED_PTR<ServiceEntryDefinition> obj, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyObject(const RR_SHARED_PTR<ServiceEntryDefinition>& obj, const RR_SHARED_PTR<ServiceDefinition>& def,
                   std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
                   std::vector<ServiceDefinitionParseException>& warnings)
 {
@@ -4339,7 +4340,7 @@ void VerifyObject(RR_SHARED_PTR<ServiceEntryDefinition> obj, RR_SHARED_PTR<Servi
                              "Service definition standard version 0.9 or greater required for \"constant\" keyword");
     }
 
-    BOOST_FOREACH (RR_SHARED_PTR<ConstantDefinition> e, obj->Constants)
+    BOOST_FOREACH (const RR_SHARED_PTR<ConstantDefinition>& e, obj->Constants)
     {
         std::string membername = VerifyConstant(e, def, obj->Constants);
         if (boost::range::find(membernames, membername) != membernames.end())
@@ -4348,7 +4349,7 @@ void VerifyObject(RR_SHARED_PTR<ServiceEntryDefinition> obj, RR_SHARED_PTR<Servi
         membernames.push_back(membername);
     }
 
-    BOOST_FOREACH (RR_SHARED_PTR<MemberDefinition> e, obj->Members)
+    BOOST_FOREACH (const RR_SHARED_PTR<MemberDefinition>& e, obj->Members)
     {
 
         std::string membername = VerifyMember(e, def, defs, warnings);
@@ -4386,7 +4387,7 @@ void VerifyObject(RR_SHARED_PTR<ServiceEntryDefinition> obj, RR_SHARED_PTR<Servi
     }
 }
 
-void VerifyStructure_check_recursion(RR_SHARED_PTR<ServiceEntryDefinition> strut,
+void VerifyStructure_check_recursion(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
                                      std::vector<RR_SHARED_PTR<ServiceDefinition> > defs, std::set<std::string> names,
                                      DataTypes entry_type)
 {
@@ -4423,7 +4424,7 @@ void VerifyStructure_check_recursion(RR_SHARED_PTR<ServiceEntryDefinition> strut
     }
 }
 
-void VerifyStructure_common(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut, const RR_SHARED_PTR<ServiceDefinition>& def,
                             std::vector<RR_SHARED_PTR<ServiceDefinition> > imported_defs,
                             std::vector<RR_SHARED_PTR<ServiceDefinition> > all_defs,
                             std::vector<ServiceDefinitionParseException>& warnings, DataTypes entry_type)
@@ -4449,7 +4450,7 @@ void VerifyStructure_common(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHAR
         }
     }
 
-    BOOST_FOREACH (RR_SHARED_PTR<ConstantDefinition> e, strut->Constants)
+    BOOST_FOREACH (const RR_SHARED_PTR<ConstantDefinition>& e, strut->Constants)
     {
         std::string membername = VerifyConstant(e, def, strut->Constants);
         if (boost::range::find(membernames, membername) != membernames.end())
@@ -4571,7 +4572,7 @@ void VerifyStructure_common(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHAR
     }
 }
 
-void VerifyStructure(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyStructure(const RR_SHARED_PTR<ServiceEntryDefinition>& strut, const RR_SHARED_PTR<ServiceDefinition>& def,
                      std::vector<RR_SHARED_PTR<ServiceDefinition> > imported_defs,
                      std::vector<RR_SHARED_PTR<ServiceDefinition> > all_defs,
                      std::vector<ServiceDefinitionParseException>& warnings)
@@ -4579,7 +4580,7 @@ void VerifyStructure(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<
     VerifyStructure_common(strut, def, imported_defs, all_defs, warnings, DataTypes_structure_t);
 }
 
-void VerifyPod(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyPod(const RR_SHARED_PTR<ServiceEntryDefinition>& strut, const RR_SHARED_PTR<ServiceDefinition>& def,
                std::vector<RR_SHARED_PTR<ServiceDefinition> > imported_defs,
                std::vector<RR_SHARED_PTR<ServiceDefinition> > all_defs,
                std::vector<ServiceDefinitionParseException>& warnings)
@@ -4587,7 +4588,7 @@ void VerifyPod(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<Servic
     VerifyStructure_common(strut, def, imported_defs, all_defs, warnings, DataTypes_pod_t);
 }
 
-void VerifyNamedArray(RR_SHARED_PTR<ServiceEntryDefinition> strut, RR_SHARED_PTR<ServiceDefinition> def,
+void VerifyNamedArray(const RR_SHARED_PTR<ServiceEntryDefinition>& strut, const RR_SHARED_PTR<ServiceDefinition>& def,
                       std::vector<RR_SHARED_PTR<ServiceDefinition> > imported_defs,
                       std::vector<RR_SHARED_PTR<ServiceDefinition> > all_defs,
                       std::vector<ServiceDefinitionParseException>& warnings)
@@ -4601,7 +4602,7 @@ struct rrimports
     std::vector<rrimports> imported;
 };
 
-rrimports get_imports(RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                       std::set<std::string> parent_defs = std::set<std::string>())
 {
     rrimports out;
@@ -4641,7 +4642,7 @@ rrimports get_imports(RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARE
     return out;
 }
 
-void VerifyImports(RR_SHARED_PTR<ServiceDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
+void VerifyImports(const RR_SHARED_PTR<ServiceDefinition>& def, std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
 {
     rrimports c = get_imports(def, defs);
 }
@@ -4684,7 +4685,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
                 e, 0, 9, "Service definition standard version 0.9 or greater required for \"constant\" keyword");
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ConstantDefinition> ee, e->Constants)
+        BOOST_FOREACH (const RR_SHARED_PTR<ConstantDefinition>& ee, e->Constants)
         {
             std::string name = VerifyConstant(ee, e, e->Constants);
             if (boost::range::find(names, name) != names.end())
@@ -4694,7 +4695,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
             names.push_back(name);
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ExceptionDefinition> ee, e->Exceptions)
+        BOOST_FOREACH (const RR_SHARED_PTR<ExceptionDefinition>& ee, e->Exceptions)
         {
             VerifyName(ee->Name, e, e->ParseInfo);
             std::string name = ee->Name;
@@ -4719,7 +4720,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
 
         if (e->StdVer)
         {
-            BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition> ee, importeddefs)
+            BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& ee, importeddefs)
             {
                 if (!ee->StdVer || ee->StdVer > e->StdVer)
                 {
@@ -4765,7 +4766,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
             names.push_back(name);
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition> ee, e->Structures)
+        BOOST_FOREACH (const RR_SHARED_PTR<ServiceEntryDefinition>& ee, e->Structures)
         {
 
             VerifyStructure(ee, e, importeddefs, def, warnings);
@@ -4778,7 +4779,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
             names.push_back(name);
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition> ee, e->Pods)
+        BOOST_FOREACH (const RR_SHARED_PTR<ServiceEntryDefinition>& ee, e->Pods)
         {
 
             VerifyPod(ee, e, importeddefs, def, warnings);
@@ -4791,7 +4792,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
             names.push_back(name);
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition> ee, e->NamedArrays)
+        BOOST_FOREACH (const RR_SHARED_PTR<ServiceEntryDefinition>& ee, e->NamedArrays)
         {
 
             VerifyNamedArray(ee, e, importeddefs, def, warnings);
@@ -4825,8 +4826,8 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
     VerifyServiceDefinitions(def, warnings);
 }
 
-bool CompareConstantDefinition(RR_SHARED_PTR<ServiceDefinition> service1, RR_SHARED_PTR<ConstantDefinition>& d1,
-                               RR_SHARED_PTR<ServiceDefinition> service2, RR_SHARED_PTR<ConstantDefinition>& d2)
+bool CompareConstantDefinition(const RR_SHARED_PTR<ServiceDefinition>& service1, RR_SHARED_PTR<ConstantDefinition>& d1,
+                               const RR_SHARED_PTR<ServiceDefinition>& service2, RR_SHARED_PTR<ConstantDefinition>& d2)
 {
     if (d1->Name != d2->Name)
         return false;
@@ -4837,9 +4838,9 @@ bool CompareConstantDefinition(RR_SHARED_PTR<ServiceDefinition> service1, RR_SHA
     return true;
 }
 
-ROBOTRACONTEUR_CORE_API bool CompareServiceEntryDefinition(RR_SHARED_PTR<ServiceDefinition> service1,
+ROBOTRACONTEUR_CORE_API bool CompareServiceEntryDefinition(const RR_SHARED_PTR<ServiceDefinition>& service1,
                                                            RR_SHARED_PTR<ServiceEntryDefinition>& d1,
-                                                           RR_SHARED_PTR<ServiceDefinition> service2,
+                                                           const RR_SHARED_PTR<ServiceDefinition>& service2,
                                                            RR_SHARED_PTR<ServiceEntryDefinition>& d2)
 {
     if (d1->Name != d2->Name)
@@ -4868,7 +4869,7 @@ ROBOTRACONTEUR_CORE_API bool CompareServiceEntryDefinition(RR_SHARED_PTR<Service
     return true;
 }
 
-bool CompareUsingDefinition(RR_SHARED_PTR<UsingDefinition> u1, RR_SHARED_PTR<UsingDefinition> u2)
+bool CompareUsingDefinition(const RR_SHARED_PTR<UsingDefinition>& u1, const RR_SHARED_PTR<UsingDefinition>& u2)
 {
     if (u1->QualifiedName != u2->QualifiedName)
         return false;
@@ -4877,7 +4878,7 @@ bool CompareUsingDefinition(RR_SHARED_PTR<UsingDefinition> u1, RR_SHARED_PTR<Usi
     return true;
 }
 
-bool CompareEnumDefinition(RR_SHARED_PTR<EnumDefinition> enum1, RR_SHARED_PTR<EnumDefinition> enum2)
+bool CompareEnumDefinition(const RR_SHARED_PTR<EnumDefinition>& enum1, const RR_SHARED_PTR<EnumDefinition>& enum2)
 {
     if (enum1->Name != enum2->Name)
         return false;
@@ -4897,8 +4898,8 @@ bool CompareEnumDefinition(RR_SHARED_PTR<EnumDefinition> enum1, RR_SHARED_PTR<En
     return true;
 }
 
-ROBOTRACONTEUR_CORE_API bool CompareServiceDefinitions(RR_SHARED_PTR<ServiceDefinition> service1,
-                                                       RR_SHARED_PTR<ServiceDefinition> service2)
+ROBOTRACONTEUR_CORE_API bool CompareServiceDefinitions(const RR_SHARED_PTR<ServiceDefinition>& service1,
+                                                       const RR_SHARED_PTR<ServiceDefinition>& service2)
 {
     if (service1->Name != service2->Name)
         return false;
@@ -4987,14 +4988,14 @@ ROBOTRACONTEUR_CORE_API boost::tuple<boost::string_ref, boost::string_ref> Split
     return boost::make_tuple(name.substr(0, pos), name.substr(pos + 1, name.size() - pos - 1));
 }
 
-ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(RR_SHARED_PTR<ServiceEntryDefinition> def,
-                                                            std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-                                                            RR_SHARED_PTR<RobotRaconteurNode> node,
-                                                            RR_SHARED_PTR<RRObject> client)
+ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(const RR_SHARED_PTR<ServiceEntryDefinition>& def,
+                                                            const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                                            const RR_SHARED_PTR<RobotRaconteurNode>& node,
+                                                            const RR_SHARED_PTR<RRObject>& client)
 {
     size_t s = 16;
     s += ArrayBinaryWriter::GetStringByteCount8(def->Name);
-    BOOST_FOREACH (RR_SHARED_PTR<MemberDefinition> m, def->Members)
+    BOOST_FOREACH (const RR_SHARED_PTR<MemberDefinition>& m, def->Members)
     {
         RR_SHARED_PTR<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
         if (IsTypeNumeric(p->Type->Type))
@@ -5037,8 +5038,8 @@ ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(RR_SHARED_PTR<Servic
 }
 
 boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(
-    RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-    RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client, std::set<std::string> n)
+    const RR_SHARED_PTR<ServiceEntryDefinition>& def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<RRObject>& client, std::set<std::string> n)
 {
     if (def->EntryType != DataTypes_namedarray_t)
     {
@@ -5130,8 +5131,8 @@ boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(
 }
 
 ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(
-    RR_SHARED_PTR<ServiceEntryDefinition> def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-    RR_SHARED_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<RRObject> client)
+    const RR_SHARED_PTR<ServiceEntryDefinition>& def, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<RRObject>& client)
 {
     std::set<std::string> n;
     return GetNamedArrayElementTypeAndCount(def, other_defs, node, client, n);

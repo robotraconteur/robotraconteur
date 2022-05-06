@@ -128,10 +128,10 @@
 #define RR_BOOST_ASIO_IO_CONTEXT boost::asio::io_context
 #define RR_BOOST_ASIO_STRAND boost::asio::strand<boost::asio::io_context::executor_type>
 #define RR_BOOST_ASIO_POST(context, func) boost::asio::post(context, func)
-#define RR_BOOST_ASIO_BUFFER_CAST(type, buf) (type) buf.data()
+#define RR_BOOST_ASIO_BUFFER_CAST(type, buf) (type) (buf).data()
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) boost::asio::bind_executor(strand, f)
 #define RR_BOOST_ASIO_NEW_STRAND(context)                                                                              \
-    (new boost::asio::strand<boost::asio::io_context::executor_type>(context.get_executor()))
+    (new boost::asio::strand<boost::asio::io_context::executor_type>((context).get_executor()))
 #endif
 
 #if BOOST_VERSION <= 105900
@@ -139,3 +139,5 @@
 #else
 #define RR_BOOST_PLACEHOLDERS(arg) boost::placeholders::arg
 #endif
+
+#define RR_UNUSED(var_) ((void)(var_))

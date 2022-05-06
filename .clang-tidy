@@ -29,9 +29,12 @@ Checks: >
     -readability-isolate-declaration,
     -readability-function-cognitive-complexity,
     -readability-identifier-length,
+    -readability-else-after-return,
+    -readability-const-return-type,
     -cppcoreguidelines-special-member-functions,
     -bugprone-easily-swappable-parameters,
-    -hicpp-*
+    -hicpp-*,
+    -cppcoreguidelines-prefer-member-initializer
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none

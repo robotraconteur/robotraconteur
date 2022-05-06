@@ -3,9 +3,9 @@
 namespace RobotRaconteur
 {
 
-void RobotRaconteurNodeSetup::DoSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
-                                      const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
-                                      RR_SHARED_PTR<CommandLineConfigParser>& config)
+void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
+                                      const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types,
+                                      const RR_SHARED_PTR<CommandLineConfigParser>& config)
 {
     this->node = node;
 
@@ -53,7 +53,7 @@ void RobotRaconteurNodeSetup::DoSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
                                                                                << " with NodeName: \"" << node_name
                                                                                << "\" TCP port: " << tcp_port);
 
-    BOOST_FOREACH (RR_SHARED_PTR<ServiceFactory> f, service_types)
+    BOOST_FOREACH (const RR_SHARED_PTR<ServiceFactory>& f, service_types)
     {
         node->RegisterServiceType(f);
     }
@@ -338,7 +338,7 @@ void RobotRaconteurNodeSetup::DoSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, NodeSetup, -1, "Node setup complete");
 }
 
-RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                                  const std::string& node_name, uint16_t tcp_port, uint32_t flags)
 {
@@ -348,7 +348,7 @@ RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNod
     DoSetup(node, service_types, c);
 }
 
-RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                                  const std::string& node_name, uint16_t tcp_port, uint32_t flags,
                                                  uint32_t allowed_overrides, int argc, char* argv[])
@@ -368,7 +368,7 @@ RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNod
     DoSetup(node, service_types, c);
 }
 
-RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                                  const std::string& node_name, uint16_t tcp_port, uint32_t flags,
                                                  uint32_t allowed_overrides, const std::vector<std::string>& args)
@@ -388,9 +388,9 @@ RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNod
     DoSetup(node, service_types, c);
 }
 
-RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+RobotRaconteurNodeSetup::RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
-                                                 RR_SHARED_PTR<CommandLineConfigParser> config)
+                                                 const RR_SHARED_PTR<CommandLineConfigParser>& config)
 {
     release_node = false;
     DoSetup(node, service_types, config);
@@ -418,7 +418,7 @@ RobotRaconteurNodeSetup::~RobotRaconteurNodeSetup()
     }
 }
 
-ClientNodeSetup::ClientNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+ClientNodeSetup::ClientNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                  const std::string& node_name, uint32_t flags)
     : RobotRaconteurNodeSetup(node, service_types, node_name, 0, flags)
@@ -429,7 +429,7 @@ ClientNodeSetup::ClientNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory>
     : RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, 0, flags)
 {}
 
-ClientNodeSetup::ClientNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+ClientNodeSetup::ClientNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, int argc,
                                  char* argv[])
     : RobotRaconteurNodeSetup(node, service_types, "", 0, RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT,
@@ -443,7 +443,7 @@ ClientNodeSetup::ClientNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory>
                               RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE, argc, argv)
 {}
 
-ClientNodeSetup::ClientNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+ClientNodeSetup::ClientNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                  const std::vector<std::string>& args)
     : RobotRaconteurNodeSetup(node, service_types, "", 0, RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT,
@@ -457,7 +457,7 @@ ClientNodeSetup::ClientNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory>
                               RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE, args)
 {}
 
-ServerNodeSetup::ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+ServerNodeSetup::ServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                  const std::string& node_name, uint16_t tcp_port, uint32_t flags)
     : RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, flags)
@@ -468,7 +468,7 @@ ServerNodeSetup::ServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory>
     : RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, flags)
 {}
 
-ServerNodeSetup::ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+ServerNodeSetup::ServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                  const std::string& node_name, uint16_t tcp_port, int argc, char* argv[])
     : RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SERVER_DEFAULT,
@@ -482,7 +482,7 @@ ServerNodeSetup::ServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > ser
                               RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE, argc, argv)
 {}
 
-ServerNodeSetup::ServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+ServerNodeSetup::ServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                  const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                  const std::string& node_name, uint16_t tcp_port, const std::vector<std::string>& args)
     : RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, RobotRaconteurNodeSetupFlags_SERVER_DEFAULT,
@@ -496,7 +496,7 @@ ServerNodeSetup::ServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFactory> > ser
                               RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE, args)
 {}
 
-SecureServerNodeSetup::SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+SecureServerNodeSetup::SecureServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                              const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                              const std::string& node_name, uint16_t tcp_port, uint32_t flags)
     : RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port, flags)
@@ -507,7 +507,7 @@ SecureServerNodeSetup::SecureServerNodeSetup(const std::vector<RR_SHARED_PTR<Ser
     : RobotRaconteurNodeSetup(RobotRaconteurNode::sp(), service_types, node_name, tcp_port, flags)
 {}
 
-SecureServerNodeSetup::SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+SecureServerNodeSetup::SecureServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                              const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                              const std::string& node_name, uint16_t tcp_port, int argc, char* argv[])
     : RobotRaconteurNodeSetup(node, service_types, node_name, tcp_port,
@@ -522,7 +522,7 @@ SecureServerNodeSetup::SecureServerNodeSetup(std::vector<RR_SHARED_PTR<ServiceFa
                               RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE, argc, argv)
 {}
 
-SecureServerNodeSetup::SecureServerNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node,
+SecureServerNodeSetup::SecureServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                              const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types,
                                              const std::string& node_name, uint16_t tcp_port,
                                              const std::vector<std::string>& args)

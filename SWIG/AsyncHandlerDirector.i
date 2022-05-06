@@ -46,7 +46,7 @@ class AsyncRequestDirector
 {
 public:
 	virtual ~AsyncRequestDirector() {}
-	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> ret, HandlerErrorInfo& error);
+	virtual void handler(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& ret, HandlerErrorInfo& error);
 
 };
 

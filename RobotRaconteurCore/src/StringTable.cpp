@@ -122,7 +122,7 @@ RR_SHARED_PTR<const StringTableEntry> StringTable::GetEntryForCode(uint32_t code
     return RR_SHARED_PTR<const StringTableEntry>();
 }
 
-void StringTable::MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m)
+void StringTable::MessageReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<Message>& m)
 {
     if (m->header->MessageFlags & MessageFlags_STRING_TABLE || m->header->StringTable.size() > 0)
     {
@@ -149,7 +149,7 @@ void StringTable::MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m)
     }
 }
 
-void StringTable::MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m)
+void StringTable::MessageReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<Message>& m)
 {
     boost::unordered_map<uint32_t, MessageStringPtr> local_table;
 
@@ -168,7 +168,7 @@ void StringTable::MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m)
     }
 }
 
-void StringTable::MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e,
+void StringTable::MessageEntryReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<MessageEntry>& e,
                                                       boost::unordered_map<MessageStringPtr, uint32_t>& local_table,
                                                       uint32_t& next_local_code, uint32_t& table_size)
 {
@@ -184,7 +184,7 @@ void StringTable::MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEn
     }
 }
 
-void StringTable::MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e,
+void StringTable::MessageElementReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<MessageElement>& e,
                                                         boost::unordered_map<MessageStringPtr, uint32_t>& local_table,
                                                         uint32_t& next_local_code, uint32_t& table_size)
 {
@@ -221,7 +221,7 @@ void StringTable::MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message
     }
 }
 
-void StringTable::MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e,
+void StringTable::MessageEntryReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<MessageEntry>& e,
                                                       boost::unordered_map<uint32_t, MessageStringPtr>& local_table)
 {
     DoReplaceCode(e->MemberName, e->MemberNameCode, e->EntryFlags, MessageEntryFlags_MEMBER_NAME_STR,
@@ -236,7 +236,7 @@ void StringTable::MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEn
     }
 }
 
-void StringTable::MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e,
+void StringTable::MessageElementReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<MessageElement>& e,
                                                         boost::unordered_map<uint32_t, MessageStringPtr>& local_table)
 {
     DoReplaceCode(e->ElementName, e->ElementNameCode, e->ElementFlags, MessageElementFlags_ELEMENT_NAME_STR,

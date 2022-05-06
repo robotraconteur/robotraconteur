@@ -318,7 +318,7 @@ void AsyncMessageWriterImpl::Reset()
     quota_pos = 0;
     state_stack.clear();
 }
-void AsyncMessageWriterImpl::BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version)
+void AsyncMessageWriterImpl::BeginWrite(const RR_INTRUSIVE_PTR<Message>& m, uint16_t version)
 {
     if (!state_stack.empty())
         throw InvalidOperationException("AsyncMessageWriter not in reset state");
@@ -357,7 +357,7 @@ void AsyncMessageWriterImpl::BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t ve
 }
 
 #define R(res)                                                                                                         \
-    if (!res)                                                                                                          \
+    if (!(res))                                                                                                          \
     {                                                                                                                  \
         prepare_continue(work_bufs, work_bufs_used, write_bufs);                                                       \
         return WriteReturn_continue;                                                                                   \
