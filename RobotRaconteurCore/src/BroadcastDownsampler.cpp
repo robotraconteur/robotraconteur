@@ -19,7 +19,11 @@
 
 namespace RobotRaconteur
 {
-BroadcastDownsampler::BroadcastDownsampler() { step_count = 0; default_downsample=0; }
+BroadcastDownsampler::BroadcastDownsampler()
+{
+    step_count = 0;
+    default_downsample = 0;
+}
 
 void BroadcastDownsampler::Init(const RR_SHARED_PTR<ServerContext>& context, uint32_t default_downsample)
 {
@@ -28,11 +32,11 @@ void BroadcastDownsampler::Init(const RR_SHARED_PTR<ServerContext>& context, uin
     RR_WEAK_PTR<BroadcastDownsampler> weak_this = shared_from_this();
 
     context->ServerServiceListener.connect(
-        boost::signals2::signal<void(const RR_SHARED_PTR<ServerContext>&, ServerServiceListenerEventType,
-                                     const RR_SHARED_PTR<void>&)>::slot_type(boost::bind(&BroadcastDownsampler::server_event,
-                                                                                  weak_this, RR_BOOST_PLACEHOLDERS(_1),
-                                                                                  RR_BOOST_PLACEHOLDERS(_2),
-                                                                                  RR_BOOST_PLACEHOLDERS(_3)))
+        boost::signals2::signal<void(
+            const RR_SHARED_PTR<ServerContext>&, ServerServiceListenerEventType,
+            const RR_SHARED_PTR<void>&)>::slot_type(boost::bind(&BroadcastDownsampler::server_event, weak_this,
+                                                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
+                                                                RR_BOOST_PLACEHOLDERS(_3)))
             .track(shared_from_this()));
 }
 
@@ -123,8 +127,9 @@ bool BroadcastDownsampler::pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this
     return drop;
 }
 
-void BroadcastDownsampler::server_event(RR_WEAK_PTR<BroadcastDownsampler> this_, const RR_SHARED_PTR<ServerContext>& ctx,
-                                        ServerServiceListenerEventType evt, const RR_SHARED_PTR<void>& p)
+void BroadcastDownsampler::server_event(RR_WEAK_PTR<BroadcastDownsampler> this_,
+                                        const RR_SHARED_PTR<ServerContext>& ctx, ServerServiceListenerEventType evt,
+                                        const RR_SHARED_PTR<void>& p)
 {
     RR_UNUSED(ctx);
     if (evt != ServerServiceListenerEventType_ClientDisconnected)

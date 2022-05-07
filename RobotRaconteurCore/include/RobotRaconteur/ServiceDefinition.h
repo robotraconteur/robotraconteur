@@ -1336,7 +1336,8 @@ class ROBOTRACONTEUR_CORE_API TypeDefinition
      * @return RR_SHARED_PTR<NamedTypeDefinition> The resolved type definition
      */
     RR_SHARED_PTR<NamedTypeDefinition> ResolveNamedType(
-        const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(),
+        const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs =
+            std::vector<RR_SHARED_PTR<ServiceDefinition> >(),
         const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>(),
         const RR_SHARED_PTR<RRObject>& client = RR_SHARED_PTR<RRObject>());
 

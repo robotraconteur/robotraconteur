@@ -56,7 +56,7 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> WrappedServiceFactory::FindStructur
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackStructure(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -68,7 +68,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> WrappedServiceFactory::UnpackStructure
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackPodArray(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -78,7 +78,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> WrappedServiceFactory::UnpackPo
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackPodMultiDimArray(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -89,7 +89,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> WrappedServiceFactory::
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackNamedArray(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -99,7 +99,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> WrappedServiceFactory::Unpack
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackNamedMultiDimArray(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -410,8 +410,9 @@ void WrappedServiceStub::async_PropertyGet(const std::string& PropertyName, int3
                                     RR_BOOST_PLACEHOLDERS(_2), sphandler),
                         timeout);
 }
-void WrappedServiceStub::async_PropertySet(const std::string& PropertyName, const RR_INTRUSIVE_PTR<MessageElement>& value,
-                                           int32_t timeout, AsyncRequestDirector* handler, int32_t id)
+void WrappedServiceStub::async_PropertySet(const std::string& PropertyName,
+                                           const RR_INTRUSIVE_PTR<MessageElement>& value, int32_t timeout,
+                                           AsyncRequestDirector* handler, int32_t id)
 {
     RR_SHARED_PTR<AsyncRequestDirector> sphandler(
         handler, boost::bind(&ReleaseDirector<AsyncRequestDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
@@ -532,10 +533,9 @@ void WrappedServiceStub::async_FunctionCall_handler(const RR_INTRUSIVE_PTR<Robot
     DIRECTOR_CALL2(handler->handler(ret, err3));
 }
 
-void WrappedServiceStub::async_GeneratorFunctionCall_handler(const std::string& FunctionName,
-                                                             const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m,
-                                                             const RR_SHARED_PTR<RobotRaconteurException>& err,
-                                                             const RR_SHARED_PTR<AsyncGeneratorClientReturnDirector>& handler)
+void WrappedServiceStub::async_GeneratorFunctionCall_handler(
+    const std::string& FunctionName, const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m,
+    const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<AsyncGeneratorClientReturnDirector>& handler)
 {
     if (err)
     {
@@ -875,8 +875,8 @@ uint32_t WrappedPipeEndpoint::SendPacket(const RR_INTRUSIVE_PTR<MessageElement>&
     return *t->end();
 }
 
-void WrappedPipeEndpoint::AsyncSendPacket(const RR_INTRUSIVE_PTR<MessageElement>& packet, AsyncUInt32ReturnDirector* handler,
-                                          int32_t id)
+void WrappedPipeEndpoint::AsyncSendPacket(const RR_INTRUSIVE_PTR<MessageElement>& packet,
+                                          AsyncUInt32ReturnDirector* handler, int32_t id)
 {
     RR_SHARED_PTR<AsyncUInt32ReturnDirector> sphandler(
         handler, boost::bind(&ReleaseDirector<AsyncUInt32ReturnDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
@@ -1000,7 +1000,8 @@ void WrappedPipeEndpoint::fire_PacketAckReceivedEvent(uint32_t packetnum)
     throw InvalidOperationException("Not valid for client");
 }
 
-void WrappedPipeClient::SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<WrappedPipeEndpoint>&)> function)
+void WrappedPipeClient::SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<WrappedPipeEndpoint>&)>
+function)
 {
     throw InvalidOperationException("Not valid for client");
 }*/
@@ -1074,7 +1075,7 @@ WrappedPipeEndpoint::~WrappedPipeEndpoint()
 }
 
 void WrappedPipeEndpoint::SetPipeBroadcaster(const RR_SHARED_PTR<WrappedPipeBroadcaster>& broadcaster,
-const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
+                                             const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
 {
     boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
     RR_SHARED_PTR<WrappedPipeBroadcaster> broadcaster1 = this->broadcaster.lock();
@@ -1270,8 +1271,8 @@ void WrappedPipeBroadcaster::AttachPipeServerEvents(const RR_SHARED_PTR<PipeServ
         boost::bind(&WrappedPipeBroadcaster::EndpointConnectedBase, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));
 }
 
-void WrappedPipeBroadcaster::AttachPipeEndpointEvents(const RR_SHARED_PTR<PipeEndpointBase>& ep,
-const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
+void WrappedPipeBroadcaster::AttachPipeEndpointEvents(
+    const RR_SHARED_PTR<PipeEndpointBase>& ep, const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
 {
     RR_SHARED_PTR<WrappedPipeEndpoint> ep_T = rr_cast<WrappedPipeEndpoint>(ep);
     ep_T->SetPipeBroadcaster(RR_STATIC_POINTER_CAST<WrappedPipeBroadcaster>(shared_from_this()), cep);
@@ -1302,7 +1303,8 @@ void WrappedWireConnection::SetOutValue(const RR_INTRUSIVE_PTR<MessageElement>& 
 }
 
 WrappedWireConnection::WrappedWireConnection(const RR_SHARED_PTR<WireBase>& parent, uint32_t endpoint,
-                                             const RR_SHARED_PTR<TypeDefinition>& Type, MemberDefinition_Direction direction)
+                                             const RR_SHARED_PTR<TypeDefinition>& Type,
+                                             MemberDefinition_Direction direction)
     : WireConnectionBase(parent, endpoint, direction)
 {
     this->Type = Type;
@@ -1488,7 +1490,8 @@ boost::function<void(const RR_SHARED_PTR<WrappedWireConnection>&)> WrappedWireCl
     throw InvalidOperationException("Not valid for client");
 }
 
-void WrappedWireClient::SetWireConnectCallback(boost::function<void(const RR_SHARED_PTR<WrappedWireConnection>&)> function)
+void WrappedWireClient::SetWireConnectCallback(
+    boost::function<void(const RR_SHARED_PTR<WrappedWireConnection>&)> function)
 {
     throw InvalidOperationException("Not valid for client");
 }
@@ -1820,8 +1823,8 @@ void WrappedWireBroadcaster::AttachWireServerEvents(const RR_SHARED_PTR<WireServ
     w_T->SetWireWrappedPeekPokeCallbacks(RR_DYNAMIC_POINTER_CAST<IWrappedWirePeekPokeCallbacks>(shared_from_this()));
 }
 
-void WrappedWireBroadcaster::AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& w,
-                                                        const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& cep)
+void WrappedWireBroadcaster::AttachWireConnectionEvents(
+    const RR_SHARED_PTR<WireConnectionBase>& w, const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& cep)
 {
     RR_SHARED_PTR<WrappedWireConnection> w_T = rr_cast<WrappedWireConnection>(w);
     w_T->SetWireBroadcaster(RR_STATIC_POINTER_CAST<WrappedWireBroadcaster>(shared_from_this()), cep);
@@ -1952,7 +1955,8 @@ bool WrappedWireUnicastReceiver::TryGetInValue(WrappedService_typed_packet& val,
 
 // Generator Function
 
-WrappedGeneratorClient::WrappedGeneratorClient(const std::string& name, int32_t id, const RR_SHARED_PTR<ServiceStub>& stub)
+WrappedGeneratorClient::WrappedGeneratorClient(const std::string& name, int32_t id,
+                                               const RR_SHARED_PTR<ServiceStub>& stub)
     : GeneratorClientBase(name, id, stub)
 {}
 
@@ -2031,7 +2035,8 @@ std::vector<RR_INTRUSIVE_PTR<MessageElement> > WrappedGeneratorClient::NextAll()
     return o;
 }
 
-WrappedGeneratorServer::WrappedGeneratorServer(const std::string& name, int32_t index, const RR_SHARED_PTR<ServiceSkel>& skel,
+WrappedGeneratorServer::WrappedGeneratorServer(const std::string& name, int32_t index,
+                                               const RR_SHARED_PTR<ServiceSkel>& skel,
                                                const RR_SHARED_PTR<ServerEndpoint>& ep,
                                                WrappedGeneratorServerDirector* director)
     : GeneratorServerBase(name, index, skel, ep)
@@ -2113,8 +2118,8 @@ void WrappedGeneratorServer::CallNext(const RR_INTRUSIVE_PTR<MessageEntry>& m)
         return dat;                                                                                                    \
     }
 
-RR_INTRUSIVE_PTR<RRBaseArray> WrappedArrayMemoryClientUtil::Read(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos,
-                                                                 uint64_t count)
+RR_INTRUSIVE_PTR<RRBaseArray> WrappedArrayMemoryClientUtil::Read(const RR_SHARED_PTR<ArrayMemoryBase>& mem,
+                                                                 uint64_t memorypos, uint64_t count)
 {
     /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
     if (i8)
@@ -2150,7 +2155,8 @@ RR_INTRUSIVE_PTR<RRBaseArray> WrappedArrayMemoryClientUtil::Read(const RR_SHARED
     }
 
 void WrappedArrayMemoryClientUtil::Write(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos,
-                                        const RR_INTRUSIVE_PTR<RRBaseArray>& buffer, uint64_t bufferpos, uint64_t count)
+                                         const RR_INTRUSIVE_PTR<RRBaseArray>& buffer, uint64_t bufferpos,
+                                         uint64_t count)
 {
     /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
     if (i8)
@@ -2326,7 +2332,8 @@ void WrappedMultiDimArrayMemoryClientUtil::Write(const RR_SHARED_PTR<MultiDimArr
         return type##_var->Direction();                                                                                \
     }
 
-MemberDefinition_Direction WrappedMultiDimArrayMemoryClientUtil::Direction(const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
+MemberDefinition_Direction WrappedMultiDimArrayMemoryClientUtil::Direction(
+    const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
 {
     RR_WMDAMCU_DIRECTION_TYPE(int8_t);
     RR_WMDAMCU_DIRECTION_TYPE(uint8_t);
@@ -2347,8 +2354,9 @@ MemberDefinition_Direction WrappedMultiDimArrayMemoryClientUtil::Direction(const
 
 // PodArrayMemory
 
-WrappedPodArrayMemoryClient::WrappedPodArrayMemoryClient(const std::string& membername, const RR_SHARED_PTR<ServiceStub>& stub,
-                                                         size_t element_size, MemberDefinition_Direction direction)
+WrappedPodArrayMemoryClient::WrappedPodArrayMemoryClient(const std::string& membername,
+                                                         const RR_SHARED_PTR<ServiceStub>& stub, size_t element_size,
+                                                         MemberDefinition_Direction direction)
     : ArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 {}
 
@@ -2414,8 +2422,8 @@ void WrappedPodMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& mem
         throw NullValueException("Buffer must not be null");
     WriteBase(memorypos, buffer, bufferpos, count);
 }
-void WrappedPodMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
-                                                           const std::vector<uint64_t>& bufferpos,
+void WrappedPodMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res,
+                                                           void* buffer, const std::vector<uint64_t>& bufferpos,
                                                            const std::vector<uint64_t>& count, uint64_t elemcount)
 {
     DIRECTOR_CALL2(((WrappedPodMultiDimArrayMemoryClientBuffer*)buffer)
@@ -2433,8 +2441,8 @@ RR_INTRUSIVE_PTR<MessageElementData> WrappedPodMultiDimArrayMemoryClient::PackWr
 // NamedArrayMemory
 
 WrappedNamedArrayMemoryClient::WrappedNamedArrayMemoryClient(const std::string& membername,
-                                                             const RR_SHARED_PTR<ServiceStub>& stub, size_t element_size,
-                                                             MemberDefinition_Direction direction)
+                                                             const RR_SHARED_PTR<ServiceStub>& stub,
+                                                             size_t element_size, MemberDefinition_Direction direction)
     : ArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
 {}
 
@@ -2500,8 +2508,8 @@ void WrappedNamedMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& m
         throw NullValueException("Buffer must not be null");
     WriteBase(memorypos, buffer, bufferpos, count);
 }
-void WrappedNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
-                                                             const std::vector<uint64_t>& bufferpos,
+void WrappedNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res,
+                                                             void* buffer, const std::vector<uint64_t>& bufferpos,
                                                              const std::vector<uint64_t>& count, uint64_t elemcount)
 {
     DIRECTOR_CALL2(((WrappedNamedMultiDimArrayMemoryClientBuffer*)buffer)
@@ -2547,7 +2555,8 @@ std::vector<RobotRaconteur::ServiceInfo2Wrapped> WrappedFindServiceByType(
     return ret;
 }
 
-std::vector<RobotRaconteur::NodeInfo2> WrappedFindNodeByID(const RR_SHARED_PTR<RobotRaconteurNode>& node, const NodeID& id,
+std::vector<RobotRaconteur::NodeInfo2> WrappedFindNodeByID(const RR_SHARED_PTR<RobotRaconteurNode>& node,
+                                                           const NodeID& id,
                                                            const std::vector<std::string>& transportschemes)
 {
     return node->FindNodeByID(id, transportschemes);
@@ -2623,8 +2632,9 @@ void WrappedUpdateDetectedNodes(const RR_SHARED_PTR<RobotRaconteurNode>& node, c
     node->UpdateDetectedNodes(schemes);
 }
 
-void AsyncWrappedUpdateDetectedNodes(const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::vector<std::string>& schemes,
-                                     int32_t timeout, AsyncVoidNoErrReturnDirector* handler, int32_t id1)
+void AsyncWrappedUpdateDetectedNodes(const RR_SHARED_PTR<RobotRaconteurNode>& node,
+                                     const std::vector<std::string>& schemes, int32_t timeout,
+                                     AsyncVoidNoErrReturnDirector* handler, int32_t id1)
 {
     RR_SHARED_PTR<AsyncVoidNoErrReturnDirector> sphandler(
         handler, boost::bind(&ReleaseDirector<AsyncVoidNoErrReturnDirector>, RR_BOOST_PLACEHOLDERS(_1), id1));
@@ -2654,7 +2664,8 @@ bool WrappedTryGetDetectedNodeCacheInfo(const boost::shared_ptr<RobotRaconteurNo
     return node->TryGetDetectedNodeCacheInfo(nodeid, nodeinfo2);
 }
 
-void WrappedServiceSkel::Init(const std::string& s, const RR_SHARED_PTR<RRObject>& o, const RR_SHARED_PTR<ServerContext>& c)
+void WrappedServiceSkel::Init(const std::string& s, const RR_SHARED_PTR<RRObject>& o,
+                              const RR_SHARED_PTR<ServerContext>& c)
 {
 
     boost::shared_ptr<WrappedRRObject> o2 = rr_cast<WrappedRRObject>(o);
@@ -3035,8 +3046,8 @@ void WrappedServiceSkel::DispatchWireMessage(const RR_INTRUSIVE_PTR<RobotRaconte
     e->second->WirePacketReceived(m, endpoint);
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> WrappedServiceSkel::CallPipeFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m,
-                                                                    uint32_t endpoint)
+RR_INTRUSIVE_PTR<MessageEntry> WrappedServiceSkel::CallPipeFunction(
+    const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t endpoint)
 {
     std::map<std::string, RR_SHARED_PTR<WrappedPipeServer> >::iterator e = pipes.find(m->MemberName.str().to_string());
     if (e == pipes.end())
@@ -3044,8 +3055,8 @@ RR_INTRUSIVE_PTR<MessageEntry> WrappedServiceSkel::CallPipeFunction(const RR_INT
     return e->second->PipeCommand(m, endpoint);
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> WrappedServiceSkel::CallWireFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m,
-                                                                    uint32_t endpoint)
+RR_INTRUSIVE_PTR<MessageEntry> WrappedServiceSkel::CallWireFunction(
+    const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t endpoint)
 {
     std::map<std::string, RR_SHARED_PTR<WrappedWireServer> >::iterator e = wires.find(m->MemberName.str().to_string());
     if (e == wires.end())
@@ -3332,7 +3343,8 @@ bool WrappedServiceSkel::IsRequestNoLock(const RR_INTRUSIVE_PTR<RobotRaconteur::
 WrappedServiceSkelAsyncAdapter::WrappedServiceSkelAsyncAdapter() { is_async = false; }
 
 void WrappedServiceSkelAsyncAdapter::SetHandler(
-    boost::function<void(const RR_INTRUSIVE_PTR<MessageElement>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
+    boost::function<void(const RR_INTRUSIVE_PTR<MessageElement>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+        handler)
 {
     this->handler = handler;
 }
@@ -3393,7 +3405,8 @@ void WrappedPodArrayMemory::Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<Mes
 }
 
 WrappedPodArrayMemoryServiceSkel::WrappedPodArrayMemoryServiceSkel(const std::string& membername,
-                                                                   const RR_SHARED_PTR<ServiceSkel>& skel, size_t element_size,
+                                                                   const RR_SHARED_PTR<ServiceSkel>& skel,
+                                                                   size_t element_size,
                                                                    MemberDefinition_Direction direction)
     : ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
 {}
@@ -3406,7 +3419,8 @@ RR_INTRUSIVE_PTR<MessageElementData> WrappedPodArrayMemoryServiceSkel::DoRead(ui
     return mem1->Read(memorypos, bufferpos, count);
 }
 void WrappedPodArrayMemoryServiceSkel::DoWrite(uint64_t memorypos, const RR_INTRUSIVE_PTR<MessageElementData>& buffer,
-                                               uint64_t bufferpos, uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+                                               uint64_t bufferpos, uint64_t count,
+                                               const RR_SHARED_PTR<ArrayMemoryBase>& mem)
 {
     RR_SHARED_PTR<WrappedPodArrayMemory> mem1 = rr_cast<WrappedPodArrayMemory>(mem);
     mem1->Write(memorypos, rr_cast<MessageElementNestedElementList>(buffer), bufferpos, count);
@@ -3447,10 +3461,9 @@ void WrappedPodMultiDimArrayMemory::Write(const std::vector<uint64_t>& memorypos
     DIRECTOR_CALL(WrappedPodMultiDimArrayMemoryDirector, RR_Director2->Write(memorypos, buffer, bufferpos, count));
 }
 
-WrappedPodMultiDimArrayMemoryServiceSkel::WrappedPodMultiDimArrayMemoryServiceSkel(const std::string& membername,
-                                                                                   const RR_SHARED_PTR<ServiceSkel>& skel,
-                                                                                   size_t element_size,
-                                                                                   MemberDefinition_Direction direction)
+WrappedPodMultiDimArrayMemoryServiceSkel::WrappedPodMultiDimArrayMemoryServiceSkel(
+    const std::string& membername, const RR_SHARED_PTR<ServiceSkel>& skel, size_t element_size,
+    MemberDefinition_Direction direction)
     : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
 {}
 RR_INTRUSIVE_PTR<MessageElementData> WrappedPodMultiDimArrayMemoryServiceSkel::DoRead(
@@ -3478,15 +3491,15 @@ WrappedNamedArrayMemoryServiceSkel::WrappedNamedArrayMemoryServiceSkel(const std
     : ArrayMemoryServiceSkelBase(membername, skel, DataTypes_namedarray_t, element_size, direction)
 {}
 
-RR_INTRUSIVE_PTR<MessageElementData> WrappedNamedArrayMemoryServiceSkel::DoRead(uint64_t memorypos, uint64_t bufferpos,
-                                                                                uint64_t count,
-                                                                                const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+RR_INTRUSIVE_PTR<MessageElementData> WrappedNamedArrayMemoryServiceSkel::DoRead(
+    uint64_t memorypos, uint64_t bufferpos, uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)
 {
     RR_SHARED_PTR<WrappedNamedArrayMemory> mem1 = rr_cast<WrappedNamedArrayMemory>(mem);
     return mem1->Read(memorypos, bufferpos, count);
 }
 void WrappedNamedArrayMemoryServiceSkel::DoWrite(uint64_t memorypos, const RR_INTRUSIVE_PTR<MessageElementData>& buffer,
-                                                 uint64_t bufferpos, uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+                                                 uint64_t bufferpos, uint64_t count,
+                                                 const RR_SHARED_PTR<ArrayMemoryBase>& mem)
 {
     RR_SHARED_PTR<WrappedNamedArrayMemory> mem1 = rr_cast<WrappedNamedArrayMemory>(mem);
     mem1->Write(memorypos, rr_cast<MessageElementNestedElementList>(buffer), bufferpos, count);
@@ -3734,7 +3747,8 @@ void WrappedServiceSubscriptionFilter::SetRRPredicateDirector(
                                           RR_BOOST_PLACEHOLDERS(_1), id));
 }
 
-WrappedServiceInfo2Subscription::WrappedServiceInfo2Subscription(const RR_SHARED_PTR<ServiceInfo2Subscription>& subscription)
+WrappedServiceInfo2Subscription::WrappedServiceInfo2Subscription(
+    const RR_SHARED_PTR<ServiceInfo2Subscription>& subscription)
 {
     this->subscription = subscription;
 }
@@ -3949,7 +3963,8 @@ void WrappedServiceSubscription::SetRRDirector(WrappedServiceSubscriptionDirecto
 
 void WrappedServiceSubscription::ClientConnected(RR_WEAK_PTR<WrappedServiceSubscription> this_,
                                                  const RR_SHARED_PTR<ServiceSubscription>& subscription,
-                                                 const ServiceSubscriptionClientID& id, const RR_SHARED_PTR<RRObject>& client)
+                                                 const ServiceSubscriptionClientID& id,
+                                                 const RR_SHARED_PTR<RRObject>& client)
 {
     RR_SHARED_PTR<WrappedServiceSubscription> this1 = this_.lock();
     if (!this1)
@@ -4325,11 +4340,9 @@ RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeServiceByType(
     return RR_MAKE_SHARED<WrappedServiceSubscription>(sub);
 }
 
-RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(const RR_SHARED_PTR<RobotRaconteurNode>& node,
-                                                                  const std::vector<std::string>& url,
-                                                                  const std::string& username,
-                                                                  const boost::intrusive_ptr<MessageElementData>& credentials,
-                                                                  const std::string& objecttype)
+RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::vector<std::string>& url, const std::string& username,
+    const boost::intrusive_ptr<MessageElementData>& credentials, const std::string& objecttype)
 {
     boost::intrusive_ptr<RRMap<std::string, RRValue> > credentials2;
     if (credentials)
@@ -4340,10 +4353,9 @@ RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(const RR_SHARE
     return RR_MAKE_SHARED<WrappedServiceSubscription>(sub);
 }
 
-RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(const RR_SHARED_PTR<RobotRaconteurNode>& node,
-                                                                  const std::string& url, const std::string& username,
-                                                                  const boost::intrusive_ptr<MessageElementData>& credentials,
-                                                                  const std::string& objecttype)
+RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::string& url, const std::string& username,
+    const boost::intrusive_ptr<MessageElementData>& credentials, const std::string& objecttype)
 {
     boost::intrusive_ptr<RRMap<std::string, RRValue> > credentials2;
     if (credentials)

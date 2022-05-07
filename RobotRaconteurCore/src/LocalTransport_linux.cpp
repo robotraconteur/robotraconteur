@@ -77,7 +77,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
 {
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
     char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
-    const struct inotify_event* event = NULL; 
+    const struct inotify_event* event = NULL;
 
     if (notify_fd < 0)
         return false;

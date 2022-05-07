@@ -239,7 +239,6 @@ class ROBOTRACONTEUR_CORE_API PasswordFileUserAuthenticator : public UserAuthent
         const RR_SHARED_PTR<ServerContext>& context, const RR_SHARED_PTR<ITransportConnection>& transport);
 
     static std::string MD5Hash(boost::string_ref text);
-
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

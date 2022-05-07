@@ -126,7 +126,7 @@ template <typename T>
 class CallbackClient : public Callback<T>
 {
   public:
-    CallbackClient(boost::string_ref name) : Callback<T>(name) { }
+    CallbackClient(boost::string_ref name) : Callback<T>(name) {}
 
     virtual ~CallbackClient() {}
 
@@ -154,14 +154,17 @@ class CallbackClient : public Callback<T>
         throw InvalidOperationException("Invalid for client side of callback");
     }
 
-    virtual T GetClientFunction(uint32_t e) { RR_UNUSED(e); throw InvalidOperationException("Invalid for client side of callback"); }
+    virtual T GetClientFunction(uint32_t e)
+    {
+        RR_UNUSED(e);
+        throw InvalidOperationException("Invalid for client side of callback");
+    }
 
     virtual void Shutdown()
     {
         boost::mutex::scoped_lock lock(function_lock);
         function.clear();
     }
-
 };
 
 class ROBOTRACONTEUR_CORE_API ServiceSkel;
@@ -184,14 +187,25 @@ template <typename T>
 class CallbackServer : public Callback<T>, public CallbackServerBase
 {
   public:
-    CallbackServer(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel) : Callback<T>(name) { this->skel = skel; }
+    CallbackServer(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel) : Callback<T>(name)
+    {
+        this->skel = skel;
+    }
 
     virtual ~CallbackServer() {}
 
     virtual T GetFunction() { throw InvalidOperationException("Invalid for server side of callback"); }
-    virtual void SetFunction(T value) { RR_UNUSED(value); throw InvalidOperationException("Invalid for server side of callback"); }
+    virtual void SetFunction(T value)
+    {
+        RR_UNUSED(value);
+        throw InvalidOperationException("Invalid for server side of callback");
+    }
 
-    virtual T GetClientFunction(const RR_SHARED_PTR<Endpoint>& e) { RR_UNUSED(e); return GetClientFunction(e->GetLocalEndpoint()); }
+    virtual T GetClientFunction(const RR_SHARED_PTR<Endpoint>& e)
+    {
+        RR_UNUSED(e);
+        return GetClientFunction(e->GetLocalEndpoint());
+    }
 
     virtual T GetClientFunction(uint32_t e)
     {

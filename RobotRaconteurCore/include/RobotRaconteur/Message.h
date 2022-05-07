@@ -160,7 +160,8 @@ class ROBOTRACONTEUR_CORE_API MessageEntry : public RRValue
 
     bool TryFindElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElement>& elem);
 
-    RR_INTRUSIVE_PTR<MessageElement> AddElement(MessageStringRef name, const RR_INTRUSIVE_PTR<MessageElementData>& data);
+    RR_INTRUSIVE_PTR<MessageElement> AddElement(MessageStringRef name,
+                                                const RR_INTRUSIVE_PTR<MessageElementData>& data);
 
     RR_INTRUSIVE_PTR<MessageElement> AddElement(const RR_INTRUSIVE_PTR<MessageElement>& m);
 
@@ -292,8 +293,10 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> Create
     DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> >&& elements_);
 #endif
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(const RR_INTRUSIVE_PTR<Message>& m);
-ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& mm);
-ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(const RR_INTRUSIVE_PTR<MessageElement>& mm);
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(
+    const RR_INTRUSIVE_PTR<MessageEntry>& mm);
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(
+    const RR_INTRUSIVE_PTR<MessageElement>& mm);
 
 // MessageElement packing functions
 template <typename T>
@@ -509,9 +512,11 @@ RR_INTRUSIVE_PTR<RRList<T> > MessageElement_UnpackList(RR_WEAK_PTR<N> node, cons
     return node1->template UnpackListType<T>(m->CastDataToNestedList());
 }
 
-ROBOTRACONTEUR_CORE_API bool MessageElement_GetElementNumber(const RR_INTRUSIVE_PTR<MessageElement>& m, int32_t& number);
+ROBOTRACONTEUR_CORE_API bool MessageElement_GetElementNumber(const RR_INTRUSIVE_PTR<MessageElement>& m,
+                                                             int32_t& number);
 ROBOTRACONTEUR_CORE_API void MessageElement_SetElementNumber(const RR_INTRUSIVE_PTR<MessageElement>& m, int32_t number);
-ROBOTRACONTEUR_CORE_API bool MessageElement_GetElementName(const RR_INTRUSIVE_PTR<MessageElement>& m, MessageStringPtr& name);
+ROBOTRACONTEUR_CORE_API bool MessageElement_GetElementName(const RR_INTRUSIVE_PTR<MessageElement>& m,
+                                                           MessageStringPtr& name);
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 using MessagePtr = RR_INTRUSIVE_PTR<Message>;

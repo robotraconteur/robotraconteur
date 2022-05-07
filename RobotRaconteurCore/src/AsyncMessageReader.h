@@ -159,8 +159,8 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageReaderImpl : public AsyncMessageReader
     size_t distance_from_limit();
 
     void pop_state();
-    void push_state(state_type new_state, state_type pop_state, size_t relative_limit,const RR_INTRUSIVE_PTR<RRValue>& data,
-                    size_t param1 = 0, size_t param2 = 0);
+    void push_state(state_type new_state, state_type pop_state, size_t relative_limit,
+                    const RR_INTRUSIVE_PTR<RRValue>& data, size_t param1 = 0, size_t param2 = 0);
     void push_state(state_type new_state, state_type pop_state, size_t relative_limit, void* ptrdata, size_t param1,
                     size_t param2, std::string& param3);
 

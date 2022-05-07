@@ -79,7 +79,8 @@ class CSharpServiceLangGen
 
     static void GenerateInterfaceFile(ServiceDefinition* d, ostream* w, bool header = true);
 
-    static void GenerateStubSkelFile(ServiceDefinition* d, const std::string& defstring, ostream* w, bool header = true);
+    static void GenerateStubSkelFile(ServiceDefinition* d, const std::string& defstring, ostream* w,
+                                     bool header = true);
 
     static void GenerateServiceFactory(ServiceDefinition* d, const std::string& defstring, ostream* w);
 
@@ -104,11 +105,13 @@ class CSharpServiceLangGen
     static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
 
     // File generators
-    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef, std::string path = ".");
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+                              std::string path = ".");
 
     static void GenerateOneFileHeader(ostream* w);
 
-    static void GenerateOneFilePart(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef, ostream* w);
+    static void GenerateOneFilePart(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+                                    ostream* w);
 };
 
 } // namespace RobotRaconteurGen

@@ -39,8 +39,8 @@ NodeID::NodeID() { id = boost::uuids::nil_uuid(); }
 
 NodeID::NodeID(boost::array<uint8_t, 16> id)
 {
-    //if (id.size() != 16)
-    //    throw InvalidArgumentException("Invalid NodeID");
+    // if (id.size() != 16)
+    //     throw InvalidArgumentException("Invalid NodeID");
     std::copy(id.begin(), id.end(), this->id.begin());
 }
 

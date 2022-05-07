@@ -167,7 +167,8 @@ class ArrayMemory : public virtual ArrayMemoryBase
      * @param bufferpos The start index in the buffer to write the data
      * @param count The number of array elements to read
      */
-    virtual void Read(uint64_t memorypos,const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -192,7 +193,8 @@ class ArrayMemory : public virtual ArrayMemoryBase
      * @param bufferpos The start index in the buffer to read the data
      * @param count The number of array elements to write
      */
-    virtual void Write(uint64_t memorypos,const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
+                       uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -389,8 +391,8 @@ class ROBOTRACONTEUR_CORE_API ArrayMemoryServiceSkelBase : private boost::noncop
   public:
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
     std::string GetMemberName() const;
-    ArrayMemoryServiceSkelBase(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel, DataTypes element_type,
-                               size_t element_size, MemberDefinition_Direction direction);
+    ArrayMemoryServiceSkelBase(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
+                               DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
     virtual ~ArrayMemoryServiceSkelBase();
     virtual RR_INTRUSIVE_PTR<MessageEntry> CallMemoryFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                                                               const RR_SHARED_PTR<Endpoint>& e,
@@ -550,16 +552,22 @@ class ArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual A
         : ArrayMemoryClientBase(membername, stub, RRPrimUtil<T>::GetTypeID(), sizeof(T), direction)
     {}
 
-    virtual void Attach(const RR_INTRUSIVE_PTR<RRArray<T> >& memory) { RR_UNUSED(memory); throw InvalidOperationException("Invalid for client"); }
+    virtual void Attach(const RR_INTRUSIVE_PTR<RRArray<T> >& memory)
+    {
+        RR_UNUSED(memory);
+        throw InvalidOperationException("Invalid for client");
+    }
 
-    virtual void Read(uint64_t memorypos,const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
         ReadBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual void Write(uint64_t memorypos,const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
+                       uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -617,8 +625,8 @@ class ROBOTRACONTEUR_CORE_API MultiDimArrayMemoryClientBase : private boost::non
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
     const std::string GetMemberName() const;
 
-    MultiDimArrayMemoryClientBase(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub, DataTypes element_type,
-                                  size_t element_size, MemberDefinition_Direction direction);
+    MultiDimArrayMemoryClientBase(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub,
+                                  DataTypes element_type, size_t element_size, MemberDefinition_Direction direction);
     virtual ~MultiDimArrayMemoryClientBase();
     RR_SHARED_PTR<ServiceStub> GetStub();
     RobotRaconteur::MemberDefinition_Direction Direction();
@@ -804,7 +812,8 @@ class PodArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Read() */
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -820,7 +829,8 @@ class PodArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Write() */
-    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
+                       uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -882,14 +892,16 @@ class PodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtua
         throw InvalidOperationException("Invalid for client");
     }
 
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
         ReadBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
+                       uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -982,7 +994,10 @@ class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @param multimemory The array to attach
      */
-    PodMultiDimArrayMemory(const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& multimemory) { this->multimemory = multimemory; }
+    PodMultiDimArrayMemory(const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& multimemory)
+    {
+        this->multimemory = multimemory;
+    }
 
     virtual ~PodMultiDimArrayMemory() {}
 
@@ -1046,8 +1061,8 @@ class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>,
                                      public virtual MultiDimArrayMemoryClientBase
 {
   public:
-    PodMultiDimArrayMemoryClient(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub, size_t element_size,
-                                 MemberDefinition_Direction direction)
+    PodMultiDimArrayMemoryClient(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub,
+                                 size_t element_size, MemberDefinition_Direction direction)
         : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
     {}
 
@@ -1218,7 +1233,8 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Read() */
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
         if (memorypos + count > memory->size())
@@ -1256,8 +1272,8 @@ template <typename T>
 class NamedArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
 {
   public:
-    NamedArrayMemoryServiceSkel(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel, size_t element_size,
-                                MemberDefinition_Direction direction)
+    NamedArrayMemoryServiceSkel(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
+                                size_t element_size, MemberDefinition_Direction direction)
         : ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
     {}
 
@@ -1297,7 +1313,8 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
         throw InvalidOperationException("Invalid for client");
     }
 
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
+    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -1465,8 +1482,8 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
                                        public virtual MultiDimArrayMemoryClientBase
 {
   public:
-    NamedMultiDimArrayMemoryClient(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub, size_t element_size,
-                                   MemberDefinition_Direction direction)
+    NamedMultiDimArrayMemoryClient(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub,
+                                   size_t element_size, MemberDefinition_Direction direction)
         : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
     {}
 

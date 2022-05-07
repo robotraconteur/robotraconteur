@@ -128,8 +128,9 @@ void RobotRaconteurNode_connector::handle_error(const int32_t& key, const RR_SHA
 }
 
 void RobotRaconteurNode_connector::connected_client(const RR_SHARED_PTR<RRObject>& client,
-                                                    const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
-                                                    const RR_SHARED_PTR<endpoint_cleanup>& ep, int32_t key)
+                                                    const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                                    const std::string& url, const RR_SHARED_PTR<endpoint_cleanup>& ep,
+                                                    int32_t key)
 {
     RR_UNUSED(key);
     // std::cout << "Connected client" << std::endl;
@@ -226,7 +227,8 @@ void RobotRaconteurNode_connector::connected_client(const RR_SHARED_PTR<RRObject
 
 void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Transport>& transport,
                                                        const RR_SHARED_PTR<ITransportConnection>& connection,
-                                                       const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
+                                                       const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                                       const std::string& url,
                                                        const RR_SHARED_PTR<endpoint_cleanup>& ep, int32_t key)
 {
 
@@ -277,7 +279,7 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
     {
         try
         {
-            int32_t key2  = 0;
+            int32_t key2 = 0;
             {
                 boost::mutex::scoped_lock lock(active_lock);
                 active_count++;
@@ -363,7 +365,8 @@ void RobotRaconteurNode_connector::start_connect_timer()
     if (timeout != RR_TIMEOUT_INFINITE)
     {
         boost::mutex::scoped_lock lock(connect_timer_lock);
-        connect_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(new boost::asio::deadline_timer(node->GetThreadPool()->get_io_context()));
+        connect_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(
+            new boost::asio::deadline_timer(node->GetThreadPool()->get_io_context()));
         connect_timer->expires_from_now(boost::posix_time::milliseconds(timeout));
         RobotRaconteurNode::asio_async_wait(node, connect_timer,
                                             boost::bind(&RobotRaconteurNode_connector::connect_timer_callback,
@@ -414,7 +417,7 @@ void RobotRaconteurNode_connector::connect2(const RR_SHARED_PTR<std::vector<std:
     RR_SHARED_PTR<Transport> t = connectors.at(url).lock();
     if (t)
     {
-        int32_t key2  = 0;
+        int32_t key2 = 0;
 
         try
         {
@@ -426,9 +429,10 @@ void RobotRaconteurNode_connector::connect2(const RR_SHARED_PTR<std::vector<std:
             active_count++;
             key2 = active_count;
 
-            boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> h =
-                boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_transport, shared_from_this(), t,
-                                           RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), url, ep, key2));
+            boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                                 const RR_SHARED_PTR<RobotRaconteurException>&)>
+                h = boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_transport, shared_from_this(),
+                                               t, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), url, ep, key2));
             t->AsyncCreateTransportConnection(url, c, h);
 
             active.push_back(key2);
@@ -467,7 +471,8 @@ void RobotRaconteurNode_connector::connect2(const RR_SHARED_PTR<std::vector<std:
             boost::mutex::scoped_lock lock3(connect_timer_lock);
             if (!connect_backoff_timer)
             {
-                connect_backoff_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(new boost::asio::deadline_timer(node->GetThreadPool()->get_io_context()));
+                connect_backoff_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(
+                    new boost::asio::deadline_timer(node->GetThreadPool()->get_io_context()));
             }
             connect_backoff_timer->expires_from_now(boost::posix_time::milliseconds(15));
             RobotRaconteurNode::asio_async_wait(node, connect_backoff_timer,
@@ -488,9 +493,12 @@ void RobotRaconteurNode_connector::connect2(const RR_SHARED_PTR<std::vector<std:
 void RobotRaconteurNode_connector::connect(
     const std::map<std::string, RR_WEAK_PTR<Transport> >& connectors, boost::string_ref username,
     const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
-    boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)> listener,
+    boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                         const RR_SHARED_PTR<void>&)>
+        listener,
     boost::string_ref objecttype,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler, int32_t timeout)
+    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+    int32_t timeout)
 {
 
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(
@@ -505,7 +513,7 @@ void RobotRaconteurNode_connector::connect(
     this->handler = handler;
     this->timeout = timeout;
 
-    int32_t key  = 0;
+    int32_t key = 0;
     {
         boost::mutex::scoped_lock lock(active_lock);
         active_count++;

@@ -16,8 +16,8 @@ using std::exception;
 namespace RobotRaconteurTest
 {
 
-static void ServiceTestClient_Service_Listener(const RR_SHARED_PTR<ClientContext>& ctx, ClientServiceListenerEventType evt,
-                                               const RR_SHARED_PTR<void>& p)
+static void ServiceTestClient_Service_Listener(const RR_SHARED_PTR<ClientContext>& ctx,
+                                               ClientServiceListenerEventType evt, const RR_SHARED_PTR<void>& p)
 {
     std::cout << evt;
     if (evt == ClientServiceListenerEventType_ServicePathReleased)
@@ -2368,7 +2368,7 @@ void ServiceTestClient::TestEvents()
 
 void ServiceTestClient::ev1_cb() { ev1_event.Set(); }
 
-void ServiceTestClient::ev2_cb(double d,const RR_INTRUSIVE_PTR<teststruct2>& s)
+void ServiceTestClient::ev2_cb(double d, const RR_INTRUSIVE_PTR<teststruct2>& s)
 {
     if (d == 27.3 && (*s->mydat)[0] == 98.23)
     {
@@ -2766,14 +2766,14 @@ void ServiceTestClient::TestWires()
 }
 
 void ServiceTestClient::w1_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > c,
-const RR_INTRUSIVE_PTR<RRArray<double> >& value, TimeSpec t)
+                                   const RR_INTRUSIVE_PTR<RRArray<double> >& value, TimeSpec t)
 {
     w1_called = true;
     we1.Set();
 }
 
 void ServiceTestClient::w2_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > c,
-                                  const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec t)
+                                   const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec t)
 {
     w2_called = true;
     we2.Set();
@@ -3261,7 +3261,8 @@ void ServiceTestClient::TestAsync1(const RR_SHARED_PTR<RRObject>& r, const RR_SH
         boost::bind(&ServiceTestClient::TestAsync2, this, r1, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2))););
 }
 
-void ServiceTestClient::TestAsync2(const RR_SHARED_PTR<async_testroot>& r,const RR_INTRUSIVE_PTR<RRArray<double> >& ret,
+void ServiceTestClient::TestAsync2(const RR_SHARED_PTR<async_testroot>& r,
+                                   const RR_INTRUSIVE_PTR<RRArray<double> >& ret,
                                    const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
@@ -3432,12 +3433,14 @@ void ServiceTestClient::TestAsync2(const RR_SHARED_PTR<async_testroot>& r,const 
     }
 }
 
-void ServiceTestClient::TestAsync3(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp)
+void ServiceTestClient::TestAsync3(const RR_SHARED_PTR<async_testroot>& r,
+                                   const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(r->async_func1(boost::bind(&ServiceTestClient::TestAsync4, this, r, RR_BOOST_PLACEHOLDERS(_1))););
 }
 
-void ServiceTestClient::TestAsync4(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp)
+void ServiceTestClient::TestAsync4(const RR_SHARED_PTR<async_testroot>& r,
+                                   const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     ASYNC_TEST_CALL(r->async_func3(
         2, 3.45,
@@ -3451,7 +3454,8 @@ void ServiceTestClient::TestAsync5(const RR_SHARED_PTR<async_testroot>& r, doubl
         boost::bind(&ServiceTestClient::TestAsync6, this, r, RR_BOOST_PLACEHOLDERS(_1))););
 }
 
-void ServiceTestClient::TestAsync6(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp)
+void ServiceTestClient::TestAsync6(const RR_SHARED_PTR<async_testroot>& r,
+                                   const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     try
     {

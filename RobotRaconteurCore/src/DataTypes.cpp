@@ -281,7 +281,8 @@ TimeSpec ptimeToTimeSpec(const boost::posix_time::ptime& t)
 
     int64_t sec = diff.total_seconds();
     int32_t nanosec = boost::numeric_cast<int32_t>(
-        (diff.fractional_seconds() * boost::numeric_cast<int32_t>(pow(10.0, (9 - boost::posix_time::time_duration::num_fractional_digits())))));
+        (diff.fractional_seconds() *
+         boost::numeric_cast<int32_t>(pow(10.0, (9 - boost::posix_time::time_duration::num_fractional_digits())))));
 
     return TimeSpec(sec, nanosec);
 }
@@ -541,7 +542,7 @@ ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
         }
         else if (static_cast<char>(c) == '%')
         {
-            boost::array<char,3> in2_c = {};
+            boost::array<char, 3> in2_c = {};
             in.read(in2_c.data(), 2);
             if (in.fail())
             {

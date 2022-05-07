@@ -118,15 +118,18 @@ class ROBOTRACONTEUR_CORE_API ServiceSkel : public RR_ENABLE_SHARED_FROM_THIS<Se
 
   protected:
     static void EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, const RR_INTRUSIVE_PTR<MessageElement>& value,
-                                        const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                        const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                        const RR_INTRUSIVE_PTR<MessageEntry>& m,
                                         const RR_SHARED_PTR<ServerEndpoint>& ep);
 
-    static void EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, const RR_SHARED_PTR<RobotRaconteurException>& err,
-                                        const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& ep);
+    static void EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel,
+                                        const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                        const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                        const RR_SHARED_PTR<ServerEndpoint>& ep);
 
     static void EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, const RR_INTRUSIVE_PTR<MessageElement>& ret,
-                                     const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_INTRUSIVE_PTR<MessageEntry>& m,
-                                     const RR_SHARED_PTR<ServerEndpoint>& ep);
+                                     const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                     const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& ep);
 
   public:
     virtual RR_SHARED_PTR<RRObject> GetSubObj(boost::string_ref name, boost::string_ref ind) = 0;
@@ -150,7 +153,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSkel : public RR_ENABLE_SHARED_FROM_THIS<Se
     virtual void ReleaseCastObject() = 0;
 
     void AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
-                              RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler);
+                              RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
+                                  handler);
 
     void SendWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e);
 
@@ -190,7 +194,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSkel : public RR_ENABLE_SHARED_FROM_THIS<Se
 
     virtual void CallGeneratorNext(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e);
 
-    void SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& ep);
+    void SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                               const RR_SHARED_PTR<ServerEndpoint>& ep);
 
     void CleanupGenerators();
 
@@ -384,8 +389,9 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e,
                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    virtual void AsyncSendUnreliableMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& e,
-                                            boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+    virtual void AsyncSendUnreliableMessage(
+        const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
                                       boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
@@ -411,8 +417,9 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     void SetSecurityPolicy(const RR_SHARED_PTR<ServiceSecurityPolicy>& policy);
 
   public:
-    virtual void SetBaseObject(boost::string_ref name, const RR_SHARED_PTR<RRObject>& o,
-                               const RR_SHARED_PTR<ServiceSecurityPolicy>& policy = RR_SHARED_PTR<ServiceSecurityPolicy>());
+    virtual void SetBaseObject(
+        boost::string_ref name, const RR_SHARED_PTR<RRObject>& o,
+        const RR_SHARED_PTR<ServiceSecurityPolicy>& policy = RR_SHARED_PTR<ServiceSecurityPolicy>());
 
     virtual RR_SHARED_PTR<ServiceSkel> GetObjectSkel(MessageStringRef servicepath);
 
@@ -568,7 +575,8 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
                                                           const RR_SHARED_PTR<ServerEndpoint>& c);
 
   public:
-    boost::signals2::signal<void(const RR_SHARED_PTR<ServerContext>&, ServerServiceListenerEventType, const RR_SHARED_PTR<void>&)>
+    boost::signals2::signal<void(const RR_SHARED_PTR<ServerContext>&, ServerServiceListenerEventType,
+                                 const RR_SHARED_PTR<void>&)>
         ServerServiceListener;
 
   protected:
@@ -613,7 +621,8 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
 
     void AsyncProcessCallbackRequest(
         const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t endpoint,
-        RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>&, const RR_SHARED_PTR<RobotRaconteurException>&)>)
+        RR_MOVE_ARG(
+            boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>&, const RR_SHARED_PTR<RobotRaconteurException>&)>)
             handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
@@ -629,7 +638,9 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     {
         RR_INTRUSIVE_PTR<MessageEntry> ret;
         RR_SHARED_PTR<AutoResetEvent> evt;
-        boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& error)> handler;
+        boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>& ret,
+                             const RR_SHARED_PTR<RobotRaconteurException>& error)>
+            handler;
         RR_SHARED_PTR<Timer> timer;
     };
 
@@ -672,7 +683,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
   protected:
     RR_SHARED_PTR<ThreadPool> monitor_thread_pool;
     boost::mutex monitor_thread_pool_lock;
-
 };
 
 /**
@@ -755,7 +765,7 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
     RobotRaconteurVersion GetClientVersion();
     void SetClientVersion(const RobotRaconteurVersion& version);
 
-    ServerEndpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Endpoint(node) { }
+    ServerEndpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Endpoint(node) {}
 };
 
 /**

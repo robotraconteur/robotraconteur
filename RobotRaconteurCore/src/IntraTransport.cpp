@@ -112,14 +112,12 @@ bool IntraTransport::IsClient() const { return true; }
 
 std::string IntraTransport::GetUrlSchemeString() const { return "rr+intra"; }
 
-bool IntraTransport::CanConnectService(boost::string_ref url)
-{
-    return (boost::starts_with(url, "rr+intra://"));
-}
+bool IntraTransport::CanConnectService(boost::string_ref url) { return (boost::starts_with(url, "rr+intra://")); }
 
 void IntraTransport::AsyncCreateTransportConnection(
     boost::string_ref url, const RR_SHARED_PTR<Endpoint>& ep,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        handler)
 {
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                       "IntraTransport begin create transport connection with URL: " << url);
@@ -306,8 +304,8 @@ void IntraTransport::CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e)
     }
 }
 
-void IntraTransport::CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
-                                                    const RR_SHARED_PTR<void>& timer)
+void IntraTransport::CloseTransportConnection_timed(const boost::system::error_code& err,
+                                                    const RR_SHARED_PTR<Endpoint>& e, const RR_SHARED_PTR<void>& timer)
 {
     RR_UNUSED(timer);
     if (err)
@@ -354,7 +352,11 @@ void IntraTransport::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
     t->SendMessage(m);
 }
 
-uint32_t IntraTransport::TransportCapability(boost::string_ref name) { RR_UNUSED(name); return 0; }
+uint32_t IntraTransport::TransportCapability(boost::string_ref name)
+{
+    RR_UNUSED(name);
+    return 0;
+}
 
 void IntraTransport::PeriodicCleanupTask()
 {
@@ -579,7 +581,7 @@ bool IntraTransport::TryGetNodeInfo(NodeID& node_id, std::string& node_name, std
 
 IntraTransportConnection::IntraTransportConnection(const RR_SHARED_PTR<IntraTransport>& parent, bool server,
                                                    uint32_t local_endpoint)
-                                                   : connected(false)
+    : connected(false)
 {
     this->parent = parent;
     this->server = server;
@@ -732,8 +734,8 @@ void IntraTransportConnection::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
     s->end_void();
 }
 
-void IntraTransportConnection::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                                boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void IntraTransportConnection::AsyncSendMessage(
+    const RR_INTRUSIVE_PTR<Message>& m, boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_SHARED_PTR<IntraTransportConnection> peer1 = peer.lock();
     if (!peer1)
@@ -827,7 +829,11 @@ void IntraTransportConnection::CheckConnection(uint32_t endpoint)
     }
 }
 
-bool IntraTransportConnection::CheckCapabilityActive(uint32_t flag) { RR_UNUSED(flag); return 0; }
+bool IntraTransportConnection::CheckCapabilityActive(uint32_t flag)
+{
+    RR_UNUSED(flag);
+    return 0;
+}
 
 void IntraTransportConnection::SetPeer(const RR_SHARED_PTR<IntraTransportConnection>& peer)
 {

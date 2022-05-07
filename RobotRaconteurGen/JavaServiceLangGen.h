@@ -135,7 +135,8 @@ class JavaServiceLangGen
 
     static void GenerateConstantsFile(ServiceDefinition* d, ostream* w);
 
-    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef, std::string path = ".");
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+                              std::string path = ".");
 };
 
 } // namespace RobotRaconteurGen

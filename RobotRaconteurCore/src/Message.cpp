@@ -468,7 +468,7 @@ void MessageHeader::Read4(ArrayBinaryReader& r)
     if (MessageFlags & MessageFlags_ROUTING_INFO)
     {
 
-    boost::array<uint8_t, 16> bSenderNodeID = {};
+        boost::array<uint8_t, 16> bSenderNodeID = {};
         for (int32_t i = 0; i < 16; i++)
         {
             bSenderNodeID[i] = r.ReadNumber<uint8_t>();

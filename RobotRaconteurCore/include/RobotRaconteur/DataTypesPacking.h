@@ -35,31 +35,31 @@ namespace detail
 namespace packing
 {
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(
-   const RR_INTRUSIVE_PTR<RRStructure>& structure, RobotRaconteurNode* node);
+    const RR_INTRUSIVE_PTR<RRStructure>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(
     const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(
-   const RR_INTRUSIVE_PTR<RRPodBaseArray>& structure, RobotRaconteurNode* node);
+    const RR_INTRUSIVE_PTR<RRPodBaseArray>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(
     const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
-   const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& structure, RobotRaconteurNode* node);
+    const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
     const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(
-   const RR_INTRUSIVE_PTR<RRNamedBaseArray>& structure, RobotRaconteurNode* node);
+    const RR_INTRUSIVE_PTR<RRNamedBaseArray>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(
     const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
-   const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& structure, RobotRaconteurNode* node);
+    const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& structure, RobotRaconteurNode* node);
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
     const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure, RobotRaconteurNode* node);

@@ -263,7 +263,11 @@ std::string ServerContext_MonitorObjectSkel::MonitorContinueEnter(uint32_t local
     return (monitor_acquired ? "OK" : "Continue");
 }
 
-void ServerContext_MonitorObjectSkel::MonitorRefresh(uint32_t localendpoint) { RR_UNUSED(localendpoint); monitor_thread_event->Set(); }
+void ServerContext_MonitorObjectSkel::MonitorRefresh(uint32_t localendpoint)
+{
+    RR_UNUSED(localendpoint);
+    monitor_thread_event->Set();
+}
 
 std::string ServerContext_MonitorObjectSkel::MonitorExit(uint32_t local_endpoint)
 {

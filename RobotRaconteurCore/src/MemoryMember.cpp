@@ -82,9 +82,9 @@ RR_SHARED_PTR<RobotRaconteurNode> ArrayMemoryServiceSkelBase::GetNode()
 
 std::string ArrayMemoryServiceSkelBase::GetMemberName() const { return m_MemberName; }
 
-ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
-                                                       DataTypes element_type, size_t element_size,
-                                                       MemberDefinition_Direction direction)
+ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membername,
+                                                       const RR_SHARED_PTR<ServiceSkel>& skel, DataTypes element_type,
+                                                       size_t element_size, MemberDefinition_Direction direction)
 {
     this->m_MemberName = RR_MOVE(membername.to_string());
     this->skel = skel;
@@ -216,7 +216,8 @@ MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(boost::st
 MultiDimArrayMemoryServiceSkelBase::~MultiDimArrayMemoryServiceSkelBase() {}
 
 RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFunction(
-    const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e, const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e,
+    const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
 {
 
     switch (m->EntryType)
@@ -563,8 +564,9 @@ RR_SHARED_PTR<RobotRaconteurNode> MultiDimArrayMemoryClientBase::GetNode()
 const std::string MultiDimArrayMemoryClientBase::GetMemberName() const { return m_MemberName; }
 
 MultiDimArrayMemoryClientBase::MultiDimArrayMemoryClientBase(boost::string_ref membername,
-                                                             const RR_SHARED_PTR<ServiceStub>& stub, DataTypes element_type,
-                                                             size_t element_size, MemberDefinition_Direction direction)
+                                                             const RR_SHARED_PTR<ServiceStub>& stub,
+                                                             DataTypes element_type, size_t element_size,
+                                                             MemberDefinition_Direction direction)
 {
     this->stub = stub;
     this->node = stub->RRGetNode();

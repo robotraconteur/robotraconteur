@@ -68,7 +68,8 @@ boost::posix_time::ptime AuthenticatedUser::GetLastAccessTime()
 }
 
 AuthenticatedUser::AuthenticatedUser(boost::string_ref username, const std::vector<std::string>& privileges,
-                                     const std::vector<std::string>& properties, const RR_SHARED_PTR<ServerContext>& context)
+                                     const std::vector<std::string>& properties,
+                                     const RR_SHARED_PTR<ServerContext>& context)
 {
     this->m_Username = RR_MOVE(username.to_string());
     this->m_Privileges = privileges;
@@ -243,7 +244,7 @@ std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
 
     return s2;
 #else
-    boost::array<uint8_t,MD5_DIGEST_LENGTH> md = {};
+    boost::array<uint8_t, MD5_DIGEST_LENGTH> md = {};
     MD5(reinterpret_cast<const uint8_t*>(text.data()), text.size(), reinterpret_cast<uint8_t*>(md.data()));
 
     std::string s2;

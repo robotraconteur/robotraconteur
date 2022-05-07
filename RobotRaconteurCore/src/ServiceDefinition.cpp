@@ -65,14 +65,13 @@ RobotRaconteurVersion::RobotRaconteurVersion(uint32_t major, uint32_t minor, uin
 }
 
 RobotRaconteurVersion::RobotRaconteurVersion(boost::string_ref v)
- {
-     major = 0;
-     minor = 0;
-     patch = 0;
-     tweak = 0;
-     FromString(v); 
-     
-    }
+{
+    major = 0;
+    minor = 0;
+    patch = 0;
+    tweak = 0;
+    FromString(v);
+}
 
 std::string RobotRaconteurVersion::ToString() const
 {
@@ -1436,7 +1435,8 @@ static void MemberDefinition_FromStringFormat_common(MemberDefiniton_ParseResult
 }
 
 static void MemberDefinition_FromStringFormat1(boost::string_ref s1, const std::vector<std::string>& member_types,
-                                               const RR_SHARED_PTR<MemberDefinition>& def, RR_SHARED_PTR<TypeDefinition>& type,
+                                               const RR_SHARED_PTR<MemberDefinition>& def,
+                                               RR_SHARED_PTR<TypeDefinition>& type,
                                                const ServiceDefinitionParseInfo& parse_info)
 {
     MemberDefiniton_ParseResults parse_res;
@@ -1455,7 +1455,8 @@ static void MemberDefinition_FromStringFormat1(boost::string_ref s1, const std::
     }
 }
 static void MemberDefinition_FromStringFormat1(boost::string_ref s1, boost::string_ref member_type,
-                                               const RR_SHARED_PTR<MemberDefinition>& def, RR_SHARED_PTR<TypeDefinition>& type,
+                                               const RR_SHARED_PTR<MemberDefinition>& def,
+                                               RR_SHARED_PTR<TypeDefinition>& type,
                                                const ServiceDefinitionParseInfo& parse_info)
 {
     std::vector<std::string> member_types;
@@ -1700,7 +1701,8 @@ bool FunctionDefinition::IsGenerator()
     return false;
 }
 
-EventDefinition::EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
+EventDefinition::EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
+    : MemberDefinition(ServiceEntry)
 {
     EventDefinition::Reset();
 }
@@ -1726,7 +1728,8 @@ void EventDefinition::Reset()
     Parameters.clear();
 }
 
-ObjRefDefinition::ObjRefDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
+ObjRefDefinition::ObjRefDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
+    : MemberDefinition(ServiceEntry)
 {
     ArrayType = DataTypes_ArrayTypes_none;
     ContainerType = DataTypes_ContainerTypes_none;
@@ -1853,7 +1856,8 @@ void ObjRefDefinition::Reset()
     ContainerType = DataTypes_ContainerTypes_none;
 }
 
-PipeDefinition::PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
+PipeDefinition::PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
+    : MemberDefinition(ServiceEntry)
 {
     PipeDefinition::Reset();
 }
@@ -1935,7 +1939,8 @@ void CallbackDefinition::Reset()
     ReturnType.reset();
 }
 
-WireDefinition::WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
+WireDefinition::WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
+    : MemberDefinition(ServiceEntry)
 {
     WireDefinition::Reset();
 }
@@ -1963,7 +1968,8 @@ void WireDefinition::Reset()
 
 MemberDefinition_Direction WireDefinition::Direction() { return MemberDefinition_GetDirection(Modifiers); }
 
-MemoryDefinition::MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
+MemoryDefinition::MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
+    : MemberDefinition(ServiceEntry)
 {
     MemoryDefinition::Reset();
 }
@@ -2179,7 +2185,8 @@ void TypeDefinition::FromString(boost::string_ref s, const ServiceDefinitionPars
             ArrayType = DataTypes_ArrayTypes_multidimarray;
             ArrayVarLength = false;
             ArrayLength.resize(1);
-            ArrayLength.at(0) = boost::lexical_cast<int32_t>(boost::lexical_cast<uint32_t>(array_multi_single_fixed_result));
+            ArrayLength.at(0) =
+                boost::lexical_cast<int32_t>(boost::lexical_cast<uint32_t>(array_multi_single_fixed_result));
         }
         else if (array_multi_fixed_result.matched)
         {
@@ -2672,11 +2679,11 @@ static bool ConstantDefinition_CheckScalar(DataTypes& t, boost::string_ref val)
             return detail::try_convert_string_to_number(val.to_string(), v);
         }
         case DataTypes_single_t: {
-            float v  = 0.0F;
+            float v = 0.0F;
             return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
         }
         case DataTypes_int8_t: {
-            int8_t v  = 0;
+            int8_t v = 0;
             return detail::try_convert_string_to_number(std::string(val.begin(), val.end()), v);
         }
         case DataTypes_uint8_t: {
@@ -2796,7 +2803,6 @@ bool ConstantDefinition::VerifyTypeAndValue(TypeDefinition& t, boost::string_ref
                                          "\\t]*\"(?:(?:\\\\\"|\\\\\\\\|\\\\/"
                                          "|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|\\\\u[\\da-fA-F]{4})|[^\"\\\\])*\"[ \\t]*$");
             return boost::regex_match(value.begin(), value.end(), r_string);
-                
         }
         else if (t.Type == DataTypes_namedtype_t)
         {
@@ -3312,7 +3318,8 @@ const char* ServiceDefinitionVerifyException::what() const throw() { return what
 
 // Code to verify the service definition.  Most of these functions are not made available in the header.
 
-static void VerifyVersionSupport(const RR_SHARED_PTR<ServiceDefinition>& def, int32_t major, int32_t minor, const char* msg)
+static void VerifyVersionSupport(const RR_SHARED_PTR<ServiceDefinition>& def, int32_t major, int32_t minor,
+                                 const char* msg)
 {
     RobotRaconteurVersion def_version = def->StdVer;
     if (!def_version)
@@ -3332,8 +3339,8 @@ static void VerifyVersionSupport(const RR_SHARED_PTR<ServiceDefinition>& def, in
     }
 }
 
-void VerifyName(const std::string& name, const RR_SHARED_PTR<ServiceDefinition>& def, const ServiceDefinitionParseInfo& parse_info,
-                bool allowdot = false, bool ignorereserved = false)
+void VerifyName(const std::string& name, const RR_SHARED_PTR<ServiceDefinition>& def,
+                const ServiceDefinitionParseInfo& parse_info, bool allowdot = false, bool ignorereserved = false)
 {
     RR_UNUSED(def);
     if (name.length() == 0)
@@ -3613,7 +3620,7 @@ void VerifyType(const RR_SHARED_PTR<TypeDefinition>& t, const RR_SHARED_PTR<Serv
 }
 
 void VerifyReturnType(const RR_SHARED_PTR<TypeDefinition>& t, const RR_SHARED_PTR<ServiceDefinition>& def,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
+                      const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
 {
     if (t->Type == DataTypes_void_t)
     {
@@ -3691,8 +3698,9 @@ void VerifyModifier(boost::string_ref modifier_str, const RR_SHARED_PTR<MemberDe
     }
 }
 
-void VerifyModifiers(const RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, bool nolock, bool nolockread,
-                     bool perclient, bool urgent, std::vector<ServiceDefinitionParseException>& warnings)
+void VerifyModifiers(const RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, bool unreliable, bool nolock,
+                     bool nolockread, bool perclient, bool urgent,
+                     std::vector<ServiceDefinitionParseException>& warnings)
 {
     bool direction_found = false;
     bool unreliable_found = false;
@@ -3807,7 +3815,7 @@ void VerifyModifiers(const RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, b
 }
 
 std::string VerifyMember(const RR_SHARED_PTR<MemberDefinition>& m, const RR_SHARED_PTR<ServiceDefinition>& def,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                         const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                          std::vector<ServiceDefinitionParseException>& warnings)
 {
     VerifyName(m->Name, def, m->ParseInfo);
@@ -4026,7 +4034,8 @@ struct rrimplements
     std::vector<rrimplements> implements;
 };
 
-rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj, const RR_SHARED_PTR<ServiceDefinition>& def,
+rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj,
+                            const RR_SHARED_PTR<ServiceDefinition>& def,
                             const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                             ServiceDefinitionParseInfo& parse_info, std::string rootobj = "")
 {
@@ -4328,7 +4337,7 @@ bool CompareMember(const RR_SHARED_PTR<MemberDefinition>& m1, const RR_SHARED_PT
 }
 
 void VerifyObject(const RR_SHARED_PTR<ServiceEntryDefinition>& obj, const RR_SHARED_PTR<ServiceDefinition>& def,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                  const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                   std::vector<ServiceDefinitionParseException>& warnings)
 {
     if (obj->EntryType != DataTypes_object_t)
@@ -4407,8 +4416,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
 }
 
 void VerifyStructure_check_recursion(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
-                                     const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs, std::set<std::string> names,
-                                     DataTypes entry_type)
+                                     const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                                     std::set<std::string> names, DataTypes entry_type)
 {
     if (strut->EntryType != entry_type && strut->EntryType != DataTypes_namedarray_t)
     {
@@ -4443,7 +4452,8 @@ void VerifyStructure_check_recursion(const RR_SHARED_PTR<ServiceEntryDefinition>
     }
 }
 
-void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut, const RR_SHARED_PTR<ServiceDefinition>& def,
+void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
+                            const RR_SHARED_PTR<ServiceDefinition>& def,
                             const std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs,
                             const std::vector<RR_SHARED_PTR<ServiceDefinition> >& all_defs,
                             std::vector<ServiceDefinitionParseException>& warnings, DataTypes entry_type)
@@ -4600,16 +4610,16 @@ void VerifyStructure(const RR_SHARED_PTR<ServiceEntryDefinition>& strut, const R
 }
 
 void VerifyPod(const RR_SHARED_PTR<ServiceEntryDefinition>& strut, const RR_SHARED_PTR<ServiceDefinition>& def,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& all_defs,
+               const std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs,
+               const std::vector<RR_SHARED_PTR<ServiceDefinition> >& all_defs,
                std::vector<ServiceDefinitionParseException>& warnings)
 {
     VerifyStructure_common(strut, def, imported_defs, all_defs, warnings, DataTypes_pod_t);
 }
 
 void VerifyNamedArray(const RR_SHARED_PTR<ServiceEntryDefinition>& strut, const RR_SHARED_PTR<ServiceDefinition>& def,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& all_defs,
+                      const std::vector<RR_SHARED_PTR<ServiceDefinition> >& imported_defs,
+                      const std::vector<RR_SHARED_PTR<ServiceDefinition> >& all_defs,
                       std::vector<ServiceDefinitionParseException>& warnings)
 {
     VerifyStructure_common(strut, def, imported_defs, all_defs, warnings, DataTypes_namedarray_t);
@@ -4621,7 +4631,8 @@ struct rrimports
     std::vector<rrimports> imported;
 };
 
-rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def,
+                      const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                       std::set<std::string> parent_defs = std::set<std::string>())
 {
     rrimports out;
@@ -4661,7 +4672,8 @@ rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def, const std::ve
     return out;
 }
 
-void VerifyImports(const RR_SHARED_PTR<ServiceDefinition>& def, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
+void VerifyImports(const RR_SHARED_PTR<ServiceDefinition>& def,
+                   const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
 {
     rrimports c = get_imports(def, defs);
 }
@@ -5009,10 +5021,9 @@ ROBOTRACONTEUR_CORE_API boost::tuple<boost::string_ref, boost::string_ref> Split
     return boost::make_tuple(name.substr(0, pos), name.substr(pos + 1, name.size() - pos - 1));
 }
 
-ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(const RR_SHARED_PTR<ServiceEntryDefinition>& def,
-                                                            const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
-                                                            const RR_SHARED_PTR<RobotRaconteurNode>& node,
-                                                            const RR_SHARED_PTR<RRObject>& client)
+ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(
+    const RR_SHARED_PTR<ServiceEntryDefinition>& def, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<RRObject>& client)
 {
     size_t s = 16;
     s += ArrayBinaryWriter::GetStringByteCount8(def->Name);
@@ -5152,7 +5163,7 @@ boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(
 }
 
 ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(
-    const RR_SHARED_PTR<ServiceEntryDefinition>& def,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+    const RR_SHARED_PTR<ServiceEntryDefinition>& def, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<RRObject>& client)
 {
     std::set<std::string> n;

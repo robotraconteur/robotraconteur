@@ -98,8 +98,8 @@ void Discovery_updatediscoverednodes::timeout_timer_callback(const TimerEvent& e
     }
 }
 
-void Discovery_updatediscoverednodes::getdetectednodes_callback(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& ret,
-                                                                int32_t key)
+void Discovery_updatediscoverednodes::getdetectednodes_callback(
+    const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& ret, int32_t key)
 {
     boost::mutex::scoped_lock lock(work_lock);
 
@@ -314,7 +314,8 @@ void Discovery_findservicebytype::rr_empty_handler() {}
 
 void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<MessageEntry>& ret1,
                                                        const RR_SHARED_PTR<RobotRaconteurException>& err,
-                                                       const RR_SHARED_PTR<ServiceStub>& client, const std::string& url, int32_t key)
+                                                       const RR_SHARED_PTR<ServiceStub>& client, const std::string& url,
+                                                       int32_t key)
 {
     boost::recursive_mutex::scoped_lock lock2(work_lock);
     if (err)
@@ -502,8 +503,8 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
 }
 
 void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>& client,
-                                                   const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
-                                                   int32_t key)
+                                                   const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                                   const std::string& url, int32_t key)
 {
     boost::recursive_mutex::scoped_lock lock2(work_lock);
 
@@ -1023,8 +1024,9 @@ void Discovery_updateserviceinfo::backoff_timer_handler(const TimerEvent& evt)
 
 void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(
     const RR_SHARED_PTR<Discovery_nodestorage>& storage, boost::string_ref service_nonce,
-    RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<Discovery_nodestorage>&, const RR_SHARED_PTR<std::vector<ServiceInfo2> >&,
-                                     boost::string_ref, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+    RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<Discovery_nodestorage>&,
+                                     const RR_SHARED_PTR<std::vector<ServiceInfo2> >&, boost::string_ref,
+                                     const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
     int32_t extra_backoff)
 {
     this->storage = storage;
@@ -1958,8 +1960,8 @@ RR_SHARED_PTR<ServiceSubscription> Discovery::SubscribeService(
     return s;
 }
 
-RR_SHARED_PTR<ServiceSubscription> Discovery::SubscribeServiceByType(const std::vector<std::string>& service_types,
-                                                                     const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter)
+RR_SHARED_PTR<ServiceSubscription> Discovery::SubscribeServiceByType(
+    const std::vector<std::string>& service_types, const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter)
 {
     RR_SHARED_PTR<ServiceSubscription> s = RR_MAKE_SHARED<ServiceSubscription>(shared_from_this());
     DoSubscribe(service_types, filter, s);
@@ -1975,7 +1977,8 @@ RR_SHARED_PTR<ServiceInfo2Subscription> Discovery::SubscribeServiceInfo2(
 }
 
 void Discovery::DoSubscribe(const std::vector<std::string>& service_types,
-                            const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter, const RR_SHARED_PTR<IServiceSubscription>& s)
+                            const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter,
+                            const RR_SHARED_PTR<IServiceSubscription>& s)
 {
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,

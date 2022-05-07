@@ -2110,7 +2110,8 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, teststruct2> > RobotRaconteurTes
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_is_struct1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, teststruct2> >& value)
+void RobotRaconteurTest_testroot::set_is_struct1(
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, teststruct2> >& value)
 {
     double is_struct1_2_1a[] = {-2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
                                 -3.256612e-02, -1.855481e-19, 3.801916e+07,  2.145894e+09,  4.487676e+12,
@@ -2158,7 +2159,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > Robo
 }
 
 void RobotRaconteurTest_testroot::set_list_d1(
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > >& value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > >& value)
 {
     if (value->size() != 3)
         throw std::exception();
@@ -2186,7 +2187,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > Robo
 }
 
 void RobotRaconteurTest_testroot::set_list_d3(
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > >& value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > >& value)
 {
     double is_d3_2a[] = {4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
                          -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
@@ -2281,7 +2282,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > > RobotR
 }
 
 void RobotRaconteurTest_testroot::set_list_str1(
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > >& value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > >& value)
 {
     if (value->size() != 1)
         throw std::exception();
@@ -2873,8 +2874,8 @@ void RobotRaconteurTest_testroot::w1_connect_callback(
 }
 
 void RobotRaconteurTest_testroot::w1_value_changed(
-    RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire,const RR_INTRUSIVE_PTR<RRArray<double> >& value,
-    TimeSpec time)
+    RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire,
+    const RR_INTRUSIVE_PTR<RRArray<double> >& value, TimeSpec time)
 {
     try
     {
@@ -2905,7 +2906,7 @@ void RobotRaconteurTest_testroot::w2_connect_callback(
 }
 
 void RobotRaconteurTest_testroot::w2_value_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > wire,
-                                                  const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec time)
+                                                   const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec time)
 {
     try
     {
@@ -3107,9 +3108,9 @@ void sub3_impl::async_get_ind(
     RobotRaconteurNode::s()->GetThreadPool()->Post(
         boost::bind(rr_handler, ind, RR_SHARED_PTR<RobotRaconteurException>()));
 }
-void sub3_impl::async_set_ind(const std::string& value,
-                              boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
-                              int32_t rr_timeout)
+void sub3_impl::async_set_ind(
+    const std::string& value,
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
         boost::bind(rr_handler, RR_MAKE_SHARED<ServiceException>("Read only property")));
@@ -3124,8 +3125,8 @@ void sub3_impl::async_get_data2(
 }
 
 void sub3_impl::async_set_data2(
-    const std::string& value, boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
-    int32_t rr_timeout)
+    const std::string& value,
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
 {
     data2 = value;
     RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler, RR_SHARED_PTR<RobotRaconteurException>()));

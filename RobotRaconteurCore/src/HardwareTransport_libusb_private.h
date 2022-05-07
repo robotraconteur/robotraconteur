@@ -152,8 +152,6 @@ namespace RobotRaconteur
 namespace detail
 {
 
-
-
 #define LIBUSB_FUNCTIONS_INIT(M)                                                                                       \
     M(libusb_init)                                                                                                     \
     M(libusb_exit)                                                                                                     \
@@ -238,9 +236,8 @@ namespace detail
 #define LIBUSB_FUNCTIONS_PTR_VOID(t) t = NULL;
 #define LIBUSB_FUNCTIONS_PTR_INIT(t)                                                                                   \
     t = reinterpret_cast<t##_t>(dlsym(lib_handle, #t));                                                                \
-    if ((t) == NULL)                                                                                                     \
-        return false; 
-
+    if ((t) == NULL)                                                                                                   \
+        return false;
 
 class LibUsb_Functions : public boost::noncopyable
 {
@@ -298,7 +295,8 @@ class LibUsb_Transfer_control : public LibUsb_Transfer
 
     virtual void CompleteTransfer();
 
-    LibUsb_Transfer_control(const RR_SHARED_PTR<LibUsb_Functions>& f, const RR_SHARED_PTR<libusb_device_handle>& device_handle,
+    LibUsb_Transfer_control(const RR_SHARED_PTR<LibUsb_Functions>& f,
+                            const RR_SHARED_PTR<libusb_device_handle>& device_handle,
                             const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager);
     virtual ~LibUsb_Transfer_control();
 };
@@ -315,7 +313,8 @@ class LibUsb_Transfer_bulk : public LibUsb_Transfer
 
     virtual void CompleteTransfer();
 
-    LibUsb_Transfer_bulk(const RR_SHARED_PTR<LibUsb_Functions>& f, const RR_SHARED_PTR<libusb_device_handle>& device_handle,
+    LibUsb_Transfer_bulk(const RR_SHARED_PTR<LibUsb_Functions>& f,
+                         const RR_SHARED_PTR<libusb_device_handle>& device_handle,
                          const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager);
     virtual ~LibUsb_Transfer_bulk();
 };
@@ -392,7 +391,8 @@ class LibUsbDevice_Initialize : public UsbDevice_Initialize
     virtual UsbDeviceStatus OpenDevice(RR_SHARED_PTR<void>& dev_h);
 
     // Call with lock
-    virtual UsbDeviceStatus ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h, RR_SHARED_PTR<UsbDevice_Settings>& settings);
+    virtual UsbDeviceStatus ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
+                                             RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
     // Call with lock
 

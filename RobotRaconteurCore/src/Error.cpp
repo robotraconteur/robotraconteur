@@ -32,7 +32,7 @@ RobotRaconteurException::RobotRaconteurException() : std::runtime_error("")
 
 RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, const std::string& error,
                                                  const std::string& message, const std::string& sub_name,
-                                                const RR_INTRUSIVE_PTR<RRValue>& param_)
+                                                 const RR_INTRUSIVE_PTR<RRValue>& param_)
     : std::runtime_error((error + " " + message).c_str())
 {
     Error = error;
@@ -48,7 +48,6 @@ RobotRaconteurException::RobotRaconteurException(const std::string& message, std
 {
     RR_UNUSED(innerexception);
     ErrorCode = MessageErrorType_None;
-    
 }
 
 std::string RobotRaconteurException::ToString() { return "RobotRaconteurException: " + Error + ": " + Message; }
@@ -56,13 +55,14 @@ std::string RobotRaconteurException::ToString() { return "RobotRaconteurExceptio
 const char* RobotRaconteurException::what() const throw() { return what_string.c_str(); }
 
 #define RR_EXCEPTION_DEF_1(exp_cpp_type, exp_code, exp_type_str)                                                       \
-    exp_cpp_type::exp_cpp_type(const std::string& message, const std::string& sub_type,const RR_INTRUSIVE_PTR<RRValue>& param_)     \
+    exp_cpp_type::exp_cpp_type(const std::string& message, const std::string& sub_type,                                \
+                               const RR_INTRUSIVE_PTR<RRValue>& param_)                                                \
         : RobotRaconteurException(exp_code, exp_type_str, message, sub_type, param_)                                   \
     {}
 
 #define RR_EXCEPTION_DEF_2(exp_cpp_type, exp_code)                                                                     \
-    exp_cpp_type::exp_cpp_type(const std::string& error, const std::string& message, const std::string& sub_type,             \
-                              const RR_INTRUSIVE_PTR<RRValue>& param_)                                                       \
+    exp_cpp_type::exp_cpp_type(const std::string& error, const std::string& message, const std::string& sub_type,      \
+                               const RR_INTRUSIVE_PTR<RRValue>& param_)                                                \
         : RobotRaconteurException(exp_code, error, message, sub_type, param_)                                          \
     {}                                                                                                                 \
     exp_cpp_type::exp_cpp_type(std::exception& innerexception)                                                         \

@@ -71,7 +71,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     boost::atomic<boost::posix_time::ptime> tlastsend;
     boost::atomic<boost::posix_time::ptime> tlastrecv;
 
-    boost::array<uint8_t,8> streammagic;
+    boost::array<uint8_t, 8> streammagic;
     uint32_t recv_message_size;
     boost::shared_array<uint8_t> recvbuf;
     size_t recvbuf_len;
@@ -95,7 +95,8 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     bool CheckStreamCapability_waiting;
     boost::mutex CheckStreamCapability_lock;
     boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)> CheckStreamCapability_callback;
-    std::queue<boost::tuple<std::string, boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)> > >
+    std::queue<
+        boost::tuple<std::string, boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)> > >
         CheckStreamCapability_queue;
 
     RR_SHARED_PTR<boost::asio::deadline_timer> CheckStreamCapability_timer;
@@ -103,9 +104,11 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     bool streamop_closed;
     bool streamop_waiting;
     boost::mutex streamop_lock;
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> streamop_callback;
-    std::queue<boost::tuple<std::string, const RR_SHARED_PTR<RRObject>&,
-                            boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> > >
+    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+        streamop_callback;
+    std::queue<boost::tuple<
+        std::string, const RR_SHARED_PTR<RRObject>&,
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> > >
         streamop_queue;
 
     RR_SHARED_PTR<boost::asio::deadline_timer> streamop_timer;
@@ -177,18 +180,17 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
         std::string nodename;
 
         // NOLINTBEGIN(bugprone-throw-keyword-missing)
-        AsyncAttachStream_args(const RobotRaconteur::NodeID& nodeid_, boost::string_ref nodename_) : nodeid(nodeid_),
-            nodename(RR_MOVE(nodename_.to_string()))
-        {
-            
-        }
+        AsyncAttachStream_args(const RobotRaconteur::NodeID& nodeid_, boost::string_ref nodename_)
+            : nodeid(nodeid_), nodename(RR_MOVE(nodename_.to_string()))
+        {}
         // NOLINTEND(bugprone-throw-keyword-missing)
 
         virtual std::string RRType() { return "RobotRaconteur::ASIOStreamBaseTransport::AsyncAttachStream_args"; }
     };
 
-    virtual void AsyncAttachStream(bool server, const NodeID& target_nodeid, boost::string_ref target_nodename,
-                                   const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+    virtual void AsyncAttachStream(
+        bool server, const NodeID& target_nodeid, boost::string_ref target_nodename,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   public:
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
@@ -201,8 +203,9 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
 
     void SimpleAsyncEndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    virtual void AsyncAttachStream1(const RR_SHARED_PTR<RRObject>& parameter, const RR_SHARED_PTR<RobotRaconteurException>& err,
-                                    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+    virtual void AsyncAttachStream1(
+        const RR_SHARED_PTR<RRObject>& parameter, const RR_SHARED_PTR<RobotRaconteurException>& err,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void BeginSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
@@ -255,11 +258,13 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     virtual uint32_t StreamCapabilities(boost::string_ref name);
 
     virtual void AsyncCheckStreamCapability(
-        boost::string_ref name, boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+        boost::string_ref name,
+        boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   protected:
     virtual void BeginCheckStreamCapability(
-        boost::string_ref name, boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+        boost::string_ref name,
+        boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     void CheckStreamCapability_EndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err);
 
@@ -269,18 +274,21 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     void CheckStreamCapability_MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
   public:
-    void AsyncStreamOp(boost::string_ref command, const RR_SHARED_PTR<RRObject>& args,
-                       boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&);
+    void AsyncStreamOp(
+        boost::string_ref command, const RR_SHARED_PTR<RRObject>& args,
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&);
 
     virtual void PeriodicCleanupTask();
 
     virtual NodeID GetRemoteNodeID();
 
   protected:
-    virtual void BeginStreamOp(boost::string_ref command, const RR_SHARED_PTR<RRObject>& args,
-                               boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&);
+    virtual void BeginStreamOp(
+        boost::string_ref command, const RR_SHARED_PTR<RRObject>& args,
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&);
 
-    virtual RR_INTRUSIVE_PTR<MessageEntry> PackStreamOpRequest(boost::string_ref command, const RR_SHARED_PTR<RRObject>& args);
+    virtual RR_INTRUSIVE_PTR<MessageEntry> PackStreamOpRequest(boost::string_ref command,
+                                                               const RR_SHARED_PTR<RRObject>& args);
 
     virtual void StreamOp_EndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err);
 

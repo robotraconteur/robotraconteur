@@ -174,9 +174,11 @@ GeneratorServerBase::GeneratorServerBase(boost::string_ref name, int32_t index, 
 
 uint32_t GeneratorServerBase::GetEndpoint() { return ep->GetLocalEndpoint(); }
 
-void GeneratorServerBase::EndAsyncCallNext(const RR_WEAK_PTR<ServiceSkel>& skel, const RR_INTRUSIVE_PTR<MessageElement>& ret,
+void GeneratorServerBase::EndAsyncCallNext(const RR_WEAK_PTR<ServiceSkel>& skel,
+                                           const RR_INTRUSIVE_PTR<MessageElement>& ret,
                                            const RR_SHARED_PTR<RobotRaconteurException>& err, int32_t index,
-                                           const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& ep)
+                                           const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                           const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
     RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
     if (!skel1)
@@ -222,7 +224,8 @@ void GeneratorServerBase::EndAsyncCallNext(const RR_WEAK_PTR<ServiceSkel>& skel,
 
 namespace detail
 {
-void GeneratorClient_AsyncNext2(const RR_INTRUSIVE_PTR<MessageElement>& v2, const RR_SHARED_PTR<RobotRaconteurException>& err,
+void GeneratorClient_AsyncNext2(const RR_INTRUSIVE_PTR<MessageElement>& v2,
+                                const RR_SHARED_PTR<RobotRaconteurException>& err,
                                 const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                 boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
 {

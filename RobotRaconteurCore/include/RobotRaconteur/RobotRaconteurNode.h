@@ -392,7 +392,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
-       const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& pod_multiarray);
+        const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& pod_multiarray);
 
     /**
      * @internal
@@ -429,7 +429,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param namedarray
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(const RR_INTRUSIVE_PTR<RRNamedBaseArray>& namedarray);
+    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(
+        const RR_INTRUSIVE_PTR<RRNamedBaseArray>& namedarray);
 
     /**
      * @internal
@@ -446,7 +447,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param namedarray
      * @return RR_INTRUSIVE_PTR<RRNamedBaseArray>
      */
-    RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& namedarray);
+    RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& namedarray);
 
     /**
      * @internal
@@ -464,7 +466,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
-       const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& named_multiarray);
+        const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& named_multiarray);
 
     /**
      * @internal
@@ -494,7 +496,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<MessageElementNestedElementList>
      */
     template <typename T>
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMultiDimArray(const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& arr)
+    RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackMultiDimArray(
+        const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& arr)
     {
         return detail::packing::PackMultiDimArray<T>(arr);
     }
@@ -512,7 +515,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return RR_INTRUSIVE_PTR<RRMultiDimArray<T> >
      */
     template <typename T>
-    RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& ar)
+    RR_INTRUSIVE_PTR<RRMultiDimArray<T> > UnpackMultiDimArray(
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& ar)
     {
         return detail::packing::UnpackMultiDimArray<T>(ar);
     }
@@ -1027,8 +1031,10 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<RRObject> ConnectService(
         boost::string_ref url, boost::string_ref username = "",
-        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > &credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
-        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
+            (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                             const RR_SHARED_PTR<void>&)>
             listener = 0,
         boost::string_ref objecttype = "");
 
@@ -1051,8 +1057,10 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
      */
     void AsyncConnectService(
-        boost::string_ref url, boost::string_ref username, const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
-        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
+        boost::string_ref url, boost::string_ref username,
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                             const RR_SHARED_PTR<void>&)>
             listener,
         boost::string_ref objecttype,
         boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
@@ -1076,8 +1084,10 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<RRObject> ConnectService(
         const std::vector<std::string>& urls, boost::string_ref username = "",
-        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
-        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
+            (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                             const RR_SHARED_PTR<void>&)>
             listener = 0,
         boost::string_ref objecttype = "");
 
@@ -1099,7 +1109,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     void AsyncConnectService(
         const std::vector<std::string>& url, boost::string_ref username,
         const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
-        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                             const RR_SHARED_PTR<void>&)>
             listener,
         boost::string_ref objecttype,
         boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
@@ -1463,7 +1474,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<ServiceSubscription> SubscribeService(
         const std::vector<std::string>& url, boost::string_ref username = "",
-        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
+            (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
         boost::string_ref objecttype = "");
 
     /**
@@ -1480,7 +1492,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      */
     RR_SHARED_PTR<ServiceSubscription> SubscribeService(
         const std::string& url, boost::string_ref username = "",
-        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
+            (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
         boost::string_ref objecttype = "");
 
   protected:
@@ -1501,7 +1514,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param node
      * @param services
      */
-    void FireNodeDetected(const RR_SHARED_PTR<NodeDiscoveryInfo>& node, const RR_SHARED_PTR<std::vector<ServiceInfo2> >& services);
+    void FireNodeDetected(const RR_SHARED_PTR<NodeDiscoveryInfo>& node,
+                          const RR_SHARED_PTR<std::vector<ServiceInfo2> >& services);
 
     /**
      * @internal
@@ -1882,7 +1896,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     void AsyncFindObjRefTyped(
-        const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref, boost::string_ref index, boost::string_ref objecttype,
+        const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref, boost::string_ref index,
+        boost::string_ref objecttype,
         boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
@@ -2580,7 +2595,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename F>
-    static bool asio_async_wait(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, BOOST_ASIO_MOVE_ARG(F) f)
+    static bool asio_async_wait(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t,
+                                BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
         if (!node1)
@@ -2726,8 +2742,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename B, typename C, typename F>
-    static bool asio_async_connect(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const B& b, const C& c,
-                                   BOOST_ASIO_MOVE_ARG(F) f)
+    static bool asio_async_connect(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const B& b,
+                                   const C& c, BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
         if (!node1)
@@ -2801,8 +2817,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename B, typename C, typename F>
-    static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const B& b, const C& c,
-                                   BOOST_ASIO_MOVE_ARG(F) f)
+    static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const B& b,
+                                   const C& c, BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
         if (!node1)
@@ -2916,7 +2932,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename F>
-    static bool asio_async_shutdown(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, BOOST_ASIO_MOVE_ARG(F) f)
+    static bool asio_async_shutdown(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t,
+                                    BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
         if (!node1)

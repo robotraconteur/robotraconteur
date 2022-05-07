@@ -50,8 +50,9 @@ ROBOTRACONTEUR_CORE_API void InvokeHandler_HandleException(RR_WEAK_PTR<RobotRaco
     RobotRaconteurNode::TryHandleException(node, &exp);
 }
 
-ROBOTRACONTEUR_CORE_API void InvokeHandler_DoPost(RR_WEAK_PTR<RobotRaconteurNode> node, const boost::function<void()>& h,
-                                                  bool shutdown_op, bool throw_on_released)
+ROBOTRACONTEUR_CORE_API void InvokeHandler_DoPost(RR_WEAK_PTR<RobotRaconteurNode> node,
+                                                  const boost::function<void()>& h, bool shutdown_op,
+                                                  bool throw_on_released)
 {
     if (!RobotRaconteurNode::TryPostToThreadPool(node, h, shutdown_op))
     {
@@ -73,8 +74,9 @@ ROBOTRACONTEUR_CORE_API void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
     }
 }
 
-ROBOTRACONTEUR_CORE_API void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
-                                           const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+ROBOTRACONTEUR_CORE_API void InvokeHandler(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     try
     {
@@ -87,7 +89,8 @@ ROBOTRACONTEUR_CORE_API void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
 }
 
 ROBOTRACONTEUR_CORE_API void InvokeHandlerWithException(
-    RR_WEAK_PTR<RobotRaconteurNode> node, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
     const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     try
@@ -101,8 +104,9 @@ ROBOTRACONTEUR_CORE_API void InvokeHandlerWithException(
 }
 
 ROBOTRACONTEUR_CORE_API void InvokeHandlerWithException(
-    RR_WEAK_PTR<RobotRaconteurNode> node, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
-    std::exception& exp, MessageErrorType default_err)
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler, std::exception& exp,
+    MessageErrorType default_err)
 {
     try
     {
@@ -127,9 +131,10 @@ ROBOTRACONTEUR_CORE_API void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node, c
     }
 }
 
-ROBOTRACONTEUR_CORE_API void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
-                                         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
-                                         bool shutdown_op, bool throw_on_released)
+ROBOTRACONTEUR_CORE_API void PostHandler(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler, bool shutdown_op,
+    bool throw_on_released)
 {
 
     if (!RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, RR_SHARED_PTR<RobotRaconteurException>()),
@@ -142,7 +147,8 @@ ROBOTRACONTEUR_CORE_API void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
 }
 
 ROBOTRACONTEUR_CORE_API void PostHandlerWithException(
-    RR_WEAK_PTR<RobotRaconteurNode> node, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
     const RR_SHARED_PTR<RobotRaconteurException>& exp, bool shutdown_op, bool throw_on_released)
 {
     if (!RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, exp), shutdown_op))
@@ -154,8 +160,9 @@ ROBOTRACONTEUR_CORE_API void PostHandlerWithException(
 }
 
 ROBOTRACONTEUR_CORE_API void PostHandlerWithException(
-    RR_WEAK_PTR<RobotRaconteurNode> node, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
-    std::exception& exp, MessageErrorType default_err, bool shutdown_op, bool throw_on_released)
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler, std::exception& exp,
+    MessageErrorType default_err, bool shutdown_op, bool throw_on_released)
 {
     RR_SHARED_PTR<RobotRaconteurException> err = RobotRaconteurExceptionUtil::ExceptionToSharedPtr(exp, default_err);
 

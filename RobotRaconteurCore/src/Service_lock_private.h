@@ -45,7 +45,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext_ObjectLock : public RR_ENABLE_SHARED
     void ReleaseSkel(const RR_SHARED_PTR<ServiceSkel>& skel);
 
     void ReleaseLock();
-
 };
 
 class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel

@@ -3476,7 +3476,8 @@ void JavaServiceLangGen::GenerateDefaultImplFile(ServiceEntryDefinition* d, ostr
     GenerateDefaultImpl(d, w);
 }
 
-void JavaServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef, const std::string& path)
+void JavaServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+                                       const std::string& path)
 {
 #ifdef _WIN32
     const std::string os_pathsep("\\");

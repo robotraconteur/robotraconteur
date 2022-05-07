@@ -66,7 +66,7 @@ struct x509_stack_cleanup
 BIO* make_buffer_bio(const boost::asio::const_buffer& b)
 {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-    return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)), 
+    return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)),
                              boost::numeric_cast<int>(boost::asio::buffer_size(b)));
 }
 
@@ -158,7 +158,7 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
                 ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
                 if (!obj)
                     return false;
-                boost::array<char,64> buf = {};
+                boost::array<char, 64> buf = {};
 
                 OBJ_obj2txt(buf.data(), 64, obj, 1);
                 std::string oid(buf.data());
@@ -514,7 +514,7 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
     if (!cert)
         return false;
 
-    boost::array<char,256> buf = {};
+    boost::array<char, 256> buf = {};
     memset(buf.data(), 0, 256);
 
     X509_NAME_oneline(X509_get_subject_name(cert), buf.data(), 256);
@@ -540,7 +540,7 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
             ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
             if (!obj)
                 return false;
-            boost::array<char,64> buf3 = {};
+            boost::array<char, 64> buf3 = {};
 
             OBJ_obj2txt(buf3.data(), 64, obj, 1);
             std::string oid(buf3.data());

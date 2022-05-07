@@ -175,9 +175,9 @@ class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
                 service_path, member, __FILE__, __LINE__);                                                             \
         if (____rr_log_record_stream____)                                                                              \
         {                                                                                                              \
-            ____rr_log_record_stream____->Stream() << args;                                                           \
+            ____rr_log_record_stream____->Stream() << args;                                                            \
         }                                                                                                              \
-    }                                                                                                                  \
+    }
 
 // NOLINTEND(bugprone-macro-parentheses)
 

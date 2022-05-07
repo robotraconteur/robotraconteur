@@ -106,8 +106,10 @@ static void libusb_error_to_ec(int err, boost::system::error_code& ec)
 
 // LibUsb_Transfer
 
-LibUsb_Transfer::LibUsb_Transfer(const RR_SHARED_PTR<LibUsb_Functions>& f, const RR_SHARED_PTR<libusb_device_handle>& device_handle,
-                                 const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager) : ref_count(0)
+LibUsb_Transfer::LibUsb_Transfer(const RR_SHARED_PTR<LibUsb_Functions>& f,
+                                 const RR_SHARED_PTR<libusb_device_handle>& device_handle,
+                                 const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager)
+    : ref_count(0)
 {
     this->f = f;
     this->device_handle = device_handle;
@@ -115,7 +117,6 @@ LibUsb_Transfer::LibUsb_Transfer(const RR_SHARED_PTR<LibUsb_Functions>& f, const
     this->device_manager = device_manager;
 
     thread_pool = device_manager->GetNode()->GetThreadPool();
-    
 }
 
 LibUsb_Transfer::~LibUsb_Transfer()
@@ -148,9 +149,7 @@ LibUsb_Transfer_control::LibUsb_Transfer_control(const RR_SHARED_PTR<LibUsb_Func
                                                  const RR_SHARED_PTR<libusb_device_handle>& device_handle,
                                                  const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager)
     : LibUsb_Transfer(f, device_handle, device_manager)
-{
-
-}
+{}
 
 void LibUsb_Transfer_control::FillTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                            boost::asio::mutable_buffer& buf,
@@ -163,10 +162,11 @@ void LibUsb_Transfer_control::FillTransfer(uint8_t bmRequestType, uint8_t bReque
     this->temp_buf = boost::shared_array<uint8_t>(new uint8_t[s]);
     this->data_buf = buf;
     boost::asio::buffer_copy(boost::asio::buffer(this->temp_buf.get(), s) + 8, buf);
-    libusb_fill_control_setup(this->temp_buf.get(), bmRequestType, bRequest, wValue, wIndex, boost::asio::buffer_size(buf));
+    libusb_fill_control_setup(this->temp_buf.get(), bmRequestType, bRequest, wValue, wIndex,
+                              boost::asio::buffer_size(buf));
 
-    libusb_fill_control_transfer(transfer, device_handle.get(), temp_buf.get(), &LibUsbDeviceManager::transfer_complete, this,
-                                 5000);
+    libusb_fill_control_transfer(transfer, device_handle.get(), temp_buf.get(), &LibUsbDeviceManager::transfer_complete,
+                                 this, 5000);
 
     this->handler = RR_MOVE(handler);
     ref_count++;
@@ -198,10 +198,7 @@ void LibUsb_Transfer_control::CompleteTransfer()
     p->Post(boost::bind(handler, ec2, actual_length));
 }
 
-LibUsb_Transfer_control::~LibUsb_Transfer_control()
-{
-
-}
+LibUsb_Transfer_control::~LibUsb_Transfer_control() {}
 
 void LibUsb_Transfer_bulk::FillTransfer(uint8_t ep, boost::asio::mutable_buffer& buf,
                                         boost::function<void(const boost::system::error_code&, size_t)> handler)
@@ -212,7 +209,8 @@ void LibUsb_Transfer_bulk::FillTransfer(uint8_t ep, boost::asio::mutable_buffer&
     this->data_buf = buf;
 
     libusb_fill_bulk_transfer(transfer, device_handle.get(), ep, boost::asio::buffer_cast<uint8_t*>(buf),
-                              boost::numeric_cast<int>(boost::asio::buffer_size(buf)), &LibUsbDeviceManager::transfer_complete, this, 0);
+                              boost::numeric_cast<int>(boost::asio::buffer_size(buf)),
+                              &LibUsbDeviceManager::transfer_complete, this, 0);
 
     transfer->flags |= LIBUSB_TRANSFER_ADD_ZERO_PACKET;
 
@@ -264,15 +262,20 @@ LibUsbDeviceManager::LibUsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>&
 
 LibUsbDeviceManager::~LibUsbDeviceManager() {}
 
-static void LibUsb_Functions_libusb_exit(const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_context* c) { f->libusb_exit(c); }
+static void LibUsb_Functions_libusb_exit(const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_context* c)
+{
+    f->libusb_exit(c);
+}
 
 static void LibUsb_Functions_libusb_unref(const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_device* dev)
 {
     f->libusb_unref_device(dev);
 }
 
-static UsbDeviceStatus LibUsbDevice_open_device(const RR_SHARED_PTR<LibUsbDeviceManager>& m, const RR_SHARED_PTR<LibUsb_Functions>& f,
-                                                const RR_SHARED_PTR<libusb_device>& device, RR_SHARED_PTR<void>& device_handle)
+static UsbDeviceStatus LibUsbDevice_open_device(const RR_SHARED_PTR<LibUsbDeviceManager>& m,
+                                                const RR_SHARED_PTR<LibUsb_Functions>& f,
+                                                const RR_SHARED_PTR<libusb_device>& device,
+                                                RR_SHARED_PTR<void>& device_handle)
 {
     libusb_device_handle* dev_h = NULL;
     int res = f->libusb_open(device.get(), &dev_h);
@@ -523,10 +526,13 @@ void LibUsbDeviceManager::UsbThread()
     }
 }
 
-void LibUsb_Functions_libusb_close(const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_device_handle* h) { f->libusb_close(h); }
+void LibUsb_Functions_libusb_close(const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_device_handle* h)
+{
+    f->libusb_close(h);
+}
 
-void LibUsbDeviceManager::LibUsbCloseDevice(RR_WEAK_PTR<LibUsbDeviceManager> d, const RR_SHARED_PTR<LibUsb_Functions>& f,
-                                            libusb_device_handle* h)
+void LibUsbDeviceManager::LibUsbCloseDevice(RR_WEAK_PTR<LibUsbDeviceManager> d,
+                                            const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_device_handle* h)
 {
     RR_SHARED_PTR<LibUsbDeviceManager> d1 = d.lock();
     if (!d1)
@@ -647,7 +653,8 @@ void LibUsbDeviceManager::transfer_complete(libusb_transfer* transfer)
     t1->CompleteTransfer();
 }
 
-void LibUsbDeviceManager::DrawDownRequests(const RR_SHARED_PTR<libusb_device_handle>& h, boost::function<void()> handler)
+void LibUsbDeviceManager::DrawDownRequests(const RR_SHARED_PTR<libusb_device_handle>& h,
+                                           boost::function<void()> handler)
 {
     // TODO: draw down requests
     // GetNode()->GetThreadPool()->Post(handler);
@@ -706,7 +713,8 @@ void LibUsbDeviceManager::Shutdown()
 
 // LibUsbDevice_Initialize
 
-LibUsbDevice_Initialize::LibUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
+LibUsbDevice_Initialize::LibUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent,
+                                                 const RR_SHARED_PTR<LibUsb_Functions>& f,
                                                  const UsbDeviceManager_detected_device& detected_device)
     : UsbDevice_Initialize(parent, detected_device)
 {

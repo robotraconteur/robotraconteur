@@ -157,8 +157,8 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
-            handler) = 0;
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
     virtual void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) = 0;
 
@@ -169,7 +169,8 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
-    RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m, const RR_SHARED_PTR<ITransportConnection>& tc);
+    RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m,
+                                             const RR_SHARED_PTR<ITransportConnection>& tc);
 
     virtual void Close();
 
@@ -188,9 +189,10 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual std::vector<NodeDiscoveryInfo> GetDetectedNodes(const std::vector<std::string>& schemes);
 
-    virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                       boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
-                                       int32_t timeout = RR_TIMEOUT_INFINITE);
+    virtual void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE);
 
   protected:
     virtual void LocalNodeServicesChanged();

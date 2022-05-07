@@ -1444,7 +1444,8 @@ void TlsSchannelAsyncStreamAdapter::async_write_some1(
 }
 
 void TlsSchannelAsyncStreamAdapter::async_write_some2(
-    const boost::system::error_code& error, const boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const boost::system::error_code& error,
+    const boost::function<void(const boost::system::error_code&, size_t)> handler)
 {
     // Error handler for async_write_some
 

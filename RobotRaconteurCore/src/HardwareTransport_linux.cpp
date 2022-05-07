@@ -92,8 +92,8 @@ Sdp_Functions::~Sdp_Functions()
 
 // BluezBluetoothConnector
 
-BluezBluetoothConnector::BluezBluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent, const RR_SHARED_PTR<void>& dbus_f,
-                                                 const RR_SHARED_PTR<void>& sdp_f)
+BluezBluetoothConnector::BluezBluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                                 const RR_SHARED_PTR<void>& dbus_f, const RR_SHARED_PTR<void>& sdp_f)
     : BluetoothConnector(parent)
 {
     this->dbus_f = RR_STATIC_POINTER_CAST<DBus_Functions>(dbus_f);
@@ -333,10 +333,10 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
 {
     std::list<BluezBluetoothConnector::device_info> o;
 
-// NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
     const uint8_t svc_uuid_int[] = {0x25, 0xbb, 0x0b, 0x62, 0x86, 0x1a, 0x49, 0x74,
                                     0xa1, 0xb8, 0x18, 0xed, 0x54, 0x95, 0xaa, 0x07};
-// NOLINTEND(cppcoreguidelines-avoid-c-arrays)
+    // NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
     uuid_t svc_uuid;
 
@@ -593,7 +593,7 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
 static std::string HardwareTransport_read_sysfs_attr(const boost::filesystem::path& p)
 {
     ssize_t rv = 0;
-    boost::array<char,256> attr_buf = {};
+    boost::array<char, 256> attr_buf = {};
     int f1 = open(p.c_str(), O_RDONLY);
     if (f1 < 0)
         throw ConnectionException("Attribute not found");

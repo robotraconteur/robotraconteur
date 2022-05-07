@@ -89,7 +89,8 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
 
     virtual void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
                                                                           const RR_SHARED_PTR<Endpoint>& e);
@@ -100,7 +101,8 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
     virtual void AsyncCreateTransportConnection2(
         const std::string& noden, const RR_SHARED_PTR<ITransportConnection>& transport,
         const RR_SHARED_PTR<RobotRaconteurException>& err,
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
                                                 const RR_SHARED_PTR<void>& timer);
@@ -118,9 +120,10 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
-    virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                       boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
-                                       int32_t timeout = RR_TIMEOUT_INFINITE);
+    virtual void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /** @copydoc TcpTransport::GetMaxMessageSize() */
     virtual int32_t GetMaxMessageSize();

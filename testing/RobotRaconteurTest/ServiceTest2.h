@@ -147,7 +147,7 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > > get_c5();
     virtual void set_c5(
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > >& value);
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > >& value);
 
     virtual RobotRaconteur::cfloat get_c7();
     virtual void set_c7(RobotRaconteur::cfloat value);
@@ -175,11 +175,11 @@ const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRacon
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > get_b4();
     virtual void set_b4(
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value);
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > get_b5();
     virtual void set_b5(
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value);
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool> > >
     get_b6();

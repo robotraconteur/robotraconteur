@@ -10,7 +10,7 @@ static void copy_to(std::set<std::string>& out, std::set<std::string> in)
 }
 
 std::set<std::string> GenerateStringTable(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& gen_defs,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& all_defs)
+                                          const std::vector<RR_SHARED_PTR<ServiceDefinition> >& all_defs)
 {
     std::set<std::string> include_strs;
     std::set<std::string> gen_strs;
@@ -53,7 +53,8 @@ std::set<std::string> GetServiceDefStrings(const RR_SHARED_PTR<ServiceDefinition
     return str1;
 }
 
-std::set<std::string> GetServiceEntryDefStrings(const RR_SHARED_PTR<ServiceEntryDefinition>& def, const std::string& def_name)
+std::set<std::string> GetServiceEntryDefStrings(const RR_SHARED_PTR<ServiceEntryDefinition>& def,
+                                                const std::string& def_name)
 {
     std::set<std::string> str1;
     std::string q_name = def_name + "." + def->Name;

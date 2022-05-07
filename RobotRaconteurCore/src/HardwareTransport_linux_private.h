@@ -89,7 +89,7 @@ namespace detail
 #define DBUS_FUNCTIONS_PTR_VOID(t) t = NULL;
 #define DBUS_FUNCTIONS_PTR_INIT(t)                                                                                     \
     t = reinterpret_cast<t##_t>(dlsym(lib_handle, #t));                                                                \
-    if ((t) == NULL)                                                                                                     \
+    if ((t) == NULL)                                                                                                   \
         return false;
 
 class DBus_Functions : public boost::noncopyable
@@ -123,7 +123,7 @@ class DBus_Functions : public boost::noncopyable
 #define SDP_FUNCTIONS_PTR_VOID(t) t = NULL;
 #define SDP_FUNCTIONS_PTR_INIT(t)                                                                                      \
     t = reinterpret_cast<t##_t>(dlsym(lib_handle, #t));                                                                \
-    if ((t) == NULL)                                                                                                     \
+    if ((t) == NULL)                                                                                                   \
         return false;
 
 class Sdp_Functions : public boost::noncopyable
@@ -171,7 +171,8 @@ class HardwareTransport_linux_discovery
     : public HardwareTransport_discovery<LibUsbDeviceManager, BluezBluetoothConnector>
 {
   public:
-    HardwareTransport_linux_discovery(const RR_SHARED_PTR<HardwareTransport>& parent, const std::vector<std::string>& schemes,
+    HardwareTransport_linux_discovery(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                      const std::vector<std::string>& schemes,
                                       const RR_SHARED_PTR<LibUsbDeviceManager>& usb,
                                       const RR_SHARED_PTR<BluezBluetoothConnector>& bt);
     virtual ~HardwareTransport_linux_discovery() {}

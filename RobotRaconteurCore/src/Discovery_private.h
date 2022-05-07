@@ -103,14 +103,15 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
 
     RR_SHARED_PTR<ServiceSubscription> SubscribeService(
         const std::vector<std::string>& url, boost::string_ref username = "",
-        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
+            (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
         boost::string_ref objecttype = "");
 
     RR_SHARED_PTR<ServiceSubscription> SubscribeServiceByType(const std::vector<std::string>& service_types,
                                                               const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter);
 
-    RR_SHARED_PTR<ServiceInfo2Subscription> SubscribeServiceInfo2(const std::vector<std::string>& service_types,
-                                                                  const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter);
+    RR_SHARED_PTR<ServiceInfo2Subscription> SubscribeServiceInfo2(
+        const std::vector<std::string>& service_types, const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter);
 
     void Shutdown();
 
@@ -129,7 +130,8 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
 
     void SubscriptionClosed(const RR_SHARED_PTR<IServiceSubscription>& subscription);
 
-    void DoSubscribe(const std::vector<std::string>& service_types, const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter,
+    void DoSubscribe(const std::vector<std::string>& service_types,
+                     const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter,
                      const RR_SHARED_PTR<IServiceSubscription>& subscription);
 };
 
@@ -198,16 +200,18 @@ class Discovery_findservicebytype : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
 
     static void rr_empty_handler();
 
-    void serviceinfo_callback(const RR_INTRUSIVE_PTR<MessageEntry>& ret1, const RR_SHARED_PTR<RobotRaconteurException>& err,
+    void serviceinfo_callback(const RR_INTRUSIVE_PTR<MessageEntry>& ret1,
+                              const RR_SHARED_PTR<RobotRaconteurException>& err,
                               const RR_SHARED_PTR<ServiceStub>& client, const std::string& url, int32_t key);
 
-    void connect_callback(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
-                          int32_t key);
+    void connect_callback(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err,
+                          const std::string& url, int32_t key);
 
     void find2();
 
     void AsyncFindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& schemes,
-                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<std::vector<ServiceInfo2> >&)>) handler,
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<std::vector<ServiceInfo2> >&)>)
+                                    handler,
                                 int32_t timeout);
 };
 
@@ -235,7 +239,8 @@ class Discovery_updateserviceinfo : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
 
     void handle_error(const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    void serviceinfo_handler(const RR_INTRUSIVE_PTR<MessageEntry>& ret1, const RR_SHARED_PTR<RobotRaconteurException>& err);
+    void serviceinfo_handler(const RR_INTRUSIVE_PTR<MessageEntry>& ret1,
+                             const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void connect_handler(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err);
 
@@ -243,9 +248,9 @@ class Discovery_updateserviceinfo : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
 
     void AsyncUpdateServiceInfo(
         const RR_SHARED_PTR<Discovery_nodestorage>& storage, boost::string_ref service_nonce,
-        RR_MOVE_ARG(
-            boost::function<void(const RR_SHARED_PTR<Discovery_nodestorage>&, const RR_SHARED_PTR<std::vector<ServiceInfo2> >&,
-                                 boost::string_ref, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+        RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<Discovery_nodestorage>&,
+                                         const RR_SHARED_PTR<std::vector<ServiceInfo2> >&, boost::string_ref,
+                                         const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
         int32_t extra_backoff = 0);
 };
 

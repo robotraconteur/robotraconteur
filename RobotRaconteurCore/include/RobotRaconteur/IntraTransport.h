@@ -97,7 +97,8 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
 
     virtual void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
                                                                           const RR_SHARED_PTR<Endpoint>& e);
@@ -127,9 +128,10 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
-    virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                       boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
-                                       int32_t timeout = RR_TIMEOUT_INFINITE);
+    virtual void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE);
 
     template <typename T, typename F>
     boost::signals2::connection AddCloseListener(const RR_SHARED_PTR<T>& t, const F& f)

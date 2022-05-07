@@ -818,7 +818,8 @@ string CPPServiceLangGen::SetPropertyDeclaration_async(PropertyDefinition* d, bo
     if (paramtype)
     {
         return "virtual void async_set_" + t.name + "(" + t.cpp_param_type +
-               " value,boost::function<void (const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > rr_handler, "
+               " value,boost::function<void (const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > "
+               "rr_handler, "
                "int32_t rr_timeout=RR_TIMEOUT_INFINITE)";
     }
     else
@@ -846,8 +847,9 @@ string CPPServiceLangGen::FunctionDeclaration_async(FunctionDefinition* d, bool 
 
         if (d->ReturnType->Type == DataTypes_void_t)
         {
-            s1.push_back("boost::function<void (const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > rr_handler, "
-                         "int32_t rr_timeout=RR_TIMEOUT_INFINITE");
+            s1.push_back(
+                "boost::function<void (const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > rr_handler, "
+                "int32_t rr_timeout=RR_TIMEOUT_INFINITE");
         }
         else
         {
@@ -956,15 +958,15 @@ string CPPServiceLangGen::ObjRefDeclaration_async(ObjRefDefinition* d, bool incl
     std::string param;
     if (indexer.empty())
     {
-        param =
-            "boost::function<void(RR_SHARED_PTR<" + object_type +
-            ">,const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> handler, int32_t timeout=RR_TIMEOUT_INFINITE";
+        param = "boost::function<void(RR_SHARED_PTR<" + object_type +
+                ">,const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> handler, int32_t "
+                "timeout=RR_TIMEOUT_INFINITE";
     }
     else
     {
-        param =
-            indexer + ", boost::function<void(RR_SHARED_PTR<" + object_type +
-            ">,const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> handler, int32_t timeout=RR_TIMEOUT_INFINITE";
+        param = indexer + ", boost::function<void(RR_SHARED_PTR<" + object_type +
+                ">,const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> handler, int32_t "
+                "timeout=RR_TIMEOUT_INFINITE";
     }
     if (inclass)
     {
@@ -1127,7 +1129,7 @@ string CPPServiceLangGen::MemoryDeclaration(MemoryDefinition* d, bool inclass)
 }
 
 void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                                    const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                                     const std::vector<std::string>& extra_include, ostream* w)
 {
     ostream& w2 = *w;
@@ -1478,7 +1480,7 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
 }
 
 void CPPServiceLangGen::GenerateStubSkelHeaderFile(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                                   const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                                    ostream* w)
 {
     ostream& w2 = *w;
@@ -1585,8 +1587,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
 }
 
 void CPPServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w,
-                                             string servicedef)
+                                             const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                             ostream* w, string servicedef)
 {
     ostream& w2 = *w;
 
@@ -1680,7 +1682,8 @@ void CPPServiceLangGen::GenerateServiceFactoryHeader(ServiceDefinition* d, ostre
        << endl;
 
     w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> "
-          "UnpackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);"
+          "UnpackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& "
+          "structure);"
        << endl;
 
     w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(boost::string_ref objecttype, "
@@ -1760,7 +1763,8 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
     w2 << "}" << endl;
 
     w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> " << factory_name
-       << "::UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin)" << endl
+       << "::UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin)"
+       << endl
        << "{" << endl;
     w2 << "RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();" << endl;
     ;
@@ -1871,7 +1875,8 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
     w2 << "}" << endl;
 
     w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> " << factory_name
-       << "::UnpackNamedArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin)" << endl
+       << "::UnpackNamedArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin)"
+       << endl
        << "{" << endl;
     w2 << "RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();" << endl;
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());"
@@ -1909,7 +1914,8 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
     w2 << "}" << endl;
 
     w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> " << factory_name
-       << "::UnpackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin)"
+       << "::UnpackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& "
+          "mstructin)"
        << endl
        << "{" << endl;
     w2 << "RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();" << endl;
@@ -2014,7 +2020,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
 }
 
 void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
+                                           const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -2026,7 +2032,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
            << "{" << endl;
         w2 << "public:" << endl;
         w2 << "" << fix_name((*e)->Name)
-           << "_stub(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode>& node) : RobotRaconteur::StructureStub(node) {}"
+           << "_stub(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode>& node) : "
+              "RobotRaconteur::StructureStub(node) {}"
            << endl;
         w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
               "PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& s);"
@@ -2223,7 +2230,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
             w2 << "virtual void rrend_get_" << fix_name(m->Name)
                << "(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, "
                   "const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, boost::function< void ("
-               << t.cpp_param_type << " ,const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > handler);" << endl;
+               << t.cpp_param_type << " ,const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > handler);"
+               << endl;
         }
         if (m->Direction() != MemberDefinition_Direction_readonly)
         {
@@ -2284,7 +2292,7 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
 }
 
 void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
+                                           const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -2317,9 +2325,11 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
            << endl;
         w2 << "virtual void InitPipeServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1);" << endl << endl;
         w2 << "virtual void InitWireServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1);" << endl << endl;
-        w2 << "virtual void DispatchPipeMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e);" << endl
+        w2 << "virtual void DispatchPipeMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e);"
+           << endl
            << endl;
-        w2 << "virtual void DispatchWireMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e);" << endl
+        w2 << "virtual void DispatchWireMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e);"
+           << endl
            << endl;
         w2 << "virtual void InitCallbackServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& o);" << endl << endl;
         w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
@@ -2352,7 +2362,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
                << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name)
                << "_skel> skel, " << get_variable_type(*m->Type, true).cpp_type
                << " value, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, "
-                  "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, const RR_SHARED_PTR<RobotRaconteur::ServerEndpoint>& ep);"
+                  "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, const "
+                  "RR_SHARED_PTR<RobotRaconteur::ServerEndpoint>& ep);"
                << endl;
         }
         MEMBER_ITER_END()
@@ -2366,9 +2377,9 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
             {
                 v1.push_back(get_variable_type(*m->ReturnType, true).cpp_type + " ret");
             }
-            v1.push_back(
-                "const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, "
-                "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep");
+            v1.push_back("const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, "
+                         "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, "
+                         "RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep");
             w2 << "static void rr_" << fix_name(m->Name) << "(RR_WEAK_PTR<"
                << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name)
                << "_skel> skel, " << boost::join(v1, ", ") << ");" << endl;
@@ -2380,7 +2391,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
                << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name)
                << "_skel> skel, " << t.generator_cpp_type
                << " ret, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, "
-                  "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep"
+                  "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, "
+                  "RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep"
                << ");" << endl;
         }
         MEMBER_ITER_END()
@@ -2513,7 +2525,8 @@ static std::string CPPServiceLangGen_direction_str(MemberDefinition_Direction di
 }
 
 void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
+                                               const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                               ostream* w)
 {
 
     ostream& w2 = *w;
@@ -2541,7 +2554,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
         w2 << "}" << endl;
 
         w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> " << fix_name((*e)->Name)
-           << "_stub::UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& m)" << endl
+           << "_stub::UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& m)"
+           << endl
            << "{" << endl;
         w2 << "std::vector<RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> >& i = m->Elements;" << endl;
         w2 << "RR_INTRUSIVE_PTR<" << fix_qualified_name((*e)->Name) << " > ret(new " << fix_qualified_name((*e)->Name)
@@ -3048,7 +3062,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
             w2 << "void " << fix_name((*e)->Name) << "_stub::rrend_get_" << fix_name(m->Name)
                << "(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, "
                   "const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, boost::function< void ("
-               << t.cpp_param_type << " ,const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > handler)" << endl;
+               << t.cpp_param_type << " ,const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > handler)"
+               << endl;
             w2 << "{" << endl;
             /*w2 << "if (err.value()==boost::system::errc::timed_out)" << endl;
             w2 << "{" << endl;
@@ -3372,7 +3387,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
 }
 
 void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
+                                               const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                               ostream* w)
 {
     ostream& w2 = *w;
 
@@ -3523,7 +3539,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
                << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name)
                << "_skel> skel," << get_variable_type(*m->Type, true).cpp_type
                << " value, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, "
-                  "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, const RR_SHARED_PTR<RobotRaconteur::ServerEndpoint>& ep)"
+                  "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, const "
+                  "RR_SHARED_PTR<RobotRaconteur::ServerEndpoint>& ep)"
                << endl
                << "{" << endl;
             w2 << "if(err)" << endl << "{" << endl;
@@ -3686,9 +3703,9 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
             {
                 v1.push_back(get_variable_type(*m->ReturnType, true).cpp_type + " ret");
             }
-            v1.push_back(
-                "const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, "
-                "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep");
+            v1.push_back("const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, "
+                         "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, "
+                         "RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep");
             w2 << "void " << fix_name((*e)->Name) << "_skel::rr_" << fix_name(m->Name) << "(RR_WEAK_PTR<"
                << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name)
                << "_skel> skel, " << boost::join(v1, ", ") << ")" << endl
@@ -3739,7 +3756,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
                << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name)
                << "_skel> skel, " << t.generator_cpp_type
                << " ret, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err, "
-                  "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep"
+                  "const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, "
+                  "RR_SHARED_PTR<RobotRaconteur::ServerEndpoint> ep"
                << ")" << endl
                << "{" << endl;
             w2 << "if(err)" << endl << "{" << endl;
@@ -3797,8 +3815,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
         w2 << "}" << endl;
         MEMBER_ITER_END()
 
-        w2 << "void " << fix_name((*e)->Name) << "_skel::RegisterEvents(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1)"
-           << endl
+        w2 << "void " << fix_name((*e)->Name)
+           << "_skel::RegisterEvents(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1)" << endl
            << "{" << endl;
         w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name)
            << " > obj=RobotRaconteur::rr_cast<" << boost::replace_all_copy(fix_name(d->Name), ".", "::")
@@ -3984,8 +4002,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
         w2 << "throw RobotRaconteur::MemberNotFoundException(\"Member not found\");" << endl;
         w2 << "}" << endl << endl;
 
-        w2 << "void " << fix_name((*e)->Name) << "_skel::InitCallbackServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& o)"
-           << endl
+        w2 << "void " << fix_name((*e)->Name)
+           << "_skel::InitCallbackServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& o)" << endl
            << "{" << endl;
         w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::" << fix_name((*e)->Name)
            << " > obj=RobotRaconteur::rr_cast<" << boost::replace_all_copy(fix_name(d->Name), ".", "::")
@@ -4277,7 +4295,8 @@ CPPServiceLangGen::convert_generator_result CPPServiceLangGen::convert_generator
     return o;
 }
 
-bool CPPServiceLangGen::is_member_override(MemberDefinition* m,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
+bool CPPServiceLangGen::is_member_override(MemberDefinition* m,
+                                           const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
 {
     RR_SHARED_PTR<ServiceEntryDefinition> obj_def = m->ServiceEntry.lock();
     if (!obj_def)
@@ -4451,7 +4470,7 @@ void CPPServiceLangGen::GenerateConstants(ServiceDefinition* d, ostream* w)
 }
 
 void CPPServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                                      const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                                       const std::vector<std::string>& extra_include, const std::string& path)
 {
 #ifdef _WIN32
@@ -4645,7 +4664,7 @@ void CPPServiceLangGen::GenerateMasterHeaderFile(const std::vector<RR_SHARED_PTR
 }
 
 void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                                  const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                                   bool is_abstract, ostream* w)
 {
     ostream& w2 = *w;
@@ -4762,7 +4781,7 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
 }
 
 void CPPServiceLangGen::GenerateDefaultImplDefinition(ServiceDefinition* d,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                                      const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                                       bool is_abstract, ostream* w)
 {
     ostream& w2 = *w;

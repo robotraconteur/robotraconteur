@@ -78,30 +78,32 @@ class ROBOTRACONTEUR_CORE_API ServiceFactory
 
     virtual RR_SHARED_PTR<StructureStub> FindStructureStub(boost::string_ref s) = 0;
 
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(const RR_INTRUSIVE_PTR<RRStructure>& structin) = 0;
+    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(
+        const RR_INTRUSIVE_PTR<RRStructure>& structin) = 0;
 
-    virtual RR_INTRUSIVE_PTR<RRValue> UnpackStructure(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mstructin) = 0;
+    virtual RR_INTRUSIVE_PTR<RRValue> UnpackStructure(
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mstructin) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(
-       const RR_INTRUSIVE_PTR<RRPodBaseArray>& structure) = 0;
+        const RR_INTRUSIVE_PTR<RRPodBaseArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(
         const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
-       const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& structure) = 0;
+        const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
         const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(
-       const RR_INTRUSIVE_PTR<RRNamedBaseArray>& structure) = 0;
+        const RR_INTRUSIVE_PTR<RRNamedBaseArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(
         const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
-       const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& structure) = 0;
+        const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
         const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
@@ -124,7 +126,8 @@ class ROBOTRACONTEUR_CORE_API ServiceFactory
 
     virtual void DownCastAndThrowException(RobotRaconteurException& exp) = 0;
 
-    virtual RR_SHARED_PTR<RobotRaconteurException> DownCastException(const RR_SHARED_PTR<RobotRaconteurException>& exp) = 0;
+    virtual RR_SHARED_PTR<RobotRaconteurException> DownCastException(
+        const RR_SHARED_PTR<RobotRaconteurException>& exp) = 0;
 
   private:
     RR_SHARED_PTR<ServiceDefinition> sdef;

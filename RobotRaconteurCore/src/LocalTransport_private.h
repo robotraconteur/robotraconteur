@@ -139,8 +139,8 @@ class LocalTransportConnection : public detail::ASIOStreamBaseTransport
 };
 
 void LocalTransport_attach_transport(
-    const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, bool server,
-    uint32_t endpoint, const std::string& noden,
+    const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
+    bool server, uint32_t endpoint, const std::string& noden,
     boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
@@ -211,13 +211,14 @@ class LocalTransportNodeLock
     T release_id;
     ~LocalTransportNodeLock()
     {
-      try
+        try
         {
-        boost::mutex::scoped_lock lock(nodeids_lock);
-        
-        nodeids.erase(release_id);
+            boost::mutex::scoped_lock lock(nodeids_lock);
+
+            nodeids.erase(release_id);
         }
-        catch (std::exception& e) {}
+        catch (std::exception& e)
+        {}
     }
 };
 

@@ -445,7 +445,8 @@ class WinUsbDeviceManager : public UsbDeviceManager
     RR_SHARED_PTR<SetupApi_Functions> setupapi_f;
 
   public:
-    WinUsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>& parent, const RR_SHARED_PTR<SetupApi_Functions>& setupapi_f);
+    WinUsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>& parent,
+                        const RR_SHARED_PTR<SetupApi_Functions>& setupapi_f);
     virtual ~WinUsbDeviceManager();
 
   protected:
@@ -488,7 +489,8 @@ class WinUsbDevice_Initialize : public UsbDevice_Initialize
     virtual UsbDeviceStatus OpenDevice(RR_SHARED_PTR<void>& dev_h);
 
     // Call with lock
-    virtual UsbDeviceStatus ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h, RR_SHARED_PTR<UsbDevice_Settings>& settings);
+    virtual UsbDeviceStatus ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
+                                             RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
     // Call with lock
     virtual UsbDeviceStatus ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
@@ -574,9 +576,10 @@ class HardwareTransport_win_discovery
     : public HardwareTransport_discovery<WinUsbDeviceManager, WinsockBluetoothConnector>
 {
   public:
-    HardwareTransport_win_discovery(const RR_SHARED_PTR<HardwareTransport>& parent, const std::vector<std::string>& schemes,
-                                    const RR_SHARED_PTR<WinUsbDeviceManager>& usb, const RR_SHARED_PTR<WinUsbDeviceManager>& ut,
-                                    const RR_SHARED_PTR<void>& f_void);
+    HardwareTransport_win_discovery(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                    const std::vector<std::string>& schemes,
+                                    const RR_SHARED_PTR<WinUsbDeviceManager>& usb,
+                                    const RR_SHARED_PTR<WinUsbDeviceManager>& ut, const RR_SHARED_PTR<void>& f_void);
     virtual ~HardwareTransport_win_discovery() {}
 
     virtual void Init();

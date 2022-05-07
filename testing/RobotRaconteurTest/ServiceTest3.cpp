@@ -46,22 +46,23 @@ void asynctestroot_impl::async_get_s1(
 }
 
 void asynctestroot_impl::async_set_s1(
-    const std::string& value, boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
+    const std::string& value,
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
+{
+    throw RobotRaconteur::NotImplementedException("");
+}
+
+void asynctestroot_impl::async_get_d2(
+    boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >,
+                         const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
+        rr_handler,
     int32_t rr_timeout)
 {
     throw RobotRaconteur::NotImplementedException("");
 }
 
-void asynctestroot_impl::async_get_d2(boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >,
-                                                           const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
-                                          rr_handler,
-                                      int32_t rr_timeout)
-{
-    throw RobotRaconteur::NotImplementedException("");
-}
-
 void asynctestroot_impl::async_set_d2(
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value,
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value,
     boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
 {
     throw RobotRaconteur::NotImplementedException("");
@@ -77,7 +78,7 @@ void asynctestroot_impl::async_get_s2(
 }
 
 void asynctestroot_impl::async_set_s2(
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > >& value,
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > >& value,
     boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
 {
     throw RobotRaconteur::NotImplementedException("");
@@ -192,10 +193,11 @@ void asynctestroot_impl::async_err_func2(
         boost::bind(rr_handler, 0.0, RR_MAKE_SHARED<com::robotraconteur::testing::TestService5::asynctestexp>("")));
 }
 
-void asynctestroot_impl::async_err_func3(boost::function<void(RR_SHARED_PTR<RobotRaconteur::Generator<double, void> >,
-                                                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
-                                             rr_handler,
-                                         int32_t rr_timeout)
+void asynctestroot_impl::async_err_func3(
+    boost::function<void(RR_SHARED_PTR<RobotRaconteur::Generator<double, void> >,
+                         const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
+        rr_handler,
+    int32_t rr_timeout)
 {
     throw NotImplementedException("");
 }

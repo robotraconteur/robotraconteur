@@ -28,11 +28,11 @@
 namespace RobotRaconteur
 {
 
-Transport::Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node) { 
+Transport::Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node)
+{
     this->node = node;
     TransportID = 0;
-    
-     }
+}
 
 RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode()
 {
@@ -65,7 +65,11 @@ RR_SHARED_PTR<ITransportConnection> Transport::GetCurrentThreadTransport()
 
 void Transport::PeriodicCleanupTask() {}
 
-uint32_t Transport::TransportCapability(boost::string_ref name) { RR_UNUSED(name); return 0; }
+uint32_t Transport::TransportCapability(boost::string_ref name)
+{
+    RR_UNUSED(name);
+    return 0;
+}
 
 void Transport::FireTransportEventListener(const RR_SHARED_PTR<Transport>& shared_this, TransportListenerEventType ev,
                                            const RR_SHARED_PTR<void>& parameter)
@@ -73,7 +77,8 @@ void Transport::FireTransportEventListener(const RR_SHARED_PTR<Transport>& share
     TransportListeners(shared_this, ev, parameter);
 }
 
-RR_INTRUSIVE_PTR<Message> Transport::SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m, const RR_SHARED_PTR<ITransportConnection>& tc)
+RR_INTRUSIVE_PTR<Message> Transport::SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m,
+                                                    const RR_SHARED_PTR<ITransportConnection>& tc)
 {
     if (!m->entries.empty())
     {
@@ -103,9 +108,9 @@ std::vector<NodeDiscoveryInfo> Transport::GetDetectedNodes(const std::vector<std
     return *t->end();
 }
 
-void Transport::AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                      boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
-                                      int32_t timeout)
+void Transport::AsyncGetDetectedNodes(
+    const std::vector<std::string>& schemes,
+    boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
 {
     RR_UNUSED(schemes);
     RR_UNUSED(timeout);

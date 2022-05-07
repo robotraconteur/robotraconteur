@@ -221,7 +221,8 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
 
     virtual void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
                                                                           const RR_SHARED_PTR<Endpoint>& e);
@@ -532,7 +533,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * * "https://(*).robotraconteur.com:443"
      *
      *    Note: forward-slash-star is not a valid comment, assume (*) is *
-     * 
+     *
      * The star symbol can be used for a subdomain wildcard when matching origins.
      *
      * Additional allowed origins can be added using this function, or the

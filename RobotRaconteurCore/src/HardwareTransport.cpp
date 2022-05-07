@@ -54,7 +54,6 @@
 //#include "HardwareTransport_android_private.h"
 #endif
 
-
 namespace RobotRaconteur
 {
 
@@ -149,7 +148,8 @@ bool HardwareTransport::CanConnectService(boost::string_ref url)
 
 void HardwareTransport::AsyncCreateTransportConnection(
     boost::string_ref url, const RR_SHARED_PTR<Endpoint>& ep,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        callback)
 {
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                       "HardwareTransport begin create transport connection with URL: " << url);
@@ -248,7 +248,8 @@ void HardwareTransport::AsyncCreateTransportConnection(
                         m = RR_STATIC_POINTER_CAST<detail::WinUsbDeviceManager>(internal2);
                     }
 
-                    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+                    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                                         const RR_SHARED_PTR<RobotRaconteurException>&)>
                         h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden,
                                         RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback);
                     m->AsyncCreateTransportConnection(url_res, ep->GetLocalEndpoint(), noden, h);
@@ -362,7 +363,8 @@ void HardwareTransport::AsyncCreateTransportConnection(
                         m = RR_STATIC_POINTER_CAST<detail::LibUsbDeviceManager>(internal2);
                     }
 
-                    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+                    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                                         const RR_SHARED_PTR<RobotRaconteurException>&)>
                         h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden,
                                         RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback);
                     m->AsyncCreateTransportConnection(url_res, ep->GetLocalEndpoint(), noden, h);
@@ -476,9 +478,9 @@ void HardwareTransport::AsyncCreateTransportConnection(
         {
             throw ConnectionException("Could not connect to service");
         }
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> h =
-            boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden,
-                        RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            h = boost::bind(&HardwareTransport::AsyncCreateTransportConnection2, shared_from_this(), noden,
+                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), callback);
         HardwareTransport_attach_transport(shared_from_this(), socket, false, ep->GetLocalEndpoint(), noden,
                                            url_res.scheme, h);
     }
@@ -491,8 +493,10 @@ void HardwareTransport::AsyncCreateTransportConnection(
 }
 
 void HardwareTransport::AsyncCreateTransportConnection2(
-    const std::string& noden, const RR_SHARED_PTR<ITransportConnection>& transport, const RR_SHARED_PTR<RobotRaconteurException>& err,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    const std::string& noden, const RR_SHARED_PTR<ITransportConnection>& transport,
+    const RR_SHARED_PTR<RobotRaconteurException>& err,
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        callback)
 {
     RR_UNUSED(noden);
     if (err)
@@ -575,7 +579,8 @@ void HardwareTransport::CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& 
     }
 }
 
-void HardwareTransport::CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
+void HardwareTransport::CloseTransportConnection_timed(const boost::system::error_code& err,
+                                                       const RR_SHARED_PTR<Endpoint>& e,
                                                        const RR_SHARED_PTR<void>& timer)
 {
     RR_UNUSED(timer);
@@ -618,7 +623,11 @@ void HardwareTransport::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
     t->SendMessage(m);
 }
 
-uint32_t HardwareTransport::TransportCapability(boost::string_ref name) { RR_UNUSED(name); return 0; }
+uint32_t HardwareTransport::TransportCapability(boost::string_ref name)
+{
+    RR_UNUSED(name);
+    return 0;
+}
 
 void HardwareTransport::PeriodicCleanupTask()
 {
@@ -1135,10 +1144,12 @@ RR_SHARED_PTR<Transport> HardwareTransportConnection::GetTransport()
     return p;
 }
 
-void HardwareTransport_attach_transport(
-    const RR_SHARED_PTR<HardwareTransport>& parent, const RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type>& socket,
-    bool server, uint32_t endpoint, const std::string& noden, boost::string_ref scheme,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+void HardwareTransport_attach_transport(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                        const RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type>& socket,
+                                        bool server, uint32_t endpoint, const std::string& noden,
+                                        boost::string_ref scheme,
+                                        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                                                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     try
     {
@@ -1168,7 +1179,8 @@ HardwareTransportConnection_driver::HardwareTransportConnection_driver(const RR_
 }
 
 void HardwareTransportConnection_driver::async_write_some(
-    const_buffers& b, const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+    const_buffers& b,
+    const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
 {
     boost::mutex::scoped_lock lock(socket_lock);
     RobotRaconteurNode::asio_async_write_some(node, socket, b, handler);
@@ -1211,15 +1223,16 @@ void HardwareTransportConnection_driver::Close1()
 
 // HardwareTransportConnection_bluetooth
 
-HardwareTransportConnection_bluetooth::HardwareTransportConnection_bluetooth(const RR_SHARED_PTR<HardwareTransport>& parent,
-                                                                             bool server, uint32_t local_endpoint)
+HardwareTransportConnection_bluetooth::HardwareTransportConnection_bluetooth(
+    const RR_SHARED_PTR<HardwareTransport>& parent, bool server, uint32_t local_endpoint)
     : HardwareTransportConnection(parent, server, local_endpoint)
 {
     scheme = "rr+bluetooth";
 }
 
 void HardwareTransportConnection_bluetooth::async_write_some(
-    const_buffers& b, const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+    const_buffers& b,
+    const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
 {
     boost::mutex::scoped_lock lock(socket_lock);
     RobotRaconteurNode::asio_async_write_some(node, socket, b, handler);
@@ -1255,9 +1268,11 @@ void HardwareTransportConnection_bluetooth::Close1()
 }
 
 void HardwareTransport_attach_transport_bluetooth(
-    const RR_SHARED_PTR<HardwareTransport>& parent, const RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>& socket,
-    bool server, uint32_t endpoint, const std::string& noden,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    const RR_SHARED_PTR<HardwareTransport>& parent,
+    const RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>& socket, bool server, uint32_t endpoint,
+    const std::string& noden,
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        callback)
 {
     try
     {

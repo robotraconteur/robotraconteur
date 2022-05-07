@@ -37,8 +37,8 @@ AsyncMessageReaderImpl::AsyncMessageReaderImpl()
     AsyncMessageReaderImpl::Reset();
     buf = boost::shared_array<uint8_t>(new uint8_t[128]);
     buf_len = 128;
-    version = 0; 
-    buf_avail_pos = 0; 
+    version = 0;
+    buf_avail_pos = 0;
     buf_read_pos = 0;
     message_pos = 0;
 }
@@ -67,7 +67,7 @@ void AsyncMessageReaderImpl::pop_state()
 }
 void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state,
                                         AsyncMessageReaderImpl::state_type pop_state, size_t relative_limit,
-                                       const RR_INTRUSIVE_PTR<RRValue>& data, size_t param1, size_t param2)
+                                        const RR_INTRUSIVE_PTR<RRValue>& data, size_t param1, size_t param2)
 {
     state_data d;
     d.state = new_state;
@@ -467,7 +467,7 @@ void AsyncMessageReaderImpl::Reset()
 }
 
 #define R(res)                                                                                                         \
-    if (!(res))                                                                                                          \
+    if (!(res))                                                                                                        \
     {                                                                                                                  \
         prepare_continue(other_bufs, other_bufs_used);                                                                 \
         return ReadReturn_continue_nobuffers;                                                                          \
@@ -1005,7 +1005,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
                 state() = MessageHeader_entrycount;
                 continue;
             }
-            uint32_t n  = 0;
+            uint32_t n = 0;
             R(read_uint_x(n));
             param1() = n;
             state() = MessageHeader_stringtable2;

@@ -67,7 +67,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
      * @param param An optional exception parameter
      */
     RobotRaconteurException(MessageErrorType ErrorCode, const std::string& error, const std::string& message,
-                            const std::string& sub_name,const RR_INTRUSIVE_PTR<RRValue>& param);
+                            const std::string& sub_name, const RR_INTRUSIVE_PTR<RRValue>& param);
 
     /**
      * @brief Construct a RobotRaconteurException based on an existing exception
@@ -189,16 +189,16 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
     class ROBOTRACONTEUR_CORE_API exp_cpp_type : public RobotRaconteurException                                        \
     {                                                                                                                  \
       public:                                                                                                          \
-        exp_cpp_type(const std::string& message, const std::string& sub_name = "",                                            \
-                     const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());                                  \
+        exp_cpp_type(const std::string& message, const std::string& sub_name = "",                                     \
+                     const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());                           \
     };
 
 #define RR_EXCEPTION_DECL_2(exp_cpp_type, exp_code)                                                                    \
     class ROBOTRACONTEUR_CORE_API exp_cpp_type : public RobotRaconteurException                                        \
     {                                                                                                                  \
       public:                                                                                                          \
-        exp_cpp_type(const std::string& error, const std::string& message, const std::string& sub_name = "",                  \
-                     const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());                                  \
+        exp_cpp_type(const std::string& error, const std::string& message, const std::string& sub_name = "",           \
+                     const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());                           \
         exp_cpp_type(std::exception& innerexception);                                                                  \
     };
 

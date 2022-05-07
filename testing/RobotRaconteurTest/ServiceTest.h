@@ -24,7 +24,8 @@ class RobotRaconteurTestServiceSupport
     RR_SHARED_PTR<RobotRaconteurTest_testroot> testservice_auth;
 
     void RegisterServices(const RR_SHARED_PTR<TcpTransport>& transport);
-    void RegisterSecureServices(const RR_SHARED_PTR<TcpTransport>& tcptransport, const std::vector<NodeID>& allowed_clients);
+    void RegisterSecureServices(const RR_SHARED_PTR<TcpTransport>& tcptransport,
+                                const std::vector<NodeID>& allowed_clients);
 
     void UnregisterServices();
 };
@@ -125,14 +126,16 @@ class RobotRaconteurTest_testroot : public virtual testroot,
     virtual void set_struct2(RR_INTRUSIVE_PTR<teststruct2> value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > > get_is_d1();
-    virtual void set_is_d1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > >& value);
+    virtual void set_is_d1(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > >& value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > > get_is_d2();
     virtual void set_is_d2(
         const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > >& value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > > get_is_d3();
-    virtual void set_is_d3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > >& value);
+    virtual void set_is_d3(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > >& value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > > get_is_d4();
     virtual void set_is_d4(
@@ -147,7 +150,8 @@ class RobotRaconteurTest_testroot : public virtual testroot,
         RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRMultiDimArray<double> > > value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<char> > > get_is_str1();
-    virtual void set_is_str1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<char> > >& value);
+    virtual void set_is_str1(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<char> > >& value);
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<char> > > get_is_str2();
     virtual void set_is_str2(
@@ -297,14 +301,14 @@ class RobotRaconteurTest_testroot : public virtual testroot,
 
     void w1_connect_callback(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire);
     void w1_value_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire,
-const RR_INTRUSIVE_PTR<RRArray<double> >& value, TimeSpec time);
+                          const RR_INTRUSIVE_PTR<RRArray<double> >& value, TimeSpec time);
 
     virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > get_w2();
     virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > value);
 
     void w2_connect_callback(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > wire);
     void w2_value_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > wire,
-                         const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec time);
+                          const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec time);
 
     virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > get_w3();
     virtual void set_w3(
@@ -465,14 +469,17 @@ class sub3_impl : public virtual sub3, public virtual async_sub3
     virtual double add(double d);
 
     virtual void async_get_ind(
-        boost::function<void(const std::string&, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
+        boost::function<void(const std::string&, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
+            rr_handler,
         int32_t rr_timeout = RR_TIMEOUT_INFINITE);
-    virtual void async_set_ind(const std::string& value,
-                               boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
-                               int32_t rr_timeout = RR_TIMEOUT_INFINITE);
+    virtual void async_set_ind(
+        const std::string& value,
+        boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
+        int32_t rr_timeout = RR_TIMEOUT_INFINITE);
 
     virtual void async_get_data2(
-        boost::function<void(const std::string&, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
+        boost::function<void(const std::string&, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
+            rr_handler,
         int32_t rr_timeout = RR_TIMEOUT_INFINITE);
     virtual void async_set_data2(
         const std::string& value,
@@ -487,7 +494,8 @@ class sub3_impl : public virtual sub3, public virtual async_sub3
         int32_t rr_timeout = RR_TIMEOUT_INFINITE);
 
     virtual void async_add(
-        double d, boost::function<void(double, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
+        double d,
+        boost::function<void(double, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
         int32_t rr_timeout = RR_TIMEOUT_INFINITE);
 
     std::string ind;

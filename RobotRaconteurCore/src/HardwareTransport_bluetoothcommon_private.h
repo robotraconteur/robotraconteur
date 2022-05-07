@@ -117,7 +117,8 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
 
     void Connect(
         const ParseConnectionURLResult& url, boost::string_ref noden, uint32_t endpoint,
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler)
     {
         target_nodeid = url.nodeid;
         target_nodename = url.nodename;
@@ -131,10 +132,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
             node, boost::bind(&BluetoothConnector::DoConnect, this->shared_from_this(), boost::protect(handler)), true);
     }
 
-    void UpdateDevices()
-    {
-        devices = GetDeviceAddresses();
-    }
+    void UpdateDevices() { devices = GetDeviceAddresses(); }
 
     std::list<btaddr> FindMatchingServices(btaddr addr, const NodeID& nodeid, boost::string_ref nodename)
     {
@@ -191,7 +189,8 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
     }
 
     void DoConnect(
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler)
     {
         boost::mutex::scoped_lock lock(this_lock);
 
@@ -217,7 +216,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
         BOOST_FOREACH (btaddr& a1, devices)
         {
             boost::thread t1(boost::bind(&BluetoothConnector::DoConnect1, this->shared_from_this(), a1,
-                                      boost::protect(handler), key));
+                                         boost::protect(handler), key));
             active_keys.push_back(key);
             key++;
         }
@@ -225,7 +224,8 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
 
     void DoConnect1(
         btaddr addr,
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
         int32_t key)
     {
         {
@@ -274,8 +274,10 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
                 const boost::asio::generic::stream_protocol::socket::executor_type& ex =
                     parent->GetNode()->GetThreadPool()->get_io_context().get_executor();
 #endif
-                // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-                sock = RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>(new boost::asio::generic::stream_protocol::socket(ex, protocol, s1));
+                // NOLINTBEGIN(cppcoreguidelines-owning-memory)
+                sock = RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>(
+                    new boost::asio::generic::stream_protocol::socket(ex, protocol, s1));
+                // NOLINTEND(cppcoreguidelines-owning-memory)
                 break;
             }
         }
@@ -311,10 +313,10 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
         }
     }
 
-    void DoConnect_err(
-        const RR_SHARED_PTR<RobotRaconteurException>& exp,
-        const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
-        int32_t key)
+    void DoConnect_err(const RR_SHARED_PTR<RobotRaconteurException>& exp,
+                       const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                                                  const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+                       int32_t key)
     {
         boost::mutex::scoped_lock lock(this_lock);
         if (!connecting)

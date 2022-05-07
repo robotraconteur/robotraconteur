@@ -41,7 +41,8 @@ namespace RobotRaconteur
 {
 static void rr_context_emptyhandler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
 
-static void rr_context_node_handler(const RR_SHARED_PTR<RobotRaconteurNode>& n, const RR_SHARED_PTR<RobotRaconteurException>& e)
+static void rr_context_node_handler(const RR_SHARED_PTR<RobotRaconteurNode>& n,
+                                    const RR_SHARED_PTR<RobotRaconteurException>& e)
 {
     n->HandleException(e.get());
 }
@@ -184,7 +185,8 @@ void ServiceSkel::ObjRefChanged(boost::string_ref name)
 }
 
 void ServiceSkel::EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, const RR_INTRUSIVE_PTR<MessageElement>& value,
-                                          const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                          const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                          const RR_INTRUSIVE_PTR<MessageEntry>& m,
                                           const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
     RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
@@ -229,8 +231,10 @@ void ServiceSkel::EndAsyncCallGetProperty(RR_WEAK_PTR<ServiceSkel> skel, const R
     }
 }
 
-void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, const RR_SHARED_PTR<RobotRaconteurException>& err,
-                                          const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& ep)
+void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel,
+                                          const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                          const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                          const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
     RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
     if (!skel1)
@@ -268,8 +272,8 @@ void ServiceSkel::EndAsyncCallSetProperty(RR_WEAK_PTR<ServiceSkel> skel, const R
 }
 
 void ServiceSkel::EndAsyncCallFunction(RR_WEAK_PTR<ServiceSkel> skel, const RR_INTRUSIVE_PTR<MessageElement>& ret,
-                                       const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_INTRUSIVE_PTR<MessageEntry>& m,
-                                       const RR_SHARED_PTR<ServerEndpoint>& ep)
+                                       const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                       const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& ep)
 {
     RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
     if (!skel1)
@@ -420,7 +424,11 @@ bool ServiceSkel::IsLocked()
 }
 
 // NOLINTNEXTLINE(readability-make-member-function-const)
-bool ServiceSkel::IsRequestNoLock(const RR_INTRUSIVE_PTR<MessageEntry>& m) { RR_UNUSED(m); return false; }
+bool ServiceSkel::IsRequestNoLock(const RR_INTRUSIVE_PTR<MessageEntry>& m)
+{
+    RR_UNUSED(m);
+    return false;
+}
 
 // NOLINTNEXTLINE(readability-make-member-function-const)
 bool ServiceSkel::IsMonitorLocked()
@@ -518,7 +526,7 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<Me
 int32_t ServiceSkel::get_new_generator_index()
 {
     RR_SHARED_PTR<RobotRaconteurNode> node = RRGetNode();
-    int32_t index  = 0;
+    int32_t index = 0;
     do
     {
         index = node->GetRandomInt<int32_t>(0, std::numeric_limits<int32_t>::max());
@@ -774,8 +782,9 @@ void ServerContext::AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, co
     e->AsyncSendMessage(mm, callback);
 }
 
-void ServerContext::AsyncSendUnreliableMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& e,
-                                               boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+void ServerContext::AsyncSendUnreliableMessage(
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& e,
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
     mm->header = CreateMessageHeader();
@@ -965,7 +974,7 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
 
                 if (skel1 == 0)
                 {
-                    
+
                     // NOLINTBEGIN(cppcoreguidelines-owning-memory)
                     m_CurrentServicePath.reset(new std::string(ppath1));
                     m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
@@ -1374,12 +1383,14 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
 
 void ServerContext::AsyncProcessCallbackRequest(
     const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t endpoint,
-    RR_MOVE_ARG(boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>&, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+    RR_MOVE_ARG(
+        boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>&, const RR_SHARED_PTR<RobotRaconteurException>&)>)
+        handler,
     int32_t timeout)
 {
     try
     {
-        uint32_t myrequestid  = 0;
+        uint32_t myrequestid = 0;
 
         RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
         t->handler = handler;
@@ -1428,8 +1439,8 @@ void ServerContext::AsyncProcessCallbackRequest(
     }
 }
 
-void ServerContext::AsyncProcessCallbackRequest_err(const RR_SHARED_PTR<RobotRaconteurException>& error, uint32_t endpoint,
-                                                    uint32_t requestid)
+void ServerContext::AsyncProcessCallbackRequest_err(const RR_SHARED_PTR<RobotRaconteurException>& error,
+                                                    uint32_t endpoint, uint32_t requestid)
 {
 
     try
@@ -2552,7 +2563,7 @@ void ServerEndpoint::SetTransportConnection(const RR_SHARED_PTR<ITransportConnec
 {
     Endpoint::SetTransportConnection(c);
     c->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE |
-                                      TransportCapabilityCode_MESSAGE4_BASIC_ENABLE);
+                             TransportCapabilityCode_MESSAGE4_BASIC_ENABLE);
 }
 
 RobotRaconteurVersion ServerEndpoint::GetClientVersion()

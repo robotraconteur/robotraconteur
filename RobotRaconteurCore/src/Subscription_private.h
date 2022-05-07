@@ -92,10 +92,11 @@ class WireSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<WireSubscr
 
     void ClientConnected1(const RR_SHARED_PTR<ServiceStub>& stub);
 
-    void ClientConnected2(const RR_SHARED_PTR<WireConnectionBase>& connection, const RR_SHARED_PTR<RobotRaconteurException>& err);
+    void ClientConnected2(const RR_SHARED_PTR<WireConnectionBase>& connection,
+                          const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void WireConnectionClosed(const RR_SHARED_PTR<WireConnectionBase>& connection);
-    void WireValueChanged(const RR_SHARED_PTR<WireConnectionBase>& connection,const RR_INTRUSIVE_PTR<RRValue>& value,
+    void WireValueChanged(const RR_SHARED_PTR<WireConnectionBase>& connection, const RR_INTRUSIVE_PTR<RRValue>& value,
                           const TimeSpec& time);
     ~WireSubscription_connection();
 
@@ -128,7 +129,8 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
 
     void ClientConnected1(const RR_SHARED_PTR<ServiceStub>& stub);
 
-    void ClientConnected2(const RR_SHARED_PTR<PipeEndpointBase>& connection, const RR_SHARED_PTR<RobotRaconteurException>& err);
+    void ClientConnected2(const RR_SHARED_PTR<PipeEndpointBase>& connection,
+                          const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     virtual void PipeEndpointClosed(const RR_SHARED_PTR<PipeEndpointBase>& endpoint);
     virtual void PipePacketReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint,

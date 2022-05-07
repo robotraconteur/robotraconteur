@@ -138,7 +138,7 @@ boost::tuple<RR_SHARED_PTR<ServiceDefinition>, std::string> ReadRobDefFile(const
 }
 
 void GenerateCPPFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& def_str,
-const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                      const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                       const std::vector<std::string>& cpp_extra_include, const std::string& output_dir)
 {
     // cout << str << endl;
@@ -146,7 +146,8 @@ const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
     CPPServiceLangGen::GenerateFiles(d, def_str, other_defs, cpp_extra_include, output_dir);
 }
 
-void GenerateCSharpFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& def_str, const std::string& output_dir)
+void GenerateCSharpFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& def_str,
+                         const std::string& output_dir)
 {
     CSharpServiceLangGen::GenerateFiles(d, def_str, output_dir);
 }
@@ -157,7 +158,8 @@ void GenerateVBNETFiles(const boost::shared_ptr<ServiceDefinition>& d, string st
     // VBNETServiceLangGen::GenerateFiles(d,str);
 }
 
-void GenerateJavaFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& def_str, const std::string& output_dir)
+void GenerateJavaFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& def_str,
+                       const std::string& output_dir)
 {
     JavaServiceLangGen::GenerateFiles(d, def_str, output_dir);
 }

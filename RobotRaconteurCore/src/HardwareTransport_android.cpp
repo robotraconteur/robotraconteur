@@ -45,7 +45,8 @@ AndroidHardwareDirector::~AndroidHardwareDirector() {}
 void AndroidHardwareDirector::ConnectBluetooth(
     const RR_SHARED_PTR<HardwareTransport>& parent, const ParseConnectionURLResult& url, boost::string_ref noden,
     uint32_t endpoint,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+        handler)
 {
 
     boost::mutex::scoped_lock lock(director_lock);

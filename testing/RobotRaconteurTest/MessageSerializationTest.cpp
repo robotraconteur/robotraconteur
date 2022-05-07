@@ -506,7 +506,8 @@ void MessageSerializationTest::CompareMessage(const RR_INTRUSIVE_PTR<Message>& m
     }
 }
 
-void MessageSerializationTest::CompareMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& m1, const RR_INTRUSIVE_PTR<MessageEntry>& m2)
+void MessageSerializationTest::CompareMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& m1,
+                                                   const RR_INTRUSIVE_PTR<MessageEntry>& m2)
 {
     if (m1->EntrySize != m2->EntrySize)
         throw std::runtime_error("");

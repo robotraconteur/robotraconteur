@@ -23,6 +23,7 @@ class MessageSerializationTest
 
     static void CompareMessage(const RR_INTRUSIVE_PTR<Message>& m1, const RR_INTRUSIVE_PTR<Message>& m2);
     static void CompareMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& m1, const RR_INTRUSIVE_PTR<MessageEntry>& m2);
-    static void CompareMessageElement(const RR_INTRUSIVE_PTR<MessageElement>& m1, const RR_INTRUSIVE_PTR<MessageElement>& m2);
+    static void CompareMessageElement(const RR_INTRUSIVE_PTR<MessageElement>& m1,
+                                      const RR_INTRUSIVE_PTR<MessageElement>& m2);
 };
 } // namespace RobotRaconteurTest

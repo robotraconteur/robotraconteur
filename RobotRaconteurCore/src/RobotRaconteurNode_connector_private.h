@@ -29,7 +29,9 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
     std::map<std::string, RR_WEAK_PTR<Transport> > connectors;
     std::string username;
     RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials;
-    boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)> listener;
+    boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                         const RR_SHARED_PTR<void>&)>
+        listener;
     std::string objecttype;
     boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler;
     int32_t timeout;
@@ -66,16 +68,18 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
   protected:
     void handle_error(const int32_t& key, const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    void connected_client(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
-                          const RR_SHARED_PTR<endpoint_cleanup>& ep, int32_t key);
+    void connected_client(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err,
+                          const std::string& url, const RR_SHARED_PTR<endpoint_cleanup>& ep, int32_t key);
 
-    void connected_transport(const RR_SHARED_PTR<Transport>& transport, const RR_SHARED_PTR<ITransportConnection>& connection,
+    void connected_transport(const RR_SHARED_PTR<Transport>& transport,
+                             const RR_SHARED_PTR<ITransportConnection>& connection,
                              const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
                              const RR_SHARED_PTR<endpoint_cleanup>& ep, int32_t key);
 
     void connect_timer_callback(const boost::system::error_code& ec);
 
-    void connect2(const RR_SHARED_PTR<std::vector<std::string> >& urls, int32_t main_key, const boost::system::error_code& ec);
+    void connect2(const RR_SHARED_PTR<std::vector<std::string> >& urls, int32_t main_key,
+                  const boost::system::error_code& ec);
 
     void start_connect_timer();
 
@@ -83,7 +87,8 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
     void connect(
         const std::map<std::string, RR_WEAK_PTR<Transport> >& connectors, boost::string_ref username,
         const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
-        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType, const RR_SHARED_PTR<void>&)>
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                             const RR_SHARED_PTR<void>&)>
             listener,
         boost::string_ref objecttype,
         boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,

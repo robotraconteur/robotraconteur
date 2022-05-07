@@ -148,7 +148,8 @@ void servicetest5(RR_SHARED_PTR<PipeEndpoint<double> > p, RR_SHARED_PTR<WireConn
     servicetest_count++;
 }
 
-void servicetest3(const std::string& url1, const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp);
+void servicetest3(const std::string& url1, const RR_SHARED_PTR<RRObject>& obj,
+                  const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
 void servicetest4(const std::string& url1)
 {
@@ -157,7 +158,8 @@ void servicetest4(const std::string& url1)
         boost::bind(&servicetest3, url1, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 }
 
-void servicetest3(const std::string& url1, const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp)
+void servicetest3(const std::string& url1, const RR_SHARED_PTR<RRObject>& obj,
+                  const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -238,14 +240,14 @@ void latencytest1(const RR_SHARED_PTR<async_testroot>& obj, const RR_SHARED_PTR<
     }
 }
 
-void servicesubscription_connected(const RR_SHARED_PTR<ServiceSubscription>& sub, const ServiceSubscriptionClientID& noden,
-                                   const RR_SHARED_PTR<RRObject>& obj)
+void servicesubscription_connected(const RR_SHARED_PTR<ServiceSubscription>& sub,
+                                   const ServiceSubscriptionClientID& noden, const RR_SHARED_PTR<RRObject>& obj)
 {
     cout << "Subscription Connected: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
 
-void servicesubscription_disconnected(const RR_SHARED_PTR<ServiceSubscription>& sub, const ServiceSubscriptionClientID& noden,
-                                      const RR_SHARED_PTR<RRObject>& obj)
+void servicesubscription_disconnected(const RR_SHARED_PTR<ServiceSubscription>& sub,
+                                      const ServiceSubscriptionClientID& noden, const RR_SHARED_PTR<RRObject>& obj)
 {
     cout << "Subscription Disconnected: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
@@ -270,7 +272,7 @@ void subscribertest_waitwire(RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<Rob
 
 void subscribertest_wirechanged(
     RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > w1,
-const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& val, const TimeSpec& time)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& val, const TimeSpec& time)
 {
     // cout << "Wire value: " << RRArrayToScalar(val) << endl;
 }
@@ -309,7 +311,8 @@ void singlethreadserver_quit_thread_func()
     singlethreadserver_keep_going = false;
 }
 
-static void asyncgetdefaultclient_handler(const RR_SHARED_PTR<testroot>& obj, const RR_SHARED_PTR<RobotRaconteurException>& err)
+static void asyncgetdefaultclient_handler(const RR_SHARED_PTR<testroot>& obj,
+                                          const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     std::cout << "Got default client callback" << std::endl;
 }

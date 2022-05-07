@@ -177,7 +177,8 @@ bool WinUsbDeviceManager::InitUpdateDevices()
     return true;
 }
 
-static void SetupApi_Functions_SetupDiDestroyDeviceInfoList(const RR_SHARED_PTR<SetupApi_Functions>& f, HDEVINFO deviceInfo)
+static void SetupApi_Functions_SetupDiDestroyDeviceInfoList(const RR_SHARED_PTR<SetupApi_Functions>& f,
+                                                            HDEVINFO deviceInfo)
 {
     f->SetupDiDestroyDeviceInfoList(deviceInfo);
 }
@@ -330,7 +331,8 @@ WinUsbDevice_Handle::~WinUsbDevice_Handle()
 
 // WinUsbDevice_Initialize
 
-WinUsbDevice_Initialize::WinUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<UsbDevice>& p,
+WinUsbDevice_Initialize::WinUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent,
+                                                 const RR_SHARED_PTR<UsbDevice>& p,
                                                  const UsbDeviceManager_detected_device& detected_device)
     : UsbDevice_Initialize(parent, detected_device)
 {
@@ -764,8 +766,8 @@ void WinUsbDevice_Claim::ClearHalt(uint8_t ep)
 
 // WinUsbDevice
 
-WinUsbDevice::WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent, const RR_SHARED_PTR<WinUsbDeviceManager>& p,
-                           const UsbDeviceManager_detected_device& device)
+WinUsbDevice::WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent,
+                           const RR_SHARED_PTR<WinUsbDeviceManager>& p, const UsbDeviceManager_detected_device& device)
     : UsbDevice(parent, device)
 {
 

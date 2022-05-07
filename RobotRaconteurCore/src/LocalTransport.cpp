@@ -95,7 +95,8 @@ class LocalTransport_socket
   public:
     LocalTransport_socket(RR_BOOST_ASIO_IO_CONTEXT& context)
     {
-        socket = RR_SHARED_PTR<boost::asio::local::stream_protocol::socket>(new boost::asio::local::stream_protocol::socket(context));
+        socket = RR_SHARED_PTR<boost::asio::local::stream_protocol::socket>(
+            new boost::asio::local::stream_protocol::socket(context));
     }
     RR_SHARED_PTR<boost::asio::local::stream_protocol::socket> socket;
 };
@@ -222,14 +223,12 @@ bool LocalTransport::IsClient() const { return true; }
 
 std::string LocalTransport::GetUrlSchemeString() const { return "rr+local"; }
 
-bool LocalTransport::CanConnectService(boost::string_ref url)
-{
-    return (boost::starts_with(url, "rr+local://"));
-}
+bool LocalTransport::CanConnectService(boost::string_ref url) { return (boost::starts_with(url, "rr+local://")); }
 
 void LocalTransport::AsyncCreateTransportConnection(
     boost::string_ref url, const RR_SHARED_PTR<Endpoint>& ep,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        callback)
 {
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                       "LocalTransport begin create transport connection with URL: " << url);
@@ -400,7 +399,8 @@ void LocalTransport::AsyncCreateTransportConnection(
 void LocalTransport::AsyncCreateTransportConnection2(
     const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, const std::string& noden,
     const RR_SHARED_PTR<ITransportConnection>& transport, const RR_SHARED_PTR<RobotRaconteurException>& err,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        callback)
 {
     RR_UNUSED(noden);
     if (err)
@@ -485,8 +485,8 @@ void LocalTransport::CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e)
     }
 }
 
-void LocalTransport::CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
-                                                    const RR_SHARED_PTR<void>& timer)
+void LocalTransport::CloseTransportConnection_timed(const boost::system::error_code& err,
+                                                    const RR_SHARED_PTR<Endpoint>& e, const RR_SHARED_PTR<void>& timer)
 {
     RR_UNUSED(timer);
     if (err)
@@ -708,7 +708,8 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
                 RR_SHARED_PTR<detail::LocalTransport_socket> socket(
                     new detail::LocalTransport_socket(GetNode()->GetThreadPool()->get_io_context()));
                 boost::asio::local::stream_protocol::endpoint ep(pipename);
-                acceptor = RR_SHARED_PTR<detail::LocalTransport_acceptor>(new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context()));
+                acceptor = RR_SHARED_PTR<detail::LocalTransport_acceptor>(
+                    new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context()));
 
                 acceptor->acceptor.open();
                 acceptor->acceptor.bind(ep);
@@ -888,7 +889,8 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
                 RR_SHARED_PTR<detail::LocalTransport_socket> socket(
                     new detail::LocalTransport_socket(GetNode()->GetThreadPool()->get_io_context()));
                 boost::asio::local::stream_protocol::endpoint ep(pipename);
-                acceptor = RR_SHARED_PTR<detail::LocalTransport_acceptor>(new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context(), ep));
+                acceptor = RR_SHARED_PTR<detail::LocalTransport_acceptor>(
+                    new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context(), ep));
                 acceptor->acceptor.open();
                 acceptor->acceptor.listen();
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -976,7 +978,11 @@ void LocalTransport::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
     t->SendMessage(m);
 }
 
-uint32_t LocalTransport::TransportCapability(boost::string_ref name) { RR_UNUSED(name); return 0; }
+uint32_t LocalTransport::TransportCapability(boost::string_ref name)
+{
+    RR_UNUSED(name);
+    return 0;
+}
 
 void LocalTransport::PeriodicCleanupTask()
 {
@@ -1418,7 +1424,8 @@ void LocalTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
 }
 
 void LocalTransportConnection::async_write_some(
-    const_buffers& b, const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+    const_buffers& b,
+    const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
 {
     boost::mutex::scoped_lock lock(socket_lock);
     RobotRaconteurNode::asio_async_write_some(node, socket->socket, b, handler);
@@ -1523,8 +1530,8 @@ void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& par
 }
 
 void LocalTransport_attach_transport(
-    const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, bool server,
-    uint32_t endpoint, const std::string& noden,
+    const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
+    bool server, uint32_t endpoint, const std::string& noden,
     boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {

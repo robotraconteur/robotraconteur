@@ -28,7 +28,8 @@ class HardwareTransportConnection : public detail::ASIOStreamBaseTransport
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
   protected:
-    void AsyncAttachSocket1(const std::string& noden, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+    void AsyncAttachSocket1(const std::string& noden,
+                            const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void Close1() = 0;
 
@@ -65,10 +66,11 @@ class HardwareTransportConnection_driver : public HardwareTransportConnection
 #else
     typedef boost::asio::posix::stream_descriptor socket_type;
 #endif
-    HardwareTransportConnection_driver(const RR_SHARED_PTR<HardwareTransport>& parent, bool server, uint32_t local_endpoint,
-                                       boost::string_ref scheme);
+    HardwareTransportConnection_driver(const RR_SHARED_PTR<HardwareTransport>& parent, bool server,
+                                       uint32_t local_endpoint, boost::string_ref scheme);
 
-    void AsyncAttachSocket(const RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type>& socket, const std::string& noden,
+    void AsyncAttachSocket(const RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type>& socket,
+                           const std::string& noden,
                            const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   protected:
@@ -95,7 +97,8 @@ class HardwareTransportConnection_bluetooth : public HardwareTransportConnection
     HardwareTransportConnection_bluetooth(const RR_SHARED_PTR<HardwareTransport>& parent, bool server,
                                           uint32_t local_endpoint);
 
-    void AsyncAttachSocket(const RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>& socket, const std::string& noden,
+    void AsyncAttachSocket(const RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>& socket,
+                           const std::string& noden,
                            const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   protected:
@@ -115,13 +118,17 @@ class HardwareTransportConnection_bluetooth : public HardwareTransportConnection
     boost::mutex socket_lock;
 };
 
-void HardwareTransport_attach_transport(
-    const RR_SHARED_PTR<HardwareTransport>& parent, const RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type>& socket,
-    bool server, uint32_t endpoint, const std::string& noden, boost::string_ref scheme,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+void HardwareTransport_attach_transport(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                        const RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type>& socket,
+                                        bool server, uint32_t endpoint, const std::string& noden,
+                                        boost::string_ref scheme,
+                                        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                                                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
 void HardwareTransport_attach_transport_bluetooth(
-    const RR_SHARED_PTR<HardwareTransport>& parent, const RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>& socket,
-    bool server, uint32_t endpoint, const std::string& noden,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+    const RR_SHARED_PTR<HardwareTransport>& parent,
+    const RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>& socket, bool server, uint32_t endpoint,
+    const std::string& noden,
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        callback);
 } // namespace RobotRaconteur

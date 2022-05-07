@@ -2616,7 +2616,8 @@ class PackMxArrayToMessageElementImpl
     }
 };
 
-RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm, const boost::shared_ptr<TypeDefinition>& tdef,
+RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm,
+                                                             const boost::shared_ptr<TypeDefinition>& tdef,
                                                              const RR_SHARED_PTR<ServiceStub>& stub, bool allow_null)
 {
     PackMxArrayToMessageElementImpl p;
@@ -2839,7 +2840,8 @@ class UnpackMessageElementToMxArrayImpl
         return a;
     }
 
-    mxArray* UnpackMessageElementToMxArray(const RR_INTRUSIVE_PTR<MessageElement>& m, const boost::shared_ptr<TypeDefinition>& tdef,
+    mxArray* UnpackMessageElementToMxArray(const RR_INTRUSIVE_PTR<MessageElement>& m,
+                                           const boost::shared_ptr<TypeDefinition>& tdef,
                                            const RR_SHARED_PTR<ServiceStub>& stub)
     {
         if (!m || m->ElementType == DataTypes_void_t)
@@ -3472,7 +3474,8 @@ class UnpackMessageElementToMxArrayImpl
 };
 
 mxArray* UnpackMessageElementToMxArray_pod(const RR_INTRUSIVE_PTR<MessageElement>& element,
-                                           const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServiceStub>& stub)
+                                           const boost::shared_ptr<TypeDefinition>& type1,
+                                           const boost::shared_ptr<ServiceStub>& stub)
 {
     UnpackMessageElementToMxArrayImpl u;
     if (type1)
@@ -3499,7 +3502,8 @@ mxArray* UnpackMessageElementToMxArray_pod(const RR_INTRUSIVE_PTR<MessageElement
     }
 }
 
-mxArray* UnpackMessageElementToMxArray(const RR_INTRUSIVE_PTR<MessageElement>& m, const boost::shared_ptr<TypeDefinition>& tdef,
+mxArray* UnpackMessageElementToMxArray(const RR_INTRUSIVE_PTR<MessageElement>& m,
+                                       const boost::shared_ptr<TypeDefinition>& tdef,
                                        const RR_SHARED_PTR<ServiceStub>& stub)
 {
     UnpackMessageElementToMxArrayImpl u;
@@ -3554,7 +3558,7 @@ RR_SHARED_PTR<RobotRaconteur::StructureStub> MexServiceFactory::FindStructureStu
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> MexServiceFactory::PackStructure(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -3565,7 +3569,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> MexServiceFactory::UnpackStructure(
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackPodArray(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -3575,7 +3579,7 @@ RR_INTRUSIVE_PTR<RRPodBaseArray> MexServiceFactory::UnpackPodArray(
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackPodMultiDimArray(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -3585,7 +3589,7 @@ RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> MexServiceFactory::UnpackPodMultiDimArr
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackNamedArray(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -3595,7 +3599,7 @@ RR_INTRUSIVE_PTR<RRNamedBaseArray> MexServiceFactory::UnpackNamedArray(
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> MexServiceFactory::PackNamedMultiDimArray(
-   const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure)
 {
     throw ServiceException("Invalid for wrapped service type");
 }
@@ -4067,8 +4071,9 @@ void MexServiceStub::EndAsyncPropertyGet(const RR_INTRUSIVE_PTR<MessageEntry>& r
     async_results.push(ares);
 }
 
-void MexServiceStub::AsyncPropertySet(const std::string& PropertyName, const mxArray* value, const RR_SHARED_PTR<mxArray>& handler,
-                                      const RR_SHARED_PTR<mxArray>& param, uint32_t timeout)
+void MexServiceStub::AsyncPropertySet(const std::string& PropertyName, const mxArray* value,
+                                      const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
+                                      uint32_t timeout)
 {
     boost::shared_ptr<PropertyDefinition> pdef;
     BOOST_FOREACH (boost::shared_ptr<MemberDefinition>& e, RR_objecttype->Members)
@@ -4118,7 +4123,8 @@ void MexServiceStub::EndAsyncPropertySet(const RR_INTRUSIVE_PTR<MessageEntry>& r
 }
 
 void MexServiceStub::AsyncFunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args,
-                                       const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram, uint32_t timeout)
+                                       const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+                                       uint32_t timeout)
 {
     boost::shared_ptr<FunctionDefinition> fdef;
     BOOST_FOREACH (boost::shared_ptr<MemberDefinition>& e, RR_objecttype->Members)
@@ -5799,8 +5805,9 @@ mxArray* MatlabObjectFromMexStub(const boost::shared_ptr<MexServiceStub>& stub)
     return mxstub;
 }
 
-static void send_handler(uint32_t packetnumber, const RR_SHARED_PTR<RobotRaconteurException>& err,
-                         boost::function<void(const RR_SHARED_PTR<uint32_t>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
+static void send_handler(
+    uint32_t packetnumber, const RR_SHARED_PTR<RobotRaconteurException>& err,
+    boost::function<void(const RR_SHARED_PTR<uint32_t>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
 {
     handler(RR_MAKE_SHARED<uint32_t>(packetnumber), err);
 }
@@ -6084,8 +6091,9 @@ RR_SHARED_PTR<MexPipeEndpoint> MexPipeClient::Connect(int32_t index)
     return o;
 }
 
-MexPipeClient::MexPipeClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
-                             bool unreliable, MemberDefinition_Direction direction)
+MexPipeClient::MexPipeClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub,
+                             const RR_SHARED_PTR<TypeDefinition>& Type, bool unreliable,
+                             MemberDefinition_Direction direction)
     : PipeClientBase(name, stub, unreliable, direction)
 {
     this->Type = Type;
@@ -6401,8 +6409,8 @@ RR_SHARED_PTR<MexWireConnection> MexWireClient::Connect()
     return o;
 }
 
-MexWireClient::MexWireClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
-                             MemberDefinition_Direction direction)
+MexWireClient::MexWireClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub,
+                             const RR_SHARED_PTR<TypeDefinition>& Type, MemberDefinition_Direction direction)
     : WireClientBase(name, stub, direction)
 {
     this->Type = Type;
@@ -6526,8 +6534,8 @@ mxArray* MexArrayMemoryClientUtil::Read(const RR_SHARED_PTR<ArrayMemoryBase>& me
         return;                                                                                                        \
     }
 
-void MexArrayMemoryClientUtil::Write(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos, const mxArray* buffer,
-                                     uint64_t bufferpos, uint64_t count)
+void MexArrayMemoryClientUtil::Write(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos,
+                                     const mxArray* buffer, uint64_t bufferpos, uint64_t count)
 {
     if (buffer == NULL)
         throw InvalidArgumentException("Data for memory write must not be null");
@@ -7651,7 +7659,8 @@ void MexServiceSkel::ProcessRequests()
 
 // MexServiceInfo2Subscription
 
-MexServiceInfo2Subscription::MexServiceInfo2Subscription(const boost::shared_ptr<ServiceInfo2Subscription>& subscription)
+MexServiceInfo2Subscription::MexServiceInfo2Subscription(
+    const boost::shared_ptr<ServiceInfo2Subscription>& subscription)
 {
     this->subscription = subscription;
     servicesubscriptionid = 0;
@@ -9149,7 +9158,8 @@ size_t MexPodArrayMemoryClient::GetBufferLength(void* buffer)
 DataTypes MexPodArrayMemoryClient::ElementTypeID() { return DataTypes_pod_t; }
 
 MexPodMultiDimArrayMemoryClient::MexPodMultiDimArrayMemoryClient(const std::string& membername,
-                                                                 const RR_SHARED_PTR<ServiceStub>& stub, size_t element_size,
+                                                                 const RR_SHARED_PTR<ServiceStub>& stub,
+                                                                 size_t element_size,
                                                                  MemberDefinition_Direction direction,
                                                                  const RR_SHARED_PTR<TypeDefinition>& type)
     : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
@@ -9266,7 +9276,8 @@ RR_INTRUSIVE_PTR<MessageElementData> MexPodMultiDimArrayMemoryClient::PackWriteR
     return CreateMessageElementNestedElementList(DataTypes_pod_multidimarray_t, qualified_name, buffer5);
 }
 
-MexNamedArrayMemoryClient::MexNamedArrayMemoryClient(const std::string& membername, const RR_SHARED_PTR<ServiceStub>& stub,
+MexNamedArrayMemoryClient::MexNamedArrayMemoryClient(const std::string& membername,
+                                                     const RR_SHARED_PTR<ServiceStub>& stub,
                                                      boost::tuple<DataTypes, size_t> array_info,
                                                      MemberDefinition_Direction direction,
                                                      const RR_SHARED_PTR<TypeDefinition>& type)

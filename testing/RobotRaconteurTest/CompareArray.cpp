@@ -7,7 +7,7 @@
 namespace RobotRaconteurTest
 {
 template <>
-void ca<double>(const RR_INTRUSIVE_PTR<RRArray<double> >& v1,const RR_INTRUSIVE_PTR<RRArray<double> >& v2)
+void ca<double>(const RR_INTRUSIVE_PTR<RRArray<double> >& v1, const RR_INTRUSIVE_PTR<RRArray<double> >& v2)
 {
     RR_NULL_CHECK(v1);
     RR_NULL_CHECK(v2);
@@ -21,7 +21,7 @@ void ca<double>(const RR_INTRUSIVE_PTR<RRArray<double> >& v1,const RR_INTRUSIVE_
 }
 
 template <>
-void ca<cdouble>(const RR_INTRUSIVE_PTR<RRArray<cdouble> >& v1,const RR_INTRUSIVE_PTR<RRArray<cdouble> >& v2)
+void ca<cdouble>(const RR_INTRUSIVE_PTR<RRArray<cdouble> >& v1, const RR_INTRUSIVE_PTR<RRArray<cdouble> >& v2)
 {
     RR_NULL_CHECK(v1);
     RR_NULL_CHECK(v2);
@@ -37,7 +37,7 @@ void ca<cdouble>(const RR_INTRUSIVE_PTR<RRArray<cdouble> >& v1,const RR_INTRUSIV
 }
 
 template <>
-void ca<cfloat>(const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v1,const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v2)
+void ca<cfloat>(const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v1, const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v2)
 {
     RR_NULL_CHECK(v1);
     RR_NULL_CHECK(v2);
