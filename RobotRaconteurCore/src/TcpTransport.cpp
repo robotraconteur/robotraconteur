@@ -243,15 +243,17 @@ static std::string TcpConnector_log_candidate_endpoints(RR_SHARED_PTR<std::list<
 
 #if BOOST_ASIO_VERSION < 101200
 void TcpConnector::connect2(
-    int32_t key, const boost::system::error_code& err, const boost::asio::ip::tcp::resolver::iterator& endpoint_iterator,
+    int32_t key, const boost::system::error_code& err, boost::asio::ip::tcp::resolver::iterator endpoint_iterator,
     const boost::function<void(const RR_SHARED_PTR<TcpTransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
+        boost::asio::ip::basic_resolver_iterator<boost::asio::ip::tcp> end;
 #else
 void TcpConnector::connect2(
     int32_t key, const boost::system::error_code& err, const boost::asio::ip::tcp::resolver::results_type& results,
     const boost::function<void(const RR_SHARED_PTR<TcpTransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
-    boost::asio::ip::tcp::resolver::results_type::iterator endpoint_iterator = results.begin();
+    boost::asio::ip::tcp::resolver::results_type::const_iterator endpoint_iterator = results.begin();
+    boost::asio::ip::tcp::resolver::results_type::const_iterator end;
 #endif
     RR_UNUSED(callback);
     if (err)
@@ -271,7 +273,6 @@ void TcpConnector::connect2(
         std::vector<boost::asio::ip::tcp::endpoint> ipv4;
         std::vector<boost::asio::ip::tcp::endpoint> ipv6;
 
-        boost::asio::ip::basic_resolver_iterator<boost::asio::ip::tcp> end;
 
         for (; endpoint_iterator != end; endpoint_iterator++)
         {

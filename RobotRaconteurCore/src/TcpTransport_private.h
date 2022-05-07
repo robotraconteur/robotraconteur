@@ -217,7 +217,7 @@ class TcpConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpConnector>
 #if BOOST_ASIO_VERSION < 101200
     void connect2(
         int32_t key, const boost::system::error_code& err,
-        const boost::asio::ip::basic_resolver_iterator<boost::asio::ip::tcp>& endpoint_iterator,
+        boost::asio::ip::basic_resolver_iterator<boost::asio::ip::tcp> endpoint_iterator,
         const boost::function<void(const RR_SHARED_PTR<TcpTransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 #else
     void connect2(
