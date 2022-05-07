@@ -30,7 +30,7 @@ AsyncMessageWriterImpl::state_data::state_data()
     param2 = 0;
 }
 
-AsyncMessageWriterImpl::AsyncMessageWriterImpl() { Reset(); }
+AsyncMessageWriterImpl::AsyncMessageWriterImpl() { Reset();  } // NOLINT
 
 size_t AsyncMessageWriterImpl::message_len() { return state_stack.front().limit; }
 
@@ -113,7 +113,7 @@ void AsyncMessageWriterImpl::prepare_continue(mutable_buffers& work_bufs, size_t
     work_bufs_used = boost::asio::buffer_size(work_bufs) - boost::asio::buffer_size(current_work_bufs);
 }
 
-size_t AsyncMessageWriterImpl::quota_available() { return quota_pos - message_pos; }
+size_t AsyncMessageWriterImpl::quota_available() const { return quota_pos - message_pos; }
 
 size_t AsyncMessageWriterImpl::work_bufs_available()
 {
@@ -166,17 +166,17 @@ bool AsyncMessageWriterImpl::write_uint_x(uint32_t number)
     }
     if (number <= std::numeric_limits<uint16_t>::max())
     {
-        uint8_t v1[3];
+        boost::array<uint8_t,3> v1;
         v1[0] = 253;
         uint16_t v2 = static_cast<uint16_t>(number);
-        memcpy(v1 + 1, &v2, 2);
-        return write_all_bytes(v1, 3);
+        memcpy(v1.data() + 1, &v2, 2);
+        return write_all_bytes(v1.data(), 3);
     }
 
-    uint8_t v1[5];
-    v1[0] = 254;
-    memcpy(v1 + 1, &number, 4);
-    return write_all_bytes(v1, 5);
+    boost::array<uint8_t,5> v2;
+    v2[0] = 254;
+    memcpy(v2.data() + 1, &number, 4);
+    return write_all_bytes(v2.data(), 5);
 }
 bool AsyncMessageWriterImpl::write_uint_x2(uint64_t number)
 {
@@ -188,25 +188,25 @@ bool AsyncMessageWriterImpl::write_uint_x2(uint64_t number)
     }
     if (number <= std::numeric_limits<uint16_t>::max())
     {
-        uint8_t v1[3];
+        boost::array<uint8_t,3> v1;
         v1[0] = 253;
         uint16_t v2 = static_cast<uint16_t>(number);
-        memcpy(v1 + 1, &v2, 2);
-        return write_all_bytes(v1, 3);
+        memcpy(v1.data() + 1, &v2, 2);
+        return write_all_bytes(v1.data(), 3);
     }
     if (number <= std::numeric_limits<uint32_t>::max())
     {
-        uint8_t v1[5];
+        boost::array<uint8_t,5> v1;
         v1[0] = 254;
         uint32_t v2 = static_cast<uint32_t>(number);
-        memcpy(v1 + 1, &v2, 4);
-        return write_all_bytes(v1, 5);
+        memcpy(v1.data() + 1, &v2, 4);
+        return write_all_bytes(v1.data(), 5);
     }
 
-    uint8_t v1[9];
-    v1[0] = 255;
-    memcpy(v1 + 1, &number, 8);
-    return write_all_bytes(v1, 9);
+    boost::array<uint8_t,9> v3;
+    v3[0] = 255;
+    memcpy(v3.data() + 1, &number, 8);
+    return write_all_bytes(v3.data(), 9);
 }
 
 bool AsyncMessageWriterImpl::write_int_x(int32_t number)
@@ -219,17 +219,17 @@ bool AsyncMessageWriterImpl::write_int_x(int32_t number)
     }
     if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
     {
-        int8_t v1[3];
+        boost::array<int8_t,3> v1;
         v1[0] = 125;
         int16_t v2 = static_cast<int16_t>(number);
-        memcpy(v1 + 1, &v2, 2);
-        return write_all_bytes(v1, 3);
+        memcpy(v1.data() + 1, &v2, 2);
+        return write_all_bytes(v1.data(), 3);
     }
 
-    int8_t v1[5];
-    v1[0] = 126;
-    memcpy(v1 + 1, &number, 4);
-    return write_all_bytes(v1, 5);
+    boost::array<int8_t,5> v3;
+    v3[0] = 126;
+    memcpy(v3.data() + 1, &number, 4);
+    return write_all_bytes(v3.data(), 5);
 }
 bool AsyncMessageWriterImpl::write_int_x2(int64_t number)
 {
@@ -241,25 +241,25 @@ bool AsyncMessageWriterImpl::write_int_x2(int64_t number)
     }
     if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
     {
-        int8_t v1[3];
+        boost::array<int8_t,3> v1;
         v1[0] = 125;
         int16_t v2 = static_cast<int16_t>(number);
-        memcpy(v1 + 1, &v2, 2);
-        return write_all_bytes(v1, 3);
+        memcpy(v1.data() + 1, &v2, 2);
+        return write_all_bytes(v1.data(), 3);
     }
     if (number >= std::numeric_limits<int32_t>::min() && number <= std::numeric_limits<int32_t>::max())
     {
-        uint8_t v1[5];
+        boost::array<uint8_t,5> v1;
         v1[0] = 126;
         int32_t v2 = static_cast<int32_t>(number);
-        memcpy(v1 + 1, &v2, 4);
-        return write_all_bytes(v1, 5);
+        memcpy(v1.data() + 1, &v2, 4);
+        return write_all_bytes(v1.data(), 5);
     }
 
-    int8_t v1[9];
-    v1[0] = 127;
-    memcpy(v1 + 1, &number, 8);
-    return write_all_bytes(v1, 9);
+    boost::array<int8_t,9> v3;
+    v3[0] = 127;
+    memcpy(v3.data() + 1, &number, 8);
+    return write_all_bytes(v3.data(), 9);
 }
 
 static void null_str_deleter(std::string* s) {}
@@ -621,7 +621,6 @@ AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write(size_t write_q
             }
         }
         case MessageElement_finishwritedata: {
-            MessageElement* el = data<MessageElement>();
             if (distance_from_limit() != 0)
                 throw ProtocolException("Element did not write all data");
             DO_POP_STATE();
@@ -664,7 +663,7 @@ AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write(size_t write_q
             size_t l = param2() - param1();
             size_t n = std::min(q, l);
 
-            write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n));
+            write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n)); // NOLINT
             message_pos += n;
             if (n >= l)
             {
@@ -1178,7 +1177,6 @@ AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write4(size_t write_
             }
         }
         case MessageElement_finishwritedata: {
-            MessageElement* el = data<MessageElement>();
             if (distance_from_limit() != 0)
                 throw ProtocolException("Element did not write all data");
             DO_POP_STATE();
@@ -1221,7 +1219,7 @@ AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write4(size_t write_
             size_t l = param2() - param1();
             size_t n = std::min(q, l);
 
-            write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n));
+            write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n)); // NOLINT
             message_pos += n;
             if (n >= l)
             {

@@ -52,7 +52,7 @@ NodeID Endpoint::GetRemoteNodeID()
     return ret;
 }
 
-void Endpoint::SetRemoteNodeID(NodeID id)
+void Endpoint::SetRemoteNodeID(const NodeID& id)
 {
     boost::unique_lock<boost::shared_mutex> lock(m_RemoteNodeName_lock);
     m_RemoteNodeID = id;

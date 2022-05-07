@@ -71,7 +71,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
                           boost::optional<std::string> username = boost::optional<std::string>());
 
 RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
-    ParseConnectionURLResult url, const std::vector<boost::filesystem::path>& search_paths,
+    const ParseConnectionURLResult& url, const std::vector<boost::filesystem::path>& search_paths,
     const std::vector<std::string>& usernames, RR_BOOST_ASIO_IO_CONTEXT& io_service_);
 
 #ifndef ROBOTRACONTEUR_WINDOWS
@@ -83,7 +83,7 @@ class FD
 
     FD(int f) { _fd = f; }
 
-    int fd() { return _fd; }
+    int fd() const { return _fd; };
 
     ~FD() { close(_fd); }
 };
@@ -97,19 +97,19 @@ class LocalTransportConnection : public detail::ASIOStreamBaseTransport
   public:
     LocalTransportConnection(const RR_SHARED_PTR<LocalTransport>& parent, bool server, uint32_t local_endpoint);
 
-    void AsyncAttachSocket(RR_SHARED_PTR<detail::LocalTransport_socket> socket, std::string noden,
-                           boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+    void AsyncAttachSocket(const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, const std::string& noden,
+                           const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
   protected:
     virtual void async_write_some(
         const_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
 
     virtual void async_read_some(
         mutable_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
 
     virtual size_t available();
 
@@ -139,13 +139,13 @@ class LocalTransportConnection : public detail::ASIOStreamBaseTransport
 };
 
 void LocalTransport_attach_transport(
-    const RR_SHARED_PTR<LocalTransport>& parent, RR_SHARED_PTR<detail::LocalTransport_socket> socket, bool server,
-    uint32_t endpoint, std::string noden,
+    const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, bool server,
+    uint32_t endpoint, const std::string& noden,
     boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
 void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& parent,
-                                        RR_SHARED_PTR<detail::LocalTransport_socket> socket,
+                                        const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
                                         const RR_SHARED_PTR<ITransportConnection>& connection,
                                         const RR_SHARED_PTR<RobotRaconteurException>& err);
 
@@ -189,8 +189,8 @@ template <typename T>
 class LocalTransportNodeLock
 {
   public:
-    static std::set<T> nodeids;
-    static boost::mutex nodeids_lock;
+    static std::set<T> nodeids; // NOLINT
+    static boost::mutex nodeids_lock; // NOLINT
 
     static RR_SHARED_PTR<LocalTransportNodeLock<T> > Lock(typename boost::call_traits<T>::param_type id)
     {
@@ -211,15 +211,20 @@ class LocalTransportNodeLock
     T release_id;
     ~LocalTransportNodeLock()
     {
+      try
+        {
         boost::mutex::scoped_lock lock(nodeids_lock);
+        
         nodeids.erase(release_id);
+        }
+        catch (std::exception& e) {}
     }
 };
 
 template <typename T>
-typename std::set<T> LocalTransportNodeLock<T>::nodeids;
+typename std::set<T> LocalTransportNodeLock<T>::nodeids; // NOLINT
 template <typename T>
-boost::mutex LocalTransportNodeLock<T>::nodeids_lock;
+boost::mutex LocalTransportNodeLock<T>::nodeids_lock; // NOLINT
 
 typedef LocalTransportNodeLock<NodeID> LocalTransportNodeIDLock;
 typedef LocalTransportNodeLock<std::string> LocalTransportNodeNameLock;

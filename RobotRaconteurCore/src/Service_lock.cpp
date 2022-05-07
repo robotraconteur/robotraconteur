@@ -282,7 +282,7 @@ std::string ServerContext_MonitorObjectSkel::MonitorExit(uint32_t local_endpoint
         monitor_thread_event->Set();
     }
 
-    boost::recursive_mutex::scoped_lock(close_lock);
+    boost::mutex::scoped_lock lock(close_lock);
 
     return "OK";
 }
@@ -343,7 +343,7 @@ void ServerContext_MonitorObjectSkel::thread_func()
     {
 
         {
-            boost::recursive_mutex::scoped_lock(close_lock);
+            boost::mutex::scoped_lock lock3(close_lock);
             {
                 RR_SHARED_PTR<ServiceSkel> s = skel.lock();
                 if (!s)
@@ -351,6 +351,7 @@ void ServerContext_MonitorObjectSkel::thread_func()
                     wait_event->Set();
                     return;
                 }
+                lock3.unlock();
                 boost::mutex::scoped_lock lock(s->monitorlocks_lock);
                 s->monitorlocks.erase(local_endpoint);
             }

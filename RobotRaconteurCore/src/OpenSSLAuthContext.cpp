@@ -65,11 +65,11 @@ struct x509_stack_cleanup
 
 BIO* make_buffer_bio(const boost::asio::const_buffer& b)
 {
-    return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)),
-                             static_cast<int>(boost::asio::buffer_size(b)));
+    return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)), // NOLINT
+                             static_cast<int>(boost::asio::buffer_size(b))); // NOLINT
 }
 
-void add_certificate_authority_x509(boost::shared_ptr<boost::asio::ssl::context> context,
+void add_certificate_authority_x509(const boost::shared_ptr<boost::asio::ssl::context>& context,
                                     boost::asio::const_buffer& buf)
 {
     ::ERR_clear_error();
@@ -147,7 +147,7 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
 
         bool found_thisoid = false;
 
-        for (size_t i = 0; i < ext_count; i++)
+        for (int i = 0; i < ext_count; i++)
         {
             X509_EXTENSION* e = X509_get_ext(cert, i);
             if (!e)
@@ -244,7 +244,7 @@ static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cer
     return b2;
 }
 
-void OpenSSLAuthContext::InitCA(boost::shared_ptr<boost::asio::ssl::context> context)
+void OpenSSLAuthContext::InitCA(const boost::shared_ptr<boost::asio::ssl::context>& context)
 {
     context->set_default_verify_paths();
     X509_STORE* store = SSL_CTX_get_cert_store(context->native_handle());
@@ -360,13 +360,13 @@ void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
     PKCS12* p12 = NULL;
     int i = 0;
     std::string fname1 = fname.to_string();
-    if (!(fp = fopen(fname1.c_str(), "rb")))
+    if (!(fp = fopen(fname1.c_str(), "rb"))) // NOLINT
     {
         throw ResourceNotFoundException("Could not load certificate file");
     }
 
     p12 = d2i_PKCS12_fp(fp, NULL);
-    fclose(fp);
+    fclose(fp); // NOLINT
     if (!p12)
     {
         throw ResourceNotFoundException("Could not load certificate file");
@@ -513,12 +513,12 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
     if (!cert)
         return false;
 
-    char buf[256];
-    memset(buf, 0, 256);
+    boost::array<char,256> buf;
+    memset(buf.data(), 0, 256);
 
-    X509_NAME_oneline(X509_get_subject_name(cert), buf, 256);
+    X509_NAME_oneline(X509_get_subject_name(cert), buf.data(), 256);
 
-    std::string buf2(buf);
+    std::string buf2(buf.data());
 
     if (buf2 != "/CN=Robot Raconteur Node " + remote_node.ToString())
     {
@@ -529,7 +529,7 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
 
     bool found_thisoid = false;
 
-    for (size_t i = 0; i < ext_count; i++)
+    for (int i = 0; i < ext_count; i++)
     {
         X509_EXTENSION* e = X509_get_ext(cert, i);
         if (!e)
@@ -539,10 +539,10 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
             ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
             if (!obj)
                 return false;
-            char buf[64];
+            boost::array<char,64> buf3;
 
-            OBJ_obj2txt(buf, 64, obj, 1);
-            std::string oid(buf);
+            OBJ_obj2txt(buf3.data(), 64, obj, 1);
+            std::string oid(buf3.data());
             if (oid == "2.5.29.15" || oid == "2.5.29.14" || oid == "2.5.29.19" || oid == "2.5.29.35" ||
                 oid == "2.5.29.32")
             {
@@ -563,12 +563,7 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
     }
 
     // If we don't find the oid for this type of cert return false;
-    if (!found_thisoid)
-    {
-        return false;
-    }
-
-    return true;
+    return found_thisoid;
 }
 
 } // namespace detail

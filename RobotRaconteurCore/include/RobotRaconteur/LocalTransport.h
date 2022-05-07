@@ -126,7 +126,7 @@ class ROBOTRACONTEUR_CORE_API LocalTransport : public Transport, public RR_ENABL
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     virtual void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
@@ -139,7 +139,7 @@ class ROBOTRACONTEUR_CORE_API LocalTransport : public Transport, public RR_ENABL
 
   protected:
     virtual void AsyncCreateTransportConnection2(
-        RR_SHARED_PTR<detail::LocalTransport_socket> socket, const std::string& noden,
+        const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, const std::string& noden,
         const RR_SHARED_PTR<ITransportConnection>& transport, const RR_SHARED_PTR<RobotRaconteurException>& err,
         boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
@@ -278,14 +278,13 @@ class ROBOTRACONTEUR_CORE_API LocalTransport : public Transport, public RR_ENABL
   protected:
     virtual void LocalNodeServicesChanged();
 
-  protected:
     RR_SHARED_PTR<detail::LocalTransport_acceptor> acceptor;
 
     boost::mutex acceptor_lock;
 
     static void handle_accept(const RR_SHARED_PTR<LocalTransport>& parent,
-                              RR_SHARED_PTR<detail::LocalTransport_acceptor> acceptor,
-                              RR_SHARED_PTR<detail::LocalTransport_socket> socket,
+                              const RR_SHARED_PTR<detail::LocalTransport_acceptor>& acceptor,
+                              const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
                               const boost::system::error_code& error);
 
     virtual void register_transport(const RR_SHARED_PTR<ITransportConnection>& connection);

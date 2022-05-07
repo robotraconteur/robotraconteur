@@ -282,7 +282,7 @@ class WrappedDynamicServiceFactory : public virtual DynamicServiceFactory
 {
 public:
     virtual ~AsyncHandlerDirector() {}
-    virtual void handler(void* m, uint32_t error_code, std::string errorname, std::string errormessage) {};
+    virtual void handler(void* m, uint32_t error_code, const std::string& errorname, const std::string& errormessage) {};
 
 };*/
 
@@ -608,7 +608,7 @@ class WrappedPipeEndpoint : public PipeEndpointBase
     void AsyncClose_handler(const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<AsyncVoidReturnDirector>& handler);
 
     void SetPipeBroadcaster(const RR_SHARED_PTR<WrappedPipeBroadcaster>& broadcaster,
-                            RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep);
+const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep);
 
     RR_WEAK_PTR<WrappedPipeBroadcaster> broadcaster;
     RR_WEAK_PTR<detail::PipeBroadcasterBase_connected_endpoint> broadcaster_cep;
@@ -712,7 +712,7 @@ class WrappedPipeBroadcaster : public PipeBroadcasterBase
     virtual void AttachPipeServerEvents(const RR_SHARED_PTR<PipeServerBase>& p);
 
     virtual void AttachPipeEndpointEvents(const RR_SHARED_PTR<PipeEndpointBase>& ep,
-                                          RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep);
+const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep);
 };
 
 class WrappedWireConnection;
@@ -774,7 +774,7 @@ class WrappedWireConnection : public virtual WireConnectionBase
     void AsyncClose_handler(const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<AsyncVoidReturnDirector>& handler);
 
     void SetWireBroadcaster(const RR_SHARED_PTR<WrappedWireBroadcaster>& broadcaster,
-                            RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> cep);
+                            const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& cep);
     void SetWireUnicastReceiver(const RR_SHARED_PTR<WrappedWireUnicastReceiver>& receiver);
 
     RR_WEAK_PTR<WrappedWireBroadcaster> broadcaster;
@@ -935,7 +935,7 @@ class WrappedWireBroadcaster : public WireBroadcasterBase, public IWrappedWirePe
     virtual void AttachWireServerEvents(const RR_SHARED_PTR<WireServerBase>& w);
 
     virtual void AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& w,
-                                            RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> cep);
+                                            const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& cep);
 
   public:
     virtual RR_INTRUSIVE_PTR<RRValue> do_PeekInValue(const uint32_t& ep);
@@ -1229,9 +1229,9 @@ class AsyncNodeInfo2VectorReturnDirector
     virtual void handler(const std::vector<NodeInfo2>& ret) {}
 };
 
-void AsyncServiceInfo2VectorReturn_handler(RR_SHARED_PTR<std::vector<ServiceInfo2> > ret,
+void AsyncServiceInfo2VectorReturn_handler(const RR_SHARED_PTR<std::vector<ServiceInfo2> >& ret,
                                            const RR_SHARED_PTR<AsyncServiceInfo2VectorReturnDirector>& handler);
-void AsyncNodeInfo2VectorReturn_handler(RR_SHARED_PTR<std::vector<NodeInfo2> > ret,
+void AsyncNodeInfo2VectorReturn_handler(const RR_SHARED_PTR<std::vector<NodeInfo2> >& ret,
                                         const RR_SHARED_PTR<AsyncNodeInfo2VectorReturnDirector>& handler);
 
 void AsyncWrappedFindServiceByType(const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::string& servicetype,

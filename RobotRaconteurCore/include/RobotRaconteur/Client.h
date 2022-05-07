@@ -419,7 +419,7 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
 
   protected:
     void AsyncPullServiceDefinitionAndImports1(
-        const RR_SHARED_PTR<PullServiceDefinitionReturn>& root, const RR_SHARED_PTR<RobotRaconteurException>& err,
+        const RR_SHARED_PTR<PullServiceDefinitionReturn>& pull_ret, const RR_SHARED_PTR<RobotRaconteurException>& err,
         const std::string& servicetype, const RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>& current,
         boost::function<void(const RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>&,
                              const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,

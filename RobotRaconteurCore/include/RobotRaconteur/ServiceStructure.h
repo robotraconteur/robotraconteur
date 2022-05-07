@@ -407,7 +407,7 @@ RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(const RR_INTRUSIVE_PTR<M
     for (size_t i = 0; i < a->Elements.size(); i++)
     {
         RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(i);
-        int32_t key;
+        int32_t key = 0;
         if (!MessageElement_GetElementNumber(m, key))
         {
             throw DataTypeException("Invalid pod array format");

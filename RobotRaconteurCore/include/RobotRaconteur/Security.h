@@ -210,7 +210,6 @@ class ROBOTRACONTEUR_CORE_API PasswordFileUserAuthenticator : public UserAuthent
         std::vector<NodeID> allowed_client_nodeid;
     };
 
-  private:
     std::map<std::string, RR_SHARED_PTR<User> > validusers;
     bool require_verified_client;
 

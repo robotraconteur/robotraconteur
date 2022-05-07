@@ -217,7 +217,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     virtual void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
@@ -457,7 +457,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     /** @copydoc IsSecurePeerIdentityVerified(uint32_t endpoint)*/
     virtual bool IsSecurePeerIdentityVerified(const RR_SHARED_PTR<RRObject>& obj);
     /** @copydoc IsSecurePeerIdentityVerified(uint32_t endpoint)*/
-    virtual bool IsSecurePeerIdentityVerified(const RR_SHARED_PTR<ITransportConnection>& tranpsort);
+    virtual bool IsSecurePeerIdentityVerified(const RR_SHARED_PTR<ITransportConnection>& transport);
 
     /**
      * @brief Get the identity of the peer if secured using TLS
@@ -524,13 +524,15 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * * "file://"
      * * "http://robotraconteur.com"
      * * "http://robotraconteur.com:80"
-     * * "http://*.robotraconteur.com"
-     * * "http://*.robotraconteur.com:80"
+     * * "http://(*).robotraconteur.com"
+     * * "http://(*).robotraconteur.com:80"
      * * "https://robotraconteur.com"
      * * "https://robotraconteur.com:443"
-     * * "https://*.robotraconteur.com"
-     * * "https://*.robotraconteur.com:443"
+     * * "https://(*).robotraconteur.com"
+     * * "https://(*).robotraconteur.com:443"
      *
+     *    Note: forward-slash-star is not a valid comment, assume (*) is *
+     * 
      * The star symbol can be used for a subdomain wildcard when matching origins.
      *
      * Additional allowed origins can be added using this function, or the
@@ -651,13 +653,13 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     bool ipv6_acceptor_paused;
 
     static void handle_v4_accept(const RR_SHARED_PTR<TcpTransport>& parent,
-                                 RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> acceptor,
-                                 RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
+                                 const RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>& acceptor,
+                                 const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                                  const boost::system::error_code& error);
 
     static void handle_v6_accept(const RR_SHARED_PTR<TcpTransport>& parent,
-                                 RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> acceptor,
-                                 RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket,
+                                 const RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>& acceptor,
+                                 const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                                  const boost::system::error_code& error);
 
     virtual void register_transport(const RR_SHARED_PTR<ITransportConnection>& connection);

@@ -1231,7 +1231,7 @@ static std::vector<Y> RRArrayToVector(const RR_INTRUSIVE_PTR<RRArray<U> >& in)
  * values converted from in
  */
 template <typename Y, typename U>
-static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(std::vector<U> in)
+static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(const std::vector<U>& in)
 {
     RR_INTRUSIVE_PTR<RRArray<Y> > out = AllocateRRArray<Y>(in.size());
     for (size_t i = 0; i < in.size(); i++)
@@ -2662,21 +2662,21 @@ class ROBOTRACONTEUR_CORE_API TimeSpec
     TimeSpec(int64_t seconds, int32_t nanoseconds);
 
     /** @brief equality comparison */
-    bool operator==(const TimeSpec& t2);
+    bool operator==(const TimeSpec& t2) const;
     /** @brief inequality comparison */
-    bool operator!=(const TimeSpec& t2);
+    bool operator!=(const TimeSpec& t2) const;
     /** @brief subtraction operator */
-    TimeSpec operator-(const TimeSpec& t2);
+    TimeSpec operator-(const TimeSpec& t2) const;
     /** @brief addition operator */
-    TimeSpec operator+(const TimeSpec& t2);
+    TimeSpec operator+(const TimeSpec& t2) const;
     /** @brief greater-than comparison */
-    bool operator>(const TimeSpec& t2);
+    bool operator>(const TimeSpec& t2) const;
     /** @brief greater-than-or-equal comparison */
-    bool operator>=(const TimeSpec& t2);
+    bool operator>=(const TimeSpec& t2) const;
     /** @brief less-then comparison */
-    bool operator<(const TimeSpec& t2);
+    bool operator<(const TimeSpec& t2) const;
     /** @brief less-than-or-equal comparison */
-    bool operator<=(const TimeSpec& t2);
+    bool operator<=(const TimeSpec& t2) const;
 
     /** @brief normalize nanoseconds to be within 0 and 1e9-1 */
     void cleanup_nanosecs();

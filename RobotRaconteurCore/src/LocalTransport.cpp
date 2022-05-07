@@ -95,14 +95,14 @@ class LocalTransport_socket
   public:
     LocalTransport_socket(RR_BOOST_ASIO_IO_CONTEXT& context)
     {
-        socket.reset(new boost::asio::local::stream_protocol::socket(context));
+        socket = RR_SHARED_PTR<boost::asio::local::stream_protocol::socket>(new boost::asio::local::stream_protocol::socket(context));
     }
     RR_SHARED_PTR<boost::asio::local::stream_protocol::socket> socket;
 };
 class LocalTransport_acceptor
 {
   public:
-    LocalTransport_acceptor(RR_BOOST_ASIO_IO_CONTEXT& context, boost::asio::local::stream_protocol::endpoint ep)
+    LocalTransport_acceptor(RR_BOOST_ASIO_IO_CONTEXT& context, const boost::asio::local::stream_protocol::endpoint& ep)
         : acceptor(context, ep)
     {}
     LocalTransport_acceptor(RR_BOOST_ASIO_IO_CONTEXT& context) : acceptor(context) {}
@@ -110,7 +110,7 @@ class LocalTransport_acceptor
 };
 } // namespace detail
 
-static std::string LocalTransport_socket_remote_endpoint(RR_SHARED_PTR<detail::LocalTransport_socket>& socket)
+static std::string LocalTransport_socket_remote_endpoint(const RR_SHARED_PTR<detail::LocalTransport_socket>& socket)
 {
     boost::system::error_code ec;
     boost::asio::local::stream_protocol::endpoint ep = socket->socket->remote_endpoint(ec);
@@ -198,12 +198,12 @@ void LocalTransport::Close()
     }
 
 #ifndef ROBOTRACONTEUR_WINDOWS
-    if (socket_file_name.size() > 0)
+    if (!socket_file_name.empty())
     {
         unlink(socket_file_name.c_str());
     }
 #else
-    if (socket_file_name.size() > 0)
+    if (!socket_file_name.empty())
     {
         DeleteFileA(socket_file_name.c_str());
     }
@@ -224,10 +224,7 @@ std::string LocalTransport::GetUrlSchemeString() const { return "rr+local"; }
 
 bool LocalTransport::CanConnectService(boost::string_ref url)
 {
-    if (boost::starts_with(url, "rr+local://"))
-        return true;
-
-    return false;
+    return (boost::starts_with(url, "rr+local://"));
 }
 
 void LocalTransport::AsyncCreateTransportConnection(
@@ -264,7 +261,7 @@ void LocalTransport::AsyncCreateTransportConnection(
                                            "LocalTransport must not contain port, invalid URL: " << url);
         throw ConnectionException("Invalid url for local transport");
     }
-    if (url_res.path != "" && url_res.path != "/")
+    if (!url_res.path.empty() && url_res.path != "/")
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                            "LocalTransport must not contain a path, invalid URL: " << url);
@@ -277,7 +274,7 @@ void LocalTransport::AsyncCreateTransportConnection(
 
     if (!boost::contains(host, "@"))
     {
-        if (host != "localhost" && host != "")
+        if (host != "localhost" && !host.empty())
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(
                 node, Transport, ep->GetLocalEndpoint(),
@@ -384,7 +381,7 @@ void LocalTransport::AsyncCreateTransportConnection(
     }
 
     std::string noden;
-    if (!(url_res.nodeid.IsAnyNode() && url_res.nodename != ""))
+    if (!(url_res.nodeid.IsAnyNode() && !url_res.nodename.empty()))
     {
         noden = url_res.nodeid.ToString();
     }
@@ -401,7 +398,7 @@ void LocalTransport::AsyncCreateTransportConnection(
 }
 
 void LocalTransport::AsyncCreateTransportConnection2(
-    RR_SHARED_PTR<detail::LocalTransport_socket> socket, const std::string& noden,
+    const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, const std::string& noden,
     const RR_SHARED_PTR<ITransportConnection>& transport, const RR_SHARED_PTR<RobotRaconteurException>& err,
     boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
@@ -711,7 +708,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
                 RR_SHARED_PTR<detail::LocalTransport_socket> socket(
                     new detail::LocalTransport_socket(GetNode()->GetThreadPool()->get_io_context()));
                 boost::asio::local::stream_protocol::endpoint ep(pipename);
-                acceptor.reset(new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context()));
+                acceptor = RR_SHARED_PTR<detail::LocalTransport_acceptor>(new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context()));
 
                 acceptor->acceptor.open();
                 acceptor->acceptor.bind(ep);
@@ -823,7 +820,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
         return;
     }
 
-    NodeID nodeid = nodeid1;
+    const NodeID& nodeid = nodeid1;
     if (nodeid.IsAnyNode())
     {
         ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Transport, -1,
@@ -891,7 +888,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
                 RR_SHARED_PTR<detail::LocalTransport_socket> socket(
                     new detail::LocalTransport_socket(GetNode()->GetThreadPool()->get_io_context()));
                 boost::asio::local::stream_protocol::endpoint ep(pipename);
-                acceptor.reset(new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context(), ep));
+                acceptor = RR_SHARED_PTR<detail::LocalTransport_acceptor>(new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context(), ep));
                 acceptor->acceptor.open();
                 acceptor->acceptor.listen();
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -1025,8 +1022,8 @@ void LocalTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
 }
 
 void LocalTransport::handle_accept(const RR_SHARED_PTR<LocalTransport>& parent,
-                                   RR_SHARED_PTR<detail::LocalTransport_acceptor> acceptor,
-                                   RR_SHARED_PTR<detail::LocalTransport_socket> socket,
+                                   const RR_SHARED_PTR<detail::LocalTransport_acceptor>& acceptor,
+                                   const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
                                    const boost::system::error_code& error)
 {
     if (error)
@@ -1089,7 +1086,7 @@ void LocalTransport::AsyncGetDetectedNodes(
     boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
 {
     RR_UNUSED(timeout);
-    if (boost::range::find(schemes, "rr+local") == schemes.end() || schemes.size() == 0)
+    if (boost::range::find(schemes, "rr+local") == schemes.end() || schemes.empty())
     {
         RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > n = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
         detail::PostHandler(node, handler, n, true);
@@ -1293,14 +1290,14 @@ LocalTransportConnection::LocalTransportConnection(const RR_SHARED_PTR<LocalTran
 }
 
 void LocalTransportConnection::AsyncAttachSocket(
-    RR_SHARED_PTR<detail::LocalTransport_socket> socket, std::string noden,
-    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, const std::string& noden,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     this->socket = socket;
 
     NodeID target_nodeid = NodeID::GetAny();
     std::string target_nodename;
-    if (noden.find("{") != std::string::npos)
+    if (noden.find('{') != std::string::npos)
     {
         target_nodeid = NodeID(noden);
     }
@@ -1401,9 +1398,11 @@ void LocalTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
         */
 
         std::string connecturl = "rr+local:///";
+        // NOLINTBEGIN
         Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this())));
+        // NOLINTEND
         p->MessageReceived(m);
     }
     catch (std::exception& exp)
@@ -1419,7 +1418,7 @@ void LocalTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
 }
 
 void LocalTransportConnection::async_write_some(
-    const_buffers& b, boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+    const_buffers& b, const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
 {
     boost::mutex::scoped_lock lock(socket_lock);
     RobotRaconteurNode::asio_async_write_some(node, socket->socket, b, handler);
@@ -1427,7 +1426,7 @@ void LocalTransportConnection::async_write_some(
 
 void LocalTransportConnection::async_read_some(
     mutable_buffers& b,
-    boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+    const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
 {
     boost::mutex::scoped_lock lock(socket_lock);
     RobotRaconteurNode::asio_async_read_some(node, socket->socket, b, handler);
@@ -1509,7 +1508,7 @@ RR_SHARED_PTR<Transport> LocalTransportConnection::GetTransport()
 }
 
 void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& parent,
-                                        RR_SHARED_PTR<detail::LocalTransport_socket> socket,
+                                        const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
                                         const RR_SHARED_PTR<ITransportConnection>& connection,
                                         const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
@@ -1524,8 +1523,8 @@ void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& par
 }
 
 void LocalTransport_attach_transport(
-    const RR_SHARED_PTR<LocalTransport>& parent, RR_SHARED_PTR<detail::LocalTransport_socket> socket, bool server,
-    uint32_t endpoint, std::string noden,
+    const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, bool server,
+    uint32_t endpoint, const std::string& noden,
     boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
@@ -1570,7 +1569,7 @@ std::string GetLogonUserName()
         throw ConnectionException("Could not determine current user");
 
     std::string o(passwd->pw_name);
-    if (o.size() == 0)
+    if (o.empty())
         throw ConnectionException("Could not determine current user");
 
     return o;
@@ -1656,7 +1655,7 @@ boost::filesystem::path GetUserRunPath()
     }
 
 #else
-    int u = getuid();
+    uid_t u = getuid();
 
     // TODO: fix mac version
     boost::filesystem::path path;
@@ -1980,7 +1979,7 @@ boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLo
 #endif
     size_t len = fd->file_len();
 
-    if (len == 0 || len == -1 || len > 16 * 1024)
+    if (len == 0 || len == -1 || len > 16384)
     {
         nodeid = NodeID::NewUniqueID();
         std::string dat = nodeid.ToString();
@@ -2270,7 +2269,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
             {
                 if (e1.NodeID == nodeid)
                 {
-                    if (e1.NodeName == "")
+                    if (e1.NodeName.empty())
                     {
                         e1.NodeName = nodename1->second;
                     }
@@ -2283,7 +2282,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
 }
 
 RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
-    ParseConnectionURLResult url, const std::vector<boost::filesystem::path>& search_paths,
+    const ParseConnectionURLResult& url, const std::vector<boost::filesystem::path>& search_paths,
     const std::vector<std::string>& usernames, RR_BOOST_ASIO_IO_CONTEXT& _io_context_)
 {
     RR_UNUSED(usernames);
@@ -2356,7 +2355,7 @@ RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
 
         std::string pipename = e2->second;
 
-        socket.reset(new detail::LocalTransport_socket(_io_context_));
+        socket = RR_SHARED_PTR<detail::LocalTransport_socket>(new detail::LocalTransport_socket(_io_context_));
         boost::asio::local::stream_protocol::endpoint ep(pipename);
         boost::system::error_code ec;
         socket->socket->connect(ep, ec);
@@ -2537,7 +2536,7 @@ void LocalTransportFD::open_lock_write(const boost::filesystem::path& path, bool
     fd = h;
 }*/
 
-bool LocalTransportFD::read(std::string& data)
+bool LocalTransportFD::read(std::string& data) // NOLINT
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
     if (::SetFilePointer(fd, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
@@ -2562,7 +2561,7 @@ bool LocalTransportFD::read(std::string& data)
 #else
     if (lseek(fd, 0, SEEK_END) < 0)
         return false;
-    int len = lseek(fd, 0, SEEK_CUR);
+    off_t len = lseek(fd, 0, SEEK_CUR);
     if (len < 0)
         return false;
     if (lseek(fd, 0, SEEK_SET) < 0)
@@ -2571,7 +2570,7 @@ bool LocalTransportFD::read(std::string& data)
     std::string ret;
     ret.resize(len);
 
-    int retval = ::read(fd, &ret[0], len);
+    ssize_t retval = ::read(fd, &ret[0], len);
     if (retval < 0)
     {
         return false;
@@ -2606,7 +2605,7 @@ bool LocalTransportFD::read_info()
     return true;
 }
 
-bool LocalTransportFD::write(boost::string_ref data)
+bool LocalTransportFD::write(boost::string_ref data) // NOLINT
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
     DWORD bytes_written = 0;
@@ -2617,7 +2616,7 @@ bool LocalTransportFD::write(boost::string_ref data)
     if (!FlushFileBuffers(fd))
         return false;
 #else
-    int ret = ::write(fd, &data[0], data.size());
+    ssize_t ret = ::write(fd, &data[0], data.size());
     if (ret != data.size())
         return false;
     if (fsync(fd) < 0)
@@ -2637,7 +2636,7 @@ bool LocalTransportFD::write_info()
     return write(data);
 }
 
-bool LocalTransportFD::reset()
+bool LocalTransportFD::reset() // NOLINT
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
     if (::SetFilePointer(fd, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
@@ -2653,17 +2652,17 @@ bool LocalTransportFD::reset()
     return true;
 }
 
-size_t LocalTransportFD::file_len()
+size_t LocalTransportFD::file_len() // NOLINT
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
     return ::GetFileSize(fd, NULL);
 #else
-    int init_pos = lseek(fd, 0, SEEK_CUR);
+    off_t init_pos = lseek(fd, 0, SEEK_CUR);
     if (init_pos < 0)
         return -1;
     if (lseek(fd, 0, SEEK_END) < 0)
         return -1;
-    int len = lseek(fd, 0, SEEK_CUR);
+    off_t len = lseek(fd, 0, SEEK_CUR);
     if (len < 0)
         return -1;
     if (lseek(fd, init_pos, SEEK_SET) < 0)

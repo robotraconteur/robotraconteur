@@ -134,7 +134,7 @@ void intrusive_ptr_release(LibUsb_Transfer* p)
     p->ref_count--;
     if (p->ref_count == 0)
     {
-        delete p;
+        delete p; //NOLINT
     }
 }
 void intrusive_ptr_add_ref(LibUsb_Transfer* p)
@@ -160,7 +160,7 @@ void LibUsb_Transfer_control::FillTransfer(uint8_t bmRequestType, uint8_t bReque
     transfer = f->libusb_alloc_transfer(0);
     if (!transfer)
         throw SystemResourceException("Memory error");
-    this->temp_buf = new uint8_t[s];
+    this->temp_buf = new uint8_t[s]; //NOLINT
     this->data_buf = buf;
     boost::asio::buffer_copy(boost::asio::buffer(this->temp_buf, s) + 8, buf);
     libusb_fill_control_setup(this->temp_buf, bmRequestType, bRequest, wValue, wIndex, boost::asio::buffer_size(buf));
@@ -168,7 +168,7 @@ void LibUsb_Transfer_control::FillTransfer(uint8_t bmRequestType, uint8_t bReque
     libusb_fill_control_transfer(transfer, device_handle.get(), temp_buf, &LibUsbDeviceManager::transfer_complete, this,
                                  5000);
 
-    this->handler = handler;
+    this->handler = RR_MOVE(handler);
     ref_count++;
 }
 
@@ -216,11 +216,11 @@ void LibUsb_Transfer_bulk::FillTransfer(uint8_t ep, boost::asio::mutable_buffer&
     this->data_buf = buf;
 
     libusb_fill_bulk_transfer(transfer, device_handle.get(), ep, boost::asio::buffer_cast<uint8_t*>(buf),
-                              boost::asio::buffer_size(buf), &LibUsbDeviceManager::transfer_complete, this, 0);
+                              boost::numeric_cast<int>(boost::asio::buffer_size(buf)), &LibUsbDeviceManager::transfer_complete, this, 0);
 
     transfer->flags |= LIBUSB_TRANSFER_ADD_ZERO_PACKET;
 
-    this->handler = handler;
+    this->handler = RR_MOVE(handler);
     ref_count++;
 }
 
@@ -278,7 +278,7 @@ static void LibUsb_Functions_libusb_unref(const RR_SHARED_PTR<LibUsb_Functions>&
 static UsbDeviceStatus LibUsbDevice_open_device(const RR_SHARED_PTR<LibUsbDeviceManager>& m, const RR_SHARED_PTR<LibUsb_Functions>& f,
                                                 const RR_SHARED_PTR<libusb_device>& device, RR_SHARED_PTR<void>& device_handle)
 {
-    libusb_device_handle* dev_h;
+    libusb_device_handle* dev_h = NULL;
     int res = f->libusb_open(device.get(), &dev_h);
     if (res != 0 || !dev_h)
     {
@@ -317,7 +317,7 @@ bool LibUsbDeviceManager::InitUpdateDevices()
 
     if (!context)
     {
-        libusb_context* c;
+        libusb_context* c = NULL;
         if (f->libusb_init(&c) != 0)
         {
             return false;
@@ -343,7 +343,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
 {
     std::list<UsbDeviceManager_detected_device> devices;
 
-    libusb_device** list1;
+    libusb_device** list1 = NULL;
     ssize_t device_count = f->libusb_get_device_list(context.get(), &list1);
     if (device_count <= 0)
     {
@@ -368,7 +368,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
             continue;
         }
 
-        libusb_config_descriptor* config_desc;
+        libusb_config_descriptor* config_desc = NULL;
         if (f->libusb_get_active_config_descriptor(list1[i], &config_desc) != 0)
         {
             continue;
@@ -424,7 +424,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                 if (c1->bDescriptorType == RR_USB_CS_INTERFACE_DESCRIPTOR_TYPE)
                 {
                     const robotraconteur_interface_common_descriptor* c3 =
-                        reinterpret_cast<const robotraconteur_interface_common_descriptor*>(c1);
+                        reinterpret_cast<const robotraconteur_interface_common_descriptor*>(c1); // NOLINT
                     if (c3->bDescriptorSubType == 0)
                     {
 
@@ -433,7 +433,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                             continue;
                         }
                         const robotraconteur_interface_descriptor* c4 =
-                            reinterpret_cast<const robotraconteur_interface_descriptor*>(c3);
+                            reinterpret_cast<const robotraconteur_interface_descriptor*>(c3); // NOLINT
 
                         if (memcmp(RR_USB_CS_INTERFACE_UUID_DETECT, c4->uuidRobotRaconteurDetect,
                                    sizeof(RR_USB_CS_INTERFACE_UUID_DETECT)) == 0)
@@ -689,7 +689,7 @@ void LibUsbDeviceManager::DrawDownRequests(const RR_SHARED_PTR<libusb_device_han
 void LibUsbDeviceManager::Shutdown()
 {
     UsbDeviceManager::Shutdown();
-    bool r;
+    bool r = false;
     {
         boost::mutex::scoped_lock lock(manager_transfer_lock);
         r = running;
@@ -760,8 +760,8 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
 
     RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
 
-    libusb_config_descriptor* config_desc;
-    int desired_config;
+    libusb_config_descriptor* config_desc = NULL;
+    int desired_config = 0;
     if (f->libusb_get_config_descriptor(f->libusb_get_device(h.get()), 0, &config_desc) != 0)
     {
         return Error;
@@ -830,14 +830,13 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_P
 {
     RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
 
-    libusb_config_descriptor* config_desc;
-    int desired_config;
+    libusb_config_descriptor* config_desc = NULL;
     if (f->libusb_get_config_descriptor(f->libusb_get_device(h.get()), 0, &config_desc) != 0)
     {
         return Error;
     }
 
-    desired_config = config_desc->bConfigurationValue;
+    int desired_config = config_desc->bConfigurationValue; // NOLINT
 
     const libusb_interface_descriptor* interface_desc = NULL;
     for (uint8_t i = 0; i < config_desc->bNumInterfaces; i++)
@@ -862,7 +861,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_P
     boost::asio::const_buffer desc(interface_desc->extra, interface_desc->extra_length);
 
     bool cs_interface_found = false;
-    uint16_t num_protocols;
+    uint16_t num_protocols = 0;
 
     while (boost::asio::buffer_size(desc) >= 2)
     {
@@ -876,7 +875,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_P
         if (c1->bDescriptorType == RR_USB_CS_INTERFACE_DESCRIPTOR_TYPE)
         {
             const robotraconteur_interface_common_descriptor* c3 =
-                reinterpret_cast<const robotraconteur_interface_common_descriptor*>(c1);
+                reinterpret_cast<const robotraconteur_interface_common_descriptor*>(c1); // NOLINT
             if (c3->bDescriptorSubType == 0)
             {
 
@@ -886,7 +885,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_P
                     return Invalid;
                 }
                 const robotraconteur_interface_descriptor* c4 =
-                    reinterpret_cast<const robotraconteur_interface_descriptor*>(c3);
+                    reinterpret_cast<const robotraconteur_interface_descriptor*>(c3); // NOLINT
 
                 if (memcmp(RR_USB_CS_INTERFACE_UUID_DETECT, c4->uuidRobotRaconteurDetect,
                            sizeof(RR_USB_CS_INTERFACE_UUID_DETECT)) != 0)
@@ -912,7 +911,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_P
                 }
 
                 const robotraconteur_protocol_descriptor* c4 =
-                    reinterpret_cast<const robotraconteur_protocol_descriptor*>(c3);
+                    reinterpret_cast<const robotraconteur_protocol_descriptor*>(c3); // NOLINT
 
                 settings->supported_protocols.push_back(c4->wRRProtocol);
             }

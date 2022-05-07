@@ -160,7 +160,7 @@ void Message::Read4(ArrayBinaryReader& r)
     }
 }
 
-uint16_t MessageHeader::ComputeSize()
+uint16_t MessageHeader::ComputeSize() // NOLINT
 {
     uint32_t s1 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(SenderNodeName));
     uint32_t s2 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ReceiverNodeName));
@@ -193,7 +193,7 @@ void MessageHeader::UpdateHeader(uint32_t message_size, uint16_t entry_count)
     EntryCount = entry_count;
 }
 
-void MessageHeader::Write(ArrayBinaryWriter& w)
+void MessageHeader::Write(ArrayBinaryWriter& w) // NOLINT
 {
     w.PushRelativeLimit(HeaderSize);
     w.WriteString8("RRAC");
@@ -350,7 +350,7 @@ void MessageHeader::UpdateHeader4(uint32_t message_entry_size, uint16_t entry_co
         MessageFlags |= MessageFlags_MULTIPLE_ENTRIES;
     }
 
-    if (MetaData.str().size() == 0 && MessageID == 0 && MessageResID == 0)
+    if (MetaData.str().empty() && MessageID == 0 && MessageResID == 0)
     {
         MessageFlags &= ~MessageFlags_META_INFO;
     }
@@ -359,7 +359,7 @@ void MessageHeader::UpdateHeader4(uint32_t message_entry_size, uint16_t entry_co
         MessageFlags |= MessageFlags_META_INFO;
     }
 
-    if (Extended.size() == 0)
+    if (Extended.empty())
     {
         MessageFlags &= ~MessageFlags_EXTENDED;
     }
@@ -819,7 +819,7 @@ void MessageEntry::UpdateData4()
         EntryFlags &= ~MessageEntryFlags_ERROR;
     }
 
-    if (MetaData.str().size() > 0)
+    if (!MetaData.str().empty())
     {
         EntryFlags |= MessageEntryFlags_META_INFO;
     }
@@ -828,7 +828,7 @@ void MessageEntry::UpdateData4()
         EntryFlags &= ~MessageEntryFlags_META_INFO;
     }
 
-    if (Extended.size() == 0)
+    if (Extended.empty())
     {
         EntryFlags &= ~MessageFlags_EXTENDED;
     }
@@ -1481,7 +1481,7 @@ void MessageElement::UpdateData4()
         throw ProtocolException("Cannot set both element name and number");
     }
 
-    if (ElementTypeName.str().size() > 0)
+    if (!ElementTypeName.str().empty())
     {
         ElementFlags |= MessageElementFlags_ELEMENT_TYPE_NAME_STR;
     }
@@ -1490,7 +1490,7 @@ void MessageElement::UpdateData4()
         ElementFlags &= ~MessageElementFlags_ELEMENT_TYPE_NAME_STR;
     }
 
-    if (MetaData.str().size() > 0)
+    if (!MetaData.str().empty())
     {
         ElementFlags |= MessageElementFlags_META_INFO;
     }
@@ -1499,7 +1499,7 @@ void MessageElement::UpdateData4()
         ElementFlags &= ~MessageElementFlags_META_INFO;
     }
 
-    if (Extended.size() == 0)
+    if (Extended.empty())
     {
         ElementFlags &= ~MessageElementFlags_EXTENDED;
     }
@@ -1739,10 +1739,7 @@ bool MessageElement::ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement
     std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 =
         boost::find_if(m, boost::bind(&MessageElement::ElementName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
-    if (m1 == m.end())
-        return false;
-
-    return true;
+    return (m1 != m.end());
 }
 
 std::string MessageElement::CastDataToString()
@@ -1945,7 +1942,7 @@ bool MessageElement_GetElementNumber(const RR_INTRUSIVE_PTR<MessageElement>& m, 
     }
     else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
     {
-        int32_t _number;
+        int32_t _number = 0;
         if (!boost::conversion::try_lexical_convert<int32_t>(m->ElementName.str(), _number))
         {
             return false;

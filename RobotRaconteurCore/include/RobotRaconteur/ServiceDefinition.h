@@ -224,7 +224,7 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinitionParseException : public ServiceDe
      *
      * @return std::string The diagnostic message
      */
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     virtual const char* what() const throw();
 
@@ -278,7 +278,7 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinitionVerifyException : public ServiceD
      *
      * @return std::string The diagnostic message
      */
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     virtual const char* what() const throw();
 
@@ -357,7 +357,7 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinition : public RR_ENABLE_SHARED_FROM_T
      *
      * @return std::string The service definition file as a string
      */
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Parses a service definition from a string
@@ -395,7 +395,7 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinition : public RR_ENABLE_SHARED_FROM_T
      *
      * @param os The stream to write the service definition to
      */
-    virtual void ToStream(std::ostream& os);
+    virtual void ToStream(std::ostream& os) const;
 
     /**
      * @brief Parse a service definition from a stream
@@ -435,7 +435,7 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinition : public RR_ENABLE_SHARED_FROM_T
      *
      * @param ver The test Robot Raconteur version. If all zero (unspecified), uses current library version
      */
-    void CheckVersion(RobotRaconteurVersion ver = RobotRaconteurVersion(0, 0));
+    void CheckVersion(const RobotRaconteurVersion& ver = RobotRaconteurVersion(0, 0)) const;
 
     /**
      * @brief Construct a new empty ServiceDefinition
@@ -465,7 +465,7 @@ class ROBOTRACONTEUR_CORE_API NamedTypeDefinition
     /** @brief The unqualified name of the type */
     std::string Name;
     /** @brief The type code of the type */
-    virtual DataTypes RRDataType() = 0;
+    virtual DataTypes RRDataType() const = 0;
     /**
      * @brief Resolves and returns the qualified name
      *
@@ -563,7 +563,7 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      *
      * @return std::string The service entry definition as a string
      */
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Convert service definition to a text stream
@@ -572,7 +572,7 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      *
      * @param os The stream to write the service entry definition to
      */
-    virtual void ToStream(std::ostream& os);
+    virtual void ToStream(std::ostream& os) const;
 
     /**
      * @brief Parse a service entry definition from a string
@@ -639,7 +639,7 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      */
     void Reset();
 
-    virtual DataTypes RRDataType();
+    virtual DataTypes RRDataType() const;
     virtual std::string ResolveQualifiedName();
 };
 
@@ -698,7 +698,7 @@ class ROBOTRACONTEUR_CORE_API MemberDefinition : public RR_ENABLE_SHARED_FROM_TH
      *
      * @return MemberDefinition_NoLock The locking behavior
      */
-    virtual MemberDefinition_NoLock NoLock();
+    virtual MemberDefinition_NoLock NoLock() const;
 
     virtual ~MemberDefinition() {}
 
@@ -709,7 +709,7 @@ class ROBOTRACONTEUR_CORE_API MemberDefinition : public RR_ENABLE_SHARED_FROM_TH
      *
      * @return std::string The member as a string
      */
-    virtual std::string ToString() { return ""; }
+    virtual std::string ToString() const { return ""; }
 
     /** @brief Clear all fields */
     virtual void Reset();
@@ -746,7 +746,7 @@ class ROBOTRACONTEUR_CORE_API PropertyDefinition : public MemberDefinition
      *
      * Use ToString(true) to convert to a field definition
      */
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Convert to a property or field definition string
@@ -757,7 +757,7 @@ class ROBOTRACONTEUR_CORE_API PropertyDefinition : public MemberDefinition
      * @param isstruct true for field, false for property
      * @return std::string The property or field as a string
      */
-    std::string ToString(bool isstruct);
+    std::string ToString(bool isstruct) const;
 
     /**
      * @brief Parse a property or field definition from string
@@ -813,7 +813,7 @@ class ROBOTRACONTEUR_CORE_API FunctionDefinition : public MemberDefinition
      */
     FunctionDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Parse a function definition from string
@@ -866,7 +866,7 @@ class ROBOTRACONTEUR_CORE_API EventDefinition : public MemberDefinition
      */
     EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Parse an event definition from string
@@ -972,7 +972,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      */
     PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Parse a pipe definition from string
@@ -997,7 +997,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      *
      * @return MemberDefinition_Direction The direction of the pipe
      */
-    MemberDefinition_Direction Direction();
+    MemberDefinition_Direction Direction() const;
 
     /**
      * @brief Pipe reliability
@@ -1009,7 +1009,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      * @return true Pipe is unreliable
      * @return false Pipe is reliable
      */
-    bool IsUnreliable();
+    bool IsUnreliable() const;
 };
 
 /**
@@ -1040,7 +1040,7 @@ class ROBOTRACONTEUR_CORE_API CallbackDefinition : public MemberDefinition
      */
     CallbackDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Parse a callback definition from string
@@ -1081,7 +1081,7 @@ class ROBOTRACONTEUR_CORE_API WireDefinition : public MemberDefinition
      */
     WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Parse a wire definition from string
@@ -1133,7 +1133,7 @@ class ROBOTRACONTEUR_CORE_API MemoryDefinition : public MemberDefinition
      */
     MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Parse a memory definition from string
@@ -1217,7 +1217,7 @@ class ROBOTRACONTEUR_CORE_API TypeDefinition
      *
      *
      */
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
     /**
      * @brief Parse a type definition from string
@@ -1383,7 +1383,7 @@ class ROBOTRACONTEUR_CORE_API ExceptionDefinition
      *
      * @return std::string The exception definition string
      */
-    std::string ToString();
+    std::string ToString() const;
 
     /**
      * @brief Parse an exception definition from string
@@ -1439,7 +1439,7 @@ class ROBOTRACONTEUR_CORE_API UsingDefinition
      *
      * @return std::string The using definition string
      */
-    std::string ToString();
+    std::string ToString() const;
 
     /**
      * @brief Parse an using definition from string
@@ -1528,7 +1528,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      *
      * @return std::string The constant definition string
      */
-    std::string ToString();
+    std::string ToString() const;
 
     /**
      * @brief Parse a constant definition from string
@@ -1560,7 +1560,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      * @return true The constant definition value is valid
      * @return false The constant definition value is invalid
      */
-    bool VerifyValue();
+    bool VerifyValue() const;
 
     /**
      * @brief Convert the constant value to a numeric scalar
@@ -1569,7 +1569,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      * @return T The numeric scalar
      */
     template <typename T>
-    T ValueToScalar()
+    T ValueToScalar() const
     {
         T v;
         if (!detail::try_convert_string_to_number(boost::trim_copy(Value), v))
@@ -1586,7 +1586,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      * @return RR_INTRUSIVE_PTR<RRArray<T> > The numeric primitive array
      */
     template <typename T>
-    RR_INTRUSIVE_PTR<RRArray<T> > ValueToArray()
+    RR_INTRUSIVE_PTR<RRArray<T> > ValueToArray() const
     {
         boost::iterator_range<std::string::const_iterator> value1(Value);
         value1 = boost::trim_copy_if(value1, boost::is_any_of(" \t{}"));
@@ -1632,14 +1632,14 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      *
      * @return std::string The constant value as a string
      */
-    std::string ValueToString();
+    std::string ValueToString() const;
 
     /**
      * @brief Convert the constant value to structure fields
      *
      * @return std::vector<ConstantDefinition_StructField> The constant as structure fields
      */
-    std::vector<ConstantDefinition_StructField> ValueToStructFields();
+    std::vector<ConstantDefinition_StructField> ValueToStructFields() const;
 
     static std::string UnescapeString(boost::string_ref in);
     static std::string EscapeString(boost::string_ref in);
@@ -1685,7 +1685,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
      *
      * @return std::string The enum definition string
      */
-    std::string ToString();
+    std::string ToString() const;
 
     /**
      * @brief Parse an enum definition from string
@@ -1701,7 +1701,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
      * @return true Enum values are valid
      * @return false Enum values are invalid
      */
-    bool VerifyValues();
+    bool VerifyValues() const;
 
     /**
      * @brief Clear all fields
@@ -1709,7 +1709,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
      */
     void Reset();
 
-    virtual DataTypes RRDataType();
+    virtual DataTypes RRDataType() const;
     virtual std::string ResolveQualifiedName();
 };
 
@@ -1754,7 +1754,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinitionValue
  * @param def The collection of service definitions to verify
  * @param warnings A vector to receive non-fatal verification warnings
  */
-ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def,
+ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& def,
                                                       std::vector<ServiceDefinitionParseException>& warnings);
 
 /**
@@ -1770,7 +1770,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
  *
  * @param def The collection of service definitions to verify
  */
-ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def);
+ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions();
 
 /**
  * @brief Compare two service definitions to see if they are identical

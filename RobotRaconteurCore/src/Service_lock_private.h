@@ -89,7 +89,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
 
     boost::mutex close_lock;
 
-  private:
     void InitializeInstanceFields();
 };
 

@@ -662,7 +662,7 @@ class Pipe : public virtual PipeBase
   public:
     friend class PipeEndpointBase;
 
-    Pipe(boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = verify; }
+    Pipe(boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = RR_MOVE(verify); }
 
     virtual ~Pipe() {}
 
@@ -884,14 +884,7 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
                boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
         : PipeClientBase(name, stub, unreliable, direction), Pipe<T>(verify)
     {
-        if (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value)
-        {
-            rawelements = true;
-        }
-        else
-        {
-            rawelements = false;
-        }
+        rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
     }
 
     using PipeClientBase::AsyncClose;
@@ -1036,14 +1029,8 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
                boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
         : PipeServerBase(name, skel, unreliable, direction), Pipe<T>(verify)
     {
-        if (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value)
-        {
-            rawelements = true;
-        }
-        else
-        {
-            rawelements = false;
-        }
+        rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
+    
     }
 
   protected:
@@ -1147,13 +1134,13 @@ class ROBOTRACONTEUR_CORE_API PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM
 
     void EndpointConnectedBase(const RR_SHARED_PTR<PipeEndpointBase>& ep);
 
-    void EndpointClosedBase(RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> ep);
+    void EndpointClosedBase(const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& ep);
 
-    void PacketAckReceivedBase(RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> ep, uint32_t id);
+    void PacketAckReceivedBase(const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& ep, uint32_t id);
 
     void handle_send(int32_t id, const RR_SHARED_PTR<RobotRaconteurException>& err,
-                     RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> ep,
-                     RR_SHARED_PTR<detail::PipeBroadcasterBase_async_send_operation> op, int32_t key, int32_t send_key,
+const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& ep,
+                     const RR_SHARED_PTR<detail::PipeBroadcasterBase_async_send_operation>& op, int32_t key, int32_t send_key,
                      boost::function<void()>& handler);
 
     void SendPacketBase(const RR_INTRUSIVE_PTR<RRValue>& packet);
@@ -1163,7 +1150,7 @@ class ROBOTRACONTEUR_CORE_API PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM
     virtual void AttachPipeServerEvents(const RR_SHARED_PTR<PipeServerBase>& p);
 
     virtual void AttachPipeEndpointEvents(const RR_SHARED_PTR<PipeEndpointBase>& p,
-                                          RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep);
+const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep);
 
     RR_SHARED_PTR<PipeBase> GetPipeBase();
 
@@ -1276,7 +1263,7 @@ class PipeBroadcaster : public PipeBroadcasterBase
     }
 
     virtual void AttachPipeEndpointEvents(const RR_SHARED_PTR<PipeEndpointBase>& ep,
-                                          RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep)
+const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
     {
         RR_SHARED_PTR<PipeEndpoint<T> > ep_T = rr_cast<PipeEndpoint<T> >(ep);
 

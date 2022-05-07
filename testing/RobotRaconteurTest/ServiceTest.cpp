@@ -3194,7 +3194,7 @@ void RobotRaconteurTestServiceSupport::RegisterSecureServices(const RR_SHARED_PT
     testservice_auth = RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
 
     std::vector<std::string> str_clients;
-    BOOST_FOREACH (NodeID n, allowed_clients)
+    BOOST_FOREACH (const NodeID& n, allowed_clients)
     {
         str_clients.push_back(n.ToString());
     }

@@ -49,11 +49,11 @@ ASIOStreamBaseTransport::ASIOStreamBaseTransport(const RR_SHARED_PTR<RobotRacont
 {
     connected.store(true);
 
-    sendbuf_len = 4 * 1024;
+    sendbuf_len = 4096;
     sendbuf = boost::shared_array<uint8_t>(new uint8_t[sendbuf_len]);
     sending = false;
 
-    recvbuf_len = 4 * 1024;
+    recvbuf_len = 4096;
     recvbuf_pos = 0;
     recvbuf_end = 0;
     recvbuf = boost::shared_array<uint8_t>(new uint8_t[recvbuf_len]);
@@ -112,7 +112,7 @@ ASIOStreamBaseTransport::ASIOStreamBaseTransport(const RR_SHARED_PTR<RobotRacont
 
 void ASIOStreamBaseTransport::AsyncAttachStream(bool server, const NodeID& target_nodeid,
                                                 boost::string_ref target_nodename,
-                                                boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+                                                const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Begin AsyncAttachStream");
 
@@ -120,7 +120,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream(bool server, const NodeID& targe
 
     try
     {
-        heartbeat_timer.reset(new boost::asio::deadline_timer(_io_context));
+        heartbeat_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(new boost::asio::deadline_timer(_io_context));
         {
             boost::mutex::scoped_lock lock(recv_lock);
             BeginReceiveMessage1();
@@ -178,7 +178,7 @@ void ASIOStreamBaseTransport::AsyncAttachStream(bool server, const NodeID& targe
 
 void ASIOStreamBaseTransport::AsyncAttachStream1(
     const RR_SHARED_PTR<RRObject>& parameter, const RR_SHARED_PTR<RobotRaconteurException>& err,
-    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     // std::cout << "AsyncAttachStream1" << std::endl;
     if (err)
@@ -281,7 +281,7 @@ void ASIOStreamBaseTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& 
 
     boost::mutex::scoped_lock lock(send_lock);
 
-    size_t message_size;
+    size_t message_size = 0;
     if (!send_4)
     {
         message_size = m->ComputeSize();
@@ -307,7 +307,7 @@ void ASIOStreamBaseTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& 
         }
         else
         {
-            if (message_size > 512 * 1024)
+            if (message_size > 524288)
             {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(),
                                                    "Attempt to send large message before authorized");
@@ -428,7 +428,7 @@ void ASIOStreamBaseTransport::BeginSendMessage(const RR_INTRUSIVE_PTR<Message>& 
 
     size_t message_size = 0;
     bool send_4 = send_version4.load();
-    bool string_table_4_closed = use_string_table4.load();
+    //bool string_table_4_closed = use_string_table4.load();
 
     // Don't use version 4 for special requests
 
@@ -544,7 +544,7 @@ void ASIOStreamBaseTransport::BeginSendMessage1(const RR_INTRUSIVE_PTR<Message>&
     mutable_buffers work_bufs;
 
     work_bufs.push_back(boost::asio::buffer(sendbuf.get(), sendbuf_len));
-    size_t work_bufs_used;
+    size_t work_bufs_used = 0;
 
     async_send_bufs.clear();
     switch (async_send_version)
@@ -605,7 +605,7 @@ void ASIOStreamBaseTransport::EndSendMessage2(const boost::system::error_code& e
             mutable_buffers work_bufs;
 
             work_bufs.push_back(boost::asio::buffer(sendbuf.get(), sendbuf_len));
-            size_t work_bufs_used;
+            size_t work_bufs_used = 0;
 
             async_send_bufs.clear();
             switch (async_send_version)
@@ -659,7 +659,7 @@ void ASIOStreamBaseTransport::EndSendMessage2(const boost::system::error_code& e
 void ASIOStreamBaseTransport::EndSendMessage(size_t startpos, const boost::system::error_code& error,
                                              size_t bytes_transferred, const RR_INTRUSIVE_PTR<Message>& m, size_t m_len,
                                              boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback,
-                                             boost::shared_array<uint8_t> buf)
+                                             const boost::shared_array<uint8_t>& buf)
 {
     RR_UNUSED(buf);
     try
@@ -715,7 +715,7 @@ void ASIOStreamBaseTransport::EndSendMessage1()
 
     bool c = connected.load();
 
-    if (send_queue.size() != 0 && c && !send_pause_request)
+    if (!send_queue.empty() && c && !send_pause_request)
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Dequeing next message");
         message_queue_entry m = send_queue.front();
@@ -795,7 +795,7 @@ void ASIOStreamBaseTransport::AsyncResumeSend()
     bool c = connected.load();
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Send resumed");
-    if (send_queue.size() != 0 && c && !send_pause_request && !sending)
+    if (!send_queue.empty() && c && !send_pause_request && !sending)
     {
         message_queue_entry m = send_queue.front();
         send_queue.pop_front();
@@ -873,7 +873,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
             }
 
             boost::array<char,4> seed;
-            uint32_t size;
+            uint32_t size = 0;
 
             memcpy(seed.data(), streamseed.data(), 4);
             memcpy(&size, streamseed.data() + 4, 4);
@@ -984,7 +984,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
 
 void ASIOStreamBaseTransport::EndReceiveMessage2(size_t startpos, const boost::system::error_code& error,
                                                  size_t bytes_transferred, size_t message_size,
-                                                 boost::shared_array<uint8_t> buf)
+                                                 const boost::shared_array<uint8_t>& buf)
 {
     RR_UNUSED(buf);
     try
@@ -1077,7 +1077,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(const RR_INTRUSIVE_PTR<Message>
     try
     {
 
-        if (message->entries.size() > 0)
+        if (!message->entries.empty())
         {
             if (message->entries.at(0)->EntryType == MessageEntryType_ConnectionTest)
             {
@@ -1237,13 +1237,13 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
                     return;
                 }
 
-                char magic[4];
-                uint32_t size;
-                uint16_t message_version;
+                boost::array<char,4> magic;
+                uint32_t size = 0;
+                uint16_t message_version = 0;
 
                 uint8_t* recvbuf1 = recvbuf.get() + recvbuf_pos;
 
-                memcpy(magic, recvbuf1, 4);
+                memcpy(magic.data(), recvbuf1, 4);
                 memcpy(&size, recvbuf1 + 4, 4);
                 memcpy(&message_version, recvbuf1 + 8, 2);
 
@@ -1252,7 +1252,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
                 std::reverse((uint8_t*)&message_version, ((uint8_t*)&message_version) + 2);
 #endif
 
-                if (std::string(magic, 4) != "RRAC")
+                if (std::string(magic.data(), 4) != "RRAC")
                 {
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(),
                                                        "Received invalid magic expected {0x52,0x52,0x41,0x43} received "
@@ -1308,7 +1308,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
             size_t bufs_read = 0;
             mutable_buffers continue_bufs;
 
-            AsyncMessageReader::return_type ret;
+            AsyncMessageReader::return_type ret = AsyncMessageReader::ReadReturn_continue_buffers;
 
             if (async_recv_continue_buf_count == 0)
             {
@@ -1461,7 +1461,6 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
                 if (async_reader->MessageReady())
                 {
                     RR_INTRUSIVE_PTR<Message> m = async_reader->GetNextMessage();
-                    bool string_table = use_string_table4.load();
 
                     if (string_table4)
                     {
@@ -1947,7 +1946,7 @@ void ASIOStreamBaseTransport::BeginCheckStreamCapability(
 
         CheckStreamCapability_callback = callback;
 
-        CheckStreamCapability_timer.reset(
+        CheckStreamCapability_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(
             new boost::asio::deadline_timer(_io_context, boost::posix_time::milliseconds(10000)));
         RR_WEAK_PTR<ASIOStreamBaseTransport> t = RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this());
         RobotRaconteurNode::asio_async_wait(node, CheckStreamCapability_timer,
@@ -2076,7 +2075,7 @@ void ASIOStreamBaseTransport::CheckStreamCapability_MessageReceived(const RR_INT
             {
                 if (CheckStreamCapability_callback)
                 {
-                    int32_t cap_level =
+                    uint32_t cap_level =
                         RRArrayToScalar(m->entries.at(0)->FindElement("return")->CastData<RRArray<uint32_t> >());
                     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(),
                                                        "Received CheckStreamCapability \""
@@ -2226,7 +2225,7 @@ void ASIOStreamBaseTransport::BeginStreamOp(
 
         streamop_callback = callback;
 
-        streamop_timer.reset(new boost::asio::deadline_timer(_io_context, boost::posix_time::milliseconds(10000)));
+        streamop_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(new boost::asio::deadline_timer(_io_context, boost::posix_time::milliseconds(10000)));
         RR_WEAK_PTR<ASIOStreamBaseTransport> t = RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this());
         RobotRaconteurNode::asio_async_wait(
             node, streamop_timer,
@@ -2592,10 +2591,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(const RR
     const MessageStringPtr& command = response->MemberName;
     if (command == "GetRemoteNodeID")
     {
-        // std::cout << "Got node id" << std::endl;
-
-        NodeID* n = new NodeID(header->SenderNodeID);
-        RR_SHARED_PTR<NodeID> ret = RR_SHARED_PTR<NodeID>(n);
+        RR_SHARED_PTR<NodeID> ret = RR_MAKE_SHARED<NodeID>(header->SenderNodeID);
         return ret;
     }
     else if (command == "CreateConnection")
@@ -2617,7 +2613,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(const RR
         }
         else
         {
-            if (target_nodename != "")
+            if (!target_nodename.empty())
             {
                 if (header->SenderNodeName != target_nodename)
                 {

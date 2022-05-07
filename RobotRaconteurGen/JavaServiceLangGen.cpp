@@ -404,7 +404,7 @@ std::string JavaServiceLangGen::str_pack_delegate(const std::vector<RR_SHARED_PT
 
 // Code to pack and unpack message elements
 
-static std::string JavaServiceLangGen_VerifyArrayLength(TypeDefinition& t, std::string varname)
+static std::string JavaServiceLangGen_VerifyArrayLength(TypeDefinition& t, const std::string& varname)
 {
     std::string s = "";
     if (t.ContainerType != DataTypes_ContainerTypes_none)
@@ -1302,7 +1302,7 @@ void JavaServiceLangGen::GenerateAsyncInterface(ServiceEntryDefinition* e, ostre
     w2 << "}" << endl << endl;
 }
 
-void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::string defstring, ostream* w)
+void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std::string& defstring, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -2984,7 +2984,7 @@ void JavaServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, ostream*
     w2 << "}" << endl;
 }
 
-void JavaServiceLangGen::GenerateServiceFactoryFile(ServiceDefinition* d, std::string defstring, ostream* w)
+void JavaServiceLangGen::GenerateServiceFactoryFile(ServiceDefinition* d, const std::string& defstring, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -3476,7 +3476,7 @@ void JavaServiceLangGen::GenerateDefaultImplFile(ServiceEntryDefinition* d, ostr
     GenerateDefaultImpl(d, w);
 }
 
-void JavaServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, std::string path)
+void JavaServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef, const std::string& path)
 {
 #ifdef _WIN32
     const std::string os_pathsep("\\");

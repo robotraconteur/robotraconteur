@@ -128,7 +128,7 @@ void WallTimer::Start()
     last_time = start_time;
     actual_last_time = last_time;
 
-    timer.reset(new boost::asio::deadline_timer(n->GetThreadPool()->get_io_context()));
+    timer = RR_SHARED_PTR<boost::asio::deadline_timer>(new boost::asio::deadline_timer(n->GetThreadPool()->get_io_context()));
 
     timer->expires_at(last_time + period);
     if (!RobotRaconteurNode::asio_async_wait(

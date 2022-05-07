@@ -666,7 +666,7 @@ class Wire : public virtual WireBase
     friend class WireConnectionBase;
 
   public:
-    Wire(boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = verify; }
+    Wire(boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = RR_MOVE(verify); }
 
     virtual ~Wire() {}
 
@@ -1033,14 +1033,7 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
                boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
         : WireClientBase(name, stub, direction), Wire<T>(verify)
     {
-        if (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value)
-        {
-            rawelements = true;
-        }
-        else
-        {
-            rawelements = false;
-        }
+        rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
     }
 
     virtual ~WireClient() {}
@@ -1219,7 +1212,7 @@ class ROBOTRACONTEUR_CORE_API WireServerBase : public virtual WireBase
     RR_SHARED_PTR<ServiceSkel> GetSkel();
 
   protected:
-    virtual void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& data, TimeSpec time, uint32_t endpoint);
+    virtual void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, TimeSpec time, uint32_t endpoint);
 
     std::string m_MemberName;
     std::string service_path;
@@ -1259,14 +1252,8 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
                boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
         : WireServerBase(name, skel, direction), Wire<T>(verify)
     {
-        if (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value)
-        {
-            rawelements = true;
-        }
-        else
-        {
-            rawelements = false;
-        }
+        rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
+
     }
 
     virtual ~WireServer() {}
@@ -1493,7 +1480,7 @@ class ROBOTRACONTEUR_CORE_API WireBroadcasterBase : public RR_ENABLE_SHARED_FROM
 
     void InitBase(const RR_SHARED_PTR<WireBase>& wire);
 
-    void ConnectionClosedBase(RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> ep);
+    void ConnectionClosedBase(const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& ep);
 
     void ConnectionConnectedBase(const RR_SHARED_PTR<WireConnectionBase>& ep);
 
@@ -1502,7 +1489,7 @@ class ROBOTRACONTEUR_CORE_API WireBroadcasterBase : public RR_ENABLE_SHARED_FROM
     virtual void AttachWireServerEvents(const RR_SHARED_PTR<WireServerBase>& w);
 
     virtual void AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& w,
-                                            RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> cep);
+                                            const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& cep);
 
     RR_INTRUSIVE_PTR<RRValue> ClientPeekInValueBase();
 
@@ -1610,7 +1597,7 @@ class WireBroadcaster : public WireBroadcasterBase
     }
 
     virtual void AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& w,
-                                            RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> c)
+                                            const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& c)
     {
         RR_SHARED_PTR<WireConnection<T> > w_T = rr_cast<WireConnection<T> >(w);
         w_T->SetWireConnectionClosedCallback(

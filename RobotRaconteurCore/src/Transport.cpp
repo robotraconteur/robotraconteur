@@ -40,7 +40,7 @@ RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode()
 
 // template <class T>
 // void thread_null_deleter(T* a) {}
-boost::thread_specific_ptr<std::string> Transport::m_CurrentThreadTransportConnectionURL;
+boost::thread_specific_ptr<std::string> Transport::m_CurrentThreadTransportConnectionURL; // NOLINT
 
 std::string Transport::GetCurrentTransportConnectionURL()
 {
@@ -49,14 +49,14 @@ std::string Transport::GetCurrentTransportConnectionURL()
     return std::string(*m_CurrentThreadTransportConnectionURL);
 }
 
-boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > Transport::m_CurrentThreadTransport;
+boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > Transport::m_CurrentThreadTransport; // NOLINT
 
 RR_SHARED_PTR<ITransportConnection> Transport::GetCurrentThreadTransport()
 {
 
     if (!m_CurrentThreadTransport.get())
         throw InvalidOperationException("Not set");
-    return *m_CurrentThreadTransport.get();
+    return *m_CurrentThreadTransport;
 }
 
 void Transport::PeriodicCleanupTask() {}
@@ -71,7 +71,7 @@ void Transport::FireTransportEventListener(const RR_SHARED_PTR<Transport>& share
 
 RR_INTRUSIVE_PTR<Message> Transport::SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m, const RR_SHARED_PTR<ITransportConnection>& tc)
 {
-    if (m->entries.size() >= 1)
+    if (!m->entries.empty())
     {
         uint32_t type = (static_cast<uint32_t>(m->entries[0]->EntryType));
         if (type < 500 && (type % 2 == 1))
@@ -124,7 +124,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
         throw ConnectionException("Invalid Connection URL");
 
     o.scheme = url_result[1];
-    if (o.scheme == "")
+    if (o.scheme.empty())
         throw ConnectionException("Invalid Connection URL");
 
     if (o.scheme == "tcp")
@@ -133,7 +133,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
             throw ConnectionException("Invalid Connection URL");
 
         o.host = url_result[2];
-        if (o.host == "")
+        if (o.host.empty())
             throw ConnectionException("Invalid Connection URL");
 
         std::string ap = url_result[4];
@@ -146,7 +146,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
         if (s.size() < 2)
             throw ConnectionException("Invalid Connection URL");
         std::string noden = s.at(0);
-        if (noden.find("{") != std::string::npos || noden.find("[") != std::string::npos)
+        if (noden.find('{') != std::string::npos || noden.find('[') != std::string::npos)
         {
             o.nodeid = NodeID(noden);
         }
@@ -176,7 +176,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
 
     o.host = url_result[2];
     std::string port_str = url_result[3];
-    if (port_str == "")
+    if (port_str.empty())
     {
         o.port = -1;
 

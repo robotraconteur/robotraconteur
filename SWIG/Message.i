@@ -121,7 +121,7 @@ public:
 	std::vector<uint8_t> Extended;
 	uint32_t DataCount;
 	MessageElement();
-	//MessageElement(std::string name, const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& datin);
+	//MessageElement(const std::string& name, const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& datin);
 
 
 	RR_MAKE_METHOD_PRIVATE(GetData);

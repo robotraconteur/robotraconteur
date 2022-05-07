@@ -30,7 +30,7 @@ template <>
 void ca<cfloat>(const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v1,const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v2);
 
 template <class T>
-void ca(std::vector<T> v1, std::vector<T> v2)
+void ca(const std::vector<T>& v1, const std::vector<T>& v2)
 {
     if (v1.size() != v2.size())
         throw std::exception();

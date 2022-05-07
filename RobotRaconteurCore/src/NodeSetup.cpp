@@ -245,7 +245,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
                                                    "Invalid tcp-ws-add-origin specified: " << ws_add_origin);
             }
 
-            BOOST_FOREACH (std::string ws_origin, ws_add_origin_split)
+            BOOST_FOREACH (const std::string& ws_origin, ws_add_origin_split)
             {
                 try
                 {
@@ -273,7 +273,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
                                                    "Invalid tcp-ws-remove-origin specified: " << ws_remove_origin);
             }
 
-            BOOST_FOREACH (std::string ws_origin, ws_remove_origin_split)
+            BOOST_FOREACH (const std::string& ws_origin, ws_remove_origin_split)
             {
                 try
                 {

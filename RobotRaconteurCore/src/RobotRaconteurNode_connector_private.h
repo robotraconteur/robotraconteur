@@ -55,7 +55,7 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
 
         endpoint_cleanup(const RR_SHARED_PTR<ClientContext>& ep, const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
-        virtual ~endpoint_cleanup();
+        virtual ~endpoint_cleanup(); // NOLINT(bugprone-exception-escape)
 
         void release();
     };
@@ -66,16 +66,16 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
   protected:
     void handle_error(const int32_t& key, const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    void connected_client(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err, std::string url,
+    void connected_client(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
                           const RR_SHARED_PTR<endpoint_cleanup>& ep, int32_t key);
 
     void connected_transport(const RR_SHARED_PTR<Transport>& transport, const RR_SHARED_PTR<ITransportConnection>& connection,
-                             const RR_SHARED_PTR<RobotRaconteurException>& err, std::string url,
+                             const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
                              const RR_SHARED_PTR<endpoint_cleanup>& ep, int32_t key);
 
     void connect_timer_callback(const boost::system::error_code& ec);
 
-    void connect2(RR_SHARED_PTR<std::vector<std::string> > urls, int32_t main_key, const boost::system::error_code& ec);
+    void connect2(const RR_SHARED_PTR<std::vector<std::string> >& urls, int32_t main_key, const boost::system::error_code& ec);
 
     void start_connect_timer();
 

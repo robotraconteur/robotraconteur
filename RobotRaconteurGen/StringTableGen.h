@@ -26,8 +26,8 @@ using namespace RobotRaconteur;
 
 namespace RobotRaconteurGen
 {
-std::set<std::string> GenerateStringTable(std::vector<RR_SHARED_PTR<ServiceDefinition> > gen_defs,
-                                          std::vector<RR_SHARED_PTR<ServiceDefinition> > all_defs);
+std::set<std::string> GenerateStringTable(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& gen_defs,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& all_defs);
 
 std::set<std::string> GetServiceDefStrings(const RR_SHARED_PTR<ServiceDefinition>& def);
 

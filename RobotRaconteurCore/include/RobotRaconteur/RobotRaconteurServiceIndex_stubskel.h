@@ -68,6 +68,7 @@ class ServiceInfo_stub : public virtual RobotRaconteur::StructureStub
 class async_ServiceIndex
 {
   public:
+    virtual ~async_ServiceIndex() {}
     virtual void async_GetLocalNodeServices(
         boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, ServiceInfo> >&,
                              const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>

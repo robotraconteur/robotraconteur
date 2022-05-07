@@ -173,20 +173,22 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     class AsyncAttachStream_args : public RRObject
     {
       public:
-        NodeID nodeid;
+        RobotRaconteur::NodeID nodeid;
         std::string nodename;
 
-        AsyncAttachStream_args(const NodeID& nodeid_, boost::string_ref nodename_) : nodeid(nodeid_),
+        // NOLINTBEGIN(bugprone-throw-keyword-missing)
+        AsyncAttachStream_args(const RobotRaconteur::NodeID& nodeid_, boost::string_ref nodename_) : nodeid(nodeid_),
             nodename(RR_MOVE(nodename_.to_string()))
         {
             
         }
+        // NOLINTEND(bugprone-throw-keyword-missing)
 
         virtual std::string RRType() { return "RobotRaconteur::ASIOStreamBaseTransport::AsyncAttachStream_args"; }
     };
 
     virtual void AsyncAttachStream(bool server, const NodeID& target_nodeid, boost::string_ref target_nodename,
-                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                   const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   public:
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
@@ -200,7 +202,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     void SimpleAsyncEndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     virtual void AsyncAttachStream1(const RR_SHARED_PTR<RRObject>& parameter, const RR_SHARED_PTR<RobotRaconteurException>& err,
-                                    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void BeginSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
@@ -210,7 +212,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     virtual void EndSendMessage(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred,
                                 const RR_INTRUSIVE_PTR<Message>& m, size_t m_len,
                                 boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback,
-                                boost::shared_array<uint8_t> buf);
+                                const boost::shared_array<uint8_t>& buf);
     virtual void EndSendMessage1();
 
     virtual void EndSendMessage2(const boost::system::error_code& error, size_t bytes_transferred,
@@ -220,7 +222,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     virtual void AsyncResumeSend();
 
     // virtual void EndReceiveMessage(const boost::system::error_code& error,
-    // size_t bytes_transferred,  boost::shared_array<uint8_t> buf);
+    // size_t bytes_transferred,  const boost::shared_array<uint8_t>& buf);
 
     // virtual void EndReceiveMessage2(const RR_SHARED_PTR<RobotRaconteur::Message>& message);
 
@@ -229,7 +231,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     virtual void EndReceiveMessage1(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred);
 
     virtual void EndReceiveMessage2(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred,
-                                    size_t message_len, boost::shared_array<uint8_t> buf);
+                                    size_t message_size, const boost::shared_array<uint8_t>& buf);
 
     virtual void EndReceiveMessage3(const RR_INTRUSIVE_PTR<Message>& message);
     virtual void EndReceiveMessage4();
@@ -294,11 +296,11 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
 
     virtual void async_write_some(
         const_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) = 0;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) = 0;
 
     virtual void async_read_some(
         mutable_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) = 0;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) = 0;
 
     virtual size_t available() = 0;
 
@@ -311,7 +313,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     virtual bool GetDisableStringTable();
     virtual void SetDisableStringTable(bool d);
 
-    virtual bool CheckCapabilityActive(uint32_t flag);
+    virtual bool CheckCapabilityActive(uint32_t cap);
 };
 
 } // namespace detail

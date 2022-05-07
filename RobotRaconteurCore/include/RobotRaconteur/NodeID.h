@@ -182,7 +182,7 @@ class ROBOTRACONTEUR_CORE_API NodeID : virtual public RRObject
     virtual std::string RRType() { return "RobotRaconteur::NodeID"; }
 
   private:
-    void init_from_string(const boost::string_ref& str);
+    void init_from_string(const boost::string_ref& id);
 };
 
 size_t hash(const NodeID& nodeid);

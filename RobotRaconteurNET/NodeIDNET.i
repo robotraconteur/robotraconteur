@@ -65,7 +65,7 @@ public:
 
 	
 	//NodeID(std::boost<uint8_t,16> id);
-	NodeID(std::string id);
+	NodeID(const std::string& id);
 
 	
 	

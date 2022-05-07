@@ -109,7 +109,7 @@ class MexEventConnection
     int32_t eventconnectionid;
     RR_SHARED_PTR<mxArray> functionhandle;
 
-    MexEventConnection(std::string membername, int32_t eventconnectionid, const RR_SHARED_PTR<mxArray>& functionhandle)
+    MexEventConnection(const std::string& membername, int32_t eventconnectionid, const RR_SHARED_PTR<mxArray>& functionhandle)
     {
         this->membername = membername;
         this->eventconnectionid = eventconnectionid;
@@ -159,15 +159,15 @@ class MexServiceStub : public virtual RobotRaconteur::ServiceStub
     MexServiceStub(boost::string_ref path, const RR_SHARED_PTR<ServiceEntryDefinition>& type,
                    const RR_SHARED_PTR<RobotRaconteur::ClientContext>& c);
 
-    virtual mxArray* PropertyGet(std::string PropertyName);
-    virtual void PropertySet(std::string PropertyName, const mxArray* value);
-    virtual mxArray* FunctionCall(std::string FunctionName, std::vector<const mxArray*> args);
+    virtual mxArray* PropertyGet(const std::string& PropertyName);
+    virtual void PropertySet(const std::string& PropertyName, const mxArray* value);
+    virtual mxArray* FunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args);
 
-    virtual void AsyncPropertyGet(std::string PropertyName, const RR_SHARED_PTR<mxArray>& handler,
+    virtual void AsyncPropertyGet(const std::string& PropertyName, const RR_SHARED_PTR<mxArray>& handler,
                                   const RR_SHARED_PTR<mxArray>& param, uint32_t timeout);
-    virtual void AsyncPropertySet(std::string PropertyName, const mxArray* value, const RR_SHARED_PTR<mxArray>& handler,
+    virtual void AsyncPropertySet(const std::string& PropertyName, const mxArray* value, const RR_SHARED_PTR<mxArray>& handler,
                                   const RR_SHARED_PTR<mxArray>& param, uint32_t timeout);
-    virtual void AsyncFunctionCall(std::string FunctionName, std::vector<const mxArray*> args,
+    virtual void AsyncFunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args,
                                    const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram, uint32_t timeout);
 
     virtual void EndAsyncPropertyGet(const RR_INTRUSIVE_PTR<MessageEntry>&,
@@ -187,10 +187,10 @@ class MexServiceStub : public virtual RobotRaconteur::ServiceStub
     virtual void DispatchPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m);
     virtual void DispatchWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m);
     /*virtual RR_INTRUSIVE_PTR<MessageEntry> CallbackCall(const RR_INTRUSIVE_PTR<MessageEntry>& m);
-    virtual RR_SHARED_PTR<RobotRaconteur::MexPipeClient> GetPipe(std::string membername);
-    virtual RR_SHARED_PTR<RobotRaconteur::MexWireClient> GetWire(std::string membername);
-    virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemoryBase> GetArrayMemory(std::string membername);
-    virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemoryBase> GetMultiDimArrayMemory(std::string membername);*/
+    virtual RR_SHARED_PTR<RobotRaconteur::MexPipeClient> GetPipe(const std::string& membername);
+    virtual RR_SHARED_PTR<RobotRaconteur::MexWireClient> GetWire(const std::string& membername);
+    virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemoryBase> GetArrayMemory(const std::string& membername);
+    virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemoryBase> GetMultiDimArrayMemory(const std::string& membername);*/
     virtual void RRClose();
     virtual void RRInitStub();
 
@@ -282,7 +282,7 @@ class MexPipeClient : public virtual PipeClientBase
     // virtual boost::function<void(const RR_SHARED_PTR<MexPipeEndpoint>&)> GetPipeConnectCallback();
     // virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<MexPipeEndpoint>&)> function);
     virtual RR_SHARED_PTR<MexPipeEndpoint> Connect(int32_t index);
-    MexPipeClient(std::string name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
+    MexPipeClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
                   bool unreliable, MemberDefinition_Direction direction);
 
     RR_SHARED_PTR<TypeDefinition> Type;
@@ -323,7 +323,7 @@ class MexWireClient : public virtual WireClientBase
 {
   public:
     virtual RR_SHARED_PTR<MexWireConnection> Connect();
-    MexWireClient(std::string name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
+    MexWireClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
                   MemberDefinition_Direction direction);
 
     RR_SHARED_PTR<TypeDefinition> Type;
@@ -405,7 +405,7 @@ class MexServiceSkel : public ServiceSkel
 
     virtual void RegisterEvents(const RR_SHARED_PTR<RRObject>& obj1);
 
-    virtual void DispatchMexEvent(std::string name, const mxArray* parameters);
+    virtual void DispatchMexEvent(const std::string& name, const mxArray* parameters);
 
     virtual void ReleaseCastObject() {}
 

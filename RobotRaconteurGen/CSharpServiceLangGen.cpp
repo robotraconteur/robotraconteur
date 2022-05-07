@@ -322,7 +322,7 @@ std::string CSharpServiceLangGen::str_pack_delegate(const std::vector<RR_SHARED_
 
 // Code to pack and unpack message elements
 
-static std::string CSharpServiceLangGen_VerifyArrayLength(TypeDefinition& t, std::string varname)
+static std::string CSharpServiceLangGen_VerifyArrayLength(TypeDefinition& t,const std::string& varname)
 {
     if (t.ArrayType == DataTypes_ArrayTypes_array && t.ArrayLength.at(0) != 0)
     {
@@ -1011,7 +1011,7 @@ void CSharpServiceLangGen::GenerateInterfaceFile(ServiceDefinition* d, ostream* 
     w2 << "}" << endl;
 }
 
-void CSharpServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d, std::string defstring, ostream* w, bool header)
+void CSharpServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d, const std::string& defstring, ostream* w, bool header)
 {
     ostream& w2 = *w;
 
@@ -1076,7 +1076,7 @@ void CSharpServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d, std::strin
     w2 << "}" << endl;
 }
 
-void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::string defstring, ostream* w)
+void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std::string& defstring, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -2957,7 +2957,7 @@ void CSharpServiceLangGen::GenerateConstants(ServiceDefinition* d, ostream* w)
     }
 }
 
-void CSharpServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, std::string path)
+void CSharpServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef, const std::string& path)
 {
 #ifdef _WIN32
     const std::string os_pathsep("\\");
@@ -2987,7 +2987,7 @@ void CSharpServiceLangGen::GenerateOneFileHeader(ostream* w)
     w2 << "#pragma warning disable 0108" << endl << endl;
 }
 
-void CSharpServiceLangGen::GenerateOneFilePart(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, ostream* w)
+void CSharpServiceLangGen::GenerateOneFilePart(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef, ostream* w)
 {
     GenerateInterfaceFile(d.get(), w, false);
     GenerateStubSkelFile(d.get(), servicedef, w, false);

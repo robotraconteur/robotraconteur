@@ -328,7 +328,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ServiceInfo2Subscription::GetNode()
     return n;
 }
 
-ServiceInfo2Subscription::ServiceInfo2Subscription(RR_SHARED_PTR<detail::Discovery> parent)
+ServiceInfo2Subscription::ServiceInfo2Subscription(const RR_SHARED_PTR<detail::Discovery>& parent)
 {
     this->parent = parent;
     RR_SHARED_PTR<RobotRaconteurNode> n = parent->GetNode();
@@ -733,7 +733,7 @@ void ServiceSubscription::ReleaseClient(const RR_SHARED_PTR<RRObject>& client)
     }
 }
 
-ServiceSubscription::ServiceSubscription(RR_SHARED_PTR<detail::Discovery> parent)
+ServiceSubscription::ServiceSubscription(const RR_SHARED_PTR<detail::Discovery>& parent)
 {
     this->parent = parent;
     RR_SHARED_PTR<RobotRaconteurNode> n = parent->GetNode();
@@ -741,7 +741,7 @@ ServiceSubscription::ServiceSubscription(RR_SHARED_PTR<detail::Discovery> parent
 
     this->node = n;
 
-    listener_strand.reset(RR_BOOST_ASIO_NEW_STRAND(n->GetThreadPool()->get_io_context()));
+    listener_strand = RR_SHARED_PTR<RR_BOOST_ASIO_STRAND>(RR_BOOST_ASIO_NEW_STRAND(n->GetThreadPool()->get_io_context()));
 
     use_service_url = false;
 }
@@ -824,7 +824,7 @@ void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, bo
                                objecttype,
                                boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, url),
-                               n->GetRequestTimeout() * 2);
+                               boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
         clients.insert(std::make_pair(ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c2));
         return;
     }
@@ -916,7 +916,7 @@ void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorag
                                        client_service_type,
                                        boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                                    RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, urls),
-                                       n->GetRequestTimeout() * 2);
+                                       boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
                 clients.insert(std::make_pair(ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c2));
                 continue;
             }
@@ -969,7 +969,7 @@ void ServiceSubscription::NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> 
 }
 
 void ServiceSubscription::ClientConnected(const RR_SHARED_PTR<RRObject>& c, const RR_SHARED_PTR<RobotRaconteurException>& err,
-                                          RR_SHARED_PTR<detail::ServiceSubscription_client> c2,
+                                          const RR_SHARED_PTR<detail::ServiceSubscription_client>& c2,
                                           const std::vector<std::string>& url)
 {
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
@@ -1041,7 +1041,7 @@ void ServiceSubscription::ClientConnected(const RR_SHARED_PTR<RRObject>& c, cons
     }
 }
 
-void ServiceSubscription::ConnectRetry(RR_SHARED_PTR<detail::ServiceSubscription_client> c2)
+void ServiceSubscription::ConnectRetry(const RR_SHARED_PTR<detail::ServiceSubscription_client>& c2)
 {
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
     if (!n)
@@ -1075,7 +1075,7 @@ void ServiceSubscription::ConnectRetry(RR_SHARED_PTR<detail::ServiceSubscription
     t->Start(c2, retry_delay);
 }
 
-void ServiceSubscription::ConnectRetry2(RR_SHARED_PTR<detail::ServiceSubscription_client> c2)
+void ServiceSubscription::ConnectRetry2(const RR_SHARED_PTR<detail::ServiceSubscription_client>& c2)
 {
     boost::mutex::scoped_lock lock(this_lock);
 
@@ -1110,7 +1110,7 @@ void ServiceSubscription::ConnectRetry2(RR_SHARED_PTR<detail::ServiceSubscriptio
                                c2->service_type,
                                boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, c2->urls),
-                               n->GetRequestTimeout() * 2);
+                               boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
         return;
     }
     catch (std::exception& exp)
@@ -1267,7 +1267,7 @@ void ServiceSubscription::SubscribeWire1(const RR_SHARED_PTR<WireSubscriptionBas
     }
     wire_subscriptions.insert(s);
 
-    BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client> client, clients | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::ServiceSubscription_client>& client, clients | boost::adaptors::map_values)
     {
         RR_SHARED_PTR<RRObject> client1 = client->client.lock();
         if (client1)
@@ -1304,7 +1304,7 @@ void ServiceSubscription::SubscribePipe1(const RR_SHARED_PTR<PipeSubscriptionBas
     }
     pipe_subscriptions.insert(s);
 
-    BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client> client, clients | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::ServiceSubscription_client>& client, clients | boost::adaptors::map_values)
     {
         RR_SHARED_PTR<RRObject> client1 = client->client.lock();
         if (client1)
@@ -1328,7 +1328,7 @@ bool ServiceSubscription::TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& clien
 {
     boost::mutex::scoped_lock lock(this_lock);
 
-    BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client> c, clients | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::ServiceSubscription_client>& c, clients | boost::adaptors::map_values)
     {
         RR_SHARED_PTR<RRObject> c1 = c->client.lock();
         if (c1)
@@ -1658,7 +1658,7 @@ void WireSubscriptionBase::SetIgnoreInValue(bool ignore)
     boost::mutex::scoped_lock lock(this_lock);
     ignore_in_value.data() = ignore;
 
-    BOOST_FOREACH (RR_SHARED_PTR<detail::WireSubscription_connection> c, connections | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::WireSubscription_connection>& c, connections | boost::adaptors::map_values)
     {
         RR_SHARED_PTR<WireConnectionBase> c1 = c->connection.lock();
         if (c1)
@@ -1699,7 +1699,7 @@ void WireSubscriptionBase::SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& v
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername,
                                             "Setting out value to all connected wires");
     boost::mutex::scoped_lock lock(this_lock);
-    BOOST_FOREACH (RR_SHARED_PTR<detail::WireSubscription_connection> c, connections | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::WireSubscription_connection>& c, connections | boost::adaptors::map_values)
     {
         RR_SHARED_PTR<WireConnectionBase> c1 = c->connection.lock();
         if (c1)
@@ -1735,7 +1735,7 @@ void WireSubscriptionBase::Close()
         connections.swap(connections1);
     }
 
-    BOOST_FOREACH (RR_SHARED_PTR<detail::WireSubscription_connection> connection,
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::WireSubscription_connection>& connection,
                    connections1 | boost::adaptors::map_values)
     {
         try
@@ -1856,12 +1856,12 @@ void WireSubscriptionBase::ClientDisconnected(const ServiceSubscriptionClientID&
     c->Close();
 }
 
-void WireSubscriptionBase::WireConnectionClosed(RR_SHARED_PTR<detail::WireSubscription_connection> wire)
+void WireSubscriptionBase::WireConnectionClosed(const RR_SHARED_PTR<detail::WireSubscription_connection>& wire)
 {
     // boost::mutex::scoped_lock lock(this_lock);
     // connections.erase(wire);
 }
-void WireSubscriptionBase::WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire,
+void WireSubscriptionBase::WireValueChanged(const RR_SHARED_PTR<detail::WireSubscription_connection>& wire,
                                            const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time)
 {
     RR_SHARED_PTR<WireConnectionBase> connection = wire->connection.lock();
@@ -1927,7 +1927,7 @@ void WireSubscription_connection::Init(const RR_SHARED_PTR<WireSubscriptionBase>
         MemberSubscriptionBase_GetClientStub(
             node, client, parent->servicepath,
             boost::bind(&WireSubscription_connection::ClientConnected1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
-            n->GetRequestTimeout());
+            boost::numeric_cast<int32_t>(n->GetRequestTimeout()));
     }
     catch (std::exception& exp)
     {
@@ -1961,7 +1961,7 @@ void WireSubscription_connection::ClientConnected1(const RR_SHARED_PTR<ServiceSt
         wire_client->AsyncConnect_internal(boost::bind(&WireSubscription_connection::ClientConnected2,
                                                        shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                                                        RR_BOOST_PLACEHOLDERS(_2)),
-                                           n->GetRequestTimeout());
+                                           boost::numeric_cast<int32_t>(n->GetRequestTimeout()));
     }
     catch (std::exception& exp)
     {
@@ -2002,7 +2002,7 @@ void WireSubscription_connection::ClientConnected2(const RR_SHARED_PTR<WireConne
             {
                 connection->AsyncClose(&WireSubscriptionBase_emptyhandler, 5000);
             }
-            catch (std::exception())
+            catch (std::exception&)
             {}
             return;
         }
@@ -2103,7 +2103,7 @@ void WireSubscription_connection::RetryConnect1(const TimerEvent& ev)
         MemberSubscriptionBase_GetClientStub(
             node, c, p->servicepath,
             boost::bind(&WireSubscription_connection::ClientConnected1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
-            n->GetRequestTimeout());
+            boost::numeric_cast<int32_t>(n->GetRequestTimeout()));
     }
     catch (std::exception& exp)
     {
@@ -2270,7 +2270,7 @@ void PipeSubscriptionBase::SetIgnoreReceived(bool ignore)
     boost::mutex::scoped_lock lock(this_lock);
     ignore_incoming_packets.data() = ignore;
 
-    BOOST_FOREACH (RR_SHARED_PTR<detail::PipeSubscription_connection> c, connections | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::PipeSubscription_connection>& c, connections | boost::adaptors::map_values)
     {
         RR_SHARED_PTR<PipeEndpointBase> c1 = c->connection.lock();
         if (c1)
@@ -2300,7 +2300,7 @@ void PipeSubscriptionBase::AsyncSendPacketAllBase(const RR_INTRUSIVE_PTR<RRValue
                                             "Sending packet to all connected pipe endpoints");
 
     boost::mutex::scoped_lock lock(this_lock);
-    BOOST_FOREACH (RR_SHARED_PTR<detail::PipeSubscription_connection> c, connections | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::PipeSubscription_connection>& c, connections | boost::adaptors::map_values)
     {
         try
         {
@@ -2335,7 +2335,7 @@ void PipeSubscriptionBase::Close()
         connections.swap(connections1);
     }
 
-    BOOST_FOREACH (RR_SHARED_PTR<detail::PipeSubscription_connection> connection,
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::PipeSubscription_connection>& connection,
                    connections1 | boost::adaptors::map_values)
     {
         RR_SHARED_PTR<PipeEndpointBase> pipe = connection->connection.lock();
@@ -2414,8 +2414,8 @@ void PipeSubscriptionBase::ClientDisconnected(const ServiceSubscriptionClientID&
     c->Close();
 }
 
-void PipeSubscriptionBase::PipeEndpointClosed(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe) {}
-void PipeSubscriptionBase::PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe,
+void PipeSubscriptionBase::PipeEndpointClosed(const RR_SHARED_PTR<detail::PipeSubscription_connection>& pipe) {}
+void PipeSubscriptionBase::PipeEndpointPacketReceived(const RR_SHARED_PTR<detail::PipeSubscription_connection>& pipe,
                                                      const RR_INTRUSIVE_PTR<RRValue>& value)
 {
     // RR_SHARED_PTR<RRObject> client = wire->client.lock();
@@ -2474,7 +2474,7 @@ void PipeSubscription_connection::Init(const RR_SHARED_PTR<PipeSubscriptionBase>
         MemberSubscriptionBase_GetClientStub(
             node, client, parent->servicepath,
             boost::bind(&PipeSubscription_connection::ClientConnected1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
-            n->GetRequestTimeout());
+            boost::numeric_cast<int32_t>(n->GetRequestTimeout()));
     }
     catch (std::exception& exp)
     {
@@ -2508,7 +2508,7 @@ void PipeSubscription_connection::ClientConnected1(const RR_SHARED_PTR<ServiceSt
                                            boost::bind(&PipeSubscription_connection::ClientConnected2,
                                                        shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                                                        RR_BOOST_PLACEHOLDERS(_2)),
-                                           n->GetRequestTimeout());
+                                           boost::numeric_cast<int32_t>(n->GetRequestTimeout()));
     }
     catch (std::exception& exp)
     {
@@ -2548,7 +2548,7 @@ void PipeSubscription_connection::ClientConnected2(const RR_SHARED_PTR<PipeEndpo
             {
                 connection->AsyncClose(&PipeSubscriptionBase_emptyhandler, 5000);
             }
-            catch (std::exception())
+            catch (std::exception&)
             {}
             return;
         }
@@ -2564,9 +2564,9 @@ void PipeSubscription_connection::ClientConnected2(const RR_SHARED_PTR<PipeEndpo
         "ServiceSubscription client connect pipe connection completed successfully");
 }
 
-void PipeSubscription_connection::PipeEndpointClosed(const RR_SHARED_PTR<PipeEndpointBase>& connection)
+void PipeSubscription_connection::PipeEndpointClosed(const RR_SHARED_PTR<PipeEndpointBase>& endpoint)
 {
-    RR_UNUSED(connection);
+    RR_UNUSED(endpoint);
     RR_SHARED_PTR<PipeSubscriptionBase> p = parent.lock();
     if (!p)
         return;
@@ -2580,9 +2580,9 @@ void PipeSubscription_connection::PipeEndpointClosed(const RR_SHARED_PTR<PipeEnd
 }
 
 void PipeSubscription_connection::PipePacketReceived(
-    const RR_SHARED_PTR<PipeEndpointBase>& connection, boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func)
+    const RR_SHARED_PTR<PipeEndpointBase>& endpoint, boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func)
 {
-    RR_UNUSED(connection);
+    RR_UNUSED(endpoint);
     RR_SHARED_PTR<PipeSubscriptionBase> p = parent.lock();
     if (!p)
         return;
@@ -2626,12 +2626,8 @@ bool PipeSubscription_connection::DoSendPacket()
 
     int32_t maximum_backlog = p->max_send_backlog;
 
-    if (maximum_backlog > -1 && (boost::numeric_cast<int32_t>(backlog.size()) +
-                                 boost::numeric_cast<int32_t>(active_sends.size())) > maximum_backlog)
-    {
-        return false;
-    }
-    return true;
+    return !(maximum_backlog > -1 && (boost::numeric_cast<int32_t>(backlog.size()) +
+                                 boost::numeric_cast<int32_t>(active_sends.size())) > maximum_backlog);
 }
 
 void PipeSubscription_connection::AsyncSendPacket(const RR_INTRUSIVE_PTR<RRValue>& packet)
@@ -2731,7 +2727,7 @@ void PipeSubscription_connection::RetryConnect1(const TimerEvent& ev)
         MemberSubscriptionBase_GetClientStub(
             node, c, p->servicepath,
             boost::bind(&PipeSubscription_connection::ClientConnected1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
-            n->GetRequestTimeout());
+            boost::numeric_cast<int32_t>(n->GetRequestTimeout()));
     }
     catch (std::exception& exp)
     {

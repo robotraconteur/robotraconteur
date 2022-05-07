@@ -36,7 +36,7 @@ namespace RobotRaconteur
 namespace detail
 {
 template <typename Y, typename U>
-static std::vector<Y> ConvertVectorType(std::vector<U> in)
+static std::vector<Y> ConvertVectorType(const std::vector<U>& in)
 {
     std::vector<Y> out(in.size());
     for (size_t i = 0; i < in.size(); i++)

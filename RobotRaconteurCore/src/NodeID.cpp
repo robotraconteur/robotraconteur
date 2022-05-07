@@ -38,8 +38,8 @@ NodeID::NodeID() { id = boost::uuids::nil_uuid(); }
 
 NodeID::NodeID(boost::array<uint8_t, 16> id)
 {
-    if (id.size() != 16)
-        throw InvalidArgumentException("Invalid NodeID");
+    //if (id.size() != 16)
+    //    throw InvalidArgumentException("Invalid NodeID");
     std::copy(id.begin(), id.end(), this->id.begin());
 }
 
@@ -54,7 +54,7 @@ NodeID::NodeID(boost::string_ref id) { init_from_string(id); }
 
 void NodeID::init_from_string(const boost::string_ref& id)
 {
-    if (id.find(":") != id.npos)
+    if (id.find(":") != boost::string_ref::npos)
     {
         throw InvalidArgumentException("Old style node-ids are no longer supported as of Robot Raconteur version 0.5.  "
                                        "Please use UUID node-id format");
@@ -72,7 +72,6 @@ void NodeID::init_from_string(const boost::string_ref& id)
             "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?");
         if (!boost::regex_match(id.begin(), id.end(), what, r))
             throw InvalidArgumentException("Invalid NodeID");
-        size_t len = what.size();
         if (what.size() != 6)
             throw InvalidArgumentException("Invalid NodeID");
         std::string id2 = what[1] + what[2] + what[3] + what[4] + what[5];
@@ -86,7 +85,7 @@ void NodeID::init_from_string(const boost::string_ref& id)
             std::string id3 = id2.substr(i * 2, 2);
             std::stringstream ss;
             ss << std::hex << id3;
-            uint32_t id4;
+            uint32_t id4 = 0;
             ss >> id4;
             if (ss.fail() || !ss.eof())
             {

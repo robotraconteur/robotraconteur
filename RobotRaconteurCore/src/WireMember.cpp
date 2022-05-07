@@ -83,7 +83,7 @@ void WireConnectionBase::Close()
 
     RR_SHARED_PTR<detail::sync_async_handler<void> > t = RR_MAKE_SHARED<detail::sync_async_handler<void> >();
     AsyncClose(boost::bind(&detail::sync_async_handler<void>::operator(), t, RR_BOOST_PLACEHOLDERS(_1)),
-               GetNode()->GetRequestTimeout());
+               boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     t->end_void();
 }
 
@@ -1047,7 +1047,7 @@ void WireServerBase::SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, Tim
     GetSkel()->SendWireMessage(m, e);
 }
 
-void WireServerBase::AsyncClose(const RR_SHARED_PTR<WireConnectionBase>& c, bool remote, uint32_t ee,
+void WireServerBase::AsyncClose(const RR_SHARED_PTR<WireConnectionBase>& endpoint, bool remote, uint32_t ee,
                                 RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
                                 int32_t timeout)
 {
@@ -1065,8 +1065,8 @@ void WireServerBase::AsyncClose(const RR_SHARED_PTR<WireConnectionBase>& c, bool
 
         {
             boost::mutex::scoped_lock lock(connections_lock);
-            if (connections.find(c->GetEndpoint()) != connections.end())
-                connections.erase(c->GetEndpoint());
+            if (connections.find(endpoint->GetEndpoint()) != connections.end())
+                connections.erase(endpoint->GetEndpoint());
         }
     }
     catch (std::exception&)
@@ -1293,7 +1293,7 @@ void WireBroadcasterBase::ServiceEvent(ServerServiceListenerEventType evt)
     predicate.clear();
 }
 
-void WireBroadcasterBase::ConnectionClosedBase(RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> ep)
+void WireBroadcasterBase::ConnectionClosedBase(const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& ep)
 {
     boost::mutex::scoped_lock lock(connected_wires_lock);
     uint32_t endpoint = 0;
@@ -1410,10 +1410,10 @@ size_t WireBroadcasterBase::GetActiveWireConnectionCount()
     return connected_wires.size();
 }
 
-void WireBroadcasterBase::AttachWireServerEvents(const RR_SHARED_PTR<WireServerBase>& p) {}
+void WireBroadcasterBase::AttachWireServerEvents(const RR_SHARED_PTR<WireServerBase>& w) {}
 
-void WireBroadcasterBase::AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& p,
-                                                     RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> cep)
+void WireBroadcasterBase::AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& w,
+                                                     const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& cep)
 {}
 
 boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> WireBroadcasterBase::GetPredicate()

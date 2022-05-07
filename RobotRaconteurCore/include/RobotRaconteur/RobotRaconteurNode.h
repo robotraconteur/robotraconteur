@@ -1501,7 +1501,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param node
      * @param services
      */
-    void FireNodeDetected(const RR_SHARED_PTR<NodeDiscoveryInfo>& node, RR_SHARED_PTR<std::vector<ServiceInfo2> > services);
+    void FireNodeDetected(const RR_SHARED_PTR<NodeDiscoveryInfo>& node, const RR_SHARED_PTR<std::vector<ServiceInfo2> >& services);
 
     /**
      * @internal
@@ -2580,7 +2580,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename F>
-    static bool asio_async_wait(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, BOOST_ASIO_MOVE_ARG(F) f)
+    static bool asio_async_wait(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
         if (!node1)
@@ -2603,7 +2603,6 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
         return true;
     }
 
-  public:
     /**
      * @internal
      *
@@ -2622,7 +2621,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename B, typename F>
-    static bool asio_async_read_some(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, B& b,
+    static bool asio_async_read_some(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, B& b,
                                      BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -2661,7 +2660,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename B, typename F>
-    static bool asio_async_write_some(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, B& b,
+    static bool asio_async_write_some(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, B& b,
                                       BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -2693,7 +2692,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename B, typename F>
-    static bool asio_async_connect(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const B& b,
+    static bool asio_async_connect(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const B& b,
                                    BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -2727,7 +2726,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename B, typename C, typename F>
-    static bool asio_async_connect(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const B& b, const C& c,
+    static bool asio_async_connect(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const B& b, const C& c,
                                    BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -2760,7 +2759,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename B, typename F>
-    static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const B& b,
+    static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const B& b,
                                    BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -2802,7 +2801,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename B, typename C, typename F>
-    static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const B& b, const C& c,
+    static bool asio_async_resolve(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const B& b, const C& c,
                                    BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -2841,7 +2840,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename F>
-    static bool asio_async_handshake(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t,
+    static bool asio_async_handshake(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t,
                                      BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -2880,7 +2879,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename U, typename F>
-    static bool asio_async_handshake(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, const U& u,
+    static bool asio_async_handshake(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, const U& u,
                                      BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
@@ -2917,7 +2916,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @return false
      */
     template <typename T, typename F>
-    static bool asio_async_shutdown(RR_WEAK_PTR<RobotRaconteurNode> node, RR_SHARED_PTR<T>& t, BOOST_ASIO_MOVE_ARG(F) f)
+    static bool asio_async_shutdown(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<T>& t, BOOST_ASIO_MOVE_ARG(F) f)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
         if (!node1)

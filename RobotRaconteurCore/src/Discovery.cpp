@@ -98,12 +98,12 @@ void Discovery_updatediscoverednodes::timeout_timer_callback(const TimerEvent& e
     }
 }
 
-void Discovery_updatediscoverednodes::getdetectednodes_callback(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > ret,
+void Discovery_updatediscoverednodes::getdetectednodes_callback(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& ret,
                                                                 int32_t key)
 {
     boost::mutex::scoped_lock lock(work_lock);
 
-    bool c;
+    bool c = false;
     {
         // boost::mutex::scoped_lock lock(searching_lock);
         c = searching;
@@ -122,7 +122,7 @@ void Discovery_updatediscoverednodes::getdetectednodes_callback(RR_SHARED_PTR<st
     {
         boost::mutex::scoped_lock lock(active_lock);
         active.remove(key);
-        if (active.size() == 0)
+        if (active.empty())
             done = true;
     }
 
@@ -211,7 +211,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
     bool done = false;
     {
         boost::mutex::scoped_lock lock(active_lock);
-        if (active.size() == 0)
+        if (active.empty())
             done = true;
     }
 
@@ -247,7 +247,7 @@ void Discovery_findservicebytype::handle_error(const int32_t& key, const RR_SHAR
         active.remove(key);
         errors.push_back(err);
 
-        if (active.size() != 0)
+        if (!active.empty())
             return;
     }
 
@@ -313,7 +313,7 @@ void Discovery_findservicebytype::rr_empty_handler() {}
 
 void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<MessageEntry>& ret1,
                                                        const RR_SHARED_PTR<RobotRaconteurException>& err,
-                                                       const RR_SHARED_PTR<ServiceStub>& client, std::string url, uint32_t key)
+                                                       const RR_SHARED_PTR<ServiceStub>& client, const std::string& url, int32_t key)
 {
     boost::recursive_mutex::scoped_lock lock2(work_lock);
     if (err)
@@ -331,7 +331,7 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
         return;
     }
 
-    bool c;
+    bool c = false;
     {
         // boost::mutex::scoped_lock lock(searching_lock);
         c = searching;
@@ -460,7 +460,7 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
             if (done)
             {
 
-                bool c2;
+                bool c2 = false;
                 {
                     // boost::mutex::scoped_lock lock(searching_lock);
                     c2 = searching;
@@ -501,8 +501,8 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
 }
 
 void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>& client,
-                                                   const RR_SHARED_PTR<RobotRaconteurException>& err, std::string url,
-                                                   uint32_t key)
+                                                   const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
+                                                   int32_t key)
 {
     boost::recursive_mutex::scoped_lock lock2(work_lock);
 
@@ -514,7 +514,7 @@ void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>
         return;
     }
 
-    bool c;
+    bool c = false;
     {
         // boost::mutex::scoped_lock lock(searching_lock);
         c = searching;
@@ -536,7 +536,7 @@ void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
                 node, Discovery, -1, "FindServiceByType connectted to " << url << ", begin getting ServiceInfo2");
 
-            int32_t key2;
+            int32_t key2 = 0;
             {
                 boost::mutex::scoped_lock lock(active_lock);
                 active_count++;
@@ -624,7 +624,7 @@ void Discovery_findservicebytype::find2()
     {
         try
         {
-            int32_t key;
+            int32_t key = 0;
             {
                 boost::mutex::scoped_lock lock(active_lock);
                 active_count++;
@@ -1211,7 +1211,7 @@ void Discovery::NodeDetected(const NodeDiscoveryInfo& info)
                 }
             }
 
-            if (info2->URLs.size() == 0)
+            if (info2->URLs.empty())
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
                                                    "Node detected NodeID " << info.NodeID.ToString()
@@ -1342,7 +1342,7 @@ void Discovery::NodeDetected(const NodeDiscoveryInfo& info)
 }
 
 void Discovery::EndUpdateServiceInfo(const RR_SHARED_PTR<Discovery_nodestorage>& storage,
-                                     RR_SHARED_PTR<std::vector<ServiceInfo2> > info, boost::string_ref nonce,
+                                     const RR_SHARED_PTR<std::vector<ServiceInfo2> >& info, boost::string_ref nonce,
                                      const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     RR_UNUSED(err);
@@ -1441,7 +1441,7 @@ void Discovery::RetryUpdateServiceInfo(const RR_SHARED_PTR<Discovery_nodestorage
                                    boost::bind(&Discovery::EndUpdateServiceInfo, shared_from_this(),
                                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
                                                RR_BOOST_PLACEHOLDERS(_3), RR_BOOST_PLACEHOLDERS(_4)),
-                                   backoff);
+                                   boost::numeric_cast<int32_t>(backoff));
 }
 
 void Discovery::UpdateDetectedNodes(const std::vector<std::string>& schemes)
@@ -1763,14 +1763,13 @@ void Discovery::AsyncFindNodeByID(const RobotRaconteur::NodeID& id, const std::v
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
                                        "Begin AsyncFindNodeByID for remote node " << id.ToString());
-    RobotRaconteur::NodeID id1 = id;
 
     boost::function<void()> h =
-        boost::bind(&Discovery::EndAsyncFindNodeByID, shared_from_this(), id1, transportschemes, handler);
+        boost::bind(&Discovery::EndAsyncFindNodeByID, shared_from_this(), id, transportschemes, handler);
     AsyncUpdateDetectedNodes(transportschemes, h, timeout);
 }
 
-void Discovery::EndAsyncFindNodeByID(RobotRaconteur::NodeID id, std::vector<std::string> transportschemes,
+void Discovery::EndAsyncFindNodeByID(const RobotRaconteur::NodeID& id, const std::vector<std::string>& transportschemes,
                                      boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
@@ -1791,7 +1790,7 @@ void Discovery::EndAsyncFindNodeByID(RobotRaconteur::NodeID id, std::vector<std:
 
             BOOST_FOREACH (NodeDiscoveryInfoURL& url, ni->URLs)
             {
-                BOOST_FOREACH (std::string& e, transportschemes)
+                BOOST_FOREACH (const std::string& e, transportschemes)
                 {
                     try
                     {
@@ -1868,7 +1867,7 @@ void Discovery::AsyncFindNodeByName(boost::string_ref name, const std::vector<st
     AsyncUpdateDetectedNodes(transportschemes, h, timeout);
 }
 
-void Discovery::EndAsyncFindNodeByName(std::string name, std::vector<std::string> transportschemes,
+void Discovery::EndAsyncFindNodeByName(const std::string& name, const std::vector<std::string>& transportschemes,
                                        boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
@@ -1888,7 +1887,7 @@ void Discovery::EndAsyncFindNodeByName(std::string name, std::vector<std::string
 
                 BOOST_FOREACH (NodeDiscoveryInfoURL& url, e->info->URLs)
                 {
-                    BOOST_FOREACH (std::string& e, transportschemes)
+                    BOOST_FOREACH (const std::string& e, transportschemes)
                     {
                         try
                         {

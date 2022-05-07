@@ -165,7 +165,7 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageWriterImpl : public AsyncMessageWriter
 
     void prepare_continue(mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs);
 
-    size_t quota_available();
+    size_t quota_available() const;
     size_t work_bufs_available();
 
     bool write_all_bytes(const void* p, size_t len);

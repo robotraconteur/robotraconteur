@@ -50,10 +50,10 @@ ServiceStub::ServiceStub(boost::string_ref path, const RR_SHARED_PTR<ClientConte
     RRMutex = RR_MAKE_SHARED<boost::recursive_mutex>();
     RREndpoint = c->GetLocalEndpoint();
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, "",
-                                            "ServiceStub created with type: " << RRType());
+                                            "ServiceStub created with type: " << RRType()); // NOLINT
 }
 
-RR_SHARED_PTR<ClientContext> ServiceStub::GetContext()
+RR_SHARED_PTR<ClientContext> ServiceStub::GetContext() // NOLINT
 {
     RR_SHARED_PTR<ClientContext> out = context.lock();
     if (!out)
@@ -252,7 +252,7 @@ RR_SHARED_PTR<RRObject> ClientContext::FindObjRef(boost::string_ref path, boost:
     AsyncFindObjRef(path, objecttype2,
                     boost::bind(&detail::sync_async_handler<RRObject>::operator(), h, RR_BOOST_PLACEHOLDERS(_1),
                                 RR_BOOST_PLACEHOLDERS(_2)),
-                    GetNode()->GetRequestTimeout());
+                    boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     return h->end();
 }
 
@@ -446,7 +446,7 @@ void ClientContext::AsyncFindObjRef2(
                                 missingdefs_names.push_back(di->Name);
                             }
                         }
-                        if (missingdefs.size() > 0)
+                        if (!missingdefs.empty())
                         {
 
                             std::vector<std::string> missingdefs_str;
@@ -581,7 +581,7 @@ std::string ClientContext::FindObjectType(boost::string_ref path)
     AsyncFindObjectType(path,
                         boost::bind(&detail::sync_async_handler<std::string>::operator(), h, RR_BOOST_PLACEHOLDERS(_1),
                                     RR_BOOST_PLACEHOLDERS(_2)),
-                        GetNode()->GetRequestTimeout());
+                        boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     return *h->end();
 }
 
@@ -773,7 +773,7 @@ void ClientContext::AsyncProcessRequest(
         if (!GetConnected())
             throw ConnectionException("Service client not connected");
 
-        uint32_t myrequestid;
+        uint32_t myrequestid = 0;
 
         RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
         t->evt = GetNode()->CreateAutoResetEvent();
@@ -1020,7 +1020,7 @@ void ClientContext::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
 
     SetLastMessageReceivedTime(GetNode()->NowNodeTime());
 
-    if (m->entries.size() >= 1)
+    if (!m->entries.empty())
     {
         if (m->entries[0]->EntryType == MessageEntryType_ConnectClientRet ||
             m->entries[0]->EntryType == MessageEntryType_ConnectClientCombinedRet)
@@ -1394,7 +1394,7 @@ RR_SHARED_PTR<RRObject> ClientContext::ConnectService(const RR_SHARED_PTR<Transp
     AsyncConnectService(c, url, username, credentials, objecttype,
                         boost::bind(&detail::sync_async_handler<RRObject>::operator(), d, RR_BOOST_PLACEHOLDERS(_1),
                                     RR_BOOST_PLACEHOLDERS(_2)),
-                        GetNode()->GetRequestTimeout());
+                        boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     return d->end();
 }
 
@@ -1411,7 +1411,7 @@ RR_SHARED_PTR<RRObject> ClientContext::ConnectService(const RR_SHARED_PTR<Transp
     AsyncConnectService(c, tc, url, username, credentials, objecttype,
                         boost::bind(&detail::sync_async_handler<RRObject>::operator(), d, RR_BOOST_PLACEHOLDERS(_1),
                                     RR_BOOST_PLACEHOLDERS(_2)),
-                        GetNode()->GetRequestTimeout());
+                        boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     return d->end();
 }
 
@@ -1511,7 +1511,7 @@ void ClientContext::AsyncConnectService(
         bool use_message4_ = tc->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE |
                                                        TransportCapabilityCode_MESSAGE4_BASIC_ENABLE);
 
-        bool use_combined_connection_;
+        bool use_combined_connection_ = false;
 
         if (!use_message4_)
         {
@@ -1529,7 +1529,7 @@ void ClientContext::AsyncConnectService(
 
         m_ServiceName = url_res.service;
 
-        if (!(url_res.nodeid.IsAnyNode() && url_res.nodename != ""))
+        if (!(url_res.nodeid.IsAnyNode() && !url_res.nodename.empty()))
         {
             // RR_SHARED_PTR<NodeID> remid = RR_MAKE_SHARED<NodeID>(s[0]);
             SetRemoteNodeID(url_res.nodeid);
@@ -1573,7 +1573,7 @@ void ClientContext::AsyncConnectService(
 
             m->AddElement("clientversion", stringToRRArray(ROBOTRACONTEUR_VERSION_TEXT));
             m->AddElement("returnservicedefs", stringToRRArray("true"));
-            if (username.size() != 0)
+            if (!username.empty())
             {
                 m->AddElement("username", stringToRRArray(username));
             }
@@ -1602,7 +1602,7 @@ void ClientContext::AsyncConnectService(
                                                              RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
                                                              username.to_string(), credentials, objecttype.to_string(),
                                                              handler),
-                                                 GetNode()->GetRequestTimeout());
+                                                 boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
         }
         else
         {
@@ -1619,7 +1619,7 @@ void ClientContext::AsyncConnectService(
                 "",
                 boost::bind(&ClientContext::AsyncConnectService2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                             RR_BOOST_PLACEHOLDERS(_2), username.to_string(), credentials, objecttype.to_string(), h1),
-                GetNode()->GetRequestTimeout());
+                boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
             d->start_timer(timeout, RR_MAKE_SHARED<ConnectionException>("Timeout during operation"));
         }
     }
@@ -1685,7 +1685,7 @@ void ClientContext::AsyncConnectService2(
                                 boost::bind(&ClientContext::AsyncConnectService3, shared_from_this(),
                                             RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), username, credentials,
                                             std::string(objecttype), d, handler),
-                                GetNode()->GetRequestTimeout());
+                                boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
         }
         catch (std::exception& err)
         {
@@ -1812,7 +1812,7 @@ void ClientContext::AsyncConnectService4(
                         missingdefs.push_back(di);
                     }
                 }
-                if (missingdefs.size() > 0)
+                if (!missingdefs.empty())
                 {
                     std::vector<std::string> missingdefs_vec;
                     std::vector<std::string> missingdefs_names;
@@ -1863,7 +1863,7 @@ void ClientContext::AsyncConnectService4(
                                 boost::bind(&ClientContext::AsyncConnectService5, shared_from_this(),
                                             RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), username, credentials,
                                             objecttype, type, d, handler),
-                                GetNode()->GetRequestTimeout());
+                                boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
         }
         catch (std::exception& err)
         {
@@ -1898,7 +1898,7 @@ void ClientContext::AsyncConnectService5(
         try
         {
 
-            if (username != "")
+            if (!username.empty())
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
                                                    "AsyncConnectService authenticating with username " << username);
@@ -1910,7 +1910,7 @@ void ClientContext::AsyncConnectService5(
                                           boost::bind(&ClientContext::AsyncConnectService6, shared_from_this(),
                                                       RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), type,
                                                       username, d, handler),
-                                          GetNode()->GetRequestTimeout());
+                                          boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
                 }
                 catch (AuthenticationException& ex)
                 {
@@ -2165,11 +2165,13 @@ bool ClientContext::VerifyObjectImplements2(boost::string_ref objecttype, boost:
             objtype = s2.get<1>().to_string();
         }
 
+        // NOLINTBEGIN(performance-inefficient-string-concatenation)
         if ((deftype + "." + objtype) == implementstype)
             return true;
 
-        if (VerifyObjectImplements2(deftype + "." + objtype, implementstype))
+        if (VerifyObjectImplements2(deftype + "." + objtype, implementstype)) 
             return true;
+        // NOLINTEND(performance-inefficient-string-concatenation)
     }
 
     return false;
@@ -2403,7 +2405,7 @@ PullServiceDefinitionReturn ClientContext::PullServiceDefinition(boost::string_r
     AsyncPullServiceDefinition(ServiceType,
                                boost::bind(&detail::sync_async_handler<PullServiceDefinitionReturn>::operator(), d,
                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
-                               GetNode()->GetRequestTimeout());
+                               boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     RR_SHARED_PTR<PullServiceDefinitionReturn> ret = d->end();
     if (!ret)
         throw NullValueException("Unexpected null return from service");
@@ -2423,7 +2425,7 @@ void ClientContext::AsyncPullServiceDefinition(
     RR_INTRUSIVE_PTR<MessageEntry> e3 = CreateMessageEntry(MessageEntryType_GetServiceDesc, "");
     // e.AddElement("servicepath", ServiceName);
 
-    if (ServiceType != "")
+    if (!ServiceType.empty())
         e3->AddElement("ServiceType", stringToRRArray(ServiceType));
 
     e3->ServicePath = GetServiceName();
@@ -2456,7 +2458,7 @@ void ClientContext::AsyncPullServiceDefinition1(
             if (ret3->Error != MessageErrorType_None)
                 throw RobotRaconteurExceptionUtil::MessageEntryToException(ret3);
             std::string def = ret3->FindElement("servicedef")->CastDataToString();
-            if (def == "")
+            if (def.empty())
                 throw ServiceNotFoundException("Could not find service definition");
 
             RR_SHARED_PTR<ServiceDefinition> d = RR_MAKE_SHARED<ServiceDefinition>();
@@ -2465,7 +2467,7 @@ void ClientContext::AsyncPullServiceDefinition1(
 
             ret->def = d;
 
-            if (ServiceType == "")
+            if (ServiceType.empty())
             {
                 RR_INTRUSIVE_PTR<MessageElement> attributes;
                 if (ret3->TryFindElement("attributes", attributes))
@@ -2529,7 +2531,7 @@ void ClientContext::AsyncPullServiceDefinitionAndImports(
         boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(),
                     RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), servicetype.to_string(),
                     RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>(), handler, timeout_time),
-        boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
+        boost::numeric_cast<int32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
 }
 
 void ClientContext::AsyncPullServiceDefinitionAndImports1(
@@ -2592,7 +2594,7 @@ void ClientContext::AsyncPullServiceDefinitionAndImports1(
                     boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(),
                                 RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), std::string(servicetype), current2,
                                 handler, timeout_time),
-                    boost::numeric_cast<uint32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
+                    boost::numeric_cast<int32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
                 return;
             }
         }
@@ -2617,7 +2619,7 @@ PullServiceDefinitionAndImportsReturn ClientContext::PullServiceDefinitionAndImp
         servicetype,
         boost::bind(&detail::sync_async_handler<PullServiceDefinitionAndImportsReturn>::operator(), d,
                     RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
-        GetNode()->GetRequestTimeout());
+        boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn> ret = d->end();
     if (!ret)
         throw NullValueException("Unexpected null return from service");
@@ -2766,7 +2768,7 @@ std::string ClientContext::RequestObjectLock(const RR_SHARED_PTR<RRObject>& obj,
     AsyncRequestObjectLock(obj, flags,
                            boost::bind(&detail::sync_async_handler<std::string>::operator(), t,
                                        RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
-                           GetNode()->GetRequestTimeout());
+                           boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     return *t->end();
 }
 
@@ -2850,7 +2852,7 @@ std::string ClientContext::ReleaseObjectLock(const RR_SHARED_PTR<RRObject>& obj)
     AsyncReleaseObjectLock(obj,
                            boost::bind(&detail::sync_async_handler<std::string>::operator(), t,
                                        RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
-                           GetNode()->GetRequestTimeout());
+                           boost::numeric_cast<int32_t>(GetNode()->GetRequestTimeout()));
     return *t->end();
 }
 
@@ -2913,7 +2915,6 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
 
             if (retcode == "OK")
             {
-                iserror = false;
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
                                                    "MonitorEnter for successful for servicepath \"" << s->ServicePath
                                                                                                     << "\"");
@@ -2937,7 +2938,6 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
                         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
                                                            "MonitorEnter for successful for servicepath \""
                                                                << s->ServicePath << "\"");
-                        iserror = false;
                         return "OK";
                     }
                     if (retcode1 != "Continue")

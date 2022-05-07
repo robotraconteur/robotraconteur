@@ -75,8 +75,8 @@ bool LinuxLocalTransportDiscovery_dir::Init(const boost::filesystem::path& path)
 
 bool LinuxLocalTransportDiscovery_dir::Refresh()
 {
-    char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
-    const struct inotify_event* event;
+    char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event)))); // NOLINT
+    const struct inotify_event* event = NULL; 
 
     if (notify_fd < 0)
         return false;
@@ -107,7 +107,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
         }
     }
 
-    int len = read(notify_fd, buf, sizeof(buf));
+    ssize_t len = read(notify_fd, buf, sizeof(buf));
     if (len == -1 && errno != EAGAIN)
     {
         return errno == EAGAIN;
@@ -118,7 +118,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
 
     for (char* ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len)
     {
-        event = reinterpret_cast<const struct inotify_event*>(ptr);
+        event = reinterpret_cast<const struct inotify_event*>(ptr); // NOLINT
 
         if (event->mask & IN_DELETE_SELF)
         {
@@ -151,7 +151,7 @@ LinuxLocalTransportDiscovery::LinuxLocalTransportDiscovery(const RR_SHARED_PTR<R
 void LinuxLocalTransportDiscovery::Init()
 {
     shutdown_evt = RR_MAKE_SHARED<LocalTransportUtil::FD>(eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK));
-    if (!shutdown_evt.get() < 0)
+    if (shutdown_evt->fd() < 0)
         throw InternalErrorException("Internal error");
 
     public_evt = RR_MAKE_SHARED<LocalTransportUtil::FD>(inotify_init1(IN_NONBLOCK | IN_CLOEXEC));
@@ -163,7 +163,7 @@ void LinuxLocalTransportDiscovery::Init()
 
 void LinuxLocalTransportDiscovery::Shutdown()
 {
-    int ret;
+    int ret = 0;
     do
     {
         ret = eventfd_write(shutdown_evt->fd(), 1);
@@ -254,7 +254,7 @@ void LinuxLocalTransportDiscovery::run()
             }
         }
 
-        int ret;
+        int ret = 0;
 
         if (!refresh_now)
         {
@@ -274,7 +274,7 @@ void LinuxLocalTransportDiscovery::run()
                 return;
         }
 
-        eventfd_t shutdown_evt_val;
+        eventfd_t shutdown_evt_val = 0;
         if (eventfd_read(shutdown_evt->fd(), &shutdown_evt_val) >= 0)
         {
             return;
@@ -362,15 +362,15 @@ void LinuxLocalTransportDiscovery::refresh_public()
 {
     if (public_wd > 0)
     {
-        char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
-        const struct inotify_event* event;
+        char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event)))); // NOLINT
+        const struct inotify_event* event = NULL;
 
-        int len = read(public_evt->fd(), buf, sizeof(buf));
+        ssize_t len = read(public_evt->fd(), buf, sizeof(buf));
         if (len > 0)
         {
             for (char* ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len)
             {
-                event = reinterpret_cast<const struct inotify_event*>(ptr);
+                event = reinterpret_cast<const struct inotify_event*>(ptr); // NOLINT
 
                 if ((event->mask & IN_DELETE_SELF))
                 {

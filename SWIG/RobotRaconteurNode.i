@@ -464,7 +464,7 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(SetNodeName)
 	
 	const std::string NodeName();
-	void SetNodeName(const std::string name);
+	void SetNodeName(const std::string& name);
 	
 	RR_PROPERTY(ThreadPoolCount)
 	int32_t GetThreadPoolCount();

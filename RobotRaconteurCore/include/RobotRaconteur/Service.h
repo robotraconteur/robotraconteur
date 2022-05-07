@@ -73,6 +73,7 @@ class ROBOTRACONTEUR_CORE_API IRRServiceObject
      * @param service_path The object service path
      */
     virtual void RRServiceObjectInit(RR_WEAK_PTR<ServerContext> context, const std::string& service_path) = 0;
+    virtual ~IRRServiceObject() {}
 };
 
 class ROBOTRACONTEUR_CORE_API ServiceSkel : public RR_ENABLE_SHARED_FROM_THIS<ServiceSkel>, private boost::noncopyable
@@ -182,7 +183,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSkel : public RR_ENABLE_SHARED_FROM_THIS<Se
 
     virtual std::string GetObjectType() = 0;
 
-    virtual std::string GetObjectType(RobotRaconteurVersion client_version);
+    virtual std::string GetObjectType(const RobotRaconteurVersion& client_version);
 
     RR_SHARED_PTR<RobotRaconteurNode> RRGetNode();
     RR_WEAK_PTR<RobotRaconteurNode> RRGetNodeWeak();
@@ -271,7 +272,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
   public:
     RR_SHARED_PTR<ServiceFactory> GetServiceDef() const;
 
-    RR_SHARED_PTR<ServiceFactory> GetRootObjectServiceDef(RobotRaconteurVersion client_version);
+    RR_SHARED_PTR<ServiceFactory> GetRootObjectServiceDef(const RobotRaconteurVersion& client_version);
 
     virtual ~ServerContext() {}
 
@@ -337,7 +338,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     boost::mutex client_endpoints_lock;
 
   public:
-    std::string GetRootObjectType(RobotRaconteurVersion client_version);
+    std::string GetRootObjectType(const RobotRaconteurVersion& client_version);
 
   protected:
     std::string m_RootObjectType;
@@ -417,7 +418,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
 
     virtual void ReplaceObject(boost::string_ref path);
 
-    virtual std::string GetObjectType(MessageStringRef servicepath, RobotRaconteurVersion client_version);
+    virtual std::string GetObjectType(MessageStringRef servicepath, const RobotRaconteurVersion& client_version);
 
     /**
      * @brief Get the current ServerContext
@@ -431,7 +432,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     static RR_SHARED_PTR<ServerContext> GetCurrentServerContext();
 
   private:
-    static boost::thread_specific_ptr<RR_SHARED_PTR<ServerContext> > m_CurrentServerContext;
+    static boost::thread_specific_ptr<RR_SHARED_PTR<ServerContext> > m_CurrentServerContext; // NOLINT
 
   public:
     /**
@@ -447,7 +448,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     static std::string GetCurrentServicePath();
 
   private:
-    static boost::thread_specific_ptr<std::string> m_CurrentServicePath;
+    static boost::thread_specific_ptr<std::string> m_CurrentServicePath; // NOLINT
 
   public:
     virtual RR_INTRUSIVE_PTR<MessageEntry> ProcessMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& m,
@@ -695,7 +696,7 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
     RR_SHARED_PTR<ServerContext> service;
 
   private:
-    static boost::thread_specific_ptr<RR_SHARED_PTR<ServerEndpoint> > m_CurrentEndpoint;
+    static boost::thread_specific_ptr<RR_SHARED_PTR<ServerEndpoint> > m_CurrentEndpoint; // NOLINT
 
   public:
     /**
@@ -712,7 +713,7 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
     static RR_SHARED_PTR<ServerEndpoint> GetCurrentEndpoint();
 
   private:
-    static boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > m_CurrentAuthenticatedUser;
+    static boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > m_CurrentAuthenticatedUser; // NOLINT
 
   public:
     /**
@@ -746,7 +747,6 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
 
     virtual void PeriodicCleanupTask();
 
-  public:
     virtual void SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c);
 
   private:

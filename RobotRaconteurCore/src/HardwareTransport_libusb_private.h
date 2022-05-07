@@ -16,7 +16,9 @@
 #include <boost/intrusive/list.hpp>
 #include <boost/intrusive_ptr.hpp>
 
+// NOLINTBEGIN
 #include <libusb.h>
+// NOLINTEND
 
 #pragma once
 
@@ -152,6 +154,8 @@ namespace RobotRaconteur
 namespace detail
 {
 
+// NOLINTBEGIN
+
 #define LIBUSB_FUNCTIONS_INIT(M)                                                                                       \
     M(libusb_init)                                                                                                     \
     M(libusb_exit)                                                                                                     \
@@ -237,8 +241,9 @@ namespace detail
 #define LIBUSB_FUNCTIONS_PTR_INIT(t)                                                                                   \
     t = reinterpret_cast<t##_t>(dlsym(lib_handle, #t));                                                                \
     if ((t) == NULL)                                                                                                     \
-        return false;
+        return false; 
 
+// NOLINTEND
 class LibUsb_Functions : public boost::noncopyable
 {
   private:

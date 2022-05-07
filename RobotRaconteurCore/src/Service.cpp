@@ -94,14 +94,14 @@ void ServiceSkel::Init(boost::string_ref s, const RR_SHARED_PTR<RRObject>& o, co
 
                     boost::string_ref implement_def;
                     boost::tie(implement_def, boost::tuples::ignore) = SplitQualifiedName(s);
-                    bool implement_def_b;
+                    bool implement_def_b = false;
                     boost::tie(boost::tuples::ignore, implement_def_b) =
                         found_defs.insert(RR_MOVE(implement_def.to_string()));
                     if (!implement_def_b)
                         continue;
 
                     RR_SHARED_PTR<ServiceDefinition> d2 = RRGetNode()->GetServiceType(implement_def)->ServiceDef();
-                    bool version_b;
+                    bool version_b = false;
                     boost::tie(boost::tuples::ignore, version_b) = found_versions.insert(d2->StdVer);
                     if (!version_b)
                         continue;
@@ -421,7 +421,7 @@ bool ServiceSkel::IsLocked()
 
 bool ServiceSkel::IsRequestNoLock(const RR_INTRUSIVE_PTR<MessageEntry>& m) { RR_UNUSED(m); return false; }
 
-bool ServiceSkel::IsMonitorLocked()
+bool ServiceSkel::IsMonitorLocked() // NOLINT
 {
     // boost::mutex::scoped_lock lock2(monitorlocks_lock);
     if (!monitorlock)
@@ -429,7 +429,7 @@ bool ServiceSkel::IsMonitorLocked()
     return monitorlock->IsLocked();
 }
 
-std::string ServiceSkel::GetObjectType(RobotRaconteurVersion client_version)
+std::string ServiceSkel::GetObjectType(const RobotRaconteurVersion& client_version)
 {
     if (!client_version)
     {
@@ -516,7 +516,7 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<Me
 int32_t ServiceSkel::get_new_generator_index()
 {
     RR_SHARED_PTR<RobotRaconteurNode> node = RRGetNode();
-    int32_t index;
+    int32_t index  = 0;
     do
     {
         index = node->GetRandomInt<int32_t>(0, std::numeric_limits<int32_t>::max());
@@ -547,7 +547,7 @@ void ServiceSkel::CleanupGenerators()
 
 RR_SHARED_PTR<ServiceFactory> ServerContext::GetServiceDef() const { return m_ServiceDef; }
 
-RR_SHARED_PTR<ServiceFactory> ServerContext::GetRootObjectServiceDef(RobotRaconteurVersion client_version)
+RR_SHARED_PTR<ServiceFactory> ServerContext::GetRootObjectServiceDef(const RobotRaconteurVersion& client_version)
 {
     std::string root_object_type = GetRootObjectType(client_version);
     boost::string_ref root_object_def;
@@ -598,7 +598,7 @@ bool ServerContext::RemoveExtraImport(boost::string_ref import_)
 
 std::string ServerContext::GetServiceName() const { return m_ServiceName; }
 
-std::string ServerContext::GetRootObjectType(RobotRaconteurVersion client_version)
+std::string ServerContext::GetRootObjectType(const RobotRaconteurVersion& client_version)
 {
     return GetObjectType(m_ServiceName, client_version);
 }
@@ -643,7 +643,7 @@ void ServerContext::SendEvent(const RR_INTRUSIVE_PTR<MessageEntry>& m)
                 {
                     try
                     {
-                        if (c->GetAuthenticatedUsername() == "")
+                        if (c->GetAuthenticatedUsername().empty())
                         {
                             ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(
                                 node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName,
@@ -875,8 +875,8 @@ void ServerContext::SetBaseObject(boost::string_ref name, const RR_SHARED_PTR<RR
             SetSecurityPolicy(policy);
         }
 
-        m_CurrentServicePath.reset(new std::string(name.to_string()));
-        m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
+        m_CurrentServicePath.reset(new std::string(name.to_string())); // NOLINT
+        m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this())); // NOLINT
 
         RR_SHARED_PTR<ServiceSkel> s = GetServiceDef()->CreateSkel(o->RRType(), name, o, shared_from_this());
 
@@ -946,7 +946,7 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
                 boost::mutex::scoped_lock lock(skels_lock);
                 std::string ppath1 = ppath;
 
-                ppath = ppath + "." + p.at(i);
+                ppath = ppath.append(".").append(p.at(i));
 
                 skel1.reset();
                 RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(ppath);
@@ -958,8 +958,8 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
                 if (skel1 == 0)
                 {
 
-                    m_CurrentServicePath.reset(new std::string(ppath1));
-                    m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
+                    m_CurrentServicePath.reset(new std::string(ppath1)); // NOLINT
+                    m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this())); // NOLINT
                     RR_SHARED_PTR<RRObject> obj1 = skel->GetSubObj(p.at(i));
 
                     m_CurrentServicePath.reset(0);
@@ -999,7 +999,7 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
 
 void ServerContext::ReplaceObject(boost::string_ref path) { ReleaseServicePath(path); }
 
-std::string ServerContext::GetObjectType(MessageStringRef servicepath, RobotRaconteurVersion client_version)
+std::string ServerContext::GetObjectType(MessageStringRef servicepath, const RobotRaconteurVersion& client_version)
 {
     try
     {
@@ -1029,13 +1029,13 @@ RR_SHARED_PTR<ServerContext> ServerContext::GetCurrentServerContext()
 {
     if (!m_CurrentServerContext.get())
         throw InvalidOperationException("Current server context not set");
-    RR_SHARED_PTR<ServerContext> out = *m_CurrentServerContext.get();
+    RR_SHARED_PTR<ServerContext> out = *m_CurrentServerContext;
     if (!out)
         throw InvalidOperationException("Current server context not set");
     return out;
 }
 
-boost::thread_specific_ptr<RR_SHARED_PTR<ServerContext> > ServerContext::m_CurrentServerContext;
+boost::thread_specific_ptr<RR_SHARED_PTR<ServerContext> > ServerContext::m_CurrentServerContext; // NOLINT
 
 std::string ServerContext::GetCurrentServicePath()
 {
@@ -1044,7 +1044,7 @@ std::string ServerContext::GetCurrentServicePath()
     return std::string(*m_CurrentServicePath);
 }
 
-boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath;
+boost::thread_specific_ptr<std::string> ServerContext::m_CurrentServicePath; // NOLINT
 
 RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                                                                   const RR_SHARED_PTR<ServerEndpoint>& c)
@@ -1115,8 +1115,8 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
             noreturn = true;
         }
 
-        m_CurrentServicePath.reset(new std::string(m->ServicePath.str().to_string()));
-        m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
+        m_CurrentServicePath.reset(new std::string(m->ServicePath.str().to_string())); // NOLINT
+        m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this())); // NOLINT
 
         if (m->EntryType == MessageEntryType_ObjectTypeName)
         {
@@ -1215,7 +1215,6 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
             {
 
                 boost::mutex::scoped_lock lock(outstanding_requests_lock);
-                uint32_t requestid = m->RequestID;
                 RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<outstanding_request> >::iterator e1 =
                     outstanding_requests.find(m->RequestID);
                 if (e1 == outstanding_requests.end())
@@ -1368,7 +1367,7 @@ void ServerContext::AsyncProcessCallbackRequest(
 {
     try
     {
-        uint32_t myrequestid;
+        uint32_t myrequestid  = 0;
 
         RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
         t->handler = handler;
@@ -1597,7 +1596,7 @@ void ServerContext::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m, const RR
         if (mmret != 0)
             mret->entries.push_back(mmret);
     }
-    if (mret->entries.size() > 0)
+    if (!mret->entries.empty())
     {
         boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
             boost::bind(&rr_context_node_handler, GetNode(), RR_BOOST_PLACEHOLDERS(_1));
@@ -2161,7 +2160,7 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
             }
         }
 
-        if (objkeys.size() == 0)
+        if (objkeys.empty())
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, -1, path, "", "Unknown service path");
             throw ServiceException("Unknown service path");
@@ -2248,7 +2247,7 @@ void ServerContext::ReleaseServicePath(boost::string_ref path, const std::vector
             {
                 try
                 {
-                    if (c->GetAuthenticatedUsername() == "")
+                    if (c->GetAuthenticatedUsername().empty())
                         continue;
                 }
                 catch (AuthenticationException&)
@@ -2466,26 +2465,26 @@ void ServerContext::SetAttributes(const std::map<std::string, RR_INTRUSIVE_PTR<R
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Service attributes set");
 }
 
-boost::thread_specific_ptr<RR_SHARED_PTR<ServerEndpoint> > ServerEndpoint::m_CurrentEndpoint;
+boost::thread_specific_ptr<RR_SHARED_PTR<ServerEndpoint> > ServerEndpoint::m_CurrentEndpoint; // NOLINT
 
 RR_SHARED_PTR<ServerEndpoint> ServerEndpoint::GetCurrentEndpoint()
 {
 
     if (!m_CurrentEndpoint.get())
         throw InvalidOperationException("Current ServiceEndpoint Not set");
-    RR_SHARED_PTR<ServerEndpoint> out = *m_CurrentEndpoint.get();
+    RR_SHARED_PTR<ServerEndpoint> out = *m_CurrentEndpoint;
     if (!out)
         throw InvalidOperationException("Current ServiceEndpoint Not set");
     return out;
 }
 
-boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_CurrentAuthenticatedUser;
+boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > ServerEndpoint::m_CurrentAuthenticatedUser; // NOLINT
 
 RR_SHARED_PTR<AuthenticatedUser> ServerEndpoint::GetCurrentAuthenticatedUser()
 {
     if (!m_CurrentAuthenticatedUser.get())
         throw PermissionDeniedException("User is not authenticated");
-    RR_SHARED_PTR<AuthenticatedUser> out = *m_CurrentAuthenticatedUser.get();
+    RR_SHARED_PTR<AuthenticatedUser> out = *m_CurrentAuthenticatedUser;
     if (!out)
         throw AuthenticationException("User is not authenticated");
     return out;
@@ -2501,7 +2500,7 @@ const std::string ServerEndpoint::GetAuthenticatedUsername() const
 
 void ServerEndpoint::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
 {
-    if (m->entries.size() > 0)
+    if (!m->entries.empty())
     {
         if (m->entries.at(0)->EntryType == MessageEntryType_EndpointCheckCapability)
         {
@@ -2513,13 +2512,13 @@ void ServerEndpoint::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
 
         SetLastMessageReceivedTime(GetNode()->NowNodeTime());
     }
-    m_CurrentEndpoint.reset(new RR_SHARED_PTR<ServerEndpoint>(shared_from_this()));
-    m_CurrentAuthenticatedUser.reset(new RR_SHARED_PTR<AuthenticatedUser>(endpoint_authenticated_user));
+    m_CurrentEndpoint.reset(new RR_SHARED_PTR<ServerEndpoint>(shared_from_this())); // NOLINT
+    m_CurrentAuthenticatedUser.reset(new RR_SHARED_PTR<AuthenticatedUser>(endpoint_authenticated_user)); // NOLINT
     if (endpoint_authenticated_user != 0)
         endpoint_authenticated_user->UpdateLastAccess();
     service->MessageReceived(m, shared_from_this());
-    m_CurrentEndpoint.reset(0);
-    m_CurrentAuthenticatedUser.reset(0);
+    m_CurrentEndpoint.reset(0); // NOLINT
+    m_CurrentAuthenticatedUser.reset(0); // NOLINT
 }
 
 void ServerEndpoint::AuthenticateUser(boost::string_ref username,
@@ -2528,7 +2527,7 @@ void ServerEndpoint::AuthenticateUser(boost::string_ref username,
 
     RR_SHARED_PTR<AuthenticatedUser> u = service->AuthenticateUser(username, credentials, shared_from_this());
     endpoint_authenticated_user = u;
-    m_CurrentAuthenticatedUser.reset(new RR_SHARED_PTR<AuthenticatedUser>(u));
+    m_CurrentAuthenticatedUser.reset(new RR_SHARED_PTR<AuthenticatedUser>(u)); // NOLINT
 }
 
 void ServerEndpoint::LogoutUser()
@@ -2549,7 +2548,7 @@ void ServerEndpoint::PeriodicCleanupTask()
 void ServerEndpoint::SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c)
 {
     Endpoint::SetTransportConnection(c);
-    bool m = c->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE |
+    c->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE |
                                       TransportCapabilityCode_MESSAGE4_BASIC_ENABLE);
 }
 

@@ -28,7 +28,6 @@ class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnec
 
     virtual void AcceptMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
-  public:
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,

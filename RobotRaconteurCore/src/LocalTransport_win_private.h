@@ -59,7 +59,7 @@ boost::optional<std::wstring> GetSIDStringForName(std::wstring name);
 
 bool IsPipeSameUserOrService(HANDLE pipe, bool allow_service);
 BOOL GetNamedPipeServerProcessId(HANDLE pipe, PULONG pid, PBOOL available);
-bool IsPipeUser(HANDLE pipe, std::string username);
+bool IsPipeUser(HANDLE pipe, const std::string& username);
 
 RR_SHARED_PTR<std::ifstream> HandleToIStream(HANDLE h);
 RR_SHARED_PTR<std::ofstream> HandleToOStream(HANDLE h);

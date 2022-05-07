@@ -24,8 +24,8 @@
 namespace RobotRaconteur
 {
 
-std::list<RR_WEAK_PTR<IntraTransport> > IntraTransport::peer_transports;
-boost::mutex IntraTransport::peer_transports_lock;
+std::list<RR_WEAK_PTR<IntraTransport> > IntraTransport::peer_transports; // NOLINT
+boost::mutex IntraTransport::peer_transports_lock; // NOLINT
 
 IntraTransport::IntraTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Transport(node)
 {
@@ -114,10 +114,7 @@ std::string IntraTransport::GetUrlSchemeString() const { return "rr+intra"; }
 
 bool IntraTransport::CanConnectService(boost::string_ref url)
 {
-    if (boost::starts_with(url, "rr+intra://"))
-        return true;
-
-    return false;
+    return (boost::starts_with(url, "rr+intra://"));
 }
 
 void IntraTransport::AsyncCreateTransportConnection(
@@ -146,13 +143,13 @@ void IntraTransport::AsyncCreateTransportConnection(
                                            "IntraTransport must not contain port, invalid URL: " << url);
         throw ConnectionException("Invalid url for IntraTransport");
     }
-    if (url_res.path != "" && url_res.path != "/")
+    if (!url_res.path.empty() && url_res.path != "/")
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                            "IntraTransport must not contain a path, invalid URL: " << url);
         throw ConnectionException("Invalid url for IntraTransport");
     }
-    if (url_res.host != "")
+    if (!url_res.host.empty())
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                            "IntraTransport must not contain a hostname, invalid URL: " << url);
@@ -228,7 +225,7 @@ void IntraTransport::AsyncCreateTransportConnection(
                                        "IntraTransport found peer transport for URL: " << url);
 
     std::string noden;
-    if (!(url_res.nodeid.IsAnyNode() && url_res.nodename != ""))
+    if (!(url_res.nodeid.IsAnyNode() && !url_res.nodename.empty()))
     {
         noden = url_res.nodeid.ToString();
     }
@@ -453,7 +450,7 @@ void IntraTransport::AsyncGetDetectedNodes(
     boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
 {
     RR_UNUSED(timeout);
-    if (boost::range::find(schemes, "rr+intra") == schemes.end() || schemes.size() == 0)
+    if (boost::range::find(schemes, "rr+intra") == schemes.end() || schemes.empty())
     {
         RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > n = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
         detail::PostHandler(node, handler, n, true);
@@ -702,9 +699,11 @@ void IntraTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
     try
     {
         std::string connecturl = "rr+intra:///";
+        // NOLINTBEGIN
         Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<IntraTransportConnection>(shared_from_this())));
+        // NOLINTEND
         p->MessageReceived(m);
     }
     catch (std::exception& exp)

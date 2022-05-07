@@ -129,7 +129,7 @@ void PasswordFileUserAuthenticator::load(boost::string_ref data)
         {
             std::vector<std::string> n_ids;
             boost::split(n_ids, g.at(3), boost::is_from_range(',', ','));
-            BOOST_FOREACH (std::string n_id, n_ids)
+            BOOST_FOREACH (const std::string& n_id, n_ids)
             {
                 u->allowed_client_nodeid.push_back(NodeID(n_id));
             }
@@ -245,8 +245,8 @@ std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
 
     return s2;
 #else
-    uint8_t md[MD5_DIGEST_LENGTH];
-    MD5(reinterpret_cast<const uint8_t*>(text.data()), text.size(), reinterpret_cast<uint8_t*>(md));
+    uint8_t md[MD5_DIGEST_LENGTH]; // NOLINT
+    MD5(reinterpret_cast<const uint8_t*>(text.data()), text.size(), reinterpret_cast<uint8_t*>(md)); // NOLINT
 
     std::string s2;
     for (size_t i = 0; i < 16; i++)

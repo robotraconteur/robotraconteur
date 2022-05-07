@@ -77,9 +77,9 @@ class CPPServiceLangGen
 
     static convert_generator_result convert_generator(FunctionDefinition* f);
 
-    static bool is_member_override(MemberDefinition* m, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs);
+    static bool is_member_override(MemberDefinition* m,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs);
 
-    static void GenerateInterfaceHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
+    static void GenerateInterfaceHeaderFile(ServiceDefinition* d,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                                             const std::vector<std::string>& extra_include, ostream* w);
 
     static string GetPropertyDeclaration(PropertyDefinition* d, bool inclass = true);
@@ -114,26 +114,26 @@ class CPPServiceLangGen
 
     static string MemoryDeclaration(MemoryDefinition* d, bool inclass = true);
 
-    static void GenerateStubSkelHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
+    static void GenerateStubSkelHeaderFile(ServiceDefinition* d,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                                            ostream* w);
 
-    static void GenerateStubSkelFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
+    static void GenerateStubSkelFile(ServiceDefinition* d,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
                                      ostream* w, string servicedef);
 
     static void GenerateServiceFactoryHeader(ServiceDefinition* d, ostream* w);
 
     static void GenerateServiceFactory(ServiceDefinition* d, ostream* w, string defstring);
 
-    static void GenerateStubHeader(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+    static void GenerateStubHeader(ServiceDefinition* d,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                    ostream* w);
 
-    static void GenerateSkelHeader(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+    static void GenerateSkelHeader(ServiceDefinition* d,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                    ostream* w);
 
-    static void GenerateStubDefinition(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+    static void GenerateStubDefinition(ServiceDefinition* d,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                        ostream* w);
 
-    static void GenerateSkelDefinition(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+    static void GenerateSkelDefinition(ServiceDefinition* d,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                        ostream* w);
 
     static void GenerateConstants(ServiceDefinition* d, ostream* w);
@@ -143,22 +143,22 @@ class CPPServiceLangGen
     static std::string GetDefaultInitializedValue(const TypeDefinition& tdef);
 
     static void GenerateDefaultImplHeader(ServiceDefinition* d,
-                                          std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, bool is_abstract,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, bool is_abstract,
                                           ostream* w);
 
     static void GenerateDefaultImplDefinition(ServiceDefinition* d,
-                                              std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                               bool is_abstract, ostream* w);
 
     static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
 
     // File generators
-    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef,
-                              std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                               const std::vector<std::string>& extra_include, std::string path = ".");
 
     // Master header file
-    static void GenerateMasterHeaderFile(std::vector<RR_SHARED_PTR<ServiceDefinition> > d, ostream* w);
+    static void GenerateMasterHeaderFile(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& d, ostream* w);
 };
 
 } // namespace RobotRaconteurGen

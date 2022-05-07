@@ -19,6 +19,7 @@
 #include "HardwareTransport_bluetoothcommon_private.h"
 #include "HardwareTransport_discoverycommon_private.h"
 
+// NOLINTBEGIN
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/hci.h>
 #include <bluetooth/hci_lib.h>
@@ -27,6 +28,7 @@
 #include <bluetooth/sdp_lib.h>
 
 #include <dbus/dbus.h>
+// NOLINTEND
 
 #pragma once
 
@@ -68,6 +70,7 @@ namespace RobotRaconteur
 namespace detail
 {
 
+// NOLINTBEGIN
 #define DBUS_FUNCTIONS_INIT(M)                                                                                         \
     M(dbus_error_init)                                                                                                 \
     M(dbus_error_free)                                                                                                 \
@@ -92,6 +95,7 @@ namespace detail
     if ((t) == NULL)                                                                                                     \
         return false;
 
+// NOLINTEND
 class DBus_Functions : public boost::noncopyable
 {
   private:
@@ -105,6 +109,7 @@ class DBus_Functions : public boost::noncopyable
     virtual ~DBus_Functions();
 };
 
+// BEGINNOLINT
 #define SDP_FUNCTIONS_INIT(M)                                                                                          \
     M(str2ba)                                                                                                          \
     M(sdp_connect)                                                                                                     \
@@ -125,6 +130,7 @@ class DBus_Functions : public boost::noncopyable
     t = reinterpret_cast<t##_t>(dlsym(lib_handle, #t));                                                                \
     if ((t) == NULL)                                                                                                     \
         return false;
+// ENDNOLINT
 
 class Sdp_Functions : public boost::noncopyable
 {

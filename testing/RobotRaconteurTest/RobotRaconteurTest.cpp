@@ -148,16 +148,16 @@ void servicetest5(RR_SHARED_PTR<PipeEndpoint<double> > p, RR_SHARED_PTR<WireConn
     servicetest_count++;
 }
 
-void servicetest3(std::string url1, const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp);
+void servicetest3(const std::string& url1, const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-void servicetest4(std::string url1)
+void servicetest4(const std::string& url1)
 {
     RobotRaconteurNode::s()->AsyncConnectService(
         url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "",
         boost::bind(&servicetest3, url1, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 }
 
-void servicetest3(std::string url1, const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp)
+void servicetest3(const std::string& url1, const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -2201,7 +2201,7 @@ int main(int argc, char* argv[])
         {
             schemes.push_back("rr+local");
         }
-        BOOST_FOREACH (std::string scheme, schemes)
+        BOOST_FOREACH (const std::string& scheme, schemes)
         {
             std::vector<std::string> schemes2;
             schemes2.push_back(scheme);
@@ -2263,7 +2263,7 @@ int main(int argc, char* argv[])
         std::vector<NodeID> n;
         std::vector<std::string> n1;
         boost::split(n1, argv[2], boost::is_any_of(","));
-        BOOST_FOREACH (std::string n2, n1)
+        BOOST_FOREACH (const std::string& n2, n1)
         {
             n.push_back(NodeID(n2));
         }

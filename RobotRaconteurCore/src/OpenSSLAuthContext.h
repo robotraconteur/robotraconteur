@@ -36,7 +36,7 @@ class OpenSSLAuthContext : boost::noncopyable
     boost::shared_ptr<X509> p12_cert;
     boost::shared_ptr<EVP_PKEY> p12_key;
 
-    static void InitCA(boost::shared_ptr<boost::asio::ssl::context> context);
+    static void InitCA(const boost::shared_ptr<boost::asio::ssl::context>& context);
 
   public:
     OpenSSLAuthContext(const NodeID& nodeid);

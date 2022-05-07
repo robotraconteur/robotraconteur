@@ -68,14 +68,14 @@ class Tap_socket
   public:
     Tap_socket(RR_BOOST_ASIO_IO_CONTEXT& context)
     {
-        socket.reset(new boost::asio::local::stream_protocol::socket(context));
+        socket = RR_SHARED_PTR<boost::asio::local::stream_protocol::socket>(new boost::asio::local::stream_protocol::socket(context));
     }
     RR_SHARED_PTR<boost::asio::local::stream_protocol::socket> socket;
 };
 class Tap_acceptor
 {
   public:
-    Tap_acceptor(RR_BOOST_ASIO_IO_CONTEXT& context, boost::asio::local::stream_protocol::endpoint ep)
+    Tap_acceptor(RR_BOOST_ASIO_IO_CONTEXT& context, const boost::asio::local::stream_protocol::endpoint& ep)
         : acceptor(context, ep)
     {}
     Tap_acceptor(RR_BOOST_ASIO_IO_CONTEXT& context) : acceptor(context) {}
@@ -163,7 +163,7 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
     size_t message_len;
     size_t message_pos;
 
-    uint8_t recv_buf[1024];
+    boost::array<uint8_t,1024> recv_buf;
 
     LocalMessageTapConnectionImpl(const RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT>& io_context, bool log_all)
     {
@@ -171,11 +171,11 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
         this->io_context = io_context;
         this->sending = false;
 
-        buffer_len = 32 * 1024;
-        send_buffer.reset(new uint8_t[buffer_len]);
+        buffer_len = 32768;
+        send_buffer = boost::shared_array<uint8_t>(new uint8_t[buffer_len]);
     }
 
-    void AttachSocket(RR_SHARED_PTR<detail::Tap_socket> socket)
+    void AttachSocket(const RR_SHARED_PTR<detail::Tap_socket>& socket)
     {
         this->socket = socket;
 
@@ -206,7 +206,7 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
         if (message_len > buffer_len)
         {
             buffer_len = message_len + message_len / 10;
-            send_buffer.reset(new uint8_t[buffer_len]);
+            send_buffer = boost::shared_array<uint8_t>(new uint8_t[buffer_len]);
         }
 
         ArrayBinaryWriter w(send_buffer.get(), 0, message_len);
@@ -252,7 +252,7 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
 
     void start_recv()
     {
-        socket->socket->async_read_some(boost::asio::buffer(recv_buf, sizeof(recv_buf)),
+        socket->socket->async_read_some(boost::asio::buffer(recv_buf.data(), sizeof(recv_buf)),
                                         boost::bind(&LocalMessageTapConnectionImpl::end_recv, shared_from_this(),
                                                     boost::asio::placeholders::error,
                                                     boost::asio::placeholders::bytes_transferred));
@@ -267,7 +267,7 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
         }
 
         boost::mutex::scoped_lock lock(this_lock);
-        socket->socket->async_read_some(boost::asio::buffer(recv_buf, sizeof(recv_buf)),
+        socket->socket->async_read_some(boost::asio::buffer(recv_buf.data(), sizeof(recv_buf)),
                                         boost::bind(&LocalMessageTapConnectionImpl::end_recv, shared_from_this(),
                                                     boost::asio::placeholders::error,
                                                     boost::asio::placeholders::bytes_transferred));
@@ -345,7 +345,7 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
         }
     }
 
-    void handle_accept_all(RR_SHARED_PTR<detail::Tap_acceptor> acceptor, RR_SHARED_PTR<detail::Tap_socket> socket,
+    void handle_accept_all(const RR_SHARED_PTR<detail::Tap_acceptor>& acceptor, const RR_SHARED_PTR<detail::Tap_socket>& socket,
                            const boost::system::error_code& error)
     {
         if (error)
@@ -372,7 +372,7 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
                                                     acceptor, all_socket1, boost::asio::placeholders::error));
     }
 
-    void handle_accept_log(RR_SHARED_PTR<detail::Tap_acceptor> acceptor, RR_SHARED_PTR<detail::Tap_socket> socket,
+    void handle_accept_log(const RR_SHARED_PTR<detail::Tap_acceptor>& acceptor, const RR_SHARED_PTR<detail::Tap_socket>& socket,
                            const boost::system::error_code& error)
     {
         if (error)
@@ -400,8 +400,8 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
     }
 
     static void thread_func(RR_SHARED_PTR<LocalMessageTapImpl>& this1,
-                            const RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT>& io_context1, boost::filesystem::path all_tap_fname1,
-                            boost::filesystem::path log_tap_fname1)
+                            const RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT>& io_context1, const boost::filesystem::path& all_tap_fname1,
+                            const boost::filesystem::path& log_tap_fname1)
     {
         RR_WEAK_PTR<LocalMessageTapImpl> this2 = this1;
         this1.reset();

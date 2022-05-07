@@ -2589,7 +2589,7 @@ class PackMxArrayToMessageElementImpl
         return boost::make_tuple(name, type);
     }
 
-    std::string get_exception_message(std::string msg)
+    std::string get_exception_message(const std::string& msg)
     {
         boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
 
@@ -3444,7 +3444,7 @@ class UnpackMessageElementToMxArrayImpl
         return boost::make_tuple(name, type);
     }
 
-    std::string get_exception_message(std::string msg)
+    std::string get_exception_message(const std::string& msg)
     {
         boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
 
@@ -3876,7 +3876,7 @@ void MexServiceStub::RRInitStub()
     }
 }
 
-mxArray* MexServiceStub::PropertyGet(std::string PropertyName)
+mxArray* MexServiceStub::PropertyGet(const std::string& PropertyName)
 {
     boost::shared_ptr<PropertyDefinition> pdef;
     BOOST_FOREACH (boost::shared_ptr<MemberDefinition>& e, RR_objecttype->Members)
@@ -3895,7 +3895,7 @@ mxArray* MexServiceStub::PropertyGet(std::string PropertyName)
     return UnpackMessageElementToMxArray(res->FindElement("value"), pdef->Type, shared_from_this());
 }
 
-void MexServiceStub::PropertySet(std::string PropertyName, const mxArray* value)
+void MexServiceStub::PropertySet(const std::string& PropertyName, const mxArray* value)
 {
     boost::shared_ptr<PropertyDefinition> pdef;
     BOOST_FOREACH (boost::shared_ptr<MemberDefinition>& e, RR_objecttype->Members)
@@ -3932,7 +3932,7 @@ mxArray* CreateGeneratorClientMxArray(int32_t id)
     return lhs[0];
 }
 
-mxArray* MexServiceStub::FunctionCall(std::string FunctionName, std::vector<const mxArray*> args)
+mxArray* MexServiceStub::FunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args)
 {
     boost::shared_ptr<FunctionDefinition> fdef;
     BOOST_FOREACH (boost::shared_ptr<MemberDefinition>& e, RR_objecttype->Members)
@@ -4019,7 +4019,7 @@ mxArray* MexServiceStub::FunctionCall(std::string FunctionName, std::vector<cons
     }
 }
 
-void MexServiceStub::AsyncPropertyGet(std::string PropertyName, const RR_SHARED_PTR<mxArray>& handler,
+void MexServiceStub::AsyncPropertyGet(const std::string& PropertyName, const RR_SHARED_PTR<mxArray>& handler,
                                       const RR_SHARED_PTR<mxArray>& param, uint32_t timeout)
 {
     boost::shared_ptr<PropertyDefinition> pdef;
@@ -4067,7 +4067,7 @@ void MexServiceStub::EndAsyncPropertyGet(const RR_INTRUSIVE_PTR<MessageEntry>& r
     async_results.push(ares);
 }
 
-void MexServiceStub::AsyncPropertySet(std::string PropertyName, const mxArray* value, const RR_SHARED_PTR<mxArray>& handler,
+void MexServiceStub::AsyncPropertySet(const std::string& PropertyName, const mxArray* value, const RR_SHARED_PTR<mxArray>& handler,
                                       const RR_SHARED_PTR<mxArray>& param, uint32_t timeout)
 {
     boost::shared_ptr<PropertyDefinition> pdef;
@@ -4117,7 +4117,7 @@ void MexServiceStub::EndAsyncPropertySet(const RR_INTRUSIVE_PTR<MessageEntry>& r
     async_results.push(ares);
 }
 
-void MexServiceStub::AsyncFunctionCall(std::string FunctionName, std::vector<const mxArray*> args,
+void MexServiceStub::AsyncFunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args,
                                        const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram, uint32_t timeout)
 {
     boost::shared_ptr<FunctionDefinition> fdef;
@@ -6084,7 +6084,7 @@ RR_SHARED_PTR<MexPipeEndpoint> MexPipeClient::Connect(int32_t index)
     return o;
 }
 
-MexPipeClient::MexPipeClient(std::string name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
+MexPipeClient::MexPipeClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
                              bool unreliable, MemberDefinition_Direction direction)
     : PipeClientBase(name, stub, unreliable, direction)
 {
@@ -6401,7 +6401,7 @@ RR_SHARED_PTR<MexWireConnection> MexWireClient::Connect()
     return o;
 }
 
-MexWireClient::MexWireClient(std::string name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
+MexWireClient::MexWireClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub, const RR_SHARED_PTR<TypeDefinition>& Type,
                              MemberDefinition_Direction direction)
     : WireClientBase(name, stub, direction)
 {
@@ -7357,7 +7357,7 @@ void MexServiceSkel::RegisterEvents(const RR_SHARED_PTR<RRObject>& obj1)
     }
 }
 
-void MexServiceSkel::DispatchMexEvent(std::string name, const mxArray* parameters)
+void MexServiceSkel::DispatchMexEvent(const std::string& name, const mxArray* parameters)
 {
     try
     {

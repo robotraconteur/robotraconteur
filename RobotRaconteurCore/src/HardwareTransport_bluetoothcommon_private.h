@@ -25,11 +25,11 @@
 #endif
 
 #ifndef INVALID_SOCKET
-#define INVALID_SOCKET -1
+#define INVALID_SOCKET (-1)
 #endif
 
 #ifndef SOCKET_ERROR
-#define SOCKET_ERROR -1
+#define SOCKET_ERROR (-1)
 #endif
 
 namespace RobotRaconteur
@@ -48,7 +48,7 @@ static T BluetoothConnector_record_read_number(boost::asio::mutable_buffer& buf)
 
     buf = buf + sizeof(T);
 #if BOOST_ENDIAN_LITTLE_BYTE
-    std::reverse(reinterpret_cast<uint8_t*>(&num), reinterpret_cast<uint8_t*>(&num) + sizeof(T));
+    std::reverse(reinterpret_cast<uint8_t*>(&num), reinterpret_cast<uint8_t*>(&num) + sizeof(T)); // NOLINT
 #endif
 
     return num;
@@ -132,7 +132,6 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
     void UpdateDevices()
     {
         devices = GetDeviceAddresses();
-        return;
     }
 
     std::list<btaddr> FindMatchingServices(btaddr addr, const NodeID& nodeid, boost::string_ref nodename)
@@ -260,7 +259,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
                     continue;
                 }
 
-                int res = connect(s1, reinterpret_cast<const sockaddr*>(&a1), sizeof(a1));
+                int res = connect(s1, reinterpret_cast<const sockaddr*>(&a1), sizeof(a1)); // NOLINT
                 if (res == SOCKET_ERROR)
                 {
                     continue;
@@ -273,7 +272,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
                 const boost::asio::generic::stream_protocol::socket::executor_type& ex =
                     parent->GetNode()->GetThreadPool()->get_io_context().get_executor();
 #endif
-                sock.reset(new boost::asio::generic::stream_protocol::socket(ex, protocol, s1));
+                sock = RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>(new boost::asio::generic::stream_protocol::socket(ex, protocol, s1)); // NOLINT
                 break;
             }
         }
@@ -311,7 +310,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
 
     void DoConnect_err(
         const RR_SHARED_PTR<RobotRaconteurException>& exp,
-        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
         int32_t key)
     {
         boost::mutex::scoped_lock lock(this_lock);

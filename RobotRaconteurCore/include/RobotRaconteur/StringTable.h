@@ -84,10 +84,9 @@ class ROBOTRACONTEUR_CORE_API StringTable : private boost::noncopyable
     void DoReplaceCode(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code,
                        boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
 
-    bool _AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
-    void _AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
+    bool AddCode_p(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
+    void AddCodesCSV_p(const std::string& csv, const std::vector<uint32_t>& table_flags);
 
-  protected:
     bool server;
 
     size_t max_entry_count;

@@ -72,7 +72,7 @@ class ROBOTRACONTEUR_CORE_API Endpoint : private boost::noncopyable
     void SetRemoteNodeName(boost::string_ref name);
 
     NodeID GetRemoteNodeID();
-    void SetRemoteNodeID(NodeID id);
+    void SetRemoteNodeID(const NodeID& id);
 
     uint32_t GetTransport();
     void SetTransport(uint32_t transport);

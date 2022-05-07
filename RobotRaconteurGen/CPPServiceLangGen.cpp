@@ -470,7 +470,7 @@ std::string CPPServiceLangGen::str_pack_parameters(const std::vector<RR_SHARED_P
 
 // Code to pack and unpack message elements
 
-static std::string CPPServiceLangGen_VerifyArrayLength(TypeDefinition& t, std::string varname)
+static std::string CPPServiceLangGen_VerifyArrayLength(TypeDefinition& t, const std::string& varname)
 {
     if (t.ArrayType == DataTypes_ArrayTypes_array && t.ArrayLength.at(0) != 0)
     {
@@ -1127,7 +1127,7 @@ string CPPServiceLangGen::MemoryDeclaration(MemoryDefinition* d, bool inclass)
 }
 
 void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
-                                                    std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                                     const std::vector<std::string>& extra_include, ostream* w)
 {
     ostream& w2 = *w;
@@ -1478,7 +1478,7 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
 }
 
 void CPPServiceLangGen::GenerateStubSkelHeaderFile(ServiceDefinition* d,
-                                                   std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                                    ostream* w)
 {
     ostream& w2 = *w;
@@ -1585,7 +1585,7 @@ void CPPServiceLangGen::GenerateStubSkelHeaderFile(ServiceDefinition* d,
 }
 
 void CPPServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d,
-                                             std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w,
                                              string servicedef)
 {
     ostream& w2 = *w;
@@ -2014,7 +2014,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, ostream* w,
 }
 
 void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
-                                           std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -2284,7 +2284,7 @@ void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
 }
 
 void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition* d,
-                                           std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -2513,7 +2513,7 @@ static std::string CPPServiceLangGen_direction_str(MemberDefinition_Direction di
 }
 
 void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
-                                               std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
 {
 
     ostream& w2 = *w;
@@ -3372,7 +3372,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
 }
 
 void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
-                                               std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, ostream* w)
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, ostream* w)
 {
     ostream& w2 = *w;
 
@@ -4277,7 +4277,7 @@ CPPServiceLangGen::convert_generator_result CPPServiceLangGen::convert_generator
     return o;
 }
 
-bool CPPServiceLangGen::is_member_override(MemberDefinition* m, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs)
+bool CPPServiceLangGen::is_member_override(MemberDefinition* m,const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
 {
     RR_SHARED_PTR<ServiceEntryDefinition> obj_def = m->ServiceEntry.lock();
     if (!obj_def)
@@ -4450,9 +4450,9 @@ void CPPServiceLangGen::GenerateConstants(ServiceDefinition* d, ostream* w)
     }
 }
 
-void CPPServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef,
-                                      std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
-                                      const std::vector<std::string>& extra_include, std::string path)
+void CPPServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                                      const std::vector<std::string>& extra_include, const std::string& path)
 {
 #ifdef _WIN32
     const std::string os_pathsep("\\");
@@ -4615,7 +4615,7 @@ std::string CPPServiceLangGen::GetDefaultInitializedValue(const TypeDefinition& 
     return get_variable_type(tdef).cpp_type + "()";
 }
 
-void CPPServiceLangGen::GenerateMasterHeaderFile(std::vector<RR_SHARED_PTR<ServiceDefinition> > d, ostream* w)
+void CPPServiceLangGen::GenerateMasterHeaderFile(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& d, ostream* w)
 {
     ostream& w2 = *w;
     w2 << "//This file is automatically generated. DO NOT EDIT!" << endl << endl;
@@ -4645,7 +4645,7 @@ void CPPServiceLangGen::GenerateMasterHeaderFile(std::vector<RR_SHARED_PTR<Servi
 }
 
 void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d,
-                                                  std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                                   bool is_abstract, ostream* w)
 {
     ostream& w2 = *w;
@@ -4762,7 +4762,7 @@ void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d,
 }
 
 void CPPServiceLangGen::GenerateDefaultImplDefinition(ServiceDefinition* d,
-                                                      std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
+const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                                                       bool is_abstract, ostream* w)
 {
     ostream& w2 = *w;

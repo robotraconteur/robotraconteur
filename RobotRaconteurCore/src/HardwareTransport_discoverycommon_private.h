@@ -140,7 +140,7 @@ class HardwareTransport_discovery
 
         boost::mutex::scoped_lock op_lock(op->this_lock);
 
-        op->timer.reset(new boost::asio::deadline_timer(p->get_io_context()));
+        op->timer = RR_SHARED_PTR<boost::asio::deadline_timer>(new boost::asio::deadline_timer(p->get_io_context()));
         if (timeout >= 0)
         {
             op->timer->expires_from_now(boost::posix_time::milliseconds(timeout));
@@ -305,7 +305,7 @@ class HardwareTransport_discovery
         GetAll1(o, op);
     }
 
-    void GetAll1(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > nodeinfo, const RR_SHARED_PTR<refresh_op>& op)
+    void GetAll1(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& nodeinfo, const RR_SHARED_PTR<refresh_op>& op)
     {
         boost::mutex::scoped_lock lock(op->this_lock);
 
@@ -346,7 +346,7 @@ class HardwareTransport_discovery
         f(op->ret);
     }
 
-    void OnDeviceChanged(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > d)
+    void OnDeviceChanged(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& d)
     {
         if (!d)
             return;
@@ -410,7 +410,7 @@ class HardwareTransport_discovery
         }
     }
 
-    void OnBluetoothChanged1(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > d)
+    void OnBluetoothChanged1(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& d)
     {
         if (!d)
             return;

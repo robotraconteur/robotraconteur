@@ -4,6 +4,7 @@ namespace RobotRaconteur
 {
 namespace detail
 {
+// NOLINTBEGIN
 const char* StringTable_default_table_csv =
     "0,\n4,array\n8,attributes\n12,AuthenticateUser\n16,capabilities\n20,capabilities2\n24,clientversion\n28,"
     "confirmcodes\n32,Continue\n36,count\n40,CreateConnection\n44,credentials\n48,data\n52,DimCount\n56,Dimensions\n60,"
@@ -24,4 +25,5 @@ const char* StringTable_default_table_csv =
     "ServiceInfo\n600,node\n604,level\n608,component\n612,componentname\n616,componentobjectid\n620,endpoint\n624,"
     "member\n628,message\n632,time\n636,sourcefile\n640,sourceline\n644,threadid\n648,fiberid";
 }
+// NOLINTEND
 } // namespace RobotRaconteur

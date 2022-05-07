@@ -28,7 +28,7 @@ namespace RobotRaconteur
 {
 public:
 	virtual ~AsyncHandlerDirector() {}
-	virtual void handler(void* m, uint32_t error_code, std::string errorname, std::string errormessage);
+	virtual void handler(void* m, uint32_t error_code,const std::string& errorname,const std::string& errormessage);
 
 };*/
 

@@ -38,7 +38,7 @@ ThreadPool::ThreadPool(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 #if BOOST_ASIO_VERSION < 101200
     _work = RR_MAKE_SHARED<RR_BOOST_ASIO_IO_CONTEXT::work>(boost::ref(_io_context));
 #else
-    _work.reset(
+    _work = RR_SHARED_PTR<boost::asio::executor_work_guard<RR_BOOST_ASIO_IO_CONTEXT::executor_type> >(
         new boost::asio::executor_work_guard<RR_BOOST_ASIO_IO_CONTEXT::executor_type>(_io_context.get_executor()));
 #endif
 }
@@ -113,7 +113,7 @@ void ThreadPool::start_new_thread()
 
 void ThreadPool::thread_function()
 {
-    bool k;
+    bool k = false;
 
     {
         boost::mutex::scoped_lock lock(keepgoing_lock);

@@ -693,11 +693,11 @@ void MultiDimArrayMemoryClientBase::ReadBase(const std::vector<uint64_t>& memory
     {
         // We need to read the array in chunks.  This is a little complicated...
 
-        uint32_t split_dim;
-        uint64_t split_dim_block;
-        uint64_t split_elem_count;
-        uint32_t splits_count;
-        uint32_t split_remainder;
+        uint32_t split_dim = 0;
+        uint64_t split_dim_block = 0;
+        uint64_t split_elem_count = 0;
+        uint32_t splits_count = 0;
+        uint32_t split_remainder = 0;
         std::vector<uint64_t> block_count;
         std::vector<uint64_t> block_count_edge;
 
@@ -821,11 +821,11 @@ void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memor
     }
     else
     {
-        uint32_t split_dim;
-        uint64_t split_dim_block;
-        uint64_t split_elem_count;
-        uint32_t splits_count;
-        uint32_t split_remainder;
+        uint32_t split_dim = 0;
+        uint64_t split_dim_block = 0;
+        uint64_t split_elem_count = 0;
+        uint32_t splits_count = 0;
+        uint32_t split_remainder = 0;
         std::vector<uint64_t> block_count;
         std::vector<uint64_t> block_count_edge;
 

@@ -83,7 +83,7 @@ class JavaServiceLangGen
 
     static void GenerateAsyncInterface(ServiceEntryDefinition* e, ostream* w);
 
-    static void GenerateServiceFactory(ServiceDefinition* d, std::string defstring, ostream* w);
+    static void GenerateServiceFactory(ServiceDefinition* d, const std::string& defstring, ostream* w);
 
     static void GenerateStructureStub(ServiceEntryDefinition* e, ostream* w);
 
@@ -109,7 +109,7 @@ class JavaServiceLangGen
 
     static void GenerateEnumFile(EnumDefinition* e, ServiceDefinition* d, ostream* w);
 
-    static void GenerateServiceFactoryFile(ServiceDefinition* d, std::string defstring, ostream* w);
+    static void GenerateServiceFactoryFile(ServiceDefinition* d, const std::string& defstring, ostream* w);
 
     static void GenerateInterfaceFile(ServiceEntryDefinition* d, ostream* w);
 
@@ -135,7 +135,7 @@ class JavaServiceLangGen
 
     static void GenerateConstantsFile(ServiceDefinition* d, ostream* w);
 
-    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, std::string servicedef, std::string path = ".");
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef, std::string path = ".");
 };
 
 } // namespace RobotRaconteurGen

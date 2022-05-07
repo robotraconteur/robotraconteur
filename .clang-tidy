@@ -32,10 +32,13 @@ Checks: >
     -readability-else-after-return,
     -readability-const-return-type,
     -readability-implicit-bool-conversion,
+    -readability-container-data-pointer,
+    -readability-convert-member-functions-to-static,
     -cppcoreguidelines-special-member-functions,
     -bugprone-easily-swappable-parameters,
     -hicpp-*,
-    -cppcoreguidelines-prefer-member-initializer
+    -cppcoreguidelines-prefer-member-initializer,
+    -cppcoreguidelines-pro-type-member-init
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
@@ -47,4 +50,6 @@ CheckOptions:
   - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
     value:           '1'
   - key: performance-unnecessary-value-param.AllowedTypes
-    value: MessageStringRef
+    value: MessageStringRef;RR_WEAK_PTR*;boost::weak_ptr*;boost::function*
+  - key: bugprone-signed-char-misuse.CharTypdefsToIgnore
+    value: int8_t

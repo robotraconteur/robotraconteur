@@ -48,7 +48,7 @@ class NpyIterAutoPtr
 };
 
 template <typename T>
-T find_by_name(std::vector<T> t, std::string& name)
+T find_by_name(const std::vector<T>& t, const std::string& name)
 {
     BOOST_FOREACH (T t1, t)
     {
@@ -62,7 +62,7 @@ T find_by_name(std::vector<T> t, std::string& name)
 }
 
 template <typename T>
-T find_by_name(std::vector<T> t, boost::string_ref name)
+T find_by_name(const std::vector<T>& t, boost::string_ref name)
 {
     BOOST_FOREACH (T t1, t)
     {
@@ -1275,7 +1275,7 @@ class PackMessageElementImpl
         return boost::make_tuple(name, type);
     }
 
-    std::string get_exception_message(std::string msg)
+    std::string get_exception_message(const std::string& msg)
     {
         boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
 
@@ -2235,7 +2235,7 @@ class UnpackMessageElementImpl
         return boost::make_tuple(name, type);
     }
 
-    std::string get_exception_message(std::string msg)
+    std::string get_exception_message(const std::string& msg)
     {
         boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
 

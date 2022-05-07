@@ -115,14 +115,14 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
     void Shutdown();
 
   protected:
-    void EndAsyncFindNodeByID(RobotRaconteur::NodeID id, std::vector<std::string> transportschemes,
+    void EndAsyncFindNodeByID(const RobotRaconteur::NodeID& id, const std::vector<std::string>& transportschemes,
                               boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler);
 
-    void EndAsyncFindNodeByName(std::string name, std::vector<std::string> transportschemes,
+    void EndAsyncFindNodeByName(const std::string& name, const std::vector<std::string>& transportschemes,
                                 boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler);
 
     void EndUpdateServiceInfo(const RR_SHARED_PTR<Discovery_nodestorage>& storage,
-                              RR_SHARED_PTR<std::vector<ServiceInfo2> > info, boost::string_ref nonce,
+                              const RR_SHARED_PTR<std::vector<ServiceInfo2> >& info, boost::string_ref nonce,
                               const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void RetryUpdateServiceInfo(const RR_SHARED_PTR<Discovery_nodestorage>& storage);
@@ -157,7 +157,7 @@ class Discovery_updatediscoverednodes : public RR_ENABLE_SHARED_FROM_THIS<Discov
 
     void timeout_timer_callback(const TimerEvent& e);
 
-    void getdetectednodes_callback(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > ret, int32_t key);
+    void getdetectednodes_callback(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& ret, int32_t key);
 
     void UpdateDiscoveredNodes(const std::vector<std::string>& schemes,
                                const std::vector<RR_SHARED_PTR<Transport> >& transports,
@@ -199,10 +199,10 @@ class Discovery_findservicebytype : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
     static void rr_empty_handler();
 
     void serviceinfo_callback(const RR_INTRUSIVE_PTR<MessageEntry>& ret1, const RR_SHARED_PTR<RobotRaconteurException>& err,
-                              const RR_SHARED_PTR<ServiceStub>& client, std::string url, uint32_t key);
+                              const RR_SHARED_PTR<ServiceStub>& client, const std::string& url, int32_t key);
 
-    void connect_callback(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err, std::string url,
-                          uint32_t key);
+    void connect_callback(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
+                          int32_t key);
 
     void find2();
 

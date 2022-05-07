@@ -27,11 +27,11 @@ namespace RobotRaconteur
 RobotRaconteurException::RobotRaconteurException() : std::runtime_error("")
 {
     InitializeInstanceFields();
-    what_string = ToString();
+    what_string = ToString(); // NOLINT
 }
 
 RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, const std::string& error,
-                                                 const std::string& message, std::string sub_name,
+                                                 const std::string& message, const std::string& sub_name,
                                                 const RR_INTRUSIVE_PTR<RRValue>& param_)
     : std::runtime_error((error + " " + message).c_str())
 {
@@ -41,7 +41,7 @@ RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, con
     this->ErrorCode = ErrorCode;
     this->ErrorSubName = sub_name;
     this->ErrorParam = param_;
-    what_string = ToString();
+    what_string = ToString(); // NOLINT
 }
 
 RobotRaconteurException::RobotRaconteurException(const std::string& message, std::exception& innerexception)
@@ -62,12 +62,12 @@ void RobotRaconteurException::InitializeInstanceFields()
 }
 
 #define RR_EXCEPTION_DEF_1(exp_cpp_type, exp_code, exp_type_str)                                                       \
-    exp_cpp_type::exp_cpp_type(const std::string& message, std::string sub_type,const RR_INTRUSIVE_PTR<RRValue>& param_)     \
+    exp_cpp_type::exp_cpp_type(const std::string& message, const std::string& sub_type,const RR_INTRUSIVE_PTR<RRValue>& param_)     \
         : RobotRaconteurException(exp_code, exp_type_str, message, sub_type, param_)                                   \
     {}
 
 #define RR_EXCEPTION_DEF_2(exp_cpp_type, exp_code)                                                                     \
-    exp_cpp_type::exp_cpp_type(const std::string& error, const std::string& message, std::string sub_type,             \
+    exp_cpp_type::exp_cpp_type(const std::string& error, const std::string& message, const std::string& sub_type,             \
                               const RR_INTRUSIVE_PTR<RRValue>& param_)                                                       \
         : RobotRaconteurException(exp_code, error, message, sub_type, param_)                                          \
     {}                                                                                                                 \

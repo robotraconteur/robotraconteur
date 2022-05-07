@@ -1074,7 +1074,7 @@ WrappedPipeEndpoint::~WrappedPipeEndpoint()
 }
 
 void WrappedPipeEndpoint::SetPipeBroadcaster(const RR_SHARED_PTR<WrappedPipeBroadcaster>& broadcaster,
-                                             RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep)
+const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
 {
     boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
     RR_SHARED_PTR<WrappedPipeBroadcaster> broadcaster1 = this->broadcaster.lock();
@@ -1271,7 +1271,7 @@ void WrappedPipeBroadcaster::AttachPipeServerEvents(const RR_SHARED_PTR<PipeServ
 }
 
 void WrappedPipeBroadcaster::AttachPipeEndpointEvents(const RR_SHARED_PTR<PipeEndpointBase>& ep,
-                                                      RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint> cep)
+const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
 {
     RR_SHARED_PTR<WrappedPipeEndpoint> ep_T = rr_cast<WrappedPipeEndpoint>(ep);
     ep_T->SetPipeBroadcaster(RR_STATIC_POINTER_CAST<WrappedPipeBroadcaster>(shared_from_this()), cep);
@@ -1430,7 +1430,7 @@ void WrappedWireConnection::AsyncClose_handler(const RR_SHARED_PTR<RobotRaconteu
 }
 
 void WrappedWireConnection::SetWireBroadcaster(const RR_SHARED_PTR<WrappedWireBroadcaster>& broadcaster,
-                                               RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> cep)
+                                               const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& cep)
 {
     boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
     RR_SHARED_PTR<WrappedWireBroadcaster> broadcaster1 = this->broadcaster.lock();
@@ -1821,7 +1821,7 @@ void WrappedWireBroadcaster::AttachWireServerEvents(const RR_SHARED_PTR<WireServ
 }
 
 void WrappedWireBroadcaster::AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& w,
-                                                        RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> cep)
+                                                        const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& cep)
 {
     RR_SHARED_PTR<WrappedWireConnection> w_T = rr_cast<WrappedWireConnection>(w);
     w_T->SetWireBroadcaster(RR_STATIC_POINTER_CAST<WrappedWireBroadcaster>(shared_from_this()), cep);
@@ -2560,7 +2560,7 @@ std::vector<RobotRaconteur::NodeInfo2> WrappedFindNodeByName(const RR_SHARED_PTR
     return node->FindNodeByName(name, transportschemes);
 }
 
-void AsyncServiceInfo2VectorReturn_handler(RR_SHARED_PTR<std::vector<ServiceInfo2> > ret,
+void AsyncServiceInfo2VectorReturn_handler(const RR_SHARED_PTR<std::vector<ServiceInfo2> >& ret,
                                            const RR_SHARED_PTR<AsyncServiceInfo2VectorReturnDirector>& handler)
 {
     std::vector<ServiceInfo2Wrapped> ret1;
@@ -2576,7 +2576,7 @@ void AsyncServiceInfo2VectorReturn_handler(RR_SHARED_PTR<std::vector<ServiceInfo
     return;
 }
 
-void AsyncNodeInfo2VectorReturn_handler(RR_SHARED_PTR<std::vector<NodeInfo2> > ret,
+void AsyncNodeInfo2VectorReturn_handler(const RR_SHARED_PTR<std::vector<NodeInfo2> >& ret,
                                         const RR_SHARED_PTR<AsyncNodeInfo2VectorReturnDirector>& handler)
 {
     std::vector<NodeInfo2> ret1 = *ret.get();
