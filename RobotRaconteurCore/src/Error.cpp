@@ -26,7 +26,7 @@ namespace RobotRaconteur
 
 RobotRaconteurException::RobotRaconteurException() : std::runtime_error("")
 {
-    InitializeInstanceFields();
+    ErrorCode = MessageErrorType_None;
     what_string = ToString(); // NOLINT
 }
 
@@ -35,7 +35,6 @@ RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, con
                                                 const RR_INTRUSIVE_PTR<RRValue>& param_)
     : std::runtime_error((error + " " + message).c_str())
 {
-    InitializeInstanceFields();
     Error = error;
     Message = message;
     this->ErrorCode = ErrorCode;
@@ -48,18 +47,13 @@ RobotRaconteurException::RobotRaconteurException(const std::string& message, std
     : std::runtime_error(message.c_str())
 {
     RR_UNUSED(innerexception);
-    InitializeInstanceFields();
+    ErrorCode = MessageErrorType_None;
+    
 }
 
 std::string RobotRaconteurException::ToString() { return "RobotRaconteurException: " + Error + ": " + Message; }
 
 const char* RobotRaconteurException::what() const throw() { return what_string.c_str(); }
-
-void RobotRaconteurException::InitializeInstanceFields()
-{
-    ErrorCode = MessageErrorType_None;
-    Error.clear();
-}
 
 #define RR_EXCEPTION_DEF_1(exp_cpp_type, exp_code, exp_type_str)                                                       \
     exp_cpp_type::exp_cpp_type(const std::string& message, const std::string& sub_type,const RR_INTRUSIVE_PTR<RRValue>& param_)     \

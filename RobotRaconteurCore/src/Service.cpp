@@ -605,7 +605,11 @@ std::string ServerContext::GetRootObjectType(const RobotRaconteurVersion& client
 
 ServerContext::ServerContext(const RR_SHARED_PTR<ServiceFactory>& f, const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
-    InitializeInstanceFields();
+    base_object_set = false;
+    m_RequireValidUser = false;
+    AllowObjectLock = false;
+
+    request_number = 0;
     m_ServiceDef = f;
     this->node = node;
 
@@ -2425,18 +2429,6 @@ void ServerContext::SetMonitorThreadPoolCount(int32_t count)
                                             "Monitor thread pool count set to " << count << "threads");
 }
 
-void ServerContext::InitializeInstanceFields()
-{
-
-    m_RootObjectType.clear();
-
-    base_object_set = false;
-    m_RequireValidUser = false;
-    AllowObjectLock = false;
-
-    request_number = 0;
-}
-
 std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > ServerContext::GetAttributes()
 {
     boost::mutex::scoped_lock lock(m_Attributes_lock);
@@ -2551,8 +2543,6 @@ void ServerEndpoint::SetTransportConnection(const RR_SHARED_PTR<ITransportConnec
     c->CheckCapabilityActive(TransportCapabilityCode_MESSAGE4_BASIC_PAGE |
                                       TransportCapabilityCode_MESSAGE4_BASIC_ENABLE);
 }
-
-void ServerEndpoint::InitializeInstanceFields() { endpoint_authenticated_user.reset(); }
 
 RobotRaconteurVersion ServerEndpoint::GetClientVersion()
 {

@@ -240,8 +240,6 @@ class ROBOTRACONTEUR_CORE_API PasswordFileUserAuthenticator : public UserAuthent
 
     static std::string MD5Hash(boost::string_ref text);
 
-  private:
-    void InitializeInstanceFields();
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

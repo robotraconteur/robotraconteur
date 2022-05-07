@@ -89,7 +89,6 @@ void AuthenticatedUser::UpdateLastAccess()
 
 PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(std::istream& file, bool require_verified_client)
 {
-    InitializeInstanceFields();
     std::stringstream buffer;
     buffer << file.rdbuf();
     load(buffer.str());
@@ -98,7 +97,6 @@ PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(std::istream& file,
 
 PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(boost::string_ref data, bool require_verified_client)
 {
-    InitializeInstanceFields();
     load(data);
     this->require_verified_client = require_verified_client;
 }
@@ -263,5 +261,4 @@ std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
 #endif
 }
 
-void PasswordFileUserAuthenticator::InitializeInstanceFields() {}
 } // namespace RobotRaconteur

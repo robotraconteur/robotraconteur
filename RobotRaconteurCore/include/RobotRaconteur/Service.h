@@ -673,8 +673,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     RR_SHARED_PTR<ThreadPool> monitor_thread_pool;
     boost::mutex monitor_thread_pool_lock;
 
-  private:
-    void InitializeInstanceFields();
 };
 
 /**
@@ -757,11 +755,7 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
     RobotRaconteurVersion GetClientVersion();
     void SetClientVersion(const RobotRaconteurVersion& version);
 
-  private:
-    void InitializeInstanceFields();
-
-  public:
-    ServerEndpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Endpoint(node) { InitializeInstanceFields(); }
+    ServerEndpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Endpoint(node) { }
 };
 
 /**

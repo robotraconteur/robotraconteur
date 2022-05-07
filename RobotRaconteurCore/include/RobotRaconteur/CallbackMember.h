@@ -126,7 +126,7 @@ template <typename T>
 class CallbackClient : public Callback<T>
 {
   public:
-    CallbackClient(boost::string_ref name) : Callback<T>(name) { InitializeInstanceFields(); }
+    CallbackClient(boost::string_ref name) : Callback<T>(name) { }
 
     virtual ~CallbackClient() {}
 
@@ -162,8 +162,6 @@ class CallbackClient : public Callback<T>
         function.clear();
     }
 
-  private:
-    void InitializeInstanceFields() { function = T(); }
 };
 
 class ROBOTRACONTEUR_CORE_API ServiceSkel;

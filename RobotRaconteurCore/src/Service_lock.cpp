@@ -25,8 +25,6 @@ namespace RobotRaconteur
 ServerContext_ObjectLock::ServerContext_ObjectLock(boost::string_ref username,
                                                    const RR_SHARED_PTR<ServiceSkel>& root_skel, uint32_t endpoint)
 {
-    InitializeInstanceFields();
-
     {
         boost::mutex::scoped_lock lock(skels_lock);
         m_Locked = true;
@@ -176,22 +174,17 @@ void ServerContext_ObjectLock::ReleaseLock()
     }
 }
 
-void ServerContext_ObjectLock::InitializeInstanceFields()
-{
-    m_Locked = true;
-    m_Username.clear();
-
-    m_Endpoint = 0;
-    m_RootServicePath.clear();
-}
-
 uint32_t ServerContext_MonitorObjectSkel::GetLocalEndpoint() const { return local_endpoint; }
 
 bool ServerContext_MonitorObjectSkel::IsLocked() const { return monitor_acquired; }
 
 ServerContext_MonitorObjectSkel::ServerContext_MonitorObjectSkel(const RR_SHARED_PTR<ServiceSkel>& skel)
 {
-    InitializeInstanceFields();
+    wait_started = false;
+    local_endpoint = 0;
+    timeout = 0;
+    monitor_acquired = false;
+    maintain_lock = false;
     this->monitor_thread_event = skel->RRGetNode()->CreateAutoResetEvent();
     this->wait_event = skel->RRGetNode()->CreateAutoResetEvent();
     RR_SHARED_PTR<RRObject> obj = skel->GetUncastObject();
@@ -374,16 +367,6 @@ void ServerContext_MonitorObjectSkel::thread_func()
             wait_event->Set();
         }
     }
-}
-
-void ServerContext_MonitorObjectSkel::InitializeInstanceFields()
-{
-    wait_started = false;
-    local_endpoint = 0;
-    timeout = 0;
-    monitor_acquire_exception.reset();
-    monitor_acquired = false;
-    maintain_lock = false;
 }
 
 } // namespace RobotRaconteur

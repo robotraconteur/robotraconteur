@@ -504,9 +504,6 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
 
     boost::atomic<bool> use_combined_connection;
 
-  private:
-    void InitializeInstanceFields();
-
   public:
     virtual void TransportConnectionClosed(uint32_t endpoint);
 

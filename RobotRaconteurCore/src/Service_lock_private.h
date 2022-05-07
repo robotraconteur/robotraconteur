@@ -46,8 +46,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext_ObjectLock : public RR_ENABLE_SHARED
 
     void ReleaseLock();
 
-  private:
-    void InitializeInstanceFields();
 };
 
 class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
@@ -88,8 +86,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
     void thread_func();
 
     boost::mutex close_lock;
-
-    void InitializeInstanceFields();
 };
 
 } // namespace RobotRaconteur

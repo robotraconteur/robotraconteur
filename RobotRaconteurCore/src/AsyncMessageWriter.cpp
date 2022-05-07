@@ -28,6 +28,8 @@ AsyncMessageWriterImpl::state_data::state_data()
     pop_state = Message_init;
     param1 = 0;
     param2 = 0;
+    limit = 0;
+    ptrdata = NULL;
 }
 
 AsyncMessageWriterImpl::AsyncMessageWriterImpl() { Reset();  } // NOLINT

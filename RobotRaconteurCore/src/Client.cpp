@@ -227,8 +227,13 @@ RR_SHARED_PTR<ServiceFactory> ClientContext::GetServiceDef() const { return m_Se
 ClientContext::ClientContext(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Endpoint(node)
 {
 
-    // rec_event = new AutoResetEvent(false);
-    InitializeInstanceFields();
+    
+    request_number = 0;
+    m_Connected = false;
+
+    m_UserAuthenticated = false;
+    use_pulled_types = false;
+    
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, -1, "ClientContext created");
 }
@@ -236,7 +241,12 @@ ClientContext::ClientContext(const RR_SHARED_PTR<RobotRaconteurNode>& node) : En
 ClientContext::ClientContext(const RR_SHARED_PTR<ServiceFactory>& service_def, const RR_SHARED_PTR<RobotRaconteurNode>& node)
     : Endpoint(node)
 {
-    InitializeInstanceFields();
+    request_number = 0;
+    m_Connected = false;
+
+    m_UserAuthenticated = false;
+    use_pulled_types = false;
+    
     m_ServiceDef = service_def;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, -1, "ClientContext created");
@@ -3112,17 +3122,6 @@ void ClientContext::ProcessCallbackCall(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
                                             "Client callback completed successfully");
-}
-
-void ClientContext::InitializeInstanceFields()
-{
-
-    request_number = 0;
-    m_Connected = false;
-
-    m_UserAuthenticated = false;
-    use_pulled_types = false;
-    // LastMessageSentTime = GetNode()->NowNodeTime();
 }
 
 void ClientContext::TransportConnectionClosed(uint32_t endpoint)

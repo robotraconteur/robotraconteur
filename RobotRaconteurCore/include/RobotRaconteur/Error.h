@@ -132,7 +132,6 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
 
   private:
     std::string what_string;
-    void InitializeInstanceFields();
 };
 
 // clang-format off
