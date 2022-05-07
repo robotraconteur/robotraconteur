@@ -168,7 +168,7 @@ class PackMapTypeSupport<int32_t, T>
              e != mset->Elements.end(); e++)
         {
             RR_INTRUSIVE_PTR<MessageElement> m = *e;
-            int32_t key; // NOLINT
+            int32_t key = 0;
             if (!MessageElement_GetElementNumber(m, key))
             {
                 throw DataTypeException("Invalid map format");
@@ -292,7 +292,7 @@ RR_INTRUSIVE_PTR<RRList<T> > UnpackListType(const RR_INTRUSIVE_PTR<MessageElemen
     for (int32_t i = 0; i < boost::numeric_cast<int32_t>(mset->Elements.size()); i++)
     {
         RR_INTRUSIVE_PTR<MessageElement> m = mset->Elements.at(i);
-        int32_t key; // NOLINT
+        int32_t key = 0;
         if (!MessageElement_GetElementNumber(m, key))
         {
             throw DataTypeException("Invalid list format");

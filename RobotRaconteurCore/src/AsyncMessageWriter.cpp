@@ -32,7 +32,9 @@ AsyncMessageWriterImpl::state_data::state_data()
     ptrdata = NULL;
 }
 
-AsyncMessageWriterImpl::AsyncMessageWriterImpl() { Reset();  } // NOLINT
+AsyncMessageWriterImpl::AsyncMessageWriterImpl() { 
+    AsyncMessageWriterImpl::Reset();
+    } 
 
 size_t AsyncMessageWriterImpl::message_len() { return state_stack.front().limit; }
 
@@ -665,7 +667,7 @@ AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write(size_t write_q
             size_t l = param2() - param1();
             size_t n = std::min(q, l);
 
-            write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n)); // NOLINT
+            write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n));
             message_pos += n;
             if (n >= l)
             {
@@ -1221,7 +1223,7 @@ AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write4(size_t write_
             size_t l = param2() - param1();
             size_t n = std::min(q, l);
 
-            write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n)); // NOLINT
+            write_bufs.push_back(boost::asio::buffer((reinterpret_cast<uint8_t*>(a->void_ptr())) + param1(), n));
             message_pos += n;
             if (n >= l)
             {

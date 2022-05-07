@@ -57,8 +57,8 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
     friend class IntraTransportConnection;
 
   private:
-    static std::list<RR_WEAK_PTR<IntraTransport> > peer_transports; // NOLINT
-    static boost::mutex peer_transports_lock; // NOLINT
+    static std::list<RR_WEAK_PTR<IntraTransport> > peer_transports;
+    static boost::mutex peer_transports_lock;
 
     bool transportopen;
     bool is_server;

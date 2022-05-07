@@ -114,7 +114,7 @@ void PipeEndpointBase::AsyncClose(RR_MOVE_ARG(boost::function<void(const RR_SHAR
     }
 }
 
-bool PipeEndpointBase::IsUnreliable() { return unreliable; } // NOLINT
+bool PipeEndpointBase::IsUnreliable() { return unreliable; } // NOLINT(readability-make-member-function-const)
 
 MemberDefinition_Direction PipeEndpointBase::Direction() { return direction; }
 
@@ -537,7 +537,7 @@ RR_SHARED_PTR<RobotRaconteurNode> PipeBase::GetNode()
 
 MemberDefinition_Direction PipeBase::Direction() { return direction; }
 
-bool PipeBase::IsUnreliable() { return unreliable; } // NOLINT
+bool PipeBase::IsUnreliable() { return unreliable; } // NOLINT(readability-make-member-function-const)
 
 std::string PipeClientBase::GetMemberName() { return m_MemberName; }
 

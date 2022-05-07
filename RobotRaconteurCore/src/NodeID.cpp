@@ -166,7 +166,7 @@ NodeID& NodeID::operator=(const NodeID& id)
 size_t hash(const NodeID& id)
 {
     boost::array<uint8_t, 16> b = id.ToByteArray();
-    return *reinterpret_cast<size_t*>(b.data());  // NOLINT
+    return *reinterpret_cast<size_t*>(b.data());
 }
 
 } // namespace RobotRaconteur

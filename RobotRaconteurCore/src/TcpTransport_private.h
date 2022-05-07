@@ -559,8 +559,8 @@ class IPNodeDiscovery : public RR_ENABLE_SHARED_FROM_THIS<IPNodeDiscovery>
         boost::asio::ip::address_v6::bytes_type b = addr.to_bytes();
         memcpy(&mreq.ipv6mr_multiaddr, &b[0], sizeof(in6_addr));
         mreq.ipv6mr_interface = scope_id;
-        setsockopt(socket.native_handle(), IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, reinterpret_cast<char*>(&mreq), // NOLINT
-                   sizeof(mreq)); // NOLINT
+        setsockopt(socket.native_handle(), IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, reinterpret_cast<char*>(&mreq),
+                   sizeof(mreq));
     }
 
     int32_t broadcast_timer_period;

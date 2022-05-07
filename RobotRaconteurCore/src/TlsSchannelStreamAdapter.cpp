@@ -1498,6 +1498,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some(
         if (diff > boost::asio::buffer_size(b3))
         {
             size_t d = boost::asio::buffer_size(b3);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             memcpy(RR_BOOST_ASIO_BUFFER_CAST(void*, b3), recv_buffer_un.get(), d);
             size_t p2 = d;
             memmove(recv_buffer_un.get(), recv_buffer_un.get() + d, recv_buffer_un_end_pos - d);
@@ -1510,6 +1511,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some(
         else
         {
             size_t d = recv_buffer_un_end_pos;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             memcpy(RR_BOOST_ASIO_BUFFER_CAST(void*, b3), recv_buffer_un.get(), d);
             recv_buffer_un_end_pos = 0;
             boost::system::error_code ec;
@@ -1714,6 +1716,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
 
     if (pDataBuffer->cbBuffer <= boost::asio::buffer_size(b))
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         MoveMemory(RR_BOOST_ASIO_BUFFER_CAST(void*, b), pDataBuffer->pvBuffer, pDataBuffer->cbBuffer);
         if (pExtraBuffer)
         {
@@ -1736,6 +1739,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
     {
         size_t bsize = boost::asio::buffer_size(b);
         size_t extra_size = pDataBuffer->cbBuffer - bsize;
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         MoveMemory(RR_BOOST_ASIO_BUFFER_CAST(void*, b), pDataBuffer->pvBuffer, bsize);
         MoveMemory(recv_buffer_un.get(), ((uint8_t*)pDataBuffer->pvBuffer) + bsize, extra_size);
         recv_buffer_un_end_pos = boost::numeric_cast<uint32_t>(extra_size);

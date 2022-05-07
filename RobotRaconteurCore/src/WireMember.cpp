@@ -27,6 +27,7 @@
 #include <boost/range/algorithm.hpp>
 #include <boost/foreach.hpp>
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define RR_WIRE_CONNECTION_LISTENER_ITER(command)                                                                      \
     try                                                                                                                \
     {                                                                                                                  \
@@ -40,7 +41,7 @@
                 e = listeners.erase(e);                                                                                \
                 continue;                                                                                              \
             }                                                                                                          \
-            command;  /* NOLINT */                                                                                                 \
+            command;                                                                                                   \
             e++;                                                                                                       \
         }                                                                                                              \
     }                                                                                                                  \
@@ -48,7 +49,7 @@
     {                                                                                                                  \
         RobotRaconteurNode::TryHandleException(node, &exp);                                                            \
     }
-
+// NOLINTEND(bugprone-macro-parentheses)
 namespace RobotRaconteur
 {
 uint32_t WireConnectionBase::GetEndpoint() { return endpoint; }

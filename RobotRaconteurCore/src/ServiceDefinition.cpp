@@ -1649,7 +1649,7 @@ MemberDefinition_Direction PropertyDefinition::Direction() { return MemberDefini
 FunctionDefinition::FunctionDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
     : MemberDefinition(ServiceEntry)
 {
-    Reset(); // NOLINT
+    FunctionDefinition::Reset();
 }
 
 std::string FunctionDefinition::ToString() const
@@ -1694,7 +1694,7 @@ bool FunctionDefinition::IsGenerator()
 
 EventDefinition::EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
-    Reset(); // NOLINT
+    EventDefinition::Reset();
 }
 
 std::string EventDefinition::ToString() const { return MemberDefinition_ToStringFormat3("event", *this, Parameters); }
@@ -1720,7 +1720,7 @@ void EventDefinition::Reset()
 
 ObjRefDefinition::ObjRefDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
-    Reset(); // NOLINT
+    ObjRefDefinition::Reset();
 }
 
 std::string ObjRefDefinition::ToString()
@@ -1845,7 +1845,7 @@ void ObjRefDefinition::Reset()
 
 PipeDefinition::PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
-    Reset(); // NOLINT
+    PipeDefinition::Reset();
 }
 
 std::string PipeDefinition::ToString() const { return MemberDefinition_ToStringFormat1("pipe", *this, *Type); }
@@ -1897,7 +1897,7 @@ bool PipeDefinition::IsUnreliable() const
 CallbackDefinition::CallbackDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry)
     : MemberDefinition(ServiceEntry)
 {
-    Reset(); // NOLINT
+    CallbackDefinition::Reset();
 }
 
 std::string CallbackDefinition::ToString() const
@@ -1927,7 +1927,7 @@ void CallbackDefinition::Reset()
 
 WireDefinition::WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
-    Reset(); // NOLINT
+    WireDefinition::Reset();
 }
 
 std::string WireDefinition::ToString() const { return MemberDefinition_ToStringFormat1("wire", *this, *Type); }
@@ -1955,7 +1955,7 @@ MemberDefinition_Direction WireDefinition::Direction() { return MemberDefinition
 
 MemoryDefinition::MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
-    Reset(); // NOLINT
+    MemoryDefinition::Reset();
 }
 
 std::string MemoryDefinition::ToString() const { return MemberDefinition_ToStringFormat1("memory", *this, *Type); }
@@ -3222,7 +3222,7 @@ ServiceDefinitionParseException::ServiceDefinitionParseException(const std::stri
 {
     ShortMessage = e;
     ParseInfo.LineNumber = -1;
-    Message = ToString(); // NOLINT
+    Message = ServiceDefinitionParseException::ToString();
     what_store = Message;
 }
 
@@ -3232,7 +3232,7 @@ ServiceDefinitionParseException::ServiceDefinitionParseException(const std::stri
 {
     ShortMessage = e;
     ParseInfo = info;
-    Message = ToString(); // NOLINT
+    Message = ServiceDefinitionParseException::ToString();
     what_store = Message;
 }
 
@@ -3258,7 +3258,7 @@ const char* ServiceDefinitionParseException::what() const throw() { return what_
 ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::string& e) : ServiceDefinitionException(e)
 {
     ShortMessage = e;
-    Message = ToString(); // NOLINT
+    Message = ServiceDefinitionVerifyException::ToString();
     ParseInfo.LineNumber = -1;
     what_store = Message;
 }
@@ -3268,7 +3268,7 @@ ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::st
     : ServiceDefinitionException(e)
 {
     ShortMessage = e;
-    Message = ToString(); // NOLINT
+    Message = ServiceDefinitionVerifyException::ToString();
     ParseInfo = info;
     what_store = Message;
 }
@@ -3328,14 +3328,14 @@ void VerifyName(const std::string& name, const RR_SHARED_PTR<ServiceDefinition>&
         if (name == "this" || name == "self" || name == "Me")
             throw ServiceDefinitionVerifyException("The names \"this\", \"self\", and \"Me\" are reserved", parse_info);
 
-        // NOLINTBEGIN
+        // NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
         const char* res_str[] = {"object",    "end",       "option",   "service",  "struct", "import", "implements",
                                  "field",     "property",  "function", "event",    "objref", "pipe",   "callback",
                                  "wire",      "memory",    "void",     "int8",     "uint8",  "int16",  "uint16",
                                  "int32",     "uint32",    "int64",    "uint64",   "single", "double", "varvalue",
                                  "varobject", "exception", "using",    "constant", "enum",   "pod",    "namedarray",
                                  "cdouble",   "csingle",   "bool",     "stdver",   "string"};
-        // NOLINTEND
+        // NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
         std::vector<std::string> reserved(res_str, res_str + sizeof(res_str) / (sizeof(res_str[0])));
 

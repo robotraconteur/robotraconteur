@@ -65,8 +65,9 @@ struct x509_stack_cleanup
 
 BIO* make_buffer_bio(const boost::asio::const_buffer& b)
 {
-    return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)), // NOLINT
-                             static_cast<int>(boost::asio::buffer_size(b))); // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+    return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)), 
+                             boost::numeric_cast<int>(boost::asio::buffer_size(b)));
 }
 
 void add_certificate_authority_x509(const boost::shared_ptr<boost::asio::ssl::context>& context,
@@ -215,7 +216,7 @@ static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cer
 {
     boost::shared_array<uint8_t> b2(new uint8_t[cert_len]);
 
-    // NOLINTBEGIN
+    // NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
     const uint8_t mask1[] = {0xbb, 0x1b, 0x38, 0x3b};
     const uint8_t mask2[] = {0x99, 0x84, 0xe2, 0xe7};
     const uint8_t mask3[] = {0xe3, 0x51, 0xb5, 0x7};
@@ -224,7 +225,7 @@ static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cer
     const uint8_t mask6[] = {0x30, 0x26, 0x90, 0xa1};
     const uint8_t mask7[] = {0x45, 0xec, 0x81, 0x42};
     const uint8_t mask8[] = {0x3d, 0xbd, 0x8e, 0x2b};
-    // NOLINTEND
+    // NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
     for (size_t i = 0; i < cert_len; i++)
     {
@@ -360,13 +361,13 @@ void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
     PKCS12* p12 = NULL;
     int i = 0;
     std::string fname1 = fname.to_string();
-    if (!(fp = fopen(fname1.c_str(), "rb"))) // NOLINT
+    if (!(fp = fopen(fname1.c_str(), "rb"))) // NOLINT(cppcoreguidelines-owning-memory)
     {
         throw ResourceNotFoundException("Could not load certificate file");
     }
 
     p12 = d2i_PKCS12_fp(fp, NULL);
-    fclose(fp); // NOLINT
+    fclose(fp); // NOLINT(cppcoreguidelines-owning-memory)
     if (!p12)
     {
         throw ResourceNotFoundException("Could not load certificate file");

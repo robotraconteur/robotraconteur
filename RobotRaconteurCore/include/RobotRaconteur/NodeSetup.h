@@ -332,7 +332,7 @@ class ROBOTRACONTEUR_CORE_API CommandLineConfigParser
      * @param argc `argc` from main()
      * @param argv `argv` from main()
      */
-    void ParseCommandLine(int argc, char* argv[]); // NOLINT
+    void ParseCommandLine(int argc, char* argv[]); // NOLINT(cppcoreguidelines-avoid-c-arrays)
 
     /**
      * @brief Parse a specified string vector containing the options
@@ -509,7 +509,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNodeSetup : boost::noncopyable
     RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                             const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types,
                             const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides,
-                            int argc, char* argv[]); // NOLINT
+                            int argc, char* argv[]); // NOLINT(cppcoreguidelines-avoid-c-arrays)
 
     /**
      * @brief Construct a new RobotRaconteurNodeSetup with node, NodeName TCP port, flags, and command line options
@@ -702,7 +702,8 @@ class ROBOTRACONTEUR_CORE_API ClientNodeSetup : public RobotRaconteurNodeSetup
      * @param argv The command line argument vector
      */
     ClientNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
-                    const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types, int argc, char* argv[]); // NOLINT
+                    const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types, int argc, 
+                    char* argv[]); // NOLINT(cppcoreguidelines-avoid-c-arrays)
 
     /**
      * @brief Construct a new ClientNodeSetup and initialize the singleton RobotRaconteurNode with command line options
@@ -717,7 +718,8 @@ class ROBOTRACONTEUR_CORE_API ClientNodeSetup : public RobotRaconteurNodeSetup
      * @param argc The number of command line arguments in argv vector
      * @param argv The command line argument vector
      */
-    ClientNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types, int argc, char* argv[]); // NOLINT
+    ClientNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types, int argc, 
+      char* argv[]); // NOLINT(cppcoreguidelines-avoid-c-arrays)
 
     /**
      * @brief Construct a new ClientNodeSetup and initialize specified RobotRaconteurNode with command line options
@@ -850,7 +852,7 @@ class ROBOTRACONTEUR_CORE_API ServerNodeSetup : public RobotRaconteurNodeSetup
      */
     ServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                     const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types, const std::string& node_name,
-                    uint16_t tcp_port, int argc, char* argv[]); // NOLINT
+                    uint16_t tcp_port, int argc, char* argv[]); // NOLINT(cppcoreguidelines-avoid-c-arrays)
 
     /**
      * @brief Construct a new ServerNodeSetup and initialize the singleton RobotRaconteurNode with command line options
@@ -866,7 +868,7 @@ class ROBOTRACONTEUR_CORE_API ServerNodeSetup : public RobotRaconteurNodeSetup
      * @param argv The command line argument vector
      */
     ServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > & service_types, const std::string& node_name,
-                    uint16_t tcp_port, int argc, char* argv[]); // NOLINT
+                    uint16_t tcp_port, int argc, char* argv[]); // NOLINT(cppcoreguidelines-avoid-c-arrays)
 
     /**
      * @brief Construct a new ServerNodeSetup and initialize specified RobotRaconteurNode with command line options
@@ -1004,7 +1006,7 @@ class ROBOTRACONTEUR_CORE_API SecureServerNodeSetup : public RobotRaconteurNodeS
      */
     SecureServerNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                           const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types, const std::string& node_name,
-                          uint16_t tcp_port, int argc, char* argv[]); // NOLINT
+                          uint16_t tcp_port, int argc, char* argv[]); // NOLINT(cppcoreguidelines-avoid-c-arrays)
 
     /**
      * @brief Construct a new SecureServerNodeSetup and initialize the singleton RobotRaconteurNode with command line
@@ -1021,7 +1023,7 @@ class ROBOTRACONTEUR_CORE_API SecureServerNodeSetup : public RobotRaconteurNodeS
      * @param argv The command line argument vector
      */
     SecureServerNodeSetup(const std::vector<RR_SHARED_PTR<ServiceFactory> > & service_types, const std::string& node_name,
-                          uint16_t tcp_port, int argc, char* argv[]); // NOLINT
+                          uint16_t tcp_port, int argc, char* argv[]); // NOLINT(cppcoreguidelines-avoid-c-arrays)
 
     /**
      * @brief Construct a new SecureServerNodeSetup and initialize specified RobotRaconteurNode with command line

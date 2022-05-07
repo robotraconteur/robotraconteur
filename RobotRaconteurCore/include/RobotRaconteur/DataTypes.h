@@ -299,7 +299,7 @@ class ROBOTRACONTEUR_CORE_API MessageStringPtr
 #endif
     // WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
     template <size_t N>
-    inline MessageStringPtr(const char (&str)[N]) // NOLINT
+    inline MessageStringPtr(const char (&str)[N]) // NOLINT(cppcoreguidelines-avoid-c-arrays)
     {
         init_literal(str, strlen(str));
     }
@@ -332,7 +332,7 @@ class ROBOTRACONTEUR_CORE_API MessageStringRef
 
     // WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
     template <size_t N>
-    inline MessageStringRef(const char (&str)[N]) // NOLINT
+    inline MessageStringRef(const char (&str)[N]) // NOLINT(cppcoreguidelines-avoid-c-arrays)
     {
         init_literal(str, strlen(str));
     }
@@ -1258,7 +1258,7 @@ static boost::array<Y, N> RRArrayToArray(const RR_INTRUSIVE_PTR<RRArray<U> >& in
         throw NullValueException("Unexpected null array");
     if (in->size() != N)
         throw OutOfRangeException("Array is incorrect size");
-    boost::array<Y, N> out; // NOLINT
+    boost::array<Y, N> out;
     for (size_t i = 0; i < N; i++)
         out[i] = boost::numeric_cast<Y>((*in)[i]);
     return out;
@@ -1627,9 +1627,9 @@ class RRMultiDimArray : public RRMultiDimBaseArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len; // NOLINT
-        uint32_t indexa; // NOLINT
-        uint32_t indexb; // NOLINT
+        uint32_t len=0;
+        uint32_t indexa = 0;
+        uint32_t indexb = 0;
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -1654,9 +1654,9 @@ class RRMultiDimArray : public RRMultiDimBaseArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len; // NOLINT
-        uint32_t indexa; // NOLINT
-        uint32_t indexb; // NOLINT
+        uint32_t len = 0;
+        uint32_t indexa = 0; 
+        uint32_t indexb = 0; 
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -1771,7 +1771,7 @@ template <typename T>
 static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateRRMultiDimArray(const RR_INTRUSIVE_PTR<RRArray<uint32_t> >& dims,
                                                                      const RR_INTRUSIVE_PTR<RRArray<T> >& array_)
 {
-    return new RRMultiDimArray<T>(dims, array_); // NOLINT
+    return new RRMultiDimArray<T>(dims, array_); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1783,7 +1783,7 @@ static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateRRMultiDimArray(const RR_IN
 template <typename T>
 RR_INTRUSIVE_PTR<RRList<T> > AllocateEmptyRRList()
 {
-    return new RRList<T>(); // NOLINT
+    return new RRList<T>(); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1797,7 +1797,7 @@ RR_INTRUSIVE_PTR<RRList<T> > AllocateEmptyRRList()
 template <typename T, typename U>
 RR_INTRUSIVE_PTR<RRList<T> > AllocateRRList(const U& c)
 {
-    return new RRList<T>(c); // NOLINT
+    return new RRList<T>(c); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1810,7 +1810,7 @@ RR_INTRUSIVE_PTR<RRList<T> > AllocateRRList(const U& c)
 template <typename K, typename T>
 RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateEmptyRRMap()
 {
-    return new RRMap<K, T>(); // NOLINT
+    return new RRMap<K, T>(); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1825,7 +1825,7 @@ RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateEmptyRRMap()
 template <typename K, typename T, typename U>
 RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateRRMap(const U& c)
 {
-    return new RRMap<K, T>(c); // NOLINT
+    return new RRMap<K, T>(c); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -2056,9 +2056,9 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len; // NOLINT
-        uint32_t indexa; // NOLINT
-        uint32_t indexb; // NOLINT
+        uint32_t len = 0;
+        uint32_t indexa = 0; 
+        uint32_t indexb = 0; 
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -2086,9 +2086,9 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len; // NOLINT
-        uint32_t indexa; // NOLINT 
-        uint32_t indexb; // NOLINT
+        uint32_t len = 0;
+        uint32_t indexa = 0;  
+        uint32_t indexb = 0; 
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -2110,7 +2110,7 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
 template <typename T>
 static RR_INTRUSIVE_PTR<RRPodArray<T> > ScalarToRRPodArray(const T& value)
 {
-    return new RRPodArray<T>(value); // NOLINT
+    return new RRPodArray<T>(value); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -2150,7 +2150,7 @@ static T RRPodArrayToScalar(const RR_INTRUSIVE_PTR<RRPodArray<T> >& value)
 template <typename T>
 static RR_INTRUSIVE_PTR<RRPodArray<T> > AllocateEmptyRRPodArray(size_t length)
 {
-    return new RRPodArray<T>(length); // NOLINT
+    return new RRPodArray<T>(length); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -2469,9 +2469,9 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len; // NOLINT
-        uint32_t indexa; // NOLINT
-        uint32_t indexb; // NOLINT
+        uint32_t len = 0;
+        uint32_t indexa = 0; 
+        uint32_t indexb = 0; 
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -2499,9 +2499,9 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len; // NOLINT
-        uint32_t indexa; // NOLINT
-        uint32_t indexb; // NOLINT
+        uint32_t len = 0;
+        uint32_t indexa = 0; 
+        uint32_t indexb = 0; 
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -2531,7 +2531,7 @@ static RR_INTRUSIVE_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t lengt
 {
     typedef typename RRPrimUtil<T>::ElementArrayType a_type;
     RR_INTRUSIVE_PTR<RRArray<a_type> > a = AllocateRRArray<a_type>(length * RRPrimUtil<T>::GetElementArrayCount());
-    return new RRNamedArray<T>(a); // NOLINT
+    return new RRNamedArray<T>(a); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**

@@ -148,6 +148,7 @@ void RRArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_INT
     memcpy(&v[0], i->data(), sizeof(T) * i->size());
 }
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define RRPodStubNumberType(type)                                                                                      \
     template <>                                                                                                        \
     class PodStub<type>                                                                                                \
@@ -160,7 +161,7 @@ void RRArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_INT
         }                                                                                                              \
                                                                                                                        \
         template <typename U>                                                                                          \
-        static void UnpackField(type& v, MessageStringRef name, U& in) /*NOLINT*/                                      \
+        static void UnpackField(type& v, MessageStringRef name, U& in)                                      \
         {                                                                                                              \
             v = RRArrayToScalar<type>(MessageElement::FindElement(in, name)->template CastData<RRArray<type> >());     \
         }                                                                                                              \
@@ -184,6 +185,7 @@ void RRArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_INT
             RRArrayTo_pod_field_array(v, a);                                                                           \
         }                                                                                                              \
     };
+// NOLINTEND(bugprone-macro-parentheses)
 
 RRPodStubNumberType(double);
 RRPodStubNumberType(float);
@@ -201,8 +203,8 @@ RR_INTRUSIVE_PTR<RRNamedArray<T> > pod_field_array_ToRRNamedArray(const pod_fiel
 {
     typedef typename RRPrimUtil<T>::ElementArrayType element_type;
     typename RR_INTRUSIVE_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>(
-        reinterpret_cast<const element_type*>(&i[0]), i.size() * RRPrimUtil<T>::GetElementArrayCount()); // NOLINT
-    return new RRNamedArray<T>(a); // NOLINT
+        reinterpret_cast<const element_type*>(&i[0]), i.size() * RRPrimUtil<T>::GetElementArrayCount());
+    return new RRNamedArray<T>(a); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 template <typename T, size_t N, bool varlength>
@@ -214,6 +216,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
     memcpy(&v[0], i->GetNumericArray()->data(), sizeof(T) * i->size());
 }
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define RRPodStubNamedArrayType(type)                                                                                  \
     template <>                                                                                                        \
     class PodStub<type>                                                                                                \
@@ -230,7 +233,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
         }                                                                                                              \
                                                                                                                        \
         template <typename U>                                                                                          \
-        static void UnpackField(type& v, MessageStringRef name, U& in) /*NOLINT*/                                      \
+        static void UnpackField(type& v, MessageStringRef name, U& in)                                      \
         {                                                                                                              \
             typedef typename RRPrimUtil<type>::ElementArrayType element_type;                                          \
             RR_INTRUSIVE_PTR<MessageElementNestedElementList> m =                                                      \
@@ -272,7 +275,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
             memcpy(&v, a1->data(), a1->size() * sizeof(element_type));                                                 \
         }                                                                                                              \
     };
-
+// NOLINTEND(bugprone-macro-parentheses)
 template <typename T, size_t N, bool varlength>
 class PodStub<pod_field_array<T, N, varlength> >
 {
@@ -307,7 +310,7 @@ class PodStub<pod_field_array<T, N, varlength> >
         for (int32_t i = 0; i < boost::numeric_cast<int32_t>(a->Elements.size()); i++)
         {
             RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(i);
-            int32_t key; // NOLINT
+            int32_t key = 0;
             if (!MessageElement_GetElementNumber(m, key))
             {
                 throw DataTypeException("Invalid pod array format");
@@ -358,7 +361,7 @@ void PodStub_UnpackPodFromArray(T& v, const RR_INTRUSIVE_PTR<MessageElementNeste
         throw DataTypeException("Invalid pod scalar array format");
 
     RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(0);
-    int32_t key; // NOLINT
+    int32_t key = 0;
     if (!MessageElement_GetElementNumber(m, key))
     {
         throw DataTypeException("Invalid pod scalar array format");
@@ -623,7 +626,7 @@ RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(const RR_INTR
         throw DataTypeException("Invalid namedarray type");
     typename RR_INTRUSIVE_PTR<RRArray<element_type> > a2 =
         MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
-    return new RRNamedArray<T>(a2); // NOLINT
+    return new RRNamedArray<T>(a2); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 template <typename T>

@@ -32,7 +32,7 @@ AsyncMessageReaderImpl::state_data::state_data()
 
 AsyncMessageReaderImpl::AsyncMessageReaderImpl()
 {
-    Reset(); // NOLINT
+    AsyncMessageReaderImpl::Reset();
     buf = boost::shared_array<uint8_t>(new uint8_t[128]);
     buf_len = 128;
 }
@@ -307,7 +307,7 @@ bool AsyncMessageReaderImpl::read_int_x(int32_t& num)
     uint8_t b1_1 = 0;
     if (!peek_byte(b1_1))
         return false;
-    int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1); // NOLINT
+    int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1);
     if (b1 <= 124)
     {
         read_number(b1);
@@ -342,7 +342,7 @@ bool AsyncMessageReaderImpl::read_int_x2(int64_t& num)
     uint8_t b1_1 = 0;
     if (!peek_byte(b1_1))
         return false;
-    int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1); // NOLINT
+    int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1);
     if (b1 <= 124)
     {
         read_number(b1);

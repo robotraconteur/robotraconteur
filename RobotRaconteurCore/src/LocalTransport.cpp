@@ -1398,11 +1398,11 @@ void LocalTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
         */
 
         std::string connecturl = "rr+local:///";
-        // NOLINTBEGIN
+        // NOLINTBEGIN(cppcoreguidelines-owning-memory)
         Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this())));
-        // NOLINTEND
+        // NOLINTEND(cppcoreguidelines-owning-memory)
         p->MessageReceived(m);
     }
     catch (std::exception& exp)
@@ -1563,7 +1563,7 @@ std::string GetLogonUserName()
 
     return std::string(n.get());
 #else
-    struct passwd* passwd; // NOLINT
+    struct passwd* passwd = NULL;
     passwd = getpwuid(getuid());
     if (passwd == NULL)
         throw ConnectionException("Could not determine current user");
@@ -2536,7 +2536,7 @@ void LocalTransportFD::open_lock_write(const boost::filesystem::path& path, bool
     fd = h;
 }*/
 
-bool LocalTransportFD::read(std::string& data) // NOLINT
+bool LocalTransportFD::read(std::string& data) // NOLINT(readability-make-member-function-const)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
     if (::SetFilePointer(fd, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
@@ -2605,7 +2605,7 @@ bool LocalTransportFD::read_info()
     return true;
 }
 
-bool LocalTransportFD::write(boost::string_ref data) // NOLINT
+bool LocalTransportFD::write(boost::string_ref data) // NOLINT(readability-make-member-function-const)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
     DWORD bytes_written = 0;
@@ -2636,7 +2636,7 @@ bool LocalTransportFD::write_info()
     return write(data);
 }
 
-bool LocalTransportFD::reset() // NOLINT
+bool LocalTransportFD::reset() // NOLINT(readability-make-member-function-const)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
     if (::SetFilePointer(fd, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
@@ -2652,7 +2652,7 @@ bool LocalTransportFD::reset() // NOLINT
     return true;
 }
 
-size_t LocalTransportFD::file_len() // NOLINT
+size_t LocalTransportFD::file_len() // NOLINT(readability-make-member-function-const)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
     return ::GetFileSize(fd, NULL);

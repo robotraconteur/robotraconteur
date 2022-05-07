@@ -75,7 +75,8 @@ bool LinuxLocalTransportDiscovery_dir::Init(const boost::filesystem::path& path)
 
 bool LinuxLocalTransportDiscovery_dir::Refresh()
 {
-    char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event)))); // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
+    char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
     const struct inotify_event* event = NULL; 
 
     if (notify_fd < 0)
@@ -118,7 +119,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
 
     for (char* ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len)
     {
-        event = reinterpret_cast<const struct inotify_event*>(ptr); // NOLINT
+        event = reinterpret_cast<const struct inotify_event*>(ptr);
 
         if (event->mask & IN_DELETE_SELF)
         {
@@ -362,7 +363,8 @@ void LinuxLocalTransportDiscovery::refresh_public()
 {
     if (public_wd > 0)
     {
-        char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event)))); // NOLINT
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
+        char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
         const struct inotify_event* event = NULL;
 
         ssize_t len = read(public_evt->fd(), buf, sizeof(buf));
@@ -370,7 +372,7 @@ void LinuxLocalTransportDiscovery::refresh_public()
         {
             for (char* ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len)
             {
-                event = reinterpret_cast<const struct inotify_event*>(ptr); // NOLINT
+                event = reinterpret_cast<const struct inotify_event*>(ptr);
 
                 if ((event->mask & IN_DELETE_SELF))
                 {

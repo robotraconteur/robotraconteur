@@ -128,11 +128,11 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
   public:
     Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
-    static boost::thread_specific_ptr<std::string> m_CurrentThreadTransportConnectionURL; // NOLINT
+    static boost::thread_specific_ptr<std::string> m_CurrentThreadTransportConnectionURL;
 
     static std::string GetCurrentTransportConnectionURL();
 
-    static boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > m_CurrentThreadTransport; // NOLINT
+    static boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > m_CurrentThreadTransport;
 
     static RR_SHARED_PTR<ITransportConnection> GetCurrentThreadTransport();
 

@@ -75,7 +75,7 @@ bool Sdp_Functions::LoadFunctions()
     if (!lib_handle)
         return false;
 
-    SDP_FUNCTIONS_INIT(SDP_FUNCTIONS_PTR_INIT); // NOLINT
+    SDP_FUNCTIONS_INIT(SDP_FUNCTIONS_PTR_INIT);
 
     return true;
 }
@@ -333,10 +333,10 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
 {
     std::list<BluezBluetoothConnector::device_info> o;
 
-// NOLINTBEGIN
+// NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
     const uint8_t svc_uuid_int[] = {0x25, 0xbb, 0x0b, 0x62, 0x86, 0x1a, 0x49, 0x74,
                                     0xa1, 0xb8, 0x18, 0xed, 0x54, 0x95, 0xaa, 0x07};
-// NOLINTEND
+// NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
     uuid_t svc_uuid;
 
@@ -376,13 +376,13 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
         o1.addr.rc_family = AF_BLUETOOTH;
         o1.addr.rc_bdaddr = addr.rc_bdaddr;
 
-        sdp_record_t* rec = reinterpret_cast<sdp_record_t*>(r->data); // NOLINT
+        sdp_record_t* rec = reinterpret_cast<sdp_record_t*>(r->data);
 
         sdp_list_t* attrlist = rec->attrlist;
 
         for (; attrlist; attrlist = attrlist->next)
         {
-            sdp_data_t* a = reinterpret_cast<sdp_data_t*>(attrlist->data); // NOLINT
+            sdp_data_t* a = reinterpret_cast<sdp_data_t*>(attrlist->data);
             if (a->attrId == 0xF001 && a->dtd == SDP_TEXT_STR8)
             {
                 o1.nodeid_str = std::string(a->val.str);
@@ -397,7 +397,7 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
         if (!sdp_f->sdp_get_access_protos(rec, &protos))
         {
             uint8_t ch = sdp_f->sdp_get_proto_port(protos, RFCOMM_UUID);
-            sdp_list_foreach(protos, reinterpret_cast<sdp_list_func_t>(sdp_f->sdp_list_free), NULL); // NOLINT
+            sdp_list_foreach(protos, reinterpret_cast<sdp_list_func_t>(sdp_f->sdp_list_free), NULL);
             sdp_f->sdp_list_free(protos, NULL);
             protos = NULL;
             o1.addr.rc_channel = ch;
@@ -445,7 +445,7 @@ void HardwareTransport_linux_discovery::Init()
         return;
     }
 
-    ret = bind(nl_socket, reinterpret_cast<struct sockaddr*>(&src_addr), sizeof(src_addr)); // NOLINT
+    ret = bind(nl_socket, reinterpret_cast<struct sockaddr*>(&src_addr), sizeof(src_addr));
     if (ret)
     {
         close(nl_socket);
@@ -534,8 +534,8 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
         return;
     }
 
-    boost::iterator_range<char*> evt(reinterpret_cast<char*>(msg.get()), // NOLINT
-                                     reinterpret_cast<char*>(msg.get()) + bytes_transferred); // NOLINT
+    boost::iterator_range<char*> evt(reinterpret_cast<char*>(msg.get()),
+                                     reinterpret_cast<char*>(msg.get()) + bytes_transferred);
 
     std::vector<std::string> evt1;
     boost::split(evt1, evt, boost::is_any_of(boost::as_array("\0")));
@@ -593,15 +593,15 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
 static std::string HardwareTransport_read_sysfs_attr(const boost::filesystem::path& p)
 {
     ssize_t rv = 0;
-    char attr_buf[256]; // NOLINT
+    boost::array<char,256> attr_buf;
     int f1 = open(p.c_str(), O_RDONLY);
     if (f1 < 0)
         throw ConnectionException("Attribute not found");
-    rv = pread(f1, attr_buf, sizeof(attr_buf), 0);
+    rv = pread(f1, attr_buf.data(), sizeof(attr_buf), 0);
     close(f1);
     if (rv < 0)
         throw ConnectionException("Could not read attribute");
-    return std::string(attr_buf, strnlen(attr_buf, sizeof(attr_buf)));
+    return std::string(attr_buf.data(), strnlen(attr_buf.data(), sizeof(attr_buf)));
 }
 
 boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost::string_ref transport_type,

@@ -24,8 +24,8 @@
 namespace RobotRaconteur
 {
 
-std::list<RR_WEAK_PTR<IntraTransport> > IntraTransport::peer_transports; // NOLINT
-boost::mutex IntraTransport::peer_transports_lock; // NOLINT
+std::list<RR_WEAK_PTR<IntraTransport> > IntraTransport::peer_transports;
+boost::mutex IntraTransport::peer_transports_lock;
 
 IntraTransport::IntraTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Transport(node)
 {
@@ -699,11 +699,11 @@ void IntraTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
     try
     {
         std::string connecturl = "rr+intra:///";
-        // NOLINTBEGIN
+        // NOLINTBEGIN(cppcoreguidelines-owning-memory)
         Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<IntraTransportConnection>(shared_from_this())));
-        // NOLINTEND
+        // NOLINTEND(cppcoreguidelines-owning-memory)
         p->MessageReceived(m);
     }
     catch (std::exception& exp)

@@ -432,7 +432,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     static RR_SHARED_PTR<ServerContext> GetCurrentServerContext();
 
   private:
-    static boost::thread_specific_ptr<RR_SHARED_PTR<ServerContext> > m_CurrentServerContext; // NOLINT
+    static boost::thread_specific_ptr<RR_SHARED_PTR<ServerContext> > m_CurrentServerContext;
 
   public:
     /**
@@ -448,7 +448,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     static std::string GetCurrentServicePath();
 
   private:
-    static boost::thread_specific_ptr<std::string> m_CurrentServicePath; // NOLINT
+    static boost::thread_specific_ptr<std::string> m_CurrentServicePath;
 
   public:
     virtual RR_INTRUSIVE_PTR<MessageEntry> ProcessMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& m,
@@ -694,7 +694,7 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
     RR_SHARED_PTR<ServerContext> service;
 
   private:
-    static boost::thread_specific_ptr<RR_SHARED_PTR<ServerEndpoint> > m_CurrentEndpoint; // NOLINT
+    static boost::thread_specific_ptr<RR_SHARED_PTR<ServerEndpoint> > m_CurrentEndpoint;
 
   public:
     /**
@@ -711,7 +711,7 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
     static RR_SHARED_PTR<ServerEndpoint> GetCurrentEndpoint();
 
   private:
-    static boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > m_CurrentAuthenticatedUser; // NOLINT
+    static boost::thread_specific_ptr<RR_SHARED_PTR<AuthenticatedUser> > m_CurrentAuthenticatedUser;
 
   public:
     /**

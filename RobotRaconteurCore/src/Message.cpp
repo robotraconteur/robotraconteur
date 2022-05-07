@@ -160,7 +160,7 @@ void Message::Read4(ArrayBinaryReader& r)
     }
 }
 
-uint16_t MessageHeader::ComputeSize() // NOLINT
+uint16_t MessageHeader::ComputeSize() // NOLINT(readability-make-member-function-const)
 {
     uint32_t s1 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(SenderNodeName));
     uint32_t s2 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ReceiverNodeName));
@@ -193,7 +193,7 @@ void MessageHeader::UpdateHeader(uint32_t message_size, uint16_t entry_count)
     EntryCount = entry_count;
 }
 
-void MessageHeader::Write(ArrayBinaryWriter& w) // NOLINT
+void MessageHeader::Write(ArrayBinaryWriter& w) // NOLINT(readability-make-member-function-const)
 {
     w.PushRelativeLimit(HeaderSize);
     w.WriteString8("RRAC");

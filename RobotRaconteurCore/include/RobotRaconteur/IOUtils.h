@@ -46,7 +46,7 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
     T ReadNumber()
     {
         T out;
-        Read(reinterpret_cast<uint8_t*>(&out), 0, sizeof(T)); // NOLINT
+        Read(reinterpret_cast<uint8_t*>(&out), 0, sizeof(T));
 #if BOOST_ENDIAN_BIG_BYTE
         if (!nativeorder)
             std::reverse(reinterpret_cast<uint8_t*>(&out), (reinterpret_cast<uint8_t*>(&out)) + sizeof(T));

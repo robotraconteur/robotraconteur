@@ -21,12 +21,12 @@ namespace RobotRaconteur
 namespace detail
 {
 
-// NOLINTBEGIN
+// NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
 static const uint8_t RR_USB_CS_INTERFACE_UUID_DETECT[] = {0x3F, 0x81, 0x0F, 0xD2, 0x2B, 0xCE, 0x45, 0x52,
                                                           0x98, 0xF3, 0xA8, 0xAC, 0x22, 0x0A, 0xD4, 0x8D};
 
-static const size_t RR_USB_MAX_PACKET_SIZE = (16 * 1024);
-// NOLINTEND
+static const size_t RR_USB_MAX_PACKET_SIZE = (16384);
+// NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
 static const uint8_t USB_DIR_OUT = 0;
 static const uint8_t USB_DIR_IN = 0x80;
@@ -98,7 +98,7 @@ struct robotraconteur_interface_descriptor
     uint8_t bLength;
     uint8_t bDescriptorType;
     uint8_t bDescriptorSubType;
-    uint8_t uuidRobotRaconteurDetect[16]; // NOLINT
+    uint8_t uuidRobotRaconteurDetect[16]; // NOLINT(cppcoreguidelines-avoid-c-arrays)
     int16_t wVersion;
     uint8_t iNodeID;
     uint8_t iNodeName;

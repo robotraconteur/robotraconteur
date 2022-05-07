@@ -631,14 +631,14 @@ void UsbDevice_Initialize::ReadRRDeviceString2(
         return;
     }
 
-    uint8_t len = *reinterpret_cast<uint8_t*>(buf.get()); // NOLINT
+    uint8_t len = *reinterpret_cast<uint8_t*>(buf.get());
     if (len != bytes_transferred)
     {
         handler(boost::asio::error::connection_aborted, "");
         return;
     }
 
-    std::string res = boost::locale::conv::utf_to_utf<char>(reinterpret_cast<uint16_t*>(buf.get() + 2)); // NOLINT
+    std::string res = boost::locale::conv::utf_to_utf<char>(reinterpret_cast<uint16_t*>(buf.get() + 2));
     boost::system::error_code ec1;
     handler(ec1, res);
 }
@@ -832,7 +832,7 @@ void UsbDevice_Claim::AsyncCreateTransportConnection3(
     ClearHalt(settings->out_pipe_id);
 
     boost::shared_array<uint8_t> buf2(new uint8_t[2]);
-    (*reinterpret_cast<uint16_t*>(buf2.get())) = 0x0100; // NOLINT
+    (*reinterpret_cast<uint16_t*>(buf2.get())) = 0x0100;
 
     boost::asio::mutable_buffer b1(buf2.get(), 2);
     AsyncControlTransfer(VendorInterfaceOutRequest, RR_USB_CONTROL_CURRENT_PROTOCOL, 0, settings->interface_number, b1,
@@ -945,7 +945,7 @@ void UsbDevice_Claim::AsyncCreateTransportConnection6(
             return;
         }
 
-        int32_t id = *reinterpret_cast<int32_t*>(buf.get()); // NOLINT
+        int32_t id = *reinterpret_cast<int32_t*>(buf.get());
 
         if (id < 0)
         {
@@ -1072,7 +1072,7 @@ void UsbDevice_Claim::ConnectionClosed(const RR_SHARED_PTR<UsbDeviceTransportCon
             boost::mutex::scoped_lock lock(this_lock);
 
             boost::shared_array<uint8_t> buf(new uint8_t[4]);
-            int32_t* buf1 = reinterpret_cast<int32_t*>(buf.get()); // NOLINT
+            int32_t* buf1 = reinterpret_cast<int32_t*>(buf.get());
             *buf1 = id;
 
             boost::asio::mutable_buffer b1(buf.get(), 4);
@@ -1183,6 +1183,7 @@ void UsbDevice_Claim::DoWrite()
                 boost::asio::mutable_buffer b2 = b + 8;
 
                 size_t s = c->DoWrite(b2);
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
                 subpacket_header* h = static_cast<subpacket_header*>(RR_BOOST_ASIO_BUFFER_CAST(void*, b));
                 h->id = c->stream_id;
                 h->flags = 0;
@@ -1292,6 +1293,7 @@ void UsbDevice_Claim::EndRead2(size_t bytes_transferred, const boost::shared_arr
 
     boost::asio::mutable_buffer b(buf.get(), bytes_transferred);
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     subpacket_header* h = static_cast<subpacket_header*>(RR_BOOST_ASIO_BUFFER_CAST(void*, b));
     uint16_t l = h->len;
     if (l != boost::asio::buffer_size(b))
@@ -1320,6 +1322,7 @@ void UsbDevice_Claim::EndRead2(size_t bytes_transferred, const boost::shared_arr
     {
         if (boost::asio::buffer_size(b1) >= 2)
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             uint16_t n = *RR_BOOST_ASIO_BUFFER_CAST(const uint16_t*, b1);
             switch (n)
             {
@@ -1825,7 +1828,7 @@ void UsbDeviceTransportConnection::Close()
 
     try
     {
-        ASIOStreamBaseTransport::Close(); // NOLINT
+        ASIOStreamBaseTransport::Close(); // NOLINT(bugprone-parent-virtual-call)
     }
     catch (std::exception&)
     {}

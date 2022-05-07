@@ -128,10 +128,10 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     boost::mutex shutdown_lock;
     boost::signals2::signal<void()> shutdown_listeners;
 
-    static bool is_init; // NOLINT
+    static bool is_init;
 
     bool instance_is_init;
-    static boost::mutex init_lock; // NOLINT
+    static boost::mutex init_lock;
 
   public:
     friend class detail::Discovery;
@@ -1224,9 +1224,9 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     boost::shared_mutex transport_lock;
     boost::mutex endpoint_lock;
 
-    static RobotRaconteurNode m_s; // NOLINT
-    static RR_SHARED_PTR<RobotRaconteurNode> m_sp; // NOLINT
-    static RR_WEAK_PTR<RobotRaconteurNode> m_weak_sp; // NOLINT
+    static RobotRaconteurNode m_s;
+    static RR_SHARED_PTR<RobotRaconteurNode> m_sp;
+    static RR_WEAK_PTR<RobotRaconteurNode> m_weak_sp;
 
     RobotRaconteur::NodeID m_NodeID;
     std::string m_NodeName;

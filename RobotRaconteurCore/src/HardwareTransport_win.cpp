@@ -383,6 +383,7 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_P
 
     while (boost::asio::buffer_size(desc) >= 2)
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         USB_COMMON_DESCRIPTOR* c1 = RR_BOOST_ASIO_BUFFER_CAST(USB_COMMON_DESCRIPTOR*, desc);
         if (c1->bLength > boost::asio::buffer_size(desc))
         {
@@ -551,6 +552,7 @@ static void WinUsbDevice_async_control_transfer(RR_BOOST_ASIO_IO_CONTEXT& _io_co
     setup.Index = wIndex;
     setup.Length = (USHORT)boost::asio::buffer_size(buf);
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     BOOL ok = f->WinUsb_ControlTransfer(my_hInterface.get(), setup, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR, buf),
                                         boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
     DWORD last_error = ::GetLastError();
@@ -646,6 +648,7 @@ void WinUsbDevice_Claim::AsyncReadPipeNoLock(uint8_t ep, boost::asio::mutable_bu
 
     DWORD bytes_transferred = 0;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     BOOL ok = f->WinUsb_ReadPipe(device_handle->hInterface.get(), ep, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR, buf),
                                  boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
     DWORD last_error = ::GetLastError();
@@ -683,6 +686,7 @@ void WinUsbDevice_Claim::AsyncWritePipeNoLock(uint8_t ep, boost::asio::mutable_b
 
     DWORD bytes_transferred = 0;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     BOOL ok = f->WinUsb_WritePipe(device_handle->hInterface.get(), ep, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR, buf),
                                   boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
     DWORD last_error = ::GetLastError();

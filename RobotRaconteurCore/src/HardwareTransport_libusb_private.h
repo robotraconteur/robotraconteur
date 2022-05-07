@@ -16,9 +16,7 @@
 #include <boost/intrusive/list.hpp>
 #include <boost/intrusive_ptr.hpp>
 
-// NOLINTBEGIN
 #include <libusb.h>
-// NOLINTEND
 
 #pragma once
 
@@ -154,7 +152,7 @@ namespace RobotRaconteur
 namespace detail
 {
 
-// NOLINTBEGIN
+
 
 #define LIBUSB_FUNCTIONS_INIT(M)                                                                                       \
     M(libusb_init)                                                                                                     \
@@ -243,7 +241,7 @@ namespace detail
     if ((t) == NULL)                                                                                                     \
         return false; 
 
-// NOLINTEND
+
 class LibUsb_Functions : public boost::noncopyable
 {
   private:
@@ -290,7 +288,7 @@ void intrusive_ptr_add_ref(LibUsb_Transfer* p);
 class LibUsb_Transfer_control : public LibUsb_Transfer
 {
   public:
-    uint8_t* temp_buf;
+    boost::shared_array<uint8_t> temp_buf;
     boost::asio::mutable_buffer data_buf;
     boost::function<void(const boost::system::error_code&, size_t)> handler;
 

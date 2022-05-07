@@ -48,7 +48,7 @@ static T BluetoothConnector_record_read_number(boost::asio::mutable_buffer& buf)
 
     buf = buf + sizeof(T);
 #if BOOST_ENDIAN_LITTLE_BYTE
-    std::reverse(reinterpret_cast<uint8_t*>(&num), reinterpret_cast<uint8_t*>(&num) + sizeof(T)); // NOLINT
+    std::reverse(reinterpret_cast<uint8_t*>(&num), reinterpret_cast<uint8_t*>(&num) + sizeof(T));
 #endif
 
     return num;
@@ -214,8 +214,8 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
 
         BOOST_FOREACH (btaddr& a1, devices)
         {
-            boost::thread(boost::bind(&BluetoothConnector::DoConnect1, this->shared_from_this(), a1, // NOLINT
-                                      boost::protect(handler), key)); //NOLINT
+            boost::thread t1(boost::bind(&BluetoothConnector::DoConnect1, this->shared_from_this(), a1,
+                                      boost::protect(handler), key));
             active_keys.push_back(key);
             key++;
         }
@@ -259,7 +259,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
                     continue;
                 }
 
-                int res = connect(s1, reinterpret_cast<const sockaddr*>(&a1), sizeof(a1)); // NOLINT
+                int res = connect(s1, reinterpret_cast<const sockaddr*>(&a1), sizeof(a1));
                 if (res == SOCKET_ERROR)
                 {
                     continue;
@@ -272,7 +272,8 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
                 const boost::asio::generic::stream_protocol::socket::executor_type& ex =
                     parent->GetNode()->GetThreadPool()->get_io_context().get_executor();
 #endif
-                sock = RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>(new boost::asio::generic::stream_protocol::socket(ex, protocol, s1)); // NOLINT
+                // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+                sock = RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>(new boost::asio::generic::stream_protocol::socket(ex, protocol, s1));
                 break;
             }
         }

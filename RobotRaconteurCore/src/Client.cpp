@@ -50,10 +50,10 @@ ServiceStub::ServiceStub(boost::string_ref path, const RR_SHARED_PTR<ClientConte
     RRMutex = RR_MAKE_SHARED<boost::recursive_mutex>();
     RREndpoint = c->GetLocalEndpoint();
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, "",
-                                            "ServiceStub created with type: " << RRType()); // NOLINT
+                                            "ServiceStub created with type: " << ServiceStub::RRType());
 }
 
-RR_SHARED_PTR<ClientContext> ServiceStub::GetContext() // NOLINT
+RR_SHARED_PTR<ClientContext> ServiceStub::GetContext() // NOLINT(readability-make-member-function-const)
 {
     RR_SHARED_PTR<ClientContext> out = context.lock();
     if (!out)

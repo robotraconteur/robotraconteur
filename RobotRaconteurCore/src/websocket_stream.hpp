@@ -200,12 +200,12 @@ class websocket_stream : private boost::noncopyable
                 return;
             }
 
-            std::string line(reinterpret_cast<char*>(buf.get()) + boost::numeric_cast<size_t>(pos), // NOLINT
-                             boost::numeric_cast<size_t>(i_lf) - boost::numeric_cast<size_t>(pos) + 1); // NOLINT
+            std::string line(reinterpret_cast<char*>(buf.get()) + boost::numeric_cast<size_t>(pos),
+                             boost::numeric_cast<size_t>(i_lf) - boost::numeric_cast<size_t>(pos) + 1);
             if (extra_recv_data_len != 0)
             {
                 boost::mutex::scoped_lock lock(extra_recv_data_lock);
-                line = std::string(reinterpret_cast<char*>(extra_recv_data.get()), extra_recv_data_len); // NOLINT
+                line = std::string(reinterpret_cast<char*>(extra_recv_data.get()), extra_recv_data_len);
                 extra_recv_data_len = 0;
                 extra_recv_data.reset();
             }
@@ -705,12 +705,12 @@ class websocket_stream : private boost::noncopyable
                 return;
             }
 
-            std::string line(reinterpret_cast<char*>(buf.get()) + boost::numeric_cast<size_t>(pos), // NOLINT
+            std::string line(reinterpret_cast<char*>(buf.get()) + boost::numeric_cast<size_t>(pos),
                              boost::numeric_cast<size_t>(i_lf) - boost::numeric_cast<size_t>(pos) + 1);
             if (extra_recv_data_len != 0)
             {
                 boost::mutex::scoped_lock lock(extra_recv_data_lock);
-                line = std::string(reinterpret_cast<char*>(extra_recv_data.get()), extra_recv_data_len).append(line); // NOLINT
+                line = std::string(reinterpret_cast<char*>(extra_recv_data.get()), extra_recv_data_len).append(line);
                 extra_recv_data_len = 0;
                 extra_recv_data.reset();
             }
@@ -848,7 +848,7 @@ class websocket_stream : private boost::noncopyable
     std::string sha1_hash(const std::string& blob)
     {
 
-    // NOLINTBEGIN
+
 
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
 
@@ -897,8 +897,8 @@ class websocket_stream : private boost::noncopyable
         return std::string(buf2.get(), hashlen);
 #endif
 #ifdef ROBOTRACONTEUR_USE_OPENSSL
-        uint8_t hash[SHA_DIGEST_LENGTH];
-        if (!SHA1(reinterpret_cast<const uint8_t*>(blob.c_str()), blob.size(), hash))
+        boost::array<uint8_t,SHA_DIGEST_LENGTH> hash;
+        if (!SHA1(reinterpret_cast<const uint8_t*>(blob.c_str()), blob.size(), hash.data()))
         {
             return "";
         }
@@ -922,7 +922,7 @@ class websocket_stream : private boost::noncopyable
         int res = 0;
         while (!done)
         {
-            res = BIO_write(b64, hash, (int)SHA_DIGEST_LENGTH);
+            res = BIO_write(b64, hash.data(), (int)SHA_DIGEST_LENGTH);
 
             if (res <= 0)
             {
@@ -947,14 +947,14 @@ class websocket_stream : private boost::noncopyable
         int output_len = BIO_get_mem_data(mem, &output);
         return std::string(output, output_len);
 #endif
-        // NOLINTEND
+    
     }
 
     std::string random_nonce()
     {
-        // NOLINTBEGIN
+    
 
-        uint8_t random_data[16];
+        boost::array<uint8_t,16> random_data;
 
         boost::random::uniform_int_distribution<uint8_t> distribution(0, std::numeric_limits<uint8_t>::max());
         for (size_t i = 0; i < 16; i++)
@@ -963,11 +963,11 @@ class websocket_stream : private boost::noncopyable
         }
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
         DWORD hashlen = 0;
-        CryptBinaryToString(random_data, 16, CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF, NULL, &hashlen);
+        CryptBinaryToString(random_data.data(), 16, CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF, NULL, &hashlen);
 
         boost::shared_array<char> buf2(new char[hashlen]);
 
-        CryptBinaryToString(random_data, 16, CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF, buf2.get(), &hashlen);
+        CryptBinaryToString(random_data.data(), 16, CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF, buf2.get(), &hashlen);
 
         return std::string(buf2.get(), hashlen);
 #endif
@@ -992,7 +992,7 @@ class websocket_stream : private boost::noncopyable
         int res = 0;
         while (!done)
         {
-            res = BIO_write(b64, random_data, static_cast<int>(16));
+            res = BIO_write(b64, random_data.data(), static_cast<int>(16));
 
             if (res <= 0)
             {
@@ -1017,7 +1017,7 @@ class websocket_stream : private boost::noncopyable
         int output_len = BIO_get_mem_data(mem, &output);
         return std::string(output, output_len);
 #endif
-        // NOLINTEND
+
     }
 
     bool send_en_mask;
@@ -1066,7 +1066,7 @@ class websocket_stream : private boost::noncopyable
             header.get()[1] = 126;
 
             uint16_t c = static_cast<uint16_t>(count);
-            uint8_t* c1 = reinterpret_cast<uint8_t*>(&c); // NOLINT
+            uint8_t* c1 = reinterpret_cast<uint8_t*>(&c);
 #if !BOOST_ENDIAN_BIG_BYTE
             header.get()[2] = c1[1];
             header.get()[3] = c1[0];
@@ -1370,7 +1370,7 @@ class websocket_stream : private boost::noncopyable
 #if !BOOST_ENDIAN_BIG_BYTE
             std::reverse(recv_header2.data(), recv_header2.data() + 2);
 #endif
-            uint16_t r_len = *reinterpret_cast<uint16_t*>(recv_header2.data()); // NOLINT
+            uint16_t r_len = *reinterpret_cast<uint16_t*>(recv_header2.data());
             recv_frame_length = r_len;
             if (en_mask)
             {
@@ -1382,7 +1382,7 @@ class websocket_stream : private boost::noncopyable
 #if !BOOST_ENDIAN_BIG_BYTE
             std::reverse(recv_header2.data(), recv_header2.data() + 8);
 #endif
-            uint64_t r_len = *reinterpret_cast<uint64_t*>(recv_header2.data()); // NOLINT
+            uint64_t r_len = *reinterpret_cast<uint64_t*>(recv_header2.data());
             recv_frame_length = r_len;
             if (en_mask)
             {
@@ -1439,7 +1439,7 @@ class websocket_stream : private boost::noncopyable
 
         if (recv_frame_en_mask)
         {
-            // TODO: make this faster
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             uint8_t* dat = RR_BOOST_ASIO_BUFFER_CAST(uint8_t*, buf);
             for (size_t i = 0; i < n; i++)
             {

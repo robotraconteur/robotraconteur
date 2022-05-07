@@ -27,7 +27,7 @@ namespace RobotRaconteur
 RobotRaconteurException::RobotRaconteurException() : std::runtime_error("")
 {
     ErrorCode = MessageErrorType_None;
-    what_string = ToString(); // NOLINT
+    what_string = RobotRaconteurException::ToString();
 }
 
 RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, const std::string& error,
@@ -40,7 +40,7 @@ RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, con
     this->ErrorCode = ErrorCode;
     this->ErrorSubName = sub_name;
     this->ErrorParam = param_;
-    what_string = ToString(); // NOLINT
+    what_string = RobotRaconteurException::ToString();
 }
 
 RobotRaconteurException::RobotRaconteurException(const std::string& message, std::exception& innerexception)

@@ -162,6 +162,8 @@ class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
 #define ROBOTRACONTEUR_LOG_DEFAULT_NODE RobotRaconteur::RobotRaconteurNode::weak_sp()
 
 #ifndef ROBOTRACONTEUR_DISABLE_LOGGING
+
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define ROBOTRACONTEUR_LOG(node, lvl, component, component_name, component_object_id, ep, service_path, member, args)  \
     {                                                                                                                  \
         boost::intrusive_ptr<RobotRaconteur::RRLogRecordStream> ____rr_log_record_stream____ =                         \
@@ -171,9 +173,12 @@ class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
                 service_path, member, __FILE__, __LINE__);                                                             \
         if (____rr_log_record_stream____)                                                                              \
         {                                                                                                              \
-            ____rr_log_record_stream____->Stream() << args; /* NOLINT */                                                           \
+            ____rr_log_record_stream____->Stream() << args;                                                           \
         }                                                                                                              \
     }                                                                                                                  \
+
+// NOLINTEND(bugprone-macro-parentheses)
+
 // TODO: Implement throttling
 #define ROBOTRACONTEUR_LOG_THROTTLE(node, lvl, component, component_name, component_object_id, ep, service_path,       \
                                     member, limit, args)                                                               \

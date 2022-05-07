@@ -40,7 +40,7 @@ RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode()
 
 // template <class T>
 // void thread_null_deleter(T* a) {}
-boost::thread_specific_ptr<std::string> Transport::m_CurrentThreadTransportConnectionURL; // NOLINT
+boost::thread_specific_ptr<std::string> Transport::m_CurrentThreadTransportConnectionURL;
 
 std::string Transport::GetCurrentTransportConnectionURL()
 {
@@ -49,7 +49,7 @@ std::string Transport::GetCurrentTransportConnectionURL()
     return std::string(*m_CurrentThreadTransportConnectionURL);
 }
 
-boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > Transport::m_CurrentThreadTransport; // NOLINT
+boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > Transport::m_CurrentThreadTransport;
 
 RR_SHARED_PTR<ITransportConnection> Transport::GetCurrentThreadTransport()
 {

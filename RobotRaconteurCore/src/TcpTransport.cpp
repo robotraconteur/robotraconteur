@@ -2334,7 +2334,7 @@ void TcpTransport::StartServer(int32_t port)
             }
 
             int on = 1;
-            setsockopt(ipv6_acceptor->native_handle(), IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<const char*>(&on), // NOLINT
+            setsockopt(ipv6_acceptor->native_handle(), IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<const char*>(&on),
                        sizeof(on));
 
             ipv6_acceptor->bind(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), port));
@@ -2532,7 +2532,7 @@ void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::addre
 
         if (ifa->ifa_addr->sa_family == AF_INET)
         {
-            struct sockaddr_in* ip1 = reinterpret_cast<struct sockaddr_in*>(ifa->ifa_addr); // NOLINT
+            struct sockaddr_in* ip1 = reinterpret_cast<struct sockaddr_in*>(ifa->ifa_addr);
             boost::asio::ip::address_v4::bytes_type b;
             memcpy(&b[0], &ip1->sin_addr, 4);
             addresses.push_back(boost::asio::ip::address_v4(b));
@@ -2540,7 +2540,7 @@ void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::addre
 
         if (ifa->ifa_addr->sa_family == AF_INET6)
         {
-            struct sockaddr_in6* ip1 = reinterpret_cast<struct sockaddr_in6*>(ifa->ifa_addr); // NOLINT
+            struct sockaddr_in6* ip1 = reinterpret_cast<struct sockaddr_in6*>(ifa->ifa_addr);
             boost::asio::ip::address_v6::bytes_type b;
             memcpy(&b[0], &ip1->sin6_addr, 16);
             addresses.push_back(boost::asio::ip::address_v6(b, ip1->sin6_scope_id));
@@ -3523,7 +3523,7 @@ void TcpTransportConnection::AsyncAttachSocket(const RR_SHARED_PTR<boost::asio::
     {}
 
     int send_timeout = 15000;
-    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout), // NOLINT
+    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout),
                sizeof(send_timeout));
     socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
@@ -3598,7 +3598,7 @@ void TcpTransportConnection::AsyncAttachWebSocket(
     {}
 
     int send_timeout = 15000;
-    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout), // NOLINT
+    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout),
                sizeof(send_timeout));
     socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
@@ -3759,7 +3759,7 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(
     {}
 
     int send_timeout = 15000;
-    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout), // NOLINT
+    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout),
                sizeof(send_timeout));
     socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
@@ -4878,11 +4878,11 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
             //}
         }
 
-        // NOLINTBEGIN
+        // NOLINTBEGIN(cppcoreguidelines-owning-memory)
         Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this())));
-        // NOLINTEND
+        // NOLINTEND(cppcoreguidelines-owning-memory)
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint,
                                            "TcpTransport received message from "
                                                << TcpTransport_socket_local_endpoint(socket) << " passing to node");
@@ -5150,7 +5150,8 @@ void TcpTransportConnection::Close()
                                               << TcpTransport_socket_local_endpoint(socket));
         boost::mutex::scoped_lock lock(socket_lock);
 
-        if (false /*is_tls*/) // NOLINT
+        // NOLINTNEXTLINE(readability-simplify-boolean-expr)
+        if (false /*is_tls*/)
         {
             try
             {
@@ -5201,7 +5202,7 @@ void TcpTransportConnection::Close()
 
             try
             {
-                // NOLINTBEGIN
+                // NOLINTBEGIN(bugprone-branch-clone)
                 if (is_tls && !use_websocket && !use_wss_websocket)
                 {
                     socket->close();
@@ -5218,7 +5219,8 @@ void TcpTransportConnection::Close()
                 {
                     socket->close();
                 }
-                // NOLINTEND
+                // NOLINTEND(bugprone-branch-clone)
+                
             }
             catch (std::exception&)
             {}
@@ -5749,7 +5751,7 @@ void IPNodeDiscovery::handle_receive(const boost::system::error_code& error, std
                                            "TcpTransport discovery received packet length " << bytes_transferred
                                                                                             << " from " << *ep);
 
-        std::string s(reinterpret_cast<char*>(buffer.get()), bytes_transferred); // NOLINT
+        std::string s(reinterpret_cast<char*>(buffer.get()), bytes_transferred);
         try
         {
 
@@ -6571,7 +6573,7 @@ void TcpTransportPortSharerClient::client_thread()
 
                 if (nread == 0)
                     throw InvalidOperationException("Connection closed");
-                std::string indata1(reinterpret_cast<char*>(indata2.data()), nread); // NOLINT
+                std::string indata1(reinterpret_cast<char*>(indata2.data()), nread);
 
                 if (!boost::starts_with(indata1, "OK"))
                 {
@@ -6774,7 +6776,8 @@ bool TcpTransportPortSharerClient::IsPortSharerConnected()
 
 namespace TcpTransportUtil
 {
-// NOLINTBEGIN
+
+// NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays,cppcoreguidelines-pro-type-cstyle-cast)
 ssize_t read_fd(int fd, void* ptr, size_t nbytes, int* recvfd)
 {
     struct msghdr msg;
@@ -6831,7 +6834,7 @@ ssize_t read_fd(int fd, void* ptr, size_t nbytes, int* recvfd)
 
     return (n);
 }
-// NOLINTEND
+// NOLINTEND(cppcoreguidelines-avoid-c-arrays,cppcoreguidelines-pro-type-cstyle-cast)
 /* end read_fd */
 
 } // namespace TcpTransportUtil

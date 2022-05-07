@@ -189,8 +189,8 @@ template <typename T>
 class LocalTransportNodeLock
 {
   public:
-    static std::set<T> nodeids; // NOLINT
-    static boost::mutex nodeids_lock; // NOLINT
+    static std::set<T> nodeids;
+    static boost::mutex nodeids_lock;
 
     static RR_SHARED_PTR<LocalTransportNodeLock<T> > Lock(typename boost::call_traits<T>::param_type id)
     {
@@ -222,9 +222,9 @@ class LocalTransportNodeLock
 };
 
 template <typename T>
-typename std::set<T> LocalTransportNodeLock<T>::nodeids; // NOLINT
+typename std::set<T> LocalTransportNodeLock<T>::nodeids;
 template <typename T>
-boost::mutex LocalTransportNodeLock<T>::nodeids_lock; // NOLINT
+boost::mutex LocalTransportNodeLock<T>::nodeids_lock;
 
 typedef LocalTransportNodeLock<NodeID> LocalTransportNodeIDLock;
 typedef LocalTransportNodeLock<std::string> LocalTransportNodeNameLock;

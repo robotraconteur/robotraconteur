@@ -39,12 +39,12 @@ static void RobotRaconteurNode_empty_handler() {}
 
 static void RobotRaconteurNode_empty_handler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
 
-RobotRaconteurNode RobotRaconteurNode::m_s; // NOLINT
-RR_SHARED_PTR<RobotRaconteurNode> RobotRaconteurNode::m_sp; // NOLINT
-RR_WEAK_PTR<RobotRaconteurNode> RobotRaconteurNode::m_weak_sp; // NOLINT
+RobotRaconteurNode RobotRaconteurNode::m_s;
+RR_SHARED_PTR<RobotRaconteurNode> RobotRaconteurNode::m_sp;
+RR_WEAK_PTR<RobotRaconteurNode> RobotRaconteurNode::m_weak_sp;
 
-bool RobotRaconteurNode::is_init = false; // NOLINT
-boost::mutex RobotRaconteurNode::init_lock; // NOLINT
+bool RobotRaconteurNode::is_init = false;
+boost::mutex RobotRaconteurNode::init_lock;
 
 RobotRaconteurNode::RobotRaconteurNode()
 {
@@ -584,14 +584,14 @@ static uint16_t RobotRaconteurNode_log_msg_error(const RR_INTRUSIVE_PTR<Message>
     return (uint16_t)m->entries[0]->Error;
 }
 
-// NOLINTBEGIN
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define ROBOTRACONTEUR_LOG_MESSAGE(log_cmd, node, source, msg_txt, m)                                                  \
     log_cmd(node, source, e->GetLocalEndpoint(), RobotRaconteurNode_log_msg_servicepath(m),                            \
             RobotRaconteurNode_log_msg_member(m),                                                                      \
             msg_txt << " from " << m->header->SenderNodeID.ToString() << " ep " << m->header->SenderEndpoint << " to " \
                     << m->header->ReceiverNodeID.ToString() << " ep " << m->header->ReceiverEndpoint << " EntryType "  \
                     << RobotRaconteurNode_log_msg_entrytype(m) << " Error " << RobotRaconteurNode_log_msg_error(m))
-// NOLINTEND
+// NOLINTEND(bugprone-macro-parentheses)
 
 void RobotRaconteurNode::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
 {
