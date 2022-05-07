@@ -39,7 +39,7 @@ Checks: >
     -hicpp-*,
     -cppcoreguidelines-prefer-member-initializer,
     -cppcoreguidelines-pro-type-member-init
-HeaderFilterRegex: '.*'
+HeaderFilterRegex: '(robotraconteur|RobotRaconteur).*'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 CheckOptions:
