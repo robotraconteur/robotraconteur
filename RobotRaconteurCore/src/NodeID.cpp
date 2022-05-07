@@ -34,6 +34,7 @@ using namespace boost::algorithm;
 namespace RobotRaconteur
 {
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 NodeID::NodeID() { id = boost::uuids::nil_uuid(); }
 
 NodeID::NodeID(boost::array<uint8_t, 16> id)
@@ -51,6 +52,7 @@ NodeID::NodeID(const NodeID& id)
 }
 
 NodeID::NodeID(boost::string_ref id) { init_from_string(id); }
+// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
 void NodeID::init_from_string(const boost::string_ref& id)
 {
@@ -79,7 +81,7 @@ void NodeID::init_from_string(const boost::string_ref& id)
             throw InvalidArgumentException("Invalid NodeID");
         // boost::uuids::string_generator gen;
         // this->id=gen(id1);
-        boost::uuids::uuid u1;
+        boost::uuids::uuid u1; // NOLINT(cppcoreguidelines-pro-type-member-init)
         for (size_t i = 0; i < 16; i++)
         {
             std::string id3 = id2.substr(i * 2, 2);
@@ -97,11 +99,13 @@ void NodeID::init_from_string(const boost::string_ref& id)
     }
 }
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 NodeID::NodeID(boost::uuids::uuid id) { this->id = id; }
+// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
 const boost::array<uint8_t, 16> NodeID::ToByteArray() const
 {
-    boost::array<uint8_t, 16> o;
+    boost::array<uint8_t, 16> o = {};
     std::copy(id.begin(), id.end(), o.begin());
     return o;
 }

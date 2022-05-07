@@ -64,6 +64,23 @@ UsbDevice_Claim_Lock::~UsbDevice_Claim_Lock()
 // NOLINTEND(bugprone-exception-escape)
 // End UsbDevice_Claim_Lock
 
+UsbDevice_Settings::UsbDevice_Settings()
+{
+    in_pipe_id = 0;
+    in_pipe_maxpacket = 0;
+    in_pipe_buffer_size = 0;
+    out_pipe_id = 0;
+    out_pipe_maxpacket = 0;
+    out_pipe_buffer_size = 0;
+    interface_number = 0;
+    interface_alt_setting  = 0;
+    interface_num_endpoints  = 0;
+    device_desired_config  = 0;
+    string_lang_index  = 0;
+    string_nodeid_index  = 0;
+    string_nodename_index = 0;
+}
+
 // UsbDeviceManager
 
 UsbDeviceManager::UsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>& parent)

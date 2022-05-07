@@ -107,7 +107,7 @@ static void libusb_error_to_ec(int err, boost::system::error_code& ec)
 // LibUsb_Transfer
 
 LibUsb_Transfer::LibUsb_Transfer(const RR_SHARED_PTR<LibUsb_Functions>& f, const RR_SHARED_PTR<libusb_device_handle>& device_handle,
-                                 const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager)
+                                 const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager) : ref_count(0)
 {
     this->f = f;
     this->device_handle = device_handle;
@@ -115,7 +115,7 @@ LibUsb_Transfer::LibUsb_Transfer(const RR_SHARED_PTR<LibUsb_Functions>& f, const
     this->device_manager = device_manager;
 
     thread_pool = device_manager->GetNode()->GetThreadPool();
-    ref_count.store(0);
+    
 }
 
 LibUsb_Transfer::~LibUsb_Transfer()
@@ -149,7 +149,7 @@ LibUsb_Transfer_control::LibUsb_Transfer_control(const RR_SHARED_PTR<LibUsb_Func
                                                  const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager)
     : LibUsb_Transfer(f, device_handle, device_manager)
 {
-    temp_buf = NULL;
+
 }
 
 void LibUsb_Transfer_control::FillTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
@@ -358,7 +358,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
         std::wstring ws_path = boost::lexical_cast<std::wstring>(bus_num) + std::wstring(L",") +
                                boost::lexical_cast<std::wstring>(port_num);
 
-        libusb_device_descriptor device_descriptor;
+        libusb_device_descriptor device_descriptor = {};
         if (f->libusb_get_device_descriptor(list1[i], &device_descriptor) != 0)
         {
             continue;

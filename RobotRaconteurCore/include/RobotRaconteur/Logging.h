@@ -76,6 +76,8 @@ class ROBOTRACONTEUR_CORE_API RRLogRecord
     std::string ThreadID;
     /** @brief The source coroutine fiber */
     std::string FiberID;
+
+    RRLogRecord();
 };
 
 /** @brief Write a RRlogRecord to a stream */

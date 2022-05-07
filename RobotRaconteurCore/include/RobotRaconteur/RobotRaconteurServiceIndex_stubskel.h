@@ -159,6 +159,7 @@ class ServiceIndex_stub : public virtual ServiceIndex,
 class ServiceIndex_skel : public virtual RobotRaconteur::ServiceSkel
 {
   public:
+    ServiceIndex_skel();
     virtual void Init(boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::RRObject>& object,
                       const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context);
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> CallGetProperty(
@@ -209,8 +210,6 @@ class ServiceIndex_skel : public virtual RobotRaconteur::ServiceSkel
     bool rr_InitPipeServersRun;
     bool rr_InitWireServersRun;
 
-  public:
-  private:
 };
 
 } // namespace RobotRaconteurServiceIndex

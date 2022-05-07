@@ -1423,7 +1423,7 @@ struct PipeBroadcasterBase_async_send_operation
 };
 } // namespace detail
 
-PipeBroadcasterBase::PipeBroadcasterBase() { copy_element = false; }
+PipeBroadcasterBase::PipeBroadcasterBase() { copy_element = false; maximum_backlog = -1; }
 
 PipeBroadcasterBase::~PipeBroadcasterBase() {}
 

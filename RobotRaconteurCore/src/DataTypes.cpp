@@ -541,7 +541,7 @@ ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
         }
         else if (static_cast<char>(c) == '%')
         {
-            boost::array<char,3> in2_c;
+            boost::array<char,3> in2_c = {};
             in.read(in2_c.data(), 2);
             if (in.fail())
             {

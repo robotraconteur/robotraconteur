@@ -74,6 +74,7 @@ RobotRaconteurNode_connector::RobotRaconteurNode_connector(const RR_SHARED_PTR<R
     active_count = 0;
     connecting = true;
     transport_connected = false;
+    timeout = -1;
     this->node = node;
 }
 

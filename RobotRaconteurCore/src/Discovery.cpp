@@ -228,6 +228,7 @@ Discovery_findservicebytype::Discovery_findservicebytype(const RR_SHARED_PTR<Rob
     searching = true;
     ret = RR_MAKE_SHARED<std::vector<ServiceInfo2> >();
     this->node = node;
+    timeout = 10000;
 }
 
 void Discovery_findservicebytype::handle_error(const int32_t& key, const RR_SHARED_PTR<RobotRaconteurException>& err)
@@ -1482,8 +1483,8 @@ void Discovery::NodeAnnouncePacketReceived(boost::string_ref packet)
 
     try
     {
-        std::string seed = "Robot Raconteur Node Discovery Packet";
-        if (packet.substr(0, seed.length()) == seed)
+        std::string magic = "Robot Raconteur Node Discovery Packet";
+        if (packet.substr(0, magic.length()) == magic)
         {
             std::vector<std::string> lines;
             boost::split(lines, packet, boost::is_from_range('\n', '\n'));

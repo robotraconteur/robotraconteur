@@ -1624,7 +1624,7 @@ class WireUnicastReceiverBase : public RR_ENABLE_SHARED_FROM_THIS<WireUnicastRec
      * Must call Init() after construction.
      *
      */
-    WireUnicastReceiverBase() {}
+    WireUnicastReceiverBase() : in_value_lifespan(-1) {}
     virtual ~WireUnicastReceiverBase() {}
 
     /**

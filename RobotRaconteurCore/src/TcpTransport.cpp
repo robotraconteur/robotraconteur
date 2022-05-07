@@ -103,6 +103,9 @@ namespace detail
 TcpConnector::TcpConnector(const RR_SHARED_PTR<TcpTransport>& parent)
 {
     this->parent = parent;
+    endpoint = 0;
+    resolve_count = 0;
+    connect_count = 0;
     connecting = false;
     active_count = 0;
     socket_connected = false;
@@ -891,9 +894,9 @@ void TcpAcceptor::AcceptSocket2(
         return;
     }
 
-    std::string seed(buf.data(), 4);
+    std::string magic(buf.data(), 4);
 
-    if (seed == "RRAC")
+    if (magic == "RRAC")
     {
         try
         {
@@ -924,7 +927,7 @@ void TcpAcceptor::AcceptSocket2(
     }
     else if (parent->GetAcceptWebSockets())
     {
-        if (seed == "GET " || seed == "GET\t")
+        if (magic == "GET " || magic == "GET\t")
         {
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, 0,
                                                "TcpTransport accepted socket begin websocket handshake "
@@ -969,6 +972,7 @@ void TcpAcceptor::AcceptSocket2(
 }
 
 TcpAcceptor::TcpAcceptor(const RR_SHARED_PTR<TcpTransport>& parent, boost::string_ref url, uint32_t local_endpoint)
+RR_MEMBER_ARRAY_INIT2(buf)
 {
     this->parent = parent;
     this->url = RR_MOVE(url.to_string());
@@ -1116,6 +1120,7 @@ TcpWebSocketConnector::TcpWebSocketConnector(const RR_SHARED_PTR<TcpTransport>& 
 {
     this->parent = parent;
     this->node = parent->GetNode();
+    endpoint = 0;
 }
 
 void TcpWebSocketConnector::Connect(
@@ -1698,6 +1703,7 @@ void TcpWSSWebSocketConnector::Connect2(
 
 TcpWSSWebSocketConnector::TcpWSSWebSocketConnector(const RR_SHARED_PTR<TcpTransport>& parent)
 {
+    endpoint = 0;
     this->parent = parent;
     this->node = parent->GetNode();
 }
@@ -5383,7 +5389,7 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
         if (!cert)
             return false;
 
-        boost::array<char,256> buf;
+        boost::array<char,256> buf = {};
         memset(buf.data(), 0, 256);
 
         X509_NAME_oneline(X509_get_subject_name(cert), buf.data(), 256);
@@ -5417,7 +5423,7 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
         if (!cert)
             return false;
 
-        boost::array<char,256> buf;
+        boost::array<char,256> buf = {};
         memset(buf.data(), 0, 256);
 
         X509_NAME_oneline(X509_get_subject_name(cert), buf.data(), 256);
@@ -5451,7 +5457,7 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
         if (!cert)
             return false;
 
-        boost::array<char,256> buf;
+        boost::array<char,256> buf = {};
         memset(buf.data(), 0, 256);
 
         X509_NAME_oneline(X509_get_subject_name(cert), buf.data(), 256);
@@ -5823,8 +5829,8 @@ void IPNodeDiscovery::NodeAnnounceReceived(boost::string_ref packet, const boost
     {
         try
         {
-            std::string seed = "Robot Raconteur Node Discovery Packet";
-            if (packet.substr(0, seed.length()) == seed)
+            std::string magic = "Robot Raconteur Node Discovery Packet";
+            if (packet.substr(0, magic.length()) == magic)
             {
                 std::vector<std::string> s1;
                 boost::split(s1, packet, boost::is_from_range('\n', '\n'));
@@ -5900,8 +5906,8 @@ void IPNodeDiscovery::NodeAnnounceReceived(boost::string_ref packet, const boost
     {
         try
         {
-            std::string seed = "Robot Raconteur Discovery Request Packet";
-            if (packet.substr(0, seed.length()) == seed)
+            std::string magic = "Robot Raconteur Discovery Request Packet";
+            if (packet.substr(0, magic.length()) == magic)
             {
                 std::vector<std::string> s1;
                 boost::split(s1, packet, boost::is_from_range('\n', '\n'));
@@ -6566,7 +6572,7 @@ void TcpTransportPortSharerClient::client_thread()
             int port1 = 0;
 
             {
-                boost::array<uint8_t,4096> indata2;
+                boost::array<uint8_t,4096> indata2 = {};
 
                 int32_t nread =
                     boost::numeric_cast<int32_t>(l->read_some(boost::asio::buffer(indata2.data(), sizeof(indata2))));
@@ -6603,7 +6609,7 @@ void TcpTransportPortSharerClient::client_thread()
                 }
 
 #ifdef ROBOTRACONTEUR_WINDOWS
-                boost::array<uint8_t,4096> buf;
+                boost::array<uint8_t,4096> buf = {};
                 int bytes_read = (int32_t)l->read_some(boost::asio::buffer(buf.data(), 4096));
 
                 if (bytes_read != sizeof(WSAPROTOCOL_INFOW))
@@ -6645,7 +6651,7 @@ void TcpTransportPortSharerClient::client_thread()
 
                 int sock = 0;
 
-                boost::array<uint8_t,1024> buf;
+                boost::array<uint8_t,1024> buf = {};
 
                 if (detail::TcpTransportUtil::read_fd(l->native_handle(), buf.data(), sizeof(buf), &sock) != 1)
                 {
@@ -6663,7 +6669,7 @@ void TcpTransportPortSharerClient::client_thread()
                     RR_SHARED_PTR<RobotRaconteurNode> node = GetParent()->GetNode();
                     RR_SHARED_PTR<boost::asio::ip::tcp::socket> ssocket;
 
-                    struct sockaddr sock_addr;
+                    struct sockaddr sock_addr = {};
                     socklen_t address_len = sizeof(struct sockaddr);
 
                     if (getsockname(sock, &sock_addr, &address_len) < 0)
@@ -6778,9 +6784,10 @@ namespace TcpTransportUtil
 {
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays,cppcoreguidelines-pro-type-cstyle-cast)
+// NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 ssize_t read_fd(int fd, void* ptr, size_t nbytes, int* recvfd)
 {
-    struct msghdr msg;
+    struct msghdr msg = {};
     struct iovec iov[1];
     ssize_t n = 0;
 #ifndef HAVE_MSGHDR_MSG_CONTROL
@@ -6834,6 +6841,7 @@ ssize_t read_fd(int fd, void* ptr, size_t nbytes, int* recvfd)
 
     return (n);
 }
+// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 // NOLINTEND(cppcoreguidelines-avoid-c-arrays,cppcoreguidelines-pro-type-cstyle-cast)
 /* end read_fd */
 

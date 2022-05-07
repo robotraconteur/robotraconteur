@@ -166,10 +166,13 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
     boost::array<uint8_t,1024> recv_buf;
 
     LocalMessageTapConnectionImpl(const RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT>& io_context, bool log_all)
+        RR_MEMBER_ARRAY_INIT2(recv_buf)
     {
         this->LogAll = log_all;
         this->io_context = io_context;
         this->sending = false;
+        message_len = 0;
+        message_pos = 0;
 
         buffer_len = 32768;
         send_buffer = boost::shared_array<uint8_t>(new uint8_t[buffer_len]);
@@ -289,6 +292,8 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
 
     boost::mutex connections_lock;
     std::list<RR_WEAK_PTR<LocalMessageTapConnectionImpl> > connections;
+
+    LocalMessageTapImpl() : is_open(false) {}
 
     void Open(const std::string& tap_name)
     {

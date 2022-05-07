@@ -225,6 +225,7 @@ RR_WEAK_PTR<RobotRaconteurNode> ServiceStub::RRGetNodeWeak() { return node; }
 RR_SHARED_PTR<ServiceFactory> ClientContext::GetServiceDef() const { return m_ServiceDef; }
 
 ClientContext::ClientContext(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Endpoint(node)
+    , use_combined_connection(false)
 {
 
     
@@ -239,13 +240,14 @@ ClientContext::ClientContext(const RR_SHARED_PTR<RobotRaconteurNode>& node) : En
 }
 
 ClientContext::ClientContext(const RR_SHARED_PTR<ServiceFactory>& service_def, const RR_SHARED_PTR<RobotRaconteurNode>& node)
-    : Endpoint(node)
+    : Endpoint(node), use_combined_connection(false)
 {
     request_number = 0;
     m_Connected = false;
 
     m_UserAuthenticated = false;
     use_pulled_types = false;
+    
     
     m_ServiceDef = service_def;
 

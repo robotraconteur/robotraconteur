@@ -33,6 +33,9 @@ AsyncMessageWriterImpl::state_data::state_data()
 }
 
 AsyncMessageWriterImpl::AsyncMessageWriterImpl() { 
+    version = 0;
+    message_pos = 0;
+    quota_pos = 0;
     AsyncMessageWriterImpl::Reset();
     } 
 
@@ -170,14 +173,14 @@ bool AsyncMessageWriterImpl::write_uint_x(uint32_t number)
     }
     if (number <= std::numeric_limits<uint16_t>::max())
     {
-        boost::array<uint8_t,3> v1;
+        boost::array<uint8_t,3> v1 = {};
         v1[0] = 253;
         uint16_t v2 = static_cast<uint16_t>(number);
         memcpy(v1.data() + 1, &v2, 2);
         return write_all_bytes(v1.data(), 3);
     }
 
-    boost::array<uint8_t,5> v2;
+    boost::array<uint8_t,5> v2 = {};
     v2[0] = 254;
     memcpy(v2.data() + 1, &number, 4);
     return write_all_bytes(v2.data(), 5);
@@ -192,7 +195,7 @@ bool AsyncMessageWriterImpl::write_uint_x2(uint64_t number)
     }
     if (number <= std::numeric_limits<uint16_t>::max())
     {
-        boost::array<uint8_t,3> v1;
+        boost::array<uint8_t,3> v1 = {};
         v1[0] = 253;
         uint16_t v2 = static_cast<uint16_t>(number);
         memcpy(v1.data() + 1, &v2, 2);
@@ -200,14 +203,14 @@ bool AsyncMessageWriterImpl::write_uint_x2(uint64_t number)
     }
     if (number <= std::numeric_limits<uint32_t>::max())
     {
-        boost::array<uint8_t,5> v1;
+        boost::array<uint8_t,5> v1 = {};
         v1[0] = 254;
         uint32_t v2 = static_cast<uint32_t>(number);
         memcpy(v1.data() + 1, &v2, 4);
         return write_all_bytes(v1.data(), 5);
     }
 
-    boost::array<uint8_t,9> v3;
+    boost::array<uint8_t,9> v3 = {};
     v3[0] = 255;
     memcpy(v3.data() + 1, &number, 8);
     return write_all_bytes(v3.data(), 9);
@@ -223,14 +226,14 @@ bool AsyncMessageWriterImpl::write_int_x(int32_t number)
     }
     if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
     {
-        boost::array<int8_t,3> v1;
+        boost::array<int8_t,3> v1 = {};
         v1[0] = 125;
         int16_t v2 = static_cast<int16_t>(number);
         memcpy(v1.data() + 1, &v2, 2);
         return write_all_bytes(v1.data(), 3);
     }
 
-    boost::array<int8_t,5> v3;
+    boost::array<int8_t,5> v3 = {};
     v3[0] = 126;
     memcpy(v3.data() + 1, &number, 4);
     return write_all_bytes(v3.data(), 5);
@@ -245,7 +248,7 @@ bool AsyncMessageWriterImpl::write_int_x2(int64_t number)
     }
     if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
     {
-        boost::array<int8_t,3> v1;
+        boost::array<int8_t,3> v1 = {};
         v1[0] = 125;
         int16_t v2 = static_cast<int16_t>(number);
         memcpy(v1.data() + 1, &v2, 2);
@@ -253,14 +256,14 @@ bool AsyncMessageWriterImpl::write_int_x2(int64_t number)
     }
     if (number >= std::numeric_limits<int32_t>::min() && number <= std::numeric_limits<int32_t>::max())
     {
-        boost::array<uint8_t,5> v1;
+        boost::array<uint8_t,5> v1 = {};
         v1[0] = 126;
         int32_t v2 = static_cast<int32_t>(number);
         memcpy(v1.data() + 1, &v2, 4);
         return write_all_bytes(v1.data(), 5);
     }
 
-    boost::array<int8_t,9> v3;
+    boost::array<int8_t,9> v3 = {};
     v3[0] = 127;
     memcpy(v3.data() + 1, &number, 8);
     return write_all_bytes(v3.data(), 9);

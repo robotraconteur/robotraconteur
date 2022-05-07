@@ -28,7 +28,11 @@
 namespace RobotRaconteur
 {
 
-Transport::Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node) { this->node = node; }
+Transport::Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node) { 
+    this->node = node;
+    TransportID = 0;
+    
+     }
 
 RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode()
 {

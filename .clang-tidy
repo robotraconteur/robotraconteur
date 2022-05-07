@@ -38,7 +38,6 @@ Checks: >
     -bugprone-easily-swappable-parameters,
     -hicpp-*,
     -cppcoreguidelines-prefer-member-initializer,
-    -cppcoreguidelines-pro-type-member-init,
     -cppcoreguidelines-pro-type-reinterpret-cast,
     -cppcoreguidelines-avoid-non-const-global-variables
 HeaderFilterRegex: '(robotraconteur|RobotRaconteur).*'

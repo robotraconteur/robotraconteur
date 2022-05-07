@@ -49,6 +49,8 @@ struct ROBOTRACONTEUR_CORE_API TimerEvent
     boost::posix_time::ptime current_expected;
     /** @brief The current invocation time */
     boost::posix_time::ptime current_real;
+
+    TimerEvent();
 };
 
 /**

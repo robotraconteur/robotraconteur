@@ -45,9 +45,13 @@ RR_SHARED_PTR<RobotRaconteurNode> ASIOStreamBaseTransport::GetNode()
 }
 
 ASIOStreamBaseTransport::ASIOStreamBaseTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node)
-    : _io_context(node->GetThreadPool()->get_io_context())
+    : _io_context(node->GetThreadPool()->get_io_context()), send_version4(false), use_string_table4(false),
+    connected(true) RR_MEMBER_ARRAY_INIT(streammagic)
 {
-    connected.store(true);
+
+    send_message_size = 0;
+    recv_message_size = 0;
+    
 
     sendbuf_len = 4096;
     sendbuf = boost::shared_array<uint8_t>(new uint8_t[sendbuf_len]);
@@ -80,9 +84,6 @@ ASIOStreamBaseTransport::ASIOStreamBaseTransport(const RR_SHARED_PTR<RobotRacont
 
     send_large_transfer_authorized = false;
     recv_large_transfer_authorized = false;
-
-    send_version4.store(false);
-    use_string_table4.store(false);
 
     // cout << "New stream" << endl;
     string_table_4_requestid = 0;
@@ -820,7 +821,7 @@ void ASIOStreamBaseTransport::BeginReceiveMessage1()
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Begin receive message");
         mutable_buffers buf;
-        buf.push_back(boost::asio::buffer(streamseed, 8));
+        buf.push_back(boost::asio::buffer(streammagic, 8));
         boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)> h =
             boost::bind(&ASIOStreamBaseTransport::EndReceiveMessage1,
                         RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), 0,
@@ -863,7 +864,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
                 size_t new_startpos = startpos + bytes_transferred;
 
                 mutable_buffers buf1;
-                buf1.push_back(boost::asio::buffer(streamseed.data() + new_startpos, 8 - new_startpos));
+                buf1.push_back(boost::asio::buffer(streammagic.data() + new_startpos, 8 - new_startpos));
                 boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)> h =
                     boost::bind(&ASIOStreamBaseTransport::EndReceiveMessage1,
                                 RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), new_startpos,
@@ -872,22 +873,22 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
                 return;
             }
 
-            boost::array<char,4> seed;
+            boost::array<char,4> magic = {};
             uint32_t size = 0;
 
-            memcpy(seed.data(), streamseed.data(), 4);
-            memcpy(&size, streamseed.data() + 4, 4);
+            memcpy(magic.data(), streammagic.data(), 4);
+            memcpy(&size, streammagic.data() + 4, 4);
 
 #ifdef BOOST_BIG_ENDIAN
             std::reverse((uint8_t*)&size, ((uint8_t*)&size) + 4);
 #endif
 
-            if (std::string(seed.data(), 4) != "RRAC")
+            if (std::string(magic.data(), 4) != "RRAC")
             {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(),
                                                    "Received invalid magic expected {0x52,0x52,0x41,0x43} received "
-                                                       << std::hex << "{0x" << (int)seed[0] << ",0x" << (int)seed[1]
-                                                       << ",0x" << (int)seed[2] << ",0x" << (int)seed[3] << "}");
+                                                       << std::hex << "{0x" << (int)magic[0] << ",0x" << (int)magic[1]
+                                                       << ",0x" << (int)magic[2] << ",0x" << (int)magic[3] << "}");
                 throw ProtocolException("Received invalid magic");
             }
 
@@ -931,7 +932,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
                 recvbuf_len=size;
             }
 
-            memcpy(recvbuf,streamseed,8);
+            memcpy(recvbuf,streammagic,8);
 
             recv_message_size=size;
 
@@ -951,7 +952,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
                 recvbuf = boost::shared_array<uint8_t>(new uint8_t[recvbuf_len]);
             }
 
-            memcpy(recvbuf.get(), streamseed.data(), 8);
+            memcpy(recvbuf.get(), streammagic.data(), 8);
 
             recv_message_size = size;
 
@@ -1237,7 +1238,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
                     return;
                 }
 
-                boost::array<char,4> magic;
+                boost::array<char,4> magic = {};
                 uint32_t size = 0;
                 uint16_t message_version = 0;
 

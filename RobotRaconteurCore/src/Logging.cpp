@@ -19,6 +19,14 @@
 namespace RobotRaconteur
 {
 
+RRLogRecord::RRLogRecord()
+{
+    Level = RobotRaconteur_LogLevel_Warning;
+    Component = RobotRaconteur_LogComponent_Default;
+    SourceLine = 0;
+    Endpoint = 0;
+}
+
 std::ostream& operator<<(std::ostream& out, const RRLogRecord& record)
 {
     out << "[" << to_iso_extended_string(record.Time) << "] [" << RRLogRecord_Level_ToString(record.Level) << "] ["

@@ -627,6 +627,8 @@ void CommandLineConfigParser::FillOptionsDescription(boost::program_options::opt
 
 CommandLineConfigParser::CommandLineConfigParser(uint32_t allowed_overrides, const std::string& prefix)
 {
+    default_tcp_port=48653;
+    default_flags = 0;
     this->prefix = prefix;
     FillOptionsDescription(desc, allowed_overrides, prefix);
 }

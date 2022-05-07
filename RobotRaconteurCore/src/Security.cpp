@@ -243,7 +243,7 @@ std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
 
     return s2;
 #else
-    boost::array<uint8_t,MD5_DIGEST_LENGTH> md;
+    boost::array<uint8_t,MD5_DIGEST_LENGTH> md = {};
     MD5(reinterpret_cast<const uint8_t*>(text.data()), text.size(), reinterpret_cast<uint8_t*>(md.data()));
 
     std::string s2;

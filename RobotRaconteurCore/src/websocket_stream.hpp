@@ -86,6 +86,9 @@ class websocket_stream : private boost::noncopyable
 #endif
 
     websocket_stream(Stream& next_layer) : next_layer_(next_layer)
+    RR_MEMBER_ARRAY_INIT(recv_header1)
+        RR_MEMBER_ARRAY_INIT(recv_header2)
+        RR_MEMBER_ARRAY_INIT(recv_frame_mask)
     {
         extra_recv_data_len = 0;
         send_en_mask = false;
@@ -96,6 +99,8 @@ class websocket_stream : private boost::noncopyable
         recv_frame_opcode = 0;
 
         ping_requested = false;
+        recv_handshake_first_line = false;
+        ping_data_len = 0;
 
         boost::mutex::scoped_lock lock(random_lock);
         std::string str = boost::posix_time::to_iso_string(boost::posix_time::microsec_clock::universal_time());
@@ -897,7 +902,7 @@ class websocket_stream : private boost::noncopyable
         return std::string(buf2.get(), hashlen);
 #endif
 #ifdef ROBOTRACONTEUR_USE_OPENSSL
-        boost::array<uint8_t,SHA_DIGEST_LENGTH> hash;
+        boost::array<uint8_t,SHA_DIGEST_LENGTH> hash = {};
         if (!SHA1(reinterpret_cast<const uint8_t*>(blob.c_str()), blob.size(), hash.data()))
         {
             return "";
@@ -954,7 +959,7 @@ class websocket_stream : private boost::noncopyable
     {
     
 
-        boost::array<uint8_t,16> random_data;
+        boost::array<uint8_t,16> random_data = {};
 
         boost::random::uniform_int_distribution<uint8_t> distribution(0, std::numeric_limits<uint8_t>::max());
         for (size_t i = 0; i < 16; i++)

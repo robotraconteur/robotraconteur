@@ -333,6 +333,8 @@ ServiceInfo2Subscription::ServiceInfo2Subscription(const RR_SHARED_PTR<detail::D
     this->parent = parent;
     RR_SHARED_PTR<RobotRaconteurNode> n = parent->GetNode();
     this->node = n;
+    active = true;
+    retry_delay = 15000;
 }
 
 void ServiceInfo2Subscription::Init(const std::vector<std::string>& service_types,
@@ -736,6 +738,7 @@ void ServiceSubscription::ReleaseClient(const RR_SHARED_PTR<RRObject>& client)
 ServiceSubscription::ServiceSubscription(const RR_SHARED_PTR<detail::Discovery>& parent)
 {
     this->parent = parent;
+    active=true;
     RR_SHARED_PTR<RobotRaconteurNode> n = parent->GetNode();
     this->retry_delay = 15000;
 
@@ -1906,7 +1909,7 @@ bool WireSubscriptionBase::isempty_WireValueChanged() { return false; }
 
 namespace detail
 {
-WireSubscription_connection::WireSubscription_connection() {}
+WireSubscription_connection::WireSubscription_connection() : closed(false) {}
 
 void WireSubscription_connection::Init(const RR_SHARED_PTR<WireSubscriptionBase>& parent, const RR_SHARED_PTR<RRObject>& client)
 {

@@ -86,7 +86,7 @@ class pod_field_array : public boost::array<T, N>
 
   public:
     pod_field_array() : len(0) {}
-    pod_field_array(size_t n) { resize(n); }
+    pod_field_array(size_t n) : len(0) { resize(n); }
     typename boost::array<T, N>::iterator end() { return boost::array<T, N>::elems + len; }
     typename boost::array<T, N>::const_iterator end() const { return boost::array<T, N>::elems + len; }
     typename boost::array<T, N>::const_iterator cend() const { return boost::array<T, N>::elems + len; }

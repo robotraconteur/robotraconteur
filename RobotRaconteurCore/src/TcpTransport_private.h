@@ -555,7 +555,7 @@ class IPNodeDiscovery : public RR_ENABLE_SHARED_FROM_THIS<IPNodeDiscovery>
     template <typename SocketType>
     void Ip6AddMembership(SocketType& socket, const boost::asio::ip::address_v6& addr, unsigned int scope_id)
     {
-        ipv6_mreq mreq;
+        ipv6_mreq mreq = {};
         boost::asio::ip::address_v6::bytes_type b = addr.to_bytes();
         memcpy(&mreq.ipv6mr_multiaddr, &b[0], sizeof(in6_addr));
         mreq.ipv6mr_interface = scope_id;

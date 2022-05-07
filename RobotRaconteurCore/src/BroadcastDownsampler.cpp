@@ -19,7 +19,7 @@
 
 namespace RobotRaconteur
 {
-BroadcastDownsampler::BroadcastDownsampler() { step_count = 0; }
+BroadcastDownsampler::BroadcastDownsampler() { step_count = 0; default_downsample=0; }
 
 void BroadcastDownsampler::Init(const RR_SHARED_PTR<ServerContext>& context, uint32_t default_downsample)
 {

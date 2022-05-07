@@ -237,7 +237,7 @@ void MessageHeader::Read(ArrayBinaryReader& r)
 {
     MessageStringPtr magic = r.ReadString8(4).str();
     if (magic != "RRAC")
-        throw ProtocolException("Incorrect message seed");
+        throw ProtocolException("Incorrect message magic");
     MessageSize = r.ReadNumber<uint32_t>();
     uint16_t version = r.ReadNumber<uint16_t>();
     if (version != 2)
@@ -247,14 +247,14 @@ void MessageHeader::Read(ArrayBinaryReader& r)
 
     r.PushRelativeLimit(HeaderSize - 12);
 
-    boost::array<uint8_t, 16> bSenderNodeID;
+    boost::array<uint8_t, 16> bSenderNodeID = {};
     for (int32_t i = 0; i < 16; i++)
     {
         bSenderNodeID[i] = r.ReadNumber<uint8_t>();
     };
     SenderNodeID = NodeID(bSenderNodeID);
 
-    boost::array<uint8_t, 16> bReceiverNodeID;
+    boost::array<uint8_t, 16> bReceiverNodeID = {};
     for (int32_t i = 0; i < 16; i++)
     {
         bReceiverNodeID[i] = r.ReadNumber<uint8_t>();
@@ -468,14 +468,14 @@ void MessageHeader::Read4(ArrayBinaryReader& r)
     if (MessageFlags & MessageFlags_ROUTING_INFO)
     {
 
-        boost::array<uint8_t, 16> bSenderNodeID;
+    boost::array<uint8_t, 16> bSenderNodeID = {};
         for (int32_t i = 0; i < 16; i++)
         {
             bSenderNodeID[i] = r.ReadNumber<uint8_t>();
         };
         SenderNodeID = NodeID(bSenderNodeID);
 
-        boost::array<uint8_t, 16> bReceiverNodeID;
+        boost::array<uint8_t, 16> bReceiverNodeID = {};
         for (int32_t i = 0; i < 16; i++)
         {
             bReceiverNodeID[i] = r.ReadNumber<uint8_t>();

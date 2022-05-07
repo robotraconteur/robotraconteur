@@ -64,7 +64,15 @@ RobotRaconteurVersion::RobotRaconteurVersion(uint32_t major, uint32_t minor, uin
     this->tweak = tweak;
 }
 
-RobotRaconteurVersion::RobotRaconteurVersion(boost::string_ref v) { FromString(v); }
+RobotRaconteurVersion::RobotRaconteurVersion(boost::string_ref v)
+ {
+     major = 0;
+     minor = 0;
+     patch = 0;
+     tweak = 0;
+     FromString(v); 
+     
+    }
 
 std::string RobotRaconteurVersion::ToString() const
 {
@@ -1720,6 +1728,8 @@ void EventDefinition::Reset()
 
 ObjRefDefinition::ObjRefDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry) : MemberDefinition(ServiceEntry)
 {
+    ArrayType = DataTypes_ArrayTypes_none;
+    ContainerType = DataTypes_ContainerTypes_none;
     ObjRefDefinition::Reset();
 }
 
@@ -1983,12 +1993,20 @@ MemberDefinition_Direction MemoryDefinition::Direction() { return MemberDefiniti
 
 TypeDefinition::TypeDefinition()
 {
+    ArrayType = DataTypes_ArrayTypes_none;
+    ContainerType = DataTypes_ContainerTypes_none;
+    Type = DataTypes_void_t;
+    ArrayVarLength = false;
     Reset();
     this->member.reset();
 }
 
 TypeDefinition::TypeDefinition(const RR_SHARED_PTR<MemberDefinition>& member)
 {
+    ArrayType = DataTypes_ArrayTypes_none;
+    ContainerType = DataTypes_ContainerTypes_none;
+    Type = DataTypes_void_t;
+    ArrayVarLength = false;
     Reset();
     this->member = member;
 }

@@ -215,7 +215,7 @@ void LinuxLocalTransportDiscovery::run()
 
         std::vector<struct pollfd> poll_fds;
 
-        struct pollfd shutdown_evt_poll;
+        struct pollfd shutdown_evt_poll = {};
         shutdown_evt_poll.fd = shutdown_evt->fd();
         shutdown_evt_poll.events = POLLIN | POLLERR | POLLRDHUP;
         shutdown_evt_poll.revents = 0;
@@ -223,7 +223,7 @@ void LinuxLocalTransportDiscovery::run()
 
         if (private_dir)
         {
-            struct pollfd private_dir_poll;
+            struct pollfd private_dir_poll = {};
             private_dir_poll.fd = private_dir->notify_fd;
             private_dir_poll.events = POLLIN | POLLERR | POLLRDHUP;
             private_dir_poll.revents = 0;
@@ -232,7 +232,7 @@ void LinuxLocalTransportDiscovery::run()
 
         if (public_evt && public_evt->fd() > 0)
         {
-            struct pollfd public_evt_poll;
+            struct pollfd public_evt_poll = {};
             public_evt_poll.fd = public_evt->fd();
             public_evt_poll.events = POLLIN | POLLERR | POLLRDHUP;
             public_evt_poll.revents = 0;
@@ -247,7 +247,7 @@ void LinuxLocalTransportDiscovery::run()
                 continue;
             if (e->second->notify_fd > 0)
             {
-                struct pollfd public_dir_poll;
+                struct pollfd public_dir_poll = {};
                 public_dir_poll.fd = e->second->notify_fd;
                 public_dir_poll.events = POLLIN | POLLERR | POLLRDHUP;
                 public_dir_poll.revents = 0;
@@ -264,7 +264,7 @@ void LinuxLocalTransportDiscovery::run()
             if (ret < 0 && errno != EINTR)
                 return;
 
-            struct pollfd shutdown_evt_poll2;
+            struct pollfd shutdown_evt_poll2 = {};
             shutdown_evt_poll2.fd = shutdown_evt->fd();
             shutdown_evt_poll2.events = POLLIN | POLLERR | POLLRDHUP;
             shutdown_evt_poll2.revents = 0;

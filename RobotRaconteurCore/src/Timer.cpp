@@ -22,6 +22,12 @@
 
 namespace RobotRaconteur
 {
+
+TimerEvent::TimerEvent()
+{
+    stopped = false;
+}
+
 void WallTimer::timer_handler(const boost::system::error_code& ec)
 {
     TimerEvent ev;

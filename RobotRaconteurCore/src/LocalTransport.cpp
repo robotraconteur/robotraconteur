@@ -696,7 +696,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
             }
             pipename += GetNode()->GetRandomString(16) + ".sock";
 
-            sockaddr_un empty_sockaddr;
+            sockaddr_un empty_sockaddr = {};
             if (pipename.size() > (sizeof(empty_sockaddr.sun_path) - 1))
             {
                 throw RobotRaconteur::SystemResourceException("Local socket path name exceeds UNIX_PATH_MAX");
@@ -876,7 +876,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
             }
             pipename += GetNode()->GetRandomString(16) + ".sock";
 
-            sockaddr_un empty_sockaddr;
+            sockaddr_un empty_sockaddr = {};
             if (pipename.size() > (sizeof(empty_sockaddr.sun_path) - 1))
             {
                 throw RobotRaconteur::SystemResourceException("Local socket path name exceeds UNIX_PATH_MAX");
@@ -1797,7 +1797,7 @@ boost::optional<boost::filesystem::path> GetTransportPublicSocketPath()
 #ifdef ROBOTRACONTEUR_WINDOWS
         // TODO: file permissions?
 #else
-    struct stat info;
+    struct stat info = {};
     if (stat(path.string().c_str(), &info) < 0)
     {
         return boost::optional<boost::filesystem::path>();
@@ -2503,7 +2503,7 @@ void LocalTransportFD::open_lock_write(const boost::filesystem::path& path, bool
         return;
     }
 
-    struct ::flock lock;
+    struct ::flock lock = {};
     lock.l_type = F_WRLCK;
     lock.l_whence = SEEK_SET;
     lock.l_start = 0;

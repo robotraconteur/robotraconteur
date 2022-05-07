@@ -28,6 +28,8 @@ AsyncMessageReaderImpl::state_data::state_data()
     pop_state = Message_init;
     param1 = 0;
     param2 = 0;
+    limit = 0;
+    ptrdata = NULL;
 }
 
 AsyncMessageReaderImpl::AsyncMessageReaderImpl()
@@ -35,6 +37,10 @@ AsyncMessageReaderImpl::AsyncMessageReaderImpl()
     AsyncMessageReaderImpl::Reset();
     buf = boost::shared_array<uint8_t>(new uint8_t[128]);
     buf_len = 128;
+    version = 0; 
+    buf_avail_pos = 0; 
+    buf_read_pos = 0;
+    message_pos = 0;
 }
 
 size_t& AsyncMessageReaderImpl::message_len() { return state_stack.front().limit; }
@@ -520,13 +526,13 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             push_state(MessageHeader_routing1, Message_readentries, h->HeaderSize - 12, h);
         }
         case MessageHeader_routing1: {
-            boost::array<uint8_t, 16> nodeid;
+            boost::array<uint8_t, 16> nodeid = {};
             R(read_all_bytes(&nodeid[0], 16));
             data<MessageHeader>()->SenderNodeID = NodeID(nodeid);
             state() = MessageHeader_routing2;
         }
         case MessageHeader_routing2: {
-            boost::array<uint8_t, 16> nodeid;
+            boost::array<uint8_t, 16> nodeid = {};
             R(read_all_bytes(&nodeid[0], 16));
             data<MessageHeader>()->ReceiverNodeID = NodeID(nodeid);
             state() = MessageHeader_endpoint1;
@@ -928,13 +934,13 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
                 continue;
             }
 
-            boost::array<uint8_t, 16> nodeid;
+            boost::array<uint8_t, 16> nodeid = {};
             R(read_all_bytes(&nodeid[0], 16));
             h->SenderNodeID = NodeID(nodeid);
             state() = MessageHeader_routing2;
         }
         case MessageHeader_routing2: {
-            boost::array<uint8_t, 16> nodeid;
+            boost::array<uint8_t, 16> nodeid = {};
             R(read_all_bytes(&nodeid[0], 16));
             data<MessageHeader>()->ReceiverNodeID = NodeID(nodeid);
             state() = MessageHeader_routing3;

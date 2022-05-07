@@ -71,7 +71,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     boost::atomic<boost::posix_time::ptime> tlastsend;
     boost::atomic<boost::posix_time::ptime> tlastrecv;
 
-    boost::array<uint8_t,8> streamseed;
+    boost::array<uint8_t,8> streammagic;
     uint32_t recv_message_size;
     boost::shared_array<uint8_t> recvbuf;
     size_t recvbuf_len;

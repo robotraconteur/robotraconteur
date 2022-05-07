@@ -141,3 +141,11 @@
 #endif
 
 #define RR_UNUSED(var_) ((void)(var_))
+
+#ifndef BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
+#define RR_MEMBER_ARRAY_INIT(x) , x({})
+#define RR_MEMBER_ARRAY_INIT2(x) : x({})
+#else
+#define RR_MEMBER_ARRAY_INIT(x)
+#define RR_MEMBER_ARRAY_INIT2(x)
+#endif

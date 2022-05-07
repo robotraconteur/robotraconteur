@@ -96,18 +96,20 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
   public:
     typedef btaddr btaddr_type;
 
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
     struct device_info
     {
         boost::optional<std::string> nodeid_str;
         boost::optional<std::string> nodename_str;
         btaddr addr;
     };
+    // NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
     BluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent)
     {
         this->parent = parent;
-        this->connecting = false;
-        this->endpoint = 0;
+        connecting = false;
+        endpoint = 0;
         node = parent->GetNode();
     }
 

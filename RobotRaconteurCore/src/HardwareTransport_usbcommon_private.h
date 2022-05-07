@@ -135,6 +135,7 @@ enum UsbDeviceStatus
     Shutdown
 };
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 class UsbDeviceManager_detected_device
 {
   public:
@@ -142,6 +143,7 @@ class UsbDeviceManager_detected_device
     RR_SHARED_PTR<void> handle;
     uint8_t interface_;
 };
+// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
 class UsbDevice;
 class UsbDeviceTransportConnection;
@@ -238,6 +240,8 @@ class UsbDevice_Settings
     uint8_t string_nodeid_index;
     uint8_t string_nodename_index;
     std::vector<uint16_t> supported_protocols;
+
+    UsbDevice_Settings();
 };
 
 class UsbDevice_Initialize : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Initialize>

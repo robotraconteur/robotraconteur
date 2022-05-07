@@ -86,7 +86,7 @@ public:
 	{
 		if (bytes_len!=16) throw InvalidArgumentException("Invalid NodeID bytes length");
 	
-		boost::array<uint8_t,16> b;
+		boost::array<uint8_t,16> b = {};
 		memcpy(&b[0],bytes,16);
 	
 		NodeID* n=new NodeID(b);

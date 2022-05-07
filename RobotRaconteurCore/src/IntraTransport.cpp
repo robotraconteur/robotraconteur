@@ -579,12 +579,14 @@ bool IntraTransport::TryGetNodeInfo(NodeID& node_id, std::string& node_name, std
 
 IntraTransportConnection::IntraTransportConnection(const RR_SHARED_PTR<IntraTransport>& parent, bool server,
                                                    uint32_t local_endpoint)
+                                                   : connected(false)
 {
     this->parent = parent;
-    this->node = parent->GetNode();
     this->server = server;
     this->m_LocalEndpoint = local_endpoint;
+    m_RemoteEndpoint = 0;
     this->recv_queue_post_requested = false;
+    this->node = parent->GetNode();
 }
 
 void IntraTransportConnection::AcceptMessage(const RR_INTRUSIVE_PTR<Message>& m)

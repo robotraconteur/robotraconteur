@@ -875,8 +875,8 @@ class RangeGenerator : public SyncGenerator<typename T::value_type, void>
     RangeGenerator(const T& range)
     {
         this->range = range;
+        aborted = false;
         this->iter = this->range.begin();
-        this->aborted = false;
     }
 
     /** @copydoc SyncGenerator<void,Param>::Next() */

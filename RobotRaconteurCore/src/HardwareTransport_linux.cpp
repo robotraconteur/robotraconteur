@@ -234,7 +234,7 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
 
         bool address_found = false;
         bool service_uuid_invalid = false;
-        sockaddr_rc a;
+        sockaddr_rc a = {};
         memset(&a, 0, sizeof(a));
         a.rc_family = AF_BLUETOOTH;
 
@@ -429,7 +429,7 @@ void HardwareTransport_linux_discovery::Init()
     boost::mutex::scoped_lock lock(this_lock);
 
     int nl_socket = 0;
-    struct sockaddr_nl src_addr;
+    struct sockaddr_nl src_addr = {};
     msg = boost::shared_array<uint8_t>(new uint8_t[NL_MAX_PAYLOAD]);
     int ret = 0;
 
@@ -593,7 +593,7 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
 static std::string HardwareTransport_read_sysfs_attr(const boost::filesystem::path& p)
 {
     ssize_t rv = 0;
-    boost::array<char,256> attr_buf;
+    boost::array<char,256> attr_buf = {};
     int f1 = open(p.c_str(), O_RDONLY);
     if (f1 < 0)
         throw ConnectionException("Attribute not found");

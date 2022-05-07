@@ -450,6 +450,12 @@ void ServiceIndex_stub::rrend_GetDetectedNodes(
             RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>());
 }
 
+ServiceIndex_skel::ServiceIndex_skel()
+{
+    rr_InitPipeServersRun = false;
+    rr_InitWireServersRun = false;
+}
+
 void ServiceIndex_skel::Init(boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::RRObject>& object,
                              const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context)
 {
