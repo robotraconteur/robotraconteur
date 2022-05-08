@@ -664,7 +664,7 @@ class Pipe : public virtual PipeBase
   public:
     friend class PipeEndpointBase;
 
-    Pipe(boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = RR_MOVE(verify); }
+    Pipe(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = RR_MOVE(verify); }
 
     virtual ~Pipe() {}
 
@@ -675,7 +675,7 @@ class Pipe : public virtual PipeBase
      *
      * @return boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> The currently configured callback function
      */
-    virtual boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> GetPipeConnectCallback() = 0;
+    virtual boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> GetPipeConnectCallback() = 0;
 
     /**
      * @brief Set the pipe endpoint connected callback function

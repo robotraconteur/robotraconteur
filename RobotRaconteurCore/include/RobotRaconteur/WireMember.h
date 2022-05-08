@@ -666,7 +666,7 @@ class Wire : public virtual WireBase
     friend class WireConnectionBase;
 
   public:
-    Wire(boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = RR_MOVE(verify); }
+    Wire(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = RR_MOVE(verify); }
 
     virtual ~Wire() {}
 
@@ -1037,7 +1037,7 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
   public:
     WireClient(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
-               boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
+               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
         : WireClientBase(name, stub, direction), Wire<T>(verify)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
