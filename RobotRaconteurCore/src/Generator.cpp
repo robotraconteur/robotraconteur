@@ -66,7 +66,7 @@ void GeneratorClientBase::AsyncAbort(boost::function<void(const RR_SHARED_PTR<Ro
     AbortOperationException err("Generator abort requested");
     RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
     m->AddElement("index", ScalarToRRArray(id));
-    GetStub()->AsyncProcessRequest(m, boost::bind(handler, RR_BOOST_PLACEHOLDERS(_2)), timeout);
+    GetStub()->AsyncProcessRequest(m, boost::bind(RR_MOVE(handler), RR_BOOST_PLACEHOLDERS(_2)), timeout);
 }
 
 void GeneratorClientBase::Close()
@@ -88,7 +88,7 @@ void GeneratorClientBase::AsyncClose(boost::function<void(const RR_SHARED_PTR<Ro
     StopIterationException err("");
     RobotRaconteurExceptionUtil::ExceptionToMessageEntry(err, m);
     m->AddElement("index", ScalarToRRArray(id));
-    GetStub()->AsyncProcessRequest(m, boost::bind(handler, RR_BOOST_PLACEHOLDERS(_2)), timeout);
+    GetStub()->AsyncProcessRequest(m, boost::bind(RR_MOVE(handler), RR_BOOST_PLACEHOLDERS(_2)), timeout);
 }
 
 std::string GeneratorClientBase::GetMemberName() { return name; }
@@ -128,7 +128,7 @@ void GeneratorClientBase::AsyncNextBase(
     }
     RR_WEAK_PTR<RobotRaconteurNode> node = GetStub()->RRGetNode();
     GetStub()->AsyncProcessRequest(m, boost::bind(&GeneratorClientBase::AsyncNextBase1, RR_BOOST_PLACEHOLDERS(_1),
-                                                  RR_BOOST_PLACEHOLDERS(_2), handler, node));
+                                                  RR_BOOST_PLACEHOLDERS(_2), RR_MOVE(handler), node));
 }
 
 void GeneratorClientBase::AsyncNextBase1(

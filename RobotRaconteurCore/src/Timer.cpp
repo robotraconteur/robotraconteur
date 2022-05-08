@@ -102,7 +102,7 @@ WallTimer::WallTimer(const boost::posix_time::time_duration& period, boost::func
 {
     this->period = period;
     this->oneshot = oneshot;
-    this->handler = handler;
+    this->handler = RR_MOVE(handler);
     running = false;
     if (!node)
     {

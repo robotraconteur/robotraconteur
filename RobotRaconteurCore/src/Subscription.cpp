@@ -2598,7 +2598,7 @@ void PipeSubscription_connection::PipeEndpointClosed(const RR_SHARED_PTR<PipeEnd
 
 void PipeSubscription_connection::PipePacketReceived(
     const RR_SHARED_PTR<PipeEndpointBase>& endpoint,
-    boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func)
+    const boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)>& receive_packet_func)
 {
     RR_UNUSED(endpoint);
     RR_SHARED_PTR<PipeSubscriptionBase> p = parent.lock();

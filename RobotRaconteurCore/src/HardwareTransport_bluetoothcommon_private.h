@@ -129,7 +129,7 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
         this->connecting = true;
 
         RobotRaconteurNode::TryPostToThreadPool(
-            node, boost::bind(&BluetoothConnector::DoConnect, this->shared_from_this(), boost::protect(handler)), true);
+            node, boost::bind(&BluetoothConnector::DoConnect, this->shared_from_this(), boost::protect(RR_MOVE(handler))), true);
     }
 
     void UpdateDevices() { devices = GetDeviceAddresses(); }

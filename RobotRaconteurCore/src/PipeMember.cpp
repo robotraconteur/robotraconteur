@@ -1689,7 +1689,7 @@ boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_
 void PipeBroadcasterBase::SetPredicate(boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> f)
 {
     boost::mutex::scoped_lock lock(endpoints_lock);
-    predicate = f;
+    predicate = RR_MOVE(f);
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, -1, service_path, member_name,
                                             "PipeBroadcaster predicate set");
 }

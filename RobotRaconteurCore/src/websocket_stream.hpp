@@ -118,7 +118,7 @@ class websocket_stream : private boost::noncopyable
         next_layer_.async_read_some(boost::asio::buffer(buf.get(), 4096),
                                     boost::bind(&websocket_stream::server_handshake2, this, buf, protocol,
                                                 allowed_origins, boost::asio::placeholders::bytes_transferred,
-                                                boost::asio::placeholders::error, boost::protect(handler)));
+                                                boost::asio::placeholders::error, boost::protect(RR_MOVE(handler))));
     }
 
   protected:
@@ -470,7 +470,7 @@ class websocket_stream : private boost::noncopyable
         next_layer_.async_write_some(boost::asio::buffer(data->c_str(), data->size()),
                                      boost::bind(&websocket_stream::end_send_server_error, this, data,
                                                  boost::asio::placeholders::bytes_transferred,
-                                                 boost::asio::placeholders::error, boost::protect(handler)));
+                                                 boost::asio::placeholders::error, boost::protect(RR_MOVE(handler))));
     }
 
     void end_send_server_error(
@@ -512,7 +512,7 @@ class websocket_stream : private boost::noncopyable
         next_layer_.async_write_some(boost::asio::buffer(data->c_str(), data->size()),
                                      boost::bind(&websocket_stream::end_send_server_success_response, this, data,
                                                  protocol, boost::asio::placeholders::bytes_transferred,
-                                                 boost::asio::placeholders::error, boost::protect(handler)));
+                                                 boost::asio::placeholders::error, boost::protect(RR_MOVE(handler))));
     }
 
     void end_send_server_success_response(
@@ -599,7 +599,7 @@ class websocket_stream : private boost::noncopyable
                                      boost::bind(&websocket_stream::async_client_handshake2, this,
                                                  boost::asio::placeholders::error,
                                                  boost::asio::placeholders::bytes_transferred, data, url, protocol, key,
-                                                 boost::protect(handler)));
+                                                 boost::protect(RR_MOVE(handler))));
     }
 
   protected:
@@ -1117,7 +1117,7 @@ class websocket_stream : private boost::noncopyable
         next_layer_.async_write_some(send_buffer, boost::bind(&websocket_stream::async_write_message3, this,
                                                               boost::asio::placeholders::bytes_transferred,
                                                               boost::asio::placeholders::error, count, header, buffer2,
-                                                              boost::protect(handler)));
+                                                              boost::protect(RR_MOVE(handler))));
     }
 
     void async_write_message3(size_t n, const boost::system::error_code ec, size_t data_count,

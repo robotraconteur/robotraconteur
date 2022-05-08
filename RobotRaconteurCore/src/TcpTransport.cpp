@@ -126,7 +126,7 @@ void TcpConnector::Connect(
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, endpoint,
                                        "TcpConnector begin connection with candidate URLs: " << boost::join(url, ", "));
 
-    this->callback = handler;
+    this->callback = RR_MOVE(handler);
     this->endpoint = endpoint;
     this->url = url.at(0);
 
@@ -1006,7 +1006,7 @@ void TcpAcceptor::AcceptSocket(
 
     socket->async_receive(boost::asio::buffer(buf, 4), boost::asio::ip::tcp::socket::message_peek,
                           boost::bind(&TcpAcceptor::AcceptSocket2, shared_from_this(), boost::asio::placeholders::error,
-                                      boost::asio::placeholders::bytes_transferred, socket, socket_closer, handler));
+                                      boost::asio::placeholders::bytes_transferred, socket, socket_closer, RR_MOVE(handler)));
 }
 
 // end class TcpAcceptor
@@ -1180,7 +1180,7 @@ void TcpWebSocketConnector::Connect(
 
         socket_connector->connect(ws_url, boost::bind(&TcpWebSocketConnector::Connect2, shared_from_this(),
                                                       RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
-                                                      socket_connector, boost::protect(handler)));
+                                                      socket_connector, boost::protect(RR_MOVE(handler))));
         parent->AddCloseListener(socket_connector, &detail::websocket_tcp_connector::cancel);
     }
     catch (std::exception& exp)
@@ -1778,7 +1778,7 @@ void TcpWSSWebSocketConnector::Connect(
 
         socket_connector->connect(ws_url, boost::bind(&TcpWSSWebSocketConnector::Connect2, shared_from_this(),
                                                       RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
-                                                      socket_connector, boost::protect(handler)));
+                                                      socket_connector, boost::protect(RR_MOVE(handler))));
         parent->AddCloseListener(socket_connector, &detail::websocket_tcp_connector::cancel);
     }
     catch (std::exception& exp)

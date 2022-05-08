@@ -1537,7 +1537,7 @@ void RobotRaconteurNode::AsyncConnectService(
 {
     std::vector<std::string> urls;
     urls.push_back(RR_MOVE(url.to_string()));
-    AsyncConnectService(urls, username, credentials, listener, objecttype, handler, timeout);
+    AsyncConnectService(urls, username, credentials, RR_MOVE(listener), objecttype, RR_MOVE(handler), timeout);
 }
 
 void RobotRaconteurNode::AsyncConnectService(
@@ -1595,8 +1595,8 @@ void RobotRaconteurNode::AsyncConnectService(
     RR_SHARED_PTR<detail::RobotRaconteurNode_connector> connector =
         RR_MAKE_SHARED<detail::RobotRaconteurNode_connector>(shared_from_this());
     GetThreadPool()->Post(boost::bind(&detail::RobotRaconteurNode_connector::connect, connector, connectors,
-                                      username.to_string(), credentials, listener, objecttype.to_string(),
-                                      boost::protect(handler), timeout));
+                                      username.to_string(), credentials, RR_MOVE(listener), objecttype.to_string(),
+                                      boost::protect(RR_MOVE(handler)), timeout));
 }
 
 RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(
@@ -1611,7 +1611,7 @@ RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(
 
     RR_SHARED_PTR<detail::sync_async_handler<RRObject> > h = RR_MAKE_SHARED<detail::sync_async_handler<RRObject> >(
         RR_MAKE_SHARED<ConnectionException>("Connection timed out"));
-    AsyncConnectService(urls, username, credentials, listener, objecttype,
+    AsyncConnectService(urls, username, credentials, RR_MOVE(listener), objecttype,
                         boost::bind(&detail::sync_async_handler<RRObject>::operator(), h, RR_BOOST_PLACEHOLDERS(_1),
                                     RR_BOOST_PLACEHOLDERS(_2)),
                         boost::numeric_cast<int32_t>(this->GetRequestTimeout() * 2));
@@ -1630,7 +1630,7 @@ RR_SHARED_PTR<RRObject> RobotRaconteurNode::ConnectService(
 
     std::vector<std::string> urls;
     urls.push_back(RR_MOVE(url.to_string()));
-    return ConnectService(urls, username, credentials, listener, objecttype);
+    return ConnectService(urls, username, credentials, RR_MOVE(listener), objecttype);
 }
 
 void RobotRaconteurNode::DisconnectService(const RR_SHARED_PTR<RRObject>& obj)
@@ -2683,7 +2683,7 @@ bool RobotRaconteurNode::InitThreadPool(int32_t thread_count)
 void RobotRaconteurNode::SetExceptionHandler(boost::function<void(const std::exception*)> handler)
 {
     boost::mutex::scoped_lock lock(exception_handler_lock);
-    exception_handler = handler;
+    exception_handler = RR_MOVE(handler);
 }
 
 boost::function<void(const std::exception*)> RobotRaconteurNode::GetExceptionHandler()

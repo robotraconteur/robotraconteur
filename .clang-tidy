@@ -51,6 +51,6 @@ CheckOptions:
   - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
     value:           '1'
   - key: performance-unnecessary-value-param.AllowedTypes
-    value: MessageStringRef;RR_WEAK_PTR*;boost::weak_ptr*;boost::function*
+    value: MessageStringRef;RR_WEAK_PTR*;boost::weak_ptr*;
   - key: bugprone-signed-char-misuse.CharTypdefsToIgnore
     value: int8_t

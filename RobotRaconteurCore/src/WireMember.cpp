@@ -1431,7 +1431,7 @@ boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> WireBroadca
 void WireBroadcasterBase::SetPredicate(boost::function<bool(const RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> f)
 {
     boost::mutex::scoped_lock lock(connected_wires_lock);
-    predicate = f;
+    predicate = RR_MOVE(f);
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, -1, service_path, member_name,
                                             "WireBroadcaster predicate set");
 }

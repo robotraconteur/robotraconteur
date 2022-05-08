@@ -231,7 +231,7 @@ void UsbDeviceManager::AsyncCreateTransportConnection(
         handler)
 {
     UpdateDevices(boost::bind(&UsbDeviceManager::AsyncCreateTransportConnection1, shared_from_this(), url_res, endpoint,
-                              noden.to_string(), boost::protect(handler)));
+                              noden.to_string(), boost::protect(RR_MOVE(handler))));
 }
 
 void UsbDeviceManager::AsyncCreateTransportConnection1(
@@ -587,7 +587,7 @@ void UsbDevice_Initialize::ReadRRDeviceString(
     AsyncControlTransfer(0x80, 0x06, 0x0300, 0x409, buf3,
                          boost::bind(&UsbDevice_Initialize::ReadRRDeviceString1, shared_from_this(),
                                      RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), interface_number,
-                                     property_index, buf, boost::protect(handler), dev_h),
+                                     property_index, buf, boost::protect(RR_MOVE(handler)), dev_h),
                          dev_h);
 }
 
@@ -868,7 +868,7 @@ void UsbDevice_Claim::AsyncCreateTransportConnection3(
     AsyncControlTransfer(VendorInterfaceOutRequest, RR_USB_CONTROL_CURRENT_PROTOCOL, 0, settings->interface_number, b1,
                          boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection4, shared_from_this(),
                                      RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), buf2, url_res, endpoint,
-                                     noden, boost::protect(handler)));
+                                     noden, boost::protect(RR_MOVE(handler))));
 }
 
 void UsbDevice_Claim::AsyncCreateTransportConnection4(
@@ -947,7 +947,7 @@ void UsbDevice_Claim::AsyncCreateTransportConnection5(
     AsyncControlTransfer(VendorInterfaceRequest, RR_USB_CONTROL_CONNECT_STREAM, 0, settings->interface_number, b1,
                          boost::bind(&UsbDevice_Claim::AsyncCreateTransportConnection6, shared_from_this(),
                                      RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), buf, url_res, endpoint,
-                                     noden, boost::protect(handler)));
+                                     noden, boost::protect(RR_MOVE(handler))));
 }
 
 void UsbDevice_Claim::AsyncCreateTransportConnection6(

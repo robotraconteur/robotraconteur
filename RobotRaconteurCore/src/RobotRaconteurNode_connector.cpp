@@ -508,9 +508,9 @@ void RobotRaconteurNode_connector::connect(
     this->connectors = connectors;
     this->username = RR_MOVE(username.to_string());
     this->credentials = credentials;
-    this->listener = listener;
+    this->listener = RR_MOVE(listener);
     this->objecttype = RR_MOVE(objecttype.to_string());
-    this->handler = handler;
+    this->handler = RR_MOVE(handler);
     this->timeout = timeout;
 
     int32_t key = 0;
