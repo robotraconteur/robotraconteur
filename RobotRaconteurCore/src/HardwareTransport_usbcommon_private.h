@@ -260,22 +260,22 @@ class UsbDevice_Initialize : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Initial
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-    virtual void InitializeDevice(boost::function<void(UsbDeviceStatus)> handler);
+    virtual void InitializeDevice(boost::function<void(const UsbDeviceStatus&)> handler);
 
   protected:
     void InitializeDevice1(
-        uint32_t attempt, boost::function<void(UsbDeviceStatus)> handler,
+        uint32_t attempt, boost::function<void(const UsbDeviceStatus&)> handler,
         const RR_SHARED_PTR<boost::asio::deadline_timer>& timer = RR_SHARED_PTR<boost::asio::deadline_timer>());
 
     void InitializeDevice2(const boost::system::error_code& ec, const std::string& device_nodeid,
-                           boost::function<void(UsbDeviceStatus)> handler, const RR_SHARED_PTR<void>& dev_h,
+                           boost::function<void(const UsbDeviceStatus&)> handler, const RR_SHARED_PTR<void>& dev_h,
                            const RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
     void InitializeDevice3(const boost::system::error_code& ec, const std::string& device_nodename,
-                           boost::function<void(UsbDeviceStatus)> handler, const RR_SHARED_PTR<void>& dev_h,
+                           boost::function<void(const UsbDeviceStatus&)> handler, const RR_SHARED_PTR<void>& dev_h,
                            const RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
-    void InitializeDevice_err(boost::function<void(UsbDeviceStatus)>& handler, UsbDeviceStatus status = Error);
+    void InitializeDevice_err(const boost::function<void(const UsbDeviceStatus&)>& handler, UsbDeviceStatus status = Error);
 
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
@@ -315,7 +315,7 @@ class UsbDevice_Initialize : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Initial
 
     boost::mutex this_lock;
 
-    std::list<boost::function<void(UsbDeviceStatus)> > initialize_handlers;
+    std::list<boost::function<void(const UsbDeviceStatus&)> > initialize_handlers;
 
     RR_WEAK_PTR<RobotRaconteurNode> node;
     RR_WEAK_PTR<UsbDevice> parent;
@@ -518,7 +518,7 @@ class UsbDevice : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice>
 
     UsbDeviceStatus GetDeviceStatus();
 
-    void InitializeDevice(boost::function<void(UsbDeviceStatus)> handler);
+    void InitializeDevice(boost::function<void(const UsbDeviceStatus&)> handler);
 
     boost::tuple<NodeID, std::string> GetNodeInfo();
 

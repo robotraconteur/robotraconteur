@@ -78,7 +78,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
                       const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     // void do_starttls3(const RR_SHARED_PTR<RobotRaconteurException>& error,
-    // boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+    // const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     void do_starttls4(const std::string& servername, const boost::system::error_code& error);
 
@@ -192,7 +192,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 void TcpTransport_attach_transport(
     const RR_SHARED_PTR<TcpTransport>& parent, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
     boost::string_ref url, bool server, uint32_t endpoint,
-    boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
+    boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&, const RR_SHARED_PTR<ITransportConnection>&,
                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
 void TcpTransport_connected_callback2(const RR_SHARED_PTR<TcpTransport>& parent,
@@ -297,14 +297,14 @@ class TcpAcceptor : public RR_ENABLE_SHARED_FROM_THIS<TcpAcceptor>
     void AcceptSocket6(const RR_SHARED_PTR<RobotRaconteurException>& err,
                        const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                        const RR_SHARED_PTR<TcpTransportConnection>& t,
-                       const boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>,
+                       const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
                                                   const RR_SHARED_PTR<ITransportConnection>&,
                                                   const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     void AcceptSocket5(const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                        const RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> >& websocket,
                        const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
-                       const boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>,
+                       const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
                                                   const RR_SHARED_PTR<ITransportConnection>&,
                                                   const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
@@ -315,14 +315,14 @@ class TcpAcceptor : public RR_ENABLE_SHARED_FROM_THIS<TcpAcceptor>
     void AcceptSocket3(const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::deadline_timer>& timer,
                        const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                        const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
-                       const boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>,
+                       const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
                                                   const RR_SHARED_PTR<ITransportConnection>&,
                                                   const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     void AcceptSocket2(const boost::system::error_code& ec, size_t n,
                        const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                        const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
-                       const boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>,
+                       const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
                                                   const RR_SHARED_PTR<ITransportConnection>&,
                                                   const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
@@ -331,7 +331,7 @@ class TcpAcceptor : public RR_ENABLE_SHARED_FROM_THIS<TcpAcceptor>
 
     void AcceptSocket(
         const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
+        boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&, const RR_SHARED_PTR<ITransportConnection>&,
                              const RR_SHARED_PTR<RobotRaconteurException>&)>
             handler);
 };

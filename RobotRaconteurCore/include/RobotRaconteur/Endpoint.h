@@ -89,7 +89,7 @@ class ROBOTRACONTEUR_CORE_API Endpoint : private boost::noncopyable
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 

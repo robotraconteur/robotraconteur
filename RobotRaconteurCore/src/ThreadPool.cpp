@@ -192,7 +192,7 @@ void IOContextThreadPool::Post(boost::function<void()> function)
 {
     RR_BOOST_ASIO_POST(_external_io_context, boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
 }
-bool IOContextThreadPool::TryPost(RR_MOVE_ARG(boost::function<void()>) function)
+bool IOContextThreadPool::TryPost(boost::function<void()> function)
 {
     RR_BOOST_ASIO_POST(_external_io_context, boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
     return true;

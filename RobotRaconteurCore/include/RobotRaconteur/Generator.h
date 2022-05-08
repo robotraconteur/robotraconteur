@@ -158,7 +158,7 @@ class Generator<Return, void> : private boost::noncopyable
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
      */
     virtual void AsyncNext(
-        boost::function<void(const Return, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
+        boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     /** @copydoc Generator::Abort() */
     virtual void Abort() = 0;
@@ -327,7 +327,7 @@ class GeneratorClient : public Generator<Return, Param>, public GeneratorClientB
             GetStub()->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Return>::BoxedType>(v2));
     }
     virtual void AsyncNext(const Param& v,
-                           boost::function<void(Return, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                           boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                            int32_t timeout = RR_TIMEOUT_INFINITE)
     {
         RR_INTRUSIVE_PTR<MessageElement> v1 = CreateMessageElement(
@@ -366,7 +366,7 @@ class GeneratorClient<Return, void> : public Generator<Return, void>, public Gen
         return RRPrimUtil<Return>::PreUnpack(
             GetStub()->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Return>::BoxedType>(v2));
     }
-    virtual void AsyncNext(boost::function<void(Return, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+    virtual void AsyncNext(boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                            int32_t timeout = RR_TIMEOUT_INFINITE)
     {
         AsyncNextBase(RR_INTRUSIVE_PTR<MessageElement>(),
@@ -668,7 +668,7 @@ class SyncGenerator : public Generator<Return, Param>
     virtual Return Next(const Param& v) = 0;
     /** @copydoc Generator<Return,Param>::AsyncNext() */
     virtual void AsyncNext(
-        const Param& v, boost::function<void(const Return, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
+        const Param& v, boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE)
     {
         RR_UNUSED(timeout);
@@ -735,7 +735,7 @@ class SyncGenerator<Return, void> : public Generator<Return, void>
     virtual Return Next() = 0;
     /** @copydoc Generator<Return,void>::AsyncNext() */
     virtual void AsyncNext(
-        boost::function<void(const Return, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
+        boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE)
     {
         RR_UNUSED(timeout);

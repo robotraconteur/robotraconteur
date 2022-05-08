@@ -88,7 +88,7 @@ void WireConnectionBase::Close()
     t->end_void();
 }
 
-void WireConnectionBase::AsyncClose(RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
+void WireConnectionBase::AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>
                                         handler,
                                     int32_t timeout)
 {
@@ -1428,7 +1428,7 @@ boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> WireBroadca
     boost::mutex::scoped_lock lock(connected_wires_lock);
     return predicate;
 }
-void WireBroadcasterBase::SetPredicate(boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> f)
+void WireBroadcasterBase::SetPredicate(boost::function<bool(const RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> f)
 {
     boost::mutex::scoped_lock lock(connected_wires_lock);
     predicate = f;

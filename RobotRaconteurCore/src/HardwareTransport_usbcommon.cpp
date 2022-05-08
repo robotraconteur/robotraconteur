@@ -386,7 +386,7 @@ RR_SHARED_PTR<RobotRaconteurNode> UsbDevice_Initialize::GetNode()
     return n;
 }
 
-void UsbDevice_Initialize::InitializeDevice(boost::function<void(UsbDeviceStatus)> handler)
+void UsbDevice_Initialize::InitializeDevice(boost::function<void(const UsbDeviceStatus&)> handler)
 {
     boost::mutex::scoped_lock lock(this_lock);
 
@@ -414,7 +414,7 @@ void UsbDevice_Initialize::InitializeDevice(boost::function<void(UsbDeviceStatus
     }
 }
 
-void UsbDevice_Initialize::InitializeDevice1(uint32_t attempt, boost::function<void(UsbDeviceStatus)> handler,
+void UsbDevice_Initialize::InitializeDevice1(uint32_t attempt, boost::function<void(const UsbDeviceStatus&)> handler,
                                              const RR_SHARED_PTR<boost::asio::deadline_timer>& timer)
 {
     RR_UNUSED(timer);
@@ -486,7 +486,7 @@ void UsbDevice_Initialize::InitializeDevice1(uint32_t attempt, boost::function<v
 }
 
 void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec, const std::string& device_nodeid,
-                                             boost::function<void(UsbDeviceStatus)> handler,
+                                             boost::function<void(const UsbDeviceStatus&)> handler,
                                              const RR_SHARED_PTR<void>& dev_h,
                                              const RR_SHARED_PTR<UsbDevice_Settings>& settings)
 {
@@ -516,7 +516,7 @@ void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec
 }
 
 void UsbDevice_Initialize::InitializeDevice3(const boost::system::error_code& ec, const std::string& device_nodename,
-                                             boost::function<void(UsbDeviceStatus)> handler,
+                                             boost::function<void(const UsbDeviceStatus&)> handler,
                                              const RR_SHARED_PTR<void>& dev_h,
                                              const RR_SHARED_PTR<UsbDevice_Settings>& settings)
 {
@@ -535,7 +535,7 @@ void UsbDevice_Initialize::InitializeDevice3(const boost::system::error_code& ec
 
         GetParent()->DeviceInitialized(settings);
 
-        BOOST_FOREACH (boost::function<void(UsbDeviceStatus)>& e, initialize_handlers)
+        BOOST_FOREACH (boost::function<void(const UsbDeviceStatus&)>& e, initialize_handlers)
         {
             if (!RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(e, status)))
             {
@@ -556,7 +556,7 @@ void UsbDevice_Initialize::InitializeDevice3(const boost::system::error_code& ec
     handler(Ready);
 }
 
-void UsbDevice_Initialize::InitializeDevice_err(boost::function<void(UsbDeviceStatus)>& handler,
+void UsbDevice_Initialize::InitializeDevice_err(const boost::function<void(const UsbDeviceStatus&)>& handler,
                                                 UsbDeviceStatus status1)
 {
     RR_SHARED_PTR<ThreadPool> p = GetNode()->GetThreadPool();
@@ -568,7 +568,7 @@ void UsbDevice_Initialize::InitializeDevice_err(boost::function<void(UsbDeviceSt
 
     RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, status1), true);
 
-    BOOST_FOREACH (boost::function<void(UsbDeviceStatus)>& e, initialize_handlers)
+    BOOST_FOREACH (boost::function<void(const UsbDeviceStatus&)>& e, initialize_handlers)
     {
         RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(e, status1), true);
     }
@@ -1584,7 +1584,7 @@ UsbDeviceStatus UsbDevice::GetDeviceStatus()
     }
 }
 
-void UsbDevice::InitializeDevice(boost::function<void(UsbDeviceStatus)> handler)
+void UsbDevice::InitializeDevice(boost::function<void(const UsbDeviceStatus&)> handler)
 {
     boost::mutex::scoped_lock lock(this_lock);
 

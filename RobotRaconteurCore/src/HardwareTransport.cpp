@@ -661,7 +661,7 @@ void HardwareTransport::PeriodicCleanupTask()
 }
 
 void HardwareTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                         boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+                                         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
 
     RR_SHARED_PTR<ITransportConnection> t;
@@ -684,7 +684,7 @@ void HardwareTransport::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) { Ge
 
 void HardwareTransport::AsyncGetDetectedNodes(
     const std::vector<std::string>& schemes,
-    boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
+    const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
 {
 
     boost::mutex::scoped_lock lock(discovery_lock);

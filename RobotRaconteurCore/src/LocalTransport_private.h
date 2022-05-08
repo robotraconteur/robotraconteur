@@ -141,7 +141,7 @@ class LocalTransportConnection : public detail::ASIOStreamBaseTransport
 void LocalTransport_attach_transport(
     const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
     bool server, uint32_t endpoint, const std::string& noden,
-    boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
+    boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&, const RR_SHARED_PTR<ITransportConnection>&,
                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
 void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& parent,

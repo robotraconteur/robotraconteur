@@ -217,7 +217,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     virtual void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,

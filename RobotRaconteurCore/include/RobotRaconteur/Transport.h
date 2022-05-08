@@ -68,7 +68,7 @@ class ROBOTRACONTEUR_CORE_API ITransportTimeProvider
     virtual TimeSpec NodeSyncTimeSpec() = 0;
 
     virtual RR_SHARED_PTR<Timer> CreateTimer(const boost::posix_time::time_duration& duration,
-                                             boost::function<void(const TimerEvent&)>& handler,
+                                             const boost::function<void(const TimerEvent&)>& handler,
                                              bool oneshot = false) = 0;
 
     virtual RR_SHARED_PTR<Rate> CreateRate(double frequency) = 0;
@@ -88,7 +88,7 @@ class ROBOTRACONTEUR_CORE_API ITransportConnection : boost::noncopyable
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
     virtual void Close() = 0;
 
@@ -165,7 +165,7 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
@@ -191,7 +191,7 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual void AsyncGetDetectedNodes(
         const std::vector<std::string>& schemes,
-        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
   protected:

@@ -82,7 +82,7 @@ boost::posix_time::ptime Endpoint::GetLastMessageSentTime() { return m_LastMessa
 void Endpoint::SetLastMessageSentTime(boost::posix_time::ptime time) { m_LastMessageSentTime.store(time); }
 
 void Endpoint::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+                                const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     if (!m->header)
         m->header = CreateMessageHeader();

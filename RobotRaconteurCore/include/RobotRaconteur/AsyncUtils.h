@@ -401,7 +401,7 @@ class ROBOTRACONTEUR_CORE_API async_signal_pool_semaphore
     }
 
   protected:
-    void do_fire_next(boost::function<void()>& h)
+    void do_fire_next(const boost::function<void()>& h)
     {
         try
         {
@@ -571,7 +571,7 @@ void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
 template <typename T>
 void PostHandlerWithException(
     RR_WEAK_PTR<RobotRaconteurNode> node,
-    const typename boost::function<void(const T&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const typename boost::function<void(T, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
     const RR_SHARED_PTR<RobotRaconteurException>& exp, bool shutdown_op = false, bool throw_on_released = true)
 {
     typename boost::initialized<typename boost::remove_reference<T>::type> default_value;
@@ -586,7 +586,7 @@ void PostHandlerWithException(
     std::exception& exp, MessageErrorType default_err = MessageErrorType_UnknownError, bool shutdown_op = false,
     bool throw_on_released = true)
 {
-    typename boost::initialized<T> default_value;
+    typename boost::initialized<typename boost::remove_reference<T>::type> default_value;
     RR_SHARED_PTR<RobotRaconteurException> err = RobotRaconteurExceptionUtil::ExceptionToSharedPtr(exp, default_err);
     boost::function<void()> h = boost::bind(handler, default_value, err);
     InvokeHandler_DoPost(RR_MOVE(node), h, shutdown_op, throw_on_released);

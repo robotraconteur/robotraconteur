@@ -384,17 +384,17 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     virtual void SendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e);
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void AsyncSendUnreliableMessage(
         const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& e,
-        boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
-                                      boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                      const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void SendWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e);
 

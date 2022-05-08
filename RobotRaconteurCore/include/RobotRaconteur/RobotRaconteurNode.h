@@ -724,7 +724,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param handler The handler called after the message has been sent
      */
     void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                          boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
+                          const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     /**
      * @internal

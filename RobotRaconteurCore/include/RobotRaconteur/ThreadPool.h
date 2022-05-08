@@ -221,7 +221,7 @@ class ROBOTRACONTEUR_CORE_API IOContextThreadPool : public ThreadPool
     virtual void SetThreadPoolCount(size_t count);
 
     virtual void Post(boost::function<void()> function);
-    virtual bool TryPost(RR_MOVE_ARG(boost::function<void()>) function);
+    virtual bool TryPost(boost::function<void()> function);
 
     virtual void Shutdown();
 

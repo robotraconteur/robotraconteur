@@ -66,7 +66,7 @@ void BroadcastDownsampler::EndStep() {}
 void BroadcastDownsampler::AddPipeBroadcaster(const RR_SHARED_PTR<PipeBroadcasterBase>& broadcaster)
 {
     RR_WEAK_PTR<BroadcastDownsampler> weak_this = shared_from_this();
-    boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> pred =
+    boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> pred =
         boost::bind(&BroadcastDownsampler::pipe_predicate, weak_this, RR_BOOST_PLACEHOLDERS(_1),
                     RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3));
 
@@ -76,14 +76,14 @@ void BroadcastDownsampler::AddPipeBroadcaster(const RR_SHARED_PTR<PipeBroadcaste
 void BroadcastDownsampler::AddWireBroadcaster(const RR_SHARED_PTR<WireBroadcasterBase>& broadcaster)
 {
     RR_WEAK_PTR<BroadcastDownsampler> weak_this = shared_from_this();
-    boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> pred = boost::bind(
+    boost::function<bool(const RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> pred = boost::bind(
         &BroadcastDownsampler::wire_predicate, weak_this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2));
 
     broadcaster->SetPredicate(pred);
 }
 
 bool BroadcastDownsampler::wire_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_,
-                                          RR_SHARED_PTR<WireBroadcasterBase>& wire, uint32_t ep)
+                                          const RR_SHARED_PTR<WireBroadcasterBase>& wire, uint32_t ep)
 {
     RR_UNUSED(wire);
     RR_SHARED_PTR<BroadcastDownsampler> this1 = this_.lock();
@@ -105,7 +105,7 @@ bool BroadcastDownsampler::wire_predicate(RR_WEAK_PTR<BroadcastDownsampler> this
 }
 
 bool BroadcastDownsampler::pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_,
-                                          RR_SHARED_PTR<PipeBroadcasterBase>& wire, uint32_t ep, uint32_t index)
+                                          const RR_SHARED_PTR<PipeBroadcasterBase>& wire, uint32_t ep, uint32_t index)
 {
     RR_UNUSED(wire);
     RR_UNUSED(index);

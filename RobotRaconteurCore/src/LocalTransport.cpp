@@ -389,7 +389,7 @@ void LocalTransport::AsyncCreateTransportConnection(
         noden = url_res.nodename;
     }
 
-    boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
+    boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&, const RR_SHARED_PTR<ITransportConnection>&,
                          const RR_SHARED_PTR<RobotRaconteurException>&)>
         h = boost::bind(&LocalTransport::AsyncCreateTransportConnection2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                         noden, RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), callback);
@@ -1008,7 +1008,7 @@ void LocalTransport::PeriodicCleanupTask()
 }
 
 void LocalTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                      boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+                                      const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_SHARED_PTR<ITransportConnection> t;
     {
@@ -1038,7 +1038,7 @@ void LocalTransport::handle_accept(const RR_SHARED_PTR<LocalTransport>& parent,
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(parent->node, Transport, 0, "LocalTransport accepted socket");
     try
     {
-        boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
+        boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&, const RR_SHARED_PTR<ITransportConnection>&,
                              const RR_SHARED_PTR<RobotRaconteurException>&)>
             h = boost::bind(&LocalTransport_connected_callback2, parent, RR_BOOST_PLACEHOLDERS(_1),
                             RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3));
@@ -1089,7 +1089,7 @@ void LocalTransport::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) { GetNo
 
 void LocalTransport::AsyncGetDetectedNodes(
     const std::vector<std::string>& schemes,
-    boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
+    const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
 {
     RR_UNUSED(timeout);
     if (boost::range::find(schemes, "rr+local") == schemes.end() || schemes.empty())
@@ -1532,7 +1532,7 @@ void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& par
 void LocalTransport_attach_transport(
     const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
     bool server, uint32_t endpoint, const std::string& noden,
-    boost::function<void(RR_SHARED_PTR<detail::LocalTransport_socket>, const RR_SHARED_PTR<ITransportConnection>&,
+    boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&, const RR_SHARED_PTR<ITransportConnection>&,
                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     try

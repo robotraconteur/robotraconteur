@@ -1773,7 +1773,7 @@ void Discovery::AsyncFindNodeByID(const RobotRaconteur::NodeID& id, const std::v
 }
 
 void Discovery::EndAsyncFindNodeByID(const RobotRaconteur::NodeID& id, const std::vector<std::string>& transportschemes,
-                                     boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler)
+                                     const boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
                                        "AsyncFindNodeByID for remote node " << id.ToString() << " update complete");
@@ -1871,7 +1871,7 @@ void Discovery::AsyncFindNodeByName(boost::string_ref name, const std::vector<st
 }
 
 void Discovery::EndAsyncFindNodeByName(const std::string& name, const std::vector<std::string>& transportschemes,
-                                       boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler)
+                                       const boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
                                        "AsyncFindNodeByName for remote node \"" << name << "\" update complete");

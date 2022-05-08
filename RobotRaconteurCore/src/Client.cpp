@@ -173,7 +173,7 @@ void ServiceStub::AsyncFindObjectType(
 }
 
 void ServiceStub::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, bool unreliable,
-                                       boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+                                       const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
 
     m->ServicePath = ServicePath;
@@ -344,7 +344,7 @@ void ClientContext::AsyncFindObjRef(
 void ClientContext::AsyncFindObjRef1(
     const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& err,
     const std::string& path, const std::string& objecttype2,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
     int32_t timeout)
 {
     if (err)
@@ -423,7 +423,7 @@ void ClientContext::AsyncFindObjRef2(
     const RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>& ret, const RR_SHARED_PTR<RobotRaconteurException>& err,
     const std::string& objecttype1, const std::string& objectdef, const std::string& path,
     const std::string& objecttype2,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
     int32_t timeout)
 {
     RR_UNUSED(timeout);
@@ -552,7 +552,7 @@ void ClientContext::AsyncFindObjRef2(
 
 void ClientContext::AsyncFindObjRef3(
     const RR_SHARED_PTR<RRObject>& ret, const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& path,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
 
     try
@@ -629,7 +629,7 @@ void ClientContext::AsyncFindObjectType(
 void ClientContext::AsyncFindObjectType1(
     const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& err,
     const std::string& path,
-    boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     if (err)
     {
@@ -1007,7 +1007,7 @@ void ClientContext::SendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 }
 
 void ClientContext::AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m,
-                                     boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+                                     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     // m.ServiceName = ServiceName;
 
@@ -1731,7 +1731,7 @@ void ClientContext::AsyncConnectService3(
     const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& e,
     const std::string& username, const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
     const std::string& objecttype, const RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>& d,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     boost::recursive_mutex::scoped_lock cl_lock(connect_lock);
     // std::cout << "AsyncConnectService3" << std::endl;
@@ -1809,7 +1809,7 @@ void ClientContext::AsyncConnectService4(
     const RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>& d, const RR_SHARED_PTR<RobotRaconteurException>& e,
     const std::string& username, const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
     const std::string& objecttype, const std::string& type,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     boost::recursive_mutex::scoped_lock cl_lock(connect_lock);
     // std::cout << "AsyncConnectService4" << std::endl;
@@ -1909,7 +1909,7 @@ void ClientContext::AsyncConnectService5(
     const std::string& username, const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
     const std::string& objecttype, const std::string& type,
     const RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>& d,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_UNUSED(ret);
     RR_UNUSED(objecttype);
@@ -1974,7 +1974,7 @@ void ClientContext::AsyncConnectService5(
 void ClientContext::AsyncConnectService6(
     const RR_SHARED_PTR<std::string>& ret, const RR_SHARED_PTR<RobotRaconteurException>& e, const std::string& type,
     const std::string& username, const RR_SHARED_PTR<PullServiceDefinitionAndImportsReturn>& d,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_UNUSED(d);
     RR_UNUSED(username);
@@ -2028,7 +2028,7 @@ void ClientContext::AsyncConnectService6(
 void ClientContext::AsyncConnectService7(
     const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& e,
     const std::string& objecttype, const std::string& username,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     boost::recursive_mutex::scoped_lock cl_lock(connect_lock);
 
@@ -2271,7 +2271,7 @@ void ClientContext::AsyncClose(RR_MOVE_ARG(boost::function<void()>) handler)
 }
 
 void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
-                                const RR_SHARED_PTR<RobotRaconteurException>& err, boost::function<void()>& handler)
+                                const RR_SHARED_PTR<RobotRaconteurException>& err, const boost::function<void()>& handler)
 {
     RR_UNUSED(err);
     {
@@ -2385,7 +2385,7 @@ void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
 }
 
 void ClientContext::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, bool unreliable,
-                                         boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+                                         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     if (!unreliable)
     {

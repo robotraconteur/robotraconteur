@@ -1375,7 +1375,7 @@ class AsyncGetDefaultClientBase_impl : public RR_ENABLE_SHARED_FROM_THIS<AsyncGe
   public:
     void Init(
         RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<ServiceSubscription>& subscription,
-        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+        const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
         int32_t timeout)
     {
         boost::mutex::scoped_lock lock(this_lock);

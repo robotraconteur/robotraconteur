@@ -382,7 +382,7 @@ void IntraTransport::PeriodicCleanupTask()
 }
 
 void IntraTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                      boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+                                      const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_SHARED_PTR<ITransportConnection> t;
     {
@@ -449,7 +449,7 @@ void IntraTransport::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) { GetNo
 
 void IntraTransport::AsyncGetDetectedNodes(
     const std::vector<std::string>& schemes,
-    boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
+    const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
 {
     RR_UNUSED(timeout);
     if (boost::range::find(schemes, "rr+intra") == schemes.end() || schemes.empty())
@@ -735,7 +735,7 @@ void IntraTransportConnection::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
 }
 
 void IntraTransportConnection::AsyncSendMessage(
-    const RR_INTRUSIVE_PTR<Message>& m, boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const RR_INTRUSIVE_PTR<Message>& m, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_SHARED_PTR<IntraTransportConnection> peer1 = peer.lock();
     if (!peer1)

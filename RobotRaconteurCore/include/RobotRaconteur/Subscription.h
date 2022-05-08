@@ -280,7 +280,7 @@ namespace detail
 {
 template <typename T>
 void AsyncGetDefaultClient_handler_adapter(
-    boost::function<void(const RR_SHARED_PTR<T>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const boost::function<void(const RR_SHARED_PTR<T>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
     const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     if (err)
@@ -985,13 +985,13 @@ class WireSubscription : public WireSubscriptionBase
      * @return event_connection The Boost.Signals2 connection
      */
     event_connection AddWireValueChangedListener(
-        boost::function<void(RR_SHARED_PTR<WireSubscription<T> >, const T&, const TimeSpec&)> f)
+        boost::function<void(const RR_SHARED_PTR<WireSubscription<T> >&, const T&, const TimeSpec&)> f)
     {
         return wire_value_changed.connect(f);
     }
 
   protected:
-    boost::signals2::signal<void(RR_SHARED_PTR<WireSubscription<T> >, const T&, const TimeSpec&)> wire_value_changed;
+    boost::signals2::signal<void(const RR_SHARED_PTR<WireSubscription<T> >&, const T&, const TimeSpec&)> wire_value_changed;
 
     virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
                                        const RR_SHARED_PTR<WireConnectionBase>& connection)
@@ -1223,13 +1223,13 @@ class PipeSubscription : public PipeSubscriptionBase
      * @param f The callback function
      * @return event_connection The Boost.Signals2 connection
      */
-    event_connection AddPipePacketReceivedListener(boost::function<void(RR_SHARED_PTR<PipeSubscription<T> >)> f)
+    event_connection AddPipePacketReceivedListener(boost::function<void(const RR_SHARED_PTR<PipeSubscription<T> >&)> f)
     {
         return pipe_packet_received.connect(f);
     }
 
   protected:
-    boost::signals2::signal<void(RR_SHARED_PTR<PipeSubscription<T> >)> pipe_packet_received;
+    boost::signals2::signal<void(const RR_SHARED_PTR<PipeSubscription<T> >&)> pipe_packet_received;
 
     virtual void fire_PipePacketReceived()
     {

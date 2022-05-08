@@ -120,7 +120,7 @@ class ROBOTRACONTEUR_CORE_API PipeEndpointBase : public RR_ENABLE_SHARED_FROM_TH
      * @param handler A handler function to call on completion, possibly with an exception
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
-    virtual void AsyncClose(RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+    virtual void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
@@ -306,7 +306,7 @@ class PipeEndpoint : public PipeEndpointBase
      *
      * @param callback The callback function
      */
-    void SetPipeEndpointClosedCallback(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> callback)
+    void SetPipeEndpointClosedCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> callback)
     {
         boost::mutex::scoped_lock lock(PipeEndpointClosedCallback_lock);
         PipeEndpointClosedCallback = callback;
@@ -318,7 +318,7 @@ class PipeEndpoint : public PipeEndpointBase
      * Callback function must accept one argument, receiving the PipeEndpointPtr<T> that
      * received a packet
      */
-    boost::signals2::signal<void(RR_SHARED_PTR<PipeEndpoint<T> >)> PacketReceivedEvent;
+    boost::signals2::signal<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> PacketReceivedEvent;
 
     /**
      * @brief Signal called when a packet ack has been received
@@ -329,7 +329,7 @@ class PipeEndpoint : public PipeEndpointBase
      * Callback function must accept two arguments, receiving the PipeEndpointPtr<T>
      * that received the packet ack and the packet number that is being acked.
      */
-    boost::signals2::signal<void(RR_SHARED_PTR<PipeEndpoint<T> >, uint32_t)> PacketAckReceivedEvent;
+    boost::signals2::signal<void(const RR_SHARED_PTR<PipeEndpoint<T> >&, uint32_t)> PacketAckReceivedEvent;
 
     /**
      * @brief Sends a packet to the peer endpoint
@@ -366,7 +366,7 @@ class PipeEndpoint : public PipeEndpointBase
      */
     virtual void AsyncSendPacket(
         typename boost::call_traits<T>::param_type packet,
-        RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler)
+        boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
     {
         AsyncSendPacketBase(RRPrimUtil<T>::PrePack(packet), RR_MOVE(handler));
     }
@@ -468,7 +468,7 @@ class PipeEndpoint : public PipeEndpointBase
 
     static void send_handler(
         uint32_t packetnumber, const RR_SHARED_PTR<RobotRaconteurException>& err,
-        boost::function<void(const RR_SHARED_PTR<uint32_t>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+        const boost::function<void(const RR_SHARED_PTR<uint32_t>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
     {
         handler(RR_MAKE_SHARED<uint32_t>(packetnumber), err);
     }
@@ -488,7 +488,7 @@ class PipeEndpoint : public PipeEndpointBase
 
   protected:
     virtual void AsyncClose1(const RR_SHARED_PTR<RobotRaconteurException>& err,
-                             boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+                             const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
     {
         try
         {
@@ -506,7 +506,7 @@ class PipeEndpoint : public PipeEndpointBase
     }
 
   public:
-    virtual void AsyncClose(RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+    virtual void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                             int32_t timeout = 2000)
     {
         PipeEndpointBase::AsyncClose(boost::bind(&PipeEndpoint<T>::AsyncClose1,
@@ -693,7 +693,7 @@ class Pipe : public virtual PipeBase
      *
      * @param function Callback function to receive incoming pipe endpoint
      */
-    virtual void SetPipeConnectCallback(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> function) = 0;
+    virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> function) = 0;
 
     /**
      * @brief Connect a pipe endpoint
@@ -722,8 +722,8 @@ class Pipe : public virtual PipeBase
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     virtual void AsyncConnect(int32_t index,
-                              RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+                              boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&,
+                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                               int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 
     /**
@@ -736,8 +736,8 @@ class Pipe : public virtual PipeBase
      * @param handler A handler function to receive the connected endpoint, or an exception
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
-    virtual void AsyncConnect(RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+    virtual void AsyncConnect(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&,
+                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                               int32_t timeout = RR_TIMEOUT_INFINITE)
     {
         AsyncConnect(-1, RR_MOVE(handler), timeout);
@@ -846,7 +846,7 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
         throw InvalidOperationException("Not valid for client");
     }
 
-    virtual void SetPipeConnectCallback(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> function)
+    virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> function)
     {
         RR_UNUSED(function);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
@@ -855,8 +855,8 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
     }
 
     virtual void AsyncConnect(int32_t index,
-                              RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+                              boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&,
+                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                               int32_t timeout = RR_TIMEOUT_INFINITE)
     {
 
@@ -999,7 +999,7 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
 
     virtual boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> GetPipeConnectCallback() { return callback; }
 
-    virtual void SetPipeConnectCallback(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> function)
+    virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> function)
     {
         callback = function;
     }
@@ -1013,8 +1013,8 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
     }
 
     virtual void AsyncConnect(int32_t index,
-                              RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
+                              boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&,
+                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                               int32_t timeout = RR_TIMEOUT_INFINITE)
     {
         RR_UNUSED(index);
@@ -1087,7 +1087,7 @@ class ROBOTRACONTEUR_CORE_API PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM
      * @return boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t) > The predicate callback
      * function
      */
-    boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> GetPredicate();
+    boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> GetPredicate();
 
     /**
      * @brief Set the predicate callback function
@@ -1107,7 +1107,7 @@ class ROBOTRACONTEUR_CORE_API PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM
      *
      * @param f The predicate callback function
      */
-    void SetPredicate(boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> f);
+    void SetPredicate(boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> f);
 
     /**
      * @brief Gets the currently configured maximum backlog
@@ -1141,7 +1141,7 @@ class ROBOTRACONTEUR_CORE_API PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM
     void handle_send(int32_t id, const RR_SHARED_PTR<RobotRaconteurException>& err,
                      const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& ep,
                      const RR_SHARED_PTR<detail::PipeBroadcasterBase_async_send_operation>& op, int32_t key,
-                     int32_t send_key, boost::function<void()>& handler);
+                     int32_t send_key, const boost::function<void()>& handler);
 
     void SendPacketBase(const RR_INTRUSIVE_PTR<RRValue>& packet);
 
@@ -1165,7 +1165,7 @@ class ROBOTRACONTEUR_CORE_API PipeBroadcasterBase : public RR_ENABLE_SHARED_FROM
 
     bool copy_element;
 
-    boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> predicate;
+    boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> predicate;
 };
 
 /**
@@ -1241,7 +1241,7 @@ class PipeBroadcaster : public PipeBroadcasterBase
      * @param packet The packet to send
      * @param handler A handler function for when packet has been sent by all endpoints
      */
-    void AsyncSendPacket(T packet, RR_MOVE_ARG(boost::function<void()>) handler)
+    void AsyncSendPacket(T packet, boost::function<void()> handler)
     {
         AsyncSendPacketBase(RRPrimUtil<T>::PrePack(packet), RR_MOVE(handler));
     }

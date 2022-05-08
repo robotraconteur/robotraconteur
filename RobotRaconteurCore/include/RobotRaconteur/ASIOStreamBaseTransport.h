@@ -194,12 +194,12 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
 
   public:
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
   protected:
     void SimpleAsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     void SimpleAsyncEndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err);
 
@@ -208,20 +208,20 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void BeginSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
     virtual void BeginSendMessage1(const RR_INTRUSIVE_PTR<Message>& m,
-                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                   const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void EndSendMessage(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred,
                                 const RR_INTRUSIVE_PTR<Message>& m, size_t m_len,
-                                boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback,
+                                const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback,
                                 const boost::shared_array<uint8_t>& buf);
     virtual void EndSendMessage1();
 
     virtual void EndSendMessage2(const boost::system::error_code& error, size_t bytes_transferred,
-                                 boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                                 const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    virtual void AsyncPauseSend(boost::function<void(const boost::system::error_code&)>& handler);
+    virtual void AsyncPauseSend(const boost::function<void(const boost::system::error_code&)>& handler);
     virtual void AsyncResumeSend();
 
     // virtual void EndReceiveMessage(const boost::system::error_code& error,
@@ -241,7 +241,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
 
     virtual void EndReceiveMessage5(const boost::system::error_code& error, size_t bytes_transferred);
 
-    virtual void AsyncPauseReceive(boost::function<void(const boost::system::error_code&)>& handler);
+    virtual void AsyncPauseReceive(const boost::function<void(const boost::system::error_code&)>& handler);
     virtual void AsyncResumeReceive();
 
     virtual void Close();
@@ -259,12 +259,12 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
 
     virtual void AsyncCheckStreamCapability(
         boost::string_ref name,
-        boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+        const boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   protected:
     virtual void BeginCheckStreamCapability(
         boost::string_ref name,
-        boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+        const boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     void CheckStreamCapability_EndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err);
 

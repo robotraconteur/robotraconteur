@@ -140,9 +140,9 @@ class ROBOTRACONTEUR_CORE_API BroadcastDownsampler : public RR_ENABLE_SHARED_FRO
 
     boost::mutex this_lock;
 
-    static bool wire_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, RR_SHARED_PTR<WireBroadcasterBase>& wire,
+    static bool wire_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, const RR_SHARED_PTR<WireBroadcasterBase>& wire,
                                uint32_t ep);
-    static bool pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, RR_SHARED_PTR<PipeBroadcasterBase>& wire,
+    static bool pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, const RR_SHARED_PTR<PipeBroadcasterBase>& wire,
                                uint32_t ep, uint32_t index);
 
     static void server_event(RR_WEAK_PTR<BroadcastDownsampler> this_, const RR_SHARED_PTR<ServerContext>& ctx,

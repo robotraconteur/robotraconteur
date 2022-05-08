@@ -117,10 +117,10 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
 
   protected:
     void EndAsyncFindNodeByID(const RobotRaconteur::NodeID& id, const std::vector<std::string>& transportschemes,
-                              boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler);
+                              const boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler);
 
     void EndAsyncFindNodeByName(const std::string& name, const std::vector<std::string>& transportschemes,
-                                boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler);
+                                const boost::function<void(const RR_SHARED_PTR<std::vector<NodeInfo2> >&)>& handler);
 
     void EndUpdateServiceInfo(const RR_SHARED_PTR<Discovery_nodestorage>& storage,
                               const RR_SHARED_PTR<std::vector<ServiceInfo2> >& info, boost::string_ref nonce,

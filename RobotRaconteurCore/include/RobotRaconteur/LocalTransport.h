@@ -126,7 +126,7 @@ class ROBOTRACONTEUR_CORE_API LocalTransport : public Transport, public RR_ENABL
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
     virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
     virtual void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
@@ -227,7 +227,7 @@ class ROBOTRACONTEUR_CORE_API LocalTransport : public Transport, public RR_ENABL
 
     virtual void AsyncGetDetectedNodes(
         const std::vector<std::string>& schemes,
-        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /** @copydoc TcpTransport::GetMaxMessageSize() */

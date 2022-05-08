@@ -110,7 +110,7 @@ std::vector<NodeDiscoveryInfo> Transport::GetDetectedNodes(const std::vector<std
 
 void Transport::AsyncGetDetectedNodes(
     const std::vector<std::string>& schemes,
-    boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
+    const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
 {
     RR_UNUSED(schemes);
     RR_UNUSED(timeout);

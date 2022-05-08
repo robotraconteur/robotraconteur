@@ -94,7 +94,7 @@ void PipeEndpointBase::Close()
     t->end_void();
 }
 
-void PipeEndpointBase::AsyncClose(RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
+void PipeEndpointBase::AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>
                                       handler,
                                   int32_t timeout)
 {
@@ -1530,7 +1530,7 @@ void PipeBroadcasterBase::PacketAckReceivedBase(const RR_SHARED_PTR<detail::Pipe
 void PipeBroadcasterBase::handle_send(int32_t id, const RR_SHARED_PTR<RobotRaconteurException>& err,
                                       const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& ep,
                                       const RR_SHARED_PTR<detail::PipeBroadcasterBase_async_send_operation>& op,
-                                      int32_t key, int32_t send_key, boost::function<void()>& handler)
+                                      int32_t key, int32_t send_key, const boost::function<void()>& handler)
 {
     RR_UNUSED(err);
     {
@@ -1680,13 +1680,13 @@ void PipeBroadcasterBase::AttachPipeEndpointEvents(
     const RR_SHARED_PTR<PipeEndpointBase>& p, const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
 {}
 
-boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> PipeBroadcasterBase::GetPredicate()
+boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> PipeBroadcasterBase::GetPredicate()
 {
     boost::mutex::scoped_lock lock(endpoints_lock);
     return predicate;
 }
 
-void PipeBroadcasterBase::SetPredicate(boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> f)
+void PipeBroadcasterBase::SetPredicate(boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> f)
 {
     boost::mutex::scoped_lock lock(endpoints_lock);
     predicate = f;

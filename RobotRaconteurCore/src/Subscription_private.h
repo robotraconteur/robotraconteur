@@ -134,7 +134,7 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
 
     virtual void PipeEndpointClosed(const RR_SHARED_PTR<PipeEndpointBase>& endpoint);
     virtual void PipePacketReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint,
-                                    boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func);
+                                    const boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func);
     virtual void PipePacketAckReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint, uint32_t pnum);
 
     // Call with PipeSubscription::this_lock locked

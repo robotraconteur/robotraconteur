@@ -653,7 +653,7 @@ void RobotRaconteurNode::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
 }
 
 void RobotRaconteurNode::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                          boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+                                          const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     if (m->header->SenderNodeID != NodeID())
     {
