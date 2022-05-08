@@ -41,29 +41,29 @@
 #include "ros/package.h"
 #endif
 
-using namespace std;
 using namespace RobotRaconteur;
 using namespace RobotRaconteurGen;
-using std::exception;
 
 bool ReadFile(std::string& file_contents, const std::string& fname)
 {
     try
     {
-        ifstream file;
-        file.open(fname.c_str(), ios_base::in);
+        std::ifstream file;
+        file.open(fname.c_str(), std::ios_base::in);
 
         if (!file)
             return false;
 
-        int8_t bom1, bom2, bom3;
+        int8_t bom1=0;
+        int8_t bom2=0;
+        int8_t bom3=0;
         file >> bom1 >> bom2 >> bom3;
         if (!(bom1 == -17 && bom2 == -69 && bom3 == -65))
         {
-            file.seekg(0, ifstream::beg);
+            file.seekg(0, std::ifstream::beg);
         }
 
-        stringstream buffer;
+        std::stringstream buffer;
         buffer << file.rdbuf();
         file.close();
 
@@ -127,12 +127,12 @@ boost::tuple<RR_SHARED_PTR<ServiceDefinition>, std::string> ReadRobDefFile(const
     }
     catch (ServiceDefinitionParseException& ee)
     {
-        cout << s << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage << endl;
+        std::cout << s << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage << std::endl;
         exit(1005);
     }
     catch (std::exception& ee)
     {
-        cout << s << ": error: " << string(ee.what()) << endl;
+        std::cout << s << ": error: " << std::string(ee.what()) << std::endl;
         exit(1006);
     }
 }
@@ -141,7 +141,7 @@ void GenerateCPPFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::stri
                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                       const std::vector<std::string>& cpp_extra_include, const std::string& output_dir)
 {
-    // cout << str << endl;
+    // std::cout << str << std::endl;
 
     CPPServiceLangGen::GenerateFiles(d, def_str, other_defs, cpp_extra_include, output_dir);
 }
@@ -152,7 +152,7 @@ void GenerateCSharpFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::s
     CSharpServiceLangGen::GenerateFiles(d, def_str, output_dir);
 }
 
-void GenerateVBNETFiles(const boost::shared_ptr<ServiceDefinition>& d, string str)
+void GenerateVBNETFiles(const boost::shared_ptr<ServiceDefinition>& d, const std::string& str)
 {
 
     // VBNETServiceLangGen::GenerateFiles(d,str);
@@ -164,7 +164,7 @@ void GenerateJavaFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::str
     JavaServiceLangGen::GenerateFiles(d, def_str, output_dir);
 }
 
-int PullServiceDefinition(string url)
+int PullServiceDefinition(const std::string& url)
 {
     ParseConnectionURLResult url_res;
     try
@@ -206,7 +206,7 @@ int PullServiceDefinition(string url)
     {
         o = rr_cast<RobotRaconteurServiceIndex::ServiceIndex>(RobotRaconteurNode::s()->ConnectService(url2));
     }
-    catch (RobotRaconteurException e)
+    catch (RobotRaconteurException& e)
     {
         std::cout << "RobotRaconteurGen: fatal error: could not connect to specified URL: " << e.Message << std::endl;
         return 6004;
@@ -221,11 +221,11 @@ int PullServiceDefinition(string url)
 
     if (!ret)
     {
-        std::cout << "RobotRaconteurGen: error: could not retrieve service definition from " + url;
+        std::cout << "RobotRaconteurGen: error: could not retrieve service definition from " << url << std::endl;
         return 6006;
     }
 
-    string type = "";
+    std::string type;
 
     for (std::map<int32_t, RR_INTRUSIVE_PTR<RobotRaconteurServiceIndex::ServiceInfo> >::const_iterator ii =
              ret->begin();
@@ -237,9 +237,9 @@ int PullServiceDefinition(string url)
         }
     }
 
-    if (type == "")
+    if (type.empty())
     {
-        std::cout << "RobotRaconteurGen: error: service not found on remote node: " + url_res.service;
+        std::cout << "RobotRaconteurGen: error: service not found on remote node: " << url_res.service << std::endl; 
         return 6006;
     }
 
@@ -251,7 +251,7 @@ int PullServiceDefinition(string url)
                  ->PullServiceDefinitionAndImports(SplitQualifiedName(type).get<0>())
                  .defs;
     }
-    catch (RobotRaconteurException e)
+    catch (RobotRaconteurException& e)
     {
         std::cout << "RobotRaconteurGen: fatal error: could not pull service definition: " << e.Message << std::endl;
         return 6007;
@@ -268,7 +268,7 @@ int PullServiceDefinition(string url)
         try
         {
             std::ofstream f(fname.c_str());
-            f << trim_copy((*e)->ToString()) << endl;
+            f << boost::trim_copy((*e)->ToString()) << std::endl;
             f.close();
         }
         catch (std::exception& e)
@@ -278,6 +278,7 @@ int PullServiceDefinition(string url)
             return 6009;
         }
     }
+    return 0;
 }
 
 int main(int argc, char* argv[])
@@ -285,9 +286,9 @@ int main(int argc, char* argv[])
     namespace po = boost::program_options;
     namespace fs = boost::filesystem;
 
-    std::string command = "";
-    std::string libname = "";
-    std::string lang = "";
+    std::string command;
+    std::string libname;
+    std::string lang;
     std::string output_dir;
     bool thunksource = false;
     bool verify_robdef = false;
@@ -340,14 +341,14 @@ int main(int argc, char* argv[])
 
         if (vm.count("help"))
         {
-            cout << "RobotRaconteurGen version " << ROBOTRACONTEUR_VERSION_TEXT << endl << endl;
-            cout << generic_ << endl;
+            std::cout << "RobotRaconteurGen version " << ROBOTRACONTEUR_VERSION_TEXT << std::endl << std::endl;
+            std::cout << generic_ << std::endl;
             return 0;
         }
 
         if (vm.count("version"))
         {
-            cout << "RobotRaconteurGen version " << ROBOTRACONTEUR_VERSION_TEXT << endl;
+            std::cout << "RobotRaconteurGen version " << ROBOTRACONTEUR_VERSION_TEXT << std::endl;
             return 0;
         }
 
@@ -393,11 +394,11 @@ int main(int argc, char* argv[])
         }
         // End find command
 
-        if (command == "")
+        if (command.empty())
         {
 
             std::cout << "RobotRaconteurGen: fatal error: no command specified" << std::endl;
-            cout << generic_ << endl;
+            std::cout << generic_ << std::endl;
             return 1;
         }
 
@@ -409,7 +410,7 @@ int main(int argc, char* argv[])
                 return 2001;
             }
 
-            cout << NodeID::NewUniqueID().ToString() << endl;
+            std::cout << NodeID::NewUniqueID().ToString() << std::endl;
             return 0;
         }
 
@@ -425,8 +426,8 @@ int main(int argc, char* argv[])
                 std::cout << "RobotRaconteurGen: fatal error: invalid options for md5passwordhash" << std::endl;
                 return 3001;
             }
-            cout << "Password hash for password " << string_vector.at(0) << " is "
-                 << PasswordFileUserAuthenticator::MD5Hash(string_vector[0]) << endl;
+            std::cout << "Password hash for password " << string_vector.at(0) << " is "
+                 << PasswordFileUserAuthenticator::MD5Hash(string_vector[0]) << std::endl;
             return 0;
         }
 
@@ -578,26 +579,26 @@ int main(int argc, char* argv[])
             VerifyServiceDefinitions(alldefs, warnings);
             BOOST_FOREACH (ServiceDefinitionParseException w, warnings)
             {
-                cout << w.ParseInfo.RobDefFilePath << "(" << w.ParseInfo.LineNumber << "): warning: " << w.ShortMessage
-                     << endl;
+                std::cout << w.ParseInfo.RobDefFilePath << "(" << w.ParseInfo.LineNumber << "): warning: " << w.ShortMessage
+                     << std::endl;
             }
         }
         catch (ServiceDefinitionParseException& ee)
         {
-            cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage
-                 << endl;
+            std::cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage
+                 << std::endl;
             return 1007;
         }
         catch (ServiceDefinitionVerifyException& ee)
         {
-            cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage
-                 << endl;
+            std::cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage
+                 << std::endl;
             return 1008;
         }
         catch (std::exception& ee)
         {
-            cout << "RobotRaconteurGen: fatal error: could not verify service definition set " << string(ee.what())
-                 << endl;
+            std::cout << "RobotRaconteurGen: fatal error: could not verify service definition set " << std::string(ee.what())
+                 << std::endl;
             return 1009;
         }
 
@@ -618,8 +619,8 @@ int main(int argc, char* argv[])
                 RR_SHARED_PTR<ServiceDefinition> d = alldefs.at(i);
                 if (d->StdVer < RobotRaconteurVersion(0, 9, 2))
                 {
-                    cout << d->ParseInfo.RobDefFilePath
-                         << "(1): error: stdver 0.9.2 or greater required for service definition verification" << endl;
+                    std::cout << d->ParseInfo.RobDefFilePath
+                         << "(1): error: stdver 0.9.2 or greater required for service definition verification" << std::endl;
 
                     return 1020;
                 }
@@ -628,8 +629,8 @@ int main(int argc, char* argv[])
                 /*std::vector<std::string> robdef_msgs;
                 if (!VerifyServiceDefinitionMatchesStandardRegex(alldefs_str.at(i), robdef_msgs))
                 {
-                    cout << d->ParseInfo.RobDefFilePath << "(1): error: service definition does not match stdver 0.9.2
-                syntax regex" << endl; return 1020;
+                    std::cout << d->ParseInfo.RobDefFilePath << "(1): error: service definition does not match stdver 0.9.2
+                syntax regex" << std::endl; return 1020;
                 }*/
             }
         }
@@ -653,8 +654,8 @@ int main(int argc, char* argv[])
                 }
                 catch (std::exception& ee)
                 {
-                    cout << sources.at(i) << ": error: could not generate thunksource files " << string(ee.what())
-                         << endl;
+                    std::cout << sources.at(i) << ": error: could not generate thunksource files " << std::string(ee.what())
+                         << std::endl;
                     return 1010;
                 }
             }
@@ -670,8 +671,8 @@ int main(int argc, char* argv[])
                 }
                 catch (std::exception& ee)
                 {
-                    cout << "RobotRaconteurGen: error: could not generate master header file " << string(ee.what())
-                         << endl;
+                    std::cout << "RobotRaconteurGen: error: could not generate master header file " << std::string(ee.what())
+                         << std::endl;
                     return 1011;
                 }
             }
@@ -692,8 +693,8 @@ int main(int argc, char* argv[])
                     }
                     catch (std::exception& ee)
                     {
-                        cout << sources.at(i) << ": error: could not generate thunksource files " << string(ee.what())
-                             << endl;
+                        std::cout << sources.at(i) << ": error: could not generate thunksource files " << std::string(ee.what())
+                             << std::endl;
                         return 1010;
                     }
                 }
@@ -710,8 +711,8 @@ int main(int argc, char* argv[])
                     }
                     catch (std::exception& ee)
                     {
-                        cout << sources.at(i) << ": error: could not generate thunksource files " << string(ee.what())
-                             << endl;
+                        std::cout << sources.at(i) << ": error: could not generate thunksource files " << std::string(ee.what())
+                             << std::endl;
                         return 1010;
                     }
                 }
@@ -732,8 +733,8 @@ int main(int argc, char* argv[])
                 }
                 catch (std::exception& ee)
                 {
-                    cout << sources.at(i) << ": error: could not generate thunksource files " << string(ee.what())
-                         << endl;
+                    std::cout << sources.at(i) << ": error: could not generate thunksource files " << std::string(ee.what())
+                         << std::endl;
                     return 1010;
                 }
             }
@@ -741,20 +742,20 @@ int main(int argc, char* argv[])
             return 0;
         }
 
-        cout << "RobotRaconteurGen: fatal error: invalid lang specified for thunksource" << endl;
+        std::cout << "RobotRaconteurGen: fatal error: invalid lang specified for thunksource" << std::endl;
         return 1012;
     }
     catch (po::error& e)
     {
-        cout << "RobotRaconteurGen: error: " << string(e.what()) << endl;
+        std::cout << "RobotRaconteurGen: error: " << std::string(e.what()) << std::endl;
         return 5;
     }
     catch (std::exception& e)
     {
-        cout << "RobotRaconteurGen: error: internal error " << string(e.what()) << endl;
+        std::cout << "RobotRaconteurGen: error: internal error " << std::string(e.what()) << std::endl;
         return 6;
     }
 
-    cout << "RobotRaconteurGen: error: unknown internal error" << endl;
+    std::cout << "RobotRaconteurGen: error: unknown internal error" << std::endl;
     return 7;
 }

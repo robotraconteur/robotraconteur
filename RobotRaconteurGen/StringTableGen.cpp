@@ -4,7 +4,7 @@
 namespace RobotRaconteurGen
 {
 
-static void copy_to(std::set<std::string>& out, std::set<std::string> in)
+static void copy_to(std::set<std::string>& out, const std::set<std::string>& in)
 {
     boost::range::copy(in, std::inserter(out, out.begin()));
 }
