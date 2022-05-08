@@ -1,3 +1,5 @@
+// NOLINTBEGIN
+
 #include "ServiceTest3.h"
 
 namespace RobotRaconteurTest
@@ -208,3 +210,5 @@ RR_SHARED_PTR<RobotRaconteur::Generator<double, void> > asynctestroot_impl::err_
 }
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include <RobotRaconteur.h>
 
 #include "AsyncMessageTest.h"
@@ -475,3 +477,4 @@ void AsyncMessageWriterTest::LoadRandomTest()
 }
 
 } // namespace RobotRaconteurTest
+// NOLINTEND

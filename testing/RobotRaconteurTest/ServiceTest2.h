@@ -1,3 +1,5 @@
+// NOLINTBEGIN
+
 #include "com__robotraconteur__testing__TestService3_stubskel.h"
 
 #pragma once
@@ -312,3 +314,5 @@ void ServiceTest2_verify_transform_multidimarray(
     size_t n, uint32_t seed);
 void ServiceTest2_verify_transform_multidimarray(const RR_INTRUSIVE_PTR<RRValue>& v, size_t m, size_t n, uint32_t seed);
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

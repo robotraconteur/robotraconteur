@@ -1,3 +1,5 @@
+// NOLINTBEGIN
+
 #include <RobotRaconteur.h>
 #include "robotraconteur_generated.h"
 #include "ServiceTest2.h"
@@ -58,3 +60,5 @@ class ServiceTestClient2
 };
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

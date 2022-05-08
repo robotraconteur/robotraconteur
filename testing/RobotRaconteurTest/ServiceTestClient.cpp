@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include "ServiceTestClient.h"
 #include "MultiDimArrayTest.h"
 
@@ -3720,3 +3722,5 @@ void ServiceTestClient::RunSingleThreadTest(string url, RR_BOOST_ASIO_IO_CONTEXT
 }
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

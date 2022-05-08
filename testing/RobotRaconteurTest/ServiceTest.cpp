@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include "ServiceTest.h"
 
 using namespace std;
@@ -3219,3 +3221,5 @@ void RobotRaconteurTestServiceSupport::UnregisterServices()
 }
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

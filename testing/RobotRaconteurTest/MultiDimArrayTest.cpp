@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include "MultiDimArrayTest.h"
 #include <boost/predef/other/endian.h>
 #include "CompareArray.h"
@@ -166,3 +168,5 @@ void MultiDimArrayTest::TestByte()
 }
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

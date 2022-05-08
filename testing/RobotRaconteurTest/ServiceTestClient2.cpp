@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include "ServiceTestClient2.h"
 
 namespace RobotRaconteurTest
@@ -720,3 +722,5 @@ void ServiceTestClient2::TestExceptionParams()
     }
 }
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include "MessageSerializationTest.h"
 
 using namespace RobotRaconteur;
@@ -693,3 +695,5 @@ void MessageSerializationTest::CompareMessageElement(const RR_INTRUSIVE_PTR<Mess
     }
 }
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

@@ -1,3 +1,5 @@
+// NOLINTBEGIN
+
 #include "com__robotraconteur__testing__TestService5_stubskel.h"
 
 #pragma once
@@ -128,3 +130,5 @@ class asynctestroot_impl : public virtual com::robotraconteur::testing::TestServ
     virtual RR_SHARED_PTR<RobotRaconteur::Generator<double, void> > err_func3();
 };
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

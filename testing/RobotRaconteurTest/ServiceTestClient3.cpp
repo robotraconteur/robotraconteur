@@ -1,3 +1,5 @@
+// NOLINTBEGIN
+
 #include "ServiceTestClient3.h"
 
 namespace RobotRaconteurTest
@@ -97,3 +99,5 @@ void ServiceTestClient3::TestFunctions()
     }
 }
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

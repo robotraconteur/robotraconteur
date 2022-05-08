@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 // RobotRaconteurTest.cpp : Defines the entry point for the console application.
 //
 
@@ -2321,3 +2323,5 @@ int main(int argc, char* argv[])
 
     throw runtime_error("Unknown test command");
 }
+
+// NOLINTEND

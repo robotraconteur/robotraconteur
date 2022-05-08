@@ -1,3 +1,5 @@
+// NOLINTBEGIN
+
 #include "com__robotraconteur__testing__TestService1.h"
 #include "com__robotraconteur__testing__TestService1_stubskel.h"
 
@@ -510,3 +512,5 @@ class TestService2SubObj : public com::robotraconteur::testing::TestService2::su
 };
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

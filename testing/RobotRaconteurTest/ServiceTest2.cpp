@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include "ServiceTest2.h"
 
 namespace RobotRaconteurTest
@@ -3988,3 +3990,5 @@ RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > testroot3_imp
 void testroot3_impl::set_w3(RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > value) { w3 = value; }
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

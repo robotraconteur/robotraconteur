@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+// NOLINTBEGIN
+
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -27,3 +29,5 @@ class MessageSerializationTest
                                       const RR_INTRUSIVE_PTR<MessageElement>& m2);
 };
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

@@ -1,3 +1,5 @@
+// NOLINTBEGIN
+
 #include <RobotRaconteur.h>
 #include "com__robotraconteur__testing__TestService1.h"
 #include "com__robotraconteur__testing__TestService1_stubskel.h"
@@ -185,3 +187,5 @@ class ServiceTestClient
 };
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND
