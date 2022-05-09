@@ -123,7 +123,7 @@ class ROBOTRACONTEUR_CORE_API ServiceStub : public virtual RRObject, public RR_E
 
     virtual RR_INTRUSIVE_PTR<MessageEntry> CallbackCall(const RR_INTRUSIVE_PTR<MessageEntry>& m);
 
-    virtual std::string RRType() { return "RobotRaconteur.ServiceStub"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return "RobotRaconteur.ServiceStub"; }
 
     virtual void RRClose();
 
@@ -283,7 +283,7 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
     void connection_test(const TimerEvent& ev);
 
   public:
-    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
 
   protected:
     void MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m);
@@ -505,7 +505,7 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
 
     void MonitorExit(const RR_SHARED_PTR<RRObject>& obj);
 
-    virtual void PeriodicCleanupTask();
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE ;
 
     uint32_t CheckServiceCapability(boost::string_ref name);
 
@@ -521,7 +521,7 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
     boost::atomic<bool> use_combined_connection;
 
   public:
-    virtual void TransportConnectionClosed(uint32_t endpoint);
+    RR_OVIRTUAL void TransportConnectionClosed(uint32_t endpoint) RR_OVERRIDE ;
 
     virtual void TransportConnectionClosed1();
 };

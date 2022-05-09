@@ -159,10 +159,10 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      */
     TcpTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
 
-    virtual ~TcpTransport();
+    RR_OVIRTUAL ~TcpTransport() RR_OVERRIDE ;
 
-    virtual bool IsServer() const;
-    virtual bool IsClient() const;
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE ;
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE ;
 
     /**
      * @brief Get the default receive timeout
@@ -210,24 +210,24 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      */
     virtual void SetDefaultConnectTimeout(int32_t milliseconds);
 
-    virtual std::string GetUrlSchemeString() const;
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE ;
 
     virtual int32_t GetListenPort();
 
-    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
 
-    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
+    RR_OVIRTUAL void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE ;
 
-    virtual void AsyncCreateTransportConnection(
+    RR_OVIRTUAL void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
         boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
-                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback) RR_OVERRIDE ;
 
-    virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                          const RR_SHARED_PTR<Endpoint>& e);
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
+                                                                          const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE ;
 
-    virtual void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e);
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE ;
 
   protected:
     virtual void CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
@@ -262,11 +262,11 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      */
     virtual bool IsPortSharerRunning();
 
-    virtual bool CanConnectService(boost::string_ref url);
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE ;
 
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE ;
 
-    virtual void CheckConnection(uint32_t endpoint);
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE ;
 
     /**
      * @brief Enable node discovery listening
@@ -318,13 +318,13 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
 
     void SendDiscoveryRequest();
 
-    virtual void PeriodicCleanupTask();
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE ;
 
-    uint32_t TransportCapability(boost::string_ref name);
+    RR_OVIRTUAL uint32_t TransportCapability(boost::string_ref name) RR_OVERRIDE ;
 
     static void GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::address>& addresses);
 
-    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
 
     /**
      * @brief Get the default heartbeat period
@@ -642,7 +642,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     }
 
   protected:
-    virtual void LocalNodeServicesChanged();
+    RR_OVIRTUAL void LocalNodeServicesChanged() RR_OVERRIDE ;
 
     boost::mutex node_discovery_lock;
     RR_SHARED_PTR<void> node_discovery;

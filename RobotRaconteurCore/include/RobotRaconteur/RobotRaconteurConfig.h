@@ -152,6 +152,8 @@
 
 #ifndef BOOST_NO_CXX11_OVERRIDE
 #define RR_OVERRIDE override
+#define RR_OVIRTUAL
 #else
 #define RR_OVERRIDE
+#define RR_OVIRTUAL virtual
 #endif

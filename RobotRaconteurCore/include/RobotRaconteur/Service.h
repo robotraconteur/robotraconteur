@@ -747,15 +747,15 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
   public:
     const std::string GetAuthenticatedUsername() const;
 
-    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
 
     void AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& credentials);
 
     void LogoutUser();
 
-    virtual void PeriodicCleanupTask();
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE ;
 
-    virtual void SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c);
+    RR_OVIRTUAL void SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c) RR_OVERRIDE ;
 
   private:
     RobotRaconteurVersion client_version;

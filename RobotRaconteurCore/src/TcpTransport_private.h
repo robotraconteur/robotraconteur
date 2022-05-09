@@ -96,23 +96,23 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     void do_starttls9(const boost::system::error_code& error);
 
   public:
-    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
 
   protected:
-    virtual void async_write_some(
+    RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
 
-    virtual void async_read_some(
+    RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
 
-    virtual size_t available();
+    RR_OVIRTUAL size_t available() RR_OVERRIDE ;
 
-    virtual bool IsLargeTransferAuthorized();
+    RR_OVIRTUAL bool IsLargeTransferAuthorized() RR_OVERRIDE ;
 
   public:
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE ;
 
   protected:
     void Close1(const boost::system::error_code& ec);
@@ -122,11 +122,11 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     void ForceClose();
 
   public:
-    virtual uint32_t GetLocalEndpoint();
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE ;
 
-    virtual uint32_t GetRemoteEndpoint();
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE ;
 
-    virtual void CheckConnection(uint32_t endpoint);
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE ;
 
     virtual bool IsSecure();
 
@@ -134,7 +134,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
     virtual std::string GetSecurePeerIdentity();
 
-    virtual RR_SHARED_PTR<Transport> GetTransport();
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE ;
 
   protected:
     RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket;
@@ -150,7 +150,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     boost::recursive_mutex close_lock;
     bool closing;
 
-    virtual void StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
+    RR_OVIRTUAL void StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
 
     // Stuff to support TLS
 

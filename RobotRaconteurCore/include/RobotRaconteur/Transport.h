@@ -120,7 +120,7 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
   public:
     friend class RobotRaconteurNode;
     friend class ITransport;
-    virtual ~Transport() {}
+    RR_OVIRTUAL ~Transport() RR_OVERRIDE  {}
 
   protected:
     RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -174,7 +174,7 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual void Close();
 
-    virtual void PeriodicCleanupTask();
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE ;
 
     virtual uint32_t TransportCapability(boost::string_ref name);
 

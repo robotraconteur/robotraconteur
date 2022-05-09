@@ -106,6 +106,11 @@ void ServiceSubscription_retrytimer::timer_handler(RR_WEAK_PTR<ServiceSubscripti
 } // namespace detail
 static void ServiceSubscription_close_handler() {}
 
+ServiceSubscriptionFilter::ServiceSubscriptionFilter()
+{
+    MaxConnections=0;
+}
+
 ServiceSubscriptionClientID::ServiceSubscriptionClientID(const ::RobotRaconteur::NodeID& nodeid,
                                                          boost::string_ref service_name)
 {

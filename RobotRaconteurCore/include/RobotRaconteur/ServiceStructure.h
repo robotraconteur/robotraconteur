@@ -598,7 +598,7 @@ void NamedArrayStub_UnpackNamedArrayFromArray(T& v, const RR_INTRUSIVE_PTR<Messa
 template <typename T>
 T NamedArrayStub_UnpackNamedArrayFromArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
-    T o;
+    T o; // NOLINT(cppcoreguidelines-pro-type-member-init)
     NamedArrayStub_UnpackNamedArrayFromArray(o, a);
     return o;
 }

@@ -509,6 +509,12 @@ static bool CPPServiceLangGen_UseVerifyArrayLength(TypeDefinition& t)
     return false;
 }
 
+static std::string pure_virtual(const std::string& definition)
+{
+    std::string res1_1 = boost::replace_first_copy(definition, "RR_OVIRTUAL", "virtual");
+    return boost::trim_copy(boost::replace_last_copy(res1_1, "RR_OVERRIDE", ""));
+}
+
 std::string CPPServiceLangGen::str_pack_message_element(const std::string& elementname, const std::string& varname,
                                                         const RR_SHARED_PTR<TypeDefinition>& t,
                                                         const std::string& packer)
@@ -754,7 +760,7 @@ std::string CPPServiceLangGen::GetPropertyDeclaration(PropertyDefinition* d, boo
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "virtual " + t.cpp_type + " get_" + t.name + "()";
+        return "RR_OVIRTUAL " + t.cpp_type + " get_" + t.name + "() RR_OVERRIDE";
     }
     else
     {
@@ -768,7 +774,7 @@ std::string CPPServiceLangGen::SetPropertyDeclaration(PropertyDefinition* d, boo
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "virtual void set_" + t.name + "(" + t.cpp_param_type + " value)";
+        return "RR_OVIRTUAL void set_" + t.name + "(" + t.cpp_param_type + " value) RR_OVERRIDE";
     }
     else
     {
@@ -796,7 +802,7 @@ std::string CPPServiceLangGen::FunctionDeclaration(FunctionDefinition* d, bool i
     }
 
     if (inclass)
-        return "virtual " + ret_type + " " + name + "(" + param_str + ")";
+        return "RR_OVIRTUAL " + ret_type + " " + name + "(" + param_str + ") RR_OVERRIDE";
     else
         return name + "(" + param_str + ")";
 }
@@ -809,9 +815,9 @@ std::string CPPServiceLangGen::GetPropertyDeclaration_async(PropertyDefinition* 
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "virtual void async_get_" + t.name + "(boost::function<void (" + t.cpp_param_type +
+        return "RR_OVIRTUAL void async_get_" + t.name + "(boost::function<void (" + t.cpp_param_type +
                ",const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > rr_handler, int32_t "
-               "rr_timeout=RR_TIMEOUT_INFINITE)";
+               "rr_timeout=RR_TIMEOUT_INFINITE) RR_OVERRIDE";
     }
     else
     {
@@ -825,10 +831,10 @@ std::string CPPServiceLangGen::SetPropertyDeclaration_async(PropertyDefinition* 
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "virtual void async_set_" + t.name + "(" + t.cpp_param_type +
+        return "RR_OVIRTUAL void async_set_" + t.name + "(" + t.cpp_param_type +
                " value,boost::function<void (const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&) > "
                "rr_handler, "
-               "int32_t rr_timeout=RR_TIMEOUT_INFINITE)";
+               "int32_t rr_timeout=RR_TIMEOUT_INFINITE) RR_OVERRIDE";
     }
     else
     {
@@ -870,7 +876,7 @@ std::string CPPServiceLangGen::FunctionDeclaration_async(FunctionDefinition* d, 
 
         if (inclass)
         {
-            return "virtual void async_" + t.name + "(" + s2 + ")";
+            return "RR_OVIRTUAL void async_" + t.name + "(" + s2 + ") RR_OVERRIDE";
         }
         else
             return "async_" + t.name + "(" + param_str + ", rr_handler)";
@@ -896,7 +902,7 @@ std::string CPPServiceLangGen::FunctionDeclaration_async(FunctionDefinition* d, 
 
         if (inclass)
         {
-            return "virtual void async_" + name + "(" + s2 + ")";
+            return "RR_OVIRTUAL void async_" + name + "(" + s2 + ") RR_OVERRIDE";
         }
         else
             return "async_" + name + "(" + param_str + ", rr_handler)";
@@ -918,7 +924,7 @@ std::string CPPServiceLangGen::EventDeclaration(EventDefinition* d, bool inclass
 
     if (inclass)
         if (!var)
-            return ("virtual boost::signals2::signal<void (" + plist + ")>& get_" + fix_name(d->Name) + "()");
+            return ("RR_OVIRTUAL boost::signals2::signal<void (" + plist + ")>& get_" + fix_name(d->Name) + "() RR_OVERRIDE");
         else
             return ("boost::signals2::signal<void (" + plist + ")> rrvar_" + d->Name);
     else
@@ -941,7 +947,7 @@ std::string CPPServiceLangGen::ObjRefDeclaration(ObjRefDefinition* d, bool incla
 
     if (inclass)
     {
-        return "virtual RR_SHARED_PTR<" + object_type + " > get_" + member_name + "(" + indexer + ")";
+        return "RR_OVIRTUAL RR_SHARED_PTR<" + object_type + " > get_" + member_name + "(" + indexer + ") RR_OVERRIDE";
     }
     else
     {
@@ -978,7 +984,7 @@ std::string CPPServiceLangGen::ObjRefDeclaration_async(ObjRefDefinition* d, bool
     }
     if (inclass)
     {
-        return "virtual void async_get_" + member_name + "(" + param + ")";
+        return "RR_OVIRTUAL void async_get_" + member_name + "(" + param + ") RR_OVERRIDE";
     }
     else
     {
@@ -992,7 +998,7 @@ std::string CPPServiceLangGen::GetPipeDeclaration(PipeDefinition* d, bool inclas
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "virtual RR_SHARED_PTR<RobotRaconteur::Pipe<" + t.cpp_type + " > > get_" + t.name + "()";
+        return "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<" + t.cpp_type + " > > get_" + t.name + "() RR_OVERRIDE";
     }
     else
     {
@@ -1006,7 +1012,7 @@ std::string CPPServiceLangGen::SetPipeDeclaration(PipeDefinition* d, bool inclas
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "virtual void set_" + t.name + "(RR_SHARED_PTR<RobotRaconteur::Pipe<" + t.cpp_type + " > > value)";
+        return "RR_OVIRTUAL void set_" + t.name + "(RR_SHARED_PTR<RobotRaconteur::Pipe<" + t.cpp_type + " > > value) RR_OVERRIDE";
     }
     else
     {
@@ -1029,8 +1035,8 @@ std::string CPPServiceLangGen::GetCallbackDeclaration(CallbackDefinition* d, boo
     if (inclass)
     {
         if (!var)
-            return "virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<" + ret.cpp_type + "(" + plist +
-                   ")" + " > > > get_" + fix_name(d->Name) + "()";
+            return "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<" + ret.cpp_type + "(" + plist +
+                   ")" + " > > > get_" + fix_name(d->Name) + "() RR_OVERRIDE";
         else
             return "boost::function<" + ret.cpp_type + "(" + plist + ")" + " >";
     }
@@ -1054,8 +1060,8 @@ std::string CPPServiceLangGen::SetCallbackDeclaration(CallbackDefinition* d, boo
     std::string plist = boost::join(pm, ", ");
     if (inclass)
     {
-        return "virtual void set_" + fix_name(d->Name) + "(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<" +
-               ret.cpp_type + "(" + plist + ")> > > value)";
+        return "RR_OVIRTUAL void set_" + fix_name(d->Name) + "(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<" +
+               ret.cpp_type + "(" + plist + ")> > > value) RR_OVERRIDE";
     }
     else
     {
@@ -1069,7 +1075,7 @@ std::string CPPServiceLangGen::GetWireDeclaration(WireDefinition* d, bool inclas
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "virtual RR_SHARED_PTR<RobotRaconteur::Wire<" + t.cpp_type + " > > get_" + t.name + "()";
+        return "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<" + t.cpp_type + " > > get_" + t.name + "() RR_OVERRIDE";
     }
     else
     {
@@ -1083,7 +1089,7 @@ std::string CPPServiceLangGen::SetWireDeclaration(WireDefinition* d, bool inclas
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "virtual void set_" + t.name + "(RR_SHARED_PTR<RobotRaconteur::Wire<" + t.cpp_type + " > > value)";
+        return "RR_OVIRTUAL void set_" + t.name + "(RR_SHARED_PTR<RobotRaconteur::Wire<" + t.cpp_type + " > > value) RR_OVERRIDE";
     }
     else
     {
@@ -1102,10 +1108,10 @@ std::string CPPServiceLangGen::MemoryDeclaration(MemoryDefinition* d, bool incla
             switch (d->Type->ArrayType)
             {
             case DataTypes_ArrayTypes_array:
-                return "virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<" + t.cpp_type + " > > get_" + t.name + "()";
+                return "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::ArrayMemory<" + t.cpp_type + " > > get_" + t.name + "() RR_OVERRIDE";
             case DataTypes_ArrayTypes_multidimarray:
-                return "virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<" + t.cpp_type + " > > get_" +
-                       t.name + "()";
+                return "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<" + t.cpp_type + " > > get_" +
+                       t.name + "() RR_OVERRIDE";
             default:
                 throw DataTypeException("Invalid memory definition");
             }
@@ -1120,11 +1126,11 @@ std::string CPPServiceLangGen::MemoryDeclaration(MemoryDefinition* d, bool incla
             switch (d->Type->ArrayType)
             {
             case DataTypes_ArrayTypes_array:
-                return "virtual RR_SHARED_PTR<RobotRaconteur::" + c + "ArrayMemory<" + t.cpp_type + " > > get_" +
-                       t.name + "()";
+                return "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::" + c + "ArrayMemory<" + t.cpp_type + " > > get_" +
+                       t.name + "() RR_OVERRIDE";
             case DataTypes_ArrayTypes_multidimarray:
-                return "virtual RR_SHARED_PTR<RobotRaconteur::" + c + "MultiDimArrayMemory<" + t.cpp_type +
-                       " > > get_" + t.name + "()";
+                return "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::" + c + "MultiDimArrayMemory<" + t.cpp_type +
+                       " > > get_" + t.name + "() RR_OVERRIDE";
             default:
                 throw DataTypeException("Invalid memory definition");
             }
@@ -1180,8 +1186,11 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
     std::string export_macro = export_definition(d);
 
     w2 << "#ifndef " << export_macro << std::endl;
+    w2 << "// NOLINTNEXTLINE" << std::endl;
     w2 << "#define " << export_macro << std::endl;
     w2 << "#endif" << std::endl << std::endl;
+
+    w2 << "// NOLINTBEGIN" << std::endl;
 
     std::vector<std::string> namespace_vec;
     split(namespace_vec, d->Name, boost::is_from_range('.', '.'));
@@ -1316,7 +1325,7 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
 
         if (e2->EntryType == DataTypes_pod_t)
         {
-            w2 << std::endl << "virtual std::string RRType() {return \"" << d->Name << "." << e2->Name << "\";  }" << std::endl;
+            w2 << std::endl << "RR_OVIRTUAL std::string RRType() {return \"" << d->Name << "." << e2->Name << "\";  }" << std::endl;
         }
         else
         {
@@ -1350,7 +1359,7 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
 
         MEMBER_ITER_END()
 
-        w2 << std::endl << "virtual std::string RRType() {return \"" << d->Name << "." << (*e)->Name << "\";  }" << std::endl;
+        w2 << std::endl << "RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return \"" << d->Name << "." << (*e)->Name << "\";  }" << std::endl;
 
         w2 << "};" << std::endl << std::endl;
         w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << std::endl;
@@ -1376,59 +1385,61 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
         w2 << "class " << export_definition(d) << " " << fix_name((*e)->Name) << " : " << boost::join(implements, ", ")
            << std::endl;
         w2 << "{" << std::endl;
+        w2 << "// NOLINTBEGIN" << std::endl;
         w2 << "public:" << std::endl;
         MEMBER_ITER2(PropertyDefinition)
         GenerateDocString(m->DocString, "", w);
         if (m->Direction() != MemberDefinition_Direction_writeonly)
         {
-            w2 << GetPropertyDeclaration(m.get(), true) << "=0;" << std::endl;
+            w2 << pure_virtual(GetPropertyDeclaration(m.get(), true)) << "=0;" << std::endl;
         }
         if (m->Direction() != MemberDefinition_Direction_readonly)
         {
-            w2 << SetPropertyDeclaration(m.get(), true) << "=0;" << std::endl;
+            w2 << pure_virtual(SetPropertyDeclaration(m.get(), true)) << "=0;" << std::endl;
         }
         w2 << std::endl;
         MEMBER_ITER2_END()
 
         MEMBER_ITER2(FunctionDefinition)
         GenerateDocString(m->DocString, "", w);
-        w2 << FunctionDeclaration(m.get(), true) << "=0;" << std::endl << std::endl;
+        w2 << pure_virtual(FunctionDeclaration(m.get(), true)) << "=0;" << std::endl << std::endl;
         MEMBER_ITER2_END()
 
         MEMBER_ITER2(EventDefinition)
         GenerateDocString(m->DocString, "", w);
-        w2 << EventDeclaration(m.get(), true) << "=0;" << std::endl << std::endl;
+        w2 << pure_virtual(EventDeclaration(m.get(), true)) << "=0;" << std::endl << std::endl;
         MEMBER_ITER2_END()
 
         MEMBER_ITER2(ObjRefDefinition)
         GenerateDocString(m->DocString, "", w);
-        w2 << ObjRefDeclaration(m.get(), true) << "=0;" << std::endl << std::endl;
+        w2 << pure_virtual(ObjRefDeclaration(m.get(), true)) << "=0;" << std::endl << std::endl;
         MEMBER_ITER2_END()
 
         MEMBER_ITER2(PipeDefinition)
         GenerateDocString(m->DocString, "", w);
-        w2 << GetPipeDeclaration(m.get(), true) << "=0;" << std::endl;
-        w2 << SetPipeDeclaration(m.get(), true) << "=0;" << std::endl << std::endl;
+        w2 << pure_virtual(GetPipeDeclaration(m.get(), true)) << "=0;" << std::endl;
+        w2 << pure_virtual(SetPipeDeclaration(m.get(), true)) << "=0;" << std::endl << std::endl;
         MEMBER_ITER2_END()
 
         MEMBER_ITER2(CallbackDefinition)
         GenerateDocString(m->DocString, "", w);
-        w2 << GetCallbackDeclaration(m.get(), true) << "=0;" << std::endl;
-        w2 << SetCallbackDeclaration(m.get(), true) << "=0;" << std::endl << std::endl;
+        w2 << pure_virtual(GetCallbackDeclaration(m.get(), true)) << "=0;" << std::endl;
+        w2 << pure_virtual(SetCallbackDeclaration(m.get(), true)) << "=0;" << std::endl << std::endl;
         MEMBER_ITER2_END()
 
         MEMBER_ITER2(WireDefinition)
         GenerateDocString(m->DocString, "", w);
-        w2 << GetWireDeclaration(m.get(), true) << "=0;" << std::endl;
-        w2 << SetWireDeclaration(m.get(), true) << "=0;" << std::endl << std::endl;
+        w2 << pure_virtual(GetWireDeclaration(m.get(), true)) << "=0;" << std::endl;
+        w2 << pure_virtual(SetWireDeclaration(m.get(), true)) << "=0;" << std::endl << std::endl;
         MEMBER_ITER2_END()
 
         MEMBER_ITER2(MemoryDefinition)
         GenerateDocString(m->DocString, "", w);
-        w2 << MemoryDeclaration(m.get(), true) << "=0;" << std::endl << std::endl;
+        w2 << pure_virtual(MemoryDeclaration(m.get(), true)) << "=0;" << std::endl << std::endl;
         MEMBER_ITER2_END()
+        w2 << "// NOLINTEND" << std::endl;
 
-        w2 << "virtual std::string RRType() {return \"" << d->Name << "." << (*e)->Name << "\";  }" << std::endl;
+        w2 << "RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return \"" << d->Name << "." << (*e)->Name << "\";  }" << std::endl;
 
         w2 << "};" << std::endl << std::endl;
         w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << std::endl;
@@ -1444,7 +1455,7 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
            << "{" << std::endl;
         w2 << "    public:" << std::endl;
         w2 << "    " << fix_name(e->Name)
-           << "(const std::string& message, std::string sub_name = \"\", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> "
+           << "(const std::string& message, const std::string& sub_name = \"\", const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& "
               "param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException(\""
            << d->Name << "." << e->Name << "\",message,sub_name,param_) {}" << std::endl;
         w2 << "};" << std::endl;
@@ -1485,6 +1496,7 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
         }
         w2 << "}" << std::endl;
     }
+    w2 << "// NOLINTEND" << std::endl;
 }
 
 void CPPServiceLangGen::GenerateStubSkelHeaderFile(ServiceDefinition* d,
@@ -1495,7 +1507,7 @@ void CPPServiceLangGen::GenerateStubSkelHeaderFile(ServiceDefinition* d,
 
     w2 << "//This file is automatically generated. DO NOT EDIT!" << std::endl << std::endl;
     w2 << "#include \"" << boost::replace_all_copy(fix_name(d->Name), ".", "__") << ".h\"" << std::endl;
-
+    w2 << "// NOLINTBEGIN" << std::endl;
     std::set<std::string> importedheaders;
 
     for (std::vector<std::string>::const_iterator e = d->Imports.begin(); e != d->Imports.end(); ++e)
@@ -1590,7 +1602,7 @@ void CPPServiceLangGen::GenerateStubSkelHeaderFile(ServiceDefinition* d,
         }
         w2 << "}" << std::endl;
     }
-
+    w2 << "// NOLINTEND" << std::endl;
     w2 << std::endl;
 }
 
@@ -1610,6 +1622,7 @@ void CPPServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d,
     w2 << "#include \"stdafx.h\"" << std::endl;
     w2 << "#endif" << std::endl;
 
+    w2 << "// NOLINTBEGIN" << std::endl;
     std::vector<std::string> namespace_vec;
     split(namespace_vec, d->Name, boost::is_from_range('.', '.'));
 
@@ -1632,7 +1645,7 @@ void CPPServiceLangGen::GenerateStubSkelFile(ServiceDefinition* d,
     {
         w2 << "}" << std::endl;
     }
-
+    w2 << "// NOLINTEND" << std::endl;
     w2 << std::endl;
 }
 
@@ -1647,70 +1660,70 @@ void CPPServiceLangGen::GenerateServiceFactoryHeader(ServiceDefinition* d, std::
        << "{" << std::endl;
     w2 << "public:" << std::endl;
 
-    w2 << "virtual std::string GetServiceName();" << std::endl;
+    w2 << "RR_OVIRTUAL std::string GetServiceName() RR_OVERRIDE;" << std::endl;
 
-    w2 << "virtual std::string DefString();" << std::endl;
+    w2 << "RR_OVIRTUAL std::string DefString() RR_OVERRIDE;" << std::endl;
 
-    w2 << "virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);" << std::endl;
+    w2 << "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s) RR_OVERRIDE;" << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
+          "PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> "
-          "UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> "
+          "UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackPodArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
+          "PackPodArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> "
-          "UnpackPodArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> "
+          "UnpackPodArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackPodMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
+          "PackPodMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> "
-          "UnpackPodMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> "
+          "UnpackPodMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackNamedArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
+          "PackNamedArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> "
-          "UnpackNamedArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> "
+          "UnpackNamedArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-          "PackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure);"
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
+          "PackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure) RR_OVERRIDE ;"
        << std::endl;
 
-    w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> "
+    w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> "
           "UnpackNamedMultiDimArray(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& "
-          "structure);"
+          "structure) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(boost::string_ref objecttype, "
-          "boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::ClientContext>& context);"
+    w2 << "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(boost::string_ref objecttype, "
+          "boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::ClientContext>& context) RR_OVERRIDE;"
        << std::endl;
 
-    w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(boost::string_ref objecttype, "
+    w2 << "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(boost::string_ref objecttype, "
           "boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::RRObject>& obj, "
-          "const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context);"
+          "const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context) RR_OVERRIDE;"
        << std::endl;
 
     // w2 << "virtual RR_SHARED_PTR<RobotRaconteur::ServiceDefinition> ServiceDef();" << std::endl;
 
     // w2 << "virtual std::string RemovePath(const std::string &path);" << std::endl;
 
-    w2 << "virtual void DownCastAndThrowException(RobotRaconteur::RobotRaconteurException& exp);" << std::endl;
+    w2 << "RR_OVIRTUAL void DownCastAndThrowException(RobotRaconteur::RobotRaconteurException& exp) RR_OVERRIDE;" << std::endl;
 
-    w2 << "virtual RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> "
-          "DownCastException(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& exp);"
+    w2 << "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException> "
+          "DownCastException(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& exp) RR_OVERRIDE;"
        << std::endl;
 
     w2 << "};" << std::endl;
@@ -2044,11 +2057,11 @@ void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
            << "_stub(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode>& node) : "
               "RobotRaconteur::StructureStub(node) {}"
            << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
-              "PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& s);"
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> "
+              "PackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& s) RR_OVERRIDE ;"
            << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> "
-              "UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& m);"
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure> "
+              "UnpackStructure(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& m) RR_OVERRIDE ;"
            << std::endl;
         w2 << "};" << std::endl << std::endl;
     }
@@ -2078,32 +2091,33 @@ void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
 
         w2 << std::endl;
         w2 << "{" << std::endl;
+        w2 << "// NOLINTBEGIN" << std::endl;
         w2 << "public:" << std::endl;
 
         MEMBER_ITER(PropertyDefinition)
         if (m->Direction() != MemberDefinition_Direction_writeonly)
         {
-            w2 << GetPropertyDeclaration_async(m.get(), true) << " = 0;" << std::endl;
+            w2 << pure_virtual(GetPropertyDeclaration_async(m.get(), true)) << " = 0;" << std::endl;
         }
         if (m->Direction() != MemberDefinition_Direction_readonly)
         {
-            w2 << SetPropertyDeclaration_async(m.get(), true) << " = 0;" << std::endl << std::endl;
+            w2 << pure_virtual(SetPropertyDeclaration_async(m.get(), true)) << " = 0;" << std::endl << std::endl;
         }
 
         w2 << std::endl;
         MEMBER_ITER_END()
 
         MEMBER_ITER(FunctionDefinition)
-        w2 << FunctionDeclaration_async(m.get(), true) << " = 0;" << std::endl << std::endl;
+        w2 << pure_virtual(FunctionDeclaration_async(m.get(), true)) << " = 0;" << std::endl << std::endl;
 
         w2 << std::endl;
         MEMBER_ITER_END()
 
         MEMBER_ITER(ObjRefDefinition)
-        w2 << ObjRefDeclaration_async(m.get(), true) << "=0;" << std::endl << std::endl;
+        w2 << pure_virtual(ObjRefDeclaration_async(m.get(), true)) << "=0;" << std::endl << std::endl;
 
         MEMBER_ITER_END()
-
+        w2 << "// NOLINTEND" << std::endl;
         w2 << "};" << std::endl;
     }
 
@@ -2119,7 +2133,7 @@ void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
         w2 << fix_name((*e)->Name) << "_stub(boost::string_ref, const RR_SHARED_PTR<RobotRaconteur::ClientContext>& c);"
            << std::endl
            << std::endl;
-        w2 << "virtual void RRInitStub();" << std::endl;
+        w2 << "RR_OVIRTUAL void RRInitStub() RR_OVERRIDE ;" << std::endl;
 
         MEMBER_ITER(PropertyDefinition)
         if (m->Direction() != MemberDefinition_Direction_writeonly)
@@ -2164,16 +2178,16 @@ void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
         MEMBER_ITER_END()
 
         w2 << std::endl;
-        w2 << "virtual void DispatchEvent(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m);" << std::endl;
-        w2 << "virtual void DispatchPipeMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m);" << std::endl;
-        w2 << "virtual void DispatchWireMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m);" << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
-              "CallbackCall(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m);"
+        w2 << "RR_OVIRTUAL void DispatchEvent(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE;" << std::endl;
+        w2 << "RR_OVIRTUAL void DispatchPipeMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE;" << std::endl;
+        w2 << "RR_OVIRTUAL void DispatchWireMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE;" << std::endl;
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
+              "CallbackCall(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE;"
            << std::endl;
-        w2 << "virtual void RRClose();" << std::endl;
-        w2 << "virtual RR_SHARED_PTR<RobotRaconteur::PipeClientBase> RRGetPipeClient(boost::string_ref membername);"
+        w2 << "RR_OVIRTUAL void RRClose() RR_OVERRIDE;" << std::endl;
+        w2 << "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::PipeClientBase> RRGetPipeClient(boost::string_ref membername) RR_OVERRIDE;"
            << std::endl;
-        w2 << "virtual RR_SHARED_PTR<RobotRaconteur::WireClientBase> RRGetWireClient(boost::string_ref membername);"
+        w2 << "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::WireClientBase> RRGetWireClient(boost::string_ref membername) RR_OVERRIDE;"
            << std::endl;
 
         w2 << "private:" << std::endl;
@@ -2295,7 +2309,7 @@ void CPPServiceLangGen::GenerateStubHeader(ServiceDefinition* d,
         w2 << ObjRefDeclaration_async(m.get(), true) << ";" << std::endl << std::endl;
         MEMBER_ITER_END()
 
-        w2 << "std::string RRType();" << std::endl;
+        w2 << "RR_OVIRTUAL std::string RRType() RR_OVERRIDE;" << std::endl;
         w2 << "};" << std::endl << std::endl;
     }
 }
@@ -2313,55 +2327,55 @@ void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition* d,
            << "public virtual RobotRaconteur::ServiceSkel" << std::endl;
         w2 << "{" << std::endl;
         w2 << "public:" << std::endl;
-        w2 << "virtual void Init(boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::RRObject>& object, "
-              "const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context);"
+        w2 << "RR_OVIRTUAL void Init(boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::RRObject>& object, "
+              "const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context) RR_OVERRIDE;"
            << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
-              "CallGetProperty(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m);"
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
+              "CallGetProperty(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE;"
            << std::endl
            << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
-              "CallSetProperty(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m);"
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
+              "CallSetProperty(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE;"
            << std::endl
            << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
-              "CallFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m);"
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
+              "CallFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE;"
            << std::endl
            << std::endl;
-        w2 << "virtual void ReleaseCastObject();" << std::endl << std::endl;
-        w2 << "virtual void RegisterEvents(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1);" << std::endl << std::endl;
-        w2 << "virtual void UnregisterEvents(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1);" << std::endl << std::endl;
-        w2 << "virtual RR_SHARED_PTR<RobotRaconteur::RRObject> GetSubObj(boost::string_ref, boost::string_ref);" << std::endl
+        w2 << "RR_OVIRTUAL void ReleaseCastObject() RR_OVERRIDE;" << std::endl << std::endl;
+        w2 << "RR_OVIRTUAL void RegisterEvents(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1) RR_OVERRIDE;" << std::endl << std::endl;
+        w2 << "RR_OVIRTUAL void UnregisterEvents(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1) RR_OVERRIDE;" << std::endl << std::endl;
+        w2 << "RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::RRObject> GetSubObj(boost::string_ref, boost::string_ref) RR_OVERRIDE;" << std::endl
            << std::endl;
-        w2 << "virtual void InitPipeServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1);" << std::endl << std::endl;
-        w2 << "virtual void InitWireServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1);" << std::endl << std::endl;
-        w2 << "virtual void DispatchPipeMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e);"
+        w2 << "RR_OVIRTUAL void InitPipeServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1) RR_OVERRIDE;" << std::endl << std::endl;
+        w2 << "RR_OVIRTUAL void InitWireServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1) RR_OVERRIDE;" << std::endl << std::endl;
+        w2 << "RR_OVIRTUAL void DispatchPipeMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e) RR_OVERRIDE;"
            << std::endl
            << std::endl;
-        w2 << "virtual void DispatchWireMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e);"
+        w2 << "RR_OVIRTUAL void DispatchWireMessage(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e) RR_OVERRIDE;"
            << std::endl
            << std::endl;
-        w2 << "virtual void InitCallbackServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& o);" << std::endl << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
-              "CallPipeFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e);"
+        w2 << "RR_OVIRTUAL void InitCallbackServers(const RR_SHARED_PTR<RobotRaconteur::RRObject>& o) RR_OVERRIDE;" << std::endl << std::endl;
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
+              "CallPipeFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e) RR_OVERRIDE;"
            << std::endl
            << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
-              "CallWireFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e);"
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
+              "CallWireFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, uint32_t e) RR_OVERRIDE;"
            << std::endl
            << std::endl;
-        w2 << "virtual RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, boost::string_ref);" << std::endl << std::endl;
-        w2 << "virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
+        w2 << "RR_OVIRTUAL RR_SHARED_PTR<void> GetCallbackFunction(uint32_t endpoint, boost::string_ref) RR_OVERRIDE;" << std::endl << std::endl;
+        w2 << "RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
               "CallMemoryFunction(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m, "
-              "const RR_SHARED_PTR<RobotRaconteur::Endpoint>& e);"
+              "const RR_SHARED_PTR<RobotRaconteur::Endpoint>& e) RR_OVERRIDE;"
            << std::endl
            << std::endl;
-        w2 << "virtual bool IsRequestNoLock(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m);" << std::endl << std::endl;
-        w2 << "virtual std::string GetObjectType();" << std::endl;
-        w2 << "virtual RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::")
+        w2 << "RR_OVIRTUAL bool IsRequestNoLock(const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE;" << std::endl << std::endl;
+        w2 << "RR_OVIRTUAL std::string GetObjectType() RR_OVERRIDE;" << std::endl;
+        w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::")
            << "::" << fix_name((*e)->Name) << " > get_obj();" << std::endl
            << std::endl;
-        w2 << "virtual RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::"
+        w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::"
            << "async_" << fix_name((*e)->Name) << " > get_asyncobj();" << std::endl
            << std::endl;
         w2 << "protected:" << std::endl;
@@ -2487,7 +2501,9 @@ void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition* d,
 
 std::string dforc(const std::string& definition, const std::string& clas)
 {
-    std::string res1 = boost::trim_copy(boost::replace_first_copy(definition, "virtual", ""));
+    std::string res1_1 = boost::replace_first_copy(definition, "virtual", "");
+    std::string res1_2 = boost::replace_last_copy(res1_1, "RR_OVERRIDE", "");
+    std::string res1 = boost::trim_copy(boost::replace_first_copy(res1_2, "RR_OVIRTUAL", ""));
 
     std::string rettype;
     std::string function;
@@ -3689,7 +3705,7 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
 
             w2 << t.generator_cpp_type << " rr_return=get_obj()->" << FunctionDeclaration(m.get(), false) << ";"
                << std::endl;
-            w2 << "int32_t rr_index;" << std::endl;
+            w2 << "int32_t rr_index = 0;" << std::endl;
             w2 << "{" << std::endl;
             w2 << "boost::mutex::scoped_lock lock(generators_lock);" << std::endl;
             w2 << "rr_index = get_new_generator_index();" << std::endl;
@@ -3782,7 +3798,7 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
             w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::")
                << "::" << fix_name((*e)->Name) << "_skel> skel1=skel.lock();" << std::endl;
             w2 << "if (!skel1) throw RobotRaconteur::InvalidOperationException(\"skel release\");" << std::endl;
-            w2 << "int32_t rr_index;" << std::endl;
+            w2 << "int32_t rr_index = 0;" << std::endl;
             w2 << "{" << std::endl;
             w2 << "boost::mutex::scoped_lock lock(skel1->generators_lock);" << std::endl;
             w2 << "rr_index = skel1->get_new_generator_index();" << std::endl;
@@ -4383,6 +4399,7 @@ void CPPServiceLangGen::GenerateConstants(ServiceDefinition* d, std::ostream* w)
     if (!hasconstants)
         return;
 
+    w2 << "// NOLINTBEGIN" << std::endl;
     w2 << "namespace " << boost::replace_all_copy(fix_name(d->Name), ".", "__") << "Constants " << std::endl << "{" << std::endl;
 
     for (std::vector<std::string>::iterator e = d->Options.begin(); e != d->Options.end(); ++e)
@@ -4479,6 +4496,7 @@ void CPPServiceLangGen::GenerateConstants(ServiceDefinition* d, std::ostream* w)
         w2 << "    };" << std::endl;
         w2 << "    }" << std::endl;
     }
+    w2 << "// NOLINTEND" << std::endl;
 }
 
 void CPPServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
@@ -4657,10 +4675,10 @@ void CPPServiceLangGen::GenerateMasterHeaderFile(const std::vector<RR_SHARED_PTR
     w2 << std::endl;
 
     std::string type_list = "boost::assign::list_of<RR_SHARED_PTR<RobotRaconteur::ServiceFactory> >";
-    BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& e, d)
-    {
-        w2 << "#include \"" << boost::replace_all_copy(fix_name(e->Name), ".", "__") << "_stubskel.h\"" << std::endl;
-    }
+    // BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& e, d)
+    // {
+    //     w2 << "#include \"" << boost::replace_all_copy(fix_name(e->Name), ".", "__") << "_stubskel.h\"" << std::endl;
+    // }
 
     BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& e, d)
     {
@@ -4786,7 +4804,7 @@ void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d,
         w2 << MemoryDeclaration(m.get(), true) << ";" << std::endl << std::endl;
         MEMBER_ITER3_END()
 
-        w2 << "virtual std::string RRType() {return \"" << d->Name << "." << (*e)->Name << "\";  }" << std::endl;
+        w2 << "RR_OVIRTUAL std::string RRType() RR_OVERRIDE {return \"" << d->Name << "." << (*e)->Name << "\";  }" << std::endl;
 
         w2 << "};" << std::endl << std::endl;
     }

@@ -157,7 +157,7 @@ class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
      * @param append If true, log messages are appended. If false, the file is truncated when opened
      */
     void OpenFile(const std::string& filename, bool append = true);
-    virtual void HandleLogRecord(const RRLogRecord& record);
+    RR_OVIRTUAL void HandleLogRecord(const RRLogRecord& record) RR_OVERRIDE ;
 };
 
 #define ROBOTRACONTEUR_LOG_EMPTY_NODE

@@ -445,7 +445,7 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
         this->done = false;
     }
 
-    virtual bool Next(uint32_t& indexa, uint32_t& indexb, uint32_t& len)
+    RR_OVIRTUAL bool Next(uint32_t& indexa, uint32_t& indexb, uint32_t& len) RR_OVERRIDE 
     {
 
         if (done)
@@ -492,7 +492,7 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
         return true;
     }
 
-    virtual ~MultiDimArray_CalculateCopyIndicesIterImpl() {}
+    RR_OVIRTUAL ~MultiDimArray_CalculateCopyIndicesIterImpl()  RR_OVERRIDE {}
 };
 
 RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(

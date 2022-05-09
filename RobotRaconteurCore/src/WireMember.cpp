@@ -516,6 +516,12 @@ void WireConnectionBase::SetOutValueLifespan(int32_t millis)
     outval_lifespan = millis;
 }
 
+WireBase::WireBase()
+{
+    rawelements = false;
+    direction = MemberDefinition_Direction_both;
+}
+
 RR_INTRUSIVE_PTR<RRValue> WireBase::UnpackPacket(const RR_INTRUSIVE_PTR<MessageEntry>& me, TimeSpec& ts)
 {
 

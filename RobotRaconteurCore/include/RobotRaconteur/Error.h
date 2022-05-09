@@ -126,9 +126,9 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
      */
     virtual std::string ToString();
 
-    virtual const char* what() const throw();
+    RR_OVIRTUAL const char* what() const throw() RR_OVERRIDE ;
 
-    ~RobotRaconteurException() throw() {}
+    RR_OVIRTUAL ~RobotRaconteurException() throw()  RR_OVERRIDE {}
 
   private:
     std::string what_string;

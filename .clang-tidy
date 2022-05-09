@@ -39,7 +39,8 @@ Checks: >
     -hicpp-*,
     -cppcoreguidelines-prefer-member-initializer,
     -cppcoreguidelines-pro-type-reinterpret-cast,
-    -cppcoreguidelines-avoid-non-const-global-variables
+    -cppcoreguidelines-avoid-non-const-global-variables,
+    modernize-use-override
 HeaderFilterRegex: '(robotraconteur|RobotRaconteur).*'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
@@ -54,3 +55,5 @@ CheckOptions:
     value: MessageStringRef;RR_WEAK_PTR*;boost::weak_ptr*;boost::function*
   - key: bugprone-signed-char-misuse.CharTypdefsToIgnore
     value: int8_t
+  - key: modernize-use-override.OverrideSpelling
+    value: RR_OVERRIDE

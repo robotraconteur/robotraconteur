@@ -167,7 +167,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
   public:
-    virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurNode> GetNode() RR_OVERRIDE ;
 
   private:
     ASIOStreamBaseTransport(const ASIOStreamBaseTransport& that);
@@ -185,7 +185,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
         {}
         // NOLINTEND(bugprone-throw-keyword-missing)
 
-        virtual std::string RRType() { return "RobotRaconteur::ASIOStreamBaseTransport::AsyncAttachStream_args"; }
+        RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return "RobotRaconteur::ASIOStreamBaseTransport::AsyncAttachStream_args"; }
     };
 
     virtual void AsyncAttachStream(
@@ -193,9 +193,9 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   public:
-    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
-    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
+    RR_OVIRTUAL void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback) RR_OVERRIDE ;
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
 
   protected:
     void SimpleAsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
@@ -244,7 +244,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     virtual void AsyncPauseReceive(const boost::function<void(const boost::system::error_code&)>& handler);
     virtual void AsyncResumeReceive();
 
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE ;
 
     virtual void heartbeat_timer_func(const boost::system::error_code& e);
 
@@ -280,7 +280,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
 
     virtual void PeriodicCleanupTask();
 
-    virtual NodeID GetRemoteNodeID();
+    RR_OVIRTUAL NodeID GetRemoteNodeID() RR_OVERRIDE ;
 
   protected:
     virtual void BeginStreamOp(
@@ -321,7 +321,7 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     virtual bool GetDisableStringTable();
     virtual void SetDisableStringTable(bool d);
 
-    virtual bool CheckCapabilityActive(uint32_t cap);
+    RR_OVIRTUAL bool CheckCapabilityActive(uint32_t cap) RR_OVERRIDE ;
 };
 
 } // namespace detail

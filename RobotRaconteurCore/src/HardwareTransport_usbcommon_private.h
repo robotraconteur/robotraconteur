@@ -551,26 +551,26 @@ class UsbDeviceTransportConnection : public HardwareTransportConnection
 
     UsbDeviceTransportConnection(const RR_SHARED_PTR<HardwareTransport>& parent, uint32_t local_endpoint,
                                  const RR_SHARED_PTR<UsbDevice_Claim>& device, int32_t stream_id);
-    virtual ~UsbDeviceTransportConnection() {}
+    RR_OVIRTUAL ~UsbDeviceTransportConnection()  RR_OVERRIDE {}
 
     void AsyncAttachSocket(boost::string_ref noden,
                            const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   protected:
-    virtual void async_write_some(
+    RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
 
-    virtual void async_read_some(
+    RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
 
-    virtual size_t available();
+    RR_OVIRTUAL size_t available() RR_OVERRIDE ;
 
-    virtual void Close1() {}
+    RR_OVIRTUAL void Close1()  RR_OVERRIDE {}
 
   public:
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE ;
 
   protected:
     RR_WEAK_PTR<UsbDevice_Claim> device;

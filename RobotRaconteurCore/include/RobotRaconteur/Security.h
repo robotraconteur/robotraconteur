@@ -228,15 +228,15 @@ class ROBOTRACONTEUR_CORE_API PasswordFileUserAuthenticator : public UserAuthent
      */
     PasswordFileUserAuthenticator(boost::string_ref data, bool require_verified_client = false);
 
-    virtual ~PasswordFileUserAuthenticator() {}
+    RR_OVIRTUAL ~PasswordFileUserAuthenticator()  RR_OVERRIDE {}
 
   private:
     void load(boost::string_ref data);
 
   public:
-    virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(
+    RR_OVIRTUAL RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(
         boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& credentials,
-        const RR_SHARED_PTR<ServerContext>& context, const RR_SHARED_PTR<ITransportConnection>& transport);
+        const RR_SHARED_PTR<ServerContext>& context, const RR_SHARED_PTR<ITransportConnection>& transport) RR_OVERRIDE ;
 
     static std::string MD5Hash(boost::string_ref text);
 };

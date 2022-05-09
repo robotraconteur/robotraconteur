@@ -464,6 +464,13 @@ void PipeEndpointBase::Shutdown()
                                             "PipeEndpointBase shut down");
 }
 
+PipeBase::PipeBase()
+{
+    unreliable = false;
+    rawelements = false;
+    direction = MemberDefinition_Direction_both;
+}
+
 void PipeBase::DispatchPacketAck(const RR_INTRUSIVE_PTR<MessageElement>& me, const RR_SHARED_PTR<PipeEndpointBase>& e)
 {
     uint32_t pnum = 0;

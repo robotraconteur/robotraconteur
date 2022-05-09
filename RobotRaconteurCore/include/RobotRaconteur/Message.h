@@ -63,13 +63,13 @@ class ROBOTRACONTEUR_CORE_API Message : public RRValue
     void Write4(ArrayBinaryWriter& w);
     void Read4(ArrayBinaryReader& r);
 
-    virtual std::string RRType() { return "RobotRaconteur::Message"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return "RobotRaconteur::Message"; }
 };
 
 class ROBOTRACONTEUR_CORE_API MessageHeader : public RRValue
 {
   public:
-    virtual ~MessageHeader() {}
+    RR_OVIRTUAL ~MessageHeader()  RR_OVERRIDE {}
 
     uint32_t HeaderSize;
 
@@ -118,7 +118,7 @@ class ROBOTRACONTEUR_CORE_API MessageHeader : public RRValue
     void Write4(ArrayBinaryWriter& w);
     void Read4(ArrayBinaryReader& r);
 
-    virtual std::string RRType() { return "RobotRaconteur::MessageHeader"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return "RobotRaconteur::MessageHeader"; }
 
     MessageHeader();
 };
@@ -126,7 +126,7 @@ class ROBOTRACONTEUR_CORE_API MessageHeader : public RRValue
 class ROBOTRACONTEUR_CORE_API MessageEntry : public RRValue
 {
   public:
-    virtual ~MessageEntry() {}
+    RR_OVIRTUAL ~MessageEntry()  RR_OVERRIDE {}
 
     uint32_t EntrySize;
 
@@ -177,13 +177,13 @@ class ROBOTRACONTEUR_CORE_API MessageEntry : public RRValue
     void Write4(ArrayBinaryWriter& w);
     void Read4(ArrayBinaryReader& r);
 
-    virtual std::string RRType() { return "RobotRaconteur::MessageEntry"; }
+    RR_OVIRTUAL std::string RRType()  RR_OVERRIDE { return "RobotRaconteur::MessageEntry"; }
 };
 
 class ROBOTRACONTEUR_CORE_API MessageElement : public RRValue
 {
   public:
-    virtual ~MessageElement() {}
+    RR_OVIRTUAL ~MessageElement()  RR_OVERRIDE {}
 
     uint32_t ElementSize;
 
@@ -256,7 +256,7 @@ class ROBOTRACONTEUR_CORE_API MessageElement : public RRValue
         return rr_cast<T>(Data);
     }
 
-    virtual std::string RRType() { return "RobotRaconteur::MessageElement"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return "RobotRaconteur::MessageElement"; }
 };
 
 class ROBOTRACONTEUR_CORE_API MessageElementNestedElementList : public MessageElementData
@@ -272,9 +272,9 @@ class ROBOTRACONTEUR_CORE_API MessageElementNestedElementList : public MessageEl
     MessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_,
                                     std::vector<RR_INTRUSIVE_PTR<MessageElement> >&& elements_);
 #endif
-    virtual MessageStringPtr GetTypeString();
-    virtual DataTypes GetTypeID();
-    virtual std::string RRType();
+    RR_OVIRTUAL MessageStringPtr GetTypeString() RR_OVERRIDE ;
+    RR_OVIRTUAL DataTypes GetTypeID() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE ;
 };
 
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<Message> CreateMessage();

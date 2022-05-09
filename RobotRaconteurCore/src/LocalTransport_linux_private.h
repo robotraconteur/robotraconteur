@@ -35,9 +35,9 @@ class LinuxLocalTransportDiscovery : public LocalTransportDiscovery,
 {
   public:
     LinuxLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node);
-    virtual void Init();
-    virtual void Shutdown();
-    virtual ~LinuxLocalTransportDiscovery();
+    RR_OVIRTUAL void Init() RR_OVERRIDE ;
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE ;
+    RR_OVIRTUAL ~LinuxLocalTransportDiscovery() RR_OVERRIDE ;
 
     void run();
     bool update_public();
