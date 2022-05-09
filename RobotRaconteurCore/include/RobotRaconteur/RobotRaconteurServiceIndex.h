@@ -22,7 +22,7 @@ class NodeInfo : public RobotRaconteur::RRStructure
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t> > NodeID;
     RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<char> > > ServiceIndexConnectionURL;
 
-    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return "RobotRaconteurServiceIndex.NodeInfo"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteurServiceIndex.NodeInfo"; }
 };
 
 class ServiceInfo : public RobotRaconteur::RRStructure
@@ -34,7 +34,7 @@ class ServiceInfo : public RobotRaconteur::RRStructure
     RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<char> > > ConnectionURL;
     RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRValue> > Attributes;
 
-    RR_OVIRTUAL std::string RRType()  RR_OVERRIDE { return "RobotRaconteurServiceIndex.ServiceInfo"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteurServiceIndex.ServiceInfo"; }
 };
 
 class ServiceIndex : public virtual RobotRaconteur::RRObject
@@ -48,7 +48,7 @@ class ServiceIndex : public virtual RobotRaconteur::RRObject
 
     virtual boost::signals2::signal<void()>& get_LocalNodeServicesChanged() = 0;
 
-    RR_OVIRTUAL std::string RRType()  RR_OVERRIDE { return "RobotRaconteurServiceIndex.ServiceIndex"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteurServiceIndex.ServiceIndex"; }
 };
 
 } // namespace RobotRaconteurServiceIndex

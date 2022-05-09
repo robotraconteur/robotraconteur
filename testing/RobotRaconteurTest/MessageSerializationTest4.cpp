@@ -602,4 +602,4 @@ void MessageSerializationTest4::RandomTest(size_t iterations)
 }
 
 } // namespace RobotRaconteurTest
-// NOLINTEND
+  // NOLINTEND

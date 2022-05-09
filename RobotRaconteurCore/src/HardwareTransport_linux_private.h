@@ -145,11 +145,11 @@ class BluezBluetoothConnector : public BluetoothConnector<sockaddr_rc, AF_BLUETO
     BluezBluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent, const RR_SHARED_PTR<void>& dbus_f,
                             const RR_SHARED_PTR<void>& sdp_f);
 
-    RR_OVIRTUAL ~BluezBluetoothConnector() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~BluezBluetoothConnector() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::list<sockaddr_rc> GetDeviceAddresses() RR_OVERRIDE ;
+    RR_OVIRTUAL std::list<sockaddr_rc> GetDeviceAddresses() RR_OVERRIDE;
 
-    RR_OVIRTUAL std::list<device_info> GetDeviceNodes(sockaddr_rc addr) RR_OVERRIDE ;
+    RR_OVIRTUAL std::list<device_info> GetDeviceNodes(sockaddr_rc addr) RR_OVERRIDE;
 
     class mysock
     {
@@ -175,13 +175,13 @@ class HardwareTransport_linux_discovery
                                       const std::vector<std::string>& schemes,
                                       const RR_SHARED_PTR<LibUsbDeviceManager>& usb,
                                       const RR_SHARED_PTR<BluezBluetoothConnector>& bt);
-    RR_OVIRTUAL ~HardwareTransport_linux_discovery() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~HardwareTransport_linux_discovery() RR_OVERRIDE {}
 
-    RR_OVIRTUAL void Init() RR_OVERRIDE ;
+    RR_OVIRTUAL void Init() RR_OVERRIDE;
 
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    RR_OVIRTUAL std::vector<NodeDiscoveryInfo> GetDriverDevices() RR_OVERRIDE ;
+    RR_OVIRTUAL std::vector<NodeDiscoveryInfo> GetDriverDevices() RR_OVERRIDE;
 
   protected:
     std::vector<NodeDiscoveryInfo> GetDriverDevices1(const std::string& transport, const std::string& scheme);

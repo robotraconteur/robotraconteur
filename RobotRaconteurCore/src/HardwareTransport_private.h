@@ -25,7 +25,7 @@ class HardwareTransportConnection : public detail::ASIOStreamBaseTransport
   public:
     HardwareTransportConnection(const RR_SHARED_PTR<HardwareTransport>& parent, bool server, uint32_t local_endpoint);
 
-    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
   protected:
     void AsyncAttachSocket1(const std::string& noden,
@@ -36,15 +36,15 @@ class HardwareTransportConnection : public detail::ASIOStreamBaseTransport
     std::string scheme;
 
   public:
-    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE;
 
-    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE;
 
-    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE;
 
   protected:
     bool server;
@@ -76,15 +76,17 @@ class HardwareTransportConnection_driver : public HardwareTransportConnection
   protected:
     RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
     RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    RR_OVIRTUAL size_t available() RR_OVERRIDE ;
+    RR_OVIRTUAL size_t available() RR_OVERRIDE;
 
-    RR_OVIRTUAL void Close1() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close1() RR_OVERRIDE;
 
     RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket;
     boost::mutex socket_lock;
@@ -104,15 +106,17 @@ class HardwareTransportConnection_bluetooth : public HardwareTransportConnection
   protected:
     RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
     RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    RR_OVIRTUAL size_t available() RR_OVERRIDE ;
+    RR_OVIRTUAL size_t available() RR_OVERRIDE;
 
-    RR_OVIRTUAL void Close1() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close1() RR_OVERRIDE;
 
     RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket> socket;
     boost::mutex socket_lock;

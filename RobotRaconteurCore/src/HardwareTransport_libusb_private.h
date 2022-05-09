@@ -293,12 +293,12 @@ class LibUsb_Transfer_control : public LibUsb_Transfer
                       boost::asio::mutable_buffer& buf,
                       boost::function<void(const boost::system::error_code&, size_t)> handler);
 
-    RR_OVIRTUAL void CompleteTransfer() RR_OVERRIDE ;
+    RR_OVIRTUAL void CompleteTransfer() RR_OVERRIDE;
 
     LibUsb_Transfer_control(const RR_SHARED_PTR<LibUsb_Functions>& f,
                             const RR_SHARED_PTR<libusb_device_handle>& device_handle,
                             const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager);
-    RR_OVIRTUAL ~LibUsb_Transfer_control() RR_OVERRIDE ;
+    RR_OVIRTUAL ~LibUsb_Transfer_control() RR_OVERRIDE;
 };
 
 class LibUsb_Transfer_bulk : public LibUsb_Transfer
@@ -311,12 +311,12 @@ class LibUsb_Transfer_bulk : public LibUsb_Transfer
     void FillTransfer(uint8_t ep, boost::asio::mutable_buffer& buf,
                       boost::function<void(const boost::system::error_code&, size_t)> handler);
 
-    RR_OVIRTUAL void CompleteTransfer() RR_OVERRIDE ;
+    RR_OVIRTUAL void CompleteTransfer() RR_OVERRIDE;
 
     LibUsb_Transfer_bulk(const RR_SHARED_PTR<LibUsb_Functions>& f,
                          const RR_SHARED_PTR<libusb_device_handle>& device_handle,
                          const RR_SHARED_PTR<LibUsbDeviceManager>& device_manager);
-    RR_OVIRTUAL ~LibUsb_Transfer_bulk() RR_OVERRIDE ;
+    RR_OVIRTUAL ~LibUsb_Transfer_bulk() RR_OVERRIDE;
 };
 
 class LibUsbDeviceManager : public UsbDeviceManager
@@ -329,17 +329,17 @@ class LibUsbDeviceManager : public UsbDeviceManager
     friend class LibUsb_Transfer_bulk;
 
     LibUsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>& parent);
-    RR_OVIRTUAL ~LibUsbDeviceManager() RR_OVERRIDE ;
+    RR_OVIRTUAL ~LibUsbDeviceManager() RR_OVERRIDE;
 
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE ;
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE;
 
   protected:
-    RR_OVIRTUAL RR_SHARED_PTR<UsbDevice> CreateDevice(const UsbDeviceManager_detected_device& device) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<UsbDevice> CreateDevice(const UsbDeviceManager_detected_device& device) RR_OVERRIDE;
 
-    RR_OVIRTUAL std::list<UsbDeviceManager_detected_device> GetDetectedDevicesPaths() RR_OVERRIDE ;
+    RR_OVIRTUAL std::list<UsbDeviceManager_detected_device> GetDetectedDevicesPaths() RR_OVERRIDE;
 
     // Call with lock
-    RR_OVIRTUAL bool InitUpdateDevices() RR_OVERRIDE ;
+    RR_OVIRTUAL bool InitUpdateDevices() RR_OVERRIDE;
 
     RR_SHARED_PTR<LibUsb_Functions> f;
     RR_SHARED_PTR<libusb_context> context;
@@ -374,30 +374,30 @@ class LibUsbDevice_Initialize : public UsbDevice_Initialize
   public:
     LibUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
                             const UsbDeviceManager_detected_device& detected_device);
-    RR_OVIRTUAL ~LibUsbDevice_Initialize() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~LibUsbDevice_Initialize() RR_OVERRIDE {}
 
     RR_OVIRTUAL void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
-                                      boost::asio::mutable_buffer& buf,
-                                      boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) RR_OVERRIDE ;
+                                          boost::asio::mutable_buffer& buf,
+                                          boost::function<void(const boost::system::error_code&, size_t)> handler,
+                                          const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) RR_OVERRIDE;
 
     // Call with lock
-    RR_OVIRTUAL void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
-                                            boost::asio::mutable_buffer& buf,
-                                            boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) RR_OVERRIDE ;
+    RR_OVIRTUAL void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue,
+                                                uint16_t wIndex, boost::asio::mutable_buffer& buf,
+                                                boost::function<void(const boost::system::error_code&, size_t)> handler,
+                                                const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) RR_OVERRIDE;
 
     // Call with lock
-    RR_OVIRTUAL UsbDeviceStatus OpenDevice(RR_SHARED_PTR<void>& dev_h) RR_OVERRIDE ;
+    RR_OVIRTUAL UsbDeviceStatus OpenDevice(RR_SHARED_PTR<void>& dev_h) RR_OVERRIDE;
 
     // Call with lock
     RR_OVIRTUAL UsbDeviceStatus ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
-                                             RR_SHARED_PTR<UsbDevice_Settings>& settings) RR_OVERRIDE ;
+                                                 RR_SHARED_PTR<UsbDevice_Settings>& settings) RR_OVERRIDE;
 
     // Call with lock
 
     RR_OVIRTUAL UsbDeviceStatus ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
-                                                  RR_SHARED_PTR<UsbDevice_Settings>& settings) RR_OVERRIDE ;
+                                                      RR_SHARED_PTR<UsbDevice_Settings>& settings) RR_OVERRIDE;
 
   protected:
     RR_SHARED_PTR<LibUsb_Functions> f;
@@ -409,43 +409,46 @@ class LibUsbDevice_Claim : public UsbDevice_Claim
   public:
     LibUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
                        const UsbDeviceManager_detected_device& detected_device);
-    RR_OVIRTUAL ~LibUsbDevice_Claim() RR_OVERRIDE ;
+    RR_OVIRTUAL ~LibUsbDevice_Claim() RR_OVERRIDE;
 
   protected:
     RR_OVIRTUAL void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
-                                      boost::asio::mutable_buffer& buf,
-                                      boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) RR_OVERRIDE ;
+                                          boost::asio::mutable_buffer& buf,
+                                          boost::function<void(const boost::system::error_code&, size_t)> handler,
+                                          const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) RR_OVERRIDE;
 
-    RR_OVIRTUAL void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
-                                            boost::asio::mutable_buffer& buf,
-                                            boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) RR_OVERRIDE ;
+    RR_OVIRTUAL void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue,
+                                                uint16_t wIndex, boost::asio::mutable_buffer& buf,
+                                                boost::function<void(const boost::system::error_code&, size_t)> handler,
+                                                const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf,
-                               boost::function<void(const boost::system::error_code&, size_t)> handler) RR_OVERRIDE ;
+                                   boost::function<void(const boost::system::error_code&, size_t)> handler) RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncReadPipeNoLock(uint8_t ep, boost::asio::mutable_buffer& buf,
-                                     boost::function<void(const boost::system::error_code&, size_t)> handler) RR_OVERRIDE ;
+                                         boost::function<void(const boost::system::error_code&, size_t)> handler)
+        RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncWritePipe(uint8_t ep, boost::asio::mutable_buffer& buf,
-                                boost::function<void(const boost::system::error_code&, size_t)> handler) RR_OVERRIDE ;
+                                    boost::function<void(const boost::system::error_code&, size_t)> handler)
+        RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncWritePipeNoLock(uint8_t ep, boost::asio::mutable_buffer& buf,
-                                      boost::function<void(const boost::system::error_code&, size_t)> handler) RR_OVERRIDE ;
+                                          boost::function<void(const boost::system::error_code&, size_t)> handler)
+        RR_OVERRIDE;
 
     void AsyncPipeOp(uint8_t ep, boost::asio::mutable_buffer& buf,
                      boost::function<void(const boost::system::error_code&, size_t)> handler);
 
     // Call with lock
-    RR_OVIRTUAL UsbDeviceStatus ClaimDevice(RR_SHARED_PTR<void>& dev_h) RR_OVERRIDE ;
+    RR_OVIRTUAL UsbDeviceStatus ClaimDevice(RR_SHARED_PTR<void>& dev_h) RR_OVERRIDE;
 
     // Call with lock
-    RR_OVIRTUAL void ReleaseClaim() RR_OVERRIDE ;
+    RR_OVIRTUAL void ReleaseClaim() RR_OVERRIDE;
 
-    RR_OVIRTUAL void DrawDownRequests(boost::function<void()> handler) RR_OVERRIDE ;
+    RR_OVIRTUAL void DrawDownRequests(boost::function<void()> handler) RR_OVERRIDE;
 
-    RR_OVIRTUAL void ClearHalt(uint8_t ep) RR_OVERRIDE ;
+    RR_OVIRTUAL void ClearHalt(uint8_t ep) RR_OVERRIDE;
 
     RR_SHARED_PTR<LibUsb_Functions> f;
 
@@ -462,10 +465,10 @@ class LibUsbDevice : public UsbDevice
   public:
     LibUsbDevice(const RR_SHARED_PTR<LibUsbDeviceManager>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
                  const UsbDeviceManager_detected_device& device);
-    RR_OVIRTUAL ~LibUsbDevice() RR_OVERRIDE ;
+    RR_OVIRTUAL ~LibUsbDevice() RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_SHARED_PTR<UsbDevice_Initialize> CreateInitialize() RR_OVERRIDE ;
-    RR_OVIRTUAL RR_SHARED_PTR<UsbDevice_Claim> CreateClaim() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<UsbDevice_Initialize> CreateInitialize() RR_OVERRIDE;
+    RR_OVIRTUAL RR_SHARED_PTR<UsbDevice_Claim> CreateClaim() RR_OVERRIDE;
 };
 } // namespace detail
 } // namespace RobotRaconteur

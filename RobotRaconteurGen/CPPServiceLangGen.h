@@ -130,10 +130,12 @@ class CPPServiceLangGen
                                    const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, std::ostream* w);
 
     static void GenerateStubDefinition(ServiceDefinition* d,
-                                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, std::ostream* w);
+                                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                       std::ostream* w);
 
     static void GenerateSkelDefinition(ServiceDefinition* d,
-                                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, std::ostream* w);
+                                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                       std::ostream* w);
 
     static void GenerateConstants(ServiceDefinition* d, std::ostream* w);
 

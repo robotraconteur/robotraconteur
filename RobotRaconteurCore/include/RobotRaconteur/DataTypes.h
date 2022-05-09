@@ -524,13 +524,13 @@ ROBOTRACONTEUR_CORE_API bool IsTypeNumeric(DataTypes type);
 class ROBOTRACONTEUR_CORE_API RRBaseArray : public MessageElementData
 {
   public:
-    RR_OVIRTUAL MessageStringPtr GetTypeString() RR_OVERRIDE 
+    RR_OVIRTUAL MessageStringPtr GetTypeString() RR_OVERRIDE
     {
         std::string type = GetRRDataTypeString(GetTypeID());
         return type + "[]";
     }
 
-     RR_OVIRTUAL  ~RRBaseArray()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~RRBaseArray() RR_OVERRIDE {}
 
     /**
      * @brief Get the number of elements in the array
@@ -539,7 +539,7 @@ class ROBOTRACONTEUR_CORE_API RRBaseArray : public MessageElementData
      */
     virtual size_t size() = 0;
 
-    RR_OVIRTUAL std::string RRType() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE;
 
     /**
      * @brief Get a void pointer to the contained array
@@ -577,23 +577,23 @@ template <typename T>
 class RRArray : public RRBaseArray
 {
   public:
-     RR_OVIRTUAL  DataTypes GetTypeID()  RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
+    RR_OVIRTUAL DataTypes GetTypeID() RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
 
     RRArray(T* data, size_t length, bool owned) : data_(data), owned(owned), element_count(length) {}
 
-     RR_OVIRTUAL  ~RRArray() RR_OVERRIDE 
+    RR_OVIRTUAL ~RRArray() RR_OVERRIDE
     {
         if (owned)
             delete[] data_;
     }
 
-     RR_OVIRTUAL  void* void_ptr()  RR_OVERRIDE { return data(); }
+    RR_OVIRTUAL void* void_ptr() RR_OVERRIDE { return data(); }
 
     T* operator->() const { return data; }
 
-    RR_OVIRTUAL size_t size()  RR_OVERRIDE { return element_count; }
+    RR_OVIRTUAL size_t size() RR_OVERRIDE { return element_count; }
 
-    RR_OVIRTUAL size_t ElementSize() RR_OVERRIDE  { return sizeof(T); }
+    RR_OVIRTUAL size_t ElementSize() RR_OVERRIDE { return sizeof(T); }
 
     // C++ container support functions based on boost::array
 
@@ -799,9 +799,9 @@ class RRMap : public RRValue
 
     RRMap(const std::map<K, RR_INTRUSIVE_PTR<T> >& mapin) : map(mapin) {}
 
-    RR_OVIRTUAL ~RRMap()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~RRMap() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return RRMap_keytype<K>::get_map_rrtype(); }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return RRMap_keytype<K>::get_map_rrtype(); }
 
     // C++ container support based on boost::container::map
 
@@ -925,9 +925,9 @@ class RRList : public RRValue
 
     RRList(std::list<RR_INTRUSIVE_PTR<T> > listin) { list = listin; }
 
-    RR_OVIRTUAL ~RRList()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~RRList() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string RRType()  RR_OVERRIDE { return "RobotRaconteur.RRList"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRList"; }
 
     // C++ container support based on boost::container::list
 
@@ -1034,7 +1034,7 @@ class RRList : public RRValue
 class ROBOTRACONTEUR_CORE_API RRStructure : public RRValue
 {
   public:
-    RR_OVIRTUAL ~RRStructure() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~RRStructure() RR_OVERRIDE {}
 };
 
 /**
@@ -1549,7 +1549,7 @@ static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR
 class ROBOTRACONTEUR_CORE_API RRMultiDimBaseArray : public RRValue
 {
   public:
-    RR_OVIRTUAL ~RRMultiDimBaseArray()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~RRMultiDimBaseArray() RR_OVERRIDE {}
 
     virtual DataTypes GetElementTypeID() = 0;
 };
@@ -1607,11 +1607,11 @@ class RRMultiDimArray : public RRMultiDimBaseArray
         this->Array = Array;
     }
 
-    RR_OVIRTUAL ~RRMultiDimArray()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~RRMultiDimArray() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return "RobotRaconteur.RRMultiDimArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRMultiDimArray"; }
 
-    RR_OVIRTUAL DataTypes GetElementTypeID() RR_OVERRIDE  { return RRPrimUtil<T>::GetTypeID(); }
+    RR_OVIRTUAL DataTypes GetElementTypeID() RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
 
     /**
      * @brief Retrieve a subset of an array
@@ -1885,11 +1885,11 @@ class RRPodArray : public RRPodBaseArray
 
     RRPodArray(const T& value_in) { pod_array.push_back(value_in); }
 
-    RR_OVIRTUAL ~RRPodArray()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~RRPodArray() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string RRType()  RR_OVERRIDE { return "RobotRaconteur.RRPodArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRPodArray"; }
 
-    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE  { return RRPrimUtil<T>::GetRRElementTypeString(); }
+    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
 
     // C++ container support based on boost::container::vector
 
@@ -2039,11 +2039,11 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
         this->PodArray = a;
     }
 
-    RR_OVIRTUAL ~RRPodMultiDimArray() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~RRPodMultiDimArray() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string RRType()  RR_OVERRIDE { return "RobotRaconteur.RRPodMultiDimArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRPodMultiDimArray"; }
 
-    RR_OVIRTUAL boost::string_ref RRElementTypeString()  RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
+    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
 
     /**
      * @brief Retrieve a subset of an array
@@ -2288,19 +2288,19 @@ class RRNamedArray : public RRNamedBaseArray
     /** @brief get a void pointer to the underlying numeric array */
     virtual void* void_ptr() { return rr_array->void_ptr(); }
     /** @brief get the number of bytes per `namedarray` element of the array */
-    RR_OVIRTUAL size_t ElementSize() RR_OVERRIDE  { return sizeof(T); }
+    RR_OVIRTUAL size_t ElementSize() RR_OVERRIDE { return sizeof(T); }
     /** @brief get the type of the underlying numeric array */
-    RR_OVIRTUAL DataTypes ElementArrayType() RR_OVERRIDE  { return RRPrimUtil<T>::GetElementArrayTypeID(); }
+    RR_OVIRTUAL DataTypes ElementArrayType() RR_OVERRIDE { return RRPrimUtil<T>::GetElementArrayTypeID(); }
     /** @brief get the total number of elements in the underlying numeric array */
-    RR_OVIRTUAL size_t ElementArrayCount() RR_OVERRIDE  { return RRPrimUtil<T>::ElementArrayCount; }
+    RR_OVIRTUAL size_t ElementArrayCount() RR_OVERRIDE { return RRPrimUtil<T>::ElementArrayCount; }
     /** @brief get the underlying numeric RRArray */
     virtual RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > GetNumericArray() { return rr_array; }
     /** @brief get the underlying numeric array as an RRBaseArray */
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRBaseArray> GetNumericBaseArray()  RR_OVERRIDE  { return rr_array; }
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRBaseArray> GetNumericBaseArray() RR_OVERRIDE { return rr_array; }
 
-    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return "RobotRaconteur.RRNamedArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRNamedArray"; }
 
-    RR_OVIRTUAL boost::string_ref RRElementTypeString()  RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
+    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
 
     // C++ container support functions based on boost::array
 
@@ -2456,9 +2456,9 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
 
     RR_OVIRTUAL ~RRNamedMultiDimArray() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string RRType()  RR_OVERRIDE { return "RobotRaconteur.RRNamedMultiDimArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRNamedMultiDimArray"; }
 
-    RR_OVIRTUAL boost::string_ref RRElementTypeString()  RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
+    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
 
     /**
      * @brief Retrieve a subset of an array

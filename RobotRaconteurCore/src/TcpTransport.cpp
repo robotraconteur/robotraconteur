@@ -773,11 +773,12 @@ void TcpConnector::handle_error(const int32_t& key, const RR_SHARED_PTR<RobotRac
 
 // class TcpAcceptor
 
-void TcpAcceptor::AcceptSocket6(
-    const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-    const RR_SHARED_PTR<TcpTransportConnection>& t,
-    const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                               const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void TcpAcceptor::AcceptSocket6(const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
+                                const RR_SHARED_PTR<TcpTransportConnection>& t,
+                                const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
+                                                           const RR_SHARED_PTR<ITransportConnection>&,
+                                                           const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     if (err)
     {
@@ -797,12 +798,13 @@ void TcpAcceptor::AcceptSocket6(
     handler(socket, t, err);
 }
 
-void TcpAcceptor::AcceptSocket5(
-    const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-    const RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> >& websocket,
-    const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
-    const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                               const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void TcpAcceptor::AcceptSocket5(const boost::system::error_code& ec,
+                                const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
+                                const RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> >& websocket,
+                                const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
+                                const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
+                                                           const RR_SHARED_PTR<ITransportConnection>&,
+                                                           const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_UNUSED(socket_closer);
     if (ec)
@@ -845,12 +847,13 @@ void TcpAcceptor::AcceptSocket4(const RR_SHARED_PTR<std::string>& dat,
                                 const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer)
 {}
 
-void TcpAcceptor::AcceptSocket3(
-    const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::deadline_timer>& timer,
-    const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-    const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
-    const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                               const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void TcpAcceptor::AcceptSocket3(const boost::system::error_code& ec,
+                                const RR_SHARED_PTR<boost::asio::deadline_timer>& timer,
+                                const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
+                                const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
+                                const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
+                                                           const RR_SHARED_PTR<ITransportConnection>&,
+                                                           const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_UNUSED(ec);
     RR_UNUSED(timer);
@@ -859,11 +862,12 @@ void TcpAcceptor::AcceptSocket3(
                                       boost::asio::placeholders::bytes_transferred, socket, socket_closer, handler));
 }
 
-void TcpAcceptor::AcceptSocket2(
-    const boost::system::error_code& ec, size_t n, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-    const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
-    const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                               const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void TcpAcceptor::AcceptSocket2(const boost::system::error_code& ec, size_t n,
+                                const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
+                                const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
+                                const boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
+                                                           const RR_SHARED_PTR<ITransportConnection>&,
+                                                           const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
 
     if (ec)
@@ -1006,7 +1010,8 @@ void TcpAcceptor::AcceptSocket(
 
     socket->async_receive(boost::asio::buffer(buf, 4), boost::asio::ip::tcp::socket::message_peek,
                           boost::bind(&TcpAcceptor::AcceptSocket2, shared_from_this(), boost::asio::placeholders::error,
-                                      boost::asio::placeholders::bytes_transferred, socket, socket_closer, RR_MOVE(handler)));
+                                      boost::asio::placeholders::bytes_transferred, socket, socket_closer,
+                                      RR_MOVE(handler)));
 }
 
 // end class TcpAcceptor

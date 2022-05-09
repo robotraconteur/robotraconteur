@@ -1811,7 +1811,7 @@ int main(int argc, char* argv[])
         }
 
         std::vector<ServiceDefinitionParseException> warnings;
-        VerifyServiceDefinitions(defs,warnings);
+        VerifyServiceDefinitions(defs, warnings);
 
         for (size_t i = 0; i < defs.size(); i++)
         {

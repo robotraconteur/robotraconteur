@@ -87,8 +87,9 @@ class ROBOTRACONTEUR_CORE_API ITransportConnection : boost::noncopyable
 
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
-    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
+    virtual void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
     virtual void Close() = 0;
 
@@ -120,7 +121,7 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
   public:
     friend class RobotRaconteurNode;
     friend class ITransport;
-    RR_OVIRTUAL ~Transport() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~Transport() RR_OVERRIDE {}
 
   protected:
     RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -164,8 +165,9 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
-    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
+    virtual void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
@@ -174,7 +176,7 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual void Close();
 
-    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE ;
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE;
 
     virtual uint32_t TransportCapability(boost::string_ref name);
 

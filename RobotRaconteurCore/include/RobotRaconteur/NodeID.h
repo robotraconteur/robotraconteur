@@ -179,7 +179,7 @@ class ROBOTRACONTEUR_CORE_API NodeID : virtual public RRObject
     /** @internal for std::unordered_map compatibility */
     virtual int32_t GetHashCode() const;
 
-    RR_OVIRTUAL std::string RRType()  RR_OVERRIDE { return "RobotRaconteur::NodeID"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur::NodeID"; }
 
   private:
     void init_from_string(const boost::string_ref& id);

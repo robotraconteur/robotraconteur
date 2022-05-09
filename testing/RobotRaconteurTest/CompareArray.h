@@ -44,4 +44,4 @@ void ca(const std::vector<T>& v1, const std::vector<T>& v2)
 }
 
 } // namespace RobotRaconteurTest
-// NOLINTEND
+  // NOLINTEND

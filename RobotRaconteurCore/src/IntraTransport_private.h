@@ -28,30 +28,31 @@ class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnec
 
     virtual void AcceptMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
-    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
-    RR_OVIRTUAL void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE ;
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE;
 
-    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE;
 
-    RR_OVIRTUAL NodeID GetRemoteNodeID() RR_OVERRIDE ;
+    RR_OVIRTUAL NodeID GetRemoteNodeID() RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurNode> GetNode() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurNode> GetNode() RR_OVERRIDE;
 
-    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
-    RR_OVIRTUAL bool CheckCapabilityActive(uint32_t flag) RR_OVERRIDE ;
+    RR_OVIRTUAL bool CheckCapabilityActive(uint32_t flag) RR_OVERRIDE;
 
     void SetPeer(const RR_SHARED_PTR<IntraTransportConnection>& peer);
 
     bool IsConnected();
 
-    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE;
 
   protected:
     static void ProcessNextRecvMessage(RR_WEAK_PTR<IntraTransportConnection> c);

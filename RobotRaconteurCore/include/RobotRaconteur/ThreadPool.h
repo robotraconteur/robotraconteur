@@ -202,14 +202,14 @@ class ROBOTRACONTEUR_CORE_API IOContextThreadPool : public ThreadPool
      */
     IOContextThreadPool(const RR_SHARED_PTR<RobotRaconteurNode>& node, RR_BOOST_ASIO_IO_CONTEXT& external_io_context,
                         bool multithreaded);
-    RR_OVIRTUAL ~IOContextThreadPool() RR_OVERRIDE ;
+    RR_OVIRTUAL ~IOContextThreadPool() RR_OVERRIDE;
 
     /**
      * @brief Returns 1 if single threaded, 2 if multithreaded
      *
      * @return size_t
      */
-    RR_OVIRTUAL size_t GetThreadPoolCount() RR_OVERRIDE ;
+    RR_OVIRTUAL size_t GetThreadPoolCount() RR_OVERRIDE;
 
     /**
      * @brief Invalid for IOContextThreadPool, throws InvalidOperationException
@@ -218,14 +218,14 @@ class ROBOTRACONTEUR_CORE_API IOContextThreadPool : public ThreadPool
      *
      * @param count
      */
-    RR_OVIRTUAL void SetThreadPoolCount(size_t count) RR_OVERRIDE ;
+    RR_OVIRTUAL void SetThreadPoolCount(size_t count) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Post(boost::function<void()> function) RR_OVERRIDE ;
-    RR_OVIRTUAL bool TryPost(boost::function<void()> function) RR_OVERRIDE ;
+    RR_OVIRTUAL void Post(boost::function<void()> function) RR_OVERRIDE;
+    RR_OVIRTUAL bool TryPost(boost::function<void()> function) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE ;
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_BOOST_ASIO_IO_CONTEXT& get_io_context() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_BOOST_ASIO_IO_CONTEXT& get_io_context() RR_OVERRIDE;
 };
 
 namespace detail

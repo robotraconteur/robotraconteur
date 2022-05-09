@@ -42,8 +42,9 @@ class JavaServiceLangGen
 
     static convert_type_result convert_type_array(TypeDefinition tdef);
 
-    static std::string str_pack_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
-                                    const boost::shared_ptr<TypeDefinition>& rettype = boost::shared_ptr<TypeDefinition>());
+    static std::string str_pack_delegate(
+        const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
+        const boost::shared_ptr<TypeDefinition>& rettype = boost::shared_ptr<TypeDefinition>());
 
     static std::string str_pack_parameters(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass);
 

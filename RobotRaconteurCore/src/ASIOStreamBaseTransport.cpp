@@ -247,7 +247,8 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(
 }
 
 void ASIOStreamBaseTransport::AsyncSendMessage(
-    const RR_INTRUSIVE_PTR<Message>& m, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
     if (!connected.load())
@@ -395,7 +396,8 @@ void ASIOStreamBaseTransport::AsyncSendMessage(
 }
 
 void ASIOStreamBaseTransport::SimpleAsyncSendMessage(
-    const RR_INTRUSIVE_PTR<Message>& m, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     if (!connected.load())
         return;
@@ -422,7 +424,8 @@ void ASIOStreamBaseTransport::SimpleAsyncEndSendMessage(const RR_SHARED_PTR<Robo
 }
 
 void ASIOStreamBaseTransport::BeginSendMessage(
-    const RR_INTRUSIVE_PTR<Message>& m, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Begin sending message to stream");
 
@@ -536,7 +539,8 @@ void ASIOStreamBaseTransport::BeginSendMessage(
 }
 
 void ASIOStreamBaseTransport::BeginSendMessage1(
-    const RR_INTRUSIVE_PTR<Message>& m, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
     async_writer->Reset();
@@ -1891,7 +1895,8 @@ uint32_t ASIOStreamBaseTransport::StreamCapabilities(boost::string_ref name)
 }
 
 void ASIOStreamBaseTransport::AsyncCheckStreamCapability(
-    boost::string_ref name, const boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    boost::string_ref name,
+    const boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
     boost::mutex::scoped_lock lock(CheckStreamCapability_lock);
@@ -1914,7 +1919,8 @@ void ASIOStreamBaseTransport::AsyncCheckStreamCapability(
 }
 
 void ASIOStreamBaseTransport::BeginCheckStreamCapability(
-    boost::string_ref name, const boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+    boost::string_ref name,
+    const boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
     {

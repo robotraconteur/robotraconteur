@@ -134,7 +134,7 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageReaderImpl : public AsyncMessageReader
 
   public:
     AsyncMessageReaderImpl();
-    RR_OVIRTUAL ~AsyncMessageReaderImpl() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~AsyncMessageReaderImpl() RR_OVERRIDE {}
 
     size_t& message_len();
 
@@ -184,13 +184,13 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageReaderImpl : public AsyncMessageReader
     bool read_string4(MessageStringPtr& str, state_type next_state);
     bool read_string4(MessageStringPtr& str); // next_state=state()++
 
-    RR_OVIRTUAL void Reset() RR_OVERRIDE ;
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
     RR_OVIRTUAL return_type Read(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len,
-                             mutable_buffers& next_continue_read_bufs) RR_OVERRIDE ;
+                                 mutable_buffers& next_continue_read_bufs) RR_OVERRIDE;
     RR_OVIRTUAL return_type Read4(const const_buffers& other_bufs, size_t& other_bufs_used, size_t continue_read_len,
-                              mutable_buffers& next_continue_read_bufs) RR_OVERRIDE ;
+                                  mutable_buffers& next_continue_read_bufs) RR_OVERRIDE;
 
-    RR_OVIRTUAL bool MessageReady() RR_OVERRIDE ;
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<Message> GetNextMessage() RR_OVERRIDE ;
+    RR_OVIRTUAL bool MessageReady() RR_OVERRIDE;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<Message> GetNextMessage() RR_OVERRIDE;
 };
 } // namespace RobotRaconteur

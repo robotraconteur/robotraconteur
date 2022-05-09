@@ -2,7 +2,6 @@
 #include "stdafx.h"
 #endif
 
-
 #include "ServiceTestClient2.h"
 // NOLINTBEGIN
 

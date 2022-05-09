@@ -226,9 +226,9 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinitionParseException : public ServiceDe
      */
     virtual std::string ToString() const;
 
-    RR_OVIRTUAL const char* what() const throw() RR_OVERRIDE ;
+    RR_OVIRTUAL const char* what() const throw() RR_OVERRIDE;
 
-    RR_OVIRTUAL ~ServiceDefinitionParseException() throw() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~ServiceDefinitionParseException() throw() RR_OVERRIDE {}
 
   private:
     std::string what_store;
@@ -280,9 +280,9 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinitionVerifyException : public ServiceD
      */
     virtual std::string ToString() const;
 
-    RR_OVIRTUAL const char* what() const throw() RR_OVERRIDE ;
+    RR_OVIRTUAL const char* what() const throw() RR_OVERRIDE;
 
-    RR_OVIRTUAL ~ServiceDefinitionVerifyException() throw()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~ServiceDefinitionVerifyException() throw() RR_OVERRIDE {}
 
   private:
     std::string what_store;
@@ -554,7 +554,7 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      */
     ServiceEntryDefinition(const RR_SHARED_PTR<ServiceDefinition>& def);
 
-    RR_OVIRTUAL ~ServiceEntryDefinition()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~ServiceEntryDefinition() RR_OVERRIDE {}
 
     /**
      * @brief Convert service entry definition to a string
@@ -639,8 +639,8 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      */
     void Reset();
 
-    RR_OVIRTUAL DataTypes RRDataType()  const RR_OVERRIDE ;
-    RR_OVIRTUAL std::string ResolveQualifiedName() RR_OVERRIDE ;
+    RR_OVIRTUAL DataTypes RRDataType() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ResolveQualifiedName() RR_OVERRIDE;
 };
 
 /**
@@ -739,14 +739,14 @@ class ROBOTRACONTEUR_CORE_API PropertyDefinition : public MemberDefinition
      */
     PropertyDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL ~PropertyDefinition()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~PropertyDefinition() RR_OVERRIDE {}
 
     /**
      * @brief Convert to a property definition string
      *
      * Use ToString(true) to convert to a field definition
      */
-    RR_OVIRTUAL std::string ToString()  const RR_OVERRIDE ;
+    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
 
     /**
      * @brief Convert to a property or field definition string
@@ -771,7 +771,7 @@ class ROBOTRACONTEUR_CORE_API PropertyDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    RR_OVIRTUAL void Reset() RR_OVERRIDE ;
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 
     /**
      * @brief The direction of the property
@@ -813,7 +813,7 @@ class ROBOTRACONTEUR_CORE_API FunctionDefinition : public MemberDefinition
      */
     FunctionDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const  RR_OVERRIDE ;
+    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
 
     /**
      * @brief Parse a function definition from string
@@ -866,7 +866,7 @@ class ROBOTRACONTEUR_CORE_API EventDefinition : public MemberDefinition
      */
     EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE ;
+    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
 
     /**
      * @brief Parse an event definition from string
@@ -972,7 +972,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      */
     PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE ;
+    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
 
     /**
      * @brief Parse a pipe definition from string
@@ -1024,7 +1024,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
 class ROBOTRACONTEUR_CORE_API CallbackDefinition : public MemberDefinition
 {
   public:
-    RR_OVIRTUAL ~CallbackDefinition() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~CallbackDefinition() RR_OVERRIDE {}
 
     /** @brief The return type of the callback. May be `void`. */
     RR_SHARED_PTR<TypeDefinition> ReturnType;
@@ -1040,7 +1040,7 @@ class ROBOTRACONTEUR_CORE_API CallbackDefinition : public MemberDefinition
      */
     CallbackDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const  RR_OVERRIDE ;
+    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
 
     /**
      * @brief Parse a callback definition from string
@@ -1081,7 +1081,7 @@ class ROBOTRACONTEUR_CORE_API WireDefinition : public MemberDefinition
      */
     WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE ;
+    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
 
     /**
      * @brief Parse a wire definition from string
@@ -1133,7 +1133,7 @@ class ROBOTRACONTEUR_CORE_API MemoryDefinition : public MemberDefinition
      */
     MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const  RR_OVERRIDE ;
+    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
 
     /**
      * @brief Parse a memory definition from string
@@ -1710,7 +1710,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
      */
     void Reset();
 
-    RR_OVIRTUAL DataTypes RRDataType() const  RR_OVERRIDE ;
+    RR_OVIRTUAL DataTypes RRDataType() const RR_OVERRIDE;
     RR_OVIRTUAL std::string ResolveQualifiedName() RR_OVERRIDE;
 };
 

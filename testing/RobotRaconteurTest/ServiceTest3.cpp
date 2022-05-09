@@ -96,7 +96,7 @@ void asynctestroot_impl::async_get_s3(
 }
 
 void asynctestroot_impl::async_set_s3(
-    const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService5::teststruct4> &value,
+    const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService5::teststruct4>& value,
     boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
 {
     throw RobotRaconteur::NotImplementedException("");

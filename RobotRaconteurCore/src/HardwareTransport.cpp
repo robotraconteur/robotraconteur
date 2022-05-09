@@ -660,8 +660,9 @@ void HardwareTransport::PeriodicCleanupTask()
     }
 }
 
-void HardwareTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void HardwareTransport::AsyncSendMessage(
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
 
     RR_SHARED_PTR<ITransportConnection> t;

@@ -37,4 +37,4 @@ class AsyncMessageWriterTest
     static void LoadRandomTest();
 };
 } // namespace RobotRaconteurTest
-// NOLINTEND
+  // NOLINTEND

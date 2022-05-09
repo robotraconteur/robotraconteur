@@ -95,10 +95,10 @@ class WireSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<WireSubscr
     void ClientConnected2(const RR_SHARED_PTR<WireConnectionBase>& connection,
                           const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    RR_OVIRTUAL void WireConnectionClosed(const RR_SHARED_PTR<WireConnectionBase>& connection) RR_OVERRIDE ;
-    RR_OVIRTUAL void WireValueChanged(const RR_SHARED_PTR<WireConnectionBase>& connection, const RR_INTRUSIVE_PTR<RRValue>& value,
-                          const TimeSpec& time) RR_OVERRIDE ;
-    RR_OVIRTUAL ~WireSubscription_connection() RR_OVERRIDE ;
+    RR_OVIRTUAL void WireConnectionClosed(const RR_SHARED_PTR<WireConnectionBase>& connection) RR_OVERRIDE;
+    RR_OVIRTUAL void WireValueChanged(const RR_SHARED_PTR<WireConnectionBase>& connection,
+                                      const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time) RR_OVERRIDE;
+    RR_OVIRTUAL ~WireSubscription_connection() RR_OVERRIDE;
 
     void SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& value);
 
@@ -132,10 +132,11 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
     void ClientConnected2(const RR_SHARED_PTR<PipeEndpointBase>& connection,
                           const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    RR_OVIRTUAL void PipeEndpointClosed(const RR_SHARED_PTR<PipeEndpointBase>& endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void PipeEndpointClosed(const RR_SHARED_PTR<PipeEndpointBase>& endpoint) RR_OVERRIDE;
     RR_OVIRTUAL void PipePacketReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint,
-                                    const boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)>& receive_packet_func) RR_OVERRIDE ;
-    RR_OVIRTUAL void PipePacketAckReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint, uint32_t pnum) RR_OVERRIDE ;
+                                        const boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)>& receive_packet_func)
+        RR_OVERRIDE;
+    RR_OVIRTUAL void PipePacketAckReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint, uint32_t pnum) RR_OVERRIDE;
 
     // Call with PipeSubscription::this_lock locked
     bool DoSendPacket();
@@ -147,7 +148,7 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
 
     void Close();
 
-    RR_OVIRTUAL ~PipeSubscription_connection() RR_OVERRIDE ;
+    RR_OVIRTUAL ~PipeSubscription_connection() RR_OVERRIDE;
 
   protected:
     RR_WEAK_PTR<PipeSubscriptionBase> parent;

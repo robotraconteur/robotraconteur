@@ -50,8 +50,9 @@ class CSharpServiceLangGen
 
     static convert_generator_result convert_generator(FunctionDefinition* f);
 
-    static std::string str_pack_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
-                                    const boost::shared_ptr<TypeDefinition>& rettype = boost::shared_ptr<TypeDefinition>());
+    static std::string str_pack_delegate(
+        const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
+        const boost::shared_ptr<TypeDefinition>& rettype = boost::shared_ptr<TypeDefinition>());
 
     static std::string str_pack_parameters(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass);
 

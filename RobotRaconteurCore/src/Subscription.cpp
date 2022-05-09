@@ -106,10 +106,7 @@ void ServiceSubscription_retrytimer::timer_handler(RR_WEAK_PTR<ServiceSubscripti
 } // namespace detail
 static void ServiceSubscription_close_handler() {}
 
-ServiceSubscriptionFilter::ServiceSubscriptionFilter()
-{
-    MaxConnections=0;
-}
+ServiceSubscriptionFilter::ServiceSubscriptionFilter() { MaxConnections = 0; }
 
 ServiceSubscriptionClientID::ServiceSubscriptionClientID(const ::RobotRaconteur::NodeID& nodeid,
                                                          boost::string_ref service_name)
@@ -1378,10 +1375,10 @@ class AsyncGetDefaultClientBase_impl : public RR_ENABLE_SHARED_FROM_THIS<AsyncGe
     ServiceSubscription::event_connection evt_connection;
 
   public:
-    void Init(
-        RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<ServiceSubscription>& subscription,
-        const boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
-        int32_t timeout)
+    void Init(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<ServiceSubscription>& subscription,
+              const boost::function<void(const RR_SHARED_PTR<RRObject>&,
+                                         const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+              int32_t timeout)
     {
         boost::mutex::scoped_lock lock(this_lock);
 

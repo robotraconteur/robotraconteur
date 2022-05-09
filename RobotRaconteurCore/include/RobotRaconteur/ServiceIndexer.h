@@ -37,13 +37,15 @@ class ServiceIndexer : public virtual RobotRaconteurServiceIndex::ServiceIndex
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
     RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >
-    GetLocalNodeServices() RR_OVERRIDE ;
+    GetLocalNodeServices() RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes()
+        RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > GetDetectedNodes() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> >
+    GetDetectedNodes() RR_OVERRIDE;
 
-    RR_OVIRTUAL boost::signals2::signal<void()>& get_LocalNodeServicesChanged() RR_OVERRIDE ;
+    RR_OVIRTUAL boost::signals2::signal<void()>& get_LocalNodeServicesChanged() RR_OVERRIDE;
 
   private:
     boost::signals2::signal<void()> ev;

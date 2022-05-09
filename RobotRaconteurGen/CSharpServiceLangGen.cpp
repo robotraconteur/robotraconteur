@@ -696,13 +696,14 @@ void CSharpServiceLangGen::GeneratePod(const RR_SHARED_PTR<ServiceEntryDefinitio
         convert_type_result t6 = convert_type(t5);
 
         w2 << "    public " << t6.cs_type << "[] GetNumericArray()" << std::endl << "    {" << std::endl;
-        w2 << "    var a=new ArraySegment<" << t6.cs_type
-           << ">(new " << t6.cs_type << "[" << boost::lexical_cast<std::string>(t4.get<1>()) << "]);" << std::endl;
+        w2 << "    var a=new ArraySegment<" << t6.cs_type << ">(new " << t6.cs_type << "["
+           << boost::lexical_cast<std::string>(t4.get<1>()) << "]);" << std::endl;
         w2 << "    GetNumericArray(ref a);" << std::endl;
         w2 << "    return a.Array;" << std::endl;
         w2 << "    }" << std::endl;
 
-        w2 << "    public void GetNumericArray(ref ArraySegment<" << t6.cs_type << "> rr_a)" << std::endl << "    {" << std::endl;
+        w2 << "    public void GetNumericArray(ref ArraySegment<" << t6.cs_type << "> rr_a)" << std::endl
+           << "    {" << std::endl;
         {
             w2 << "    if(rr_a.Count < " << t4.get<1>()
                << ") throw new ArgumentException(\"ArraySegment invalid length\");" << std::endl;
@@ -797,15 +798,14 @@ void CSharpServiceLangGen::GenerateNamedArrayExtensions(const RR_SHARED_PTR<Serv
 
     w2 << "    public static " << t3.cs_type << "[] GetNumericArray(this " << fix_name(e->Name) << "[] s)" << std::endl
        << "    {" << std::endl;
-    w2 << "    var a=new ArraySegment<" << t3.cs_type
-       << ">(new " << t3.cs_type << "[" << boost::lexical_cast<std::string>(t1.get<1>()) << " * s.Length]);" << std::endl;
+    w2 << "    var a=new ArraySegment<" << t3.cs_type << ">(new " << t3.cs_type << "["
+       << boost::lexical_cast<std::string>(t1.get<1>()) << " * s.Length]);" << std::endl;
     w2 << "    s.GetNumericArray(ref a);" << std::endl;
     w2 << "    return a.Array;" << std::endl;
     w2 << "    }" << std::endl;
 
-    w2 << "    public static void GetNumericArray(this " << fix_name(e->Name) << "[] s, ref ArraySegment<" << t3.cs_type <<
-              "> a)"
-       << std::endl
+    w2 << "    public static void GetNumericArray(this " << fix_name(e->Name) << "[] s, ref ArraySegment<" << t3.cs_type
+       << "> a)" << std::endl
        << "    {" << std::endl;
     w2 << "    if(a.Count < " << t1.get<1>()
        << " * s.Length) throw new ArgumentException(\"ArraySegment invalid length\");" << std::endl;
@@ -816,9 +816,8 @@ void CSharpServiceLangGen::GenerateNamedArrayExtensions(const RR_SHARED_PTR<Serv
     w2 << "    }" << std::endl;
     w2 << "    }" << std::endl;
 
-    w2 << "    public static void AssignFromNumericArray(this " << fix_name(e->Name) << "[] s, ref ArraySegment<" <<
-              t3.cs_type + "> a)"
-       << std::endl
+    w2 << "    public static void AssignFromNumericArray(this " << fix_name(e->Name) << "[] s, ref ArraySegment<"
+       << t3.cs_type + "> a)" << std::endl
        << "    {" << std::endl;
     w2 << "    if(a.Count < " << t1.get<1>()
        << " * s.Length) throw new ArgumentException(\"ArraySegment invalid length\");" << std::endl;
@@ -914,8 +913,8 @@ void CSharpServiceLangGen::GenerateInterface(ServiceEntryDefinition* e, std::ost
 
     MEMBER_ITER2(CallbackDefinition)
     GenerateDocString(m->DocString, "    ", w);
-    w2 << "    Callback<" << str_pack_delegate(m->Parameters, m->ReturnType) << "> " << fix_name(m->Name) << " {get; set;}"
-       << std::endl;
+    w2 << "    Callback<" << str_pack_delegate(m->Parameters, m->ReturnType) << "> " << fix_name(m->Name)
+       << " {get; set;}" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(WireDefinition)
@@ -949,7 +948,8 @@ void CSharpServiceLangGen::GenerateInterface(ServiceEntryDefinition* e, std::ost
         w2 << "    " << c << "ArrayMemory<" << t.cs_type << "> " << fix_name(m->Name) << " { get; }" << std::endl;
         break;
     case DataTypes_ArrayTypes_multidimarray:
-        w2 << "    " << c << "MultiDimArrayMemory<" << t.cs_type << "> " << fix_name(m->Name) << " { get; }" << std::endl;
+        w2 << "    " << c << "MultiDimArrayMemory<" << t.cs_type << "> " << fix_name(m->Name) << " { get; }"
+           << std::endl;
         break;
     default:
         throw DataTypeException("Invalid memory definition");
@@ -1003,7 +1003,8 @@ void CSharpServiceLangGen::GenerateInterfaceFile(ServiceDefinition* d, std::ostr
     BOOST_FOREACH (const RR_SHARED_PTR<ExceptionDefinition>& e, d->Exceptions)
     {
         GenerateDocString(e->DocString, "    ", w);
-        w2 << "public class " << fix_name(e->Name) << " : RobotRaconteurRemoteException" << std::endl << "{" << std::endl;
+        w2 << "public class " << fix_name(e->Name) << " : RobotRaconteurRemoteException" << std::endl
+           << "{" << std::endl;
 
         w2 << "    public " << fix_name(e->Name)
            << "(string message,string errorsubname=null,object param=null) : base(\"" << d->Name << "." << e->Name
@@ -1084,7 +1085,8 @@ void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const st
 {
     std::ostream& w2 = *w;
 
-    w2 << "public class " << boost::replace_all_copy(fix_name(d->Name), ".", "__") << "Factory : ServiceFactory" << std::endl
+    w2 << "public class " << boost::replace_all_copy(fix_name(d->Name), ".", "__") << "Factory : ServiceFactory"
+       << std::endl
        << "{" << std::endl;
     w2 << "    public override string DefString()" << std::endl << "{" << std::endl;
     w2 << "    const string s=\"";
@@ -1119,16 +1121,19 @@ void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const st
     {
         w2 << "    public " << fix_name((*e)->Name) << "_stub " << fix_name((*e)->Name) << "_stubentry;" << std::endl;
     }
-    w2 << "    public " << boost::replace_all_copy(fix_name(d->Name), ".", "__") << "Factory()" << std::endl << "{" << std::endl;
+    w2 << "    public " << boost::replace_all_copy(fix_name(d->Name), ".", "__") << "Factory()" << std::endl
+       << "{" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin();
          e != d->Structures.end(); ++e)
     {
-        w2 << "    " << fix_name((*e)->Name) << "_stubentry=new " << fix_name((*e)->Name) << "_stub(this);" << std::endl;
+        w2 << "    " << fix_name((*e)->Name) << "_stubentry=new " << fix_name((*e)->Name) << "_stub(this);"
+           << std::endl;
     }
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end();
          ++e)
     {
-        w2 << "    " << fix_name((*e)->Name) << "_stubentry=new " << fix_name((*e)->Name) << "_stub(this);" << std::endl;
+        w2 << "    " << fix_name((*e)->Name) << "_stubentry=new " << fix_name((*e)->Name) << "_stub(this);"
+           << std::endl;
     }
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin();
          e != d->NamedArrays.end(); ++e)
@@ -1137,7 +1142,8 @@ void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const st
     }
     w2 << "    }" << std::endl;
 
-    w2 << "    public override IStructureStub FindStructureStub(string objecttype)" << std::endl << "    {" << std::endl;
+    w2 << "    public override IStructureStub FindStructureStub(string objecttype)" << std::endl
+       << "    {" << std::endl;
     // w2 << "    string objshort=RemovePath(objecttype);" << std::endl;
 
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin();
@@ -1161,7 +1167,8 @@ void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const st
     w2 << "    throw new DataTypeException(\"Cannot find appropriate pod stub\");" << std::endl;
     w2 << "    }" << std::endl;
 
-    w2 << "    public override INamedArrayStub FindNamedArrayStub(string objecttype)" << std::endl << "    {" << std::endl;
+    w2 << "    public override INamedArrayStub FindNamedArrayStub(string objecttype)" << std::endl
+       << "    {" << std::endl;
     // w2 << "    string objshort=RemovePath(objecttype);" << std::endl;
 
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin();
@@ -1248,25 +1255,22 @@ void CSharpServiceLangGen::GenerateStructureStub(ServiceEntryDefinition* e, std:
     std::ostream& w2 = *w;
 
     w2 << "public class " << fix_name(e->Name) << "_stub : IStructureStub {" << std::endl;
-    w2 << "    public " << fix_name(e->Name) << "_stub(" <<
-              boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") + "Factory d) {def=d;}"
+    w2 << "    public " << fix_name(e->Name) << "_stub("
+       << boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") + "Factory d) {def=d;}"
        << std::endl;
-    w2 << "    private " << boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") <<
-              "Factory def;"
-       << std::endl;
+    w2 << "    private " << boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__")
+       << "Factory def;" << std::endl;
     w2 << "    public MessageElementNestedElementList PackStructure(object s1) {" << std::endl;
 
     w2 << "    using(vectorptr_messageelement m=new vectorptr_messageelement())" << std::endl << "    {" << std::endl;
     w2 << "    if (s1 ==null) return null;" << std::endl;
     w2 << "    " << fix_qualified_name(e->Name) << " s = (" << fix_qualified_name(e->Name) << ")s1;" << std::endl;
     MEMBER_ITER2(PropertyDefinition)
-    w2 << "    MessageElementUtil.AddMessageElementDispose(m," <<
-              str_pack_message_element(m->Name, "s." + fix_name(m->Name), m->Type, "def") + ");"
-       << std::endl;
+    w2 << "    MessageElementUtil.AddMessageElementDispose(m,"
+       << str_pack_message_element(m->Name, "s." + fix_name(m->Name), m->Type, "def") + ");" << std::endl;
     MEMBER_ITER_END()
-    w2 << "    return new MessageElementNestedElementList(DataTypes.structure_t,\"" <<
-              e->ServiceDefinition_.lock()->Name + "." + e->Name + "\",m);"
-       << std::endl;
+    w2 << "    return new MessageElementNestedElementList(DataTypes.structure_t,\""
+       << e->ServiceDefinition_.lock()->Name + "." + e->Name + "\",m);" << std::endl;
     w2 << "    }" << std::endl;
     w2 << "    }" << std::endl;
 
@@ -1281,8 +1285,8 @@ void CSharpServiceLangGen::GenerateStructureStub(ServiceEntryDefinition* e, std:
     convert_type_result t = convert_type(*m->Type);
     t.name = m->Name;
 
-    w2 << "    s." << fix_name(t.name) << " =" <<
-              str_unpack_message_element("MessageElement.FindElement(mm,\"" + t.name + "\")", m->Type, "def") << ";"
+    w2 << "    s." << fix_name(t.name) << " ="
+       << str_unpack_message_element("MessageElement.FindElement(mm,\"" + t.name + "\")", m->Type, "def") << ";"
        << std::endl;
 
     MEMBER_ITER_END()
@@ -1302,20 +1306,19 @@ void CSharpServiceLangGen::GeneratePodStub(ServiceEntryDefinition* e, std::ostre
     std::ostream& w2 = *w;
 
     w2 << "public class " << fix_name(e->Name) << "_stub : PodStub<" << fix_name(e->Name) << "> {" << std::endl;
-    w2 << "    public " << fix_name(e->Name) << "_stub(" <<
-              boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") << "Factory d) {def=d;}"
+    w2 << "    public " << fix_name(e->Name) << "_stub("
+       << boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") << "Factory d) {def=d;}"
        << std::endl;
-    w2 << "    private " << boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__") <<
-              "Factory def;"
+    w2 << "    private " << boost::replace_all_copy(fix_name(e->ServiceDefinition_.lock()->Name), ".", "__")
+       << "Factory def;" << std::endl;
+    w2 << "    public override MessageElementNestedElementList PackPod(ref " << fix_name(e->Name) << " s1) {"
        << std::endl;
-    w2 << "    public override MessageElementNestedElementList PackPod(ref " << fix_name(e->Name) << " s1) {" << std::endl;
     w2 << "    using(vectorptr_messageelement m=new vectorptr_messageelement())" << std::endl << "    {" << std::endl;
     w2 << "    " << fix_qualified_name(e->Name) << " s = (" << fix_qualified_name(e->Name) << ")s1;" << std::endl;
     MEMBER_ITER2(PropertyDefinition)
     RR_SHARED_PTR<TypeDefinition> t2 = CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
-    w2 << "    MessageElementUtil.AddMessageElementDispose(m," <<
-              str_pack_message_element(m->Name, "s." + fix_name(m->Name), t2, "def") << ");"
-       << std::endl;
+    w2 << "    MessageElementUtil.AddMessageElementDispose(m,"
+       << str_pack_message_element(m->Name, "s." + fix_name(m->Name), t2, "def") << ");" << std::endl;
     MEMBER_ITER_END()
     w2 << "    return new MessageElementNestedElementList(DataTypes.pod_t,\"\",m);" << std::endl;
     w2 << "    }" << std::endl;
@@ -1331,8 +1334,8 @@ void CSharpServiceLangGen::GeneratePodStub(ServiceEntryDefinition* e, std::ostre
     convert_type_result t = convert_type(*m->Type);
     t.name = m->Name;
     RR_SHARED_PTR<TypeDefinition> t2 = CSharpServiceLangGen_RemoveMultiDimArray(*m->Type);
-    w2 << "    s." << fix_name(t.name) << " =" <<
-              str_unpack_message_element("MessageElement.FindElement(mm,\"" + t.name + "\")", t2, "def") << ";"
+    w2 << "    s." << fix_name(t.name) << " ="
+       << str_unpack_message_element("MessageElement.FindElement(mm,\"" + t.name + "\")", t2, "def") << ";"
        << std::endl;
 
     MEMBER_ITER_END()
@@ -1476,8 +1479,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
 
         t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
-        w2 << "    Task<" << t.generator_csharp_type << "> async_" << fix_name(m->Name) << "(" << boost::join(t2, ",") << ");"
-           << std::endl;
+        w2 << "    Task<" << t.generator_csharp_type << "> async_" << fix_name(m->Name) << "(" << boost::join(t2, ",")
+           << ");" << std::endl;
     }
     MEMBER_ITER_END()
 
@@ -1488,28 +1491,24 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
     std::string indtype;
     if (GetObjRefIndType(m, indtype))
     {
-        w2 << "    Task<" << objtype << "> async_get_" << fix_name(m->Name) << "(" << indtype <<
-                  " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);"
-           << std::endl;
+        w2 << "    Task<" << objtype << "> async_get_" << fix_name(m->Name) << "(" << indtype
+           << " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << std::endl;
     }
     else
     {
-        w2 << "    Task<" << objtype << "> async_get_" << fix_name(m->Name) <<
-                  "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);"
-           << std::endl;
+        w2 << "    Task<" << objtype << "> async_get_" << fix_name(m->Name)
+           << "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << std::endl;
     }
     MEMBER_ITER_END()
 
     w2 << "}" << std::endl;
 
-    w2 << "public class " << fix_name(e->Name) << "_stub : ServiceStub , " << fix_name(e->Name) << ", async_" <<
-              fix_name(e->Name) << "{"
-       << std::endl;
+    w2 << "public class " << fix_name(e->Name) << "_stub : ServiceStub , " << fix_name(e->Name) << ", async_"
+       << fix_name(e->Name) << "{" << std::endl;
 
     MEMBER_ITER2(CallbackDefinition)
-    w2 << "    private CallbackClient<" << str_pack_delegate(m->Parameters, m->ReturnType) << "> rr_" <<
-              fix_name(m->Name) << ";"
-       << std::endl;
+    w2 << "    private CallbackClient<" << str_pack_delegate(m->Parameters, m->ReturnType) << "> rr_"
+       << fix_name(m->Name) << ";" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(PipeDefinition)
@@ -1546,7 +1545,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         w2 << "    private " << c << "ArrayMemory<" << t.cs_type << "> rr_" << fix_name(m->Name) << ";" << std::endl;
         break;
     case DataTypes_ArrayTypes_multidimarray:
-        w2 << "    private " << c << "MultiDimArrayMemory<" << t.cs_type << "> rr_" << fix_name(m->Name) << ";" << std::endl;
+        w2 << "    private " << c << "MultiDimArrayMemory<" << t.cs_type << "> rr_" << fix_name(m->Name) << ";"
+           << std::endl;
         break;
     default:
         throw DataTypeException("Invalid memory definition");
@@ -1556,22 +1556,19 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
 
     w2 << "    public " << fix_name(e->Name) << "_stub(WrappedServiceStub innerstub) : base(innerstub) {" << std::endl;
     MEMBER_ITER2(CallbackDefinition)
-    w2 << "    rr_" << fix_name(m->Name) << "=new CallbackClient<" << str_pack_delegate(m->Parameters, m->ReturnType) <<
-              ">(\"" << m->Name << "\");"
-       << std::endl;
+    w2 << "    rr_" << fix_name(m->Name) << "=new CallbackClient<" << str_pack_delegate(m->Parameters, m->ReturnType)
+       << ">(\"" << m->Name << "\");" << std::endl;
     MEMBER_ITER_END()
     MEMBER_ITER2(PipeDefinition)
     convert_type_result t = convert_type(*m->Type);
-    w2 << "    rr_" << fix_name(m->Name) << "=new Pipe<" << t.cs_type << t.cs_arr_type << ">(innerstub.GetPipe(\"" <<
-              m->Name << "\"));"
-       << std::endl;
+    w2 << "    rr_" << fix_name(m->Name) << "=new Pipe<" << t.cs_type << t.cs_arr_type << ">(innerstub.GetPipe(\""
+       << m->Name << "\"));" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(WireDefinition)
     convert_type_result t = convert_type(*m->Type);
-    w2 << "    rr_" << fix_name(m->Name) << "=new Wire<" << t.cs_type << t.cs_arr_type << ">(innerstub.GetWire(\"" <<
-              m->Name << "\"));"
-       << std::endl;
+    w2 << "    rr_" << fix_name(m->Name) << "=new Wire<" << t.cs_type << t.cs_arr_type << ">(innerstub.GetWire(\""
+       << m->Name << "\"));" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(MemoryDefinition)
@@ -1599,9 +1596,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
            << c << "ArrayMemory(\"" << m->Name << "\"));" << std::endl;
         break;
     case DataTypes_ArrayTypes_multidimarray:
-        w2 << "    rr_" << fix_name(m->Name) << "=new " << c
-           << "MultiDimArrayMemoryClient<" << t.cs_type << ">(innerstub.Get" << c
-           << "MultiDimArrayMemory(\"" << m->Name << "\"));" << std::endl;
+        w2 << "    rr_" << fix_name(m->Name) << "=new " << c << "MultiDimArrayMemoryClient<" << t.cs_type
+           << ">(innerstub.Get" << c << "MultiDimArrayMemory(\"" << m->Name << "\"));" << std::endl;
         break;
     default:
         throw DataTypeException("Invalid memory definition");
@@ -1613,12 +1609,12 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
     MEMBER_ITER2(PropertyDefinition)
     convert_type_result t = convert_type(*m->Type);
     t.name = fix_name(m->Name);
-    w2 << "    public " <<t.cs_type << t.cs_arr_type <<" " << t.name << " {" << std::endl;
+    w2 << "    public " << t.cs_type << t.cs_arr_type << " " << t.name << " {" << std::endl;
     if (m->Direction() != MemberDefinition_Direction_writeonly)
     {
         w2 << "    get {" << std::endl;
-        w2 << "    return " << str_unpack_message_element("rr_innerstub.PropertyGet(\"" + m->Name + "\")", m->Type) << ";"
-           << std::endl;
+        w2 << "    return " << str_unpack_message_element("rr_innerstub.PropertyGet(\"" + m->Name + "\")", m->Type)
+           << ";" << std::endl;
         w2 << "    }" << std::endl;
     }
     if (m->Direction() != MemberDefinition_Direction_readonly)
@@ -1638,10 +1634,12 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
     {
         convert_type_result t = convert_type(*m->ReturnType);
         std::string params = str_pack_parameters(m->Parameters, true);
-        w2 << "    public " << t.cs_type << t.cs_arr_type << " " << fix_name(m->Name) << "(" << params << ") {" << std::endl;
-        w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl << "    {" << std::endl;
-        for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin(); p != m->Parameters.end();
-             ++p)
+        w2 << "    public " << t.cs_type << t.cs_arr_type << " " << fix_name(m->Name) << "(" << params << ") {"
+           << std::endl;
+        w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl
+           << "    {" << std::endl;
+        for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin();
+             p != m->Parameters.end(); ++p)
         {
             w2 << "    MessageElementUtil.AddMessageElementDispose(rr_param,"
                << str_pack_message_element((*p)->Name, fix_name((*p)->Name), *p) << ");" << std::endl;
@@ -1660,16 +1658,17 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
     {
         convert_generator_result t = convert_generator(m.get());
         std::string params = str_pack_parameters(t.params, true);
-        w2 << "    public " << t.generator_csharp_type << " " << fix_name(m->Name) << "(" << params << ") {" << std::endl;
-        w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl << "    {" << std::endl;
+        w2 << "    public " << t.generator_csharp_type << " " << fix_name(m->Name) << "(" << params << ") {"
+           << std::endl;
+        w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl
+           << "    {" << std::endl;
         for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = t.params.begin(); p != t.params.end(); ++p)
         {
             w2 << "    MessageElementUtil.AddMessageElementDispose(rr_param,"
                << str_pack_message_element((*p)->Name, fix_name((*p)->Name), *p) << ");" << std::endl;
         }
-        w2 << "    WrappedGeneratorClient generator_client = rr_innerstub.GeneratorFunctionCall(\"" << m->Name <<
-                  "\",rr_param);"
-           << std::endl;
+        w2 << "    WrappedGeneratorClient generator_client = rr_innerstub.GeneratorFunctionCall(\"" << m->Name
+           << "\",rr_param);" << std::endl;
 
         w2 << "    return new " << t.generator_csharp_base_type << "Client<" << t.generator_csharp_template_params
            << ">(generator_client);" << std::endl;
@@ -1690,15 +1689,13 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
     std::string params = str_pack_parameters(m->Parameters, false);
     w2 << "    case \"" << m->Name << "\":" << std::endl << "    {" << std::endl;
     w2 << "    if (" << fix_name(m->Name) << " != null) { " << std::endl;
-    for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin(); p != m->Parameters.end();
-         ++p)
+    for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin();
+         p != m->Parameters.end(); ++p)
     {
         convert_type_result t3 = convert_type(*(*p));
-        w2 << "    " << t3.cs_type << t3.cs_arr_type << " " << fix_name((*p)->Name) << "=" <<
-                  str_unpack_message_element("vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")",
-                                             *p) <<
-                  ";"
-           << std::endl;
+        w2 << "    " << t3.cs_type << t3.cs_arr_type << " " << fix_name((*p)->Name) << "="
+           << str_unpack_message_element("vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")", *p)
+           << ";" << std::endl;
         ;
     }
     w2 << "    " << fix_name(m->Name) << "(" << params << ");" << std::endl;
@@ -1761,7 +1758,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         else
         {
             w2 << "    public " << objtype << " get_" << fix_name(m->Name) << "() {" << std::endl;
-            w2 << "    return (" << objtype << ")FindObjRefTyped(\"" << m->Name << "\",\"" << objecttype2 << "\");" << std::endl;
+            w2 << "    return (" << objtype << ")FindObjRefTyped(\"" << m->Name << "\",\"" << objecttype2 << "\");"
+               << std::endl;
             w2 << "    }" << std::endl;
         }
     }
@@ -1798,15 +1796,13 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
     std::string params = str_pack_parameters(m->Parameters, false);
     w2 << "    case \"" << m->Name << "\":" << std::endl << "    {" << std::endl;
 
-    for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin(); p != m->Parameters.end();
-         ++p)
+    for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin();
+         p != m->Parameters.end(); ++p)
     {
         convert_type_result t3 = convert_type(*(*p));
-        w2 << "    " << t3.cs_type << t3.cs_arr_type << " " << fix_name((*p)->Name) << "=" <<
-                  str_unpack_message_element("vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")",
-                                             *p) <<
-                  ";"
-           << std::endl;
+        w2 << "    " << t3.cs_type << t3.cs_arr_type << " " << fix_name((*p)->Name) << "="
+           << str_unpack_message_element("vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")", *p)
+           << ";" << std::endl;
         ;
     }
     if (m->ReturnType->Type == DataTypes_void_t)
@@ -1817,7 +1813,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
     else
     {
         convert_type_result t = convert_type(*m->ReturnType);
-        w2 << "    " << t.cs_type << t.cs_arr_type << " ret=" << fix_name(m->Name) << ".Function(" << params << ");" << std::endl;
+        w2 << "    " << t.cs_type << t.cs_arr_type << " ret=" << fix_name(m->Name) << ".Function(" << params << ");"
+           << std::endl;
         w2 << "    return " << str_pack_message_element("return", "ret", m->ReturnType) << ";" << std::endl;
     }
     w2 << "    }" << std::endl;
@@ -1854,7 +1851,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         break;
     case DataTypes_ArrayTypes_multidimarray:
 
-        w2 << "    public " << c << "MultiDimArrayMemory<" << t.cs_type << "> " << fix_name(m->Name) << " {" << std::endl;
+        w2 << "    public " << c << "MultiDimArrayMemory<" << t.cs_type << "> " << fix_name(m->Name) << " {"
+           << std::endl;
         break;
     default:
         throw DataTypeException("Invalid memory definition");
@@ -1918,12 +1916,13 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         }
         t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
-        w2 << "    public virtual async " << task_type
-           << " async_" << fix_name(m->Name) << "(" << boost::join(t2, ",") << ")" << std::endl
+        w2 << "    public virtual async " << task_type << " async_" << fix_name(m->Name) << "(" << boost::join(t2, ",")
+           << ")" << std::endl
            << "    {" << std::endl;
-        w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl << "    {" << std::endl;
-        for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin(); p != m->Parameters.end();
-             ++p)
+        w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl
+           << "    {" << std::endl;
+        for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin();
+             p != m->Parameters.end(); ++p)
         {
             w2 << "    MessageElementUtil.AddMessageElementDispose(rr_param,"
                << str_pack_message_element((*p)->Name, fix_name((*p)->Name), *p) << ");" << std::endl;
@@ -1955,11 +1954,11 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
 
         t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
-        w2 << "    public virtual async Task<" << t.generator_csharp_type << "> async_" << fix_name(m->Name) << "(" <<
-                  boost::join(t2, ",") << ")"
-           << std::endl
+        w2 << "    public virtual async Task<" << t.generator_csharp_type << "> async_" << fix_name(m->Name) << "("
+           << boost::join(t2, ",") << ")" << std::endl
            << "    {" << std::endl;
-        w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl << "    {" << std::endl;
+        w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl
+           << "    {" << std::endl;
         for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = t.params.begin(); p != t.params.end(); ++p)
         {
             w2 << "    MessageElementUtil.AddMessageElementDispose(rr_param,"
@@ -1985,17 +1984,15 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         std::string indtype;
         if (GetObjRefIndType(m, indtype))
         {
-            w2 << "    public Task<" << objtype << "> async_get_" << fix_name(m->Name) << "(" << indtype <<
-                      " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {"
-               << std::endl;
+            w2 << "    public Task<" << objtype << "> async_get_" << fix_name(m->Name) << "(" << indtype
+               << " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {" << std::endl;
             w2 << "    return AsyncFindObjRef(\"" << m->Name << "\",ind.ToString(),timeout);" << std::endl;
             w2 << "    }" << std::endl;
         }
         else
         {
-            w2 << "    public Task<" << objtype << "> async_get_" << fix_name(m->Name) <<
-                      "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {"
-               << std::endl;
+            w2 << "    public Task<" << objtype << "> async_get_" << fix_name(m->Name)
+               << "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE) {" << std::endl;
             w2 << "    return AsyncFindObjRef(\"" << m->Name << "\",timeout);" << std::endl;
             w2 << "    }" << std::endl;
         }
@@ -2023,9 +2020,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         std::string indtype;
         if (GetObjRefIndType(m, indtype))
         {
-            w2 << "    public Task<" << objtype << ">  async_get_" << fix_name(m->Name) << "(" << indtype <<
-                      " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)"
-               << std::endl
+            w2 << "    public Task<" << objtype << ">  async_get_" << fix_name(m->Name) << "(" << indtype
+               << " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << std::endl
                << "    {" << std::endl;
             w2 << "    return AsyncFindObjRefTyped<" << objtype << ">(\"" << fix_name(m->Name) << "\",ind.ToString(),\""
                << objecttype2 << "\",timeout);" << std::endl;
@@ -2033,9 +2029,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         }
         else
         {
-            w2 << "    public Task<" << objtype << "> async_get_" << fix_name(m->Name) <<
-                      "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)"
-               << std::endl
+            w2 << "    public Task<" << objtype << "> async_get_" << fix_name(m->Name)
+               << "(int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << std::endl
                << "    {" << std::endl;
             w2 << "    return AsyncFindObjRefTyped<" << objtype << ">(\"" << m->Name << "\",\"" << objecttype2
                << "\",timeout);" << std::endl;
@@ -2128,15 +2123,14 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         w2 << "    case \"" << m->Name << "\":" << std::endl << "    {" << std::endl;
 
         std::string params = str_pack_parameters(m->Parameters, false);
-        for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin(); p != m->Parameters.end();
-             ++p)
+        for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin();
+             p != m->Parameters.end(); ++p)
         {
             convert_type_result t3 = convert_type(*(*p));
-            w2 << "    " << t3.cs_type << t3.cs_arr_type << " " << fix_name((*p)->Name) << "=" <<
-                      str_unpack_message_element(
-                          "vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")", *p) <<
-                      ";"
-               << std::endl;
+            w2 << "    " << t3.cs_type << t3.cs_arr_type << " " << fix_name((*p)->Name) << "="
+               << str_unpack_message_element("vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")",
+                                             *p)
+               << ";" << std::endl;
             ;
         }
 
@@ -2165,8 +2159,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         else
         {
             convert_type_result t = convert_type(*m->ReturnType);
-            w2 << "    " << t.cs_type << t.cs_arr_type << " rr_ret=this.obj." << fix_name(m->Name) << "(" << params << ");"
-               << std::endl;
+            w2 << "    " << t.cs_type << t.cs_arr_type << " rr_ret=this.obj." << fix_name(m->Name) << "(" << params
+               << ");" << std::endl;
             w2 << "    return " << str_pack_message_element("return", "rr_ret", m->ReturnType) << ";" << std::endl;
         }
         w2 << "    }" << std::endl;
@@ -2176,18 +2170,19 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         w2 << "    case \"" << m->Name << "\":" << std::endl << "    {" << std::endl;
         convert_generator_result t4 = convert_generator(m.get());
         std::string params = str_pack_parameters(t4.params, false);
-        for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = t4.params.begin(); p != t4.params.end(); ++p)
+        for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = t4.params.begin(); p != t4.params.end();
+             ++p)
         {
             convert_type_result t3 = convert_type(*(*p));
-            w2 << "    " << t3.cs_type << t3.cs_arr_type << " " << fix_name((*p)->Name) << "=" <<
-                      str_unpack_message_element(
-                          "vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")", *p) <<
-                      ";"
-               << std::endl;
+            w2 << "    " << t3.cs_type << t3.cs_arr_type << " " << fix_name((*p)->Name) << "="
+               << str_unpack_message_element("vectorptr_messageelement_util.FindElement(rr_m,\"" + (*p)->Name + "\")",
+                                             *p)
+               << ";" << std::endl;
             ;
         }
 
-        w2 << "    " << t4.generator_csharp_type << " rr_ret=this.obj." << fix_name(m->Name) << "(" << params << ");" << std::endl;
+        w2 << "    " << t4.generator_csharp_type << " rr_ret=this.obj." << fix_name(m->Name) << "(" << params << ");"
+           << std::endl;
         w2 << "    int generator_index = innerskel.RegisterGeneratorServer(\"" << m->Name << "\", new Wrapped"
            << t4.generator_csharp_base_type << "ServerDirectorNET<" << t4.generator_csharp_template_params
            << ">(rr_ret));" << std::endl;
@@ -2248,8 +2243,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     std::string params = str_pack_parameters(m->Parameters, true);
     w2 << "    public void rr_" << fix_name(m->Name) << "(" << params << ") {" << std::endl;
     w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement()) {" << std::endl;
-    for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin(); p != m->Parameters.end();
-         ++p)
+    for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin();
+         p != m->Parameters.end(); ++p)
     {
         w2 << "    MessageElementUtil.AddMessageElementDispose(rr_param,"
            << str_pack_message_element((*p)->Name, fix_name((*p)->Name), *p) << ");" << std::endl;
@@ -2266,19 +2261,19 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     convert_type_result t = convert_type(*m->ReturnType);
     std::string params = str_pack_parameters(m->Parameters, true);
     w2 << "    case \"" << m->Name << "\": {" << std::endl;
-    w2 << "    return new " << str_pack_delegate(m->Parameters, m->ReturnType) <<"( delegate(" <<
-              str_pack_parameters(m->Parameters, true) << ") {"
-       << std::endl;
+    w2 << "    return new " << str_pack_delegate(m->Parameters, m->ReturnType) << "( delegate("
+       << str_pack_parameters(m->Parameters, true) << ") {" << std::endl;
     ;
-    w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl << "    {" << std::endl;
-    for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin(); p != m->Parameters.end();
-         ++p)
+    w2 << "    using(vectorptr_messageelement rr_param=new vectorptr_messageelement())" << std::endl
+       << "    {" << std::endl;
+    for (std::vector<RR_SHARED_PTR<TypeDefinition> >::const_iterator p = m->Parameters.begin();
+         p != m->Parameters.end(); ++p)
     {
         w2 << "    MessageElementUtil.AddMessageElementDispose(rr_param,"
            << str_pack_message_element((*p)->Name, fix_name((*p)->Name), *p) << ");" << std::endl;
     }
-    w2 << "    using(MessageElement rr_me=this.innerskel.WrappedCallbackCall(\"" << m->Name << "\",rr_endpoint,rr_param))"
-       << std::endl
+    w2 << "    using(MessageElement rr_me=this.innerskel.WrappedCallbackCall(\"" << m->Name
+       << "\",rr_endpoint,rr_param))" << std::endl
        << "    {" << std::endl;
     if (m->ReturnType->Type != DataTypes_void_t)
     {
@@ -2299,9 +2294,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     w2 << "    obj=(" << fix_name(e->Name) << ")rrobj1;" << std::endl;
     MEMBER_ITER2(PipeDefinition)
     convert_type_result t = convert_type(*m->Type);
-    w2 << "    obj." << fix_name(m->Name) << "=new Pipe<" << t.cs_type << t.cs_arr_type << ">(innerskel.GetPipe(\"" <<
-              m->Name << "\"));"
-       << std::endl;
+    w2 << "    obj." << fix_name(m->Name) << "=new Pipe<" << t.cs_type << t.cs_arr_type << ">(innerskel.GetPipe(\""
+       << m->Name << "\"));" << std::endl;
     MEMBER_ITER_END()
     w2 << "    }" << std::endl;
 
@@ -2309,9 +2303,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     w2 << "    obj=(" << fix_name(e->Name) << ")rrobj1;" << std::endl;
     MEMBER_ITER2(CallbackDefinition)
 
-    w2 << "    obj." << fix_name(m->Name) << "=new CallbackServer<" << str_pack_delegate(m->Parameters, m->ReturnType) <<
-              ">(\"" << m->Name << "\",this);"
-       << std::endl;
+    w2 << "    obj." << fix_name(m->Name) << "=new CallbackServer<" << str_pack_delegate(m->Parameters, m->ReturnType)
+       << ">(\"" << m->Name << "\",this);" << std::endl;
     MEMBER_ITER_END()
     w2 << "    }" << std::endl;
 
@@ -2319,9 +2312,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     w2 << "    obj=(" << fix_name(e->Name) << ")rrobj1;" << std::endl;
     MEMBER_ITER2(WireDefinition)
     convert_type_result t = convert_type(*m->Type);
-    w2 << "    obj." << fix_name(m->Name) << "=new Wire<" << t.cs_type << t.cs_arr_type << ">(innerskel.GetWire(\"" <<
-              m->Name << "\"));"
-       << std::endl;
+    w2 << "    obj." << fix_name(m->Name) << "=new Wire<" << t.cs_type << t.cs_arr_type << ">(innerskel.GetWire(\""
+       << m->Name << "\"));" << std::endl;
     MEMBER_ITER_END()
     w2 << "    }" << std::endl;
 
@@ -2337,9 +2329,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
     {
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
-        w2 << "    WrappedArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedArrayMemoryDirectorNET<" <<
-                  t.cs_type <<">(obj." << fix_name(m->Name) << ");"
-           << std::endl;
+        w2 << "    WrappedArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedArrayMemoryDirectorNET<"
+           << t.cs_type << ">(obj." << fix_name(m->Name) << ");" << std::endl;
         // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
         // w2 << "    dir.memoryid=id;" << std::endl;
         // w2 << "    dir.Disown();" << std::endl;
@@ -2365,8 +2356,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
     {
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
-        w2 << "    WrappedMultiDimArrayMemoryDirectorNET<" << t.cs_type <<
-                  "> dir=new  WrappedMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name) << ");"
+        w2 << "    WrappedMultiDimArrayMemoryDirectorNET<" << t.cs_type
+           << "> dir=new  WrappedMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name) << ");"
            << std::endl;
         // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
         // w2 << "    dir.memoryid=id;" << std::endl;
@@ -2398,9 +2389,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
     {
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
-        w2 << "    WrappedPodArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedPodArrayMemoryDirectorNET<" <<
-                  t.cs_type << ">(obj." << fix_name(m->Name) << ");"
-           << std::endl;
+        w2 << "    WrappedPodArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedPodArrayMemoryDirectorNET<"
+           << t.cs_type << ">(obj." << fix_name(m->Name) << ");" << std::endl;
         // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
         // w2 << "    dir.memoryid=id;" << std::endl;
         // w2 << "    dir.Disown();" << std::endl;
@@ -2414,7 +2404,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << std::endl;
     w2 << "    }" << std::endl;
 
-    w2 << "    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {" << std::endl;
+    w2 << "    public override WrappedPodMultiDimArrayMemoryDirector GetPodMultiDimArrayMemory(string name) {"
+       << std::endl;
     w2 << "    switch (name) {" << std::endl;
     MEMBER_ITER2(MemoryDefinition)
     TypeDefinition t2;
@@ -2431,10 +2422,9 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
     {
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
-        w2 << "    WrappedPodMultiDimArrayMemoryDirectorNET<" << t.cs_type <<
-                  "> dir=new  WrappedPodMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name) <<
-                  ");"
-           << std::endl;
+        w2 << "    WrappedPodMultiDimArrayMemoryDirectorNET<" << t.cs_type
+           << "> dir=new  WrappedPodMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name)
+           << ");" << std::endl;
         // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
         // w2 << "    dir.memoryid=id;" << std::endl;
         // w2 << "    dir.Disown();" << std::endl;
@@ -2466,9 +2456,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     if (m->Type->ArrayType == DataTypes_ArrayTypes_array)
     {
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
-        w2 << "    WrappedNamedArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedNamedArrayMemoryDirectorNET<" <<
-                  t.cs_type << ">(obj." << fix_name(m->Name) << ");"
-           << std::endl;
+        w2 << "    WrappedNamedArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedNamedArrayMemoryDirectorNET<"
+           << t.cs_type << ">(obj." << fix_name(m->Name) << ");" << std::endl;
         // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
         // w2 << "    dir.memoryid=id;" << std::endl;
         // w2 << "    dir.Disown();" << std::endl;
@@ -2500,10 +2489,9 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     if (m->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
     {
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
-        w2 << "    WrappedNamedMultiDimArrayMemoryDirectorNET<" << t.cs_type <<
-                  "> dir=new  WrappedNamedMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name) <<
-                  ");"
-           << std::endl;
+        w2 << "    WrappedNamedMultiDimArrayMemoryDirectorNET<" << t.cs_type
+           << "> dir=new  WrappedNamedMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name)
+           << ");" << std::endl;
         // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
         // w2 << "    dir.memoryid=id;" << std::endl;
         // w2 << "    dir.Disown();" << std::endl;
@@ -2517,9 +2505,8 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
     w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << std::endl;
     w2 << "    }" << std::endl;
 
-    w2 << "    public override string RRType { get { return \"" + e->ServiceDefinition_.lock()->Name << "." << e->Name <<
-              "\"; } }"
-       << std::endl;
+    w2 << "    public override string RRType { get { return \"" + e->ServiceDefinition_.lock()->Name << "." << e->Name
+       << "\"; } }" << std::endl;
 
     w2 << "}" << std::endl;
 }
@@ -2531,9 +2518,8 @@ void CSharpServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, std::o
     w2 << "public class " << fix_name(e->Name) << "_default_impl : " << fix_name(e->Name) << "{" << std::endl;
 
     MEMBER_ITER2(CallbackDefinition)
-    w2 << "    protected Callback<" << str_pack_delegate(m->Parameters, m->ReturnType) << "> rrvar_" << fix_name(m->Name) <<
-              ";"
-       << std::endl;
+    w2 << "    protected Callback<" << str_pack_delegate(m->Parameters, m->ReturnType) << "> rrvar_"
+       << fix_name(m->Name) << ";" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(PipeDefinition)
@@ -2555,16 +2541,16 @@ void CSharpServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, std::o
     if (m->Direction() == MemberDefinition_Direction_writeonly)
     {
         convert_type_result t = convert_type(*m->Type);
-        w2 << "    protected WireUnicastReceiver<" << t.cs_type << t.cs_arr_type << "> rrvar_" << fix_name(m->Name) << ";"
-           << std::endl;
+        w2 << "    protected WireUnicastReceiver<" << t.cs_type << t.cs_arr_type << "> rrvar_" << fix_name(m->Name)
+           << ";" << std::endl;
     }
     MEMBER_ITER_END()
 
     MEMBER_ITER2(PropertyDefinition)
     convert_type_result t = convert_type(*m->Type);
     t.name = fix_name(m->Name);
-    w2 << "    public virtual " << t.cs_type << t.cs_arr_type << " " << t.name << " {get; set;} = "
-       << GetDefaultInitializedValue(*m->Type) << ";" << std::endl;
+    w2 << "    public virtual " << t.cs_type << t.cs_arr_type << " " << t.name
+       << " {get; set;} = " << GetDefaultInitializedValue(*m->Type) << ";" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(FunctionDefinition)
@@ -2579,7 +2565,8 @@ void CSharpServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, std::o
     {
         convert_generator_result t = convert_generator(m.get());
         std::string params = str_pack_parameters(t.params, true);
-        w2 << "    public virtual " << t.generator_csharp_type <<" " << fix_name(m->Name) << "(" << params << ") {" << std::endl;
+        w2 << "    public virtual " << t.generator_csharp_type << " " << fix_name(m->Name) << "(" << params << ") {"
+           << std::endl;
     }
     w2 << "    throw new NotImplementedException();";
     w2 << "    }" << std::endl;
@@ -2588,7 +2575,8 @@ void CSharpServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, std::o
 
     MEMBER_ITER2(EventDefinition)
     std::string params = str_pack_parameters(m->Parameters, true);
-    w2 << "    public virtual event " << str_pack_delegate(m->Parameters) << " " << fix_name(m->Name) << ";" << std::endl;
+    w2 << "    public virtual event " << str_pack_delegate(m->Parameters) << " " << fix_name(m->Name) << ";"
+       << std::endl;
     w2 << "    protected virtual void rrfire_" << fix_name(m->Name) << "(" << str_pack_parameters(m->Parameters, true)
        << ") {" << std::endl;
     w2 << "    " << fix_name(m->Name) << "?.Invoke(" << str_pack_parameters(m->Parameters, false) << ");" << std::endl;
@@ -2602,7 +2590,8 @@ void CSharpServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, std::o
     std::string indtype;
     if (GetObjRefIndType(m, indtype))
     {
-        w2 << "    public virtual " << objtype << " get_" << fix_name(m->Name) << "(" << indtype << " ind) {" << std::endl;
+        w2 << "    public virtual " << objtype << " get_" << fix_name(m->Name) << "(" << indtype << " ind) {"
+           << std::endl;
         w2 << "    throw new NotImplementedException();" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2642,9 +2631,8 @@ void CSharpServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, std::o
     MEMBER_ITER_END()
 
     MEMBER_ITER2(CallbackDefinition)
-    w2 << "    public virtual Callback<" << str_pack_delegate(m->Parameters, m->ReturnType) << "> " << fix_name(m->Name) <<
-              " {"
-       << std::endl;
+    w2 << "    public virtual Callback<" << str_pack_delegate(m->Parameters, m->ReturnType) << "> " << fix_name(m->Name)
+       << " {" << std::endl;
     w2 << "    get { return rrvar_" << fix_name(m->Name) << ";  }" << std::endl;
     w2 << "    set {" << std::endl;
     w2 << "    if (rrvar_" << fix_name(m->Name)
@@ -2712,7 +2700,8 @@ void CSharpServiceLangGen::GenerateDefaultImpl(ServiceEntryDefinition* e, std::o
     switch (m->Type->ArrayType)
     {
     case DataTypes_ArrayTypes_array:
-        w2 << "    public virtual " << c << "ArrayMemory<" << t.cs_type << "> " << fix_name(m->Name) << " { " << std::endl;
+        w2 << "    public virtual " << c << "ArrayMemory<" << t.cs_type << "> " << fix_name(m->Name) << " { "
+           << std::endl;
         break;
     case DataTypes_ArrayTypes_multidimarray:
 
@@ -2850,7 +2839,8 @@ void CSharpServiceLangGen::GenerateConstants(ServiceDefinition* d, std::ostream*
     boost::copy(d->Structures, std::back_inserter(entries));
     boost::copy(d->Objects, std::back_inserter(entries));
 
-    for (std::vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator ee = entries.begin(); ee != entries.end(); ++ee)
+    for (std::vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator ee = entries.begin(); ee != entries.end();
+         ++ee)
     {
         for (std::vector<std::string>::iterator e = (*ee)->Options.begin(); e != (*ee)->Options.end(); ++e)
         {
@@ -2885,7 +2875,8 @@ void CSharpServiceLangGen::GenerateConstants(ServiceDefinition* d, std::ostream*
         w2 << "    " << convert_constant(c.get(), d->Constants, d) << std::endl;
     }
 
-    for (std::vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator ee = entries.begin(); ee != entries.end(); ++ee)
+    for (std::vector<boost::shared_ptr<ServiceEntryDefinition> >::iterator ee = entries.begin(); ee != entries.end();
+         ++ee)
     {
         bool objhasconstants = false;
 
@@ -2974,7 +2965,8 @@ void CSharpServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>&
     GenerateInterfaceFile(d.get(), &f1);
     f1.close();
 
-    std::ofstream f2((path + os_pathsep + boost::replace_all_copy(fix_name(d->Name), ".", "__") + "_stubskel.cs").c_str());
+    std::ofstream f2(
+        (path + os_pathsep + boost::replace_all_copy(fix_name(d->Name), ".", "__") + "_stubskel.cs").c_str());
     GenerateStubSkelFile(d.get(), servicedef, &f2);
     f2.close();
 }

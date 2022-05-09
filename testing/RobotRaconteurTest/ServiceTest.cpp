@@ -2,7 +2,6 @@
 #include "stdafx.h"
 #endif
 
-
 #include "ServiceTest.h"
 
 // NOLINTBEGIN
@@ -1976,8 +1975,8 @@ RobotRaconteurTest_testroot::get_is_d5()
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_is_d5(const
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double> > >& value)
+void RobotRaconteurTest_testroot::set_is_d5(
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double> > >& value)
 {
     uint32_t is_d5_2_1a[] = {10, 20};
     double is_d5_2_1b[] = {
@@ -2040,8 +2039,8 @@ RobotRaconteurTest_testroot::get_is_d6()
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_is_d6(const 
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRMultiDimArray<double> > >& value)
+void RobotRaconteurTest_testroot::set_is_d6(
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRMultiDimArray<double> > >& value)
 {
     uint32_t is_d6_2_1a[] = {8, 10};
     double is_d6_2_1b[] = {
@@ -2234,8 +2233,8 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double> 
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_list_d5(const 
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double> > >& value)
+void RobotRaconteurTest_testroot::set_list_d5(
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double> > >& value)
 {
     uint32_t is_d5_2_1a[] = {10, 20};
     double is_d5_2_1b[] = {
@@ -2332,8 +2331,8 @@ RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2> RobotRaco
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_struct3(const 
-    RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2>& value)
+void RobotRaconteurTest_testroot::set_struct3(
+    const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2>& value)
 {
     double struct3_1a[] = {-2.426765e+05, -9.410735e+01, -1.667915e+12, -4.084240e-05, 3.199460e+03,
                            8.256717e-12,  -4.772119e-11, -1.061407e-13, 2.759750e+02,  -1.212549e+10,

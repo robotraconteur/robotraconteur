@@ -477,4 +477,4 @@ void AsyncMessageWriterTest::LoadRandomTest()
 }
 
 } // namespace RobotRaconteurTest
-// NOLINTEND
+  // NOLINTEND

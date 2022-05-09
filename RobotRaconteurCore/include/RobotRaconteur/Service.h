@@ -393,8 +393,9 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
         const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& e,
         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    virtual void AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
-                                      const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+    virtual void AsyncSendPipeMessage(
+        const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void SendWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e);
 
@@ -747,15 +748,15 @@ class ROBOTRACONTEUR_CORE_API ServerEndpoint : public Endpoint, public RR_ENABLE
   public:
     const std::string GetAuthenticatedUsername() const;
 
-    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
     void AuthenticateUser(boost::string_ref username, std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& credentials);
 
     void LogoutUser();
 
-    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE ;
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE;
 
-    RR_OVIRTUAL void SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c) RR_OVERRIDE ;
+    RR_OVIRTUAL void SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c) RR_OVERRIDE;
 
   private:
     RobotRaconteurVersion client_version;

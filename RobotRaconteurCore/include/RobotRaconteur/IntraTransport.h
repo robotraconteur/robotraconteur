@@ -82,28 +82,29 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
      */
     IntraTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
 
-    RR_OVIRTUAL ~IntraTransport() RR_OVERRIDE ;
+    RR_OVIRTUAL ~IntraTransport() RR_OVERRIDE;
 
-    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE ;
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE;
 
-    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE ;
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE;
 
-    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE;
 
-    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
-    RR_OVIRTUAL void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE ;
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
         boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
-                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE ;
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                          const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE;
 
-    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE ;
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE;
 
     /**
      * @brief Start the server to listen for incoming client connections
@@ -116,22 +117,22 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
                                                 const RR_SHARED_PTR<void>& timer);
 
   public:
-    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE ;
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
-    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE ;
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE;
 
-    RR_OVIRTUAL uint32_t TransportCapability(boost::string_ref name) RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t TransportCapability(boost::string_ref name) RR_OVERRIDE;
 
-    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncGetDetectedNodes(
         const std::vector<std::string>& schemes,
         const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
-        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE ;
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE;
 
     template <typename T, typename F>
     boost::signals2::connection AddCloseListener(const RR_SHARED_PTR<T>& t, const F& f)
@@ -149,7 +150,7 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
 
     bool TryGetNodeInfo(NodeID& node_id, std::string& node_name, std::string& service_nonce);
 
-    RR_OVIRTUAL void LocalNodeServicesChanged() RR_OVERRIDE ;
+    RR_OVIRTUAL void LocalNodeServicesChanged() RR_OVERRIDE;
 
     void SendNodeDiscovery();
 

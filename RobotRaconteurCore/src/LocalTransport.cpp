@@ -389,8 +389,8 @@ void LocalTransport::AsyncCreateTransportConnection(
         noden = url_res.nodename;
     }
 
-    boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                         const RR_SHARED_PTR<RobotRaconteurException>&)>
+    boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&,
+                         const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
         h = boost::bind(&LocalTransport::AsyncCreateTransportConnection2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                         noden, RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), callback);
     LocalTransport_attach_transport(shared_from_this(), socket, false, ep->GetLocalEndpoint(), noden, h);
@@ -1007,8 +1007,9 @@ void LocalTransport::PeriodicCleanupTask()
     }
 }
 
-void LocalTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                      const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void LocalTransport::AsyncSendMessage(
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_SHARED_PTR<ITransportConnection> t;
     {
@@ -1038,8 +1039,8 @@ void LocalTransport::handle_accept(const RR_SHARED_PTR<LocalTransport>& parent,
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(parent->node, Transport, 0, "LocalTransport accepted socket");
     try
     {
-        boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                             const RR_SHARED_PTR<RobotRaconteurException>&)>
+        boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&,
+                             const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
             h = boost::bind(&LocalTransport_connected_callback2, parent, RR_BOOST_PLACEHOLDERS(_1),
                             RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3));
         LocalTransport_attach_transport(parent, socket, true, 0, "{0}", h);
@@ -1529,11 +1530,12 @@ void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& par
     // This is just an empty method.  The connected transport will register when it has a local endpoint.
 }
 
-void LocalTransport_attach_transport(
-    const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
-    bool server, uint32_t endpoint, const std::string& noden,
-    boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                         const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+void LocalTransport_attach_transport(const RR_SHARED_PTR<LocalTransport>& parent,
+                                     const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, bool server,
+                                     uint32_t endpoint, const std::string& noden,
+                                     boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&,
+                                                          const RR_SHARED_PTR<ITransportConnection>&,
+                                                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     try
     {

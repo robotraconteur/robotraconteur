@@ -57,8 +57,10 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
 
     virtual com::robotraconteur::testing::TestService3::testpod1 testpod1_func2() RR_OVERRIDE;
 
-    virtual RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3> get_teststruct3_prop() RR_OVERRIDE;
-    virtual void set_teststruct3_prop(const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3>& value) RR_OVERRIDE;
+    virtual RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3> get_teststruct3_prop()
+        RR_OVERRIDE;
+    virtual void set_teststruct3_prop(
+        const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3>& value) RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::PodArrayMemory<com::robotraconteur::testing::TestService3::testpod2> >
     get_pod_m1() RR_OVERRIDE;
@@ -82,29 +84,37 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
                                   RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2> > >
     gen_func5() RR_OVERRIDE;
 
-    virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_p1() RR_OVERRIDE;
+    virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_p1()
+        RR_OVERRIDE;
     virtual void set_p1(
         RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > value) RR_OVERRIDE;
 
-    virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_p2() RR_OVERRIDE;
+    virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_p2()
+        RR_OVERRIDE;
     virtual void set_p2(
         RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > value) RR_OVERRIDE;
 
-    virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > get_p3() RR_OVERRIDE;
+    virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > get_p3()
+        RR_OVERRIDE;
     virtual void set_p3(
-        RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > value) RR_OVERRIDE;
+        RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > value)
+        RR_OVERRIDE;
 
-    virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_w1() RR_OVERRIDE;
+    virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_w1()
+        RR_OVERRIDE;
     virtual void set_w1(
         RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > value) RR_OVERRIDE;
 
-    virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_w2() RR_OVERRIDE;
+    virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_w2()
+        RR_OVERRIDE;
     virtual void set_w2(
         RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > value) RR_OVERRIDE;
 
-    virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > get_w3() RR_OVERRIDE;
+    virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > get_w3()
+        RR_OVERRIDE;
     virtual void set_w3(
-        RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > value) RR_OVERRIDE;
+        RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > value)
+        RR_OVERRIDE;
 
     virtual com::robotraconteur::testing::TestService3::vector3 get_testnamedarray1() RR_OVERRIDE;
     virtual void set_testnamedarray1(const com::robotraconteur::testing::TestService3::vector3& value) RR_OVERRIDE;
@@ -115,21 +125,20 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<com::robotraconteur::testing::TestService3::transform> >
     get_testnamedarray3() RR_OVERRIDE;
     virtual void set_testnamedarray3(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<com::robotraconteur::testing::TestService3::transform> >& value) RR_OVERRIDE;
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<com::robotraconteur::testing::TestService3::transform> >&
+            value) RR_OVERRIDE;
 
     virtual RR_INTRUSIVE_PTR<
         RobotRaconteur::RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >
     get_testnamedarray4() RR_OVERRIDE;
-    virtual void set_testnamedarray4(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >&
-            value) RR_OVERRIDE;
+    virtual void set_testnamedarray4(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<
+                                         com::robotraconteur::testing::TestService3::transform> >& value) RR_OVERRIDE;
 
     virtual RR_INTRUSIVE_PTR<
         RobotRaconteur::RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >
     get_testnamedarray5() RR_OVERRIDE;
-    virtual void set_testnamedarray5(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >&
-            value) RR_OVERRIDE;
+    virtual void set_testnamedarray5(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<
+                                         com::robotraconteur::testing::TestService3::transform> >& value) RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::NamedArrayMemory<com::robotraconteur::testing::TestService3::transform> >
     get_namedarray_m1() RR_OVERRIDE;
@@ -145,11 +154,14 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
     virtual void set_c2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble> >& value) RR_OVERRIDE;
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble> > get_c3() RR_OVERRIDE;
-    virtual void set_c3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble> >& value) RR_OVERRIDE;
+    virtual void set_c3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble> >& value)
+        RR_OVERRIDE;
 
-    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > > get_c5() RR_OVERRIDE;
+    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > > get_c5()
+        RR_OVERRIDE;
     virtual void set_c5(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > >& value) RR_OVERRIDE;
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > >& value)
+        RR_OVERRIDE;
 
     virtual RobotRaconteur::cfloat get_c7() RR_OVERRIDE;
     virtual void set_c7(RobotRaconteur::cfloat value) RR_OVERRIDE;
@@ -158,7 +170,8 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
     virtual void set_c8(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat> >& value) RR_OVERRIDE;
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat> > get_c9() RR_OVERRIDE;
-    virtual void set_c9(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat> >& value) RR_OVERRIDE;
+    virtual void set_c9(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat> >& value)
+        RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::cdouble> > get_c_m1() RR_OVERRIDE;
 
@@ -173,20 +186,26 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
     virtual void set_b2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> >& value) RR_OVERRIDE;
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool> > get_b3() RR_OVERRIDE;
-    virtual void set_b3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool> >& value) RR_OVERRIDE;
+    virtual void set_b3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool> >& value)
+        RR_OVERRIDE;
 
-    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > get_b4() RR_OVERRIDE;
+    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > get_b4()
+        RR_OVERRIDE;
     virtual void set_b4(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value) RR_OVERRIDE;
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value)
+        RR_OVERRIDE;
 
-    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > get_b5() RR_OVERRIDE;
+    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > > get_b5()
+        RR_OVERRIDE;
     virtual void set_b5(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value) RR_OVERRIDE;
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > >& value)
+        RR_OVERRIDE;
 
     virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool> > >
     get_b6() RR_OVERRIDE;
     virtual void set_b6(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool> > >& value) RR_OVERRIDE;
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool> > >&
+            value) RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool> > get_c_m5() RR_OVERRIDE;
 

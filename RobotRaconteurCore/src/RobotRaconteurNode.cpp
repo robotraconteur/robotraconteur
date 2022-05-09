@@ -652,8 +652,9 @@ void RobotRaconteurNode::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
     ROBOTRACONTEUR_LOG_MESSAGE(ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH, weak_this, Node, "Sending message", m)
 }
 
-void RobotRaconteurNode::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                          const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void RobotRaconteurNode::AsyncSendMessage(
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     if (m->header->SenderNodeID != NodeID())
     {

@@ -159,10 +159,10 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      */
     TcpTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
 
-    RR_OVIRTUAL ~TcpTransport() RR_OVERRIDE ;
+    RR_OVIRTUAL ~TcpTransport() RR_OVERRIDE;
 
-    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE ;
-    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE ;
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE;
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE;
 
     /**
      * @brief Get the default receive timeout
@@ -210,24 +210,25 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      */
     virtual void SetDefaultConnectTimeout(int32_t milliseconds);
 
-    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE;
 
     virtual int32_t GetListenPort();
 
-    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
-    RR_OVIRTUAL void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE ;
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncCreateTransportConnection(
         boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
         boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
-                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback) RR_OVERRIDE ;
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback) RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                          const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE;
 
-    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE ;
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE;
 
   protected:
     virtual void CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
@@ -262,11 +263,11 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      */
     virtual bool IsPortSharerRunning();
 
-    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE ;
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
     /**
      * @brief Enable node discovery listening
@@ -318,13 +319,13 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
 
     void SendDiscoveryRequest();
 
-    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE ;
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE;
 
-    RR_OVIRTUAL uint32_t TransportCapability(boost::string_ref name) RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t TransportCapability(boost::string_ref name) RR_OVERRIDE;
 
     static void GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::address>& addresses);
 
-    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
     /**
      * @brief Get the default heartbeat period
@@ -642,7 +643,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     }
 
   protected:
-    RR_OVIRTUAL void LocalNodeServicesChanged() RR_OVERRIDE ;
+    RR_OVIRTUAL void LocalNodeServicesChanged() RR_OVERRIDE;
 
     boost::mutex node_discovery_lock;
     RR_SHARED_PTR<void> node_discovery;

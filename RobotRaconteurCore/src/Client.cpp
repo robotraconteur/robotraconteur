@@ -172,8 +172,9 @@ void ServiceStub::AsyncFindObjectType(
                                       timeout);
 }
 
-void ServiceStub::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, bool unreliable,
-                                       const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void ServiceStub::AsyncSendPipeMessage(
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, bool unreliable,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
 
     m->ServicePath = ServicePath;
@@ -629,7 +630,8 @@ void ClientContext::AsyncFindObjectType(
 void ClientContext::AsyncFindObjectType1(
     const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& err,
     const std::string& path,
-    const boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const boost::function<void(const RR_SHARED_PTR<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        handler)
 {
     if (err)
     {
@@ -1006,8 +1008,9 @@ void ClientContext::SendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m)
     Endpoint::SendMessage(mm);
 }
 
-void ClientContext::AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m,
-                                     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+void ClientContext::AsyncSendMessage(
+    const RR_INTRUSIVE_PTR<MessageEntry>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     // m.ServiceName = ServiceName;
 
@@ -2271,7 +2274,8 @@ void ClientContext::AsyncClose(RR_MOVE_ARG(boost::function<void()>) handler)
 }
 
 void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
-                                const RR_SHARED_PTR<RobotRaconteurException>& err, const boost::function<void()>& handler)
+                                const RR_SHARED_PTR<RobotRaconteurException>& err,
+                                const boost::function<void()>& handler)
 {
     RR_UNUSED(err);
     {
@@ -2384,8 +2388,9 @@ void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
     GetNode()->DeleteEndpoint(shared_from_this());
 }
 
-void ClientContext::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, bool unreliable,
-                                         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void ClientContext::AsyncSendPipeMessage(
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, bool unreliable,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     if (!unreliable)
     {

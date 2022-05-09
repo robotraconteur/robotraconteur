@@ -1,4 +1,4 @@
-// NOLINTBEGIN 
+// NOLINTBEGIN
 
 #include <RobotRaconteur.h>
 #include "robotraconteur_generated.h"

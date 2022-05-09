@@ -54,9 +54,9 @@ bool ReadFile(std::string& file_contents, const std::string& fname)
         if (!file)
             return false;
 
-        int8_t bom1=0;
-        int8_t bom2=0;
-        int8_t bom3=0;
+        int8_t bom1 = 0;
+        int8_t bom2 = 0;
+        int8_t bom3 = 0;
         file >> bom1 >> bom2 >> bom3;
         if (!(bom1 == -17 && bom2 == -69 && bom3 == -65))
         {
@@ -239,7 +239,7 @@ int PullServiceDefinition(const std::string& url)
 
     if (type.empty())
     {
-        std::cout << "RobotRaconteurGen: error: service not found on remote node: " << url_res.service << std::endl; 
+        std::cout << "RobotRaconteurGen: error: service not found on remote node: " << url_res.service << std::endl;
         return 6006;
     }
 
@@ -427,7 +427,7 @@ int main(int argc, char* argv[])
                 return 3001;
             }
             std::cout << "Password hash for password " << string_vector.at(0) << " is "
-                 << PasswordFileUserAuthenticator::MD5Hash(string_vector[0]) << std::endl;
+                      << PasswordFileUserAuthenticator::MD5Hash(string_vector[0]) << std::endl;
             return 0;
         }
 
@@ -579,26 +579,26 @@ int main(int argc, char* argv[])
             VerifyServiceDefinitions(alldefs, warnings);
             BOOST_FOREACH (ServiceDefinitionParseException w, warnings)
             {
-                std::cout << w.ParseInfo.RobDefFilePath << "(" << w.ParseInfo.LineNumber << "): warning: " << w.ShortMessage
-                     << std::endl;
+                std::cout << w.ParseInfo.RobDefFilePath << "(" << w.ParseInfo.LineNumber
+                          << "): warning: " << w.ShortMessage << std::endl;
             }
         }
         catch (ServiceDefinitionParseException& ee)
         {
-            std::cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage
-                 << std::endl;
+            std::cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber
+                      << "): error: " << ee.ShortMessage << std::endl;
             return 1007;
         }
         catch (ServiceDefinitionVerifyException& ee)
         {
-            std::cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber << "): error: " << ee.ShortMessage
-                 << std::endl;
+            std::cout << ee.ParseInfo.RobDefFilePath << "(" << ee.ParseInfo.LineNumber
+                      << "): error: " << ee.ShortMessage << std::endl;
             return 1008;
         }
         catch (std::exception& ee)
         {
-            std::cout << "RobotRaconteurGen: fatal error: could not verify service definition set " << std::string(ee.what())
-                 << std::endl;
+            std::cout << "RobotRaconteurGen: fatal error: could not verify service definition set "
+                      << std::string(ee.what()) << std::endl;
             return 1009;
         }
 
@@ -620,7 +620,8 @@ int main(int argc, char* argv[])
                 if (d->StdVer < RobotRaconteurVersion(0, 9, 2))
                 {
                     std::cout << d->ParseInfo.RobDefFilePath
-                         << "(1): error: stdver 0.9.2 or greater required for service definition verification" << std::endl;
+                              << "(1): error: stdver 0.9.2 or greater required for service definition verification"
+                              << std::endl;
 
                     return 1020;
                 }
@@ -629,8 +630,8 @@ int main(int argc, char* argv[])
                 /*std::vector<std::string> robdef_msgs;
                 if (!VerifyServiceDefinitionMatchesStandardRegex(alldefs_str.at(i), robdef_msgs))
                 {
-                    std::cout << d->ParseInfo.RobDefFilePath << "(1): error: service definition does not match stdver 0.9.2
-                syntax regex" << std::endl; return 1020;
+                    std::cout << d->ParseInfo.RobDefFilePath << "(1): error: service definition does not match stdver
+                0.9.2 syntax regex" << std::endl; return 1020;
                 }*/
             }
         }
@@ -654,8 +655,8 @@ int main(int argc, char* argv[])
                 }
                 catch (std::exception& ee)
                 {
-                    std::cout << sources.at(i) << ": error: could not generate thunksource files " << std::string(ee.what())
-                         << std::endl;
+                    std::cout << sources.at(i) << ": error: could not generate thunksource files "
+                              << std::string(ee.what()) << std::endl;
                     return 1010;
                 }
             }
@@ -671,8 +672,8 @@ int main(int argc, char* argv[])
                 }
                 catch (std::exception& ee)
                 {
-                    std::cout << "RobotRaconteurGen: error: could not generate master header file " << std::string(ee.what())
-                         << std::endl;
+                    std::cout << "RobotRaconteurGen: error: could not generate master header file "
+                              << std::string(ee.what()) << std::endl;
                     return 1011;
                 }
             }
@@ -693,8 +694,8 @@ int main(int argc, char* argv[])
                     }
                     catch (std::exception& ee)
                     {
-                        std::cout << sources.at(i) << ": error: could not generate thunksource files " << std::string(ee.what())
-                             << std::endl;
+                        std::cout << sources.at(i) << ": error: could not generate thunksource files "
+                                  << std::string(ee.what()) << std::endl;
                         return 1010;
                     }
                 }
@@ -711,8 +712,8 @@ int main(int argc, char* argv[])
                     }
                     catch (std::exception& ee)
                     {
-                        std::cout << sources.at(i) << ": error: could not generate thunksource files " << std::string(ee.what())
-                             << std::endl;
+                        std::cout << sources.at(i) << ": error: could not generate thunksource files "
+                                  << std::string(ee.what()) << std::endl;
                         return 1010;
                     }
                 }
@@ -733,8 +734,8 @@ int main(int argc, char* argv[])
                 }
                 catch (std::exception& ee)
                 {
-                    std::cout << sources.at(i) << ": error: could not generate thunksource files " << std::string(ee.what())
-                         << std::endl;
+                    std::cout << sources.at(i) << ": error: could not generate thunksource files "
+                              << std::string(ee.what()) << std::endl;
                     return 1010;
                 }
             }

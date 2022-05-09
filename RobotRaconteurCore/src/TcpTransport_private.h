@@ -96,23 +96,25 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     void do_starttls9(const boost::system::error_code& error);
 
   public:
-    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
   protected:
     RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
     RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    RR_OVIRTUAL size_t available() RR_OVERRIDE ;
+    RR_OVIRTUAL size_t available() RR_OVERRIDE;
 
-    RR_OVIRTUAL bool IsLargeTransferAuthorized() RR_OVERRIDE ;
+    RR_OVIRTUAL bool IsLargeTransferAuthorized() RR_OVERRIDE;
 
   public:
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
   protected:
     void Close1(const boost::system::error_code& ec);
@@ -122,11 +124,11 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     void ForceClose();
 
   public:
-    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE;
 
-    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE;
 
-    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
     virtual bool IsSecure();
 
@@ -134,7 +136,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
     virtual std::string GetSecurePeerIdentity();
 
-    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE;
 
   protected:
     RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket;
@@ -150,7 +152,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     boost::recursive_mutex close_lock;
     bool closing;
 
-    RR_OVIRTUAL void StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
     // Stuff to support TLS
 
@@ -331,8 +333,8 @@ class TcpAcceptor : public RR_ENABLE_SHARED_FROM_THIS<TcpAcceptor>
 
     void AcceptSocket(
         const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-        boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                             const RR_SHARED_PTR<RobotRaconteurException>&)>
+        boost::function<void(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>&,
+                             const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
             handler);
 };
 

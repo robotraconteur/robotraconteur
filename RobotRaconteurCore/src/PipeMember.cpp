@@ -94,8 +94,7 @@ void PipeEndpointBase::Close()
     t->end_void();
 }
 
-void PipeEndpointBase::AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>
-                                      handler,
+void PipeEndpointBase::AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                   int32_t timeout)
 {
 
@@ -1693,7 +1692,8 @@ boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_
     return predicate;
 }
 
-void PipeBroadcasterBase::SetPredicate(boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> f)
+void PipeBroadcasterBase::SetPredicate(
+    boost::function<bool(const RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t)> f)
 {
     boost::mutex::scoped_lock lock(endpoints_lock);
     predicate = RR_MOVE(f);

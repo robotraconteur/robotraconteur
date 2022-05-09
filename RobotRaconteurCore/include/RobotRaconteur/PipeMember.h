@@ -364,9 +364,8 @@ class PipeEndpoint : public PipeEndpointBase
      * @param packet The packet to send
      * @param handler A handler function to receive the sent packet number or an exception
      */
-    virtual void AsyncSendPacket(
-        typename boost::call_traits<T>::param_type packet,
-        boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
+    virtual void AsyncSendPacket(typename boost::call_traits<T>::param_type packet,
+                                 boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
     {
         AsyncSendPacketBase(RRPrimUtil<T>::PrePack(packet), RR_MOVE(handler));
     }
@@ -448,7 +447,7 @@ class PipeEndpoint : public PipeEndpointBase
         : PipeEndpointBase(parent, index, endpoint, unreliable, direction){};
 
   protected:
-    RR_OVIRTUAL void fire_PipeEndpointClosedCallback() RR_OVERRIDE 
+    RR_OVIRTUAL void fire_PipeEndpointClosedCallback() RR_OVERRIDE
     {
         boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> c = GetPipeEndpointClosedCallback();
         if (!c)
@@ -456,25 +455,25 @@ class PipeEndpoint : public PipeEndpointBase
         c(RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(shared_from_this()));
     }
 
-    RR_OVIRTUAL void fire_PacketReceivedEvent() RR_OVERRIDE 
+    RR_OVIRTUAL void fire_PacketReceivedEvent() RR_OVERRIDE
     {
         PacketReceivedEvent(RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(shared_from_this()));
     }
 
-    RR_OVIRTUAL void fire_PacketAckReceivedEvent(uint32_t packetnum) RR_OVERRIDE 
+    RR_OVIRTUAL void fire_PacketAckReceivedEvent(uint32_t packetnum) RR_OVERRIDE
     {
         PacketAckReceivedEvent(RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(shared_from_this()), packetnum);
     }
 
-    static void send_handler(
-        uint32_t packetnumber, const RR_SHARED_PTR<RobotRaconteurException>& err,
-        const boost::function<void(const RR_SHARED_PTR<uint32_t>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    static void send_handler(uint32_t packetnumber, const RR_SHARED_PTR<RobotRaconteurException>& err,
+                             const boost::function<void(const RR_SHARED_PTR<uint32_t>&,
+                                                        const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
     {
         handler(RR_MAKE_SHARED<uint32_t>(packetnumber), err);
     }
 
   public:
-    RR_OVIRTUAL void Close() RR_OVERRIDE 
+    RR_OVIRTUAL void Close() RR_OVERRIDE
     {
         PipeEndpointBase::Close();
         {
@@ -507,7 +506,7 @@ class PipeEndpoint : public PipeEndpointBase
 
   public:
     RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                            int32_t timeout = 2000) RR_OVERRIDE 
+                                int32_t timeout = 2000) RR_OVERRIDE
     {
         PipeEndpointBase::AsyncClose(boost::bind(&PipeEndpoint<T>::AsyncClose1,
                                                  RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(shared_from_this()),
@@ -516,7 +515,7 @@ class PipeEndpoint : public PipeEndpointBase
     }
 
   protected:
-    RR_OVIRTUAL void RemoteClose() RR_OVERRIDE 
+    RR_OVIRTUAL void RemoteClose() RR_OVERRIDE
     {
         PipeEndpointBase::RemoteClose();
         {
@@ -566,7 +565,6 @@ class ROBOTRACONTEUR_CORE_API PipeBase : public RR_ENABLE_SHARED_FROM_THIS<PipeB
                             int32_t timeout) = 0;
 
   protected:
-
     PipeBase();
 
     bool unreliable;
@@ -669,7 +667,7 @@ class Pipe : public virtual PipeBase
 
     Pipe(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = RR_MOVE(verify); }
 
-    RR_OVIRTUAL ~Pipe()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~Pipe() RR_OVERRIDE {}
 
     /**
      * @brief Get the currently configured pipe endpoint connected callback function
@@ -724,10 +722,11 @@ class Pipe : public virtual PipeBase
      * @param handler A handler function to receive the connected endpoint, or an exception
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
-    virtual void AsyncConnect(int32_t index,
-                              boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                              int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+    virtual void AsyncConnect(
+        int32_t index,
+        boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 
     /**
      * @brief Asynchronously connect a pipe endpoint.
@@ -739,14 +738,15 @@ class Pipe : public virtual PipeBase
      * @param handler A handler function to receive the connected endpoint, or an exception
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
-    virtual void AsyncConnect(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                              int32_t timeout = RR_TIMEOUT_INFINITE)
+    virtual void AsyncConnect(
+        boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE)
     {
         AsyncConnect(-1, RR_MOVE(handler), timeout);
     }
 
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> PackData(const RR_INTRUSIVE_PTR<RRValue>& data) RR_OVERRIDE 
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> PackData(const RR_INTRUSIVE_PTR<RRValue>& data) RR_OVERRIDE
     {
         if (verify)
         {
@@ -755,7 +755,7 @@ class Pipe : public virtual PipeBase
         return GetNode()->template PackAnyType<typename RRPrimUtil<T>::BoxedType>(data);
     }
 
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRValue> UnpackData(const RR_INTRUSIVE_PTR<MessageElement>& mdata) RR_OVERRIDE 
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRValue> UnpackData(const RR_INTRUSIVE_PTR<MessageElement>& mdata) RR_OVERRIDE
     {
         if (!verify)
         {
@@ -781,27 +781,29 @@ class ROBOTRACONTEUR_CORE_API PipeClientBase : public virtual PipeBase
     friend class PipeSubscriptionBase;
     friend class detail::PipeSubscription_connection;
 
-    RR_OVIRTUAL ~PipeClientBase() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~PipeClientBase() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE;
 
-    RR_OVIRTUAL void PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e = 0) RR_OVERRIDE ;
+    RR_OVIRTUAL void PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e = 0) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE ;
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncClose(const RR_SHARED_PTR<PipeEndpointBase>& endpoint, bool remote, uint32_t ee,
-                            RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
-                            int32_t timeout) RR_OVERRIDE ;
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
+                                    handler,
+                                int32_t timeout) RR_OVERRIDE;
 
     RR_SHARED_PTR<ServiceStub> GetStub();
 
-    RR_OVIRTUAL std::string GetServicePath() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetServicePath() RR_OVERRIDE;
 
   protected:
     RR_OVIRTUAL void AsyncSendPipePacket(
         const RR_INTRUSIVE_PTR<RRValue>& data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint,
         bool unreliable,
-        RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler) RR_OVERRIDE ;
+        RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>)
+            handler) RR_OVERRIDE;
 
     std::string m_MemberName;
 
@@ -833,23 +835,24 @@ class ROBOTRACONTEUR_CORE_API PipeClientBase : public virtual PipeBase
     virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable,
                                                                   MemberDefinition_Direction direction) = 0;
 
-    RR_OVIRTUAL void DeleteEndpoint(const RR_SHARED_PTR<PipeEndpointBase>& e) RR_OVERRIDE ;
+    RR_OVIRTUAL void DeleteEndpoint(const RR_SHARED_PTR<PipeEndpointBase>& e) RR_OVERRIDE;
 };
 
 template <typename T>
 class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
 {
   public:
-    RR_OVIRTUAL ~PipeClient() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~PipeClient() RR_OVERRIDE {}
 
-    RR_OVIRTUAL boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> GetPipeConnectCallback() RR_OVERRIDE 
+    RR_OVIRTUAL boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> GetPipeConnectCallback() RR_OVERRIDE
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "GetPipeConnectCallback is not valid for PipeClient");
         throw InvalidOperationException("Not valid for client");
     }
 
-    RR_OVIRTUAL void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> function) RR_OVERRIDE 
+    RR_OVIRTUAL void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> function)
+        RR_OVERRIDE
     {
         RR_UNUSED(function);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
@@ -857,10 +860,11 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
         throw InvalidOperationException("Not valid for client");
     }
 
-    RR_OVIRTUAL void AsyncConnect(int32_t index,
-                              boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                              int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+    RR_OVIRTUAL void AsyncConnect(
+        int32_t index,
+        boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
 
         AsyncConnect_internal(index,
@@ -870,7 +874,7 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
                               timeout);
     }
 
-    RR_OVIRTUAL RR_SHARED_PTR<PipeEndpoint<T> > Connect(int32_t index) RR_OVERRIDE 
+    RR_OVIRTUAL RR_SHARED_PTR<PipeEndpoint<T> > Connect(int32_t index) RR_OVERRIDE
     {
         ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
@@ -904,7 +908,7 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
     }
 
     RR_OVIRTUAL RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable,
-                                                                  MemberDefinition_Direction direction) RR_OVERRIDE 
+                                                                      MemberDefinition_Direction direction) RR_OVERRIDE
     {
         return RR_MAKE_SHARED<PipeEndpoint<T> >(RR_STATIC_POINTER_CAST<PipeBase>(shared_from_this()), index, 0,
                                                 unreliable, direction);
@@ -915,28 +919,30 @@ class ROBOTRACONTEUR_CORE_API ServiceSkel;
 class ROBOTRACONTEUR_CORE_API PipeServerBase : public virtual PipeBase
 {
   public:
-    RR_OVIRTUAL ~PipeServerBase()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~PipeServerBase() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE;
 
-    RR_OVIRTUAL void PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e = 0) RR_OVERRIDE ;
+    RR_OVIRTUAL void PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e = 0) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE ;
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncSendPipePacket(
         const RR_INTRUSIVE_PTR<RRValue>& data, int32_t index, uint32_t packetnumber, bool requestack, uint32_t endpoint,
         bool unreliable,
-        RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>) handler) RR_OVERRIDE ;
+        RR_MOVE_ARG(boost::function<void(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&)>)
+            handler) RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncClose(const RR_SHARED_PTR<PipeEndpointBase>& endpoint, bool remote, uint32_t ee,
-                            RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
-                            int32_t timeout) RR_OVERRIDE ;
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
+                                    handler,
+                                int32_t timeout) RR_OVERRIDE;
 
     virtual RR_INTRUSIVE_PTR<MessageEntry> PipeCommand(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e);
 
     RR_SHARED_PTR<ServiceSkel> GetSkel();
 
-    RR_OVIRTUAL std::string GetServicePath() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetServicePath() RR_OVERRIDE;
 
   protected:
     std::string m_MemberName;
@@ -981,7 +987,7 @@ class ROBOTRACONTEUR_CORE_API PipeServerBase : public virtual PipeBase
     virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, uint32_t endpoint, bool unreliable,
                                                                   MemberDefinition_Direction direction) = 0;
 
-    RR_OVIRTUAL void DeleteEndpoint(const RR_SHARED_PTR<PipeEndpointBase>& e) RR_OVERRIDE ;
+    RR_OVIRTUAL void DeleteEndpoint(const RR_SHARED_PTR<PipeEndpointBase>& e) RR_OVERRIDE;
 
     virtual void fire_PipeConnectCallback(const RR_SHARED_PTR<PipeEndpointBase>& e) = 0;
 
@@ -998,16 +1004,20 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
 {
 
   public:
-    RR_OVIRTUAL ~PipeServer()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~PipeServer() RR_OVERRIDE {}
 
-    RR_OVIRTUAL boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> GetPipeConnectCallback()  RR_OVERRIDE { return callback; }
+    RR_OVIRTUAL boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> GetPipeConnectCallback() RR_OVERRIDE
+    {
+        return callback;
+    }
 
-    RR_OVIRTUAL void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> function) RR_OVERRIDE 
+    RR_OVIRTUAL void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> function)
+        RR_OVERRIDE
     {
         callback = function;
     }
 
-    RR_OVIRTUAL RR_SHARED_PTR<PipeEndpoint<T> > Connect(int32_t index) RR_OVERRIDE 
+    RR_OVIRTUAL RR_SHARED_PTR<PipeEndpoint<T> > Connect(int32_t index) RR_OVERRIDE
     {
         RR_UNUSED(index);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName,
@@ -1015,10 +1025,11 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
         throw InvalidOperationException("Not valid for server");
     }
 
-    RR_OVIRTUAL void AsyncConnect(int32_t index,
-                              boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                              int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+    RR_OVIRTUAL void AsyncConnect(
+        int32_t index,
+        boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         RR_UNUSED(index);
         RR_UNUSED(handler);
@@ -1038,7 +1049,7 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
 
   protected:
     RR_OVIRTUAL RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, uint32_t endpoint, bool unreliable,
-                                                                  MemberDefinition_Direction direction) RR_OVERRIDE 
+                                                                      MemberDefinition_Direction direction) RR_OVERRIDE
     {
         return RR_MAKE_SHARED<PipeEndpoint<T> >(RR_STATIC_POINTER_CAST<PipeBase>(shared_from_this()), index, endpoint,
                                                 unreliable, direction);
@@ -1046,7 +1057,7 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
 
     boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> callback;
 
-    RR_OVIRTUAL void fire_PipeConnectCallback(const RR_SHARED_PTR<PipeEndpointBase>& e) RR_OVERRIDE 
+    RR_OVIRTUAL void fire_PipeConnectCallback(const RR_SHARED_PTR<PipeEndpointBase>& e) RR_OVERRIDE
     {
         if (!callback)
             return;
@@ -1056,7 +1067,7 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
     boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify;
 
   public:
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE 
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE
     {
         PipeServerBase::Shutdown();
 
@@ -1257,7 +1268,7 @@ class PipeBroadcaster : public PipeBroadcasterBase
     RR_SHARED_PTR<Pipe<T> > GetPipe() { return rr_cast<Pipe<T> >(GetPipeBase()); }
 
   protected:
-    RR_OVIRTUAL void AttachPipeServerEvents(const RR_SHARED_PTR<PipeServerBase>& p) RR_OVERRIDE 
+    RR_OVIRTUAL void AttachPipeServerEvents(const RR_SHARED_PTR<PipeServerBase>& p) RR_OVERRIDE
     {
         RR_SHARED_PTR<PipeServer<T> > p_T = rr_cast<PipeServer<T> >(p);
 
@@ -1266,7 +1277,8 @@ class PipeBroadcaster : public PipeBroadcasterBase
     }
 
     RR_OVIRTUAL void AttachPipeEndpointEvents(const RR_SHARED_PTR<PipeEndpointBase>& ep,
-                                          const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep) RR_OVERRIDE 
+                                              const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
+        RR_OVERRIDE
     {
         RR_SHARED_PTR<PipeEndpoint<T> > ep_T = rr_cast<PipeEndpoint<T> >(ep);
 

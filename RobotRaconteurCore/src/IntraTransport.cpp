@@ -381,8 +381,9 @@ void IntraTransport::PeriodicCleanupTask()
     }
 }
 
-void IntraTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
-                                      const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+void IntraTransport::AsyncSendMessage(
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_SHARED_PTR<ITransportConnection> t;
     {
@@ -735,7 +736,8 @@ void IntraTransportConnection::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
 }
 
 void IntraTransportConnection::AsyncSendMessage(
-    const RR_INTRUSIVE_PTR<Message>& m, const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
+    const RR_INTRUSIVE_PTR<Message>& m,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_SHARED_PTR<IntraTransportConnection> peer1 = peer.lock();
     if (!peer1)

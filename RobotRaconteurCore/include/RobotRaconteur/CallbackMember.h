@@ -128,39 +128,39 @@ class CallbackClient : public Callback<T>
   public:
     CallbackClient(boost::string_ref name) : Callback<T>(name) {}
 
-    RR_OVIRTUAL ~CallbackClient()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~CallbackClient() RR_OVERRIDE {}
 
   private:
     T function;
     boost::mutex function_lock;
 
   public:
-    RR_OVIRTUAL T GetFunction() RR_OVERRIDE 
+    RR_OVIRTUAL T GetFunction() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(function_lock);
         if (!function)
             throw InvalidOperationException("Callback function not set");
         return function;
     }
-    RR_OVIRTUAL void SetFunction(T value) RR_OVERRIDE 
+    RR_OVIRTUAL void SetFunction(T value) RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(function_lock);
         function = value;
     }
 
-    RR_OVIRTUAL T GetClientFunction(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE 
+    RR_OVIRTUAL T GetClientFunction(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
     {
         RR_UNUSED(e);
         throw InvalidOperationException("Invalid for client side of callback");
     }
 
-    RR_OVIRTUAL T GetClientFunction(uint32_t e) RR_OVERRIDE 
+    RR_OVIRTUAL T GetClientFunction(uint32_t e) RR_OVERRIDE
     {
         RR_UNUSED(e);
         throw InvalidOperationException("Invalid for client side of callback");
     }
 
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE 
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(function_lock);
         function.clear();
@@ -192,22 +192,22 @@ class CallbackServer : public Callback<T>, public CallbackServerBase
         this->skel = skel;
     }
 
-    RR_OVIRTUAL ~CallbackServer()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~CallbackServer() RR_OVERRIDE {}
 
-    RR_OVIRTUAL T GetFunction() RR_OVERRIDE  { throw InvalidOperationException("Invalid for server side of callback"); }
-    RR_OVIRTUAL void SetFunction(T value) RR_OVERRIDE 
+    RR_OVIRTUAL T GetFunction() RR_OVERRIDE { throw InvalidOperationException("Invalid for server side of callback"); }
+    RR_OVIRTUAL void SetFunction(T value) RR_OVERRIDE
     {
         RR_UNUSED(value);
         throw InvalidOperationException("Invalid for server side of callback");
     }
 
-    RR_OVIRTUAL T GetClientFunction(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE 
+    RR_OVIRTUAL T GetClientFunction(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
     {
         RR_UNUSED(e);
         return GetClientFunction(e->GetLocalEndpoint());
     }
 
-    RR_OVIRTUAL T GetClientFunction(uint32_t e) RR_OVERRIDE 
+    RR_OVIRTUAL T GetClientFunction(uint32_t e) RR_OVERRIDE
     {
         RR_SHARED_PTR<ServiceSkel> s = skel.lock();
         if (!s)
@@ -215,9 +215,9 @@ class CallbackServer : public Callback<T>, public CallbackServerBase
         return *RR_STATIC_POINTER_CAST<T>(s->GetCallbackFunction(e, GetMemberName()));
     }
 
-    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE  { return Callback<T>::GetMemberName(); }
+    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE { return Callback<T>::GetMemberName(); }
 
-    RR_OVIRTUAL void Shutdown()  RR_OVERRIDE {}
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE {}
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

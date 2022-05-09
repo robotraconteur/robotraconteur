@@ -389,7 +389,7 @@ class WireConnection : public WireConnectionBase
         WireConnectionClosedCallback = callback;
     }
 
-    RR_OVIRTUAL ~WireConnection() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~WireConnection() RR_OVERRIDE {}
 
     /**
      * @brief Get the current InValue
@@ -473,13 +473,13 @@ class WireConnection : public WireConnectionBase
     {}
 
   protected:
-    RR_OVIRTUAL void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time) RR_OVERRIDE 
+    RR_OVIRTUAL void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time) RR_OVERRIDE
     {
         WireValueChanged(RR_STATIC_POINTER_CAST<WireConnection<T> >(shared_from_this()),
                          RRPrimUtil<T>::PreUnpack(value), time);
     }
 
-    RR_OVIRTUAL void fire_WireClosedCallback() RR_OVERRIDE 
+    RR_OVIRTUAL void fire_WireClosedCallback() RR_OVERRIDE
     {
         boost::function<void(RR_SHARED_PTR<WireConnection<T> >)> c = GetWireConnectionClosedCallback();
         if (!c)
@@ -488,7 +488,7 @@ class WireConnection : public WireConnectionBase
     }
 
   public:
-    RR_OVIRTUAL void Close() RR_OVERRIDE 
+    RR_OVIRTUAL void Close() RR_OVERRIDE
     {
         WireConnectionBase::Close();
         {
@@ -518,7 +518,7 @@ class WireConnection : public WireConnectionBase
 
   public:
     RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                            int32_t timeout = 2000) RR_OVERRIDE 
+                                int32_t timeout = 2000) RR_OVERRIDE
     {
         WireConnectionBase::AsyncClose(boost::bind(&WireConnection<T>::AsyncClose1,
                                                    RR_STATIC_POINTER_CAST<WireConnection<T> >(shared_from_this()),
@@ -527,7 +527,7 @@ class WireConnection : public WireConnectionBase
     }
 
   protected:
-    RR_OVIRTUAL void RemoteClose() RR_OVERRIDE 
+    RR_OVIRTUAL void RemoteClose() RR_OVERRIDE
     {
         WireConnectionBase::RemoteClose();
         {
@@ -568,7 +568,6 @@ class ROBOTRACONTEUR_CORE_API WireBase : public RR_ENABLE_SHARED_FROM_THIS<WireB
                             int32_t timeout) = 0;
 
   protected:
-
     WireBase();
 
     virtual void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& data, TimeSpec time, uint32_t endpoint) = 0;
@@ -671,7 +670,7 @@ class Wire : public virtual WireBase
   public:
     Wire(boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify) { this->verify = RR_MOVE(verify); }
 
-    RR_OVIRTUAL ~Wire()  RR_OVERRIDE {}
+    RR_OVIRTUAL ~Wire() RR_OVERRIDE {}
 
     /**
      * @brief Connect the wire
@@ -698,9 +697,10 @@ class Wire : public virtual WireBase
      * @param handler A handler function to receive the wire connection, or an exception
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
-    virtual void AsyncConnect(boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                              int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+    virtual void AsyncConnect(
+        boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 
     /**
      * @brief Peek the current InValue
@@ -764,8 +764,7 @@ class Wire : public virtual WireBase
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     virtual void AsyncPeekInValue(
-        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)>
-            handler,
+        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 
     /**
@@ -779,8 +778,7 @@ class Wire : public virtual WireBase
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     virtual void AsyncPeekOutValue(
-        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)>
-            handler,
+        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 
     /**
@@ -795,8 +793,7 @@ class Wire : public virtual WireBase
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     virtual void AsyncPokeOutValue(const T& value,
-                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>
-                                       handler,
+                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                    int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
 
     /**
@@ -934,7 +931,7 @@ class Wire : public virtual WireBase
         boost::function<void(const T&, const TimeSpec&, const uint32_t&)> function) = 0;
 
   protected:
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> PackData(const RR_INTRUSIVE_PTR<RRValue>& data) RR_OVERRIDE 
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> PackData(const RR_INTRUSIVE_PTR<RRValue>& data) RR_OVERRIDE
     {
         if (verify)
         {
@@ -943,7 +940,7 @@ class Wire : public virtual WireBase
         return GetNode()->template PackAnyType<typename RRPrimUtil<T>::BoxedType>(data);
     }
 
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRValue> UnpackData(const RR_INTRUSIVE_PTR<MessageElement>& mdata) RR_OVERRIDE 
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRValue> UnpackData(const RR_INTRUSIVE_PTR<MessageElement>& mdata) RR_OVERRIDE
     {
         if (!verify)
         {
@@ -969,24 +966,26 @@ class ROBOTRACONTEUR_CORE_API WireClientBase : public virtual WireBase
     friend class detail::WireSubscription_connection;
 
   public:
-    RR_OVIRTUAL ~WireClientBase() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~WireClientBase() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE;
 
-    RR_OVIRTUAL std::string GetServicePath() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetServicePath() RR_OVERRIDE;
 
-    RR_OVIRTUAL void WirePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e = 0) RR_OVERRIDE ;
+    RR_OVIRTUAL void WirePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e = 0) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE ;
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncClose(const RR_SHARED_PTR<WireConnectionBase>& endpoint, bool remote, uint32_t ee,
-                            RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
-                            int32_t timeout) RR_OVERRIDE ;
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
+                                    handler,
+                                int32_t timeout) RR_OVERRIDE;
 
     RR_SHARED_PTR<ServiceStub> GetStub();
 
   protected:
-    RR_OVIRTUAL void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, TimeSpec time, uint32_t endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, TimeSpec time,
+                                    uint32_t endpoint) RR_OVERRIDE;
 
     std::string m_MemberName;
     std::string service_path;
@@ -1046,11 +1045,12 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
     }
 
-    RR_OVIRTUAL ~WireClient() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~WireClient() RR_OVERRIDE {}
 
-    RR_OVIRTUAL void AsyncConnect(boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                              int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+    RR_OVIRTUAL void AsyncConnect(
+        boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         AsyncConnect_internal(boost::bind(handler,
                                           boost::bind(&WireClient<T>::AsyncConnect_cast, RR_BOOST_PLACEHOLDERS(_1)),
@@ -1058,7 +1058,7 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
                               timeout);
     }
 
-    RR_OVIRTUAL RR_SHARED_PTR<WireConnection<T> > Connect() RR_OVERRIDE 
+    RR_OVIRTUAL RR_SHARED_PTR<WireConnection<T> > Connect() RR_OVERRIDE
     {
         ROBOTRACONTEUR_ASSERT_MULTITHREADED(node);
 
@@ -1105,13 +1105,15 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
     }
 
   public:
-    RR_OVIRTUAL T PeekInValue(TimeSpec& ts) RR_OVERRIDE  { return RRPrimUtil<T>::PreUnpack(PeekInValueBase(ts)); }
-    RR_OVIRTUAL T PeekOutValue(TimeSpec& ts)  RR_OVERRIDE { return RRPrimUtil<T>::PreUnpack(PeekOutValueBase(ts)); }
-    RR_OVIRTUAL void PokeOutValue(const T& value)  RR_OVERRIDE { return PokeOutValueBase(RRPrimUtil<T>::PrePack(value)); }
+    RR_OVIRTUAL T PeekInValue(TimeSpec& ts) RR_OVERRIDE { return RRPrimUtil<T>::PreUnpack(PeekInValueBase(ts)); }
+    RR_OVIRTUAL T PeekOutValue(TimeSpec& ts) RR_OVERRIDE { return RRPrimUtil<T>::PreUnpack(PeekOutValueBase(ts)); }
+    RR_OVIRTUAL void PokeOutValue(const T& value) RR_OVERRIDE
+    {
+        return PokeOutValueBase(RRPrimUtil<T>::PrePack(value));
+    }
     RR_OVIRTUAL void AsyncPeekInValue(
-        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)>
-            handler,
-        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         AsyncPeekInValueBase(boost::bind(&WireClient::AsyncPeekValueBaseEnd2,
                                          RR_DYNAMIC_POINTER_CAST<WireClient>(shared_from_this()),
@@ -1120,9 +1122,8 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
                              timeout);
     }
     RR_OVIRTUAL void AsyncPeekOutValue(
-        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)>
-            handler,
-        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         AsyncPeekOutValueBase(boost::bind(&WireClient::AsyncPeekValueBaseEnd2,
                                           RR_DYNAMIC_POINTER_CAST<WireClient>(shared_from_this()),
@@ -1131,60 +1132,61 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
                               timeout);
     }
     RR_OVIRTUAL void AsyncPokeOutValue(const T& value,
-                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>
-                                       handler,
-                                   int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+                                       boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                       int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         AsyncPokeOutValueBase(RRPrimUtil<T>::PrePack(value), RR_MOVE(handler), timeout);
     }
 
     // Unused service-side functions
-    RR_OVIRTUAL boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> GetWireConnectCallback() RR_OVERRIDE 
+    RR_OVIRTUAL boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> GetWireConnectCallback() RR_OVERRIDE
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "GetWireConnectCallback is not valid for WireClient");
         throw InvalidOperationException("Not valid for client");
     }
-    RR_OVIRTUAL void SetWireConnectCallback(boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> function) RR_OVERRIDE 
+    RR_OVIRTUAL void SetWireConnectCallback(boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> function)
+        RR_OVERRIDE
     {
         RR_UNUSED(function);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "SetWireConnectCallback is not valid for WireClient");
         throw InvalidOperationException("Not valid for client");
     }
-    RR_OVIRTUAL boost::function<T(const uint32_t&)> GetPeekInValueCallback() RR_OVERRIDE 
+    RR_OVIRTUAL boost::function<T(const uint32_t&)> GetPeekInValueCallback() RR_OVERRIDE
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "GetPeekInValueCallback is not valid for WireClient");
         throw InvalidOperationException("Not valid for client");
     }
-    RR_OVIRTUAL void SetPeekInValueCallback(boost::function<T(const uint32_t&)> function) RR_OVERRIDE 
+    RR_OVIRTUAL void SetPeekInValueCallback(boost::function<T(const uint32_t&)> function) RR_OVERRIDE
     {
         RR_UNUSED(function);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "SetPeekInValueCallback is not valid for WireClient");
         throw InvalidOperationException("Not valid for client");
     }
-    RR_OVIRTUAL boost::function<T(const uint32_t&)> GetPeekOutValueCallback() RR_OVERRIDE 
+    RR_OVIRTUAL boost::function<T(const uint32_t&)> GetPeekOutValueCallback() RR_OVERRIDE
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "GetPeekOutValueCallback is not valid for WireClient");
         throw InvalidOperationException("Not valid for client");
     }
-    RR_OVIRTUAL void SetPeekOutValueCallback(boost::function<T(const uint32_t&)> function) RR_OVERRIDE 
+    RR_OVIRTUAL void SetPeekOutValueCallback(boost::function<T(const uint32_t&)> function) RR_OVERRIDE
     {
         RR_UNUSED(function);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "SetPeekOutValueCallback is not valid for WireClient");
         throw InvalidOperationException("Not valid for client");
     }
-    RR_OVIRTUAL boost::function<void(const T&, const TimeSpec&, const uint32_t&)> GetPokeOutValueCallback() RR_OVERRIDE 
+    RR_OVIRTUAL boost::function<void(const T&, const TimeSpec&, const uint32_t&)> GetPokeOutValueCallback() RR_OVERRIDE
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "GetPokeOutValueCallback is not valid for WireClient");
         throw InvalidOperationException("Not valid for client");
     }
-    RR_OVIRTUAL void SetPokeOutValueCallback(boost::function<void(const T&, const TimeSpec&, const uint32_t&)> function) RR_OVERRIDE 
+    RR_OVIRTUAL void SetPokeOutValueCallback(boost::function<void(const T&, const TimeSpec&, const uint32_t&)> function)
+        RR_OVERRIDE
     {
         RR_UNUSED(function);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
@@ -1193,7 +1195,8 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
     }
 
   protected:
-    RR_OVIRTUAL RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction) RR_OVERRIDE 
+    RR_OVIRTUAL RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction)
+        RR_OVERRIDE
     {
         return RR_MAKE_SHARED<WireConnection<T> >(RR_STATIC_POINTER_CAST<WireBase>(shared_from_this()), 0, direction);
     }
@@ -1205,26 +1208,28 @@ class ROBOTRACONTEUR_CORE_API WireServerBase : public virtual WireBase
     friend class WireConnectionBase;
 
   public:
-    RR_OVIRTUAL ~WireServerBase() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~WireServerBase() RR_OVERRIDE {}
 
-    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE;
 
-    RR_OVIRTUAL std::string GetServicePath() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string GetServicePath() RR_OVERRIDE;
 
-    RR_OVIRTUAL void WirePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e = 0) RR_OVERRIDE ;
+    RR_OVIRTUAL void WirePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e = 0) RR_OVERRIDE;
 
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE ;
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncClose(const RR_SHARED_PTR<WireConnectionBase>& endpoint, bool remote, uint32_t ee,
-                            RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>) handler,
-                            int32_t timeout) RR_OVERRIDE ;
+                                RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>)
+                                    handler,
+                                int32_t timeout) RR_OVERRIDE;
 
     virtual RR_INTRUSIVE_PTR<MessageEntry> WireCommand(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e);
 
     RR_SHARED_PTR<ServiceSkel> GetSkel();
 
   protected:
-    RR_OVIRTUAL void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, TimeSpec time, uint32_t endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void SendWirePacket(const RR_INTRUSIVE_PTR<RRValue>& packet, TimeSpec time,
+                                    uint32_t endpoint) RR_OVERRIDE;
 
     std::string m_MemberName;
     std::string service_path;
@@ -1268,11 +1273,12 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
     }
 
-    RR_OVIRTUAL ~WireServer() RR_OVERRIDE  {}
+    RR_OVIRTUAL ~WireServer() RR_OVERRIDE {}
 
-     RR_OVIRTUAL  void AsyncConnect(boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&,
-                                                               const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
-                              int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+    RR_OVIRTUAL void AsyncConnect(
+        boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         RR_UNUSED(handler);
         RR_UNUSED(timeout);
@@ -1280,27 +1286,27 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
                                                 "AsyncConnect is not valid for WireServer");
         throw InvalidOperationException("Not valid for server");
     }
-    RR_OVIRTUAL RR_SHARED_PTR<WireConnection<T> > Connect() RR_OVERRIDE 
+    RR_OVIRTUAL RR_SHARED_PTR<WireConnection<T> > Connect() RR_OVERRIDE
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName,
                                                 "Connect is not valid for WireServer");
         throw InvalidOperationException("Not valid for server");
     }
-    RR_OVIRTUAL T PeekInValue(TimeSpec& ts) RR_OVERRIDE 
+    RR_OVIRTUAL T PeekInValue(TimeSpec& ts) RR_OVERRIDE
     {
         RR_UNUSED(ts);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName,
                                                 "PeekInValue is not valid for WireServer");
         throw InvalidOperationException("Not valid for server");
     }
-    RR_OVIRTUAL T PeekOutValue(TimeSpec& ts) RR_OVERRIDE 
+    RR_OVIRTUAL T PeekOutValue(TimeSpec& ts) RR_OVERRIDE
     {
         RR_UNUSED(ts);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName,
                                                 "PeekOutValue is not valid for WireServer");
         throw InvalidOperationException("Not valid for server");
     }
-    RR_OVIRTUAL void PokeOutValue(const T& value) RR_OVERRIDE 
+    RR_OVIRTUAL void PokeOutValue(const T& value) RR_OVERRIDE
     {
         RR_UNUSED(value);
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, -1, service_path, m_MemberName,
@@ -1308,9 +1314,8 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
         throw InvalidOperationException("Not valid for server");
     }
     RR_OVIRTUAL void AsyncPeekInValue(
-        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)>
-            handler,
-        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         RR_UNUSED(handler);
         RR_UNUSED(timeout);
@@ -1319,9 +1324,8 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
         throw InvalidOperationException("Not valid for server");
     }
     RR_OVIRTUAL void AsyncPeekOutValue(
-        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)>
-            handler,
-        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+        boost::function<void(const T&, const TimeSpec&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         RR_UNUSED(handler);
         RR_UNUSED(timeout);
@@ -1330,9 +1334,8 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
         throw InvalidOperationException("Not valid for server");
     }
     RR_OVIRTUAL void AsyncPokeOutValue(const T& value,
-                                   boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>
-                                       handler,
-                                   int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE 
+                                       boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                       int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         RR_UNUSED(value);
         RR_UNUSED(handler);
@@ -1342,26 +1345,38 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
         throw InvalidOperationException("Not valid for server");
     }
 
-    RR_OVIRTUAL boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> GetWireConnectCallback()  RR_OVERRIDE { return callback; }
-    RR_OVIRTUAL void SetWireConnectCallback(boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> function) RR_OVERRIDE 
+    RR_OVIRTUAL boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> GetWireConnectCallback() RR_OVERRIDE
+    {
+        return callback;
+    }
+    RR_OVIRTUAL void SetWireConnectCallback(boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> function)
+        RR_OVERRIDE
     {
         callback = function;
     }
-    RR_OVIRTUAL boost::function<T(const uint32_t&)> GetPeekInValueCallback() RR_OVERRIDE  { return peek_in_callback; }
-    RR_OVIRTUAL void SetPeekInValueCallback(boost::function<T(const uint32_t&)> function) RR_OVERRIDE { peek_in_callback = function; }
-    RR_OVIRTUAL boost::function<T(const uint32_t&)> GetPeekOutValueCallback()  RR_OVERRIDE { return peek_out_callback; }
-    RR_OVIRTUAL void SetPeekOutValueCallback(boost::function<T(const uint32_t&)> function) RR_OVERRIDE  { peek_out_callback = function; }
-    RR_OVIRTUAL boost::function<void(const T&, const TimeSpec&, const uint32_t&)> GetPokeOutValueCallback() RR_OVERRIDE 
+    RR_OVIRTUAL boost::function<T(const uint32_t&)> GetPeekInValueCallback() RR_OVERRIDE { return peek_in_callback; }
+    RR_OVIRTUAL void SetPeekInValueCallback(boost::function<T(const uint32_t&)> function) RR_OVERRIDE
+    {
+        peek_in_callback = function;
+    }
+    RR_OVIRTUAL boost::function<T(const uint32_t&)> GetPeekOutValueCallback() RR_OVERRIDE { return peek_out_callback; }
+    RR_OVIRTUAL void SetPeekOutValueCallback(boost::function<T(const uint32_t&)> function) RR_OVERRIDE
+    {
+        peek_out_callback = function;
+    }
+    RR_OVIRTUAL boost::function<void(const T&, const TimeSpec&, const uint32_t&)> GetPokeOutValueCallback() RR_OVERRIDE
     {
         return poke_out_callback;
     }
-    RR_OVIRTUAL void SetPokeOutValueCallback(boost::function<void(const T&, const TimeSpec&, const uint32_t&)> function) RR_OVERRIDE 
+    RR_OVIRTUAL void SetPokeOutValueCallback(boost::function<void(const T&, const TimeSpec&, const uint32_t&)> function)
+        RR_OVERRIDE
     {
         poke_out_callback = function;
     }
 
   protected:
-    RR_OVIRTUAL RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(uint32_t e, MemberDefinition_Direction direction) RR_OVERRIDE 
+    RR_OVIRTUAL RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(
+        uint32_t e, MemberDefinition_Direction direction) RR_OVERRIDE
     {
         return RR_MAKE_SHARED<WireConnection<T> >(RR_STATIC_POINTER_CAST<WireBase>(shared_from_this()), e, direction);
     }
@@ -1371,14 +1386,14 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
     boost::function<T(const uint32_t&)> peek_out_callback;
     boost::function<void(const T&, const TimeSpec&, const uint32_t&)> poke_out_callback;
 
-    RR_OVIRTUAL void fire_WireConnectCallback(const RR_SHARED_PTR<WireConnectionBase>& e) RR_OVERRIDE 
+    RR_OVIRTUAL void fire_WireConnectCallback(const RR_SHARED_PTR<WireConnectionBase>& e) RR_OVERRIDE
     {
         if (!callback)
             return;
         callback(RR_STATIC_POINTER_CAST<WireConnection<T> >(e));
     }
 
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRValue> do_PeekInValue(const uint32_t& ep) RR_OVERRIDE 
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRValue> do_PeekInValue(const uint32_t& ep) RR_OVERRIDE
     {
         if (!peek_in_callback)
         {
@@ -1389,7 +1404,7 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
         return RRPrimUtil<T>::PrePack(peek_in_callback(ep));
     }
 
-    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRValue> do_PeekOutValue(const uint32_t& ep) RR_OVERRIDE 
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRValue> do_PeekOutValue(const uint32_t& ep) RR_OVERRIDE
     {
         if (!peek_out_callback)
         {
@@ -1400,7 +1415,8 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
         return RRPrimUtil<T>::PrePack(peek_out_callback(ep));
     }
 
-    RR_OVIRTUAL void do_PokeOutValue(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& ts, const uint32_t& ep) RR_OVERRIDE 
+    RR_OVIRTUAL void do_PokeOutValue(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& ts,
+                                     const uint32_t& ep) RR_OVERRIDE
     {
         if (!poke_out_callback)
         {
@@ -1412,7 +1428,7 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
     }
 
   public:
-    RR_OVIRTUAL void Shutdown() RR_OVERRIDE 
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE
     {
         WireServerBase::Shutdown();
         callback.clear();
@@ -1599,7 +1615,7 @@ class WireBroadcaster : public WireBroadcasterBase
     static T ClientPeekOutValue() { throw ReadOnlyMemberException("Read only wire"); }
     static T ClientPokeOutValue() { throw ReadOnlyMemberException("Read only wire"); }
 
-    RR_OVIRTUAL void AttachWireServerEvents(const RR_SHARED_PTR<WireServerBase>& w) RR_OVERRIDE 
+    RR_OVIRTUAL void AttachWireServerEvents(const RR_SHARED_PTR<WireServerBase>& w) RR_OVERRIDE
     {
         RR_SHARED_PTR<WireServer<T> > w_T = rr_cast<WireServer<T> >(w);
         w_T->SetWireConnectCallback(boost::bind(&WireBroadcaster::ConnectionConnectedBase, this->shared_from_this(),
@@ -1611,7 +1627,8 @@ class WireBroadcaster : public WireBroadcasterBase
     }
 
     RR_OVIRTUAL void AttachWireConnectionEvents(const RR_SHARED_PTR<WireConnectionBase>& w,
-                                            const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& c) RR_OVERRIDE 
+                                                const RR_SHARED_PTR<detail::WireBroadcaster_connected_connection>& c)
+        RR_OVERRIDE
     {
         RR_SHARED_PTR<WireConnection<T> > w_T = rr_cast<WireConnection<T> >(w);
         w_T->SetWireConnectionClosedCallback(

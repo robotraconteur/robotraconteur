@@ -100,29 +100,31 @@ class LocalTransportConnection : public detail::ASIOStreamBaseTransport
     void AsyncAttachSocket(const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, const std::string& noden,
                            const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
   protected:
     RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
     RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler) RR_OVERRIDE ;
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    RR_OVIRTUAL size_t available() RR_OVERRIDE ;
+    RR_OVIRTUAL size_t available() RR_OVERRIDE;
 
   public:
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE;
 
-    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE ;
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE;
 
-    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE ;
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
-    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE;
 
   protected:
     RR_SHARED_PTR<detail::LocalTransport_socket> socket;
@@ -138,11 +140,12 @@ class LocalTransportConnection : public detail::ASIOStreamBaseTransport
     boost::recursive_mutex close_lock;
 };
 
-void LocalTransport_attach_transport(
-    const RR_SHARED_PTR<LocalTransport>& parent, const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
-    bool server, uint32_t endpoint, const std::string& noden,
-    boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&, const RR_SHARED_PTR<ITransportConnection>&,
-                         const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
+void LocalTransport_attach_transport(const RR_SHARED_PTR<LocalTransport>& parent,
+                                     const RR_SHARED_PTR<detail::LocalTransport_socket>& socket, bool server,
+                                     uint32_t endpoint, const std::string& noden,
+                                     boost::function<void(const RR_SHARED_PTR<detail::LocalTransport_socket>&,
+                                                          const RR_SHARED_PTR<ITransportConnection>&,
+                                                          const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
 void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& parent,
                                         const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,

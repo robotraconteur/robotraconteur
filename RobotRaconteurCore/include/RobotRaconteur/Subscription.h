@@ -162,7 +162,7 @@ class IServiceSubscription
 
   public:
     virtual void Close() = 0;
-    virtual ~IServiceSubscription() {};
+    virtual ~IServiceSubscription(){};
 };
 
 /**
@@ -238,7 +238,7 @@ class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription : public IServiceSubscrip
      * Closes the subscription. Subscriptions are automatically closed when the node is shut down.
      *
      */
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
@@ -270,9 +270,9 @@ class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription : public IServiceSubscrip
 
   protected:
     RR_OVIRTUAL void Init(const std::vector<std::string>& service_types,
-                      const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter) RR_OVERRIDE ;
-    RR_OVIRTUAL void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE ;
-    RR_OVIRTUAL void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE ;
+                          const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter) RR_OVERRIDE;
+    RR_OVIRTUAL void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE;
+    RR_OVIRTUAL void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE;
 
     void fire_ServiceDetectedListener(const ServiceSubscriptionClientID& noden, const ServiceInfo2& info);
     void fire_ServiceLostListener(const ServiceSubscriptionClientID& noden, const ServiceInfo2& info);
@@ -413,7 +413,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * Close the subscription. Subscriptions are automatically closed when the node is shut down.
      *
      */
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
     /**
      * @brief Claim a client that was connected by the subscription
@@ -711,13 +711,13 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
 
   protected:
     RR_OVIRTUAL void Init(const std::vector<std::string>& service_types,
-                      const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter) RR_OVERRIDE ;
+                          const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter) RR_OVERRIDE;
     virtual void InitServiceURL(const std::vector<std::string>& url, boost::string_ref username = "",
                                 const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
                                     (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
                                 boost::string_ref objecttype = "");
-    RR_OVIRTUAL void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE ;
-    RR_OVIRTUAL void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE ;
+    RR_OVIRTUAL void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE;
+    RR_OVIRTUAL void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE;
 
     void ClientConnected(const RR_SHARED_PTR<RRObject>& c, const RR_SHARED_PTR<RobotRaconteurException>& err,
                          const RR_SHARED_PTR<detail::ServiceSubscription_client>& c2,
@@ -993,17 +993,18 @@ class WireSubscription : public WireSubscriptionBase
     }
 
   protected:
-    boost::signals2::signal<void(const RR_SHARED_PTR<WireSubscription<T> >&, const T&, const TimeSpec&)> wire_value_changed;
+    boost::signals2::signal<void(const RR_SHARED_PTR<WireSubscription<T> >&, const T&, const TimeSpec&)>
+        wire_value_changed;
 
     RR_OVIRTUAL void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
-                                       const RR_SHARED_PTR<WireConnectionBase>& connection) RR_OVERRIDE 
+                                           const RR_SHARED_PTR<WireConnectionBase>& connection) RR_OVERRIDE
     {
         RR_UNUSED(connection);
         wire_value_changed(RR_STATIC_POINTER_CAST<WireSubscription<T> >(shared_from_this()),
                            RRPrimUtil<T>::PreUnpack(value), time);
     }
 
-    RR_OVIRTUAL bool isempty_WireValueChanged()  RR_OVERRIDE { return wire_value_changed.empty(); }
+    RR_OVIRTUAL bool isempty_WireValueChanged() RR_OVERRIDE { return wire_value_changed.empty(); }
 };
 
 /**
@@ -1233,12 +1234,12 @@ class PipeSubscription : public PipeSubscriptionBase
   protected:
     boost::signals2::signal<void(const RR_SHARED_PTR<PipeSubscription<T> >&)> pipe_packet_received;
 
-    RR_OVIRTUAL void fire_PipePacketReceived() RR_OVERRIDE 
+    RR_OVIRTUAL void fire_PipePacketReceived() RR_OVERRIDE
     {
         pipe_packet_received(RR_STATIC_POINTER_CAST<PipeSubscription<T> >(shared_from_this()));
     }
 
-    RR_OVIRTUAL bool isempty_PipePacketReceived() RR_OVERRIDE  { return pipe_packet_received.empty(); }
+    RR_OVIRTUAL bool isempty_PipePacketReceived() RR_OVERRIDE { return pipe_packet_received.empty(); }
 };
 
 namespace detail

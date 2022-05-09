@@ -52,4 +52,4 @@ void ca<cfloat>(const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v1, const RR_INTRUSIVE
     }
 }
 } // namespace RobotRaconteurTest
-// NOLINTEND
+  // NOLINTEND

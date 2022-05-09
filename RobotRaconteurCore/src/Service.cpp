@@ -748,8 +748,9 @@ void ServerContext::SendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const R
     e->SendMessage(mm);
 }
 
-void ServerContext::AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e,
-                                     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+void ServerContext::AsyncSendMessage(
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
     RR_SHARED_PTR<ServerEndpoint> s;
@@ -768,8 +769,9 @@ void ServerContext::AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, ui
     AsyncSendMessage(m, s, (callback));
 }
 
-void ServerContext::AsyncSendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e,
-                                     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+void ServerContext::AsyncSendMessage(
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
     // m.ServicePath = ServiceName;
@@ -794,8 +796,9 @@ void ServerContext::AsyncSendUnreliableMessage(
     e->AsyncSendMessage(mm, callback);
 }
 
-void ServerContext::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
-                                         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
+void ServerContext::AsyncSendPipeMessage(
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     if (!unreliable)
     {

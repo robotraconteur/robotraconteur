@@ -2,8 +2,6 @@
 #include "stdafx.h"
 #endif
 
-
-
 #include "ServiceTestClient.h"
 #include "MultiDimArrayTest.h"
 

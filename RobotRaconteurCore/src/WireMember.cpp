@@ -88,8 +88,7 @@ void WireConnectionBase::Close()
     t->end_void();
 }
 
-void WireConnectionBase::AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>
-                                        handler,
+void WireConnectionBase::AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                     int32_t timeout)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,

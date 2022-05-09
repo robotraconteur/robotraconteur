@@ -108,13 +108,13 @@ class ROBOTRACONTEUR_CORE_API LocalMessageTap : public MessageTap
      * @param tap_name The name of the local tap
      */
     LocalMessageTap(const std::string& tap_name);
-    RR_OVIRTUAL~LocalMessageTap() RR_OVERRIDE ;
+    RR_OVIRTUAL ~LocalMessageTap() RR_OVERRIDE;
 
-    RR_OVIRTUAL void Open() RR_OVERRIDE ;
-    RR_OVIRTUAL void Close() RR_OVERRIDE ;
+    RR_OVIRTUAL void Open() RR_OVERRIDE;
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    RR_OVIRTUAL void RecordLogRecord(const RRLogRecord& log_record) RR_OVERRIDE ;
-    RR_OVIRTUAL void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message) RR_OVERRIDE ;
+    RR_OVIRTUAL void RecordLogRecord(const RRLogRecord& log_record) RR_OVERRIDE;
+    RR_OVIRTUAL void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message) RR_OVERRIDE;
 };
 
 }; // namespace RobotRaconteur
