@@ -839,7 +839,7 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
   public:
     virtual ~PipeClient() {}
 
-    virtual boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> GetPipeConnectCallback()
+    virtual boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> GetPipeConnectCallback()
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "GetPipeConnectCallback is not valid for PipeClient");
@@ -882,7 +882,7 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
 
     PipeClient(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub, bool unreliable = false,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
-               boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
+               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
         : PipeClientBase(name, stub, unreliable, direction), Pipe<T>(verify)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
@@ -997,7 +997,7 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
   public:
     virtual ~PipeServer() {}
 
-    virtual boost::function<void(RR_SHARED_PTR<PipeEndpoint<T> >)> GetPipeConnectCallback() { return callback; }
+    virtual boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> GetPipeConnectCallback() { return callback; }
 
     virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<PipeEndpoint<T> >&)> function)
     {
@@ -1027,7 +1027,7 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
 
     PipeServer(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel, bool unreliable = false,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
-               boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
+               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
         : PipeServerBase(name, skel, unreliable, direction), Pipe<T>(verify)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);

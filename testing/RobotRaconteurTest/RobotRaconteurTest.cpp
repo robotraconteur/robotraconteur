@@ -14,10 +14,10 @@
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 
-#include "MessageSerializationTest.h"
-#include "MessageSerializationTest4.h"
+// #include "MessageSerializationTest.h"
+// #include "MessageSerializationTest4.h"
 
-#include "AsyncMessageTest.h"
+// #include "AsyncMessageTest.h"
 
 #include <RobotRaconteur.h>
 /*#include "com__robotraconteur__testing__TestService1.h"
@@ -367,41 +367,41 @@ int main(int argc, char* argv[])
     else
         command = "loopback";
 
-    if (command == "messagetest")
-    {
-        MessageSerializationTest::Test();
-        MessageSerializationTest4::Test();
-        std::cout << "Done!" << std::endl;
-        return 0;
-    }
+    // if (command == "messagetest")
+    // {
+    //     MessageSerializationTest::Test();
+    //     MessageSerializationTest4::Test();
+    //     std::cout << "Done!" << std::endl;
+    //     return 0;
+    // }
 
-    if (command == "messagerandomtest")
-    {
-        size_t n = 100;
-        if (argc > 2)
-        {
-            n = boost::lexical_cast<size_t>(string(argv[2]));
-        }
-        MessageSerializationTest::RandomTest(n);
-        MessageSerializationTest4::RandomTest(n);
-        std::cout << "Done!" << std::endl;
-        return 0;
-    }
+    // if (command == "messagerandomtest")
+    // {
+    //     size_t n = 100;
+    //     if (argc > 2)
+    //     {
+    //         n = boost::lexical_cast<size_t>(string(argv[2]));
+    //     }
+    //     MessageSerializationTest::RandomTest(n);
+    //     MessageSerializationTest4::RandomTest(n);
+    //     std::cout << "Done!" << std::endl;
+    //     return 0;
+    // }
 
-    if (command == "asyncmessagerandomtest")
-    {
-        size_t n = 100;
-        if (argc > 2)
-        {
-            n = boost::lexical_cast<size_t>(string(argv[2]));
-        }
-        AsyncMessageReaderTest::RandomTest(n);
-        AsyncMessageReaderTest::RandomTest4(n);
-        AsyncMessageWriterTest::RandomTest(n);
-        AsyncMessageWriterTest::RandomTest4(n);
-        std::cout << "Done!" << std::endl;
-        return 0;
-    }
+    // if (command == "asyncmessagerandomtest")
+    // {
+    //     size_t n = 100;
+    //     if (argc > 2)
+    //     {
+    //         n = boost::lexical_cast<size_t>(string(argv[2]));
+    //     }
+    //     AsyncMessageReaderTest::RandomTest(n);
+    //     AsyncMessageReaderTest::RandomTest4(n);
+    //     AsyncMessageWriterTest::RandomTest(n);
+    //     AsyncMessageWriterTest::RandomTest4(n);
+    //     std::cout << "Done!" << std::endl;
+    //     return 0;
+    // }
 
     if (command == "loopback")
     {
@@ -1346,8 +1346,8 @@ int main(int argc, char* argv[])
 
     if (command == "multidimarraytest")
     {
-        MultiDimArrayTest::TestDouble();
-        MultiDimArrayTest::TestByte();
+        // MultiDimArrayTest::TestDouble();
+        // MultiDimArrayTest::TestByte();
         return 0;
     }
 
@@ -1810,7 +1810,8 @@ int main(int argc, char* argv[])
             defs2.push_back(def2);
         }
 
-        VerifyServiceDefinitions(defs);
+        std::vector<ServiceDefinitionParseException> warnings;
+        VerifyServiceDefinitions(defs,warnings);
 
         for (size_t i = 0; i < defs.size(); i++)
         {

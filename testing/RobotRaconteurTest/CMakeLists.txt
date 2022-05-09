@@ -21,9 +21,9 @@ robotraconteur_generate_thunk(
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(RobotRaconteurTest_src
-    MessageSerializationTest.cpp
-    MessageSerializationTest4.cpp
-    MultiDimArrayTest.cpp
+    # MessageSerializationTest.cpp
+    # MessageSerializationTest4.cpp
+    # MultiDimArrayTest.cpp
     RobotRaconteurTest.cpp
     ServiceTest.cpp
     ServiceTestClient.cpp
@@ -31,7 +31,7 @@ set(RobotRaconteurTest_src
     ServiceTestClient2.cpp
     ServiceTest3.cpp
     ServiceTestClient3.cpp
-    AsyncMessageTest.cpp
+    # AsyncMessageTest.cpp
     CompareArray.cpp
     ${RR_THUNK_SRCS})
 

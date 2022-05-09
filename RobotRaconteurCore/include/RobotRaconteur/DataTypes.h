@@ -1171,7 +1171,7 @@ ROBOTRACONTEUR_CORE_API size_t RRArrayElementSize(DataTypes type);
 template <typename T>
 static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value)
 {
-    return AttachRRArray(&value, 1, true);
+    return AttachRRArrayCopy(&value, 1);
 }
 
 /**

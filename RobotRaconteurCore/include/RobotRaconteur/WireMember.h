@@ -803,7 +803,7 @@ class Wire : public virtual WireBase
      *
      * @return boost::function<void(RR_SHARED_PTR<WireConnection<T> >)> The currently configured callback function
      */
-    virtual boost::function<void(RR_SHARED_PTR<WireConnection<T> >)> GetWireConnectCallback() = 0;
+    virtual boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> GetWireConnectCallback() = 0;
 
     /**
      * @brief Set wire connected callback function
@@ -1136,7 +1136,7 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
     }
 
     // Unused service-side functions
-    virtual boost::function<void(RR_SHARED_PTR<WireConnection<T> >)> GetWireConnectCallback()
+    virtual boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> GetWireConnectCallback()
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName,
                                                 "GetWireConnectCallback is not valid for WireClient");
@@ -1259,7 +1259,7 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
   public:
     WireServer(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
-               boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
+               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
         : WireServerBase(name, skel, direction), Wire<T>(verify)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
@@ -1339,7 +1339,7 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
         throw InvalidOperationException("Not valid for server");
     }
 
-    virtual boost::function<void(RR_SHARED_PTR<WireConnection<T> >)> GetWireConnectCallback() { return callback; }
+    virtual boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> GetWireConnectCallback() { return callback; }
     virtual void SetWireConnectCallback(boost::function<void(const RR_SHARED_PTR<WireConnection<T> >&)> function)
     {
         callback = function;

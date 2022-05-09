@@ -149,3 +149,9 @@
 #define RR_MEMBER_ARRAY_INIT(x)
 #define RR_MEMBER_ARRAY_INIT2(x)
 #endif
+
+#ifndef BOOST_NO_CXX11_OVERRIDE
+#define RR_OVERRIDE override
+#else
+#define RR_OVERRIDE
+#endif

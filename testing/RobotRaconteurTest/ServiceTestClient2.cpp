@@ -2,9 +2,9 @@
 #include "stdafx.h"
 #endif
 
-// NOLINTBEGIN
 
 #include "ServiceTestClient2.h"
+// NOLINTBEGIN
 
 namespace RobotRaconteurTest
 {

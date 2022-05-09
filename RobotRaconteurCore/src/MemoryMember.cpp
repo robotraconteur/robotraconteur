@@ -480,7 +480,7 @@ void ArrayMemoryClientBase::ReadBase(uint64_t memorypos, void* buffer, uint64_t 
     }
 }
 
-void ArrayMemoryClientBase::WriteBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count)
+void ArrayMemoryClientBase::WriteBase(uint64_t memorypos, const void* buffer, uint64_t bufferpos, uint64_t count)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName,
                                             "Begin memory write with " << count << " elements");
@@ -777,7 +777,7 @@ void MultiDimArrayMemoryClientBase::ReadBase(const std::vector<uint64_t>& memory
     }
 }
 
-void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memorypos, void* buffer,
+void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memorypos, const void* buffer,
                                               const std::vector<uint64_t>& bufferpos,
                                               const std::vector<uint64_t>& count)
 {

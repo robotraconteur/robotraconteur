@@ -1,7 +1,7 @@
-// NOLINTBEGIN
 
 #include "ServiceTestClient3.h"
 
+// NOLINTBEGIN
 namespace RobotRaconteurTest
 {
 

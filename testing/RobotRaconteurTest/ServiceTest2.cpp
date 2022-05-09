@@ -2,10 +2,10 @@
 #include "stdafx.h"
 #endif
 
-// NOLINTBEGIN
 
 #include "ServiceTest2.h"
 
+// NOLINTBEGIN
 namespace RobotRaconteurTest
 {
 
@@ -131,7 +131,7 @@ RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3> testro
     return ServiceTest2_fill_teststruct3(16483675);
 }
 void testroot3_impl::set_teststruct3_prop(
-    RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3> value)
+    const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3>& value)
 {
     ServiceTest2_verify_teststruct3(value, 858362);
 }
@@ -274,7 +274,7 @@ RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transf
     return ServiceTest2_fill_transform_array(8, 837512);
 }
 void testroot3_impl::set_testnamedarray3(
-    RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > value)
+    const RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> >& value)
 {
     ServiceTest2_verify_transform_array(value, 6, 19274);
 }
@@ -285,7 +285,7 @@ RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3
     return ServiceTest2_fill_transform_multidimarray(7, 2, 66134);
 }
 void testroot3_impl::set_testnamedarray4(
-    RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value)
+    const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >& value)
 {
     ServiceTest2_verify_transform_multidimarray(value, 5, 2, 6385);
 }
@@ -296,7 +296,7 @@ RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3
     return ServiceTest2_fill_transform_multidimarray(3, 2, 773142);
 }
 void testroot3_impl::set_testnamedarray5(
-    RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value)
+    const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >& value)
 {
     ServiceTest2_verify_transform_multidimarray(value, 3, 2, 7732);
 }
@@ -535,7 +535,7 @@ RR_INTRUSIVE_PTR<RRList<RRMultiDimArray<rr_bool> > > testroot3_impl::get_b6()
     o->push_back(AllocateRRMultiDimArray(AttachRRArrayCopy(dims, 2), AttachRRArrayCopy(v, 4)));
     return o;
 }
-void testroot3_impl::set_b6(RR_INTRUSIVE_PTR<RRList<RRMultiDimArray<rr_bool> > > value)
+void testroot3_impl::set_b6(const RR_INTRUSIVE_PTR<RRList<RRMultiDimArray<rr_bool> > >& value)
 {
     RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool> > value1;
 

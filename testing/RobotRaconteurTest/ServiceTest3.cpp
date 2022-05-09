@@ -1,6 +1,6 @@
-// NOLINTBEGIN
 
 #include "ServiceTest3.h"
+// NOLINTBEGIN
 
 namespace RobotRaconteurTest
 {
@@ -55,7 +55,7 @@ void asynctestroot_impl::async_set_s1(
 }
 
 void asynctestroot_impl::async_get_d2(
-    boost::function<void(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >,
+    boost::function<void(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >&,
                          const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
         rr_handler,
     int32_t rr_timeout)
@@ -87,7 +87,7 @@ void asynctestroot_impl::async_set_s2(
 }
 
 void asynctestroot_impl::async_get_s3(
-    boost::function<void(RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService5::teststruct4>,
+    boost::function<void(const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService5::teststruct4>&,
                          const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)>
         rr_handler,
     int32_t rr_timeout)
@@ -96,7 +96,7 @@ void asynctestroot_impl::async_get_s3(
 }
 
 void asynctestroot_impl::async_set_s3(
-    RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService5::teststruct4> value,
+    const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService5::teststruct4> &value,
     boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
 {
     throw RobotRaconteur::NotImplementedException("");

@@ -154,7 +154,7 @@ class ServiceTestClient
 
     void TestAsync6(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-    void TestAsync7(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<async_testroot>& r1,
+    void TestAsync7(const RR_SHARED_PTR<async_testroot>& r, const RR_SHARED_PTR<sub1>& r1,
                     const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
     void TestAsync8(const RR_SHARED_PTR<testroot>& r,

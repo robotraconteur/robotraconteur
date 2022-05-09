@@ -147,7 +147,7 @@ class ArrayMemory : public virtual ArrayMemoryBase
      *
      * @return uint64_t The length of the array memory
      */
-    virtual uint64_t Length()
+    virtual uint64_t Length() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         return memory->size();
@@ -167,7 +167,7 @@ class ArrayMemory : public virtual ArrayMemoryBase
      * @param bufferpos The start index in the buffer to write the data
      * @param count The number of array elements to read
      */
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
+    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
                       uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -204,7 +204,7 @@ class ArrayMemory : public virtual ArrayMemoryBase
         memcpy(memory->data() + memorypos, buffer->data() + bufferpos, boost::numeric_cast<size_t>(count * sizeof(T)));
     }
 
-    virtual DataTypes ElementTypeID() { return RRPrimUtil<T>::GetTypeID(); }
+    virtual DataTypes ElementTypeID() RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
 };
 
 /**
@@ -299,7 +299,7 @@ class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @return std::vector<uint64_t> The dimensions of the memory array
      */
-    virtual std::vector<uint64_t> Dimensions()
+    virtual std::vector<uint64_t> Dimensions() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims = multimemory->Dims;
@@ -320,7 +320,7 @@ class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      *
      * @return uint64_t Number of dimensions
      */
-    virtual uint64_t DimCount()
+    virtual uint64_t DimCount() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         return multimemory->Dims->size();
@@ -340,7 +340,7 @@ class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
      * @param bufferpos The start position in the buffer to write the data
      * @param count The count of array elements to read
      */
-    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -373,7 +373,7 @@ class MultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
                                     detail::ConvertVectorType<uint32_t>(count));
     }
 
-    virtual DataTypes ElementTypeID() { return RRPrimUtil<T>::GetTypeID(); }
+    virtual DataTypes ElementTypeID() RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
 };
 
 class ROBOTRACONTEUR_CORE_API ArrayMemoryServiceSkelBase : private boost::noncopyable
@@ -415,7 +415,7 @@ class ArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
     {}
 
     virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count,
-                                                        const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+                                                        const RR_SHARED_PTR<ArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_UNUSED(bufferpos);
         RR_SHARED_PTR<ArrayMemory<T> > mem1 = rr_cast<ArrayMemory<T> >(mem);
@@ -425,7 +425,7 @@ class ArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
     }
 
     virtual void DoWrite(uint64_t memorypos, const RR_INTRUSIVE_PTR<MessageElementData>& buffer, uint64_t bufferpos,
-                         uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+                         uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_UNUSED(bufferpos);
         RR_SHARED_PTR<ArrayMemory<T> > mem1 = rr_cast<ArrayMemory<T> >(mem);
@@ -477,7 +477,7 @@ class MultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
     virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(const std::vector<uint64_t>& memorypos,
                                                         const std::vector<uint64_t>& bufferpos,
                                                         const std::vector<uint64_t>& count, uint32_t elemcount,
-                                                        const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
+                                                        const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem) RR_OVERRIDE
     {
         RR_SHARED_PTR<MultiDimArrayMemory<T> > mem1 = rr_cast<MultiDimArrayMemory<T> >(mem);
 
@@ -491,7 +491,7 @@ class MultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelBase
     }
     virtual void DoWrite(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<MessageElementData>& buffer,
                          const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount,
-                         const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
+                         const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem) RR_OVERRIDE
     {
         RR_UNUSED(elemcount);
         RR_SHARED_PTR<MultiDimArrayMemory<T> > mem1 = rr_cast<MultiDimArrayMemory<T> >(mem);
@@ -530,8 +530,8 @@ class ROBOTRACONTEUR_CORE_API ArrayMemoryClientBase : private boost::noncopyable
     uint32_t remote_max_size;
     boost::mutex max_size_lock;
     uint32_t GetMaxTransferSize();
-    virtual void ReadBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count);
-    virtual void WriteBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count);
+    virtual void ReadBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count) ;
+    virtual void WriteBase(uint64_t memorypos, const void* buffer, uint64_t bufferpos, uint64_t count) ;
 
   public:
     void Shutdown();
@@ -539,8 +539,8 @@ class ROBOTRACONTEUR_CORE_API ArrayMemoryClientBase : private boost::noncopyable
   protected:
     virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer, uint64_t offset,
                                   uint64_t count) = 0;
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t offset, uint64_t count) = 0;
-    virtual size_t GetBufferLength(void* buffer) = 0;
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, uint64_t offset, uint64_t count) = 0;
+    virtual size_t GetBufferLength(const void* buffer) = 0;
 };
 
 template <typename T>
@@ -558,8 +558,8 @@ class ArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual A
         throw InvalidOperationException("Invalid for client");
     }
 
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
-                      uint64_t count)
+    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -567,27 +567,27 @@ class ArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual A
     }
 
     virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos,
-                       uint64_t count)
+                       uint64_t count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
         WriteBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual uint64_t Length() { return ArrayMemoryClientBase::Length(); }
+    virtual uint64_t Length()  RR_OVERRIDE { return ArrayMemoryClientBase::Length(); }
 
   protected:
     virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer, uint64_t bufferpos,
-                                  uint64_t count)
+                                  uint64_t count)  RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<RRArray<T> > data = rr_cast<RRArray<T> >(res);
         RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
         memcpy(buffer1->data() + bufferpos, data->data(), boost::numeric_cast<size_t>(count * sizeof(T)));
     }
 
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, uint64_t bufferpos, uint64_t count)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
+        const RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<const RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
         if (bufferpos == 0 && buffer1->size() == boost::numeric_cast<size_t>(count))
         {
             return buffer1;
@@ -602,9 +602,9 @@ class ArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual A
             throw OutOfRangeException("");
     }
 
-    virtual size_t GetBufferLength(void* buffer)
+    virtual size_t GetBufferLength(const void* buffer)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
+        const RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<const RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
         return buffer1->size();
     }
 };
@@ -641,7 +641,7 @@ class ROBOTRACONTEUR_CORE_API MultiDimArrayMemoryClientBase : private boost::non
     uint32_t GetMaxTransferSize();
     virtual void ReadBase(const std::vector<uint64_t>& memorypos, void* buffer, const std::vector<uint64_t>& bufferpos,
                           const std::vector<uint64_t>& count);
-    virtual void WriteBase(const std::vector<uint64_t>& memorypos, void* buffer, const std::vector<uint64_t>& bufferpos,
+    virtual void WriteBase(const std::vector<uint64_t>& memorypos, const void* buffer, const std::vector<uint64_t>& bufferpos,
                            const std::vector<uint64_t>& count);
 
   public:
@@ -651,7 +651,7 @@ class ROBOTRACONTEUR_CORE_API MultiDimArrayMemoryClientBase : private boost::non
     virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
                                   const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count,
                                   uint64_t elemcount) = 0;
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos,
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, const std::vector<uint64_t>& bufferpos,
                                                                   const std::vector<uint64_t>& count,
                                                                   uint64_t elemcount) = 0;
 };
@@ -671,12 +671,12 @@ class MultiDimArrayMemoryClient : public virtual MultiDimArrayMemory<T>, public 
         throw InvalidOperationException("Not valid for client");
     }
 
-    virtual std::vector<uint64_t> Dimensions() { return MultiDimArrayMemoryClientBase::Dimensions(); }
+    virtual std::vector<uint64_t> Dimensions()  RR_OVERRIDE { return MultiDimArrayMemoryClientBase::Dimensions(); }
 
-    virtual uint64_t DimCount() { return MultiDimArrayMemoryClientBase::DimCount(); }
+    virtual uint64_t DimCount()  RR_OVERRIDE { return MultiDimArrayMemoryClientBase::DimCount(); }
 
-    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
-                      const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
+                      const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -684,7 +684,7 @@ class MultiDimArrayMemoryClient : public virtual MultiDimArrayMemory<T>, public 
     }
 
     virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
-                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -694,7 +694,7 @@ class MultiDimArrayMemoryClient : public virtual MultiDimArrayMemory<T>, public 
   protected:
     virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
                                   const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count,
-                                  uint64_t elemcount)
+                                  uint64_t elemcount)  RR_OVERRIDE
     {
         RR_UNUSED(elemcount);
         RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRMultiDimArray<T> >*>(buffer);
@@ -704,11 +704,11 @@ class MultiDimArrayMemoryClient : public virtual MultiDimArrayMemory<T>, public 
         RR_SHARED_PTR<MultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<MultiDimArrayMemory<T> >(data);
         data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
     }
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos,
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, const std::vector<uint64_t>& bufferpos,
                                                                   const std::vector<uint64_t>& count,
-                                                                  uint64_t elemcount)
+                                                                  uint64_t elemcount)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRMultiDimArray<T> >*>(buffer);
+        const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer1 = *static_cast<const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >*>(buffer);
 
         bool equ = true;
         for (size_t i = 0; i < count.size(); i++)
@@ -805,14 +805,14 @@ class PodArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Length() */
-    virtual uint64_t Length()
+    virtual uint64_t Length()  RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         return memory->size();
     }
 
     /** @copydoc ArrayMemory::Read() */
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
+    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
                       uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -844,7 +844,7 @@ class PodArrayMemory : public virtual ArrayMemoryBase
         }
     }
 
-    virtual DataTypes ElementTypeID() { return DataTypes_pod_t; }
+    virtual DataTypes ElementTypeID()  RR_OVERRIDE { return DataTypes_pod_t; }
 };
 
 template <typename T>
@@ -857,7 +857,7 @@ class PodArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
     {}
 
     virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count,
-                                                        const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+                                                        const RR_SHARED_PTR<ArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_UNUSED(bufferpos);
         RR_SHARED_PTR<PodArrayMemory<T> > mem1 = rr_cast<PodArrayMemory<T> >(mem);
@@ -867,7 +867,7 @@ class PodArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
     }
 
     virtual void DoWrite(uint64_t memorypos, const RR_INTRUSIVE_PTR<MessageElementData>& buffer, uint64_t bufferpos,
-                         uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+                         uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_UNUSED(bufferpos);
         RR_SHARED_PTR<PodArrayMemory<T> > mem1 = rr_cast<PodArrayMemory<T> >(mem);
@@ -892,8 +892,8 @@ class PodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtua
         throw InvalidOperationException("Invalid for client");
     }
 
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
-                      uint64_t count)
+    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -901,18 +901,18 @@ class PodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtua
     }
 
     virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos,
-                       uint64_t count)
+                       uint64_t count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
         WriteBase(memorypos, &buffer, bufferpos, count);
     }
 
-    virtual uint64_t Length() { return ArrayMemoryClientBase::Length(); }
+    virtual uint64_t Length()  RR_OVERRIDE { return ArrayMemoryClientBase::Length(); }
 
   protected:
     virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer, uint64_t bufferpos,
-                                  uint64_t count)
+                                  uint64_t count)  RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRPodArray<T> >*>(buffer);
         RR_INTRUSIVE_PTR<RRPodArray<T> > res1 =
@@ -924,9 +924,9 @@ class PodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtua
         }
     }
 
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, uint64_t bufferpos, uint64_t count)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRPodArray<T> >*>(buffer);
+        RR_INTRUSIVE_PTR<RRPodArray<T> > buffer1 = *static_cast<const RR_INTRUSIVE_PTR<RRPodArray<T> >*>(buffer);
         RR_INTRUSIVE_PTR<RRPodArray<T> > o = AllocateEmptyRRPodArray<T>(boost::numeric_cast<size_t>(count));
 
         for (size_t i = 0; i < count; i++)
@@ -936,9 +936,9 @@ class PodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtua
         return PodStub_PackPodArray(o);
     }
 
-    virtual size_t GetBufferLength(void* buffer)
+    virtual size_t GetBufferLength(const void* buffer)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRPodArray<T> >*>(buffer);
+        const RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer1 = *static_cast<const RR_INTRUSIVE_PTR<RRPodArray<T> >*>(buffer);
         return buffer1->size();
     }
 };
@@ -1013,7 +1013,7 @@ class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
     }
 
     /** @copydoc MultiDimArrayMemory::Dimensions() */
-    virtual std::vector<uint64_t> Dimensions()
+    virtual std::vector<uint64_t> Dimensions()  RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims = multimemory->Dims;
@@ -1027,14 +1027,14 @@ class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
     }
 
     /** @copydoc MultiDimArrayMemory::DimCount() */
-    virtual uint64_t DimCount()
+    virtual uint64_t DimCount()  RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         return multimemory->Dims->size();
     }
 
     /** @copydoc MultiDimArrayMemory::Read() */
-    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -1053,7 +1053,7 @@ class PodMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
                                     detail::ConvertVectorType<uint32_t>(count));
     }
 
-    virtual DataTypes ElementTypeID() { return DataTypes_pod_t; }
+    virtual DataTypes ElementTypeID()  RR_OVERRIDE { return DataTypes_pod_t; }
 };
 
 template <typename T>
@@ -1072,12 +1072,12 @@ class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>,
         throw InvalidOperationException("Not valid for client");
     }
 
-    virtual std::vector<uint64_t> Dimensions() { return MultiDimArrayMemoryClientBase::Dimensions(); }
+    virtual std::vector<uint64_t> Dimensions()  RR_OVERRIDE { return MultiDimArrayMemoryClientBase::Dimensions(); }
 
-    virtual uint64_t DimCount() { return MultiDimArrayMemoryClientBase::DimCount(); }
+    virtual uint64_t DimCount()  RR_OVERRIDE { return MultiDimArrayMemoryClientBase::DimCount(); }
 
-    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
-                      const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
+                      const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -1085,7 +1085,7 @@ class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>,
     }
 
     virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
-                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -1095,7 +1095,7 @@ class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>,
   protected:
     virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
                                   const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count,
-                                  uint64_t elemcount)
+                                  uint64_t elemcount)  RR_OVERRIDE
     {
         RR_UNUSED(elemcount);
         RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer1 =
@@ -1106,12 +1106,12 @@ class PodMultiDimArrayMemoryClient : public virtual PodMultiDimArrayMemory<T>,
         RR_SHARED_PTR<PodMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<PodMultiDimArrayMemory<T> >(data);
         data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
     }
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos,
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, const std::vector<uint64_t>& bufferpos,
                                                                   const std::vector<uint64_t>& count,
-                                                                  uint64_t elemcount)
+                                                                  uint64_t elemcount)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer1 =
-            *static_cast<RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >*>(buffer);
+        const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer1 =
+            *static_cast<const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >*>(buffer);
 
         RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > data = AllocateEmptyRRPodMultiDimArray<T>();
         data->Dims = VectorToRRArray<uint32_t>(count);
@@ -1135,7 +1135,7 @@ class PodMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelB
     virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(const std::vector<uint64_t>& memorypos,
                                                         const std::vector<uint64_t>& bufferpos,
                                                         const std::vector<uint64_t>& count, uint32_t elemcount,
-                                                        const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
+                                                        const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_SHARED_PTR<PodMultiDimArrayMemory<T> > mem1 = rr_cast<PodMultiDimArrayMemory<T> >(mem);
 
@@ -1148,7 +1148,7 @@ class PodMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelB
     }
     virtual void DoWrite(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<MessageElementData>& buffer,
                          const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount,
-                         const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
+                         const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_UNUSED(elemcount);
         RR_SHARED_PTR<PodMultiDimArrayMemory<T> > mem1 = rr_cast<PodMultiDimArrayMemory<T> >(mem);
@@ -1226,14 +1226,14 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
     }
 
     /** @copydoc ArrayMemory::Length() */
-    virtual uint64_t Length()
+    virtual uint64_t Length()  RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         return memory->size();
     }
 
     /** @copydoc ArrayMemory::Read() */
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
+    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
                       uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -1265,7 +1265,7 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
         }
     }
 
-    virtual DataTypes ElementTypeID() { return DataTypes_pod_t; }
+    virtual DataTypes ElementTypeID()  RR_OVERRIDE { return DataTypes_pod_t; }
 };
 
 template <typename T>
@@ -1278,7 +1278,7 @@ class NamedArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
     {}
 
     virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count,
-                                                        const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+                                                        const RR_SHARED_PTR<ArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_UNUSED(bufferpos);
         RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T> >(mem);
@@ -1288,7 +1288,7 @@ class NamedArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
     }
 
     virtual void DoWrite(uint64_t memorypos, const RR_INTRUSIVE_PTR<MessageElementData>& buffer, uint64_t bufferpos,
-                         uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)
+                         uint64_t count, const RR_SHARED_PTR<ArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_UNUSED(bufferpos);
         RR_SHARED_PTR<NamedArrayMemory<T> > mem1 = rr_cast<NamedArrayMemory<T> >(mem);
@@ -1313,8 +1313,8 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
         throw InvalidOperationException("Invalid for client");
     }
 
-    virtual void Read(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
-                      uint64_t count)
+    virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
+                      uint64_t count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -1322,7 +1322,7 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
     }
 
     virtual void Write(uint64_t memorypos, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer, uint64_t bufferpos,
-                       uint64_t count)
+                       uint64_t count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -1333,7 +1333,7 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
 
   protected:
     virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer, uint64_t bufferpos,
-                                  uint64_t count)
+                                  uint64_t count)  RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
         RR_INTRUSIVE_PTR<RRNamedArray<T> > res1 =
@@ -1345,9 +1345,9 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
         }
     }
 
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count)
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, uint64_t bufferpos, uint64_t count)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
+        RR_INTRUSIVE_PTR<RRNamedArray<T> > buffer1 = *static_cast<const RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
         RR_INTRUSIVE_PTR<RRNamedArray<T> > o = AllocateEmptyRRNamedArray<T>(boost::numeric_cast<size_t>(count));
 
         for (size_t i = 0; i < count; i++)
@@ -1357,9 +1357,9 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
         return NamedArrayStub_PackNamedArray(o);
     }
 
-    virtual size_t GetBufferLength(void* buffer)
+    virtual size_t GetBufferLength(const void* buffer)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
+        RR_INTRUSIVE_PTR<RRNamedArray<T> > buffer1 = *static_cast<const RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
         return buffer1->size();
     }
 };
@@ -1434,7 +1434,7 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
     }
 
     /** @copydoc MultiDimArrayMemory::Dimensions() */
-    virtual std::vector<uint64_t> Dimensions()
+    virtual std::vector<uint64_t> Dimensions()  RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims = multimemory->Dims;
@@ -1448,14 +1448,14 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
     }
 
     /** @copydoc MultiDimArrayMemory::DimCount() */
-    virtual uint64_t DimCount()
+    virtual uint64_t DimCount()  RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(memory_lock);
         return multimemory->Dims->size();
     }
 
     /** @copydoc MultiDimArrayMemory::Read() */
-    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
@@ -1474,7 +1474,7 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
                                     detail::ConvertVectorType<uint32_t>(count));
     }
 
-    virtual DataTypes ElementTypeID() { return DataTypes_pod_t; }
+    virtual DataTypes ElementTypeID()  RR_OVERRIDE { return DataTypes_pod_t; }
 };
 
 template <typename T>
@@ -1493,11 +1493,11 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
         throw InvalidOperationException("Not valid for client");
     }
 
-    virtual std::vector<uint64_t> Dimensions() { return MultiDimArrayMemoryClientBase::Dimensions(); }
+    virtual std::vector<uint64_t> Dimensions()  RR_OVERRIDE { return MultiDimArrayMemoryClientBase::Dimensions(); }
 
-    virtual uint64_t DimCount() { return MultiDimArrayMemoryClientBase::DimCount(); }
+    virtual uint64_t DimCount()  RR_OVERRIDE { return MultiDimArrayMemoryClientBase::DimCount(); }
 
-    virtual void Read(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
+    virtual void Read(const std::vector<uint64_t>& memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
     {
         if (!buffer)
@@ -1506,7 +1506,7 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
     }
 
     virtual void Write(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
-                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
+                       const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)  RR_OVERRIDE
     {
         if (!buffer)
             throw NullValueException("Buffer must not be null");
@@ -1516,7 +1516,7 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
   protected:
     virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
                                   const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count,
-                                  uint64_t elemcount)
+                                  uint64_t elemcount)  RR_OVERRIDE
     {
         RR_UNUSED(elemcount);
         RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer1 =
@@ -1527,12 +1527,12 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
         RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > data2 = RR_MAKE_SHARED<NamedMultiDimArrayMemory<T> >(data);
         data2->Read(std::vector<uint64_t>(count.size()), buffer1, bufferpos, count);
     }
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos,
+    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, const std::vector<uint64_t>& bufferpos,
                                                                   const std::vector<uint64_t>& count,
-                                                                  uint64_t elemcount)
+                                                                  uint64_t elemcount)  RR_OVERRIDE
     {
-        RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer1 =
-            *static_cast<RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >*>(buffer);
+        RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer1 =
+            *static_cast<const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >*>(buffer);
 
         RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > data = AllocateEmptyRRNamedMultiDimArray<T>();
         data->Dims = VectorToRRArray<uint32_t>(count);
@@ -1556,7 +1556,7 @@ class NamedMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSke
     virtual RR_INTRUSIVE_PTR<MessageElementData> DoRead(const std::vector<uint64_t>& memorypos,
                                                         const std::vector<uint64_t>& bufferpos,
                                                         const std::vector<uint64_t>& count, uint32_t elemcount,
-                                                        const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
+                                                        const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T> >(mem);
 
@@ -1569,7 +1569,7 @@ class NamedMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSke
     }
     virtual void DoWrite(const std::vector<uint64_t>& memorypos, const RR_INTRUSIVE_PTR<MessageElementData>& buffer,
                          const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint32_t elemcount,
-                         const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
+                         const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)  RR_OVERRIDE
     {
         RR_UNUSED(elemcount);
         RR_SHARED_PTR<NamedMultiDimArrayMemory<T> > mem1 = rr_cast<NamedMultiDimArrayMemory<T> >(mem);

@@ -280,7 +280,7 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
             get_variable_type_result o;
             o.name = fix_name(tdef.Name);
             o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RRList<" + remove_RR_INTRUSIVE_PTR(s2.cpp_type) + " > >";
-            o.cpp_param_type = o.cpp_type;
+            o.cpp_param_type = "const " + o.cpp_type + "&";
             return o;
         }
         case DataTypes_ContainerTypes_map_int32: {
@@ -288,7 +288,7 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
             o.name = fix_name(tdef.Name);
             o.cpp_type =
                 "RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t," + remove_RR_INTRUSIVE_PTR(s2.cpp_type) + " > >";
-            o.cpp_param_type = o.cpp_type;
+            o.cpp_param_type = "const " + o.cpp_type + "&";
             return o;
         }
         case DataTypes_ContainerTypes_map_string: {
@@ -296,7 +296,7 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
             o.name = fix_name(tdef.Name);
             o.cpp_type =
                 "RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string," + remove_RR_INTRUSIVE_PTR(s2.cpp_type) + " > >";
-            o.cpp_param_type = o.cpp_type;
+            o.cpp_param_type = "const " + o.cpp_type + "&";
             return o;
         }
         default:
@@ -324,14 +324,14 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
             get_variable_type_result o;
             o.name = c.name;
             o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<" + c.cpp_type + " > >";
-            o.cpp_param_type = o.cpp_type;
+            o.cpp_param_type = "const " + o.cpp_type + "&";
             return o;
         }
         case DataTypes_ArrayTypes_multidimarray: {
             get_variable_type_result o;
             o.name = c.name;
             o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<" + c.cpp_type + " > >";
-            o.cpp_param_type = o.cpp_type;
+            o.cpp_param_type = "const " + o.cpp_type + "&";
             return o;
         }
         default:
@@ -354,7 +354,7 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
             get_variable_type_result o;
             o.name = c.name;
             o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<char> >";
-            o.cpp_param_type = o.cpp_type;
+            o.cpp_param_type = "const " + o.cpp_type + "&";
             return o;
         }
     }
@@ -369,7 +369,7 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
         case DataTypes_structure_t:
             o.name = fix_name(tdef.Name);
             o.cpp_type = "RR_INTRUSIVE_PTR<" + fix_qualified_name(tdef.TypeString) + " >";
-            o.cpp_param_type = o.cpp_type;
+            o.cpp_param_type = "const " + o.cpp_type + "&";
             break;
         case DataTypes_pod_t:
         case DataTypes_namedarray_t: {
@@ -390,20 +390,20 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
                     o.name = fix_name(tdef.Name);
                     o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RR" + a + "Array<" +
                                  fix_qualified_name(tdef.TypeString) + "> >";
-                    o.cpp_param_type = o.cpp_type;
+                    o.cpp_param_type = "const " + o.cpp_type + "&";
                 }
                 break;
             case DataTypes_ArrayTypes_array:
                 o.name = fix_name(tdef.Name);
                 o.cpp_type =
                     "RR_INTRUSIVE_PTR<RobotRaconteur::RR" + a + "Array<" + fix_qualified_name(tdef.TypeString) + "> >";
-                o.cpp_param_type = o.cpp_type;
+                o.cpp_param_type = "const " + o.cpp_type + "&";
                 break;
             case DataTypes_ArrayTypes_multidimarray:
                 o.name = fix_name(tdef.Name);
                 o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RR" + a + "MultiDimArray<" +
                              fix_qualified_name(tdef.TypeString) + "> >";
-                o.cpp_param_type = o.cpp_type;
+                o.cpp_param_type = "const " + o.cpp_type + "&";
                 break;
             default:
                 throw InternalErrorException("Invalid namedarray or pod type");
@@ -415,18 +415,21 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
             if (!boost::contains(tdef.TypeString, "."))
             {
                 o.cpp_type = fix_name(tdef.TypeString) + "::" + fix_name(tdef.TypeString);
+                o.cpp_param_type = o.cpp_type;
             }
             else
             {
                 boost::string_ref enum_type_name;
                 boost::tie(boost::tuples::ignore, enum_type_name) = SplitQualifiedName(tdef.TypeString);
                 o.cpp_type = fix_qualified_name(tdef.TypeString) + "::" + fix_name(enum_type_name.to_string());
+                o.cpp_param_type = o.cpp_type;
             }
             if (!usescalar)
             {
                 o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> >";
+                o.cpp_param_type = "const " + o.cpp_type + "&";
             }
-            o.cpp_param_type = o.cpp_type;
+            
             break;
         default:
             throw DataTypeException("Unknown named type id");
@@ -440,7 +443,7 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
         get_variable_type_result o;
         o.name = c.name;
         o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<" + c.cpp_type + " > >";
-        o.cpp_param_type = o.cpp_type;
+        o.cpp_param_type = "const " +  o.cpp_type + "&";
         return o;
     }
     else if (tdef.Type == DataTypes_varvalue_t)
@@ -448,7 +451,7 @@ CPPServiceLangGen::get_variable_type_result CPPServiceLangGen::get_variable_type
         get_variable_type_result o;
         o.name = fix_name(tdef.Name);
         o.cpp_type = "RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>";
-        o.cpp_param_type = o.cpp_type;
+        o.cpp_param_type = "const " + o.cpp_type + "&";
         return o;
     }
 
@@ -1940,7 +1943,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "}" << std::endl;
 
     w2 << "RR_SHARED_PTR<RobotRaconteur::ServiceStub> " << factory_name
-       << "::CreateStub(boost::string_ref type, boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::ClientContext> "
+       << "::CreateStub(boost::string_ref type, boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::ClientContext>& "
           "context)"
        << std::endl
        << "{" << std::endl;
@@ -1961,7 +1964,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "}" << std::endl;
 
     w2 << "RR_SHARED_PTR<RobotRaconteur::ServiceSkel> " << factory_name
-       << "::CreateSkel(boost::string_ref type, const boost::string_ref path, RR_SHARED_PTR<RobotRaconteur::RRObject> "
+       << "::CreateSkel(boost::string_ref type, const boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::RRObject>& "
           "obj, const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context)"
        << std::endl
        << "{" << std::endl;
@@ -2584,7 +2587,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
         if (CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
         {
             w2 << "static void " << fix_name((*e)->Name) << "_stub_rrverify_" << m->Name
-               << "(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)" << std::endl
+               << "(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)" << std::endl
                << "{" << std::endl;
             w2 << CPPServiceLangGen_VerifyArrayLength(
                       *m->Type, "RobotRaconteur::rr_cast<" +
@@ -2597,7 +2600,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
         if (CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
         {
             w2 << "static void " << fix_name((*e)->Name) << "_stub_rrverify_" << m->Name
-               << "(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)" << std::endl
+               << "(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)" << std::endl
                << "{" << std::endl;
             w2 << CPPServiceLangGen_VerifyArrayLength(
                       *m->Type, "RobotRaconteur::rr_cast<" +
@@ -3881,7 +3884,7 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
         if (CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
         {
             w2 << "static void " << fix_name((*e)->Name) << "_skel_rrverify_" << m->Name
-               << "(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)" << std::endl
+               << "(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)" << std::endl
                << "{" << std::endl;
             w2 << CPPServiceLangGen_VerifyArrayLength(
                       *m->Type, "RobotRaconteur::rr_cast<" +
@@ -3950,7 +3953,7 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
         if (CPPServiceLangGen_UseVerifyArrayLength(*m->Type))
         {
             w2 << "static void " << fix_name((*e)->Name) << "_skel_rrverify_" << m->Name
-               << "(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)" << std::endl
+               << "(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)" << std::endl
                << "{" << std::endl;
             w2 << CPPServiceLangGen_VerifyArrayLength(
                       *m->Type, "RobotRaconteur::rr_cast<" +
