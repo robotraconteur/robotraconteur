@@ -1814,12 +1814,13 @@ boost::optional<boost::filesystem::path> GetTransportPublicSocketPath()
 
     uid_t my_uid = getuid();
 
-    chmod(bynodeid_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
-    chown(bynodeid_path.string().c_str(), my_uid, info.st_gid);
-    chmod(bynodename_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
-    chown(bynodename_path.string().c_str(), my_uid, info.st_gid);
-    chmod(socket_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
-    chown(socket_path.string().c_str(), my_uid, info.st_gid);
+    int ret = chmod(bynodeid_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
+    ret = chown(bynodeid_path.string().c_str(), my_uid, info.st_gid);
+    ret = chmod(bynodename_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
+    ret = chown(bynodename_path.string().c_str(), my_uid, info.st_gid);
+    ret = chmod(socket_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
+    ret = chown(socket_path.string().c_str(), my_uid, info.st_gid);
+    RR_UNUSED(ret);
 #endif
 
     return path;
