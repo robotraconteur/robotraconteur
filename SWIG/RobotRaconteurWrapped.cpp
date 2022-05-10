@@ -2383,7 +2383,7 @@ void WrappedPodArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Messag
                        ->UnpackReadResult(rr_cast<MessageElementNestedElementList>(res), bufferpos, count));
 }
 
-RR_INTRUSIVE_PTR<MessageElementData> WrappedPodArrayMemoryClient::PackWriteRequest(void* buffer, uint64_t bufferpos,
+RR_INTRUSIVE_PTR<MessageElementData> WrappedPodArrayMemoryClient::PackWriteRequest(const void* buffer, uint64_t bufferpos,
                                                                                    uint64_t count)
 {
     RR_INTRUSIVE_PTR<MessageElementData> ret;
@@ -2391,7 +2391,7 @@ RR_INTRUSIVE_PTR<MessageElementData> WrappedPodArrayMemoryClient::PackWriteReque
     return ret;
 }
 
-size_t WrappedPodArrayMemoryClient::GetBufferLength(void* buffer)
+size_t WrappedPodArrayMemoryClient::GetBufferLength(const void* buffer)
 {
     uint64_t ret;
     DIRECTOR_CALL2(ret = ((WrappedPodArrayMemoryClientBuffer*)buffer)->GetBufferLength());
@@ -2431,7 +2431,7 @@ void WrappedPodMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PT
 }
 
 RR_INTRUSIVE_PTR<MessageElementData> WrappedPodMultiDimArrayMemoryClient::PackWriteRequest(
-    void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
+    const void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
     RR_INTRUSIVE_PTR<MessageElementData> ret;
     DIRECTOR_CALL2(ret = ((WrappedPodMultiDimArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
@@ -2469,7 +2469,7 @@ void WrappedNamedArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Mess
                        ->UnpackReadResult(rr_cast<MessageElementNestedElementList>(res), bufferpos, count));
 }
 
-RR_INTRUSIVE_PTR<MessageElementData> WrappedNamedArrayMemoryClient::PackWriteRequest(void* buffer, uint64_t bufferpos,
+RR_INTRUSIVE_PTR<MessageElementData> WrappedNamedArrayMemoryClient::PackWriteRequest(const void* buffer, uint64_t bufferpos,
                                                                                      uint64_t count)
 {
     RR_INTRUSIVE_PTR<MessageElementData> ret;
@@ -2477,7 +2477,7 @@ RR_INTRUSIVE_PTR<MessageElementData> WrappedNamedArrayMemoryClient::PackWriteReq
     return ret;
 }
 
-size_t WrappedNamedArrayMemoryClient::GetBufferLength(void* buffer)
+size_t WrappedNamedArrayMemoryClient::GetBufferLength(const void* buffer)
 {
     uint64_t ret;
     DIRECTOR_CALL2(ret = ((WrappedNamedArrayMemoryClientBuffer*)buffer)->GetBufferLength());
@@ -2517,7 +2517,7 @@ void WrappedNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_
 }
 
 RR_INTRUSIVE_PTR<MessageElementData> WrappedNamedMultiDimArrayMemoryClient::PackWriteRequest(
-    void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
+    const void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
     RR_INTRUSIVE_PTR<MessageElementData> ret;
     DIRECTOR_CALL2(ret = ((WrappedNamedMultiDimArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
@@ -2664,7 +2664,7 @@ bool WrappedTryGetDetectedNodeCacheInfo(const boost::shared_ptr<RobotRaconteurNo
     return node->TryGetDetectedNodeCacheInfo(nodeid, nodeinfo2);
 }
 
-void WrappedServiceSkel::Init(const std::string& s, const RR_SHARED_PTR<RRObject>& o,
+void WrappedServiceSkel::Init(boost::string_ref s, const RR_SHARED_PTR<RRObject>& o,
                               const RR_SHARED_PTR<ServerContext>& c)
 {
 
@@ -3445,7 +3445,7 @@ uint64_t WrappedPodMultiDimArrayMemory::DimCount()
     DIRECTOR_CALL(WrappedPodMultiDimArrayMemoryDirector, l = RR_Director2->DimCount());
     return l;
 }
-bool WrappedPodMultiDimArrayMemory::Complex() { return false; }
+
 DataTypes WrappedPodMultiDimArrayMemory::ElementTypeID() { return DataTypes_pod_t; }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> WrappedPodMultiDimArrayMemory::Read(
     const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
@@ -3553,7 +3553,7 @@ uint64_t WrappedNamedMultiDimArrayMemory::DimCount()
     DIRECTOR_CALL(WrappedNamedMultiDimArrayMemoryDirector, l = RR_Director2->DimCount());
     return l;
 }
-bool WrappedNamedMultiDimArrayMemory::Complex() { return false; }
+
 DataTypes WrappedNamedMultiDimArrayMemory::ElementTypeID() { return DataTypes_pod_t; }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> WrappedNamedMultiDimArrayMemory::Read(
     const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
@@ -3822,7 +3822,7 @@ void WrappedServiceInfo2Subscription::ServiceLost(RR_WEAK_PTR<WrappedServiceInfo
     this1->ServiceLost1(subscription, id, info);
 }
 
-void WrappedServiceInfo2Subscription::ServiceDetected1(RR_SHARED_PTR<ServiceInfo2Subscription>& subscription,
+void WrappedServiceInfo2Subscription::ServiceDetected1(const RR_SHARED_PTR<ServiceInfo2Subscription>& subscription,
                                                        const ServiceSubscriptionClientID& id, const ServiceInfo2& info)
 {
     RR_SHARED_PTR<WrappedServiceInfo2Subscription> s = shared_from_this();
@@ -3830,7 +3830,7 @@ void WrappedServiceInfo2Subscription::ServiceDetected1(RR_SHARED_PTR<ServiceInfo
     DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director->ServiceDetected(s, id, info2));
 }
 
-void WrappedServiceInfo2Subscription::ServiceLost1(RR_SHARED_PTR<ServiceInfo2Subscription>& subscription,
+void WrappedServiceInfo2Subscription::ServiceLost1(const RR_SHARED_PTR<ServiceInfo2Subscription>& subscription,
                                                    const ServiceSubscriptionClientID& id, const ServiceInfo2& info)
 {
     RR_SHARED_PTR<WrappedServiceInfo2Subscription> s = shared_from_this();
@@ -3994,17 +3994,17 @@ void WrappedServiceSubscription::ClientConnectFailed(RR_WEAK_PTR<WrappedServiceS
     this1->ClientConnectFailed1(subscription, id, url, err);
 }
 
-void WrappedServiceSubscription::ClientConnected1(RR_SHARED_PTR<ServiceSubscription>& subscription,
+void WrappedServiceSubscription::ClientConnected1(const RR_SHARED_PTR<ServiceSubscription>& subscription,
                                                   const ServiceSubscriptionClientID& id,
-                                                  RR_SHARED_PTR<RRObject>& client)
+                                                  const RR_SHARED_PTR<RRObject>& client)
 {
     RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
     RR_SHARED_PTR<WrappedServiceStub> client2 = RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(client);
     DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientConnected(s, id, client2));
 }
-void WrappedServiceSubscription::ClientDisconnected1(RR_SHARED_PTR<ServiceSubscription>& subscription,
+void WrappedServiceSubscription::ClientDisconnected1(const RR_SHARED_PTR<ServiceSubscription>& subscription,
                                                      const ServiceSubscriptionClientID& id,
-                                                     RR_SHARED_PTR<RRObject>& client)
+                                                     const RR_SHARED_PTR<RRObject>& client)
 {
     RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
     RR_SHARED_PTR<WrappedServiceStub> client2 = RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(client);
@@ -4285,7 +4285,7 @@ std::vector<ServiceSubscriptionClientID> WrappedServiceSubscriptionClientsToVect
 }
 
 static RR_SHARED_PTR<ServiceSubscriptionFilter> WrappedSubscribeService_LoadFilter(
-    RR_SHARED_PTR<RobotRaconteurNode>& node, RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter)
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter)
 {
     RR_SHARED_PTR<ServiceSubscriptionFilter> filter2;
     if (filter)

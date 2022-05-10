@@ -36,7 +36,7 @@ public:
 	%rename (_CallGetProperty) CallGetProperty;
 	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallGetProperty(const std::string& name, const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
 	%rename (_CallSetProperty) CallSetProperty;
-	virtual void CallSetProperty(const std::string& name, const boost::intrusive_ptr<RobotRaconteur::MessageElement>& m, const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
+	virtual void CallSetProperty(const std::string& name, boost::intrusive_ptr<RobotRaconteur::MessageElement> m, const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
 	%rename (_CallFunction) CallFunction;
 	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallFunction(const std::string& name, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m, const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
 	%rename (_GetSubObj) GetSubObj;

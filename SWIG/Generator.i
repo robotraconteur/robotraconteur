@@ -55,7 +55,7 @@ namespace RobotRaconteur
 		WrappedGeneratorServerDirector();
 		virtual ~WrappedGeneratorServerDirector() {}
 
-		virtual boost::intrusive_ptr<MessageElement> Next(const boost::intrusive_ptr<MessageElement>& m,const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
+		virtual boost::intrusive_ptr<MessageElement> Next(boost::intrusive_ptr<MessageElement> m,const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor);
 
 		virtual void Abort(const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adapter);
 		virtual void Close(const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adapter);

@@ -58,7 +58,7 @@ class WrappedUserAuthenticatorDirector
 {
 public:
 	virtual ~WrappedUserAuthenticatorDirector() {}
-	virtual boost::shared_ptr<AuthenticatedUser> AuthenticateUser(const std::string &username, const boost::intrusive_ptr<RobotRaconteur::MessageElement>& credentials, const boost::shared_ptr<RobotRaconteur::ServerContext>& context);
+	virtual boost::shared_ptr<AuthenticatedUser> AuthenticateUser(const std::string &username, boost::intrusive_ptr<RobotRaconteur::MessageElement> credentials, const boost::shared_ptr<RobotRaconteur::ServerContext>& context);
 	
 };
 
