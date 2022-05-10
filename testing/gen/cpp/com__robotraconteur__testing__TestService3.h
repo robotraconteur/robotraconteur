@@ -8,9 +8,11 @@
 #pragma once
 
 #ifndef ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT
+// NOLINTNEXTLINE
 #define ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT
 #endif
 
+// NOLINTBEGIN
 namespace com
 {
 namespace robotraconteur
@@ -28,6 +30,7 @@ class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3_
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT obj4;
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT obj5;
 
+// NOLINTBEGIN
 namespace com__robotraconteur__testing__TestService3Constants 
 {
     static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81";
@@ -61,6 +64,7 @@ namespace com__robotraconteur__testing__TestService3Constants
     more_values = -0x7ffffff9
     };
     }
+// NOLINTEND
 
 union pixel{
 boost::array<uint8_t,3> a;
@@ -101,7 +105,7 @@ int8_t i1;
 RobotRaconteur::pod_field_array<int8_t,15,false> i2;
 RobotRaconteur::pod_field_array<int8_t,17,true> i3;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testpod2";  }
+RR_OVIRTUAL std::string RRType() {return "com.robotraconteur.testing.TestService3.testpod2";  }
 };
 
 union vector3{
@@ -138,7 +142,7 @@ RobotRaconteur::pod_field_array<transform,4,false> t2;
 RobotRaconteur::pod_field_array<transform,15,true> t3;
 RobotRaconteur::pod_field_array<transform,8,false> t4;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testpod1";  }
+RR_OVIRTUAL std::string RRType() {return "com.robotraconteur.testing.TestService3.testpod1";  }
 };
 
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT teststruct3 : public RobotRaconteur::RRStructure {
@@ -170,7 +174,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> t9;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> t10;
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> t11;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.teststruct3";  }
+RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.teststruct3";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -179,6 +183,7 @@ using teststruct3Ptr = RR_INTRUSIVE_PTR<teststruct3>;
 
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT testroot3 : public virtual RobotRaconteur::RRObject
 {
+// NOLINTBEGIN
 public:
 virtual int32_t get_readme()=0;
 
@@ -194,25 +199,25 @@ virtual testpod1 get_testpod1_prop()=0;
 virtual void set_testpod1_prop(const testpod1& value)=0;
 
 virtual RR_INTRUSIVE_PTR<teststruct3 > get_teststruct3_prop()=0;
-virtual void set_teststruct3_prop(RR_INTRUSIVE_PTR<teststruct3 > value)=0;
+virtual void set_teststruct3_prop(const RR_INTRUSIVE_PTR<teststruct3 >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d1()=0;
-virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)=0;
+virtual void set_d1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > get_d2()=0;
-virtual void set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > value)=0;
+virtual void set_d2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > get_d3()=0;
-virtual void set_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)=0;
+virtual void set_d3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > get_d4()=0;
-virtual void set_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > value)=0;
+virtual void set_d4(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > get_d5()=0;
-virtual void set_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > value)=0;
+virtual void set_d5(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > get_d6()=0;
-virtual void set_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > value)=0;
+virtual void set_d6(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >& value)=0;
 
 virtual vector3 get_testnamedarray1()=0;
 virtual void set_testnamedarray1(const vector3& value)=0;
@@ -221,67 +226,67 @@ virtual transform get_testnamedarray2()=0;
 virtual void set_testnamedarray2(const transform& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > get_testnamedarray3()=0;
-virtual void set_testnamedarray3(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > value)=0;
+virtual void set_testnamedarray3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > get_testnamedarray4()=0;
-virtual void set_testnamedarray4(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > value)=0;
+virtual void set_testnamedarray4(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > get_testnamedarray5()=0;
-virtual void set_testnamedarray5(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > value)=0;
+virtual void set_testnamedarray5(const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> >& value)=0;
 
 virtual RobotRaconteur::cdouble get_c1()=0;
 virtual void set_c1(RobotRaconteur::cdouble value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > get_c2()=0;
-virtual void set_c2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > value)=0;
+virtual void set_c2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > get_c3()=0;
-virtual void set_c3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > value)=0;
+virtual void set_c3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > get_c4()=0;
-virtual void set_c4(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value)=0;
+virtual void set_c4(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > get_c5()=0;
-virtual void set_c5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > value)=0;
+virtual void set_c5(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > get_c6()=0;
-virtual void set_c6(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > value)=0;
+virtual void set_c6(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > >& value)=0;
 
 virtual RobotRaconteur::cfloat get_c7()=0;
 virtual void set_c7(RobotRaconteur::cfloat value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > get_c8()=0;
-virtual void set_c8(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > value)=0;
+virtual void set_c8(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > get_c9()=0;
-virtual void set_c9(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > value)=0;
+virtual void set_c9(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > get_c10()=0;
-virtual void set_c10(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > value)=0;
+virtual void set_c10(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > get_c11()=0;
-virtual void set_c11(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > value)=0;
+virtual void set_c11(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > get_c12()=0;
-virtual void set_c12(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > value)=0;
+virtual void set_c12(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > >& value)=0;
 
 virtual RobotRaconteur::rr_bool get_b1()=0;
 virtual void set_b1(RobotRaconteur::rr_bool value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > get_b2()=0;
-virtual void set_b2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > value)=0;
+virtual void set_b2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > get_b3()=0;
-virtual void set_b3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > value)=0;
+virtual void set_b3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > get_b4()=0;
-virtual void set_b4(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value)=0;
+virtual void set_b4(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > get_b5()=0;
-virtual void set_b5(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > value)=0;
+virtual void set_b5(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > >& value)=0;
 
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > get_b6()=0;
-virtual void set_b6(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > value)=0;
+virtual void set_b6(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > >& value)=0;
 
 virtual void testpod1_func1(const testpod1& s)=0;
 
@@ -358,7 +363,8 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<RobotRaconteur::rr_bool > > ge
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_bool > > get_c_m6()=0;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.testroot3";  }
+// NOLINTEND
+RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.testroot3";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -367,11 +373,13 @@ using testroot3Ptr = RR_SHARED_PTR<testroot3>;
 
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT obj1 : public virtual RobotRaconteur::RRObject
 {
+// NOLINTBEGIN
 public:
 virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > get_d1()=0;
-virtual void set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > value)=0;
+virtual void set_d1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >& value)=0;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj1";  }
+// NOLINTEND
+RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj1";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -380,8 +388,10 @@ using obj1Ptr = RR_SHARED_PTR<obj1>;
 
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT obj2 : public virtual obj1
 {
+// NOLINTBEGIN
 public:
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj2";  }
+// NOLINTEND
+RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj2";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -390,8 +400,10 @@ using obj2Ptr = RR_SHARED_PTR<obj2>;
 
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT obj3 : public virtual obj1, public virtual obj2
 {
+// NOLINTBEGIN
 public:
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj3";  }
+// NOLINTEND
+RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj3";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -400,8 +412,10 @@ using obj3Ptr = RR_SHARED_PTR<obj3>;
 
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT obj4 : public virtual com::robotraconteur::testing::TestService1::sub2
 {
+// NOLINTBEGIN
 public:
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj4";  }
+// NOLINTEND
+RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj4";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -410,6 +424,7 @@ using obj4Ptr = RR_SHARED_PTR<obj4>;
 
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT obj5 : public virtual RobotRaconteur::RRObject
 {
+// NOLINTBEGIN
 public:
 virtual double get_p1()=0;
 virtual void set_p1(double value)=0;
@@ -442,7 +457,8 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m2()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3()=0;
 
-virtual std::string RRType() {return "com.robotraconteur.testing.TestService3.obj5";  }
+// NOLINTEND
+RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj5";  }
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
@@ -452,7 +468,7 @@ using obj5Ptr = RR_SHARED_PTR<obj5>;
 class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3____EXPORT test_exception4 : public RobotRaconteur::RobotRaconteurRemoteException
 {
     public:
-    test_exception4(const std::string& message, std::string sub_name = "", RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService3.test_exception4",message,sub_name,param_) {}
+    test_exception4(const std::string& message, const std::string& sub_name = "", const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService3.test_exception4",message,sub_name,param_) {}
 };
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 using test_exception4Ptr = RR_SHARED_PTR<test_exception4>;
@@ -478,3 +494,4 @@ RRPrimUtilNamedArray(com::robotraconteur::testing::TestService3::pixel2, "com.ro
 RRPodStubNamedArrayType(com::robotraconteur::testing::TestService3::pixel2);
 RRPrimUtilEnum(com::robotraconteur::testing::TestService3::testenum1::testenum1);
 }
+// NOLINTEND

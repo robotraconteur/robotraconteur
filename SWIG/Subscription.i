@@ -89,8 +89,8 @@ namespace RobotRaconteur
 	class WrappedServiceInfo2SubscriptionDirector
 	{
 	public:
-		virtual void ServiceDetected(const boost::shared_ptr<RobotRaconteur::WrappedServiceInfo2Subscription>& subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2Wrapped& service) {}
-		virtual void ServiceLost(const boost::shared_ptr<RobotRaconteur::WrappedServiceInfo2Subscription>& subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2Wrapped& service) {}
+		virtual void ServiceDetected(const boost::shared_ptr<RobotRaconteur::WrappedServiceInfo2Subscription>& subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2Wrapped& service) = 0;
+		virtual void ServiceLost(const boost::shared_ptr<RobotRaconteur::WrappedServiceInfo2Subscription>& subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2Wrapped& service)  = 0;
 
 		virtual ~WrappedServiceInfo2SubscriptionDirector() {}
 	};

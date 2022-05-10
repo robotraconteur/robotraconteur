@@ -357,7 +357,7 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinition : public RR_ENABLE_SHARED_FROM_T
      *
      * @return std::string The service definition file as a string
      */
-    virtual std::string ToString() const;
+    virtual std::string ToString();
 
     /**
      * @brief Parses a service definition from a string
@@ -563,7 +563,7 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      *
      * @return std::string The service entry definition as a string
      */
-    virtual std::string ToString() const;
+    virtual std::string ToString();
 
     /**
      * @brief Convert service definition to a text stream
@@ -709,7 +709,7 @@ class ROBOTRACONTEUR_CORE_API MemberDefinition : public RR_ENABLE_SHARED_FROM_TH
      *
      * @return std::string The member as a string
      */
-    virtual std::string ToString() const { return ""; }
+    virtual std::string ToString() { return ""; }
 
     /** @brief Clear all fields */
     virtual void Reset();
@@ -746,7 +746,7 @@ class ROBOTRACONTEUR_CORE_API PropertyDefinition : public MemberDefinition
      *
      * Use ToString(true) to convert to a field definition
      */
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Convert to a property or field definition string
@@ -813,7 +813,7 @@ class ROBOTRACONTEUR_CORE_API FunctionDefinition : public MemberDefinition
      */
     FunctionDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a function definition from string
@@ -866,7 +866,7 @@ class ROBOTRACONTEUR_CORE_API EventDefinition : public MemberDefinition
      */
     EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse an event definition from string
@@ -931,7 +931,7 @@ class ROBOTRACONTEUR_CORE_API ObjRefDefinition : public MemberDefinition
      */
     ObjRefDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse an objref definition from string
@@ -972,7 +972,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      */
     PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a pipe definition from string
@@ -1040,7 +1040,7 @@ class ROBOTRACONTEUR_CORE_API CallbackDefinition : public MemberDefinition
      */
     CallbackDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a callback definition from string
@@ -1081,7 +1081,7 @@ class ROBOTRACONTEUR_CORE_API WireDefinition : public MemberDefinition
      */
     WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a wire definition from string
@@ -1133,7 +1133,7 @@ class ROBOTRACONTEUR_CORE_API MemoryDefinition : public MemberDefinition
      */
     MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    RR_OVIRTUAL std::string ToString() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a memory definition from string
@@ -1217,7 +1217,7 @@ class ROBOTRACONTEUR_CORE_API TypeDefinition
      *
      *
      */
-    virtual std::string ToString() const;
+    virtual std::string ToString();
 
     /**
      * @brief Parse a type definition from string
@@ -1384,7 +1384,7 @@ class ROBOTRACONTEUR_CORE_API ExceptionDefinition
      *
      * @return std::string The exception definition string
      */
-    std::string ToString() const;
+    std::string ToString();
 
     /**
      * @brief Parse an exception definition from string
@@ -1440,7 +1440,7 @@ class ROBOTRACONTEUR_CORE_API UsingDefinition
      *
      * @return std::string The using definition string
      */
-    std::string ToString() const;
+    std::string ToString();
 
     /**
      * @brief Parse an using definition from string
@@ -1529,7 +1529,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      *
      * @return std::string The constant definition string
      */
-    std::string ToString() const;
+    std::string ToString();
 
     /**
      * @brief Parse a constant definition from string
@@ -1633,7 +1633,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      *
      * @return std::string The constant value as a string
      */
-    std::string ValueToString() const;
+    std::string ValueToString();
 
     /**
      * @brief Convert the constant value to structure fields
@@ -1686,7 +1686,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
      *
      * @return std::string The enum definition string
      */
-    std::string ToString() const;
+    std::string ToString();
 
     /**
      * @brief Parse an enum definition from string
@@ -1771,7 +1771,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(const std::vector<RR_SHARE
  *
  * @param def The collection of service definitions to verify
  */
-ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions();
+ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& def);
 
 /**
  * @brief Compare two service definitions to see if they are identical

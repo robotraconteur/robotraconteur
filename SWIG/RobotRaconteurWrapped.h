@@ -2096,21 +2096,21 @@ std::vector<ServiceSubscriptionClientID> WrappedServiceInfo2SubscriptionServices
 
 RR_SHARED_PTR<WrappedServiceInfo2Subscription> WrappedSubscribeServiceInfo2(
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::vector<std::string>& service_types,
-    RR_SHARED_PTR<WrappedServiceSubscriptionFilter> filter = RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
+    const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter = RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
 
 RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeServiceByType(
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::vector<std::string>& service_types,
-    RR_SHARED_PTR<WrappedServiceSubscriptionFilter> filter = RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
+    const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter = RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
 
 RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::vector<std::string>& url,
     const std::string& username = "",
-    boost::intrusive_ptr<MessageElementData> credentials = boost::intrusive_ptr<MessageElementData>(),
+    const boost::intrusive_ptr<MessageElementData>& credentials = boost::intrusive_ptr<MessageElementData>(),
     const std::string& objecttype = "");
 
 RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::string& url, const std::string& username = "",
-    boost::intrusive_ptr<MessageElementData> credentials = boost::intrusive_ptr<MessageElementData>(),
+    const boost::intrusive_ptr<MessageElementData>& credentials = boost::intrusive_ptr<MessageElementData>(),
     const std::string& objecttype = "");
 
 class UserLogRecordHandlerDirector

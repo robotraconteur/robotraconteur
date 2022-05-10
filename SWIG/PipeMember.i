@@ -28,9 +28,9 @@ class WrappedPipeEndpointDirector
 {
 public:
 	virtual ~WrappedPipeEndpointDirector() {}
-	virtual void PipeEndpointClosedCallback();
-	virtual void PacketReceivedEvent();
-	virtual void PacketAckReceivedEvent(uint32_t packetnum);
+	virtual void PipeEndpointClosedCallback() = 0;
+	virtual void PacketReceivedEvent() = 0;
+	virtual void PacketAckReceivedEvent(uint32_t packetnum) = 0;
 
 };
 
@@ -38,7 +38,7 @@ class AsyncPipeEndpointReturnDirector
 {
 public:
 	virtual ~AsyncPipeEndpointReturnDirector();
-	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedPipeEndpoint>& ep, HandlerErrorInfo& error);
+	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedPipeEndpoint>& ep, HandlerErrorInfo& error) = 0;
 };
 
 class WrappedTryReceivePacketWaitResult
@@ -111,7 +111,7 @@ class WrappedPipeServerConnectDirector
 {
 public:
 	virtual ~WrappedPipeServerConnectDirector() {}
-	virtual void PipeConnectCallback(const boost::shared_ptr<WrappedPipeEndpoint>& pipeendpoint) {};
+	virtual void PipeConnectCallback(const boost::shared_ptr<WrappedPipeEndpoint>& pipeendpoint) = 0;
 };
 
 %nodefaultctor WrappedPipeServer;

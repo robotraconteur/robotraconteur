@@ -2621,7 +2621,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
 
         self.obj.RobotRaconteurMonitorExit()
 
-    def ReleaseCastObj(self):
+    def ReleaseCastObject(self):
         self.obj = None
         self.skel = None
 
