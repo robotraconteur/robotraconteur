@@ -52,60 +52,71 @@ RR_SHARED_PTR<ServiceDefinition> WrappedServiceFactory::ServiceDef() { return se
 
 RR_SHARED_PTR<RobotRaconteur::StructureStub> WrappedServiceFactory::FindStructureStub(boost::string_ref s)
 {
+    RR_UNUSED(s);
     throw ServiceException("Invalid for wrapped service type");
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackStructure(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin)
 {
+    RR_UNUSED(structin);
     throw ServiceException("Invalid for wrapped service type");
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> WrappedServiceFactory::UnpackStructure(
     const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin)
 {
+    RR_UNUSED(mstructin);
     throw ServiceException("Invalid for wrapped service type");
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackPodArray(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure)
 {
+    RR_UNUSED(structure);
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> WrappedServiceFactory::UnpackPodArray(
     const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure)
 {
+    RR_UNUSED(structure);
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackPodMultiDimArray(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure)
 {
+    RR_UNUSED(structure);
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> WrappedServiceFactory::UnpackPodMultiDimArray(
     const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure)
 {
+    RR_UNUSED(structure);
     throw ServiceException("Invalid for wrapped service type");
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackNamedArray(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure)
 {
+    RR_UNUSED(structure);
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> WrappedServiceFactory::UnpackNamedArray(
     const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure)
 {
+    RR_UNUSED(structure);
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> WrappedServiceFactory::PackNamedMultiDimArray(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure)
 {
+    RR_UNUSED(structure);
     throw ServiceException("Invalid for wrapped service type");
 }
 RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> WrappedServiceFactory::UnpackNamedMultiDimArray(
     const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure)
 {
+    RR_UNUSED(structure);
     throw ServiceException("Invalid for wrapped service type");
 }
 
@@ -2030,7 +2041,7 @@ std::vector<RR_INTRUSIVE_PTR<MessageElement> > WrappedGeneratorClient::NextAll()
             o.push_back(Next(RR_INTRUSIVE_PTR<MessageElement>()));
         }
     }
-    catch (StopIterationException)
+    catch (StopIterationException&)
     {}
     return o;
 }

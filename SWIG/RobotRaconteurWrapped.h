@@ -138,7 +138,7 @@ void SetPythonTracebackPrintExc(bool value);
                 RobotRaconteur::RRDirectorExceptionHelper::GetError());                                                \
     }
 
-#define DIRECTOR_DELETE(var)
+#define DIRECTOR_DELETE(var) RR_UNUSED(var)
 #endif
 
 class RRDirectorExceptionHelper
@@ -355,9 +355,9 @@ class WrappedServiceStubDirector
 {
   public:
     virtual ~WrappedServiceStubDirector() {}
-    virtual void DispatchEvent(const std::string& EventName, const std::vector<RR_INTRUSIVE_PTR<MessageElement> > args) = 0;
+    virtual void DispatchEvent(const std::string& EventName, std::vector<RR_INTRUSIVE_PTR<MessageElement> > args) = 0;
     virtual RR_INTRUSIVE_PTR<MessageElement> CallbackCall(const std::string& CallbackName,
-                                                          const std::vector<RR_INTRUSIVE_PTR<MessageElement> > args) = 0;
+                                                          std::vector<RR_INTRUSIVE_PTR<MessageElement> > args) = 0;
 };
 
 class WrappedPipeClient;
@@ -436,8 +436,8 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
         const RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry>& m) RR_OVERRIDE ;
     RR_SHARED_PTR<RobotRaconteur::WrappedPipeClient> GetPipe(const std::string& membername);
     RR_SHARED_PTR<RobotRaconteur::WrappedWireClient> GetWire(const std::string& membername);
-    RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(boost::string_ref membername);
-    RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername);
+    RR_OVIRTUAL RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(boost::string_ref membername) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername) RR_OVERRIDE ;
     RR_SHARED_PTR<RobotRaconteur::ArrayMemoryBase> GetArrayMemory(const std::string& membername);
     RR_SHARED_PTR<WrappedPodArrayMemoryClient> GetPodArrayMemory(const std::string& membername);
     RR_SHARED_PTR<WrappedNamedArrayMemoryClient> GetNamedArrayMemory(const std::string& membername);
@@ -449,10 +449,8 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
     RR_OVIRTUAL void RRClose() RR_OVERRIDE ;
     RR_OVIRTUAL void RRInitStub() RR_OVERRIDE ;
 
-  public:
     RR_SHARED_PTR<ServiceEntryDefinition> RR_objecttype;
 
-  public:
     RR_OVIRTUAL std::string RRType() RR_OVERRIDE ;
 
   protected:
@@ -550,6 +548,8 @@ class WrappedTryReceivePacketWaitResult
   public:
     bool res;
     RR_INTRUSIVE_PTR<MessageElement> packet;
+
+    WrappedTryReceivePacketWaitResult() : res(false) {}
 };
 
 class WrappedPipeEndpoint : public PipeEndpointBase
@@ -558,7 +558,7 @@ class WrappedPipeEndpoint : public PipeEndpointBase
   public:
     friend class WrappedPipeBroadcaster;
 
-    virtual ~WrappedPipeEndpoint();
+    RR_OVIRTUAL ~WrappedPipeEndpoint() RR_OVERRIDE ;
 
     uint32_t SendPacket(const RR_INTRUSIVE_PTR<MessageElement>& packet);
     void AsyncSendPacket(const RR_INTRUSIVE_PTR<MessageElement>& packet, AsyncUInt32ReturnDirector* handler,
@@ -625,7 +625,7 @@ class AsyncPipeEndpointReturnDirector
 class WrappedPipeClient : public virtual PipeClientBase
 {
   public:
-    virtual ~WrappedPipeClient() {}
+    RR_OVIRTUAL ~WrappedPipeClient() RR_OVERRIDE  {}
 
     // virtual boost::function<void(const RR_SHARED_PTR<WrappedPipeEndpoint>&)> GetPipeConnectCallback();
     // virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<WrappedPipeEndpoint>&)> function);
@@ -659,7 +659,7 @@ class WrappedPipeServer : public virtual PipeServerBase
   public:
     WrappedPipeServer(const std::string& name, const RR_SHARED_PTR<ServiceSkel>& skel,
                       const RR_SHARED_PTR<TypeDefinition>& Type, bool unreliable, MemberDefinition_Direction direction);
-    virtual ~WrappedPipeServer();
+    RR_OVIRTUAL ~WrappedPipeServer() RR_OVERRIDE ;
 
     RR_SHARED_PTR<TypeDefinition> Type;
 
@@ -735,6 +735,8 @@ class TryGetValueResult
     bool res;
     RR_INTRUSIVE_PTR<MessageElement> value;
     TimeSpec ts;
+
+    TryGetValueResult() : res(false) {}
 };
 
 class WrappedWireConnection : public virtual WireConnectionBase
@@ -743,7 +745,7 @@ class WrappedWireConnection : public virtual WireConnectionBase
     friend class WrappedWireBroadcaster;
     friend class WrappedWireUnicastReceiver;
 
-    virtual ~WrappedWireConnection();
+    RR_OVIRTUAL ~WrappedWireConnection() RR_OVERRIDE ;
     RR_INTRUSIVE_PTR<MessageElement> GetInValue();
     RR_INTRUSIVE_PTR<MessageElement> GetOutValue();
     void SetOutValue(const RR_INTRUSIVE_PTR<MessageElement>& value);
@@ -804,7 +806,7 @@ class AsyncWirePeekReturnDirector
 class WrappedWireClient : public virtual WireClientBase
 {
   public:
-    virtual ~WrappedWireClient() {}
+    RR_OVIRTUAL ~WrappedWireClient()  RR_OVERRIDE {}
 
     boost::function<void(const RR_SHARED_PTR<WrappedWireConnection>&)> GetWireConnectCallback();
     void SetWireConnectCallback(boost::function<void(const RR_SHARED_PTR<WrappedWireConnection>&)> function);
@@ -866,7 +868,7 @@ class WrappedWireServer : public WireServerBase
   public:
     WrappedWireServer(const std::string& name, const RR_SHARED_PTR<ServiceSkel>& skel,
                       const RR_SHARED_PTR<TypeDefinition>& Type, MemberDefinition_Direction direction);
-    virtual ~WrappedWireServer();
+    RR_OVIRTUAL ~WrappedWireServer() RR_OVERRIDE ;
     RR_SHARED_PTR<TypeDefinition> Type;
 
   protected:
@@ -914,6 +916,8 @@ class IWrappedWirePeekPokeCallbacks
     virtual RR_INTRUSIVE_PTR<RRValue> do_PeekInValue(const uint32_t& ep) = 0;
     virtual RR_INTRUSIVE_PTR<RRValue> do_PeekOutValue(const uint32_t& ep) = 0;
     virtual void do_PokeOutValue(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& ts, const uint32_t& ep) = 0;
+
+    virtual ~IWrappedWirePeekPokeCallbacks() {}
 };
 
 class WrappedWireBroadcasterPredicateDirector
@@ -1312,7 +1316,7 @@ class WrappedServiceSkel : public virtual ServiceSkel
         RR_Director=NULL;
     }*/
 
-    virtual ~WrappedServiceSkel() {}
+    RR_OVIRTUAL ~WrappedServiceSkel() RR_OVERRIDE  {}
     boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> Type;
 
     boost::shared_ptr<WrappedRRObject> castobj;
@@ -1416,7 +1420,7 @@ class WrappedRRObject : public RRObject, public IRobotRaconteurMonitorObject
 
     RR_OVIRTUAL void RobotRaconteurMonitorExit() RR_OVERRIDE  { DIRECTOR_CALL(WrappedServiceSkelDirector, RR_Director2->MonitorExit()); }
 
-    virtual ~WrappedRRObject();
+    RR_OVIRTUAL ~WrappedRRObject() RR_OVERRIDE ;
 };
 
 class WrappedArrayMemoryDirector
@@ -1457,7 +1461,7 @@ class WrappedArrayMemory : public virtual ArrayMemory<T>
     {
         if (!RR_Director)
             throw InvalidOperationException("Director not set");
-        uint64_t len;
+        uint64_t len = 0;
         DIRECTOR_CALL(WrappedArrayMemoryDirector, len = RR_Director2->Length());
         return len;
     }
@@ -1503,6 +1507,8 @@ class WrappedMultiDimArrayMemoryDirector
     virtual void Write(WrappedMultiDimArrayMemoryParams* p) = 0;
 
     int32_t objectheapid;
+
+    WrappedMultiDimArrayMemoryDirector() : objectheapid(0) {}
 };
 
 template <class T>
@@ -1535,7 +1541,7 @@ class WrappedMultiDimArrayMemory : public virtual MultiDimArrayMemory<T>
     {
         if (!RR_Director)
             throw InvalidOperationException("Director not set");
-        uint64_t dim;
+        uint64_t dim = 0;
         DIRECTOR_CALL(WrappedMultiDimArrayMemoryDirector, dim = RR_Director2->DimCount());
         return dim;
     }
@@ -1633,6 +1639,7 @@ class WrappedPodMultiDimArrayMemoryDirector
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
 
     int32_t objectheapid;
+    WrappedPodMultiDimArrayMemoryDirector() : objectheapid(0) {}
 };
 
 class WrappedPodMultiDimArrayMemory : public MultiDimArrayMemoryBase
@@ -1725,6 +1732,7 @@ class WrappedNamedMultiDimArrayMemoryDirector
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count) = 0;
 
     int32_t objectheapid;
+    WrappedNamedMultiDimArrayMemoryDirector() : objectheapid(0) {}
 };
 
 class WrappedNamedMultiDimArrayMemory : public MultiDimArrayMemoryBase
@@ -1826,6 +1834,8 @@ class WrappedServiceSubscriptionFilter
     RR_SHARED_PTR<WrappedServiceSubscriptionFilterPredicateDirector> Predicate;
     void SetRRPredicateDirector(WrappedServiceSubscriptionFilterPredicateDirector* director, int32_t id);
     uint32_t MaxConnections;
+
+    WrappedServiceSubscriptionFilter() : MaxConnections(0) {}
 };
 
 class WrappedServiceInfo2Subscription;
@@ -1880,6 +1890,8 @@ class WrappedService_typed_packet
     RR_SHARED_PTR<WrappedServiceStub> stub;
     RR_SHARED_PTR<ClientContext> context;
     uint32_t client;
+
+    WrappedService_typed_packet() : client(0) {}
 };
 
 class WrappedServiceSubscription;
@@ -1908,6 +1920,8 @@ class WrappedServiceSubscription_TryDefaultClientRes
   public:
     bool res;
     RR_SHARED_PTR<WrappedServiceStub> client;
+
+    WrappedServiceSubscription_TryDefaultClientRes() : res(false) {}
 };
 
 class WrappedServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<WrappedServiceSubscription>

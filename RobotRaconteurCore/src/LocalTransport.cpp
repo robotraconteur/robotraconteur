@@ -1814,13 +1814,30 @@ boost::optional<boost::filesystem::path> GetTransportPublicSocketPath()
 
     uid_t my_uid = getuid();
 
-    int ret = chmod(bynodeid_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
-    ret = chown(bynodeid_path.string().c_str(), my_uid, info.st_gid);
-    ret = chmod(bynodename_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
-    ret = chown(bynodename_path.string().c_str(), my_uid, info.st_gid);
-    ret = chmod(socket_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP);
-    ret = chown(socket_path.string().c_str(), my_uid, info.st_gid);
-    RR_UNUSED(ret);
+    if(chmod(bynodeid_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP)<0)
+    {
+        throw SystemResourceException("Could not activate system for local transport");
+    }    
+    if(chown(bynodeid_path.string().c_str(), my_uid, info.st_gid) < 0)
+    {
+        throw SystemResourceException("Could not activate system for local transport");
+    }
+    if(chmod(bynodename_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP)<0)
+    {
+        throw SystemResourceException("Could not activate system for local transport");
+    }    
+    if(chown(bynodename_path.string().c_str(), my_uid, info.st_gid) < 0)
+    {
+        throw SystemResourceException("Could not activate system for local transport");
+    }    
+    if(chmod(socket_path.string().c_str(), S_ISGID | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP) < 0)
+    {
+        throw SystemResourceException("Could not activate system for local transport");
+    }
+    if(chown(socket_path.string().c_str(), my_uid, info.st_gid) < 0)
+    {
+        throw SystemResourceException("Could not activate system for local transport");
+    }
 #endif
 
     return path;

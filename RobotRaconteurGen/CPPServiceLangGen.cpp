@@ -4774,8 +4774,10 @@ void CPPServiceLangGen::GenerateMasterHeaderFile(const std::vector<RR_SHARED_PTR
     {
         std::string n1 = boost::replace_all_copy(fix_name(e->Name), ".", "::");
         std::string n2 = boost::replace_all_copy(fix_name(e->Name), ".", "__");
+        // NOLINTBEGIN(performance-inefficient-string-concatenation)
         type_list += "(RR_MAKE_SHARED< ::" + n1 + "::" + n2 +
-                     "Factory>())"; // NOLINT(performance-inefficient-string-concatenation)
+                     "Factory>())"; 
+        // NOLINTEND(performance-inefficient-string-concatenation)
     }
 
     type_list += ".convert_to_container<std::vector<RR_SHARED_PTR<RobotRaconteur::ServiceFactory> > >()";
