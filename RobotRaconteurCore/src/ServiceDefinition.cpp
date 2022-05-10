@@ -2551,6 +2551,7 @@ ExceptionDefinition::~ExceptionDefinition() {}
 
 ExceptionDefinition::ExceptionDefinition(const RR_SHARED_PTR<ServiceDefinition>& service) { this->service = service; }
 
+// NOLINTNEXTLINE(readability-make-member-function-const)
 std::string ExceptionDefinition::ToString() { return "exception " + Name; }
 
 void ExceptionDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
@@ -2578,6 +2579,7 @@ UsingDefinition::~UsingDefinition() {}
 
 UsingDefinition::UsingDefinition(const RR_SHARED_PTR<ServiceDefinition>& service) { this->service = service; }
 
+// NOLINTNEXTLINE(readability-make-member-function-const)
 std::string UsingDefinition::ToString()
 {
     boost::string_ref qualified_name_type;
@@ -2634,6 +2636,7 @@ ConstantDefinition::ConstantDefinition(const RR_SHARED_PTR<ServiceEntryDefinitio
     this->service_entry = service_entry;
 }
 
+// NOLINTNEXTLINE(readability-make-member-function-const)
 std::string ConstantDefinition::ToString() { return "constant " + Type->ToString() + " " + Name + " " + Value; }
 void ConstantDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
@@ -2822,6 +2825,7 @@ void ConstantDefinition::Reset()
     Value.clear();
 }
 
+// NOLINTNEXTLINE(readability-make-member-function-const)
 std::string ConstantDefinition::ValueToString()
 {
     if (!Type)
