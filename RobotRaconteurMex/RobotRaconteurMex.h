@@ -56,41 +56,41 @@ class MexServiceFactory : public virtual RobotRaconteur::ServiceFactory
     MexServiceFactory(const std::string& defstring);
     MexServiceFactory(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def);
 
-    virtual std::string GetServiceName();
-    virtual std::string DefString();
-    virtual RR_SHARED_PTR<ServiceDefinition> ServiceDef();
-    virtual RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s);
-    virtual RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin);
-    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin);
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure);
-    virtual RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure);
-    virtual RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure);
-    virtual RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure);
-    virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
-        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure);
+    RR_OVIRTUAL std::string GetServiceName() RR_OVERRIDE ;
+    RR_OVIRTUAL std::string DefString() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<ServiceDefinition> ServiceDef() RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::StructureStub> FindStructureStub(boost::string_ref s) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> PackStructure(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRStructure>& structin) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> UnpackStructure(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& mstructin) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray>& structure) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray>& structure) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray>& structure) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray>& structure) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
+        const RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList>& structure) RR_OVERRIDE ;
 
-    virtual RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::ServiceStub> CreateStub(
         boost::string_ref objecttype, boost::string_ref path,
-        const RR_SHARED_PTR<RobotRaconteur::ClientContext>& context);
-    virtual RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(
+        const RR_SHARED_PTR<RobotRaconteur::ClientContext>& context) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::ServiceSkel> CreateSkel(
         boost::string_ref objecttype, boost::string_ref path, const RR_SHARED_PTR<RobotRaconteur::RRObject>& obj,
-        const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context);
+        const RR_SHARED_PTR<RobotRaconteur::ServerContext>& context) RR_OVERRIDE ;
 
-    virtual void DownCastAndThrowException(RobotRaconteurException& exp) { throw exp; }
+    RR_OVIRTUAL void DownCastAndThrowException(RobotRaconteurException& exp) RR_OVERRIDE  { throw exp; }
 
-    virtual RR_SHARED_PTR<RobotRaconteurException> DownCastException(const RR_SHARED_PTR<RobotRaconteurException>& exp)
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurException> DownCastException(const RR_SHARED_PTR<RobotRaconteurException>& exp) RR_OVERRIDE 
     {
         return exp;
     }
@@ -103,8 +103,8 @@ class MexServiceFactory : public virtual RobotRaconteur::ServiceFactory
 class MexDynamicServiceFactory : public virtual DynamicServiceFactory
 {
   public:
-    virtual RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(boost::string_ref def);
-    virtual std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def);
+    RR_OVIRTUAL RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(boost::string_ref def) RR_OVERRIDE ;
+    RR_OVIRTUAL std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def) RR_OVERRIDE ;
 };
 
 class MexEventConnection
@@ -143,7 +143,7 @@ class MexAsyncResult
     RR_SHARED_PTR<TypeDefinition> return_type;
     RR_INTRUSIVE_PTR<MessageElement> return_value;
 
-    MexAsyncResult(const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+    MexAsyncResult(const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                    const RR_SHARED_PTR<RobotRaconteurException>& error,
                    RR_SHARED_PTR<TypeDefinition> return_type = RR_SHARED_PTR<TypeDefinition>(),
                    RR_INTRUSIVE_PTR<MessageElement> return_value = RR_INTRUSIVE_PTR<MessageElement>())
@@ -165,49 +165,49 @@ class MexServiceStub : public virtual RobotRaconteur::ServiceStub
     MexServiceStub(boost::string_ref path, const RR_SHARED_PTR<ServiceEntryDefinition>& type,
                    const RR_SHARED_PTR<RobotRaconteur::ClientContext>& c);
 
-    virtual mxArray* PropertyGet(const std::string& PropertyName);
-    virtual void PropertySet(const std::string& PropertyName, const mxArray* value);
-    virtual mxArray* FunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args);
+    mxArray* PropertyGet(const std::string& PropertyName);
+    void PropertySet(const std::string& PropertyName, const mxArray* value);
+    mxArray* FunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args);
 
-    virtual void AsyncPropertyGet(const std::string& PropertyName, const RR_SHARED_PTR<mxArray>& handler,
+    void AsyncPropertyGet(const std::string& PropertyName, const RR_SHARED_PTR<mxArray>& handler,
                                   const RR_SHARED_PTR<mxArray>& param, uint32_t timeout);
-    virtual void AsyncPropertySet(const std::string& PropertyName, const mxArray* value,
+    void AsyncPropertySet(const std::string& PropertyName, const mxArray* value,
                                   const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                   uint32_t timeout);
-    virtual void AsyncFunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args,
-                                   const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+    void AsyncFunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args,
+                                   const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                    uint32_t timeout);
 
-    virtual void EndAsyncPropertyGet(const RR_INTRUSIVE_PTR<MessageEntry>&,
+    void EndAsyncPropertyGet(const RR_INTRUSIVE_PTR<MessageEntry>&,
                                      const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&,
-                                     const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+                                     const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                      const RR_SHARED_PTR<PropertyDefinition>& def);
-    virtual void EndAsyncPropertySet(const RR_INTRUSIVE_PTR<MessageEntry>&,
+    void EndAsyncPropertySet(const RR_INTRUSIVE_PTR<MessageEntry>&,
                                      const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&,
-                                     const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+                                     const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                      const RR_SHARED_PTR<PropertyDefinition>& def);
-    virtual void EndAsyncFunctionCall(const RR_INTRUSIVE_PTR<MessageEntry>&,
+    void EndAsyncFunctionCall(const RR_INTRUSIVE_PTR<MessageEntry>&,
                                       const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&,
-                                      const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+                                      const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                       const RR_SHARED_PTR<FunctionDefinition>& def);
 
-    virtual void DispatchEvent(const RR_INTRUSIVE_PTR<MessageEntry>& m);
-    virtual void DispatchPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m);
-    virtual void DispatchWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m);
+    RR_OVIRTUAL void DispatchEvent(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void DispatchPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE ;
+    RR_OVIRTUAL void DispatchWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE ;
     /*virtual RR_INTRUSIVE_PTR<MessageEntry> CallbackCall(const RR_INTRUSIVE_PTR<MessageEntry>& m);
     virtual RR_SHARED_PTR<RobotRaconteur::MexPipeClient> GetPipe(const std::string& membername);
     virtual RR_SHARED_PTR<RobotRaconteur::MexWireClient> GetWire(const std::string& membername);
     virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemoryBase> GetArrayMemory(const std::string& membername);
     virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemoryBase> GetMultiDimArrayMemory(const std::string&
     membername);*/
-    virtual void RRClose();
-    virtual void RRInitStub();
+    RR_OVIRTUAL void RRClose() RR_OVERRIDE ;
+    RR_OVIRTUAL void RRInitStub() RR_OVERRIDE ;
 
-    virtual RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(boost::string_ref membername);
-    virtual RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername);
+    RR_OVIRTUAL RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(boost::string_ref membername) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername) RR_OVERRIDE ;
 
   public:
-    virtual std::string RRType();
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE ;
     RR_SHARED_PTR<ServiceEntryDefinition> RR_objecttype;
 
     std::map<std::string, RR_SHARED_PTR<MexPipeClient> > pipes;
@@ -235,7 +235,7 @@ class MexServiceStub : public virtual RobotRaconteur::ServiceStub
     mxArray* addlistener(const mxArray* name, const mxArray* functionhandle);
     void deletelistener(const mxArray* eventid);
 
-    virtual RR_INTRUSIVE_PTR<MessageEntry> CallbackCall(const RR_INTRUSIVE_PTR<MessageEntry>& m);
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageEntry> CallbackCall(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE ;
 
     std::deque<boost::shared_ptr<MexCallbackCall> > callback_requests;
     boost::recursive_mutex callback_lock;
@@ -260,12 +260,12 @@ class MexPipeEndpoint : public PipeEndpointBase
 {
 
   public:
-    virtual uint32_t SendPacket(const RR_INTRUSIVE_PTR<MessageElement>& packet);
-    virtual RR_INTRUSIVE_PTR<MessageElement> ReceivePacket();
-    virtual RR_INTRUSIVE_PTR<MessageElement> PeekNextPacket();
-    virtual RR_INTRUSIVE_PTR<MessageElement> ReceivePacketWait(int32_t timeout);
-    virtual RR_INTRUSIVE_PTR<MessageElement> PeekNextPacketWait(int32_t timeout);
-    virtual bool TryReceivePacketWait(RR_INTRUSIVE_PTR<MessageElement>& packet, int32_t timeout, bool peek);
+    uint32_t SendPacket(const RR_INTRUSIVE_PTR<MessageElement>& packet);
+    RR_INTRUSIVE_PTR<MessageElement> ReceivePacket();
+    RR_INTRUSIVE_PTR<MessageElement> PeekNextPacket();
+    RR_INTRUSIVE_PTR<MessageElement> ReceivePacketWait(int32_t timeout);
+    RR_INTRUSIVE_PTR<MessageElement> PeekNextPacketWait(int32_t timeout);
+    bool TryReceivePacketWait(RR_INTRUSIVE_PTR<MessageElement>& packet, int32_t timeout, bool peek);
     MexPipeEndpoint(const RR_SHARED_PTR<PipeBase>& parent, int32_t index, uint32_t endpoint,
                     const RR_SHARED_PTR<TypeDefinition>& Type, bool unreliable, MemberDefinition_Direction direction);
     RR_SHARED_PTR<TypeDefinition> Type;
@@ -275,14 +275,14 @@ class MexPipeEndpoint : public PipeEndpointBase
 
     int32_t pipeendpointid;
 
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE ;
 
     RR_SHARED_PTR<ServiceStub> GetStub();
 
   protected:
-    virtual void fire_PipeEndpointClosedCallback();
-    virtual void fire_PacketReceivedEvent();
-    virtual void fire_PacketAckReceivedEvent(uint32_t packetnum);
+    RR_OVIRTUAL void fire_PipeEndpointClosedCallback() RR_OVERRIDE ;
+    RR_OVIRTUAL void fire_PacketReceivedEvent() RR_OVERRIDE ;
+    RR_OVIRTUAL void fire_PacketAckReceivedEvent(uint32_t packetnum) RR_OVERRIDE ;
 };
 
 class MexPipeClient : public virtual PipeClientBase
@@ -290,15 +290,15 @@ class MexPipeClient : public virtual PipeClientBase
   public:
     // virtual boost::function<void(const RR_SHARED_PTR<MexPipeEndpoint>&)> GetPipeConnectCallback();
     // virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<MexPipeEndpoint>&)> function);
-    virtual RR_SHARED_PTR<MexPipeEndpoint> Connect(int32_t index);
+    RR_SHARED_PTR<MexPipeEndpoint> Connect(int32_t index);
     MexPipeClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub,
                   const RR_SHARED_PTR<TypeDefinition>& Type, bool unreliable, MemberDefinition_Direction direction);
 
     RR_SHARED_PTR<TypeDefinition> Type;
 
   protected:
-    virtual RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable,
-                                                                  MemberDefinition_Direction direction);
+    RR_OVIRTUAL RR_SHARED_PTR<PipeEndpointBase> CreateNewPipeEndpoint(int32_t index, bool unreliable,
+                                                                  MemberDefinition_Direction direction)  RR_OVERRIDE ;
 };
 
 boost::recursive_mutex pipeendpoints_lock;
@@ -308,21 +308,21 @@ std::map<int32_t, boost::shared_ptr<MexPipeEndpoint> > pipeendpoints;
 class MexWireConnection : public virtual WireConnectionBase
 {
   public:
-    virtual RR_INTRUSIVE_PTR<MessageElement> GetInValue();
-    virtual RR_INTRUSIVE_PTR<MessageElement> GetOutValue();
-    virtual void SetOutValue(const RR_INTRUSIVE_PTR<MessageElement>& value);
+    RR_INTRUSIVE_PTR<MessageElement> GetInValue();
+    RR_INTRUSIVE_PTR<MessageElement> GetOutValue();
+    void SetOutValue(const RR_INTRUSIVE_PTR<MessageElement>& value);
     MexWireConnection(const RR_SHARED_PTR<WireBase>& parent, uint32_t endpoint,
                       const RR_SHARED_PTR<TypeDefinition>& Type, MemberDefinition_Direction direction);
 
-    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time);
-    virtual void fire_WireClosedCallback();
+    RR_OVIRTUAL void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time) RR_OVERRIDE ;
+    RR_OVIRTUAL void fire_WireClosedCallback() RR_OVERRIDE ;
 
     RR_SHARED_PTR<TypeDefinition> Type;
     int32_t wireconnectionid;
 
     RR_SHARED_PTR<ServiceStub> GetStub();
 
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE ;
 
     mxArray* subsref(const mxArray* S);
     void subsasgn(const mxArray* S, const mxArray* value);
@@ -331,7 +331,7 @@ class MexWireConnection : public virtual WireConnectionBase
 class MexWireClient : public virtual WireClientBase
 {
   public:
-    virtual RR_SHARED_PTR<MexWireConnection> Connect();
+    RR_SHARED_PTR<MexWireConnection> Connect();
     MexWireClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub,
                   const RR_SHARED_PTR<TypeDefinition>& Type, MemberDefinition_Direction direction);
 
@@ -342,7 +342,7 @@ class MexWireClient : public virtual WireClientBase
     void PokeOutValue(const mxArray* value);
 
   protected:
-    virtual RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction);
+    RR_OVIRTUAL RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction) RR_OVERRIDE ;
 };
 
 boost::recursive_mutex wireconnections_lock;
@@ -390,7 +390,7 @@ class MexRRObject : public RRObject
     boost::shared_ptr<ServiceEntryDefinition> type;
     std::string strtype;
 
-    virtual std::string RRType() { return strtype; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE  { return strtype; }
 };
 
 class MexServiceSkel : public ServiceSkel
@@ -400,35 +400,35 @@ class MexServiceSkel : public ServiceSkel
     boost::shared_ptr<MexRRObject> obj;
 
     boost::mutex request_lock;
-    std::list<boost::tuple<const RR_INTRUSIVE_PTR<MessageEntry>&, boost::shared_ptr<ServerEndpoint> > >
+    std::list<boost::tuple<RR_INTRUSIVE_PTR<MessageEntry>, boost::shared_ptr<ServerEndpoint> > >
         property_get_requests;
-    std::list<boost::tuple<const RR_INTRUSIVE_PTR<MessageEntry>&, boost::shared_ptr<ServerEndpoint> > >
+    std::list<boost::tuple<RR_INTRUSIVE_PTR<MessageEntry>, boost::shared_ptr<ServerEndpoint> > >
         property_set_requests;
-    std::list<boost::tuple<const RR_INTRUSIVE_PTR<MessageEntry>&, boost::shared_ptr<ServerEndpoint> > >
+    std::list<boost::tuple<RR_INTRUSIVE_PTR<MessageEntry>, boost::shared_ptr<ServerEndpoint> > >
         function_requests;
 
-    virtual void Init(const std::string& s, const RR_SHARED_PTR<RRObject>& o, const RR_SHARED_PTR<ServerContext>& c);
+    RR_OVIRTUAL void Init(boost::string_ref s, const RR_SHARED_PTR<RRObject>& o, const RR_SHARED_PTR<ServerContext>& c) RR_OVERRIDE ;
 
-    virtual RR_INTRUSIVE_PTR<MessageEntry> CallGetProperty(const RR_INTRUSIVE_PTR<MessageEntry>& m);
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageEntry> CallGetProperty(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE ;
 
-    virtual RR_INTRUSIVE_PTR<MessageEntry> CallSetProperty(const RR_INTRUSIVE_PTR<MessageEntry>& m);
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageEntry> CallSetProperty(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE ;
 
-    virtual RR_INTRUSIVE_PTR<MessageEntry> CallFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m);
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageEntry> CallFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE ;
 
-    virtual void RegisterEvents(const RR_SHARED_PTR<RRObject>& obj1);
+    RR_OVIRTUAL void RegisterEvents(const RR_SHARED_PTR<RRObject>& obj1) RR_OVERRIDE ;
 
-    virtual void DispatchMexEvent(const std::string& name, const mxArray* parameters);
+    void DispatchMexEvent(const std::string& name, const mxArray* parameters);
 
-    virtual void ReleaseCastObject() {}
+    RR_OVIRTUAL void ReleaseCastObject() RR_OVERRIDE  {}
 
-    virtual std::string GetObjectType()
+    RR_OVIRTUAL std::string GetObjectType() RR_OVERRIDE 
     {
         return GetContext()->GetServiceDef()->GetServiceName() + "." + obj->type->Name;
     }
 
-    virtual void ProcessRequests();
+    void ProcessRequests();
 
-    virtual RR_SHARED_PTR<RRObject> GetSubObj(boost::string_ref, boost::string_ref)
+    RR_OVIRTUAL RR_SHARED_PTR<RRObject> GetSubObj(boost::string_ref, boost::string_ref) RR_OVERRIDE 
     {
         throw InvalidArgumentException("Object not found");
     }
@@ -531,11 +531,11 @@ class MexGeneratorClient : public virtual GeneratorClientBase, public RR_ENABLE_
     mxArray* subsref(const mxArray* S);
     void subsasgn(const mxArray* S, const mxArray* value);
 
-    virtual void EndAsyncNext(const RR_INTRUSIVE_PTR<MessageElement>&,
+    void EndAsyncNext(const RR_INTRUSIVE_PTR<MessageElement>&,
                               const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&,
-                              const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram);
-    virtual void EndAsyncClose(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&,
-                               const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param);
+                              const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param) ;
+    void EndAsyncClose(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&,
+                               const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param) ;
 };
 
 class MexPodArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual ArrayMemoryBase
@@ -543,16 +543,16 @@ class MexPodArrayMemoryClient : public virtual ArrayMemoryClientBase, public vir
   public:
     MexPodArrayMemoryClient(const std::string& membername, const RR_SHARED_PTR<ServiceStub>& stub, size_t element_size,
                             MemberDefinition_Direction direction, const RR_SHARED_PTR<TypeDefinition>& type);
-    virtual mxArray* Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
-    virtual void Write(uint64_t memorypos, const mxArray* buffer, uint64_t bufferpos, uint64_t count);
-    virtual uint64_t Length();
-    virtual DataTypes ElementTypeID();
+    mxArray* Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+    void Write(uint64_t memorypos, const mxArray* buffer, uint64_t bufferpos, uint64_t count);
+    RR_OVIRTUAL uint64_t Length()  RR_OVERRIDE ;
+    RR_OVIRTUAL DataTypes ElementTypeID()  RR_OVERRIDE ;
 
   protected:
-    virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer, uint64_t bufferpos,
-                                  uint64_t count);
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count);
-    virtual size_t GetBufferLength(void* buffer);
+    RR_OVIRTUAL void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer, uint64_t bufferpos,
+                                  uint64_t count) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, uint64_t bufferpos, uint64_t count) RR_OVERRIDE ;
+    RR_OVIRTUAL size_t GetBufferLength(const void* buffer) RR_OVERRIDE ;
 
     RR_SHARED_PTR<TypeDefinition> type;
 };
@@ -564,21 +564,21 @@ class MexPodMultiDimArrayMemoryClient : public virtual MultiDimArrayMemoryClient
     MexPodMultiDimArrayMemoryClient(const std::string& membername, const RR_SHARED_PTR<ServiceStub>& stub,
                                     size_t element_size, MemberDefinition_Direction direction,
                                     const RR_SHARED_PTR<TypeDefinition>& type);
-    virtual mxArray* Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos,
+    mxArray* Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos,
                           const std::vector<uint64_t>& count);
-    virtual void Write(const std::vector<uint64_t>& memorypos, const mxArray* buffer,
+    void Write(const std::vector<uint64_t>& memorypos, const mxArray* buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-    virtual std::vector<uint64_t> Dimensions();
-    virtual uint64_t DimCount();
-    virtual DataTypes ElementTypeID();
+    RR_OVIRTUAL std::vector<uint64_t> Dimensions() RR_OVERRIDE ;
+    RR_OVIRTUAL uint64_t DimCount() RR_OVERRIDE ;
+    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE ;
 
   protected:
-    virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
+    RR_OVIRTUAL void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
                                   const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count,
-                                  uint64_t elemcount);
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos,
+                                  uint64_t elemcount) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, const std::vector<uint64_t>& bufferpos,
                                                                   const std::vector<uint64_t>& count,
-                                                                  uint64_t elemcount);
+                                                                  uint64_t elemcount) RR_OVERRIDE ;
 
     RR_SHARED_PTR<TypeDefinition> type;
 };
@@ -589,16 +589,16 @@ class MexNamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public v
     MexNamedArrayMemoryClient(const std::string& membername, const RR_SHARED_PTR<ServiceStub>& stub,
                               boost::tuple<DataTypes, size_t> array_info, MemberDefinition_Direction direction,
                               const RR_SHARED_PTR<TypeDefinition>& type);
-    virtual mxArray* Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
-    virtual void Write(uint64_t memorypos, const mxArray* buffer, uint64_t bufferpos, uint64_t count);
-    virtual uint64_t Length();
-    virtual DataTypes ElementTypeID();
+    mxArray* Read(uint64_t memorypos, uint64_t bufferpos, uint64_t count);
+    void Write(uint64_t memorypos, const mxArray* buffer, uint64_t bufferpos, uint64_t count);
+    RR_OVIRTUAL uint64_t Length() RR_OVERRIDE ;
+    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE ;
 
   protected:
-    virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer, uint64_t bufferpos,
-                                  uint64_t count);
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, uint64_t bufferpos, uint64_t count);
-    virtual size_t GetBufferLength(void* buffer);
+    RR_OVIRTUAL void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer, uint64_t bufferpos,
+                                  uint64_t count) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, uint64_t bufferpos, uint64_t count) RR_OVERRIDE ;
+    RR_OVIRTUAL size_t GetBufferLength(const void* buffer) RR_OVERRIDE ;
 
     RR_SHARED_PTR<TypeDefinition> type;
 
@@ -614,21 +614,21 @@ class MexNamedMultiDimArrayMemoryClient : public virtual MultiDimArrayMemoryClie
     MexNamedMultiDimArrayMemoryClient(const std::string& membername, const RR_SHARED_PTR<ServiceStub>& stub,
                                       boost::tuple<DataTypes, size_t> array_info, MemberDefinition_Direction direction,
                                       const RR_SHARED_PTR<TypeDefinition>& type);
-    virtual mxArray* Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos,
+    mxArray* Read(const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos,
                           const std::vector<uint64_t>& count);
-    virtual void Write(const std::vector<uint64_t>& memorypos, const mxArray* buffer,
+    void Write(const std::vector<uint64_t>& memorypos, const mxArray* buffer,
                        const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
-    virtual std::vector<uint64_t> Dimensions();
-    virtual uint64_t DimCount();
-    virtual DataTypes ElementTypeID();
+    RR_OVIRTUAL std::vector<uint64_t> Dimensions() RR_OVERRIDE ;
+    RR_OVIRTUAL uint64_t DimCount() RR_OVERRIDE ;
+    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE ;
 
   protected:
-    virtual void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
+    RR_OVIRTUAL void UnpackReadResult(const RR_INTRUSIVE_PTR<MessageElementData>& res, void* buffer,
                                   const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count,
-                                  uint64_t elemcount);
-    virtual RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(void* buffer, const std::vector<uint64_t>& bufferpos,
+                                  uint64_t elemcount) RR_OVERRIDE ;
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> PackWriteRequest(const void* buffer, const std::vector<uint64_t>& bufferpos,
                                                                   const std::vector<uint64_t>& count,
-                                                                  uint64_t elemcount);
+                                                                  uint64_t elemcount) RR_OVERRIDE ;
 
     RR_SHARED_PTR<TypeDefinition> type;
 

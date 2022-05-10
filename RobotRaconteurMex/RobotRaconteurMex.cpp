@@ -4047,7 +4047,7 @@ void MexServiceStub::AsyncPropertyGet(const std::string& PropertyName, const RR_
 
 void MexServiceStub::EndAsyncPropertyGet(const RR_INTRUSIVE_PTR<MessageEntry>& res,
                                          const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
-                                         const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+                                         const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                          const RR_SHARED_PTR<PropertyDefinition>& pdef)
 {
     RR_SHARED_PTR<MexAsyncResult> ares;
@@ -4099,7 +4099,7 @@ void MexServiceStub::AsyncPropertySet(const std::string& PropertyName, const mxA
 
 void MexServiceStub::EndAsyncPropertySet(const RR_INTRUSIVE_PTR<MessageEntry>& res,
                                          const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
-                                         const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+                                         const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                          const RR_SHARED_PTR<PropertyDefinition>& pdef)
 {
     RR_SHARED_PTR<MexAsyncResult> ares;
@@ -4123,7 +4123,7 @@ void MexServiceStub::EndAsyncPropertySet(const RR_INTRUSIVE_PTR<MessageEntry>& r
 }
 
 void MexServiceStub::AsyncFunctionCall(const std::string& FunctionName, std::vector<const mxArray*> args,
-                                       const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+                                       const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                        uint32_t timeout)
 {
     boost::shared_ptr<FunctionDefinition> fdef;
@@ -4160,7 +4160,7 @@ void MexServiceStub::AsyncFunctionCall(const std::string& FunctionName, std::vec
 
 void MexServiceStub::EndAsyncFunctionCall(const RR_INTRUSIVE_PTR<MessageEntry>& res,
                                           const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
-                                          const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram,
+                                          const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                                           const RR_SHARED_PTR<FunctionDefinition>& fdef)
 {
     RR_SHARED_PTR<MexAsyncResult> ares;
@@ -7265,7 +7265,7 @@ mxArray* ServiceDefinitionConstants(const boost::shared_ptr<ServiceDefinition>& 
     return o;
 }
 
-void MexServiceSkel::Init(const std::string& s, const RR_SHARED_PTR<RRObject>& o, const RR_SHARED_PTR<ServerContext>& c)
+void MexServiceSkel::Init(boost::string_ref s, const RR_SHARED_PTR<RRObject>& o, const RR_SHARED_PTR<ServerContext>& c)
 {
     {
         boost::mutex::scoped_lock lock(skels_lock);
@@ -7420,9 +7420,9 @@ void MexServiceSkel::ProcessRequests()
     while (true)
     {
 
-        boost::tuple<const RR_INTRUSIVE_PTR<MessageEntry>&, boost::shared_ptr<ServerEndpoint> > pg;
-        boost::tuple<const RR_INTRUSIVE_PTR<MessageEntry>&, boost::shared_ptr<ServerEndpoint> > ps;
-        boost::tuple<const RR_INTRUSIVE_PTR<MessageEntry>&, boost::shared_ptr<ServerEndpoint> > f;
+        boost::tuple<RR_INTRUSIVE_PTR<MessageEntry>, boost::shared_ptr<ServerEndpoint> > pg;
+        boost::tuple<RR_INTRUSIVE_PTR<MessageEntry>, boost::shared_ptr<ServerEndpoint> > ps;
+        boost::tuple<RR_INTRUSIVE_PTR<MessageEntry>, boost::shared_ptr<ServerEndpoint> > f;
 
         {
             boost::mutex::scoped_lock lock(request_lock);
@@ -9030,7 +9030,7 @@ void MexGeneratorClient::subsasgn(const mxArray* S, const mxArray* value)
 
 void MexGeneratorClient::EndAsyncNext(const RR_INTRUSIVE_PTR<MessageElement>& res,
                                       const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
-                                      const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram)
+                                      const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param)
 {
     RR_SHARED_PTR<MexAsyncResult> ares;
     if (err)
@@ -9060,7 +9060,7 @@ void MexGeneratorClient::EndAsyncNext(const RR_INTRUSIVE_PTR<MessageElement>& re
 }
 
 void MexGeneratorClient::EndAsyncClose(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>& err,
-                                       const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& haram)
+                                       const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param)
 {
     RR_SHARED_PTR<MexAsyncResult> ares;
     if (err)
@@ -9130,16 +9130,16 @@ void MexPodArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<MessageEle
     }
 }
 
-RR_INTRUSIVE_PTR<MessageElementData> MexPodArrayMemoryClient::PackWriteRequest(void* buffer, uint64_t bufferpos,
+RR_INTRUSIVE_PTR<MessageElementData> MexPodArrayMemoryClient::PackWriteRequest(const void* buffer, uint64_t bufferpos,
                                                                                uint64_t count)
 {
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> >* buffer2 =
-        static_cast<std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer2 =
+        *static_cast<const std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > o(count);
 
     for (size_t i = 0; i < count; i++)
     {
-        o.at(i) = buffer2->at(bufferpos + i);
+        o.at(i) = buffer2.at(bufferpos + i);
     }
 
     std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
@@ -9148,11 +9148,11 @@ RR_INTRUSIVE_PTR<MessageElementData> MexPodArrayMemoryClient::PackWriteRequest(v
         type->ResolveNamedType(other_defs, RobotRaconteurNode::sp(), GetStub())->ResolveQualifiedName(), o);
 }
 
-size_t MexPodArrayMemoryClient::GetBufferLength(void* buffer)
+size_t MexPodArrayMemoryClient::GetBufferLength(const void* buffer)
 {
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> >* buffer2 =
-        static_cast<std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
-    return buffer2->size();
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer2 =
+        *static_cast<const std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
+    return buffer2.size();
 }
 
 DataTypes MexPodArrayMemoryClient::ElementTypeID() { return DataTypes_pod_t; }
@@ -9245,10 +9245,10 @@ void MexPodMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Me
     }
 }
 RR_INTRUSIVE_PTR<MessageElementData> MexPodMultiDimArrayMemoryClient::PackWriteRequest(
-    void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
+    const void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> >* buffer2 =
-        static_cast<std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer2 =
+        *static_cast<const std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
 
     std::vector<uint64_t> stride(count.size());
     stride[0] = 1;
@@ -9262,7 +9262,7 @@ RR_INTRUSIVE_PTR<MessageElementData> MexPodMultiDimArrayMemoryClient::PackWriteR
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer3(elemcount);
     for (size_t i = 0; i < elemcount; i++)
     {
-        buffer3.at(i + start_ind) = buffer2->at(i);
+        buffer3.at(i + start_ind) = buffer2.at(i);
     }
 
     std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
@@ -9336,13 +9336,13 @@ void MexNamedArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<MessageE
     memcpy(((uint8_t*)(*buffer2)->void_ptr()) + (bufferpos * element_size), res3->void_ptr(), count * element_size);
 }
 
-RR_INTRUSIVE_PTR<MessageElementData> MexNamedArrayMemoryClient::PackWriteRequest(void* buffer, uint64_t bufferpos,
+RR_INTRUSIVE_PTR<MessageElementData> MexNamedArrayMemoryClient::PackWriteRequest(const void* buffer, uint64_t bufferpos,
                                                                                  uint64_t count)
 {
-    RR_INTRUSIVE_PTR<RRBaseArray>* buffer2 = static_cast<RR_INTRUSIVE_PTR<RRBaseArray>*>(buffer);
+    RR_INTRUSIVE_PTR<RRBaseArray> buffer2 = *static_cast<const RR_INTRUSIVE_PTR<RRBaseArray>*>(buffer);
     RR_INTRUSIVE_PTR<RRBaseArray> o1 = AllocateRRArrayByType(array_elementtype, count * array_elementcount);
 
-    memcpy(o1->void_ptr(), ((uint8_t*)(*buffer2)->void_ptr()) + (bufferpos * element_size), count * element_size);
+    memcpy(o1->void_ptr(), ((uint8_t*)(buffer2)->void_ptr()) + (bufferpos * element_size), count * element_size);
 
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > o2;
     o2.push_back(CreateMessageElement("array", o1));
@@ -9350,7 +9350,7 @@ RR_INTRUSIVE_PTR<MessageElementData> MexNamedArrayMemoryClient::PackWriteRequest
     return CreateMessageElementNestedElementList(DataTypes_namedarray_array_t, type_string, o2);
 }
 
-size_t MexNamedArrayMemoryClient::GetBufferLength(void* buffer) { return mxGetN((mxArray*)buffer); }
+size_t MexNamedArrayMemoryClient::GetBufferLength(const void* buffer) { return mxGetN((const mxArray*)buffer); }
 
 DataTypes MexNamedArrayMemoryClient::ElementTypeID() { return DataTypes_namedarray_t; }
 
@@ -9479,14 +9479,14 @@ void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<
     }
 }
 RR_INTRUSIVE_PTR<MessageElementData> MexNamedMultiDimArrayMemoryClient::PackWriteRequest(
-    void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
+    const void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-    MexNamedMultiDimArrayMemoryClient_buffer* buffer1 = static_cast<MexNamedMultiDimArrayMemoryClient_buffer*>(buffer);
+    const MexNamedMultiDimArrayMemoryClient_buffer* buffer1 = static_cast<const MexNamedMultiDimArrayMemoryClient_buffer*>(buffer);
     RR_INTRUSIVE_PTR<RRBaseArray> buffer2 = buffer1->buffer;
 
     RR_INTRUSIVE_PTR<RRBaseArray> buffer3 = AllocateRRArrayByType(array_elementtype, elemcount * array_elementcount);
 
-    std::vector<uint32_t>& mema_dims = buffer1->dims;
+    const std::vector<uint32_t>& mema_dims = buffer1->dims;
     std::vector<uint32_t> zero_dims(count.size());
     std::vector<uint32_t> bufferpos1 = detail::ConvertVectorType<uint32_t>(bufferpos);
     std::vector<uint32_t> count1 = detail::ConvertVectorType<uint32_t>(count);
