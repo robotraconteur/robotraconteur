@@ -79,7 +79,7 @@ namespace RobotRaconteur
     class UserLogRecordHandlerDirector
 	{
 	public:
-		virtual void HandleLogRecord(const RRLogRecord& record) {};
+		virtual void HandleLogRecord(const RRLogRecord& record) = 0;
         virtual ~UserLogRecordHandlerDirector();
 	};
 

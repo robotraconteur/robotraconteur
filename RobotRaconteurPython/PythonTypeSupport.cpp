@@ -172,7 +172,7 @@ void VerifyMultiDimArrayLength(const boost::intrusive_ptr<MessageElementNestedEl
 }
 
 PyObject* GetStructureType(const std::string& type, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
-                           const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
+                           boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
 {
     PyObject* modules_dict = PyImport_GetModuleDict();
     if (modules_dict == NULL)
@@ -782,7 +782,7 @@ class PackMessageElementImpl
     boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data,
                                                             const boost::shared_ptr<TypeDefinition>& type1,
                                                             const boost::shared_ptr<WrappedServiceStub>& obj,
-                                                            const boost::shared_ptr<RobotRaconteurNode>& node)
+                                                            boost::shared_ptr<RobotRaconteurNode> node)
     {
         if (!type1)
             throw InvalidArgumentException("Invalid parameters for PackMessageElement");
@@ -1306,7 +1306,7 @@ class PackMessageElementImpl
 
 boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, const boost::shared_ptr<TypeDefinition>& type1,
                                                         const boost::shared_ptr<WrappedServiceStub>& obj,
-                                                        const boost::shared_ptr<RobotRaconteurNode>& node)
+                                                        boost::shared_ptr<RobotRaconteurNode> node)
 {
     PackMessageElementImpl p;
     if (type1)
@@ -1335,7 +1335,7 @@ boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, const bo
 
 boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, const boost::shared_ptr<TypeDefinition>& type1,
                                                         const boost::shared_ptr<ServerContext>& obj,
-                                                        const boost::shared_ptr<RobotRaconteurNode>& node)
+                                                        boost::shared_ptr<RobotRaconteurNode> node)
 {
     if (!node && obj)
     {
@@ -1632,7 +1632,7 @@ class UnpackMessageElementImpl
     PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
                                    const boost::shared_ptr<TypeDefinition>& type1,
                                    const boost::shared_ptr<WrappedServiceStub>& stub,
-                                   const boost::shared_ptr<RobotRaconteurNode>& node)
+                                   boost::shared_ptr<RobotRaconteurNode> node)
     {
         if (!element)
             throw NullValueException("element must not be null for UnpackMessageElement");
@@ -2268,7 +2268,7 @@ class UnpackMessageElementImpl
 PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
                                const boost::shared_ptr<TypeDefinition>& type1,
                                const boost::shared_ptr<WrappedServiceStub>& stub,
-                               const boost::shared_ptr<RobotRaconteurNode>& node)
+                               boost::shared_ptr<RobotRaconteurNode> node)
 {
     UnpackMessageElementImpl u;
     if (type1)
@@ -2298,7 +2298,7 @@ PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& eleme
 PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
                                const boost::shared_ptr<TypeDefinition>& type1,
                                const boost::shared_ptr<ServerContext>& obj,
-                               const boost::shared_ptr<RobotRaconteurNode>& node)
+                               boost::shared_ptr<RobotRaconteurNode> node)
 {
     if (!node && obj)
     {
@@ -2623,7 +2623,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_bool(PyObject* array_,
 }
 
 boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1,
-                                                const boost::intrusive_ptr<RRBaseArray>& destrrarray)
+                                                boost::intrusive_ptr<RRBaseArray> destrrarray)
 {
     if (!type1)
         throw NullValueException("PackToRRArray type must not be None");
@@ -2837,7 +2837,7 @@ PyObject* UnpackFromRRArray(const boost::intrusive_ptr<RRBaseArray>& rrarray,
 }
 
 boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1,
-                                                      const boost::intrusive_ptr<RRBaseArray>& destrrarray)
+                                                      boost::intrusive_ptr<RRBaseArray> destrrarray)
 {
     if (!PyArray_Check(array_))
         throw DataTypeException("numpy array expected");

@@ -30,8 +30,8 @@ class WrappedServiceStubDirector
 {
 public:
 	virtual ~WrappedServiceStubDirector() {}
-	virtual void DispatchEvent(const std::string& EventName, std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args);
-	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallbackCall(const std::string& CallbackName, std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args);
+	virtual void DispatchEvent(const std::string& EventName, std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args) = 0;
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> CallbackCall(const std::string& CallbackName, std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > args) = 0;
 };
 RR_DIRECTOR_SHARED_PTR_RETURN_DEFAULT(RobotRaconteur::MessageElement)
 
@@ -39,7 +39,7 @@ class AsyncStubReturnDirector
 {
 public:
 	virtual ~AsyncStubReturnDirector() {}
-	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& stub, HandlerErrorInfo& error);
+	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& stub, HandlerErrorInfo& error) = 0;
 };
 
 %nodefaultctor WrappedServiceStub;

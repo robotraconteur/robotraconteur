@@ -35,22 +35,22 @@ class WrappedWireConnectionDirector
 {
 public:
 	virtual ~WrappedWireConnectionDirector() {}
-	virtual void WireValueChanged(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& time);
-	virtual void WireConnectionClosedCallback();
+	virtual void WireValueChanged(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& time) = 0;
+	virtual void WireConnectionClosedCallback() = 0;
 };
 
 class AsyncWireConnectionReturnDirector
 {
 public:
 	virtual ~AsyncWireConnectionReturnDirector();
-	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedWireConnection>& ep, HandlerErrorInfo& error);
+	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedWireConnection>& ep, HandlerErrorInfo& error) = 0;
 };
 
 class AsyncWirePeekReturnDirector
 {
 public:
 	virtual ~AsyncWirePeekReturnDirector() {}
-	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& ts, HandlerErrorInfo& error) {};
+	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const TimeSpec& ts, HandlerErrorInfo& error) = 0;
 };
 
 class TryGetValueResult
@@ -151,14 +151,14 @@ class WrappedWireServerConnectDirector
 {
 public:
 	virtual ~WrappedWireServerConnectDirector() {}
-	virtual void WireConnectCallback(const boost::shared_ptr<WrappedWireConnection>& c) {};	
+	virtual void WireConnectCallback(const boost::shared_ptr<WrappedWireConnection>& c) = 0;
 };
 
 class WrappedWireServerPeekValueDirector
 {
 public:	
     virtual ~WrappedWireServerPeekValueDirector() {}
-	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> PeekValue(const uint32_t& ep) = 0;
+	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> PeekValue(const uint32_t& ep) =0;
 };
 
 class WrappedWireServerPokeValueDirector

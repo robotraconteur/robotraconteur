@@ -367,7 +367,7 @@ static void ServiceDefinition_FindBlock(boost::string_ref current_line, std::ist
     throw ServiceDefinitionParseException("Block end not found", init_parse_info);
 }
 
-std::string ServiceDefinition::ToString() const
+std::string ServiceDefinition::ToString()
 {
     std::ostringstream o;
     ToStream(o);
@@ -829,7 +829,7 @@ ServiceEntryDefinition::ServiceEntryDefinition(const RR_SHARED_PTR<ServiceDefini
     ServiceDefinition_ = def;
 }
 
-std::string ServiceEntryDefinition::ToString() const
+std::string ServiceEntryDefinition::ToString()
 {
     std::stringstream o;
     ToStream(o);
@@ -1622,7 +1622,7 @@ PropertyDefinition::PropertyDefinition(const RR_SHARED_PTR<ServiceEntryDefinitio
     : MemberDefinition(ServiceEntry)
 {}
 
-std::string PropertyDefinition::ToString() const { return ToString(false); }
+std::string PropertyDefinition::ToString() { return ToString(false); }
 
 std::string PropertyDefinition::ToString(bool isstruct) const
 {
@@ -1661,7 +1661,7 @@ FunctionDefinition::FunctionDefinition(const RR_SHARED_PTR<ServiceEntryDefinitio
     FunctionDefinition::Reset();
 }
 
-std::string FunctionDefinition::ToString() const
+std::string FunctionDefinition::ToString()
 {
     return MemberDefinition_ToStringFormat2("function", *this, *ReturnType, Parameters);
 }
@@ -1707,7 +1707,7 @@ EventDefinition::EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& Se
     EventDefinition::Reset();
 }
 
-std::string EventDefinition::ToString() const { return MemberDefinition_ToStringFormat3("event", *this, Parameters); }
+std::string EventDefinition::ToString() { return MemberDefinition_ToStringFormat3("event", *this, Parameters); }
 
 void EventDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
@@ -1862,7 +1862,7 @@ PipeDefinition::PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& Serv
     PipeDefinition::Reset();
 }
 
-std::string PipeDefinition::ToString() const { return MemberDefinition_ToStringFormat1("pipe", *this, *Type); }
+std::string PipeDefinition::ToString() { return MemberDefinition_ToStringFormat1("pipe", *this, *Type); }
 
 void PipeDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
@@ -1914,7 +1914,7 @@ CallbackDefinition::CallbackDefinition(const RR_SHARED_PTR<ServiceEntryDefinitio
     CallbackDefinition::Reset();
 }
 
-std::string CallbackDefinition::ToString() const
+std::string CallbackDefinition::ToString()
 {
     return MemberDefinition_ToStringFormat2("callback", *this, *ReturnType, Parameters);
 }
@@ -1945,7 +1945,7 @@ WireDefinition::WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& Serv
     WireDefinition::Reset();
 }
 
-std::string WireDefinition::ToString() const { return MemberDefinition_ToStringFormat1("wire", *this, *Type); }
+std::string WireDefinition::ToString() { return MemberDefinition_ToStringFormat1("wire", *this, *Type); }
 
 void WireDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
@@ -1974,7 +1974,7 @@ MemoryDefinition::MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& 
     MemoryDefinition::Reset();
 }
 
-std::string MemoryDefinition::ToString() const { return MemberDefinition_ToStringFormat1("memory", *this, *Type); }
+std::string MemoryDefinition::ToString() { return MemberDefinition_ToStringFormat1("memory", *this, *Type); }
 
 void MemoryDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
@@ -2017,7 +2017,7 @@ TypeDefinition::TypeDefinition(const RR_SHARED_PTR<MemberDefinition>& member)
     this->member = member;
 }
 
-std::string TypeDefinition::ToString() const
+std::string TypeDefinition::ToString()
 {
     std::ostringstream o;
     o << ((Type >= DataTypes_namedtype_t && (!(Type == DataTypes_varvalue_t) && !(Type == DataTypes_varobject_t)))
@@ -2551,7 +2551,7 @@ ExceptionDefinition::~ExceptionDefinition() {}
 
 ExceptionDefinition::ExceptionDefinition(const RR_SHARED_PTR<ServiceDefinition>& service) { this->service = service; }
 
-std::string ExceptionDefinition::ToString() const { return "exception " + Name; }
+std::string ExceptionDefinition::ToString() { return "exception " + Name; }
 
 void ExceptionDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
@@ -2578,7 +2578,7 @@ UsingDefinition::~UsingDefinition() {}
 
 UsingDefinition::UsingDefinition(const RR_SHARED_PTR<ServiceDefinition>& service) { this->service = service; }
 
-std::string UsingDefinition::ToString() const
+std::string UsingDefinition::ToString()
 {
     boost::string_ref qualified_name_type;
     boost::tie(boost::tuples::ignore, qualified_name_type) = SplitQualifiedName(QualifiedName);
@@ -2634,7 +2634,7 @@ ConstantDefinition::ConstantDefinition(const RR_SHARED_PTR<ServiceEntryDefinitio
     this->service_entry = service_entry;
 }
 
-std::string ConstantDefinition::ToString() const { return "constant " + Type->ToString() + " " + Name + " " + Value; }
+std::string ConstantDefinition::ToString() { return "constant " + Type->ToString() + " " + Name + " " + Value; }
 void ConstantDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
     Reset();
@@ -2822,7 +2822,7 @@ void ConstantDefinition::Reset()
     Value.clear();
 }
 
-std::string ConstantDefinition::ValueToString() const
+std::string ConstantDefinition::ValueToString()
 {
     if (!Type)
         throw InvalidOperationException("Invalid operation");
@@ -2989,7 +2989,7 @@ EnumDefinition::EnumDefinition(const RR_SHARED_PTR<ServiceDefinition>& service)
     Reset();
 }
 
-std::string EnumDefinition::ToString() const
+std::string EnumDefinition::ToString()
 {
     if (!VerifyValues())
     {

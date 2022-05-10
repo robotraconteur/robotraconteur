@@ -29,7 +29,7 @@ std::string PyObjectToUTF8(PyObject* obj);
 PyObject* NewStructure(const std::string& type, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
                        const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
 PyObject* GetStructureType(const std::string& type, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
-                           const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
+                           boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
 PyObject* GetNumPyDescrForType(const std::string& type,
                                const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
                                const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
@@ -42,28 +42,28 @@ PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<TypeDefinition>& e,
 
 boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, const boost::shared_ptr<TypeDefinition>& type1,
                                                         const boost::shared_ptr<WrappedServiceStub>& obj,
-                                                        const boost::shared_ptr<RobotRaconteurNode>& node);
+                                                        boost::shared_ptr<RobotRaconteurNode> node);
 boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, const boost::shared_ptr<TypeDefinition>& type1,
                                                         const boost::shared_ptr<ServerContext>& obj,
-                                                        const boost::shared_ptr<RobotRaconteurNode>& node);
+                                                        boost::shared_ptr<RobotRaconteurNode> node);
 
 PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
                                const boost::shared_ptr<TypeDefinition>& type1,
                                const boost::shared_ptr<WrappedServiceStub>& stub,
-                               const boost::shared_ptr<RobotRaconteurNode>& node);
+                               boost::shared_ptr<RobotRaconteurNode> node);
 PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
                                const boost::shared_ptr<TypeDefinition>& type1,
                                const boost::shared_ptr<ServerContext>& obj,
-                               const boost::shared_ptr<RobotRaconteurNode>& node);
+                               boost::shared_ptr<RobotRaconteurNode> node);
 
 boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1,
-                                                const boost::intrusive_ptr<RRBaseArray>& destrrarray);
+                                                boost::intrusive_ptr<RRBaseArray> destrrarray);
 
 PyObject* UnpackFromRRArray(const boost::intrusive_ptr<RRBaseArray>& rrarray,
                             const boost::shared_ptr<TypeDefinition>& type1);
 
 boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1,
-                                                      const boost::intrusive_ptr<RRBaseArray>& destrrarray);
+                                                      boost::intrusive_ptr<RRBaseArray> destrrarray);
 
 PyObject* UnpackFromRRArray_numpy(const boost::intrusive_ptr<RRBaseArray>& rrarray,
                                   const boost::shared_ptr<TypeDefinition>& type1);

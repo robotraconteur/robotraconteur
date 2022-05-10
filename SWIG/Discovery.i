@@ -23,14 +23,14 @@ namespace RobotRaconteur
 	{
 	public:
 		virtual ~AsyncServiceInfo2VectorReturnDirector();
-		virtual void handler(const std::vector<RobotRaconteur::ServiceInfo2Wrapped>& ret) {}
+		virtual void handler(const std::vector<RobotRaconteur::ServiceInfo2Wrapped>& ret) = 0;
 	};
 
 	class AsyncNodeInfo2VectorReturnDirector
 	{
 	public:
 		virtual ~AsyncNodeInfo2VectorReturnDirector();
-		virtual void handler(const std::vector<RobotRaconteur::NodeInfo2>& ret) {}
+		virtual void handler(const std::vector<RobotRaconteur::NodeInfo2>& ret) = 0;
 	};
 
 
