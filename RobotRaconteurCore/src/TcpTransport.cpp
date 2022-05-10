@@ -1238,7 +1238,7 @@ void TcpWSSWebSocketConnector::Connect4(
     const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
     const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& tls_stream,
     RR_SHARED_PTR<websocket_stream<TlsSchannelAsyncStreamAdapter_ASIO_adapter&> > websocket,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+    const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
         handler)
 {
     if (err)
@@ -1273,7 +1273,7 @@ void TcpWSSWebSocketConnector::Connect3(
     const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
     const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& tls_stream,
     RR_SHARED_PTR<websocket_stream<TlsSchannelAsyncStreamAdapter_ASIO_adapter&> > websocket,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+    const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
         handler)
 {
 
@@ -1312,7 +1312,7 @@ void TcpWSSWebSocketConnector::Connect2_1(
     const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
     const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
     const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& tls_stream,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+    const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
         handler)
 {
     if (ec)
@@ -1358,7 +1358,7 @@ void TcpWSSWebSocketConnector::Connect2_1(
 void TcpWSSWebSocketConnector::Connect2(
     const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
     const RR_SHARED_PTR<websocket_tcp_connector>& socket_connector,
-    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+    const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
         handler)
 {
     if (ec)

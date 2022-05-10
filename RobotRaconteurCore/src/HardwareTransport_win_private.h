@@ -470,20 +470,20 @@ class WinUsbDevice_Handle
 class WinUsbDevice_Initialize : public UsbDevice_Initialize
 {
   public:
-    WinUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<UsbDevice>& p,
+    WinUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                             const UsbDeviceManager_detected_device& detected_device);
     virtual ~WinUsbDevice_Initialize() {}
 
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
                                       boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     // Call with lock
     virtual void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                             boost::asio::mutable_buffer& buf,
                                             boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     // Call with lock
     virtual UsbDeviceStatus OpenDevice(RR_SHARED_PTR<void>& dev_h);
@@ -503,7 +503,7 @@ class WinUsbDevice_Initialize : public UsbDevice_Initialize
 class WinUsbDevice_Claim : public UsbDevice_Claim
 {
   public:
-    WinUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<UsbDevice>& p,
+    WinUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                        const UsbDeviceManager_detected_device& detected_device);
     virtual ~WinUsbDevice_Claim() {}
 
@@ -511,12 +511,12 @@ class WinUsbDevice_Claim : public UsbDevice_Claim
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
                                       boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     virtual void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                             boost::asio::mutable_buffer& buf,
                                             boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     virtual void AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf,
                                boost::function<void(const boost::system::error_code&, size_t)> handler);
@@ -554,7 +554,7 @@ class WinUsbDevice : public UsbDevice
     RR_SHARED_PTR<WinUsb_Functions> f;
 
   public:
-    WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent, const RR_SHARED_PTR<WinUsbDeviceManager>& p,
+    WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                  const UsbDeviceManager_detected_device& device);
     virtual ~WinUsbDevice();
 
@@ -579,7 +579,7 @@ class HardwareTransport_win_discovery
     HardwareTransport_win_discovery(const RR_SHARED_PTR<HardwareTransport>& parent,
                                     const std::vector<std::string>& schemes,
                                     const RR_SHARED_PTR<WinUsbDeviceManager>& usb,
-                                    const RR_SHARED_PTR<WinUsbDeviceManager>& ut, const RR_SHARED_PTR<void>& f_void);
+                                    const RR_SHARED_PTR<WinsockBluetoothConnector>& bt, const RR_SHARED_PTR<void>& f_void);
     virtual ~HardwareTransport_win_discovery() {}
 
     virtual void Init();
