@@ -332,7 +332,7 @@ WinUsbDevice_Handle::~WinUsbDevice_Handle()
 // WinUsbDevice_Initialize
 
 WinUsbDevice_Initialize::WinUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent,
-                                                 const RR_SHARED_PTR<UsbDevice>& p,
+                                                 const RR_SHARED_PTR<WinUsb_Functions>& f,
                                                  const UsbDeviceManager_detected_device& detected_device)
     : UsbDevice_Initialize(parent, detected_device)
 {
@@ -589,7 +589,7 @@ void WinUsbDevice_Initialize::AsyncControlTransferNoLock(
 
 // WinUsbDevice_Claim
 
-WinUsbDevice_Claim::WinUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<UsbDevice>& p,
+WinUsbDevice_Claim::WinUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                                        const UsbDeviceManager_detected_device& detected_device)
     : UsbDevice_Claim(parent, detected_device)
 {
@@ -602,14 +602,14 @@ void WinUsbDevice_Claim::AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRe
                                               const RR_SHARED_PTR<void>& dev_h)
 {
     boost::mutex::scoped_lock lock(this_lock);
-
-    if (!dev_h)
+    RR_SHARED_PTR<void> dev_h1 = dev_h;
+    if (!dev_h1)
     {
-        dev_h = device_handle;
+        dev_h1 = device_handle;
     }
 
     WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest,
-                                        wValue, wIndex, buf, handler, dev_h);
+                                        wValue, wIndex, buf, handler, dev_h1);
 }
 
 void WinUsbDevice_Claim::AsyncControlTransferNoLock(
@@ -617,14 +617,14 @@ void WinUsbDevice_Claim::AsyncControlTransferNoLock(
     boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
 {
     // boost::mutex::scoped_lock lock(this_lock);
-
-    if (!dev_h)
+    RR_SHARED_PTR<void> dev_h1 = dev_h;
+    if (!dev_h1)
     {
-        dev_h = device_handle;
+        dev_h1 = device_handle;
     }
 
     WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest,
-                                        wValue, wIndex, buf, handler, dev_h);
+                                        wValue, wIndex, buf, handler, dev_h1);
 }
 
 void WinUsbDevice_Claim::AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf,
@@ -767,7 +767,7 @@ void WinUsbDevice_Claim::ClearHalt(uint8_t ep)
 // WinUsbDevice
 
 WinUsbDevice::WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent,
-                           const RR_SHARED_PTR<WinUsbDeviceManager>& p, const UsbDeviceManager_detected_device& device)
+                           const RR_SHARED_PTR<WinUsb_Functions>& f, const UsbDeviceManager_detected_device& device)
     : UsbDevice(parent, device)
 {
 

@@ -1266,7 +1266,7 @@ void TlsSchannelAsyncStreamAdapter::do_handshake6(const boost::system::error_cod
 }
 
 static void TlsSchannelAsyncStreamAdapter_async_write_some_buf_adaptor(
-    const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& t, const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& t,
+    const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& t, const RR_SHARED_PTR<const_buffers>& b,
     const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     t->async_write_some(*b, handler);
@@ -1445,7 +1445,7 @@ void TlsSchannelAsyncStreamAdapter::async_write_some1(
 
 void TlsSchannelAsyncStreamAdapter::async_write_some2(
     const boost::system::error_code& error,
-    const boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     // Error handler for async_write_some
 
@@ -1764,7 +1764,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
 
 void TlsSchannelAsyncStreamAdapter::async_read_some2(
     const boost::system::error_code& error, boost::asio::mutable_buffer& b,
-    boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     {
         // boost::mutex::scoped_lock lock(stream_lock);
