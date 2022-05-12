@@ -157,3 +157,4 @@
 #define RR_OVERRIDE
 #define RR_OVIRTUAL virtual
 #endif
+#define	RR_NULL_FN	0

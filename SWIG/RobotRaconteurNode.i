@@ -109,7 +109,7 @@ RR_RELEASE_GIL()
 		boost::shared_ptr<WrappedServiceStub> stub;
 		if (listener==0)
 		{
-			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,NULL,objecttype));
+			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,RR_NULL_FN,objecttype));
 		}
 		else
 		{
@@ -135,7 +135,7 @@ RR_RELEASE_GIL()
 		boost::shared_ptr<WrappedServiceStub> stub;
 		if (listener==0)
 		{
-			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,NULL,objecttype));
+			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,RR_NULL_FN,objecttype));
 		}
 		else
 		{
@@ -162,7 +162,7 @@ RR_KEEP_GIL()
 		
 		if (listener==0)
 		{
-			$self->AsyncConnectService(url,username,credentials2,NULL,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
+			$self->AsyncConnectService(url,username,credentials2,RR_NULL_FN,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 		}
 		else
 		{
@@ -181,7 +181,7 @@ RR_KEEP_GIL()
 		
 		if (listener==0)
 		{
-			$self->AsyncConnectService(url,username,credentials2,NULL,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
+			$self->AsyncConnectService(url,username,credentials2,RR_NULL_FN,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 		}
 		else
 		{
@@ -509,7 +509,7 @@ RR_KEEP_GIL()
 	
 	void ClearExceptionHandler()
 	{
-		$self->SetExceptionHandler(NULL);
+		$self->SetExceptionHandler(RR_NULL_FN);
 	}
 }
 

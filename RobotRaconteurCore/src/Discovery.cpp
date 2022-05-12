@@ -635,7 +635,7 @@ void Discovery_findservicebytype::find2()
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
                                                    "FindServiceByType connecting to node using candidate URLs "
                                                        << boost::join(e, ", "));
-                node->AsyncConnectService(e, "", (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), NULL, "",
+                node->AsyncConnectService(e, "", (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()), RR_NULL_FN, "",
                                           boost::bind(&Discovery_findservicebytype::connect_callback,
                                                       shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                                                       RR_BOOST_PLACEHOLDERS(_2), e.front(), key),
@@ -997,7 +997,7 @@ void Discovery_updateserviceinfo::backoff_timer_handler(const TimerEvent& evt)
                                            "UpdateServiceInfo connecting to remote node "
                                                << this->remote_nodeid.ToString() << " using candidate URLs "
                                                << boost::join(urls, ", "));
-        n->AsyncConnectService(urls, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "",
+        n->AsyncConnectService(urls, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "",
                                boost::bind(&Discovery_updateserviceinfo::connect_handler, shared_from_this(),
                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
                                15000);

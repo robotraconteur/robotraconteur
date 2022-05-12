@@ -1039,7 +1039,7 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
   public:
     WireClient(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
-               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
+               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN)
         : WireClientBase(name, stub, direction), Wire<T>(verify)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
@@ -1267,7 +1267,7 @@ class WireServer : public virtual WireServerBase, public virtual Wire<T>
   public:
     WireServer(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
-               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
+               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN)
         : WireServerBase(name, skel, direction), Wire<T>(verify)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);

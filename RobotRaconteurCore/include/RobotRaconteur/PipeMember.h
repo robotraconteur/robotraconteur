@@ -889,7 +889,7 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
 
     PipeClient(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub, bool unreliable = false,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
-               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
+               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN)
         : PipeClientBase(name, stub, unreliable, direction), Pipe<T>(verify)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
@@ -1041,7 +1041,7 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
 
     PipeServer(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel, bool unreliable = false,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
-               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = NULL)
+               boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN)
         : PipeServerBase(name, skel, unreliable, direction), Pipe<T>(verify)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
