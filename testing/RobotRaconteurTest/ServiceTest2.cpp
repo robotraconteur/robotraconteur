@@ -57,7 +57,7 @@ testroot3_impl::testroot3_impl()
     obj5_ = RR_MAKE_SHARED<obj5_impl>();
 }
 
-void testroot3_impl::set_peekwire(RR_SHARED_PTR<Wire<int32_t> > value)
+void testroot3_impl::set_peekwire(const RR_SHARED_PTR<Wire<int32_t> >& value)
 {
     testroot3_default_impl::set_peekwire(value);
 
@@ -78,7 +78,7 @@ int32_t testroot3_impl::get_readme() { return 0; }
 void testroot3_impl::set_writeme(int32_t value) {}
 
 RR_SHARED_PTR<Pipe<int32_t> > testroot3_impl::get_unreliable1() { return unreliable1; }
-void testroot3_impl::set_unreliable1(RR_SHARED_PTR<Pipe<int32_t> > value) { unreliable1 = value; }
+void testroot3_impl::set_unreliable1(const RR_SHARED_PTR<Pipe<int32_t> >& value) { unreliable1 = value; }
 
 RR_SHARED_PTR<Pipe<int32_t> > testroot3_impl::get_unreliable2() { return unreliable2; }
 void testroot3_impl::set_unreliable2(RR_SHARED_PTR<Pipe<int32_t> > value) { unreliable2 = value; }
@@ -3971,22 +3971,22 @@ void ServiceTest2_verify_transform_multidimarray(const RR_INTRUSIVE_PTR<RRValue>
 }
 
 RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t> > > > testroot3_impl::get_p1() { return p1; }
-void testroot3_impl::set_p1(RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t> > > > value) { p1 = value; }
+void testroot3_impl::set_p1(const RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t> > > >& value) { p1 = value; }
 
 RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t> > > > testroot3_impl::get_p2() { return p2; }
-void testroot3_impl::set_p2(RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t> > > > value) { p2 = value; }
+void testroot3_impl::set_p2(const RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t> > > >& value) { p2 = value; }
 
 RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > testroot3_impl::get_p3() { return p3; }
-void testroot3_impl::set_p3(RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > value) { p3 = value; }
+void testroot3_impl::set_p3(const RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > >& value) { p3 = value; }
 
 RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t> > > > testroot3_impl::get_w1() { return w1; }
-void testroot3_impl::set_w1(RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t> > > > value) { w1 = value; }
+void testroot3_impl::set_w1(const RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t> > > >& value) { w1 = value; }
 
 RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t> > > > testroot3_impl::get_w2() { return w2; }
-void testroot3_impl::set_w2(RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t> > > > value) { w2 = value; }
+void testroot3_impl::set_w2(const RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t> > > >& value) { w2 = value; }
 
 RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > testroot3_impl::get_w3() { return w3; }
-void testroot3_impl::set_w3(RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > value) { w3 = value; }
+void testroot3_impl::set_w3(const RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > >& value) { w3 = value; }
 
 } // namespace RobotRaconteurTest
 

@@ -1013,8 +1013,8 @@ std::string CPPServiceLangGen::SetPipeDeclaration(PipeDefinition* d, bool inclas
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "RR_OVIRTUAL void set_" + t.name + "(RR_SHARED_PTR<RobotRaconteur::Pipe<" + t.cpp_type +
-               " > > value) RR_OVERRIDE";
+        return "RR_OVIRTUAL void set_" + t.name + "(const RR_SHARED_PTR<RobotRaconteur::Pipe<" + t.cpp_type +
+               " > >& value) RR_OVERRIDE";
     }
     else
     {
@@ -1063,8 +1063,8 @@ std::string CPPServiceLangGen::SetCallbackDeclaration(CallbackDefinition* d, boo
     if (inclass)
     {
         return "RR_OVIRTUAL void set_" + fix_name(d->Name) +
-               "(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<" + ret.cpp_type + "(" + plist +
-               ")> > > value) RR_OVERRIDE";
+               "(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<" + ret.cpp_type + "(" + plist +
+               ")> > >& value) RR_OVERRIDE";
     }
     else
     {
@@ -1092,8 +1092,8 @@ std::string CPPServiceLangGen::SetWireDeclaration(WireDefinition* d, bool inclas
     t.name = fix_name(d->Name);
     if (inclass)
     {
-        return "RR_OVIRTUAL void set_" + t.name + "(RR_SHARED_PTR<RobotRaconteur::Wire<" + t.cpp_type +
-               " > > value) RR_OVERRIDE";
+        return "RR_OVIRTUAL void set_" + t.name + "(const RR_SHARED_PTR<RobotRaconteur::Wire<" + t.cpp_type +
+               " > >& value) RR_OVERRIDE";
     }
     else
     {

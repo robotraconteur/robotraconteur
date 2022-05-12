@@ -2634,7 +2634,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 }
 
 void RobotRaconteurTest_testroot::set_p1(
-    RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > >& value)
 {
     p1 = value;
     p1->SetPipeConnectCallback(
@@ -2695,7 +2695,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > > RobotRacont
     return p2;
 }
 
-void RobotRaconteurTest_testroot::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > > value)
+void RobotRaconteurTest_testroot::set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > >& value)
 {
     p2 = value;
     p2->SetPipeConnectCallback(
@@ -2741,7 +2741,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<double> > RobotRaconteurTest_testroot::get_br
     boost::mutex::scoped_lock lock(broadcastpipe_lock);
     return broadcastpipe_pipe;
 }
-void RobotRaconteurTest_testroot::set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur::Pipe<double> > value)
+void RobotRaconteurTest_testroot::set_broadcastpipe(const RR_SHARED_PTR<RobotRaconteur::Pipe<double> >& value)
 {
     boost::mutex::scoped_lock lock(broadcastpipe_lock);
     if (broadcastpipe_pipe)
@@ -2777,7 +2777,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > RobotRaconteu
     return cb1;
 }
 
-void RobotRaconteurTest_testroot::set_cb1(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value)
+void RobotRaconteurTest_testroot::set_cb1(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)
 {
     cb1 = value;
 }
@@ -2788,7 +2788,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >
 }
 
 void RobotRaconteurTest_testroot::set_cb2(
-    RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >& value)
 {
     cb2 = value;
 }
@@ -2800,7 +2800,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> >
 }
 
 void RobotRaconteurTest_testroot::set_cb3(
-    RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > >& value)
 {
     cb3 = value;
 }
@@ -2812,7 +2812,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > RobotRacon
 }
 
 void RobotRaconteurTest_testroot::set_cb_meaning_of_life(
-    RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > >& value)
 {
     cb_mol = value;
 }
@@ -2823,7 +2823,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > RobotRaconteu
 }
 
 void RobotRaconteurTest_testroot::set_cb_errtest(
-    RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)
 {
     cb_err = value;
 }
@@ -2859,7 +2859,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 }
 
 void RobotRaconteurTest_testroot::set_w1(
-    RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > >& value)
 {
     w1 = value;
     w1->SetWireConnectCallback(
@@ -2891,7 +2891,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > RobotRacont
     return w2;
 }
 
-void RobotRaconteurTest_testroot::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > value)
+void RobotRaconteurTest_testroot::set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > >& value)
 {
     w2 = value;
     w2->SetWireConnectCallback(
@@ -2924,7 +2924,7 @@ RobotRaconteurTest_testroot::get_w3()
 }
 
 void RobotRaconteurTest_testroot::set_w3(
-    RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > >& value)
 {
     w3 = value;
     w3->SetWireConnectCallback(
@@ -2957,7 +2957,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<double> > RobotRaconteurTest_testroot::get_br
     return broadcastwire_wire;
 }
 
-void RobotRaconteurTest_testroot::set_broadcastwire(RR_SHARED_PTR<RobotRaconteur::Wire<double> > value)
+void RobotRaconteurTest_testroot::set_broadcastwire(const RR_SHARED_PTR<RobotRaconteur::Wire<double> >& value)
 {
     boost::mutex::scoped_lock lock(broadcastwire_lock);
     if (broadcastwire_wire)
