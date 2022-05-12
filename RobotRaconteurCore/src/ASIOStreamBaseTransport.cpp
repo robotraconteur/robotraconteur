@@ -1990,7 +1990,7 @@ void ASIOStreamBaseTransport::CheckStreamCapability_EndSendMessage(const RR_SHAR
                 RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(CheckStreamCapability_callback, 0, err));
             }
             CheckStreamCapability_waiting = false;
-			CheckStreamCapability_callback.clear();
+            CheckStreamCapability_callback.clear();
             if (CheckStreamCapability_timer)
             {
                 CheckStreamCapability_timer->cancel();
@@ -2038,7 +2038,7 @@ void ASIOStreamBaseTransport::CheckStreamCapability_timercallback(RR_WEAK_PTR<AS
                                           RR_MAKE_SHARED<RequestTimeoutException>("Timed out")));
             }
             t2->CheckStreamCapability_waiting = false;
-			t2->CheckStreamCapability_callback.clear();
+            t2->CheckStreamCapability_callback.clear();
             t2->CheckStreamCapability_timer.reset();
 
             while (!t2->CheckStreamCapability_queue.empty())
@@ -2098,7 +2098,7 @@ void ASIOStreamBaseTransport::CheckStreamCapability_MessageReceived(const RR_INT
                                                                         RR_SHARED_PTR<RobotRaconteurException>()));
                 }
                 CheckStreamCapability_waiting = false;
-				CheckStreamCapability_callback.clear();
+                CheckStreamCapability_callback.clear();
                 if (CheckStreamCapability_timer)
                 {
                     CheckStreamCapability_timer->cancel();
@@ -2292,7 +2292,7 @@ void ASIOStreamBaseTransport::StreamOp_EndSendMessage(const RR_SHARED_PTR<RobotR
             }
             streamop_waiting = false;
 
-			streamop_callback.clear();
+            streamop_callback.clear();
             if (streamop_timer)
             {
                 streamop_timer->cancel();
@@ -2337,7 +2337,7 @@ void ASIOStreamBaseTransport::StreamOp_timercallback(RR_WEAK_PTR<ASIOStreamBaseT
             }
             t2->streamop_waiting = false;
 
-			t2->streamop_callback.clear();
+            t2->streamop_callback.clear();
             t2->streamop_timer.reset();
 
             while (!t2->streamop_queue.empty())
@@ -2575,7 +2575,7 @@ void ASIOStreamBaseTransport::StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Mes
                     Close();
                 }
             }
-			streamop_callback.clear();
+            streamop_callback.clear();
             if (streamop_timer)
             {
                 streamop_timer->cancel();

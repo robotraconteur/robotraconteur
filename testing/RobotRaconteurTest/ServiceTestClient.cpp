@@ -3552,8 +3552,8 @@ void ServiceTestClient::TestAsync15() { async_wait.Set(); }
 void ServiceTestClient::RunSingleThreadTest(string url, RR_BOOST_ASIO_IO_CONTEXT& io_context)
 {
     IOContextThreadPool_AsyncResultAdapter<RR_SHARED_PTR<RRObject> > connect_res(io_context);
-    RobotRaconteurNode::s()->AsyncConnectService(url, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "",
-                                                 connect_res, 5000);
+    RobotRaconteurNode::s()->AsyncConnectService(url, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN,
+                                                 "", connect_res, 5000);
     RR_SHARED_PTR<RRObject> c1 = connect_res.GetResult();
     RR_SHARED_PTR<async_testroot> c = rr_cast<async_testroot>(c1);
 

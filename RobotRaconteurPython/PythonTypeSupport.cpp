@@ -2297,8 +2297,7 @@ PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& eleme
 
 PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
                                const boost::shared_ptr<TypeDefinition>& type1,
-                               const boost::shared_ptr<ServerContext>& obj,
-                               boost::shared_ptr<RobotRaconteurNode> node)
+                               const boost::shared_ptr<ServerContext>& obj, boost::shared_ptr<RobotRaconteurNode> node)
 {
     if (!node && obj)
     {

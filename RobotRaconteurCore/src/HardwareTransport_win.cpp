@@ -766,8 +766,8 @@ void WinUsbDevice_Claim::ClearHalt(uint8_t ep)
 
 // WinUsbDevice
 
-WinUsbDevice::WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent,
-                           const RR_SHARED_PTR<WinUsb_Functions>& f, const UsbDeviceManager_detected_device& device)
+WinUsbDevice::WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
+                           const UsbDeviceManager_detected_device& device)
     : UsbDevice(parent, device)
 {
 

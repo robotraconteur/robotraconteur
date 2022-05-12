@@ -209,7 +209,8 @@ static std::string ptimeToString(const boost::posix_time::ptime& now)
     o << std::setw(2) << std::setfill('0') << t.hours() << std::setw(2) << t.minutes() << std::setw(2) << t.seconds()
       << ".";
     std::stringstream o2;
-    o2 << std::setw(boost::posix_time::time_duration::num_fractional_digits()) << std::setfill('0') << t.fractional_seconds();
+    o2 << std::setw(boost::posix_time::time_duration::num_fractional_digits()) << std::setfill('0')
+       << t.fractional_seconds();
     std::string o3 = o2.str();
     while (o3.size() < 3)
         o3 += "0";
@@ -6007,7 +6008,7 @@ mxArray* MexPipeEndpoint::subsref(const mxArray* S)
 
     if (membername == "PeekNextPacketWait")
     {
-        int32_t timeout =0;
+        int32_t timeout = 0;
         if (mxGetNumberOfElements(cell_args) == 0)
         {
             timeout = RR_TIMEOUT_INFINITE;
@@ -6640,7 +6641,8 @@ void MexArrayMemoryClientUtil::Write(const RR_SHARED_PTR<ArrayMemoryBase>& mem, 
     }
 
 mxArray* MexMultiDimArrayMemoryClientUtil::Read(const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem,
-                                                const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& count)
+                                                const std::vector<uint64_t>& memorypos,
+                                                const std::vector<uint64_t>& count)
 {
     size_t elems = 1;
     BOOST_FOREACH (const uint64_t& e, count)
@@ -7035,10 +7037,7 @@ struct constant_type
     std::string name;
     mxArray* data;
 
-    constant_type()
-    {
-        data = NULL;
-    }
+    constant_type() { data = NULL; }
 };
 
 struct obj_constant_type
@@ -9505,9 +9504,8 @@ void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<
 
     // NOLINTNEXTLINE(readability-suspicious-call-argument)
     RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
-    // NOLINTNEXTLINE(readability-suspicious-call-argument)
+        // NOLINTNEXTLINE(readability-suspicious-call-argument)
         detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, bufferpos1, count1, zero_dims, count1);
-    
 
     uint32_t len = 0;
     uint32_t indexa = 0;
@@ -9522,7 +9520,8 @@ void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<
 RR_INTRUSIVE_PTR<MessageElementData> MexNamedMultiDimArrayMemoryClient::PackWriteRequest(
     const void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-    const MexNamedMultiDimArrayMemoryClient_buffer* buffer1 = static_cast<const MexNamedMultiDimArrayMemoryClient_buffer*>(buffer);
+    const MexNamedMultiDimArrayMemoryClient_buffer* buffer1 =
+        static_cast<const MexNamedMultiDimArrayMemoryClient_buffer*>(buffer);
     RR_INTRUSIVE_PTR<RRBaseArray> buffer2 = buffer1->buffer;
 
     RR_INTRUSIVE_PTR<RRBaseArray> buffer3 = AllocateRRArrayByType(array_elementtype, elemcount * array_elementcount);
@@ -9536,7 +9535,6 @@ RR_INTRUSIVE_PTR<MessageElementData> MexNamedMultiDimArrayMemoryClient::PackWrit
     RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
         // NOLINTNEXTLINE(readability-suspicious-call-argument)
         detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, bufferpos1, count1, zero_dims, count1);
-    
 
     uint32_t len = 0;
     uint32_t indexa = 0;
@@ -9596,6 +9594,5 @@ boost::weak_ptr<HardwareTransport> usb_transport;
 boost::mutex generators_lock;
 int32_t generators_count = 0;
 std::map<int32_t, boost::shared_ptr<MexGeneratorClient> > generators;
-
 
 // NOLINTEND(cppcoreguidelines-pro-type-cstyle-cast,cppcoreguidelines-avoid-c-arrays)

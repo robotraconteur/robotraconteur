@@ -579,7 +579,8 @@ class HardwareTransport_win_discovery
     HardwareTransport_win_discovery(const RR_SHARED_PTR<HardwareTransport>& parent,
                                     const std::vector<std::string>& schemes,
                                     const RR_SHARED_PTR<WinUsbDeviceManager>& usb,
-                                    const RR_SHARED_PTR<WinsockBluetoothConnector>& bt, const RR_SHARED_PTR<void>& f_void);
+                                    const RR_SHARED_PTR<WinsockBluetoothConnector>& bt,
+                                    const RR_SHARED_PTR<void>& f_void);
     virtual ~HardwareTransport_win_discovery() {}
 
     virtual void Init();

@@ -2394,8 +2394,8 @@ void WrappedPodArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Messag
                        ->UnpackReadResult(rr_cast<MessageElementNestedElementList>(res), bufferpos, count));
 }
 
-RR_INTRUSIVE_PTR<MessageElementData> WrappedPodArrayMemoryClient::PackWriteRequest(const void* buffer, uint64_t bufferpos,
-                                                                                   uint64_t count)
+RR_INTRUSIVE_PTR<MessageElementData> WrappedPodArrayMemoryClient::PackWriteRequest(const void* buffer,
+                                                                                   uint64_t bufferpos, uint64_t count)
 {
     RR_INTRUSIVE_PTR<MessageElementData> ret;
     DIRECTOR_CALL2(ret = ((WrappedPodArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
@@ -2480,8 +2480,8 @@ void WrappedNamedArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Mess
                        ->UnpackReadResult(rr_cast<MessageElementNestedElementList>(res), bufferpos, count));
 }
 
-RR_INTRUSIVE_PTR<MessageElementData> WrappedNamedArrayMemoryClient::PackWriteRequest(const void* buffer, uint64_t bufferpos,
-                                                                                     uint64_t count)
+RR_INTRUSIVE_PTR<MessageElementData> WrappedNamedArrayMemoryClient::PackWriteRequest(const void* buffer,
+                                                                                     uint64_t bufferpos, uint64_t count)
 {
     RR_INTRUSIVE_PTR<MessageElementData> ret;
     DIRECTOR_CALL2(ret = ((WrappedNamedArrayMemoryClientBuffer*)buffer)->PackWriteRequest(bufferpos, count));
