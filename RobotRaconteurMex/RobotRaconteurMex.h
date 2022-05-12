@@ -18,6 +18,8 @@
 
 #pragma once
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-cstyle-cast,cppcoreguidelines-avoid-c-arrays)
+
 using namespace RobotRaconteur;
 
 enum RobotRaconteurMexObjectTypes
@@ -37,7 +39,7 @@ DataTypes mxClassIDToRRDataType(mxClassID type);
 mxClassID rrDataTypeToMxClassID(DataTypes type);
 
 RR_INTRUSIVE_PTR<RRBaseArray> GetRRArrayFromMxArray(const mxArray* pa);
-mxArray* GetMxArrayFromRRArray(const RR_INTRUSIVE_PTR<RRBaseArray>& real,
+mxArray* GetMxArrayFromRRArray(const RR_INTRUSIVE_PTR<RRBaseArray>& array_,
                                std::vector<mwSize> dims = std::vector<mwSize>());
 
 RR_INTRUSIVE_PTR<MessageElement> PackMxArrayToMessageElement(const mxArray* pm,
@@ -145,8 +147,8 @@ class MexAsyncResult
 
     MexAsyncResult(const RR_SHARED_PTR<mxArray>& handler, const RR_SHARED_PTR<mxArray>& param,
                    const RR_SHARED_PTR<RobotRaconteurException>& error,
-                   RR_SHARED_PTR<TypeDefinition> return_type = RR_SHARED_PTR<TypeDefinition>(),
-                   RR_INTRUSIVE_PTR<MessageElement> return_value = RR_INTRUSIVE_PTR<MessageElement>())
+                   const RR_SHARED_PTR<TypeDefinition>& return_type = RR_SHARED_PTR<TypeDefinition>(),
+                   const RR_INTRUSIVE_PTR<MessageElement>& return_value = RR_INTRUSIVE_PTR<MessageElement>())
     {
         this->handler = handler;
         this->param = param;
@@ -206,7 +208,6 @@ class MexServiceStub : public virtual RobotRaconteur::ServiceStub
     RR_OVIRTUAL RR_SHARED_PTR<PipeClientBase> RRGetPipeClient(boost::string_ref membername) RR_OVERRIDE ;
     RR_OVIRTUAL RR_SHARED_PTR<WireClientBase> RRGetWireClient(boost::string_ref membername) RR_OVERRIDE ;
 
-  public:
     RR_OVIRTUAL std::string RRType() RR_OVERRIDE ;
     RR_SHARED_PTR<ServiceEntryDefinition> RR_objecttype;
 
@@ -249,9 +250,9 @@ class MexServiceStub : public virtual RobotRaconteur::ServiceStub
     std::queue<RR_SHARED_PTR<MexAsyncResult> > async_results;
 };
 
-std::map<int32_t, boost::shared_ptr<MexServiceStub> > stubs;
-static int stubcount = 100;
-boost::recursive_mutex stubs_lock;
+extern std::map<int32_t, boost::shared_ptr<MexServiceStub> > stubs;
+extern int stubcount;
+extern boost::recursive_mutex stubs_lock;
 
 mxArray* ConnectClient(const mxArray* url, const mxArray* username, const mxArray* credentials);
 mxArray* MatlabObjectFromMexStub(const boost::shared_ptr<MexServiceStub>& stub);
@@ -301,9 +302,9 @@ class MexPipeClient : public virtual PipeClientBase
                                                                   MemberDefinition_Direction direction)  RR_OVERRIDE ;
 };
 
-boost::recursive_mutex pipeendpoints_lock;
-int32_t pipeendpoints_count = 0;
-std::map<int32_t, boost::shared_ptr<MexPipeEndpoint> > pipeendpoints;
+extern boost::recursive_mutex pipeendpoints_lock;
+extern int32_t pipeendpoints_count;
+extern std::map<int32_t, boost::shared_ptr<MexPipeEndpoint> > pipeendpoints;
 
 class MexWireConnection : public virtual WireConnectionBase
 {
@@ -345,9 +346,9 @@ class MexWireClient : public virtual WireClientBase
     RR_OVIRTUAL RR_SHARED_PTR<WireConnectionBase> CreateNewWireConnection(MemberDefinition_Direction direction) RR_OVERRIDE ;
 };
 
-boost::recursive_mutex wireconnections_lock;
-int32_t wireconnections_count = 0;
-std::map<int32_t, boost::shared_ptr<MexWireConnection> > wireconnections;
+extern boost::recursive_mutex wireconnections_lock;
+extern int32_t wireconnections_count;
+extern std::map<int32_t, boost::shared_ptr<MexWireConnection> > wireconnections;
 
 class MexArrayMemoryClientUtil
 {
@@ -361,11 +362,11 @@ class MexArrayMemoryClientUtil
 class MexMultiDimArrayMemoryClientUtil
 {
   public:
-    static mxArray* Read(const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem, std::vector<uint64_t> memorypos,
-                         std::vector<uint64_t> count);
+    static mxArray* Read(const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem, const std::vector<uint64_t>& memorypos,
+                         const std::vector<uint64_t>& count);
 
-    static void Write(const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem, std::vector<uint64_t> memorypos,
-                      const mxArray* buffer, std::vector<uint64_t> bufferpos, std::vector<uint64_t> count);
+    static void Write(const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem, const std::vector<uint64_t>& memorypos,
+                      const mxArray* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count);
 };
 
 mxArray* FindService(const mxArray* name);
@@ -379,9 +380,9 @@ mxArray* GetDetectedNodes();
 
 mxArray* ServiceDefinitionConstants(const boost::shared_ptr<ServiceDefinition>& def);
 
-boost::recursive_mutex rate_lock;
-int32_t rate_count;
-std::map<int32_t, RR_SHARED_PTR<RobotRaconteur::Rate> > rates;
+extern boost::recursive_mutex rate_lock;
+extern int32_t rate_count;
+extern std::map<int32_t, RR_SHARED_PTR<RobotRaconteur::Rate> > rates;
 
 class MexRRObject : public RRObject
 {
@@ -434,6 +435,11 @@ class MexServiceSkel : public ServiceSkel
     }
 
     int skelid;
+
+    MexServiceSkel()
+    {
+      skelid = 0;
+    }
 };
 
 class MexServiceInfo2Subscription : public RR_ENABLE_SHARED_FROM_THIS<MexServiceInfo2Subscription>
@@ -487,7 +493,7 @@ class MexWireSubscription
 {
   public:
     MexWireSubscription(const boost::shared_ptr<MexServiceSubscription>& service_subscription,
-                        boost::shared_ptr<WireSubscription<RR_INTRUSIVE_PTR<MessageElement> > > subscription);
+                        const boost::shared_ptr<WireSubscription<RR_INTRUSIVE_PTR<MessageElement> > >& subscription);
 
     int wiresubscriptionid;
 
@@ -504,7 +510,7 @@ class MexPipeSubscription
 {
   public:
     MexPipeSubscription(const boost::shared_ptr<MexServiceSubscription>& service_subscription,
-                        boost::shared_ptr<PipeSubscription<RR_INTRUSIVE_PTR<MessageElement> > > subscription);
+                        const boost::shared_ptr<PipeSubscription<RR_INTRUSIVE_PTR<MessageElement> > >& subscription);
 
     int pipesubscriptionid;
 
@@ -522,7 +528,7 @@ class MexGeneratorClient : public virtual GeneratorClientBase, public RR_ENABLE_
   public:
     MexGeneratorClient(const std::string& name, int32_t id, const RR_SHARED_PTR<ServiceStub>& stub,
                        const RR_SHARED_PTR<TypeDefinition>& return_type,
-                       const RR_SHARED_PTR<TypeDefinition>& raram_type);
+                       const RR_SHARED_PTR<TypeDefinition>& param_type);
 
     RR_SHARED_PTR<TypeDefinition> param_type;
     RR_SHARED_PTR<TypeDefinition> return_type;
@@ -637,29 +643,31 @@ class MexNamedMultiDimArrayMemoryClient : public virtual MultiDimArrayMemoryClie
     std::string type_string;
 };
 
-boost::recursive_mutex servicesubscriptions_lock;
-int32_t serviceinfo2subscriptions_count = 0;
-std::map<int32_t, boost::shared_ptr<MexServiceInfo2Subscription> > serviceinfo2subscriptions;
-int32_t servicesubscriptions_count = 0;
-std::map<int32_t, boost::shared_ptr<MexServiceSubscription> > servicesubscriptions;
-int32_t wiresubscriptions_count = 0;
-std::map<int32_t, boost::shared_ptr<MexWireSubscription> > wiresubscriptions;
-int32_t pipesubscriptions_count = 0;
-std::map<int32_t, boost::shared_ptr<MexPipeSubscription> > pipesubscriptions;
+extern boost::recursive_mutex servicesubscriptions_lock;
+extern int32_t serviceinfo2subscriptions_count;
+extern std::map<int32_t, boost::shared_ptr<MexServiceInfo2Subscription> > serviceinfo2subscriptions;
+extern int32_t servicesubscriptions_count;
+extern std::map<int32_t, boost::shared_ptr<MexServiceSubscription> > servicesubscriptions;
+extern int32_t wiresubscriptions_count;
+extern std::map<int32_t, boost::shared_ptr<MexWireSubscription> > wiresubscriptions;
+extern int32_t pipesubscriptions_count;
+extern std::map<int32_t, boost::shared_ptr<MexPipeSubscription> > pipesubscriptions;
 
-mxArray* SubscribeServiceInfo2(const mxArray* service_types, const mxArray* filter);
-mxArray* SubscribeServiceByType(const mxArray* service_types, const mxArray* filter);
-mxArray* SubscribeService(const mxArray* url, const mxArray* username, const mxArray* credentials);
+extern mxArray* SubscribeServiceInfo2(const mxArray* service_types, const mxArray* filter);
+extern mxArray* SubscribeServiceByType(const mxArray* service_types, const mxArray* filter);
+extern mxArray* SubscribeService(const mxArray* url, const mxArray* username, const mxArray* credentials);
 
-std::map<int, boost::weak_ptr<MexServiceSkel> > skels;
-boost::mutex skels_lock;
-static int skelscount = 100;
-AutoResetEvent skels_waiting;
+extern std::map<int, boost::weak_ptr<MexServiceSkel> > skels;
+extern boost::mutex skels_lock;
+extern int skelscount;
+extern AutoResetEvent skels_waiting;
 
-boost::weak_ptr<TcpTransport> tcp_transport;
-boost::weak_ptr<LocalTransport> local_transport;
-boost::weak_ptr<HardwareTransport> usb_transport;
+extern boost::weak_ptr<TcpTransport> tcp_transport;
+extern boost::weak_ptr<LocalTransport> local_transport;
+extern boost::weak_ptr<HardwareTransport> usb_transport;
 
-boost::mutex generators_lock;
-int32_t generators_count = 0;
-std::map<int32_t, boost::shared_ptr<MexGeneratorClient> > generators;
+extern boost::mutex generators_lock;
+extern int32_t generators_count;
+extern std::map<int32_t, boost::shared_ptr<MexGeneratorClient> > generators;
+
+// NOLINTEND(cppcoreguidelines-pro-type-cstyle-cast,cppcoreguidelines-avoid-c-arrays)
