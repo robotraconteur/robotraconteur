@@ -22,9 +22,9 @@ jobs:
         - os: ubuntu-20.04
           runs_on: ubuntu-20.04
           container: ""
-        - os: ubuntu-16.04
-          runs_on: ubuntu-latest
-          container: ubuntu:xenial
+        # - os: ubuntu-16.04
+        #   runs_on: ubuntu-latest
+        #   container: ubuntu:xenial
         - os: debian-10
           runs_on: ubuntu-latest
           container: debian:buster-slim
