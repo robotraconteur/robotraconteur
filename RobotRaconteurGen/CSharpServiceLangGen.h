@@ -20,8 +20,6 @@
 #include <RobotRaconteur.h>
 #include <ostream>
 
-using namespace std;
-using namespace boost;
 using namespace RobotRaconteur;
 
 namespace RobotRaconteurGen
@@ -52,10 +50,11 @@ class CSharpServiceLangGen
 
     static convert_generator_result convert_generator(FunctionDefinition* f);
 
-    static string str_pack_delegate(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
-                                    boost::shared_ptr<TypeDefinition> rettype = boost::shared_ptr<TypeDefinition>());
+    static std::string str_pack_delegate(
+        const std::vector<RR_SHARED_PTR<TypeDefinition> >& l,
+        const boost::shared_ptr<TypeDefinition>& rettype = boost::shared_ptr<TypeDefinition>());
 
-    static string str_pack_parameters(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass);
+    static std::string str_pack_parameters(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass);
 
     static std::string str_pack_message_element(const std::string& elementname, const std::string& varname,
                                                 const RR_SHARED_PTR<TypeDefinition>& t,
@@ -69,46 +68,49 @@ class CSharpServiceLangGen
 
     static bool GetObjRefIndType(RR_SHARED_PTR<ObjRefDefinition>& m, std::string& indtype);
 
-    static void GenerateStructure(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateStructure(ServiceEntryDefinition* e, std::ostream* w);
 
-    static void GeneratePod(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GeneratePod(const RR_SHARED_PTR<ServiceEntryDefinition>& e, std::ostream* w);
 
-    static void GenerateNamedArrayExtensions(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GenerateNamedArrayExtensions(const RR_SHARED_PTR<ServiceEntryDefinition>& e, std::ostream* w);
 
-    static void GenerateInterface(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateInterface(ServiceEntryDefinition* e, std::ostream* w);
 
-    static void GenerateInterfaceFile(ServiceDefinition* d, ostream* w, bool header = true);
+    static void GenerateInterfaceFile(ServiceDefinition* d, std::ostream* w, bool header = true);
 
-    static void GenerateStubSkelFile(ServiceDefinition* d, std::string defstring, ostream* w, bool header = true);
+    static void GenerateStubSkelFile(ServiceDefinition* d, const std::string& defstring, std::ostream* w,
+                                     bool header = true);
 
-    static void GenerateServiceFactory(ServiceDefinition* d, std::string defstring, ostream* w);
+    static void GenerateServiceFactory(ServiceDefinition* d, const std::string& defstring, std::ostream* w);
 
-    static void GenerateStructureStub(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateStructureStub(ServiceEntryDefinition* e, std::ostream* w);
 
-    static void GenerateNamedArrayStub(RR_SHARED_PTR<ServiceEntryDefinition> e, ostream* w);
+    static void GenerateNamedArrayStub(const RR_SHARED_PTR<ServiceEntryDefinition>& e, std::ostream* w);
 
-    static void GeneratePodStub(ServiceEntryDefinition* e, ostream* w);
+    static void GeneratePodStub(ServiceEntryDefinition* e, std::ostream* w);
 
-    static void GenerateStub(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateStub(ServiceEntryDefinition* e, std::ostream* w);
 
-    static void GenerateSkel(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateSkel(ServiceEntryDefinition* e, std::ostream* w);
 
-    static void GenerateDefaultImpl(ServiceEntryDefinition* e, ostream* w);
+    static void GenerateDefaultImpl(ServiceEntryDefinition* e, std::ostream* w);
 
-    static void GenerateConstants(ServiceDefinition* d, ostream* w);
+    static void GenerateConstants(ServiceDefinition* d, std::ostream* w);
 
     static std::string GetDefaultValue(const TypeDefinition& tdef);
 
     static std::string GetDefaultInitializedValue(const TypeDefinition& tdef);
 
-    static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
+    static void GenerateDocString(const std::string& docstring, const std::string& prefix, std::ostream* w);
 
     // File generators
-    static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, std::string path = ".");
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+                              const std::string& path = ".");
 
-    static void GenerateOneFileHeader(ostream* w);
+    static void GenerateOneFileHeader(std::ostream* w);
 
-    static void GenerateOneFilePart(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef, ostream* w);
+    static void GenerateOneFilePart(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+                                    std::ostream* w);
 };
 
 } // namespace RobotRaconteurGen

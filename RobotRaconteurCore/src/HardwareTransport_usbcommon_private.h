@@ -21,10 +21,12 @@ namespace RobotRaconteur
 namespace detail
 {
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
 static const uint8_t RR_USB_CS_INTERFACE_UUID_DETECT[] = {0x3F, 0x81, 0x0F, 0xD2, 0x2B, 0xCE, 0x45, 0x52,
                                                           0x98, 0xF3, 0xA8, 0xAC, 0x22, 0x0A, 0xD4, 0x8D};
 
-static const size_t RR_USB_MAX_PACKET_SIZE = (16 * 1024);
+static const size_t RR_USB_MAX_PACKET_SIZE = (16384);
+// NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
 static const uint8_t USB_DIR_OUT = 0;
 static const uint8_t USB_DIR_IN = 0x80;
@@ -49,7 +51,7 @@ static const uint8_t VendorInterfaceOutRequest = ((USB_DIR_OUT | USB_TYPE_VENDOR
 #define USB_ENDPOINT_DIRECTION_MASK 0x80
 #define USB_ENDPOINT_DIRECTION_OUT(addr) (!((addr)&USB_ENDPOINT_DIRECTION_MASK))
 #define USB_ENDPOINT_DIRECTION_IN(addr) ((addr)&USB_ENDPOINT_DIRECTION_MASK)
-#define USB_ENDPOINT_TYPE_BULK(attr) ((attr & 0x03) == LIBUSB_TRANSFER_TYPE_BULK)
+#define USB_ENDPOINT_TYPE_BULK(attr) (((attr)&0x03) == LIBUSB_TRANSFER_TYPE_BULK)
 
 enum rr_usb_control_requests
 {
@@ -96,7 +98,7 @@ struct robotraconteur_interface_descriptor
     uint8_t bLength;
     uint8_t bDescriptorType;
     uint8_t bDescriptorSubType;
-    uint8_t uuidRobotRaconteurDetect[16];
+    uint8_t uuidRobotRaconteurDetect[16]; // NOLINT(cppcoreguidelines-avoid-c-arrays)
     int16_t wVersion;
     uint8_t iNodeID;
     uint8_t iNodeName;
@@ -133,6 +135,7 @@ enum UsbDeviceStatus
     Shutdown
 };
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 class UsbDeviceManager_detected_device
 {
   public:
@@ -140,6 +143,7 @@ class UsbDeviceManager_detected_device
     RR_SHARED_PTR<void> handle;
     uint8_t interface_;
 };
+// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
 class UsbDevice;
 class UsbDeviceTransportConnection;
@@ -147,7 +151,7 @@ class UsbDeviceTransportConnection;
 class UsbDeviceManager : public RR_ENABLE_SHARED_FROM_THIS<UsbDeviceManager>
 {
   public:
-    UsbDeviceManager(RR_SHARED_PTR<HardwareTransport> parent);
+    UsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>& parent);
     virtual ~UsbDeviceManager() {}
 
     RR_SHARED_PTR<HardwareTransport> GetParent();
@@ -158,7 +162,8 @@ class UsbDeviceManager : public RR_ENABLE_SHARED_FROM_THIS<UsbDeviceManager>
 
     virtual void AsyncCreateTransportConnection(
         const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     virtual void Shutdown();
 
@@ -173,13 +178,14 @@ class UsbDeviceManager : public RR_ENABLE_SHARED_FROM_THIS<UsbDeviceManager>
     virtual bool InitUpdateDevices() = 0;
 
     virtual void UpdateDevices1(boost::function<void()> handler);
-    virtual void UpdateDevices2(UsbDeviceStatus status, RR_SHARED_PTR<UsbDevice> dev,
-                                RR_SHARED_PTR<std::list<RR_SHARED_PTR<UsbDevice> > > l,
+    virtual void UpdateDevices2(UsbDeviceStatus status, const RR_SHARED_PTR<UsbDevice>& dev,
+                                const RR_SHARED_PTR<std::list<RR_SHARED_PTR<UsbDevice> > >& l,
                                 boost::function<void()> handler);
 
     virtual void AsyncCreateTransportConnection1(
         const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     RR_WEAK_PTR<HardwareTransport> parent;
     RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -197,11 +203,12 @@ class UsbDeviceClaim_create_request
     ParseConnectionURLResult url_res;
     uint32_t endpoint;
     std::string noden;
-    boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler;
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+        handler;
 
-    UsbDeviceClaim_create_request(
-        const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+    UsbDeviceClaim_create_request(const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden,
+                                  boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                                                       const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 };
 
 class UsbDevice_Claim;
@@ -211,8 +218,8 @@ class UsbDevice_Claim_Lock : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim_L
     RR_WEAK_PTR<UsbDevice_Claim> parent;
 
   public:
-    UsbDevice_Claim_Lock(RR_SHARED_PTR<UsbDevice_Claim> parent);
-    virtual ~UsbDevice_Claim_Lock();
+    UsbDevice_Claim_Lock(const RR_SHARED_PTR<UsbDevice_Claim>& parent);
+    virtual ~UsbDevice_Claim_Lock(); // NOLINT(bugprone-exception-escape)
 };
 
 class UsbDevice_Settings
@@ -236,6 +243,8 @@ class UsbDevice_Settings
     uint8_t string_nodeid_index;
     uint8_t string_nodename_index;
     std::vector<uint16_t> supported_protocols;
+
+    UsbDevice_Settings();
 };
 
 class UsbDevice_Initialize : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Initialize>
@@ -243,69 +252,71 @@ class UsbDevice_Initialize : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Initial
   public:
     friend class UsbDeviceTransportConnection;
 
-    UsbDevice_Initialize(RR_SHARED_PTR<UsbDevice> parent, const UsbDeviceManager_detected_device& detected_device);
+    UsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent,
+                         const UsbDeviceManager_detected_device& detected_device);
     virtual ~UsbDevice_Initialize() {}
 
     RR_SHARED_PTR<UsbDevice> GetParent();
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-    virtual void InitializeDevice(boost::function<void(UsbDeviceStatus)> handler);
+    virtual void InitializeDevice(boost::function<void(const UsbDeviceStatus&)> handler);
 
   protected:
     void InitializeDevice1(
-        uint32_t attempt, boost::function<void(UsbDeviceStatus)> handler,
-        RR_SHARED_PTR<boost::asio::deadline_timer> timer = RR_SHARED_PTR<boost::asio::deadline_timer>());
+        uint32_t attempt, boost::function<void(const UsbDeviceStatus&)> handler,
+        const RR_SHARED_PTR<boost::asio::deadline_timer>& timer = RR_SHARED_PTR<boost::asio::deadline_timer>());
 
     void InitializeDevice2(const boost::system::error_code& ec, const std::string& device_nodeid,
-                           boost::function<void(UsbDeviceStatus)> handler, RR_SHARED_PTR<void> dev_h,
-                           RR_SHARED_PTR<UsbDevice_Settings> settings);
+                           boost::function<void(const UsbDeviceStatus&)> handler, const RR_SHARED_PTR<void>& dev_h,
+                           const RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
     void InitializeDevice3(const boost::system::error_code& ec, const std::string& device_nodename,
-                           boost::function<void(UsbDeviceStatus)> handler, RR_SHARED_PTR<void> dev_h,
-                           RR_SHARED_PTR<UsbDevice_Settings> settings);
+                           boost::function<void(const UsbDeviceStatus&)> handler, const RR_SHARED_PTR<void>& dev_h,
+                           const RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
-    void InitializeDevice_err(boost::function<void(UsbDeviceStatus)>& handler, UsbDeviceStatus status = Error);
+    void InitializeDevice_err(const boost::function<void(const UsbDeviceStatus&)>& handler,
+                              UsbDeviceStatus status = Error);
 
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
                                       boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>()) = 0;
+                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) = 0;
 
     // Call with lock
     virtual void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                             boost::asio::mutable_buffer& buf,
                                             boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>()) = 0;
+                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) = 0;
 
     // Call with lock
     virtual UsbDeviceStatus OpenDevice(RR_SHARED_PTR<void>& dev_h) = 0;
 
     // Call with lock
-    virtual UsbDeviceStatus ReadPipeSettings(RR_SHARED_PTR<void> dev_h,
+    virtual UsbDeviceStatus ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
                                              RR_SHARED_PTR<UsbDevice_Settings>& settings) = 0;
 
     // Call with lock
-    virtual UsbDeviceStatus ReadInterfaceSettings(RR_SHARED_PTR<void> dev_h,
+    virtual UsbDeviceStatus ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
                                                   RR_SHARED_PTR<UsbDevice_Settings>& settings) = 0;
 
     void ReadRRDeviceString(uint8_t interface_number, uint8_t property_index,
                             boost::function<void(const boost::system::error_code&, const std::string&)> handler,
-                            RR_SHARED_PTR<void> dev_h);
+                            const RR_SHARED_PTR<void>& dev_h);
 
     void ReadRRDeviceString1(const boost::system::error_code& ec, size_t bytes_transferred, uint8_t interface_number,
-                             uint8_t property_index, boost::shared_array<uint8_t> buf,
+                             uint8_t property_index, const boost::shared_array<uint8_t>& buf,
                              boost::function<void(const boost::system::error_code&, const std::string&)> handler,
-                             RR_SHARED_PTR<void> dev_h);
+                             const RR_SHARED_PTR<void>& dev_h);
 
     void ReadRRDeviceString2(const boost::system::error_code& ec, size_t bytes_transferred, uint8_t interface_number,
-                             uint8_t property_index, boost::shared_array<uint8_t> buf,
+                             uint8_t property_index, const boost::shared_array<uint8_t>& buf,
                              boost::function<void(const boost::system::error_code&, const std::string&)> handler,
-                             RR_SHARED_PTR<void> dev_h);
+                             const RR_SHARED_PTR<void>& dev_h);
 
     boost::mutex this_lock;
 
-    std::list<boost::function<void(UsbDeviceStatus)> > initialize_handlers;
+    std::list<boost::function<void(const UsbDeviceStatus&)> > initialize_handlers;
 
     RR_WEAK_PTR<RobotRaconteurNode> node;
     RR_WEAK_PTR<UsbDevice> parent;
@@ -321,7 +332,7 @@ class UsbDevice_Claim : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim>
     friend class UsbDeviceTransportConnection;
     friend class UsbDevice_Claim_Lock;
 
-    UsbDevice_Claim(RR_SHARED_PTR<UsbDevice> parent, const UsbDeviceManager_detected_device& detected_device);
+    UsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const UsbDeviceManager_detected_device& detected_device);
     virtual ~UsbDevice_Claim() {}
 
     RR_SHARED_PTR<UsbDevice> GetParent();
@@ -330,7 +341,8 @@ class UsbDevice_Claim : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim>
 
     void AsyncCreateTransportConnection(
         const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     virtual void Close();
 
@@ -341,46 +353,53 @@ class UsbDevice_Claim : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim>
   protected:
     void AsyncCreateTransportConnection1(
         const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler,
         uint32_t attempt);
 
     void AsyncCreateTransportConnection2(
-        const boost::system::error_code& ec, size_t bytes_transferred, boost::shared_array<uint8_t> buf,
+        const boost::system::error_code& ec, size_t bytes_transferred, const boost::shared_array<uint8_t>& buf,
         const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     void AsyncCreateTransportConnection3(
-        const boost::system::error_code& ec, size_t bytes_transferred, boost::shared_array<uint8_t> buf,
+        const boost::system::error_code& ec, size_t bytes_transferred, const boost::shared_array<uint8_t>& buf,
         const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     void AsyncCreateTransportConnection4(
-        const boost::system::error_code& ec, size_t bytes_transferred, boost::shared_array<uint8_t> buf,
+        const boost::system::error_code& ec, size_t bytes_transferred, const boost::shared_array<uint8_t>& buf,
         const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     void AsyncCreateTransportConnection5(
         const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     void AsyncCreateTransportConnection6(
-        const boost::system::error_code& ec, size_t bytes_transferred, boost::shared_array<uint8_t> buf,
+        const boost::system::error_code& ec, size_t bytes_transferred, const boost::shared_array<uint8_t>& buf,
         const ParseConnectionURLResult& url_res, uint32_t endpoint, const std::string& noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     void AsyncCreateTransportConnection_err(
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& handler,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
         UsbDeviceStatus status = Error);
 
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
                                       boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>()) = 0;
+                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) = 0;
 
     virtual void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                             boost::asio::mutable_buffer& buf,
                                             boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>()) = 0;
+                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>()) = 0;
 
     virtual void AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf,
                                boost::function<void(const boost::system::error_code&, size_t)> handler) = 0;
@@ -396,10 +415,10 @@ class UsbDevice_Claim : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim>
 
     void CleanupConnections();
 
-    void ConnectionClosed(RR_SHARED_PTR<UsbDeviceTransportConnection> connection);
+    void ConnectionClosed(const RR_SHARED_PTR<UsbDeviceTransportConnection>& connection);
 
     void ConnectionClosed1(const boost::system::error_code& ec, size_t bytes_transferred,
-                           boost::shared_array<uint8_t> buf);
+                           const boost::shared_array<uint8_t>& buf);
 
     void TransportCanRead();
 
@@ -409,12 +428,13 @@ class UsbDevice_Claim : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim>
 
     void DoWrite();
 
-    void EndRead(const boost::system::error_code& ec, size_t bytes_transferred, boost::shared_array<uint8_t> buf,
+    void EndRead(const boost::system::error_code& ec, size_t bytes_transferred, const boost::shared_array<uint8_t>& buf,
                  uint64_t c);
 
-    void EndRead2(size_t bytes_transferred, boost::shared_array<uint8_t> buf, uint64_t c);
+    void EndRead2(size_t bytes_transferred, const boost::shared_array<uint8_t>& buf, uint64_t c);
 
-    void EndWrite(const boost::system::error_code& ec, size_t bytes_transferred, boost::shared_array<uint8_t> buf);
+    void EndWrite(const boost::system::error_code& ec, size_t bytes_transferred,
+                  const boost::shared_array<uint8_t>& buf);
 
     void DeviceError(const boost::system::error_code& ec);
 
@@ -427,7 +447,7 @@ class UsbDevice_Claim : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim>
     virtual void DrawDownRequests(boost::function<void()> handler) = 0;
 
     virtual void Closed1(const boost::system::error_code& ec, size_t bytes_transferred,
-                         boost::shared_array<uint8_t> buf);
+                         const boost::shared_array<uint8_t>& buf);
 
     virtual void Closed2();
 
@@ -435,7 +455,6 @@ class UsbDevice_Claim : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim>
 
     virtual void ClearHalt(uint8_t ep) = 0;
 
-  protected:
     UsbDeviceManager_detected_device detected_device;
 
     boost::mutex this_lock;
@@ -491,7 +510,7 @@ class UsbDevice : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice>
     friend class UsbDevice_Initialize;
     friend class UsbDevice_Claim;
 
-    UsbDevice(RR_SHARED_PTR<UsbDeviceManager> parent, const UsbDeviceManager_detected_device& detected_device);
+    UsbDevice(const RR_SHARED_PTR<UsbDeviceManager>& parent, const UsbDeviceManager_detected_device& detected_device);
 
     virtual ~UsbDevice();
 
@@ -500,13 +519,14 @@ class UsbDevice : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice>
 
     UsbDeviceStatus GetDeviceStatus();
 
-    void InitializeDevice(boost::function<void(UsbDeviceStatus)> handler);
+    void InitializeDevice(boost::function<void(const UsbDeviceStatus&)> handler);
 
     boost::tuple<NodeID, std::string> GetNodeInfo();
 
     void AsyncCreateTransportConnection(
         const ParseConnectionURLResult& url_res, uint32_t endpoint, boost::string_ref noden,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler);
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+            handler);
 
     void Close();
 
@@ -516,13 +536,13 @@ class UsbDevice : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice>
     virtual RR_SHARED_PTR<UsbDevice_Initialize> CreateInitialize() = 0;
     virtual RR_SHARED_PTR<UsbDevice_Claim> CreateClaim() = 0;
 
-    virtual void DeviceInitialized(RR_SHARED_PTR<UsbDevice_Settings> settings, UsbDeviceStatus status = Ready);
+    virtual void DeviceInitialized(const RR_SHARED_PTR<UsbDevice_Settings>& settings, UsbDeviceStatus status = Ready);
 
-    virtual void DeviceClaimed(RR_SHARED_PTR<UsbDevice_Claim> claim, UsbDeviceStatus status = Claimed);
+    virtual void DeviceClaimed(const RR_SHARED_PTR<UsbDevice_Claim>& claim, UsbDeviceStatus status = Claimed);
 
-    virtual void DeviceClaimError(RR_SHARED_PTR<UsbDevice_Claim> claim, UsbDeviceStatus status = Error);
+    virtual void DeviceClaimError(const RR_SHARED_PTR<UsbDevice_Claim>& claim, UsbDeviceStatus status = Error);
 
-    virtual void DeviceClaimReleased(RR_SHARED_PTR<UsbDevice_Claim> claim);
+    virtual void DeviceClaimReleased(const RR_SHARED_PTR<UsbDevice_Claim>& claim);
 };
 
 class UsbDeviceTransportConnection : public HardwareTransportConnection
@@ -530,28 +550,30 @@ class UsbDeviceTransportConnection : public HardwareTransportConnection
   public:
     friend class UsbDevice_Claim;
 
-    UsbDeviceTransportConnection(RR_SHARED_PTR<HardwareTransport> parent, uint32_t local_endpoint,
-                                 RR_SHARED_PTR<UsbDevice_Claim> device, int32_t stream_id);
-    virtual ~UsbDeviceTransportConnection() {}
+    UsbDeviceTransportConnection(const RR_SHARED_PTR<HardwareTransport>& parent, uint32_t local_endpoint,
+                                 const RR_SHARED_PTR<UsbDevice_Claim>& device, int32_t stream_id);
+    RR_OVIRTUAL ~UsbDeviceTransportConnection() RR_OVERRIDE {}
 
     void AsyncAttachSocket(boost::string_ref noden,
-                           boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+                           const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   protected:
-    virtual void async_write_some(
+    RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    virtual void async_read_some(
+    RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    virtual size_t available();
+    RR_OVIRTUAL size_t available() RR_OVERRIDE;
 
-    virtual void Close1() {}
+    RR_OVIRTUAL void Close1() RR_OVERRIDE {}
 
   public:
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
   protected:
     RR_WEAK_PTR<UsbDevice_Claim> device;

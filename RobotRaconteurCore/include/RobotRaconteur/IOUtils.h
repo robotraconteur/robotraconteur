@@ -35,12 +35,12 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
   public:
     ArrayBinaryReader(const uint8_t* buffer, size_t start_position, size_t length, bool nativeorder = false);
 
-    size_t Length();
+    size_t Length() const;
 
-    virtual size_t Position();
-    virtual void Seek(size_t position);
+    size_t Position() const;
+    void Seek(size_t position);
 
-    virtual size_t Read(void* buffer, size_t index, size_t length);
+    size_t Read(void* buffer, size_t index, size_t length);
 
     template <typename T>
     T ReadNumber()
@@ -68,15 +68,15 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryReader : private boost::noncopyable
     // length of reads.  This will detect errors
     // in binary messages.
 
-    virtual size_t CurrentLimit();
+    size_t CurrentLimit();
 
-    virtual void PushRelativeLimit(size_t limit);
+    void PushRelativeLimit(size_t limit);
 
-    virtual void PushAbsoluteLimit(size_t limit);
+    void PushAbsoluteLimit(size_t limit);
 
-    virtual void PopLimit();
+    void PopLimit();
 
-    virtual int32_t DistanceFromLimit();
+    int32_t DistanceFromLimit();
 
   private:
     const uint8_t* buffer;
@@ -96,12 +96,12 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryWriter : private boost::noncopyable
   public:
     ArrayBinaryWriter(uint8_t* buffer, size_t start_position, size_t length, bool nativeorder = false);
 
-    virtual size_t Length();
+    size_t Length() const;
 
-    virtual size_t Position();
-    virtual void Seek(size_t position);
+    size_t Position() const;
+    void Seek(size_t position);
 
-    virtual size_t Write(const void* buffer, size_t index, size_t length);
+    size_t Write(const void* buffer, size_t index, size_t length);
 
     template <typename T>
     void WriteNumber(T number)
@@ -140,15 +140,15 @@ class ROBOTRACONTEUR_CORE_API ArrayBinaryWriter : private boost::noncopyable
     // length of reads.  This will detect errors
     // in binary messages.
 
-    virtual size_t CurrentLimit();
+    size_t CurrentLimit();
 
-    virtual void PushRelativeLimit(size_t limit);
+    void PushRelativeLimit(size_t limit);
 
-    virtual void PushAbsoluteLimit(size_t limit);
+    void PushAbsoluteLimit(size_t limit);
 
-    virtual void PopLimit();
+    void PopLimit();
 
-    virtual int32_t DistanceFromLimit();
+    int32_t DistanceFromLimit();
 
   private:
     uint8_t* buffer;

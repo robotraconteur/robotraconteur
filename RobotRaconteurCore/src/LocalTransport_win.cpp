@@ -83,7 +83,7 @@ bool IsPipeSameUserOrService(HANDLE pipe, bool allow_service)
     return valid;
 }
 
-bool IsPipeUser(HANDLE pipe, std::string username)
+bool IsPipeUser(HANDLE pipe, const std::string& username)
 {
     bool valid = true;
     ULONG serverid;
@@ -399,7 +399,7 @@ static RR_SHARED_PTR<void> WinLocalTransportDiscovery_find_first(const boost::fi
     return o;
 }
 
-WinLocalTransportDiscovery::WinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node)
+WinLocalTransportDiscovery::WinLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node)
     : LocalTransportDiscovery(node)
 {}
 

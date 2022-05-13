@@ -23,7 +23,6 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <dlfcn.h>
 #include <linux/netlink.h>
-#include <boost/algorithm/string.hpp>
 #include <boost/range/as_array.hpp>
 
 namespace RobotRaconteur
@@ -93,8 +92,8 @@ Sdp_Functions::~Sdp_Functions()
 
 // BluezBluetoothConnector
 
-BluezBluetoothConnector::BluezBluetoothConnector(RR_SHARED_PTR<HardwareTransport> parent, RR_SHARED_PTR<void> dbus_f,
-                                                 RR_SHARED_PTR<void> sdp_f)
+BluezBluetoothConnector::BluezBluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                                 const RR_SHARED_PTR<void>& dbus_f, const RR_SHARED_PTR<void>& sdp_f)
     : BluetoothConnector(parent)
 {
     this->dbus_f = RR_STATIC_POINTER_CAST<DBus_Functions>(dbus_f);
@@ -105,7 +104,7 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
 {
     std::list<sockaddr_rc> o;
 
-    DBusConnection* conn;
+    DBusConnection* conn = NULL;
     DBusError err;
 
     dbus_f->dbus_error_init(&err);
@@ -123,7 +122,7 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
         return o;
     }
 
-    dbus_bool_t hcid_exists;
+    dbus_bool_t hcid_exists = 0;
     dbus_f->dbus_error_init(&err);
     hcid_exists = dbus_f->dbus_bus_name_has_owner(conn, "org.bluez", &err);
     if (dbus_f->dbus_error_is_set(&err))
@@ -165,7 +164,7 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
         return o;
     }
 
-    char* adapter1;
+    char* adapter1 = NULL;
 
     dbus_f->dbus_message_iter_get_basic(&reply_iter, &adapter1);
 
@@ -205,14 +204,14 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
     dbus_f->dbus_message_iter_recurse(&reply_iter, &iter_array);
     while (dbus_f->dbus_message_iter_get_arg_type(&iter_array) == DBUS_TYPE_OBJECT_PATH)
     {
-        const char* object_path;
+        const char* object_path = NULL;
         char* name = NULL;
         char* bdaddr = NULL;
 
         dbus_f->dbus_message_iter_get_basic(&iter_array, &object_path);
 
-        DBusMessage* message1;
-        DBusMessage* reply1;
+        DBusMessage* message1 = NULL;
+        DBusMessage* reply1 = NULL;
 
         message1 = dbus_f->dbus_message_new_method_call("org.bluez", object_path, "org.bluez.Device", "GetProperties");
         reply1 = dbus_f->dbus_connection_send_with_reply_and_block(conn, message1, -1, &err);
@@ -235,13 +234,13 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
 
         bool address_found = false;
         bool service_uuid_invalid = false;
-        sockaddr_rc a;
+        sockaddr_rc a = {};
         memset(&a, 0, sizeof(a));
         a.rc_family = AF_BLUETOOTH;
 
         while (dbus_f->dbus_message_iter_get_arg_type(&reply_iter_entry1) == DBUS_TYPE_DICT_ENTRY)
         {
-            const char* key;
+            const char* key = NULL;
             DBusMessageIter dict_entry, iter_dict_val;
 
             dbus_f->dbus_message_iter_recurse(&reply_iter_entry1, &dict_entry);
@@ -262,7 +261,7 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
             if (strcmp(key, "Address") == 0)
             {
                 dbus_f->dbus_message_iter_recurse(&dict_entry, &iter_dict_val);
-                const char* value;
+                const char* value = NULL;
                 if (DBUS_TYPE_STRING == dbus_f->dbus_message_iter_get_arg_type(&iter_dict_val))
                 {
                     dbus_f->dbus_message_iter_get_basic(&iter_dict_val, &value);
@@ -291,7 +290,7 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
                         {
                             try
                             {
-                                const char* value1;
+                                const char* value1 = NULL;
                                 dbus_f->dbus_message_iter_get_basic(&iter_uuid_val, &value1);
                                 std::string value(value1);
                                 boost::uuids::string_generator gen;
@@ -334,8 +333,11 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
 {
     std::list<BluezBluetoothConnector::device_info> o;
 
+    // NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
     const uint8_t svc_uuid_int[] = {0x25, 0xbb, 0x0b, 0x62, 0x86, 0x1a, 0x49, 0x74,
                                     0xa1, 0xb8, 0x18, 0xed, 0x54, 0x95, 0xaa, 0x07};
+    // NOLINTEND(cppcoreguidelines-avoid-c-arrays)
+
     uuid_t svc_uuid;
 
     bdaddr_t target = addr.rc_bdaddr;
@@ -354,7 +356,7 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
     uint32_t range = 0x0000ffff;
     sdp_list_t* attrid_list = sdp_f->sdp_list_append(NULL, &range);
 
-    sdp_list_t* r;
+    sdp_list_t* r = NULL;
 
     if (sdp_f->sdp_service_search_attr_req(session, search_list, SDP_ATTR_REQ_RANGE, attrid_list, &r))
     {
@@ -413,10 +415,10 @@ std::list<BluezBluetoothConnector::device_info> BluezBluetoothConnector::GetDevi
 
 // HardwareTransport_linux_discovery
 
-HardwareTransport_linux_discovery::HardwareTransport_linux_discovery(RR_SHARED_PTR<HardwareTransport> parent,
+HardwareTransport_linux_discovery::HardwareTransport_linux_discovery(const RR_SHARED_PTR<HardwareTransport>& parent,
                                                                      const std::vector<std::string>& schemes,
-                                                                     RR_SHARED_PTR<LibUsbDeviceManager> usb,
-                                                                     RR_SHARED_PTR<BluezBluetoothConnector> bt)
+                                                                     const RR_SHARED_PTR<LibUsbDeviceManager>& usb,
+                                                                     const RR_SHARED_PTR<BluezBluetoothConnector>& bt)
     : HardwareTransport_discovery(parent, schemes, usb, bt)
 {
     running = false;
@@ -426,10 +428,10 @@ void HardwareTransport_linux_discovery::Init()
 {
     boost::mutex::scoped_lock lock(this_lock);
 
-    int nl_socket;
-    struct sockaddr_nl src_addr;
-    msg.reset(new uint8_t[NL_MAX_PAYLOAD]);
-    int ret;
+    int nl_socket = 0;
+    struct sockaddr_nl src_addr = {};
+    msg = boost::shared_array<uint8_t>(new uint8_t[NL_MAX_PAYLOAD]);
+    int ret = 0;
 
     // Prepare source address
     memset(&src_addr, 0, sizeof(src_addr));
@@ -590,16 +592,16 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
 
 static std::string HardwareTransport_read_sysfs_attr(const boost::filesystem::path& p)
 {
-    int rv;
-    char attr_buf[256];
+    ssize_t rv = 0;
+    boost::array<char, 256> attr_buf = {};
     int f1 = open(p.c_str(), O_RDONLY);
     if (f1 < 0)
         throw ConnectionException("Attribute not found");
-    rv = pread(f1, attr_buf, sizeof(attr_buf), 0);
+    rv = pread(f1, attr_buf.data(), sizeof(attr_buf), 0);
     close(f1);
     if (rv < 0)
         throw ConnectionException("Could not read attribute");
-    return std::string(attr_buf, strnlen(attr_buf, sizeof(attr_buf)));
+    return std::string(attr_buf.data(), strnlen(attr_buf.data(), sizeof(attr_buf)));
 }
 
 boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost::string_ref transport_type,
@@ -623,8 +625,6 @@ boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost:
         try
         {
             std::string dev_transport = HardwareTransport_read_sysfs_attr((dir_itr->path() / "transport"));
-            size_t n1 = transport_type.size();
-            size_t n2 = dev_transport.size();
             if (dev_transport != transport_type)
             {
                 continue;
@@ -707,6 +707,7 @@ boost::optional<std::string> HardwareTransport_linux_find_bluetooth(const NodeID
 std::list<boost::tuple<NodeID, std::string> > HardwareTransport_linux_find_deviceinterfaces(
     boost::string_ref transport_type)
 {
+    RR_UNUSED(transport_type);
     std::list<boost::tuple<NodeID, std::string> > o;
 
     boost::filesystem::path rr_class = "/sys/class/robotraconteur";
@@ -723,8 +724,6 @@ std::list<boost::tuple<NodeID, std::string> > HardwareTransport_linux_find_devic
             try
             {
                 std::string dev_transport = HardwareTransport_read_sysfs_attr((dir_itr->path() / "transport"));
-                size_t n1 = transport_type.size();
-                size_t n2 = dev_transport.size();
             }
             catch (std::exception&)
             {

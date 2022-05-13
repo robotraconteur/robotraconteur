@@ -148,8 +148,8 @@ WinUsb_Functions::~WinUsb_Functions()
 
 // WinUsbDeviceManager
 
-WinUsbDeviceManager::WinUsbDeviceManager(RR_SHARED_PTR<HardwareTransport> parent,
-                                         RR_SHARED_PTR<SetupApi_Functions> setupapi_f)
+WinUsbDeviceManager::WinUsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                         const RR_SHARED_PTR<SetupApi_Functions>& setupapi_f)
     : UsbDeviceManager(parent)
 {
     this->setupapi_f = setupapi_f;
@@ -177,7 +177,8 @@ bool WinUsbDeviceManager::InitUpdateDevices()
     return true;
 }
 
-static void SetupApi_Functions_SetupDiDestroyDeviceInfoList(RR_SHARED_PTR<SetupApi_Functions> f, HDEVINFO deviceInfo)
+static void SetupApi_Functions_SetupDiDestroyDeviceInfoList(const RR_SHARED_PTR<SetupApi_Functions>& f,
+                                                            HDEVINFO deviceInfo)
 {
     f->SetupDiDestroyDeviceInfoList(deviceInfo);
 }
@@ -281,7 +282,7 @@ RR_SHARED_PTR<UsbDevice> WinUsbDeviceManager::CreateDevice(const UsbDeviceManage
 
 // WinUsbDevice_Handle
 
-static void WinUsbDevice_winusb_free(RR_SHARED_PTR<WinUsb_Functions> f, void* hInterface)
+static void WinUsbDevice_winusb_free(const RR_SHARED_PTR<WinUsb_Functions>& f, void* hInterface)
 {
     f->WinUsb_Free(hInterface);
 }
@@ -330,7 +331,8 @@ WinUsbDevice_Handle::~WinUsbDevice_Handle()
 
 // WinUsbDevice_Initialize
 
-WinUsbDevice_Initialize::WinUsbDevice_Initialize(RR_SHARED_PTR<UsbDevice> parent, RR_SHARED_PTR<WinUsb_Functions> f,
+WinUsbDevice_Initialize::WinUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent,
+                                                 const RR_SHARED_PTR<WinUsb_Functions>& f,
                                                  const UsbDeviceManager_detected_device& detected_device)
     : UsbDevice_Initialize(parent, detected_device)
 {
@@ -342,7 +344,7 @@ UsbDeviceStatus WinUsbDevice_Initialize::OpenDevice(RR_SHARED_PTR<void>& dev_h)
     return WinUsbDevice_open_device(GetNode()->GetThreadPool()->get_io_context(), f, detected_device.path, dev_h);
 }
 
-UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(RR_SHARED_PTR<void> dev_h,
+UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
                                                                RR_SHARED_PTR<UsbDevice_Settings>& settings)
 {
     RR_SHARED_PTR<WinUsbDevice_Handle> h = RR_STATIC_POINTER_CAST<WinUsbDevice_Handle>(dev_h);
@@ -383,6 +385,7 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(RR_SHARED_PTR<voi
 
     while (boost::asio::buffer_size(desc) >= 2)
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         USB_COMMON_DESCRIPTOR* c1 = RR_BOOST_ASIO_BUFFER_CAST(USB_COMMON_DESCRIPTOR*, desc);
         if (c1->bLength > boost::asio::buffer_size(desc))
         {
@@ -463,7 +466,7 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(RR_SHARED_PTR<voi
     return Open;
 }
 
-UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(RR_SHARED_PTR<void> dev_h,
+UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
                                                           RR_SHARED_PTR<UsbDevice_Settings>& settings)
 {
 
@@ -523,7 +526,7 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(RR_SHARED_PTR<void> de
 }
 
 static void WinUsbDevice_async_control_transfer(RR_BOOST_ASIO_IO_CONTEXT& _io_context,
-                                                RR_SHARED_PTR<WinUsb_Functions> f, uint8_t bmRequestType,
+                                                const RR_SHARED_PTR<WinUsb_Functions>& f, uint8_t bmRequestType,
                                                 uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                                 boost::asio::mutable_buffer& buf,
                                                 boost::function<void(const boost::system::error_code&, size_t)> handler,
@@ -551,6 +554,7 @@ static void WinUsbDevice_async_control_transfer(RR_BOOST_ASIO_IO_CONTEXT& _io_co
     setup.Index = wIndex;
     setup.Length = (USHORT)boost::asio::buffer_size(buf);
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     BOOL ok = f->WinUsb_ControlTransfer(my_hInterface.get(), setup, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR, buf),
                                         boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
     DWORD last_error = ::GetLastError();
@@ -567,7 +571,7 @@ static void WinUsbDevice_async_control_transfer(RR_BOOST_ASIO_IO_CONTEXT& _io_co
 
 void WinUsbDevice_Initialize::AsyncControlTransfer(
     uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
-    boost::function<void(const boost::system::error_code&, size_t)> handler, RR_SHARED_PTR<void> dev_h)
+    boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
 {
     boost::mutex::scoped_lock lock(this_lock);
     WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest,
@@ -576,7 +580,7 @@ void WinUsbDevice_Initialize::AsyncControlTransfer(
 
 void WinUsbDevice_Initialize::AsyncControlTransferNoLock(
     uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
-    boost::function<void(const boost::system::error_code&, size_t)> handler, RR_SHARED_PTR<void> dev_h)
+    boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
 {
     // boost::mutex::scoped_lock lock(this_lock);
     WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest,
@@ -585,7 +589,7 @@ void WinUsbDevice_Initialize::AsyncControlTransferNoLock(
 
 // WinUsbDevice_Claim
 
-WinUsbDevice_Claim::WinUsbDevice_Claim(RR_SHARED_PTR<UsbDevice> parent, RR_SHARED_PTR<WinUsb_Functions> f,
+WinUsbDevice_Claim::WinUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                                        const UsbDeviceManager_detected_device& detected_device)
     : UsbDevice_Claim(parent, detected_device)
 {
@@ -595,32 +599,32 @@ WinUsbDevice_Claim::WinUsbDevice_Claim(RR_SHARED_PTR<UsbDevice> parent, RR_SHARE
 void WinUsbDevice_Claim::AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                               boost::asio::mutable_buffer& buf,
                                               boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                              RR_SHARED_PTR<void> dev_h)
+                                              const RR_SHARED_PTR<void>& dev_h)
 {
     boost::mutex::scoped_lock lock(this_lock);
-
-    if (!dev_h)
+    RR_SHARED_PTR<void> dev_h1 = dev_h;
+    if (!dev_h1)
     {
-        dev_h = device_handle;
+        dev_h1 = device_handle;
     }
 
     WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest,
-                                        wValue, wIndex, buf, handler, dev_h);
+                                        wValue, wIndex, buf, handler, dev_h1);
 }
 
 void WinUsbDevice_Claim::AsyncControlTransferNoLock(
     uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
-    boost::function<void(const boost::system::error_code&, size_t)> handler, RR_SHARED_PTR<void> dev_h)
+    boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
 {
     // boost::mutex::scoped_lock lock(this_lock);
-
-    if (!dev_h)
+    RR_SHARED_PTR<void> dev_h1 = dev_h;
+    if (!dev_h1)
     {
-        dev_h = device_handle;
+        dev_h1 = device_handle;
     }
 
     WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest,
-                                        wValue, wIndex, buf, handler, dev_h);
+                                        wValue, wIndex, buf, handler, dev_h1);
 }
 
 void WinUsbDevice_Claim::AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf,
@@ -646,6 +650,7 @@ void WinUsbDevice_Claim::AsyncReadPipeNoLock(uint8_t ep, boost::asio::mutable_bu
 
     DWORD bytes_transferred = 0;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     BOOL ok = f->WinUsb_ReadPipe(device_handle->hInterface.get(), ep, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR, buf),
                                  boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
     DWORD last_error = ::GetLastError();
@@ -683,6 +688,7 @@ void WinUsbDevice_Claim::AsyncWritePipeNoLock(uint8_t ep, boost::asio::mutable_b
 
     DWORD bytes_transferred = 0;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     BOOL ok = f->WinUsb_WritePipe(device_handle->hInterface.get(), ep, RR_BOOST_ASIO_BUFFER_CAST(PUCHAR, buf),
                                   boost::asio::buffer_size(buf), &bytes_transferred, overlapped.get());
     DWORD last_error = ::GetLastError();
@@ -760,7 +766,7 @@ void WinUsbDevice_Claim::ClearHalt(uint8_t ep)
 
 // WinUsbDevice
 
-WinUsbDevice::WinUsbDevice(RR_SHARED_PTR<WinUsbDeviceManager> parent, RR_SHARED_PTR<WinUsb_Functions> f,
+WinUsbDevice::WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                            const UsbDeviceManager_detected_device& device)
     : UsbDevice(parent, device)
 {
@@ -781,7 +787,7 @@ RR_SHARED_PTR<UsbDevice_Claim> WinUsbDevice::CreateClaim()
 
 // WinsockBluetoothConnector
 
-WinsockBluetoothConnector::WinsockBluetoothConnector(RR_SHARED_PTR<HardwareTransport> parent)
+WinsockBluetoothConnector::WinsockBluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent)
     : BluetoothConnector(parent)
 {}
 
@@ -890,7 +896,7 @@ std::list<BluetoothConnector<SOCKADDR_BTH, AF_BTH, BTHPROTO_RFCOMM>::device_info
 
 // Device driver interface search
 
-boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHARED_PTR<void> f,
+boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(const RR_SHARED_PTR<void>& f,
                                                                          const GUID* interface_guid,
                                                                          const NodeID& nodeid,
                                                                          boost::string_ref nodename)
@@ -1062,30 +1068,30 @@ boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHAR
     return boost::optional<std::wstring>();
 }
 
-boost::optional<std::wstring> HardwareTransport_win_find_usb(RR_SHARED_PTR<void> f, const NodeID& nodeid,
+boost::optional<std::wstring> HardwareTransport_win_find_usb(const RR_SHARED_PTR<void>& f, const NodeID& nodeid,
                                                              boost::string_ref nodename)
 {
     return HardwareTransport_win_find_deviceinterface(f, &GUID_DEVINTERFACE_RobotRaconteurUSBDriver, nodeid, nodename);
 }
 
-boost::optional<std::wstring> HardwareTransport_win_find_pci(RR_SHARED_PTR<void> f, const NodeID& nodeid,
+boost::optional<std::wstring> HardwareTransport_win_find_pci(const RR_SHARED_PTR<void>& f, const NodeID& nodeid,
                                                              boost::string_ref nodename)
 {
     return HardwareTransport_win_find_deviceinterface(f, &GUID_DEVINTERFACE_RobotRaconteurPCIDriver, nodeid, nodename);
 }
 
-boost::optional<std::wstring> HardwareTransport_win_find_bluetooth(RR_SHARED_PTR<void> f, const NodeID& nodeid,
+boost::optional<std::wstring> HardwareTransport_win_find_bluetooth(const RR_SHARED_PTR<void>& f, const NodeID& nodeid,
                                                                    boost::string_ref nodename)
 {
     return HardwareTransport_win_find_deviceinterface(f, &GUID_DEVINTERFACE_RobotRaconteurBluetoothDriver, nodeid,
                                                       nodename);
 }
 
-HardwareTransport_win_discovery::HardwareTransport_win_discovery(RR_SHARED_PTR<HardwareTransport> parent,
+HardwareTransport_win_discovery::HardwareTransport_win_discovery(const RR_SHARED_PTR<HardwareTransport>& parent,
                                                                  const std::vector<std::string>& schemes,
-                                                                 RR_SHARED_PTR<WinUsbDeviceManager> usb,
-                                                                 RR_SHARED_PTR<WinsockBluetoothConnector> bt,
-                                                                 RR_SHARED_PTR<void> f_void)
+                                                                 const RR_SHARED_PTR<WinUsbDeviceManager>& usb,
+                                                                 const RR_SHARED_PTR<WinsockBluetoothConnector>& bt,
+                                                                 const RR_SHARED_PTR<void>& f_void)
     : HardwareTransport_discovery(parent, schemes, usb, bt)
 {}
 
@@ -1256,7 +1262,7 @@ static BOOL DoRegisterDeviceInterfaceToHwnd(const GUID* InterfaceClassGuid, HWND
     return TRUE;
 }
 
-static BOOL DoRegisterBluetoothRadioToHwd(RR_SHARED_PTR<void> f, HWND hWnd, RR_SHARED_PTR<void>& hDeviceNotify,
+static BOOL DoRegisterBluetoothRadioToHwd(const RR_SHARED_PTR<void>& f, HWND hWnd, RR_SHARED_PTR<void>& hDeviceNotify,
                                           RR_SHARED_PTR<void>& hRadio)
 {
     if (!f)
@@ -1571,7 +1577,7 @@ void HardwareTransport_win_discovery::MessageWindowFunc()
     }
 }
 
-std::list<boost::tuple<NodeID, std::string> > HardwareTransport_win_find_deviceinterfaces(RR_SHARED_PTR<void> f,
+std::list<boost::tuple<NodeID, std::string> > HardwareTransport_win_find_deviceinterfaces(const RR_SHARED_PTR<void>& f,
                                                                                           const GUID* interface_guid)
 {
 

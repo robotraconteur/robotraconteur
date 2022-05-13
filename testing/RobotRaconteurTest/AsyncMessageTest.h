@@ -3,6 +3,7 @@
 
 #pragma once
 
+// NOLINTBEGIN
 namespace RobotRaconteur
 {
 class Message;
@@ -36,3 +37,4 @@ class AsyncMessageWriterTest
     static void LoadRandomTest();
 };
 } // namespace RobotRaconteurTest
+  // NOLINTEND

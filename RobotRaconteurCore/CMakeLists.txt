@@ -29,7 +29,7 @@ if(ANDROID)
     find_package(OpenSSL REQUIRED)
 endif()
 
-if(UNIX AND NOT APPLE AND NOT ANDROID)
+if("${CMAKE_SYSTEM}" MATCHES "Linux" AND NOT ANDROID)
     find_path(DBUS_INCLUDE_DIR dbus.h NAMES dbus/dbus.h PATH_SUFFIXES dbus-1.0)
     find_library(DBUS_LIBRARY dbus-1)
     get_filename_component(DBUS_LIBRARY_DIR ${DBUS_LIBRARY} DIRECTORY)
@@ -54,6 +54,11 @@ if(APPLE)
         message(FATAL_ERROR "CoreFoundation framework not found")
     endif()
 
+    find_package(OpenSSL REQUIRED)
+endif()
+
+if(UNIX AND NOT "${CMAKE_SYSTEM}" MATCHES "Linux")
+    # TODO: Determine how to handle this list(REMOVE_ITEM Boost_LIBRARIES ${BOOST_THREAD_LIBRARY})
     find_package(OpenSSL REQUIRED)
 endif()
 
@@ -300,6 +305,10 @@ if(ANDROID)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
+    target_compile_options(RobotRaconteurCore PRIVATE "-fPIC")
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(RobotRaconteurCore PRIVATE "-fPIC")
 endif()
 

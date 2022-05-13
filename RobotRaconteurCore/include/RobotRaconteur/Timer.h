@@ -49,6 +49,8 @@ struct ROBOTRACONTEUR_CORE_API TimerEvent
     boost::posix_time::ptime current_expected;
     /** @brief The current invocation time */
     boost::posix_time::ptime current_real;
+
+    TimerEvent();
 };
 
 /**
@@ -141,11 +143,11 @@ class ROBOTRACONTEUR_CORE_API WallRate : public Rate
     boost::asio::deadline_timer timer;
 
   public:
-    WallRate(double frequency, RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>());
+    WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>());
 
-    virtual void Sleep();
+    RR_OVIRTUAL void Sleep() RR_OVERRIDE;
 
-    virtual ~WallRate() {}
+    RR_OVIRTUAL ~WallRate() RR_OVERRIDE {}
 };
 
 class ROBOTRACONTEUR_CORE_API WallTimer : public Timer, public RR_ENABLE_SHARED_FROM_THIS<WallTimer>
@@ -170,21 +172,21 @@ class ROBOTRACONTEUR_CORE_API WallTimer : public Timer, public RR_ENABLE_SHARED_
 
   public:
     WallTimer(const boost::posix_time::time_duration& period, boost::function<void(const TimerEvent&)> handler,
-              bool oneshot, RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>());
+              bool oneshot, const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>());
 
-    virtual void Start();
+    RR_OVIRTUAL void Start() RR_OVERRIDE;
 
-    virtual void Stop();
+    RR_OVIRTUAL void Stop() RR_OVERRIDE;
 
-    virtual boost::posix_time::time_duration GetPeriod();
+    RR_OVIRTUAL boost::posix_time::time_duration GetPeriod() RR_OVERRIDE;
 
-    virtual void SetPeriod(const boost::posix_time::time_duration& period);
+    RR_OVIRTUAL void SetPeriod(const boost::posix_time::time_duration& period) RR_OVERRIDE;
 
-    virtual bool IsRunning();
+    RR_OVIRTUAL bool IsRunning() RR_OVERRIDE;
 
-    virtual void Clear();
+    RR_OVIRTUAL void Clear() RR_OVERRIDE;
 
-    virtual ~WallTimer() {}
+    RR_OVIRTUAL ~WallTimer() RR_OVERRIDE {}
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

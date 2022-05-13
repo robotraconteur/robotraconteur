@@ -3,6 +3,7 @@
 #endif
 
 #include "ServiceTestClient2.h"
+// NOLINTBEGIN
 
 namespace RobotRaconteurTest
 {
@@ -91,7 +92,7 @@ void ServiceTestClient2::AsyncTestWirePeekPoke()
 }
 
 void ServiceTestClient2::AsyncTestWirePeekPoke1(const int32_t& value, const TimeSpec& ts,
-                                                RR_SHARED_PTR<RobotRaconteurException> err)
+                                                const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     if (err)
     {
@@ -111,7 +112,7 @@ void ServiceTestClient2::AsyncTestWirePeekPoke1(const int32_t& value, const Time
         75738261, boost::bind(&ServiceTestClient2::AsyncTestWirePeekPoke2, this, RR_BOOST_PLACEHOLDERS(_1)));
 }
 
-void ServiceTestClient2::AsyncTestWirePeekPoke2(RR_SHARED_PTR<RobotRaconteurException> err)
+void ServiceTestClient2::AsyncTestWirePeekPoke2(const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     if (err)
     {
@@ -126,7 +127,7 @@ void ServiceTestClient2::AsyncTestWirePeekPoke2(RR_SHARED_PTR<RobotRaconteurExce
 }
 
 void ServiceTestClient2::AsyncTestWirePeekPoke3(const int32_t& value, const TimeSpec& ts,
-                                                RR_SHARED_PTR<RobotRaconteurException> err)
+                                                const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     if (err)
     {
@@ -720,3 +721,5 @@ void ServiceTestClient2::TestExceptionParams()
     }
 }
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

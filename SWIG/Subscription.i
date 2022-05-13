@@ -89,8 +89,8 @@ namespace RobotRaconteur
 	class WrappedServiceInfo2SubscriptionDirector
 	{
 	public:
-		virtual void ServiceDetected(boost::shared_ptr<RobotRaconteur::WrappedServiceInfo2Subscription> subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2Wrapped& service) {}
-		virtual void ServiceLost(boost::shared_ptr<RobotRaconteur::WrappedServiceInfo2Subscription> subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2Wrapped& service) {}
+		virtual void ServiceDetected(const boost::shared_ptr<RobotRaconteur::WrappedServiceInfo2Subscription>& subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2Wrapped& service) = 0;
+		virtual void ServiceLost(const boost::shared_ptr<RobotRaconteur::WrappedServiceInfo2Subscription>& subscription, const ServiceSubscriptionClientID& id, const ServiceInfo2Wrapped& service)  = 0;
 
 		virtual ~WrappedServiceInfo2SubscriptionDirector() {}
 	};
@@ -113,9 +113,9 @@ namespace RobotRaconteur
 	class WrappedServiceSubscriptionDirector
 	{
 	public:
-		virtual void ClientConnected(boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription> subscription, const ServiceSubscriptionClientID& id, boost::shared_ptr<WrappedServiceStub> client) = 0;
-		virtual void ClientDisconnected(boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription> subscription, const ServiceSubscriptionClientID& id, boost::shared_ptr<WrappedServiceStub> client) = 0;
-		virtual void ClientConnectFailed(boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription> subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, HandlerErrorInfo& error) = 0;
+		virtual void ClientConnected(const boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& slient) = 0;
+		virtual void ClientDisconnected(const boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& slient) = 0;
+		virtual void ClientConnectFailed(const boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, HandlerErrorInfo& error) = 0;
 		
 		virtual ~WrappedServiceSubscriptionDirector() {}
 	};
@@ -139,8 +139,8 @@ namespace RobotRaconteur
 
 		void Close();
 		
-		void ClaimClient(boost::shared_ptr<WrappedServiceStub> client);
-		void ReleaseClient(boost::shared_ptr<WrappedServiceStub> client);
+		void ClaimClient(const boost::shared_ptr<WrappedServiceStub>& client);
+		void ReleaseClient(const boost::shared_ptr<WrappedServiceStub>& client);
 
 		uint32_t GetConnectRetryDelay();
 		void SetConnectRetryDelay(uint32_t delay_milliseconds);
@@ -174,7 +174,7 @@ namespace RobotRaconteur
 	class WrappedWireSubscriptionDirector
 	{
 	public:
-		virtual void WireValueChanged(boost::shared_ptr<RobotRaconteur::WrappedWireSubscription> wire_subscription, WrappedService_typed_packet& value, const TimeSpec& time) = 0;
+		virtual void WireValueChanged(const boost::shared_ptr<RobotRaconteur::WrappedWireSubscription>& wire_subscription, WrappedService_typed_packet& value, const TimeSpec& time) = 0;
 		
 		virtual ~WrappedWireSubscriptionDirector() {}
 	};
@@ -220,7 +220,7 @@ namespace RobotRaconteur
 	class WrappedPipeSubscriptionDirector
 	{
 	public:
-		virtual void PipePacketReceived(boost::shared_ptr<RobotRaconteur::WrappedPipeSubscription> pipe_subscription) = 0;
+		virtual void PipePacketReceived(const boost::shared_ptr<RobotRaconteur::WrappedPipeSubscription>& pipe_subscription) = 0;
 
 		virtual ~WrappedPipeSubscriptionDirector() {}
 	};
@@ -260,14 +260,14 @@ namespace RobotRaconteur
 
 	std::vector<ServiceSubscriptionClientID> WrappedServiceInfo2SubscriptionServicesToVector(std::map<ServiceSubscriptionClientID, ServiceInfo2Wrapped >& infos);
 
-	boost::shared_ptr<WrappedServiceInfo2Subscription> WrappedSubscribeServiceInfo2(boost::shared_ptr<RobotRaconteurNode> node, const std::vector<std::string>& service_types, boost::shared_ptr<WrappedServiceSubscriptionFilter> filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
+	boost::shared_ptr<WrappedServiceInfo2Subscription> WrappedSubscribeServiceInfo2(const boost::shared_ptr<RobotRaconteurNode>& node, const std::vector<std::string>& service_types, boost::shared_ptr<WrappedServiceSubscriptionFilter> filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
 
 	std::vector<ServiceSubscriptionClientID> WrappedServiceSubscriptionClientsToVector(std::map<ServiceSubscriptionClientID, boost::shared_ptr<WrappedServiceStub> >& clients);
 
-	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeServiceByType(boost::shared_ptr<RobotRaconteurNode> node, const std::vector<std::string>& service_types, boost::shared_ptr<WrappedServiceSubscriptionFilter> filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
+	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeServiceByType(const boost::shared_ptr<RobotRaconteurNode>& node, const std::vector<std::string>& service_types, boost::shared_ptr<WrappedServiceSubscriptionFilter> filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
 
-	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(boost::shared_ptr<RobotRaconteurNode> node, const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
+	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(const boost::shared_ptr<RobotRaconteurNode>& node, const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
 	
-	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(boost::shared_ptr<RobotRaconteurNode> node, const std::string& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
+	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(const boost::shared_ptr<RobotRaconteurNode>& node, const std::string& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
 
 }

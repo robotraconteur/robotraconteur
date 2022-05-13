@@ -26,49 +26,43 @@ namespace RobotRaconteur
 
 RobotRaconteurException::RobotRaconteurException() : std::runtime_error("")
 {
-    InitializeInstanceFields();
-    what_string = ToString();
+    ErrorCode = MessageErrorType_None;
+    what_string = RobotRaconteurException::ToString();
 }
 
 RobotRaconteurException::RobotRaconteurException(MessageErrorType ErrorCode, const std::string& error,
-                                                 const std::string& message, std::string sub_name,
-                                                 RR_INTRUSIVE_PTR<RRValue> param_)
+                                                 const std::string& message, const std::string& sub_name,
+                                                 const RR_INTRUSIVE_PTR<RRValue>& param_)
     : std::runtime_error((error + " " + message).c_str())
 {
-    InitializeInstanceFields();
     Error = error;
     Message = message;
     this->ErrorCode = ErrorCode;
     this->ErrorSubName = sub_name;
     this->ErrorParam = param_;
-    what_string = ToString();
+    what_string = RobotRaconteurException::ToString();
 }
 
 RobotRaconteurException::RobotRaconteurException(const std::string& message, std::exception& innerexception)
     : std::runtime_error(message.c_str())
 {
-
-    InitializeInstanceFields();
+    RR_UNUSED(innerexception);
+    ErrorCode = MessageErrorType_None;
 }
 
 std::string RobotRaconteurException::ToString() { return "RobotRaconteurException: " + Error + ": " + Message; }
 
 const char* RobotRaconteurException::what() const throw() { return what_string.c_str(); }
 
-void RobotRaconteurException::InitializeInstanceFields()
-{
-    ErrorCode = MessageErrorType_None;
-    Error.clear();
-}
-
 #define RR_EXCEPTION_DEF_1(exp_cpp_type, exp_code, exp_type_str)                                                       \
-    exp_cpp_type::exp_cpp_type(const std::string& message, std::string sub_type, RR_INTRUSIVE_PTR<RRValue> param_)     \
+    exp_cpp_type::exp_cpp_type(const std::string& message, const std::string& sub_type,                                \
+                               const RR_INTRUSIVE_PTR<RRValue>& param_)                                                \
         : RobotRaconteurException(exp_code, exp_type_str, message, sub_type, param_)                                   \
     {}
 
 #define RR_EXCEPTION_DEF_2(exp_cpp_type, exp_code)                                                                     \
-    exp_cpp_type::exp_cpp_type(const std::string& error, const std::string& message, std::string sub_type,             \
-                               RR_INTRUSIVE_PTR<RRValue> param_)                                                       \
+    exp_cpp_type::exp_cpp_type(const std::string& error, const std::string& message, const std::string& sub_type,      \
+                               const RR_INTRUSIVE_PTR<RRValue>& param_)                                                \
         : RobotRaconteurException(exp_code, error, message, sub_type, param_)                                          \
     {}                                                                                                                 \
     exp_cpp_type::exp_cpp_type(std::exception& innerexception)                                                         \
@@ -82,7 +76,7 @@ RR_EXCEPTION_TYPES_INIT(RR_EXCEPTION_DEF_1, RR_EXCEPTION_DEF_2)
 #undef RR_EXCEPTION_DEF_2
 
 void RobotRaconteurExceptionUtil::ExceptionToMessageEntry(std::exception& exception,
-                                                          RR_INTRUSIVE_PTR<MessageEntry> entry)
+                                                          const RR_INTRUSIVE_PTR<MessageEntry>& entry)
 {
     if (dynamic_cast<RobotRaconteurException*>(&exception) != 0)
     {
@@ -124,7 +118,7 @@ void RobotRaconteurExceptionUtil::ExceptionToMessageEntry(std::exception& except
         return RR_MAKE_SHARED<exp_cpp_type>(error_name, error_string, error_sub_name, error_param);
 
 RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::MessageEntryToException(
-    RR_INTRUSIVE_PTR<MessageEntry> entry)
+    const RR_INTRUSIVE_PTR<MessageEntry>& entry)
 {
     std::string error_name = entry->FindElement("errorname")->CastDataToString();
     std::string error_string = entry->FindElement("errorstring")->CastDataToString();
@@ -167,7 +161,7 @@ RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::MessageEntry
     case exp_code:                                                                                                     \
         throw exp_cpp_type(error_name, error_string, error_sub_name, error_param);
 
-void RobotRaconteurExceptionUtil::ThrowMessageEntryException(RR_INTRUSIVE_PTR<MessageEntry> entry)
+void RobotRaconteurExceptionUtil::ThrowMessageEntryException(const RR_INTRUSIVE_PTR<MessageEntry>& entry)
 {
     std::string error_name = entry->FindElement("errorname")->CastDataToString();
     std::string error_string = entry->FindElement("errorstring")->CastDataToString();
@@ -224,7 +218,7 @@ RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::DownCastExce
 }
 
 RR_SHARED_PTR<RobotRaconteurException> RobotRaconteurExceptionUtil::DownCastException(
-    RR_SHARED_PTR<RobotRaconteurException> err)
+    const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     RobotRaconteurException* err1 = err.get();
     return DownCastException(*err1);
@@ -273,7 +267,7 @@ void RobotRaconteurExceptionUtil::DownCastAndThrowException(RobotRaconteurExcept
     throw RobotRaconteurException(err.ErrorCode, err.Error, err.Message, err.ErrorSubName, err.ErrorParam);
 }
 
-void RobotRaconteurExceptionUtil::DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurException> err)
+void RobotRaconteurExceptionUtil::DownCastAndThrowException(const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     RobotRaconteurException* err1 = err.get();
     DownCastAndThrowException(*err1);

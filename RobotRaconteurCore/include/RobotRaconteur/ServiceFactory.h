@@ -58,7 +58,7 @@ class ROBOTRACONTEUR_CORE_API ServiceFactory
   public:
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-    void SetNode(RR_SHARED_PTR<RobotRaconteurNode> node);
+    void SetNode(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     virtual ~ServiceFactory() {}
 
@@ -78,40 +78,42 @@ class ROBOTRACONTEUR_CORE_API ServiceFactory
 
     virtual RR_SHARED_PTR<StructureStub> FindStructureStub(boost::string_ref s) = 0;
 
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRStructure> structin) = 0;
+    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(
+        const RR_INTRUSIVE_PTR<RRStructure>& structin) = 0;
 
-    virtual RR_INTRUSIVE_PTR<RRValue> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementNestedElementList> mstructin) = 0;
+    virtual RR_INTRUSIVE_PTR<RRValue> UnpackStructure(
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& mstructin) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(
-        RR_INTRUSIVE_PTR<RRPodBaseArray> structure) = 0;
+        const RR_INTRUSIVE_PTR<RRPodBaseArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(
-        RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure) = 0;
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
-        RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> structure) = 0;
+        const RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
-        RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure) = 0;
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(
-        RR_INTRUSIVE_PTR<RRNamedBaseArray> structure) = 0;
+        const RR_INTRUSIVE_PTR<RRNamedBaseArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(
-        RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure) = 0;
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
-        RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> structure) = 0;
+        const RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray>& structure) = 0;
 
     virtual RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
-        RR_INTRUSIVE_PTR<MessageElementNestedElementList> structure) = 0;
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& structure) = 0;
 
     virtual RR_SHARED_PTR<ServiceStub> CreateStub(boost::string_ref objecttype, boost::string_ref path,
-                                                  RR_SHARED_PTR<ClientContext> context) = 0;
+                                                  const RR_SHARED_PTR<ClientContext>& context) = 0;
 
     virtual RR_SHARED_PTR<ServiceSkel> CreateSkel(boost::string_ref objecttype, boost::string_ref path,
-                                                  RR_SHARED_PTR<RRObject> obj,
-                                                  RR_SHARED_PTR<ServerContext> context) = 0;
+                                                  const RR_SHARED_PTR<RRObject>& obj,
+                                                  const RR_SHARED_PTR<ServerContext>& context) = 0;
 
     /**
      * @brief Return the parsed ServiceDefinition
@@ -124,7 +126,8 @@ class ROBOTRACONTEUR_CORE_API ServiceFactory
 
     virtual void DownCastAndThrowException(RobotRaconteurException& exp) = 0;
 
-    virtual RR_SHARED_PTR<RobotRaconteurException> DownCastException(RR_SHARED_PTR<RobotRaconteurException> exp) = 0;
+    virtual RR_SHARED_PTR<RobotRaconteurException> DownCastException(
+        const RR_SHARED_PTR<RobotRaconteurException>& exp) = 0;
 
   private:
     RR_SHARED_PTR<ServiceDefinition> sdef;

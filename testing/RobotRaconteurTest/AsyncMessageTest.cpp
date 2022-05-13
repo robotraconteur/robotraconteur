@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include <RobotRaconteur.h>
 
 #include "AsyncMessageTest.h"
@@ -62,7 +64,7 @@ void AsyncMessageReaderTest::Test1()
     }
 }
 
-void AsyncMessageReaderTest::DoTest(RR_INTRUSIVE_PTR<Message> m, uint16_t version, boost::random::mt19937& rng)
+void AsyncMessageReaderTest::DoTest(const RR_INTRUSIVE_PTR<Message>& m, uint16_t version, boost::random::mt19937& rng)
 {
     boost::shared_array<uint8_t> buf;
     size_t message_size = 0;
@@ -417,7 +419,7 @@ void AsyncMessageWriterTest::RandomTest4(size_t iterations)
     }
 }
 
-void AsyncMessageWriterTest::WriteMessage(RR_INTRUSIVE_PTR<Message> m, uint16_t version)
+void AsyncMessageWriterTest::WriteMessage(const RR_INTRUSIVE_PTR<Message>& m, uint16_t version)
 {
     size_t message_size;
     boost::shared_array<uint8_t> buf;
@@ -475,3 +477,4 @@ void AsyncMessageWriterTest::LoadRandomTest()
 }
 
 } // namespace RobotRaconteurTest
+  // NOLINTEND

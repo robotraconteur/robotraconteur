@@ -24,7 +24,7 @@ namespace detail
 class LocalTransportDiscovery
 {
   public:
-    LocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    LocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node);
     virtual void Init() = 0;
     virtual void Shutdown() = 0;
     virtual ~LocalTransportDiscovery() {}

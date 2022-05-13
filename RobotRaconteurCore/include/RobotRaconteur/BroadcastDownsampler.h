@@ -79,7 +79,7 @@ class ROBOTRACONTEUR_CORE_API BroadcastDownsampler : public RR_ENABLE_SHARED_FRO
      * @param context The ServerContext of the service
      * @param default_downsample The default downsample for clients
      */
-    void Init(RR_SHARED_PTR<ServerContext> context, uint32_t default_downsample = 0);
+    void Init(const RR_SHARED_PTR<ServerContext>& context, uint32_t default_downsample = 0);
 
     /**
      * @brief Get the downsample for the specified client
@@ -120,7 +120,7 @@ class ROBOTRACONTEUR_CORE_API BroadcastDownsampler : public RR_ENABLE_SHARED_FRO
      *
      * @param broadcaster The broadcaster to add
      */
-    void AddPipeBroadcaster(RR_SHARED_PTR<PipeBroadcasterBase> broadcaster);
+    void AddPipeBroadcaster(const RR_SHARED_PTR<PipeBroadcasterBase>& broadcaster);
 
     /**
      * @brief Add a WireBroadcaster to the downsampler
@@ -129,7 +129,7 @@ class ROBOTRACONTEUR_CORE_API BroadcastDownsampler : public RR_ENABLE_SHARED_FRO
      *
      * @param broadcaster The broadcaster to add
      */
-    void AddWireBroadcaster(RR_SHARED_PTR<WireBroadcasterBase> broadcaster);
+    void AddWireBroadcaster(const RR_SHARED_PTR<WireBroadcasterBase>& broadcaster);
 
   protected:
     RR_WEAK_PTR<ServerContext> context;
@@ -140,13 +140,13 @@ class ROBOTRACONTEUR_CORE_API BroadcastDownsampler : public RR_ENABLE_SHARED_FRO
 
     boost::mutex this_lock;
 
-    static bool wire_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, RR_SHARED_PTR<WireBroadcasterBase>& wire,
+    static bool wire_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, const RR_SHARED_PTR<WireBroadcasterBase>& wire,
                                uint32_t ep);
-    static bool pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, RR_SHARED_PTR<PipeBroadcasterBase>& wire,
+    static bool pipe_predicate(RR_WEAK_PTR<BroadcastDownsampler> this_, const RR_SHARED_PTR<PipeBroadcasterBase>& wire,
                                uint32_t ep, uint32_t index);
 
-    static void server_event(RR_WEAK_PTR<BroadcastDownsampler> this_, RR_SHARED_PTR<ServerContext> ctx,
-                             ServerServiceListenerEventType evt, RR_SHARED_PTR<void> p);
+    static void server_event(RR_WEAK_PTR<BroadcastDownsampler> this_, const RR_SHARED_PTR<ServerContext>& ctx,
+                             ServerServiceListenerEventType evt, const RR_SHARED_PTR<void>& p);
 };
 
 /**

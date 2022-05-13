@@ -4,6 +4,7 @@
 
 #include "ServiceTest.h"
 
+// NOLINTBEGIN
 using namespace std;
 using namespace boost;
 using namespace com::robotraconteur::testing::TestService1;
@@ -14,7 +15,7 @@ using std::exception;
 namespace RobotRaconteurTest
 {
 
-RobotRaconteurTest_testroot::RobotRaconteurTest_testroot(RR_SHARED_PTR<TcpTransport> tcptransport)
+RobotRaconteurTest_testroot::RobotRaconteurTest_testroot(const RR_SHARED_PTR<TcpTransport>& tcptransport)
 {
     this->tcptransport = tcptransport;
     o1 = RR_MAKE_SHARED<sub1_impl>();
@@ -127,7 +128,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > RobotRaconteurTest_testroot::
     return (AttachRRArrayCopy(d2_b, 392));
 }
 
-void RobotRaconteurTest_testroot::set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > value)
+void RobotRaconteurTest_testroot::set_d2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value)
 {
     double d2_a[] = {
         8.805544e-12,  3.735066e+12,  3.491919e+17,  4.979833e+12,  -4.042302e+00, 2.927731e-12,  5.945355e+11,
@@ -234,7 +235,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > RobotRaconteurTest_testroot::
     return (AttachRRArrayCopy(d3_b, 16));
 }
 
-void RobotRaconteurTest_testroot::set_d3(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > value)
+void RobotRaconteurTest_testroot::set_d3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value)
 {
     double d3_a[] = {9.025110e-18, 3.567231e+17, 2.594489e+01, 2.311708e-04, 7.345164e+13, 6.550284e-01,
                      1.969554e+12, 9.451979e-05, 5.900637e-09, 9.975667e+03, 6.549533e-17, 2.227145e-13,
@@ -248,7 +249,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > RobotRaconteurTest_testroot::
     return (AttachRRArrayCopy(d4_b, 6));
 }
 
-void RobotRaconteurTest_testroot::set_d4(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > value)
+void RobotRaconteurTest_testroot::set_d4(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value)
 {
     double d4_a[] = {-4.207179e-09, -3.611333e+11, -4.155626e-06, -2.458459e+10, 2.826045e-11,
                      3.511191e-08,  4.759250e-07,  2.455883e+09,  4.182578e+11,  4.732337e-14,
@@ -286,7 +287,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> > RobotRaconteurTest_te
     return (AllocateRRMultiDimArray<double>(AttachRRArrayCopy(d5_b1, 3), AttachRRArrayCopy(d5_b2, 150)));
 }
 
-void RobotRaconteurTest_testroot::set_d5(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> > value)
+void RobotRaconteurTest_testroot::set_d5(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> >& value)
 {
     uint32_t d5_a1[] = {8, 6, 2};
     double d5_a2[] = {
@@ -334,7 +335,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> > RobotRaconteurTest_te
     return (AllocateRRMultiDimArray<double>(AttachRRArrayCopy(d5_b1, 2), AttachRRArrayCopy(d5_b2, 9)));
 }
 
-void RobotRaconteurTest_testroot::set_d6(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> > value)
+void RobotRaconteurTest_testroot::set_d6(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> >& value)
 {
     uint32_t d5_a1[] = {3, 3};
     double d5_a2[] = {-5.528040e-08, 3.832644e-01, -9.139211e-22, -4.919312e-05, 3.809620e-11,
@@ -482,7 +483,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float> > RobotRaconteurTest_testroot::g
     return (AttachRRArrayCopy(s2_b, 856));
 }
 
-void RobotRaconteurTest_testroot::set_s2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float> > value)
+void RobotRaconteurTest_testroot::set_s2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float> >& value)
 {
     float s2_a[] = {
         -1.374271e+12f, 1.798486e-08f,  -4.845395e-08f, -4.785331e+12f, -2.914127e+04f, -1.753064e-17f, -4.063563e-09f,
@@ -590,7 +591,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> > RobotRaconteurTest_testroot::
     return (AttachRRArrayCopy(i8_2b, 967));
 }
 
-void RobotRaconteurTest_testroot::set_i8_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> > value)
+void RobotRaconteurTest_testroot::set_i8_2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> >& value)
 {
     int8_t i8_2a[] = {
         -66,  34,   -121, -118, -12,  -83,  -43,  55,   -53, 31,   -100, -37,  -116, 69,   22,   -60,  59,   32,   51,
@@ -670,7 +671,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t> > RobotRaconteurTest_testroot:
     return (AttachRRArrayCopy(u8_2b, 628));
 }
 
-void RobotRaconteurTest_testroot::set_u8_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t> > value)
+void RobotRaconteurTest_testroot::set_u8_2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t> >& value)
 {
     uint8_t u8_2a[] = {
         52,  40,  13,  185, 137, 3,   173, 236, 60,  18,  206, 224, 231, 19,  31,  139, 177, 201, 100, 37,  8,   94,
@@ -726,7 +727,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t> > RobotRaconteurTest_t
     return AllocateRRMultiDimArray<uint8_t>(AttachRRArrayCopy(u8_3_1b1, 2), AttachRRArrayCopy(u8_3_1b2, 200));
 }
 
-void RobotRaconteurTest_testroot::set_u8_3(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t> > value)
+void RobotRaconteurTest_testroot::set_u8_3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t> >& value)
 {
     uint32_t u8_3_1a1[] = {30, 10};
     uint8_t u8_3_1a2[] = {
@@ -797,7 +798,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t> > RobotRaconteurTest_testroot:
     return (AttachRRArrayCopy(i16_2b, 476));
 }
 
-void RobotRaconteurTest_testroot::set_i16_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t> > value)
+void RobotRaconteurTest_testroot::set_i16_2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t> >& value)
 {
     int16_t i16_2a[] = {
         -29064, 7306,   1457,   -19474, -671,   22876,  -14357, -18020, -23418, -10298, 1040,   -2415,  -22890, 4293,
@@ -902,7 +903,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t> > RobotRaconteurTest_testroot
     return (AttachRRArrayCopy(u16_2b, 200));
 }
 
-void RobotRaconteurTest_testroot::set_u16_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t> > value)
+void RobotRaconteurTest_testroot::set_u16_2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t> >& value)
 {
     uint16_t u16_2a[] = {
         27153, 43996, 41432, 58304, 12942, 58876, 28186, 11185, 10827, 17769, 13091, 23017, 17671, 49113, 6987,  35547,
@@ -1039,7 +1040,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > RobotRaconteurTest_testroot:
     return (AttachRRArrayCopy(i32_1b, 822));
 }
 
-void RobotRaconteurTest_testroot::set_i32_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > value)
+void RobotRaconteurTest_testroot::set_i32_2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> >& value)
 {
     int32_t i32_1a[] = {
         -966485083,  547919123,   -1194190604, 1550099195,  -86896479,   -1346998266, -111775936,  1595883280,
@@ -1175,7 +1176,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > RobotRaconteurTest_testroot:
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_i32_huge(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > value)
+void RobotRaconteurTest_testroot::set_i32_huge(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> >& value)
 {
     if (value->size() != 2621440)
         throw std::exception();
@@ -1311,7 +1312,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > RobotRaconteurTest_testroot
     return (AttachRRArrayCopy(u32_1b, 886));
 }
 
-void RobotRaconteurTest_testroot::set_u32_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > value)
+void RobotRaconteurTest_testroot::set_u32_2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> >& value)
 {
     uint32_t u32_1a[] = {
         237099665u,  1725693514u, 3671290215u, 2838122575u, 2174235839u, 1926762547u, 837710207u,  2675306390u,
@@ -1429,7 +1430,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t> > RobotRaconteurTest_testroot:
     return (AttachRRArrayCopy(i64_2b, 166));
 }
 
-void RobotRaconteurTest_testroot::set_i64_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t> > value)
+void RobotRaconteurTest_testroot::set_i64_2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t> >& value)
 {
     int64_t i64_2a[] = {
         -1418708830105823852, -1357833931563696072, -8308127073437794904, 6203263204523798112,  7076661289157584762,
@@ -1507,7 +1508,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t> > RobotRaconteurTest_testroot
     return (AttachRRArrayCopy(u64_1b, 122));
 }
 
-void RobotRaconteurTest_testroot::set_u64_2(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t> > value)
+void RobotRaconteurTest_testroot::set_u64_2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t> >& value)
 {
     uint64_t u64_1a[] = {6515978873578326855u,  1465640522145789825u,  14139647178981527348u, 17376225719361197745u,
                          4827355217349405315u,  5237172857588412536u,  11185863429255124449u, 11922950710462888186u,
@@ -1668,7 +1669,7 @@ RR_INTRUSIVE_PTR<teststruct1> RobotRaconteurTest_testroot::get_struct1()
     return s1;
 }
 
-void RobotRaconteurTest_testroot::set_struct1(RR_INTRUSIVE_PTR<teststruct1> s2)
+void RobotRaconteurTest_testroot::set_struct1(const RR_INTRUSIVE_PTR<teststruct1>& s2)
 {
 
     double dat1a[] = {
@@ -1810,7 +1811,7 @@ RR_INTRUSIVE_PTR<teststruct2> RobotRaconteurTest_testroot::get_struct2()
     return a;
 }
 
-void RobotRaconteurTest_testroot::set_struct2(RR_INTRUSIVE_PTR<teststruct2> value)
+void RobotRaconteurTest_testroot::set_struct2(const RR_INTRUSIVE_PTR<teststruct2>& value)
 {
     double a1[] = {
         -1.451096e-09, -3.762302e-18, 2.016877e+04,  -4.171245e+16, 1.500851e+09,  -3.071385e-05, 1.329949e+09,
@@ -1842,7 +1843,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> 
 }
 
 void RobotRaconteurTest_testroot::set_is_d1(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > >& value)
 {
     if (value->size() != 3)
         throw std::exception();
@@ -1864,7 +1865,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<doub
 }
 
 void RobotRaconteurTest_testroot::set_is_d2(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > >& value)
 {
     if (value->size() != 2)
         throw std::exception();
@@ -1891,7 +1892,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> 
 }
 
 void RobotRaconteurTest_testroot::set_is_d3(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > >& value)
 {
     double is_d3_2a[] = {4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
                          -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
@@ -1929,7 +1930,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<doub
 }
 
 void RobotRaconteurTest_testroot::set_is_d4(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > >& value)
 {
     double is_d4_2a[] = {1.771838e+06, 3.037284e-01,  -1.739742e-02, 1.399508e-20,  3.605232e-21,
                          3.517522e+14, 4.887514e+14,  3.505442e-03,  -3.968972e+18, 1.422037e-20,
@@ -1975,7 +1976,7 @@ RobotRaconteurTest_testroot::get_is_d5()
 }
 
 void RobotRaconteurTest_testroot::set_is_d5(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double> > >& value)
 {
     uint32_t is_d5_2_1a[] = {10, 20};
     double is_d5_2_1b[] = {
@@ -2039,7 +2040,7 @@ RobotRaconteurTest_testroot::get_is_d6()
 }
 
 void RobotRaconteurTest_testroot::set_is_d6(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRMultiDimArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRMultiDimArray<double> > >& value)
 {
     uint32_t is_d6_2_1a[] = {8, 10};
     double is_d6_2_1b[] = {
@@ -2072,7 +2073,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<char> > 
 }
 
 void RobotRaconteurTest_testroot::set_is_str1(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<char> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<char> > >& value)
 {
     if (value->size() != 1)
         throw std::exception();
@@ -2089,7 +2090,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<char
 }
 
 void RobotRaconteurTest_testroot::set_is_str2(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<char> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<char> > >& value)
 {
     if (value->size() != 1)
         throw std::exception();
@@ -2110,7 +2111,8 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, teststruct2> > RobotRaconteurTes
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_is_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, teststruct2> > value)
+void RobotRaconteurTest_testroot::set_is_struct1(
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, teststruct2> >& value)
 {
     double is_struct1_2_1a[] = {-2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
                                 -3.256612e-02, -1.855481e-19, 3.801916e+07,  2.145894e+09,  4.487676e+12,
@@ -2135,7 +2137,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, teststruct2> > RobotRaconteu
 }
 
 void RobotRaconteurTest_testroot::set_is_struct2(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, teststruct2> > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, teststruct2> >& value)
 {
     double is_struct2_2_1a[] = {6.931327e-21,  4.527137e-02,  1.260822e-18,  3.592805e-12,  1.088317e-05,
                                 3.305865e+03,  -9.798828e-20, 1.497504e+18,  -3.653592e+01, 1.473952e+10,
@@ -2158,7 +2160,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > Robo
 }
 
 void RobotRaconteurTest_testroot::set_list_d1(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > >& value)
 {
     if (value->size() != 3)
         throw std::exception();
@@ -2186,7 +2188,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > Robo
 }
 
 void RobotRaconteurTest_testroot::set_list_d3(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > >& value)
 {
     double is_d3_2a[] = {4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
                          -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
@@ -2232,7 +2234,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double> 
 }
 
 void RobotRaconteurTest_testroot::set_list_d5(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double> > >& value)
 {
     uint32_t is_d5_2_1a[] = {10, 20};
     double is_d5_2_1b[] = {
@@ -2281,7 +2283,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > > RobotR
 }
 
 void RobotRaconteurTest_testroot::set_list_str1(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<char> > >& value)
 {
     if (value->size() != 1)
         throw std::exception();
@@ -2302,7 +2304,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2> > RobotRaconteurTest_testro
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_list_struct1(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2> > value)
+void RobotRaconteurTest_testroot::set_list_struct1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2> >& value)
 {
     double is_struct1_2_1a[] = {-2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
                                 -3.256612e-02, -1.855481e-19, 3.801916e+07,  2.145894e+09,  4.487676e+12,
@@ -2330,7 +2332,7 @@ RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2> RobotRaco
 }
 
 void RobotRaconteurTest_testroot::set_struct3(
-    RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2> value)
+    const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2>& value)
 {
     double struct3_1a[] = {-2.426765e+05, -9.410735e+01, -1.667915e+12, -4.084240e-05, 3.199460e+03,
                            8.256717e-12,  -4.772119e-11, -1.061407e-13, 2.759750e+02,  -1.212549e+10,
@@ -2341,7 +2343,7 @@ void RobotRaconteurTest_testroot::set_struct3(
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var1() { return var1; }
 
-void RobotRaconteurTest_testroot::set_var1(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value) { var1 = value; }
+void RobotRaconteurTest_testroot::set_var1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value) { var1 = value; }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRValue> > RobotRaconteurTest_testroot::get_var2()
 {
@@ -2349,7 +2351,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRValue> > Robot
 }
 
 void RobotRaconteurTest_testroot::set_var2(
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRValue> > value)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRValue> >& value)
 {
     var2 = value;
 }
@@ -2362,7 +2364,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_n
     return (AttachRRArrayCopy(var_numa, 15));
 }
 
-void RobotRaconteurTest_testroot::set_var_num(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
+void RobotRaconteurTest_testroot::set_var_num(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)
 {
     int32_t var_numb[] = {-1046369769, 1950632347, 1140727074, -1277424443, 163999900,
                           970815027,   545593183,  514305170,  1896372264,  1385916382};
@@ -2374,7 +2376,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_s
     return stringToRRArray("Hello Client!");
 }
 
-void RobotRaconteurTest_testroot::set_var_str(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
+void RobotRaconteurTest_testroot::set_var_str(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)
 {
     if (RRArrayToString(rr_cast<RRArray<char> >(value)) != "Hello Server!")
         throw std::exception();
@@ -2391,7 +2393,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_s
     return o;
 }
 
-void RobotRaconteurTest_testroot::set_var_struct(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
+void RobotRaconteurTest_testroot::set_var_struct(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)
 {
     double var_struct1_1a[] = {-4.945426e-20, 1.763386e+13,  3.431578e-04,  4.411409e+17,  -2.690201e+03,
                                3.025939e-10,  -3.659846e+11, -4.780435e-10, -3.246816e+14, -1.815578e+04,
@@ -2407,7 +2409,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_v
     return d;
 }
 
-void RobotRaconteurTest_testroot::set_var_vector(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
+void RobotRaconteurTest_testroot::set_var_vector(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)
 {
     RR_INTRUSIVE_PTR<RRMap<int32_t, RRValue> > d = rr_cast<RRMap<int32_t, RRValue> >(value);
     if (d->size() != 1)
@@ -2423,7 +2425,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_d
     return d;
 }
 
-void RobotRaconteurTest_testroot::set_var_dictionary(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
+void RobotRaconteurTest_testroot::set_var_dictionary(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)
 {
     RR_INTRUSIVE_PTR<RRMap<string, RRValue> > d = rr_cast<RRMap<string, RRValue> >(value);
     if (d->size() != 1)
@@ -2439,7 +2441,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_l
     return d;
 }
 
-void RobotRaconteurTest_testroot::set_var_list(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
+void RobotRaconteurTest_testroot::set_var_list(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)
 {
     RR_INTRUSIVE_PTR<RRList<RRValue> > d = rr_cast<RRList<RRValue> >(value);
     if (d->size() != 1)
@@ -2462,7 +2464,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_m
     return var_a_1;
 }
 
-void RobotRaconteurTest_testroot::set_var_multidimarray(RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> value)
+void RobotRaconteurTest_testroot::set_var_multidimarray(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)
 {
     uint32_t var_a_2a[] = {5, 4};
     double var_a_2b[] = {3.792953e+00,  2.968121e-17,  -3.976413e-15, 4.392986e+19,  2.197463e+10,
@@ -2481,7 +2483,7 @@ void RobotRaconteurTest_testroot::set_errtest(double value) { throw runtime_erro
 
 RR_INTRUSIVE_PTR<teststruct1> RobotRaconteurTest_testroot::get_nulltest() { return RR_INTRUSIVE_PTR<teststruct1>(); }
 
-void RobotRaconteurTest_testroot::set_nulltest(RR_INTRUSIVE_PTR<teststruct1> value)
+void RobotRaconteurTest_testroot::set_nulltest(const RR_INTRUSIVE_PTR<teststruct1>& value)
 {
     if (value)
         throw std::exception();
@@ -2632,7 +2634,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 }
 
 void RobotRaconteurTest_testroot::set_p1(
-    RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > >& value)
 {
     p1 = value;
     p1->SetPipeConnectCallback(
@@ -2693,7 +2695,8 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > > RobotRacont
     return p2;
 }
 
-void RobotRaconteurTest_testroot::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > > value)
+void RobotRaconteurTest_testroot::set_p2(
+    const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > >& value)
 {
     p2 = value;
     p2->SetPipeConnectCallback(
@@ -2739,7 +2742,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<double> > RobotRaconteurTest_testroot::get_br
     boost::mutex::scoped_lock lock(broadcastpipe_lock);
     return broadcastpipe_pipe;
 }
-void RobotRaconteurTest_testroot::set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur::Pipe<double> > value)
+void RobotRaconteurTest_testroot::set_broadcastpipe(const RR_SHARED_PTR<RobotRaconteur::Pipe<double> >& value)
 {
     boost::mutex::scoped_lock lock(broadcastpipe_lock);
     if (broadcastpipe_pipe)
@@ -2775,7 +2778,8 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > RobotRaconteu
     return cb1;
 }
 
-void RobotRaconteurTest_testroot::set_cb1(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value)
+void RobotRaconteurTest_testroot::set_cb1(
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)
 {
     cb1 = value;
 }
@@ -2786,7 +2790,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >
 }
 
 void RobotRaconteurTest_testroot::set_cb2(
-    RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >& value)
 {
     cb2 = value;
 }
@@ -2798,7 +2802,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> >
 }
 
 void RobotRaconteurTest_testroot::set_cb3(
-    RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > >& value)
 {
     cb3 = value;
 }
@@ -2810,7 +2814,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > RobotRacon
 }
 
 void RobotRaconteurTest_testroot::set_cb_meaning_of_life(
-    RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > >& value)
 {
     cb_mol = value;
 }
@@ -2821,7 +2825,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > RobotRaconteu
 }
 
 void RobotRaconteurTest_testroot::set_cb_errtest(
-    RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)
 {
     cb_err = value;
 }
@@ -2857,7 +2861,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 }
 
 void RobotRaconteurTest_testroot::set_w1(
-    RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > >& value)
 {
     w1 = value;
     w1->SetWireConnectCallback(
@@ -2873,8 +2877,8 @@ void RobotRaconteurTest_testroot::w1_connect_callback(
 }
 
 void RobotRaconteurTest_testroot::w1_value_changed(
-    RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire, RR_INTRUSIVE_PTR<RRArray<double> > value,
-    TimeSpec time)
+    RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire,
+    const RR_INTRUSIVE_PTR<RRArray<double> >& value, TimeSpec time)
 {
     try
     {
@@ -2889,7 +2893,8 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > RobotRacont
     return w2;
 }
 
-void RobotRaconteurTest_testroot::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > value)
+void RobotRaconteurTest_testroot::set_w2(
+    const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > >& value)
 {
     w2 = value;
     w2->SetWireConnectCallback(
@@ -2905,7 +2910,7 @@ void RobotRaconteurTest_testroot::w2_connect_callback(
 }
 
 void RobotRaconteurTest_testroot::w2_value_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<teststruct2> > > wire,
-                                                   RR_INTRUSIVE_PTR<teststruct2> value, TimeSpec time)
+                                                   const RR_INTRUSIVE_PTR<teststruct2>& value, TimeSpec time)
 {
     try
     {
@@ -2922,7 +2927,7 @@ RobotRaconteurTest_testroot::get_w3()
 }
 
 void RobotRaconteurTest_testroot::set_w3(
-    RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > value)
+    const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > >& value)
 {
     w3 = value;
     w3->SetWireConnectCallback(
@@ -2939,7 +2944,7 @@ void RobotRaconteurTest_testroot::w3_connect_callback(
 
 void RobotRaconteurTest_testroot::w3_value_changed(
     RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > wire,
-    RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > value, TimeSpec time)
+    const RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> >& value, TimeSpec time)
 {
     try
     {
@@ -2955,7 +2960,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<double> > RobotRaconteurTest_testroot::get_br
     return broadcastwire_wire;
 }
 
-void RobotRaconteurTest_testroot::set_broadcastwire(RR_SHARED_PTR<RobotRaconteur::Wire<double> > value)
+void RobotRaconteurTest_testroot::set_broadcastwire(const RR_SHARED_PTR<RobotRaconteur::Wire<double> >& value)
 {
     boost::mutex::scoped_lock lock(broadcastwire_lock);
     if (broadcastwire_wire)
@@ -3011,11 +3016,11 @@ sub1_impl::sub1_impl() { o2_1 = RR_MAKE_SHARED<sub2_impl>(); }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > sub1_impl::get_d1() { return d1; }
 
-void sub1_impl::set_d1(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > value) { d1 = value; }
+void sub1_impl::set_d1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value) { d1 = value; }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> > sub1_impl::get_d2() { return d2; }
 
-void sub1_impl::set_d2(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> > value) { d2 = value; }
+void sub1_impl::set_d2(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> >& value) { d2 = value; }
 
 std::string sub1_impl::get_s_ind() { return s_ind; }
 
@@ -3101,22 +3106,22 @@ void sub3_impl::set_data3(double value) { data3 = value; }
 double sub3_impl::add(double d) { return d + 42; }
 
 void sub3_impl::async_get_ind(
-    boost::function<void(const std::string&, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    boost::function<void(const std::string&, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
         boost::bind(rr_handler, ind, RR_SHARED_PTR<RobotRaconteurException>()));
 }
-void sub3_impl::async_set_ind(const std::string& value,
-                              boost::function<void(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
-                              int32_t rr_timeout)
+void sub3_impl::async_set_ind(
+    const std::string& value,
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
         boost::bind(rr_handler, RR_MAKE_SHARED<ServiceException>("Read only property")));
 }
 
 void sub3_impl::async_get_data2(
-    boost::function<void(const std::string&, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    boost::function<void(const std::string&, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
@@ -3124,22 +3129,22 @@ void sub3_impl::async_get_data2(
 }
 
 void sub3_impl::async_set_data2(
-    const std::string& value, boost::function<void(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
-    int32_t rr_timeout)
+    const std::string& value,
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler, int32_t rr_timeout)
 {
     data2 = value;
     RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler, RR_SHARED_PTR<RobotRaconteurException>()));
 }
 
 void sub3_impl::async_get_data3(
-    boost::function<void(double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    boost::function<void(double, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     RobotRaconteurNode::s()->GetThreadPool()->Post(
         boost::bind(rr_handler, data3, RR_SHARED_PTR<RobotRaconteurException>()));
 }
 void sub3_impl::async_set_data3(
-    double value, boost::function<void(RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    double value, boost::function<void(const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     data3 = value;
@@ -3147,7 +3152,7 @@ void sub3_impl::async_set_data3(
 }
 
 void sub3_impl::async_add(
-    double d, boost::function<void(double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>)> rr_handler,
+    double d, boost::function<void(double, const RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>&)> rr_handler,
     int32_t rr_timeout)
 {
     double res = d + 42;
@@ -3161,7 +3166,7 @@ double TestService2SubObj::add_val(double v) { return v + 1; }
 
 // support
 
-void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTransport> tcptransport)
+void RobotRaconteurTestServiceSupport::RegisterServices(const RR_SHARED_PTR<TcpTransport>& tcptransport)
 {
     testservice = RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
     testservice_auth = RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
@@ -3188,13 +3193,13 @@ void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTranspo
                                              "com.robotraconteur.testing.TestService1", testservice_auth, s);
 }
 
-void RobotRaconteurTestServiceSupport::RegisterSecureServices(RR_SHARED_PTR<TcpTransport> tcptransport,
+void RobotRaconteurTestServiceSupport::RegisterSecureServices(const RR_SHARED_PTR<TcpTransport>& tcptransport,
                                                               const std::vector<NodeID>& allowed_clients)
 {
     testservice_auth = RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
 
     std::vector<std::string> str_clients;
-    BOOST_FOREACH (NodeID n, allowed_clients)
+    BOOST_FOREACH (const NodeID& n, allowed_clients)
     {
         str_clients.push_back(n.ToString());
     }
@@ -3218,3 +3223,5 @@ void RobotRaconteurTestServiceSupport::UnregisterServices()
 }
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

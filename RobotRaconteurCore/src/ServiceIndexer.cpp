@@ -25,7 +25,7 @@ using namespace std;
 namespace RobotRaconteur
 {
 
-ServiceIndexer::ServiceIndexer(RR_SHARED_PTR<RobotRaconteurNode> node) { this->node = node; }
+ServiceIndexer::ServiceIndexer(const RR_SHARED_PTR<RobotRaconteurNode>& node) { this->node = node; }
 
 RR_SHARED_PTR<RobotRaconteurNode> ServiceIndexer::GetNode()
 {
@@ -38,7 +38,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ServiceIndexer::GetNode()
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> > ServiceIndexer::
     GetLocalNodeServices()
 {
-    if (Transport::GetCurrentTransportConnectionURL() == "")
+    if (Transport::GetCurrentTransportConnectionURL().empty())
         throw ServiceException("GetLocalNodeServices must be called through a transport that supports node discovery");
 
     RR_INTRUSIVE_PTR<RRMap<int32_t, ServiceInfo> > o = AllocateEmptyRRMap<int32_t, ServiceInfo>();

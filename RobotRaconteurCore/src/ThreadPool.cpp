@@ -29,7 +29,7 @@ namespace RobotRaconteur
 {
 // Thread pool
 
-ThreadPool::ThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node)
+ThreadPool::ThreadPool(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
     keepgoing = true;
     this->node = node;
@@ -38,7 +38,7 @@ ThreadPool::ThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node)
 #if BOOST_ASIO_VERSION < 101200
     _work = RR_MAKE_SHARED<RR_BOOST_ASIO_IO_CONTEXT::work>(boost::ref(_io_context));
 #else
-    _work.reset(
+    _work = RR_SHARED_PTR<boost::asio::executor_work_guard<RR_BOOST_ASIO_IO_CONTEXT::executor_type> >(
         new boost::asio::executor_work_guard<RR_BOOST_ASIO_IO_CONTEXT::executor_type>(_io_context.get_executor()));
 #endif
 }
@@ -90,7 +90,7 @@ void ThreadPool::Post(boost::function<void()> function)
     RR_BOOST_ASIO_POST(_io_context, boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
 }
 
-bool ThreadPool::TryPost(RR_MOVE_ARG(boost::function<void()>) function)
+bool ThreadPool::TryPost(boost::function<void()> function)
 {
     if (!keepgoing)
         return false;
@@ -113,7 +113,7 @@ void ThreadPool::start_new_thread()
 
 void ThreadPool::thread_function()
 {
-    bool k;
+    bool k = false;
 
     {
         boost::mutex::scoped_lock lock(keepgoing_lock);
@@ -173,7 +173,7 @@ RR_BOOST_ASIO_IO_CONTEXT& ThreadPool::get_io_context() { return _io_context; }
 
 ThreadPoolFactory::~ThreadPoolFactory() {}
 
-IOContextThreadPool::IOContextThreadPool(RR_SHARED_PTR<RobotRaconteurNode> node,
+IOContextThreadPool::IOContextThreadPool(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                          RR_BOOST_ASIO_IO_CONTEXT& external_io_context, bool multithreaded)
     : ThreadPool(node), _external_io_context(external_io_context), _multithreaded(multithreaded)
 {}
@@ -184,6 +184,7 @@ size_t IOContextThreadPool::GetThreadPoolCount() { return _multithreaded ? 2 : 1
 
 void IOContextThreadPool::SetThreadPoolCount(size_t count)
 {
+    RR_UNUSED(count);
     throw InvalidOperationException("Cannot set thread count on IOContextThreadPool");
 }
 
@@ -191,7 +192,7 @@ void IOContextThreadPool::Post(boost::function<void()> function)
 {
     RR_BOOST_ASIO_POST(_external_io_context, boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
 }
-bool IOContextThreadPool::TryPost(RR_MOVE_ARG(boost::function<void()>) function)
+bool IOContextThreadPool::TryPost(boost::function<void()> function)
 {
     RR_BOOST_ASIO_POST(_external_io_context, boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
     return true;
@@ -218,7 +219,7 @@ bool ThreadPool_IsNodeMultithreaded(RR_WEAK_PTR<RobotRaconteurNode> node)
 
 RR_SHARED_PTR<RobotRaconteurNode> IOContextThreadPool_RobotRaconteurNode_sp() { return RobotRaconteurNode::sp(); }
 
-void IOContextThreadPool_RobotRaconteurNode_DownCastAndThrowException(RR_SHARED_PTR<RobotRaconteurNode> node,
+void IOContextThreadPool_RobotRaconteurNode_DownCastAndThrowException(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                                                       RobotRaconteurException& exp)
 {
     node->DownCastAndThrowException(exp);

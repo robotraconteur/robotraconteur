@@ -86,7 +86,7 @@ bool AutoResetEvent::WaitOne(int32_t timeout)
 
 #else
 
-AutoResetEvent::AutoResetEvent() : m_mutex() { m_bSet = false; }
+AutoResetEvent::AutoResetEvent() { m_bSet = false; }
 
 AutoResetEvent::~AutoResetEvent() {}
 

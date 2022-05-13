@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+// NOLINTBEGIN
+
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -23,3 +25,5 @@ class MessageSerializationTest4
     static void RandomTest(size_t iterations);
 };
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

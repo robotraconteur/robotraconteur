@@ -1,3 +1,5 @@
+// NOLINTBEGIN
+
 #include <RobotRaconteur.h>
 #include "robotraconteur_generated.h"
 #include "ServiceTest3.h"
@@ -27,3 +29,5 @@ class ServiceTestClient3
     RR_SHARED_PTR<asynctestroot> r;
 };
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

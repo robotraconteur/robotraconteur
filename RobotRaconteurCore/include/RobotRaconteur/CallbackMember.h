@@ -40,7 +40,7 @@ namespace RobotRaconteur
  *
  * On the client side,
  * the client specifies a function for the callback using the SetFunction() function.
- * On the service side, the function GetFunction(RR_SHARED_PTR<Endpoint> endpoint) is used to retrieve
+ * On the service side, the function GetFunction(const RR_SHARED_PTR<Endpoint>& endpoint) is used to retrieve
  * the proxy function to call a client callback.
  *
  * This class is instantiated by the node. It should not be instantiated by the user.
@@ -97,13 +97,13 @@ class Callback : private boost::noncopyable
      * @param endpoint The endpoint of the client connection
      * @return T The callback proxy function
      */
-    virtual T GetClientFunction(RR_SHARED_PTR<Endpoint> endpoint) = 0;
+    virtual T GetClientFunction(const RR_SHARED_PTR<Endpoint>& endpoint) = 0;
 
     /**
      * @brief Get the proxy function to call the callback for the specified client
      * on the service side
      *
-     * Same as GetClientFunction(RR_SHARED_PTR<Endpoint> endpoint), except the endpoint
+     * Same as GetClientFunction(const RR_SHARED_PTR<Endpoint>& endpoint), except the endpoint
      * is specified using the uint32_t LocalEndpoint id instead of the Endpoint
      * object.
      *
@@ -126,43 +126,45 @@ template <typename T>
 class CallbackClient : public Callback<T>
 {
   public:
-    CallbackClient(boost::string_ref name) : Callback<T>(name) { InitializeInstanceFields(); }
+    CallbackClient(boost::string_ref name) : Callback<T>(name) {}
 
-    virtual ~CallbackClient() {}
+    RR_OVIRTUAL ~CallbackClient() RR_OVERRIDE {}
 
   private:
     T function;
     boost::mutex function_lock;
 
   public:
-    virtual T GetFunction()
+    RR_OVIRTUAL T GetFunction() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(function_lock);
         if (!function)
             throw InvalidOperationException("Callback function not set");
         return function;
     }
-    virtual void SetFunction(T value)
+    RR_OVIRTUAL void SetFunction(T value) RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(function_lock);
         function = value;
     }
 
-    virtual T GetClientFunction(RR_SHARED_PTR<Endpoint> e)
+    RR_OVIRTUAL T GetClientFunction(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
     {
+        RR_UNUSED(e);
         throw InvalidOperationException("Invalid for client side of callback");
     }
 
-    virtual T GetClientFunction(uint32_t e) { throw InvalidOperationException("Invalid for client side of callback"); }
+    RR_OVIRTUAL T GetClientFunction(uint32_t e) RR_OVERRIDE
+    {
+        RR_UNUSED(e);
+        throw InvalidOperationException("Invalid for client side of callback");
+    }
 
-    virtual void Shutdown()
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(function_lock);
         function.clear();
     }
-
-  private:
-    void InitializeInstanceFields() { function = T(); }
 };
 
 class ROBOTRACONTEUR_CORE_API ServiceSkel;
@@ -185,16 +187,27 @@ template <typename T>
 class CallbackServer : public Callback<T>, public CallbackServerBase
 {
   public:
-    CallbackServer(boost::string_ref name, RR_SHARED_PTR<ServiceSkel> skel) : Callback<T>(name) { this->skel = skel; }
+    CallbackServer(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel) : Callback<T>(name)
+    {
+        this->skel = skel;
+    }
 
-    virtual ~CallbackServer() {}
+    RR_OVIRTUAL ~CallbackServer() RR_OVERRIDE {}
 
-    virtual T GetFunction() { throw InvalidOperationException("Invalid for server side of callback"); }
-    virtual void SetFunction(T value) { throw InvalidOperationException("Invalid for server side of callback"); }
+    RR_OVIRTUAL T GetFunction() RR_OVERRIDE { throw InvalidOperationException("Invalid for server side of callback"); }
+    RR_OVIRTUAL void SetFunction(T value) RR_OVERRIDE
+    {
+        RR_UNUSED(value);
+        throw InvalidOperationException("Invalid for server side of callback");
+    }
 
-    virtual T GetClientFunction(RR_SHARED_PTR<Endpoint> e) { return GetClientFunction(e->GetLocalEndpoint()); }
+    RR_OVIRTUAL T GetClientFunction(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
+    {
+        RR_UNUSED(e);
+        return GetClientFunction(e->GetLocalEndpoint());
+    }
 
-    virtual T GetClientFunction(uint32_t e)
+    RR_OVIRTUAL T GetClientFunction(uint32_t e) RR_OVERRIDE
     {
         RR_SHARED_PTR<ServiceSkel> s = skel.lock();
         if (!s)
@@ -202,9 +215,9 @@ class CallbackServer : public Callback<T>, public CallbackServerBase
         return *RR_STATIC_POINTER_CAST<T>(s->GetCallbackFunction(e, GetMemberName()));
     }
 
-    virtual std::string GetMemberName() { return Callback<T>::GetMemberName(); }
+    RR_OVIRTUAL std::string GetMemberName() RR_OVERRIDE { return Callback<T>::GetMemberName(); }
 
-    virtual void Shutdown() {}
+    RR_OVIRTUAL void Shutdown() RR_OVERRIDE {}
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

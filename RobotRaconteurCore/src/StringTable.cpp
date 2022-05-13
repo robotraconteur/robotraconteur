@@ -122,9 +122,9 @@ RR_SHARED_PTR<const StringTableEntry> StringTable::GetEntryForCode(uint32_t code
     return RR_SHARED_PTR<const StringTableEntry>();
 }
 
-void StringTable::MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m)
+void StringTable::MessageReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<Message>& m)
 {
-    if (m->header->MessageFlags & MessageFlags_STRING_TABLE || m->header->StringTable.size() > 0)
+    if (m->header->MessageFlags & MessageFlags_STRING_TABLE || !m->header->StringTable.empty())
     {
         return;
     }
@@ -138,7 +138,7 @@ void StringTable::MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m)
         MessageEntryReplaceStringsWithCodes(e, local_table, next_local_code, table_size);
     }
 
-    if (local_table.size() > 0)
+    if (!local_table.empty())
     {
         m->header->MessageFlags |= MessageFlags_STRING_TABLE;
         typedef boost::unordered_map<MessageStringPtr, uint32_t>::value_type e_type;
@@ -149,7 +149,7 @@ void StringTable::MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m)
     }
 }
 
-void StringTable::MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m)
+void StringTable::MessageReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<Message>& m)
 {
     boost::unordered_map<uint32_t, MessageStringPtr> local_table;
 
@@ -168,7 +168,7 @@ void StringTable::MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m)
     }
 }
 
-void StringTable::MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e,
+void StringTable::MessageEntryReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<MessageEntry>& e,
                                                       boost::unordered_map<MessageStringPtr, uint32_t>& local_table,
                                                       uint32_t& next_local_code, uint32_t& table_size)
 {
@@ -184,7 +184,7 @@ void StringTable::MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEn
     }
 }
 
-void StringTable::MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e,
+void StringTable::MessageElementReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<MessageElement>& e,
                                                         boost::unordered_map<MessageStringPtr, uint32_t>& local_table,
                                                         uint32_t& next_local_code, uint32_t& table_size)
 {
@@ -221,7 +221,7 @@ void StringTable::MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message
     }
 }
 
-void StringTable::MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e,
+void StringTable::MessageEntryReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<MessageEntry>& e,
                                                       boost::unordered_map<uint32_t, MessageStringPtr>& local_table)
 {
     DoReplaceCode(e->MemberName, e->MemberNameCode, e->EntryFlags, MessageEntryFlags_MEMBER_NAME_STR,
@@ -236,7 +236,7 @@ void StringTable::MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEn
     }
 }
 
-void StringTable::MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e,
+void StringTable::MessageElementReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<MessageElement>& e,
                                                         boost::unordered_map<uint32_t, MessageStringPtr>& local_table)
 {
     DoReplaceCode(e->ElementName, e->ElementNameCode, e->ElementFlags, MessageElementFlags_ELEMENT_NAME_STR,
@@ -299,7 +299,7 @@ void StringTable::DoReplaceString(MessageStringPtr& str, uint32_t& code, uint8_t
                 return;
             }
 
-            uint32_t c;
+            uint32_t c = 0;
             boost::unordered_map<MessageStringPtr, uint32_t>::iterator e2 = local_table.find(str);
             if (e2 == local_table.end())
             {
@@ -333,7 +333,7 @@ void StringTable::DoReplaceString(MessageStringPtr& str, uint32_t& code, uint8_t
 void StringTable::DoReplaceCode(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str,
                                 uint32_t flag_code, boost::unordered_map<uint32_t, MessageStringPtr>& local_table)
 {
-    if (!(flags & flag_str) && (flags & flag_code) && str.str().size() == 0)
+    if (!(flags & flag_str) && (flags & flag_code) && str.str().empty())
     {
         if (code & 0x1)
         {
@@ -367,10 +367,10 @@ void StringTable::DoReplaceCode(MessageStringPtr& str, uint32_t& code, uint8_t& 
 bool StringTable::AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags)
 {
     boost::mutex::scoped_lock lock(this_lock);
-    return _AddCode(code, str, table_flags);
+    return AddCode_p(code, str, table_flags);
 }
 
-bool StringTable::_AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags)
+bool StringTable::AddCode_p(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags)
 {
     if (code & 0x1)
         return false;
@@ -401,10 +401,10 @@ bool StringTable::_AddCode(uint32_t code, MessageStringRef str, const std::vecto
 void StringTable::AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags)
 {
     boost::mutex::scoped_lock lock(this_lock);
-    _AddCodesCSV(csv, table_flags);
+    AddCodesCSV_p(csv, table_flags);
 }
 
-void StringTable::_AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags)
+void StringTable::AddCodesCSV_p(const std::string& csv, const std::vector<uint32_t>& table_flags)
 {
     typedef boost::split_iterator<std::string::const_iterator> string_split_iterator;
 
@@ -423,7 +423,7 @@ void StringTable::_AddCodesCSV(const std::string& csv, const std::vector<uint32_
         uint32_t code = boost::lexical_cast<uint32_t>(line_match[1].str());
         std::string str = line_match[2].str();
 
-        _AddCode(code, str, table_flags);
+        AddCode_p(code, str, table_flags);
     }
 }
 
@@ -469,7 +469,7 @@ void StringTable::SetTableFlags(std::vector<uint32_t> flags_)
     {
         std::vector<uint32_t> table_flags;
         table_flags.push_back(TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE);
-        _AddCodesCSV(RobotRaconteur::detail::StringTable_default_table_csv, table_flags);
+        AddCodesCSV_p(RobotRaconteur::detail::StringTable_default_table_csv, table_flags);
     }
 }
 } // namespace detail

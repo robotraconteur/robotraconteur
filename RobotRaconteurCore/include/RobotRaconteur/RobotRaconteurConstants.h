@@ -563,7 +563,7 @@ enum MemberDefinition_NoLock
  * operations to disable timeout for that operation.
  *
  */
-#define RR_TIMEOUT_INFINITE -1
+#define RR_TIMEOUT_INFINITE (-1)
 
 /**
  * @brief Set wire values to have infinite lifespan and will not expire
@@ -571,7 +571,7 @@ enum MemberDefinition_NoLock
  * Wire values may optionally expire after a given period in milliseconds.
  * Set `RR_TIMEOUT_INFINITE` to disable value expiration.
  */
-#define RR_VALUE_LIFESPAN_INFINITE -1
+#define RR_VALUE_LIFESPAN_INFINITE (-1)
 
 /** @brief Page mask for transport capability code */
 const uint32_t TranspartCapabilityCode_PAGE_MASK = 0xFFF00000;

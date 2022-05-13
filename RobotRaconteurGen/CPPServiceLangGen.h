@@ -20,8 +20,6 @@
 #include <RobotRaconteur.h>
 #include <ostream>
 
-using namespace std;
-using namespace boost;
 using namespace RobotRaconteur;
 
 namespace RobotRaconteurGen
@@ -44,7 +42,7 @@ class CPPServiceLangGen
 
     static convert_type_result convert_type(const TypeDefinition& tdef);
 
-    static string remove_RR_INTRUSIVE_PTR(const string& vartype);
+    static std::string remove_RR_INTRUSIVE_PTR(const std::string& vartype);
 
     struct get_variable_type_result
     {
@@ -55,7 +53,7 @@ class CPPServiceLangGen
 
     static get_variable_type_result get_variable_type(const TypeDefinition& tdef, bool usescalar = true);
 
-    static string str_pack_parameters(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass = true);
+    static std::string str_pack_parameters(const std::vector<RR_SHARED_PTR<TypeDefinition> >& l, bool inclass = true);
 
     static std::string str_pack_message_element(const std::string& elementname, const std::string& varname,
                                                 const RR_SHARED_PTR<TypeDefinition>& t,
@@ -77,88 +75,91 @@ class CPPServiceLangGen
 
     static convert_generator_result convert_generator(FunctionDefinition* f);
 
-    static bool is_member_override(MemberDefinition* m, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs);
+    static bool is_member_override(MemberDefinition* m, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs);
 
-    static void GenerateInterfaceHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
-                                            const std::vector<std::string>& extra_include, ostream* w);
+    static void GenerateInterfaceHeaderFile(ServiceDefinition* d,
+                                            const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                                            const std::vector<std::string>& extra_include, std::ostream* w);
 
-    static string GetPropertyDeclaration(PropertyDefinition* d, bool inclass = true);
+    static std::string GetPropertyDeclaration(PropertyDefinition* d, bool inclass = true);
 
-    static string SetPropertyDeclaration(PropertyDefinition* d, bool inclass = true);
+    static std::string SetPropertyDeclaration(PropertyDefinition* d, bool inclass = true);
 
-    static string FunctionDeclaration(FunctionDefinition* d, bool inclass = true);
+    static std::string FunctionDeclaration(FunctionDefinition* d, bool inclass = true);
 
-    static string GetPropertyDeclaration_async(PropertyDefinition* d, bool inclass = true);
+    static std::string GetPropertyDeclaration_async(PropertyDefinition* d, bool inclass = true);
 
-    static string SetPropertyDeclaration_async(PropertyDefinition* d, bool inclass = true);
+    static std::string SetPropertyDeclaration_async(PropertyDefinition* d, bool inclass = true);
 
-    static string FunctionDeclaration_async(FunctionDefinition* d, bool inclass = true);
+    static std::string FunctionDeclaration_async(FunctionDefinition* d, bool inclass = true);
 
-    static string EventDeclaration(EventDefinition* d, bool inclass = true, bool var = false);
+    static std::string EventDeclaration(EventDefinition* d, bool inclass = true, bool var = false);
 
-    static string ObjRefDeclaration(ObjRefDefinition* d, bool inclass = true);
+    static std::string ObjRefDeclaration(ObjRefDefinition* d, bool inclass = true);
 
-    static string ObjRefDeclaration_async(ObjRefDefinition* d, bool inclass = true);
+    static std::string ObjRefDeclaration_async(ObjRefDefinition* d, bool inclass = true);
 
-    static string GetPipeDeclaration(PipeDefinition* d, bool inclass = true);
+    static std::string GetPipeDeclaration(PipeDefinition* d, bool inclass = true);
 
-    static string SetPipeDeclaration(PipeDefinition* d, bool inclass = true);
+    static std::string SetPipeDeclaration(PipeDefinition* d, bool inclass = true);
 
-    static string GetCallbackDeclaration(CallbackDefinition* d, bool inclass = true, bool var = false);
+    static std::string GetCallbackDeclaration(CallbackDefinition* d, bool inclass = true, bool var = false);
 
-    static string SetCallbackDeclaration(CallbackDefinition* d, bool inclass = true);
+    static std::string SetCallbackDeclaration(CallbackDefinition* d, bool inclass = true);
 
-    static string GetWireDeclaration(WireDefinition* d, bool inclass = true);
+    static std::string GetWireDeclaration(WireDefinition* d, bool inclass = true);
 
-    static string SetWireDeclaration(WireDefinition* d, bool inclass = true);
+    static std::string SetWireDeclaration(WireDefinition* d, bool inclass = true);
 
-    static string MemoryDeclaration(MemoryDefinition* d, bool inclass = true);
+    static std::string MemoryDeclaration(MemoryDefinition* d, bool inclass = true);
 
-    static void GenerateStubSkelHeaderFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
-                                           ostream* w);
+    static void GenerateStubSkelHeaderFile(ServiceDefinition* d,
+                                           const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs, std::ostream* w);
 
-    static void GenerateStubSkelFile(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > defs,
-                                     ostream* w, string servicedef);
+    static void GenerateStubSkelFile(ServiceDefinition* d, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                                     std::ostream* w, const std::string& servicedef);
 
-    static void GenerateServiceFactoryHeader(ServiceDefinition* d, ostream* w);
+    static void GenerateServiceFactoryHeader(ServiceDefinition* d, std::ostream* w);
 
-    static void GenerateServiceFactory(ServiceDefinition* d, ostream* w, string defstring);
+    static void GenerateServiceFactory(ServiceDefinition* d, std::ostream* w, const std::string& defstring);
 
-    static void GenerateStubHeader(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-                                   ostream* w);
+    static void GenerateStubHeader(ServiceDefinition* d,
+                                   const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, std::ostream* w);
 
-    static void GenerateSkelHeader(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-                                   ostream* w);
+    static void GenerateSkelHeader(ServiceDefinition* d,
+                                   const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs, std::ostream* w);
 
-    static void GenerateStubDefinition(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-                                       ostream* w);
+    static void GenerateStubDefinition(ServiceDefinition* d,
+                                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                       std::ostream* w);
 
-    static void GenerateSkelDefinition(ServiceDefinition* d, std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-                                       ostream* w);
+    static void GenerateSkelDefinition(ServiceDefinition* d,
+                                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                       std::ostream* w);
 
-    static void GenerateConstants(ServiceDefinition* d, ostream* w);
+    static void GenerateConstants(ServiceDefinition* d, std::ostream* w);
 
     static std::string GetDefaultValue(const TypeDefinition& tdef);
 
     static std::string GetDefaultInitializedValue(const TypeDefinition& tdef);
 
     static void GenerateDefaultImplHeader(ServiceDefinition* d,
-                                          std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs, bool is_abstract,
-                                          ostream* w);
+                                          const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                          bool is_abstract, std::ostream* w);
 
     static void GenerateDefaultImplDefinition(ServiceDefinition* d,
-                                              std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-                                              bool is_abstract, ostream* w);
+                                              const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                              bool is_abstract, std::ostream* w);
 
-    static void GenerateDocString(const std::string& docstring, const std::string& prefix, ostream* w);
+    static void GenerateDocString(const std::string& docstring, const std::string& prefix, std::ostream* w);
 
     // File generators
-    static void GenerateFiles(RR_SHARED_PTR<ServiceDefinition> d, std::string servicedef,
-                              std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs,
-                              const std::vector<std::string>& extra_include, std::string path = ".");
+    static void GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& servicedef,
+                              const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                              const std::vector<std::string>& extra_include, const std::string& path = ".");
 
     // Master header file
-    static void GenerateMasterHeaderFile(std::vector<RR_SHARED_PTR<ServiceDefinition> > d, ostream* w);
+    static void GenerateMasterHeaderFile(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& d, std::ostream* w);
 };
 
 } // namespace RobotRaconteurGen

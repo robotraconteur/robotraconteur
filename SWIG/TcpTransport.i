@@ -31,7 +31,7 @@ public:
 
 	TcpTransport();
 	
-	TcpTransport(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
+	TcpTransport(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
 	
 	RR_PROPERTY(DefaultReceiveTimeout)
 	int32_t GetDefaultReceiveTimeout();	
@@ -77,15 +77,15 @@ public:
 	
 	virtual bool IsTransportConnectionSecure(uint32_t endpoint);
 	RR_MAKE_METHOD_PRIVATE(IsTransportConnectionSecure)	
-	virtual bool IsTransportConnectionSecure(boost::shared_ptr<RobotRaconteur::RRObject> obj);
+	virtual bool IsTransportConnectionSecure(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
 		
 	virtual bool IsSecurePeerIdentityVerified(uint32_t endpoint);
 	RR_MAKE_METHOD_PRIVATE(IsSecurePeerIdentityVerified)	
-	virtual bool IsSecurePeerIdentityVerified(boost::shared_ptr<RobotRaconteur::RRObject> obj);
+	virtual bool IsSecurePeerIdentityVerified(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
 	
 	virtual std::string GetSecurePeerIdentity(uint32_t endpoint);
 	RR_MAKE_METHOD_PRIVATE(GetSecurePeerIdentity)	
-	virtual std::string GetSecurePeerIdentity(boost::shared_ptr<RobotRaconteur::RRObject> obj);
+	virtual std::string GetSecurePeerIdentity(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
 	
 	virtual void StartServerUsingPortSharer();
 	RR_MAKE_METHOD_PRIVATE(IsPortSharerRunning)	

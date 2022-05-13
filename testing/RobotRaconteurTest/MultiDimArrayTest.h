@@ -1,6 +1,8 @@
 #include <fstream>
 #include <RobotRaconteur/DataTypes.h>
 
+// NOLINTBEGIN
+
 #pragma once
 
 using namespace RobotRaconteur;
@@ -25,3 +27,5 @@ class MultiDimArrayTest
 };
 
 } // namespace RobotRaconteurTest
+
+// NOLINTEND

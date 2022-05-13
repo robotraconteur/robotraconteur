@@ -28,13 +28,19 @@ AsyncMessageReaderImpl::state_data::state_data()
     pop_state = Message_init;
     param1 = 0;
     param2 = 0;
+    limit = 0;
+    ptrdata = NULL;
 }
 
 AsyncMessageReaderImpl::AsyncMessageReaderImpl()
 {
-    Reset();
-    buf.reset(new uint8_t[128]);
+    AsyncMessageReaderImpl::Reset();
+    buf = boost::shared_array<uint8_t>(new uint8_t[128]);
     buf_len = 128;
+    version = 0;
+    buf_avail_pos = 0;
+    buf_read_pos = 0;
+    message_pos = 0;
 }
 
 size_t& AsyncMessageReaderImpl::message_len() { return state_stack.front().limit; }
@@ -61,7 +67,7 @@ void AsyncMessageReaderImpl::pop_state()
 }
 void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state,
                                         AsyncMessageReaderImpl::state_type pop_state, size_t relative_limit,
-                                        RR_INTRUSIVE_PTR<RRValue> data, size_t param1, size_t param2)
+                                        const RR_INTRUSIVE_PTR<RRValue>& data, size_t param1, size_t param2)
 {
     state_data d;
     d.state = new_state;
@@ -218,16 +224,13 @@ bool AsyncMessageReaderImpl::peek_byte(uint8_t& b)
     }
 
     size_t a1 = boost::asio::buffer_copy(boost::asio::buffer(&b, 1), other_bufs);
-    if (a1 == 1)
-        return true;
-
-    return false;
+    return (a1 == 1);
 }
 
 bool AsyncMessageReaderImpl::read_uint_x(uint32_t& num)
 {
 
-    uint8_t b1;
+    uint8_t b1 = 0;
     if (!peek_byte(b1))
         return false;
     if (b1 <= 252)
@@ -242,7 +245,7 @@ bool AsyncMessageReaderImpl::read_uint_x(uint32_t& num)
         if (a1 < 3)
             return false;
         read_number(b1);
-        uint16_t num2;
+        uint16_t num2 = 0;
         read_number(num2);
         num = num2;
         return true;
@@ -261,7 +264,7 @@ bool AsyncMessageReaderImpl::read_uint_x(uint32_t& num)
 
 bool AsyncMessageReaderImpl::read_uint_x2(uint64_t& num)
 {
-    uint8_t b1;
+    uint8_t b1 = 0;
     if (!peek_byte(b1))
         return false;
     if (b1 <= 252)
@@ -276,7 +279,7 @@ bool AsyncMessageReaderImpl::read_uint_x2(uint64_t& num)
         if (a1 < 3)
             return false;
         read_number(b1);
-        uint16_t num2;
+        uint16_t num2 = 0;
         read_number(num2);
         num = num2;
         return true;
@@ -287,7 +290,7 @@ bool AsyncMessageReaderImpl::read_uint_x2(uint64_t& num)
         if (a1 < 5)
             return false;
         read_number(b1);
-        uint32_t num2;
+        uint32_t num2 = 0;
         read_number(num2);
         num = num2;
         return true;
@@ -307,7 +310,7 @@ bool AsyncMessageReaderImpl::read_uint_x2(uint64_t& num)
 bool AsyncMessageReaderImpl::read_int_x(int32_t& num)
 {
 
-    uint8_t b1_1;
+    uint8_t b1_1 = 0;
     if (!peek_byte(b1_1))
         return false;
     int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1);
@@ -323,7 +326,7 @@ bool AsyncMessageReaderImpl::read_int_x(int32_t& num)
         if (a1 < 3)
             return false;
         read_number(b1);
-        int16_t num2;
+        int16_t num2 = 0;
         read_number(num2);
         num = num2;
         return true;
@@ -342,7 +345,7 @@ bool AsyncMessageReaderImpl::read_int_x(int32_t& num)
 
 bool AsyncMessageReaderImpl::read_int_x2(int64_t& num)
 {
-    uint8_t b1_1;
+    uint8_t b1_1 = 0;
     if (!peek_byte(b1_1))
         return false;
     int8_t b1 = *reinterpret_cast<int8_t*>(&b1_1);
@@ -358,7 +361,7 @@ bool AsyncMessageReaderImpl::read_int_x2(int64_t& num)
         if (a1 < 3)
             return false;
         read_number(b1);
-        int16_t num2;
+        int16_t num2 = 0;
         read_number(num2);
         num = num2;
         return true;
@@ -369,7 +372,7 @@ bool AsyncMessageReaderImpl::read_int_x2(int64_t& num)
         if (a1 < 5)
             return false;
         read_number(b1);
-        int32_t num2;
+        int32_t num2 = 0;
         read_number(num2);
         num = num2;
         return true;
@@ -390,7 +393,7 @@ static void null_str_deleter(std::string* s) {}
 
 bool AsyncMessageReaderImpl::read_string(MessageStringPtr& str, state_type next_state)
 {
-    uint16_t l;
+    uint16_t l = 0;
     if (!read_number(l))
         return false;
     // TODO: avoid swap
@@ -417,7 +420,7 @@ bool AsyncMessageReaderImpl::read_string(MessageStringPtr& str)
 
 bool AsyncMessageReaderImpl::read_string4(MessageStringPtr& str, state_type next_state)
 {
-    uint32_t l;
+    uint32_t l = 0;
     if (!read_uint_x(l))
         return false;
     std::string s;
@@ -464,7 +467,7 @@ void AsyncMessageReaderImpl::Reset()
 }
 
 #define R(res)                                                                                                         \
-    if (!res)                                                                                                          \
+    if (!(res))                                                                                                        \
     {                                                                                                                  \
         prepare_continue(other_bufs, other_bufs_used);                                                                 \
         return ReadReturn_continue_nobuffers;                                                                          \
@@ -523,13 +526,13 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             push_state(MessageHeader_routing1, Message_readentries, h->HeaderSize - 12, h);
         }
         case MessageHeader_routing1: {
-            boost::array<uint8_t, 16> nodeid;
+            boost::array<uint8_t, 16> nodeid = {};
             R(read_all_bytes(&nodeid[0], 16));
             data<MessageHeader>()->SenderNodeID = NodeID(nodeid);
             state() = MessageHeader_routing2;
         }
         case MessageHeader_routing2: {
-            boost::array<uint8_t, 16> nodeid;
+            boost::array<uint8_t, 16> nodeid = {};
             R(read_all_bytes(&nodeid[0], 16));
             data<MessageHeader>()->ReceiverNodeID = NodeID(nodeid);
             state() = MessageHeader_endpoint1;
@@ -601,13 +604,13 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             state() = MessageEntry_entrytype;
         }
         case MessageEntry_entrytype: {
-            uint16_t t;
+            uint16_t t = 0;
             R(read_number(t));
             data<MessageEntry>()->EntryType = static_cast<MessageEntryType>(t);
             state() = MessageEntry_pad;
         }
         case MessageEntry_pad: {
-            uint16_t v;
+            uint16_t v = 0;
             R(read_number(v));
             state() = MessageEntry_servicepathstr;
         }
@@ -624,8 +627,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             state() = MessageEntry_error;
         }
         case MessageEntry_error: {
-            MessageEntry* e = data<MessageEntry>();
-            uint16_t err;
+            uint16_t err = 0;
             R(read_number(err));
             data<MessageEntry>()->Error = static_cast<MessageErrorType>(err);
             state() = MessageEntry_metainfo;
@@ -635,7 +637,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             state() = MessageEntry_elementcount;
         }
         case MessageEntry_elementcount: {
-            uint16_t c;
+            uint16_t c = 0;
             R(read_number(c));
             param1() = c;
             data<MessageEntry>()->elements.reserve(c);
@@ -659,7 +661,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
         }
         case MessageElement_elementsize: {
             size_t p = message_pos;
-            uint32_t l;
+            uint32_t l = 0;
             R(read_number(l));
             if (l < 4)
                 throw ProtocolException("Message element too short");
@@ -674,7 +676,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             state() = MessageElement_elementtype;
         }
         case MessageElement_elementtype: {
-            uint16_t t;
+            uint16_t t = 0;
             R(read_number(t));
             data<MessageElement>()->ElementType = static_cast<DataTypes>(t);
             state() = MessageElement_elementtypestr;
@@ -913,8 +915,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             push_state(MessageHeader_headersize, Message_readentries, h->MessageSize - 10, h);
         }
         case MessageHeader_headersize: {
-            size_t p = message_pos;
-            uint32_t l;
+            uint32_t l = 0;
             R(read_uint_x(l));
             limit() = l;
             data<MessageHeader>()->HeaderSize = l;
@@ -933,13 +934,13 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
                 continue;
             }
 
-            boost::array<uint8_t, 16> nodeid;
+            boost::array<uint8_t, 16> nodeid = {};
             R(read_all_bytes(&nodeid[0], 16));
             h->SenderNodeID = NodeID(nodeid);
             state() = MessageHeader_routing2;
         }
         case MessageHeader_routing2: {
-            boost::array<uint8_t, 16> nodeid;
+            boost::array<uint8_t, 16> nodeid = {};
             R(read_all_bytes(&nodeid[0], 16));
             data<MessageHeader>()->ReceiverNodeID = NodeID(nodeid);
             state() = MessageHeader_routing3;
@@ -1004,7 +1005,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
                 state() = MessageHeader_entrycount;
                 continue;
             }
-            uint32_t n;
+            uint32_t n = 0;
             R(read_uint_x(n));
             param1() = n;
             state() = MessageHeader_stringtable2;
@@ -1015,14 +1016,13 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
                 state() = MessageHeader_entrycount;
                 continue;
             }
-            uint32_t code;
+            uint32_t code = 0;
             R(read_uint_x(code));
             data<MessageHeader>()->StringTable.push_back(boost::make_tuple(code, ""));
             param1()--;
             state() = MessageHeader_stringtable3;
         }
         case MessageHeader_stringtable3: {
-            MessageHeader* h = data<MessageHeader>();
             R(read_string4(data<MessageHeader>()->StringTable.back().get<1>(), MessageHeader_stringtable2));
             state() = MessageHeader_stringtable2;
             continue;
@@ -1035,7 +1035,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             }
             else
             {
-                uint32_t c;
+                uint32_t c = 0;
                 R(read_uint_x(c));
                 if (c > std::numeric_limits<uint16_t>::max())
                     throw ProtocolException("Too many entries in message");
@@ -1051,7 +1051,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
                 state() = Message_readentries;
                 continue;
             }
-            uint32_t n;
+            uint32_t n = 0;
             R(read_uint_x(n));
             h->Extended.resize(n);
             state() = MessageHeader_extended2;
@@ -1103,7 +1103,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             state() = MessageEntry_entrytype;
         }
         case MessageEntry_entrytype: {
-            uint16_t t;
+            uint16_t t = 0;
             R(read_number(t));
             data<MessageEntry>()->EntryType = static_cast<MessageEntryType>(t);
             state() = MessageEntry_servicepathstr;
@@ -1152,7 +1152,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             MessageEntry* ee = data<MessageEntry>();
             if (ee->EntryFlags & MessageEntryFlags_ERROR)
             {
-                uint16_t err;
+                uint16_t err = 0;
                 R(read_number(err));
                 ee->Error = static_cast<MessageErrorType>(err);
             }
@@ -1173,7 +1173,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
                 state() = MessageEntry_elementcount;
                 continue;
             }
-            uint32_t n;
+            uint32_t n = 0;
             R(read_uint_x(n));
             ee->Extended.resize(n);
             state() = MessageEntry_extended2;
@@ -1188,7 +1188,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
         }
         case MessageEntry_elementcount: {
             MessageEntry* ee = data<MessageEntry>();
-            uint32_t c;
+            uint32_t c = 0;
             R(read_uint_x(c));
             param1() = c;
             ee->elements.reserve(c);
@@ -1212,7 +1212,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
         }
         case MessageElement_elementsize: {
             size_t p = message_pos;
-            uint32_t l;
+            uint32_t l = 0;
             R(read_uint_x(l));
             if (l < 4)
                 throw ProtocolException("Message element too short");
@@ -1251,7 +1251,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             state() = MessageElement_elementtype;
         }
         case MessageElement_elementtype: {
-            uint16_t t;
+            uint16_t t = 0;
             R(read_number(t));
             data<MessageElement>()->ElementType = static_cast<DataTypes>(t);
             state() = MessageElement_elementtypestr;
@@ -1287,7 +1287,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
                 state() = MessageElement_datacount;
                 continue;
             }
-            uint32_t n;
+            uint32_t n = 0;
             R(read_uint_x(n));
             ee->Extended.resize(n);
             state() = MessageElement_extended2;
@@ -1347,7 +1347,6 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             }
         }
         case MessageElement_finishreaddata: {
-            MessageElement* el = data<MessageElement>();
             if (distance_from_limit() != 0)
                 throw ProtocolException("Element did not consume all data");
             DO_POP_STATE();

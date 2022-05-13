@@ -28,9 +28,17 @@ AsyncMessageWriterImpl::state_data::state_data()
     pop_state = Message_init;
     param1 = 0;
     param2 = 0;
+    limit = 0;
+    ptrdata = NULL;
 }
 
-AsyncMessageWriterImpl::AsyncMessageWriterImpl() { Reset(); }
+AsyncMessageWriterImpl::AsyncMessageWriterImpl()
+{
+    version = 0;
+    message_pos = 0;
+    quota_pos = 0;
+    AsyncMessageWriterImpl::Reset();
+}
 
 size_t AsyncMessageWriterImpl::message_len() { return state_stack.front().limit; }
 
@@ -55,7 +63,7 @@ void AsyncMessageWriterImpl::pop_state()
 
 void AsyncMessageWriterImpl::push_state(AsyncMessageWriterImpl::state_type new_state,
                                         AsyncMessageWriterImpl::state_type pop_state, size_t relative_limit,
-                                        RR_INTRUSIVE_PTR<RRValue> data, size_t param1, size_t param2)
+                                        const RR_INTRUSIVE_PTR<RRValue>& data, size_t param1, size_t param2)
 {
     state_data d;
     d.state = new_state;
@@ -113,7 +121,7 @@ void AsyncMessageWriterImpl::prepare_continue(mutable_buffers& work_bufs, size_t
     work_bufs_used = boost::asio::buffer_size(work_bufs) - boost::asio::buffer_size(current_work_bufs);
 }
 
-size_t AsyncMessageWriterImpl::quota_available() { return quota_pos - message_pos; }
+size_t AsyncMessageWriterImpl::quota_available() const { return quota_pos - message_pos; }
 
 size_t AsyncMessageWriterImpl::work_bufs_available()
 {
@@ -166,17 +174,17 @@ bool AsyncMessageWriterImpl::write_uint_x(uint32_t number)
     }
     if (number <= std::numeric_limits<uint16_t>::max())
     {
-        uint8_t v1[3];
+        boost::array<uint8_t, 3> v1 = {};
         v1[0] = 253;
         uint16_t v2 = static_cast<uint16_t>(number);
-        memcpy(v1 + 1, &v2, 2);
-        return write_all_bytes(v1, 3);
+        memcpy(v1.data() + 1, &v2, 2);
+        return write_all_bytes(v1.data(), 3);
     }
 
-    uint8_t v1[5];
-    v1[0] = 254;
-    memcpy(v1 + 1, &number, 4);
-    return write_all_bytes(v1, 5);
+    boost::array<uint8_t, 5> v2 = {};
+    v2[0] = 254;
+    memcpy(v2.data() + 1, &number, 4);
+    return write_all_bytes(v2.data(), 5);
 }
 bool AsyncMessageWriterImpl::write_uint_x2(uint64_t number)
 {
@@ -188,25 +196,25 @@ bool AsyncMessageWriterImpl::write_uint_x2(uint64_t number)
     }
     if (number <= std::numeric_limits<uint16_t>::max())
     {
-        uint8_t v1[3];
+        boost::array<uint8_t, 3> v1 = {};
         v1[0] = 253;
         uint16_t v2 = static_cast<uint16_t>(number);
-        memcpy(v1 + 1, &v2, 2);
-        return write_all_bytes(v1, 3);
+        memcpy(v1.data() + 1, &v2, 2);
+        return write_all_bytes(v1.data(), 3);
     }
     if (number <= std::numeric_limits<uint32_t>::max())
     {
-        uint8_t v1[5];
+        boost::array<uint8_t, 5> v1 = {};
         v1[0] = 254;
         uint32_t v2 = static_cast<uint32_t>(number);
-        memcpy(v1 + 1, &v2, 4);
-        return write_all_bytes(v1, 5);
+        memcpy(v1.data() + 1, &v2, 4);
+        return write_all_bytes(v1.data(), 5);
     }
 
-    uint8_t v1[9];
-    v1[0] = 255;
-    memcpy(v1 + 1, &number, 8);
-    return write_all_bytes(v1, 9);
+    boost::array<uint8_t, 9> v3 = {};
+    v3[0] = 255;
+    memcpy(v3.data() + 1, &number, 8);
+    return write_all_bytes(v3.data(), 9);
 }
 
 bool AsyncMessageWriterImpl::write_int_x(int32_t number)
@@ -219,17 +227,17 @@ bool AsyncMessageWriterImpl::write_int_x(int32_t number)
     }
     if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
     {
-        int8_t v1[3];
+        boost::array<int8_t, 3> v1 = {};
         v1[0] = 125;
         int16_t v2 = static_cast<int16_t>(number);
-        memcpy(v1 + 1, &v2, 2);
-        return write_all_bytes(v1, 3);
+        memcpy(v1.data() + 1, &v2, 2);
+        return write_all_bytes(v1.data(), 3);
     }
 
-    int8_t v1[5];
-    v1[0] = 126;
-    memcpy(v1 + 1, &number, 4);
-    return write_all_bytes(v1, 5);
+    boost::array<int8_t, 5> v3 = {};
+    v3[0] = 126;
+    memcpy(v3.data() + 1, &number, 4);
+    return write_all_bytes(v3.data(), 5);
 }
 bool AsyncMessageWriterImpl::write_int_x2(int64_t number)
 {
@@ -241,25 +249,25 @@ bool AsyncMessageWriterImpl::write_int_x2(int64_t number)
     }
     if (number >= std::numeric_limits<int16_t>::min() && number <= std::numeric_limits<int16_t>::max())
     {
-        int8_t v1[3];
+        boost::array<int8_t, 3> v1 = {};
         v1[0] = 125;
         int16_t v2 = static_cast<int16_t>(number);
-        memcpy(v1 + 1, &v2, 2);
-        return write_all_bytes(v1, 3);
+        memcpy(v1.data() + 1, &v2, 2);
+        return write_all_bytes(v1.data(), 3);
     }
     if (number >= std::numeric_limits<int32_t>::min() && number <= std::numeric_limits<int32_t>::max())
     {
-        uint8_t v1[5];
+        boost::array<uint8_t, 5> v1 = {};
         v1[0] = 126;
         int32_t v2 = static_cast<int32_t>(number);
-        memcpy(v1 + 1, &v2, 4);
-        return write_all_bytes(v1, 5);
+        memcpy(v1.data() + 1, &v2, 4);
+        return write_all_bytes(v1.data(), 5);
     }
 
-    int8_t v1[9];
-    v1[0] = 127;
-    memcpy(v1 + 1, &number, 8);
-    return write_all_bytes(v1, 9);
+    boost::array<int8_t, 9> v3 = {};
+    v3[0] = 127;
+    memcpy(v3.data() + 1, &number, 8);
+    return write_all_bytes(v3.data(), 9);
 }
 
 static void null_str_deleter(std::string* s) {}
@@ -318,7 +326,7 @@ void AsyncMessageWriterImpl::Reset()
     quota_pos = 0;
     state_stack.clear();
 }
-void AsyncMessageWriterImpl::BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version)
+void AsyncMessageWriterImpl::BeginWrite(const RR_INTRUSIVE_PTR<Message>& m, uint16_t version)
 {
     if (!state_stack.empty())
         throw InvalidOperationException("AsyncMessageWriter not in reset state");
@@ -357,7 +365,7 @@ void AsyncMessageWriterImpl::BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t ve
 }
 
 #define R(res)                                                                                                         \
-    if (!res)                                                                                                          \
+    if (!(res))                                                                                                        \
     {                                                                                                                  \
         prepare_continue(work_bufs, work_bufs_used, write_bufs);                                                       \
         return WriteReturn_continue;                                                                                   \
@@ -621,7 +629,6 @@ AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write(size_t write_q
             }
         }
         case MessageElement_finishwritedata: {
-            MessageElement* el = data<MessageElement>();
             if (distance_from_limit() != 0)
                 throw ProtocolException("Element did not write all data");
             DO_POP_STATE();
@@ -1178,7 +1185,6 @@ AsyncMessageWriterImpl::return_type AsyncMessageWriterImpl::Write4(size_t write_
             }
         }
         case MessageElement_finishwritedata: {
-            MessageElement* el = data<MessageElement>();
             if (distance_from_limit() != 0)
                 throw ProtocolException("Element did not write all data");
             DO_POP_STATE();

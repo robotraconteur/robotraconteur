@@ -34,7 +34,7 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(boost::
     return ret;
 }
 
-ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr)
+ROBOTRACONTEUR_CORE_API std::string RRArrayToString(const RR_INTRUSIVE_PTR<RRArray<char> >& arr)
 {
     if (!arr)
     {
@@ -281,7 +281,8 @@ TimeSpec ptimeToTimeSpec(const boost::posix_time::ptime& t)
 
     int64_t sec = diff.total_seconds();
     int32_t nanosec = boost::numeric_cast<int32_t>(
-        (diff.fractional_seconds() * boost::numeric_cast<int32_t>(pow(10.0, (9 - diff.num_fractional_digits())))));
+        (diff.fractional_seconds() *
+         boost::numeric_cast<int32_t>(pow(10.0, (9 - boost::posix_time::time_duration::num_fractional_digits())))));
 
     return TimeSpec(sec, nanosec);
 }
@@ -305,25 +306,25 @@ void TimeSpec::cleanup_nanosecs()
     }
 }
 
-bool TimeSpec::operator==(const TimeSpec& t2)
+bool TimeSpec::operator==(const TimeSpec& t2) const
 {
 
     return (this->seconds == t2.seconds && this->nanoseconds == t2.nanoseconds);
 }
 
-bool TimeSpec::operator!=(const TimeSpec& t2) { return !(*this == t2); }
+bool TimeSpec::operator!=(const TimeSpec& t2) const { return !(*this == t2); }
 
-TimeSpec TimeSpec::operator-(const TimeSpec& t2)
+TimeSpec TimeSpec::operator-(const TimeSpec& t2) const
 {
     return TimeSpec(this->seconds - t2.seconds, this->nanoseconds - t2.nanoseconds);
 }
 
-TimeSpec TimeSpec::operator+(const TimeSpec& t2)
+TimeSpec TimeSpec::operator+(const TimeSpec& t2) const
 {
     return TimeSpec(this->seconds + t2.seconds, this->nanoseconds + t2.nanoseconds);
 }
 
-bool TimeSpec::operator>(const TimeSpec& t2)
+bool TimeSpec::operator>(const TimeSpec& t2) const
 {
     TimeSpec diff = *this - t2;
     if (diff.seconds == 0)
@@ -331,14 +332,14 @@ bool TimeSpec::operator>(const TimeSpec& t2)
     return diff.seconds > 0;
 }
 
-bool TimeSpec::operator>=(const TimeSpec& t2)
+bool TimeSpec::operator>=(const TimeSpec& t2) const
 {
     if (*this == t2)
         return true;
     return *this > t2;
 }
 
-bool TimeSpec::operator<(const TimeSpec& t2)
+bool TimeSpec::operator<(const TimeSpec& t2) const
 {
     TimeSpec diff = *this - t2;
     if (diff.seconds == 0)
@@ -346,7 +347,7 @@ bool TimeSpec::operator<(const TimeSpec& t2)
     return diff.seconds < 0;
 }
 
-bool TimeSpec::operator<=(const TimeSpec& t2)
+bool TimeSpec::operator<=(const TimeSpec& t2) const
 {
     if (*this == t2)
         return true;
@@ -382,7 +383,7 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
     {
         // Error checking
 
-        if (count.size() == 0)
+        if (count.empty())
             throw InvalidArgumentException("MultiDimArray count invalid");
 
         if (count.size() > mema_dims.size() || count.size() > memb_dims.size())
@@ -444,7 +445,7 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
         this->done = false;
     }
 
-    virtual bool Next(uint32_t& indexa, uint32_t& indexb, uint32_t& len)
+    RR_OVIRTUAL bool Next(uint32_t& indexa, uint32_t& indexb, uint32_t& len) RR_OVERRIDE
     {
 
         if (done)
@@ -491,7 +492,7 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
         return true;
     }
 
-    virtual ~MultiDimArray_CalculateCopyIndicesIterImpl() {}
+    RR_OVIRTUAL ~MultiDimArray_CalculateCopyIndicesIterImpl() RR_OVERRIDE {}
 };
 
 RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(
@@ -537,26 +538,26 @@ ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
 
         if (static_cast<char>(c) != '%')
         {
-            out.put(c);
+            out.put((char)c);
         }
         else if (static_cast<char>(c) == '%')
         {
-            char in2_c[3];
-            in.read(in2_c, 2);
+            boost::array<char, 3> in2_c = {};
+            in.read(in2_c.data(), 2);
             if (in.fail())
             {
                 throw InvalidArgumentException("Invalid encoded index");
             }
             in2_c[2] = 0;
-            std::stringstream in2(in2_c);
+            std::stringstream in2(in2_c.data());
 
-            int v;
+            int v = 0;
             in2 >> std::hex >> v;
             if (in2.fail() || !in2.eof())
             {
                 throw InvalidArgumentException("Invalid encoded index");
             }
-            out.put(v);
+            out.put((char)v);
         }
     }
     // std::cout << "decode: " << out.str() << out.str().length() << std::endl;
@@ -583,11 +584,11 @@ RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector
     return o;
 }
 
-std::vector<std::string> RRListToStringVector(RR_INTRUSIVE_PTR<RRList<RRArray<char> > > list)
+std::vector<std::string> RRListToStringVector(const RR_INTRUSIVE_PTR<RRList<RRArray<char> > >& list)
 {
     rr_null_check(list, "Unexected null string list");
     std::vector<std::string> o;
-    BOOST_FOREACH (RR_INTRUSIVE_PTR<RRArray<char> > e, *list)
+    BOOST_FOREACH (const RR_INTRUSIVE_PTR<RRArray<char> >& e, *list)
     {
         o.push_back(RRArrayToString(e));
     }

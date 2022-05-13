@@ -31,6 +31,7 @@ ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::v
                                                    std::vector<uint64_t>& block_count_edge)
 {
 
+    RR_UNUSED(element_size);
     split_elem_count = 1;
     split_dim = -1;
     split_dim_block = 0;
@@ -81,9 +82,9 @@ RR_SHARED_PTR<RobotRaconteurNode> ArrayMemoryServiceSkelBase::GetNode()
 
 std::string ArrayMemoryServiceSkelBase::GetMemberName() const { return m_MemberName; }
 
-ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membername, RR_SHARED_PTR<ServiceSkel> skel,
-                                                       DataTypes element_type, size_t element_size,
-                                                       MemberDefinition_Direction direction)
+ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membername,
+                                                       const RR_SHARED_PTR<ServiceSkel>& skel, DataTypes element_type,
+                                                       size_t element_size, MemberDefinition_Direction direction)
 {
     this->m_MemberName = RR_MOVE(membername.to_string());
     this->skel = skel;
@@ -95,9 +96,9 @@ ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membern
 
 ArrayMemoryServiceSkelBase::~ArrayMemoryServiceSkelBase() {}
 
-RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(RR_INTRUSIVE_PTR<MessageEntry> m,
-                                                                              RR_SHARED_PTR<Endpoint> e,
-                                                                              RR_SHARED_PTR<ArrayMemoryBase> mem)
+RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                                                                              const RR_SHARED_PTR<Endpoint>& e,
+                                                                              const RR_SHARED_PTR<ArrayMemoryBase>& mem)
 {
 
     switch (m->EntryType)
@@ -199,7 +200,7 @@ RR_SHARED_PTR<RobotRaconteurNode> MultiDimArrayMemoryServiceSkelBase::GetNode()
 std::string MultiDimArrayMemoryServiceSkelBase::GetMemberName() const { return m_MemberName; }
 
 MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(boost::string_ref membername,
-                                                                       RR_SHARED_PTR<ServiceSkel> skel,
+                                                                       const RR_SHARED_PTR<ServiceSkel>& skel,
                                                                        DataTypes element_type, size_t element_size,
                                                                        MemberDefinition_Direction direction)
 {
@@ -215,7 +216,8 @@ MultiDimArrayMemoryServiceSkelBase::MultiDimArrayMemoryServiceSkelBase(boost::st
 MultiDimArrayMemoryServiceSkelBase::~MultiDimArrayMemoryServiceSkelBase() {}
 
 RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFunction(
-    RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<Endpoint> e, RR_SHARED_PTR<MultiDimArrayMemoryBase> mem)
+    const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e,
+    const RR_SHARED_PTR<MultiDimArrayMemoryBase>& mem)
 {
 
     switch (m->EntryType)
@@ -342,7 +344,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ArrayMemoryClientBase::GetNode()
     return n;
 }
 
-ArrayMemoryClientBase::ArrayMemoryClientBase(boost::string_ref membername, RR_SHARED_PTR<ServiceStub> stub,
+ArrayMemoryClientBase::ArrayMemoryClientBase(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub,
                                              DataTypes element_type, size_t element_size,
                                              MemberDefinition_Direction direction)
 {
@@ -478,7 +480,7 @@ void ArrayMemoryClientBase::ReadBase(uint64_t memorypos, void* buffer, uint64_t 
     }
 }
 
-void ArrayMemoryClientBase::WriteBase(uint64_t memorypos, void* buffer, uint64_t bufferpos, uint64_t count)
+void ArrayMemoryClientBase::WriteBase(uint64_t memorypos, const void* buffer, uint64_t bufferpos, uint64_t count)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, m_MemberName,
                                             "Begin memory write with " << count << " elements");
@@ -562,8 +564,9 @@ RR_SHARED_PTR<RobotRaconteurNode> MultiDimArrayMemoryClientBase::GetNode()
 const std::string MultiDimArrayMemoryClientBase::GetMemberName() const { return m_MemberName; }
 
 MultiDimArrayMemoryClientBase::MultiDimArrayMemoryClientBase(boost::string_ref membername,
-                                                             RR_SHARED_PTR<ServiceStub> stub, DataTypes element_type,
-                                                             size_t element_size, MemberDefinition_Direction direction)
+                                                             const RR_SHARED_PTR<ServiceStub>& stub,
+                                                             DataTypes element_type, size_t element_size,
+                                                             MemberDefinition_Direction direction)
 {
     this->stub = stub;
     this->node = stub->RRGetNode();
@@ -692,11 +695,11 @@ void MultiDimArrayMemoryClientBase::ReadBase(const std::vector<uint64_t>& memory
     {
         // We need to read the array in chunks.  This is a little complicated...
 
-        uint32_t split_dim;
-        uint64_t split_dim_block;
-        uint64_t split_elem_count;
-        uint32_t splits_count;
-        uint32_t split_remainder;
+        uint32_t split_dim = 0;
+        uint64_t split_dim_block = 0;
+        uint64_t split_elem_count = 0;
+        uint32_t splits_count = 0;
+        uint32_t split_remainder = 0;
         std::vector<uint64_t> block_count;
         std::vector<uint64_t> block_count_edge;
 
@@ -774,7 +777,7 @@ void MultiDimArrayMemoryClientBase::ReadBase(const std::vector<uint64_t>& memory
     }
 }
 
-void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memorypos, void* buffer,
+void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memorypos, const void* buffer,
                                               const std::vector<uint64_t>& bufferpos,
                                               const std::vector<uint64_t>& count)
 {
@@ -820,11 +823,11 @@ void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memor
     }
     else
     {
-        uint32_t split_dim;
-        uint64_t split_dim_block;
-        uint64_t split_elem_count;
-        uint32_t splits_count;
-        uint32_t split_remainder;
+        uint32_t split_dim = 0;
+        uint64_t split_dim_block = 0;
+        uint64_t split_elem_count = 0;
+        uint32_t splits_count = 0;
+        uint32_t split_remainder = 0;
         std::vector<uint64_t> block_count;
         std::vector<uint64_t> block_count_edge;
 

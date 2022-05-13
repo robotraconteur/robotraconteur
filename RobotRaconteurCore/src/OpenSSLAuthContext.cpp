@@ -65,11 +65,12 @@ struct x509_stack_cleanup
 
 BIO* make_buffer_bio(const boost::asio::const_buffer& b)
 {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)),
-                             static_cast<int>(boost::asio::buffer_size(b)));
+                             boost::numeric_cast<int>(boost::asio::buffer_size(b)));
 }
 
-void add_certificate_authority_x509(boost::shared_ptr<boost::asio::ssl::context> context,
+void add_certificate_authority_x509(const boost::shared_ptr<boost::asio::ssl::context>& context,
                                     boost::asio::const_buffer& buf)
 {
     ::ERR_clear_error();
@@ -96,7 +97,7 @@ void add_certificate_authority_x509(boost::shared_ptr<boost::asio::ssl::context>
 
 bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
 {
-
+    RR_UNUSED(preverified);
     int cert_error = X509_STORE_CTX_get_error(ctx.native_handle());
 
     if (cert_error && cert_error != X509_V_ERR_UNHANDLED_CRITICAL_EXTENSION)
@@ -147,7 +148,7 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
 
         bool found_thisoid = false;
 
-        for (size_t i = 0; i < ext_count; i++)
+        for (int i = 0; i < ext_count; i++)
         {
             X509_EXTENSION* e = X509_get_ext(cert, i);
             if (!e)
@@ -157,10 +158,10 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
                 ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
                 if (!obj)
                     return false;
-                char buf[64];
+                boost::array<char, 64> buf = {};
 
-                OBJ_obj2txt(buf, 64, obj, 1);
-                std::string oid(buf);
+                OBJ_obj2txt(buf.data(), 64, obj, 1);
+                std::string oid(buf.data());
                 if (oid == "2.5.29.15" || oid == "2.5.29.14" || oid == "2.5.29.19" || oid == "2.5.29.35" ||
                     oid == "2.5.29.32")
                 {
@@ -215,6 +216,7 @@ static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cer
 {
     boost::shared_array<uint8_t> b2(new uint8_t[cert_len]);
 
+    // NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
     const uint8_t mask1[] = {0xbb, 0x1b, 0x38, 0x3b};
     const uint8_t mask2[] = {0x99, 0x84, 0xe2, 0xe7};
     const uint8_t mask3[] = {0xe3, 0x51, 0xb5, 0x7};
@@ -223,6 +225,7 @@ static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cer
     const uint8_t mask6[] = {0x30, 0x26, 0x90, 0xa1};
     const uint8_t mask7[] = {0x45, 0xec, 0x81, 0x42};
     const uint8_t mask8[] = {0x3d, 0xbd, 0x8e, 0x2b};
+    // NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
     for (size_t i = 0; i < cert_len; i++)
     {
@@ -242,7 +245,7 @@ static boost::shared_array<uint8_t> unmask_certificate(const uint8_t* masked_cer
     return b2;
 }
 
-void OpenSSLAuthContext::InitCA(boost::shared_ptr<boost::asio::ssl::context> context)
+void OpenSSLAuthContext::InitCA(const boost::shared_ptr<boost::asio::ssl::context>& context)
 {
     context->set_default_verify_paths();
     X509_STORE* store = SSL_CTX_get_cert_store(context->native_handle());
@@ -340,6 +343,7 @@ void OpenSSLAuthContext::InitCA(boost::shared_ptr<boost::asio::ssl::context> con
 
 void OpenSSLAuthContext::LoadPKCS12FromBuffer(boost::asio::mutable_buffer& buf)
 {
+    RR_UNUSED(buf);
     throw NotImplementedException("Not implemented");
 }
 
@@ -350,20 +354,20 @@ void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
     if (server_context)
         throw InvalidOperationException("Certificate already loaded");
 
-    FILE* fp;
-    EVP_PKEY* pkey;
-    X509* cert;
+    FILE* fp = NULL;
+    EVP_PKEY* pkey = NULL;
+    X509* cert = NULL;
     STACK_OF(X509)* ca = NULL;
-    PKCS12* p12;
-    int i;
+    PKCS12* p12 = NULL;
+    int i = 0;
     std::string fname1 = fname.to_string();
-    if (!(fp = fopen(fname1.c_str(), "rb")))
+    if (!(fp = fopen(fname1.c_str(), "rb"))) // NOLINT(cppcoreguidelines-owning-memory)
     {
         throw ResourceNotFoundException("Could not load certificate file");
     }
 
     p12 = d2i_PKCS12_fp(fp, NULL);
-    fclose(fp);
+    fclose(fp); // NOLINT(cppcoreguidelines-owning-memory)
     if (!p12)
     {
         throw ResourceNotFoundException("Could not load certificate file");
@@ -510,12 +514,12 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
     if (!cert)
         return false;
 
-    char buf[256];
-    memset(buf, 0, 256);
+    boost::array<char, 256> buf = {};
+    memset(buf.data(), 0, 256);
 
-    X509_NAME_oneline(X509_get_subject_name(cert), buf, 256);
+    X509_NAME_oneline(X509_get_subject_name(cert), buf.data(), 256);
 
-    std::string buf2(buf);
+    std::string buf2(buf.data());
 
     if (buf2 != "/CN=Robot Raconteur Node " + remote_node.ToString())
     {
@@ -526,7 +530,7 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
 
     bool found_thisoid = false;
 
-    for (size_t i = 0; i < ext_count; i++)
+    for (int i = 0; i < ext_count; i++)
     {
         X509_EXTENSION* e = X509_get_ext(cert, i);
         if (!e)
@@ -536,10 +540,10 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
             ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
             if (!obj)
                 return false;
-            char buf[64];
+            boost::array<char, 64> buf3 = {};
 
-            OBJ_obj2txt(buf, 64, obj, 1);
-            std::string oid(buf);
+            OBJ_obj2txt(buf3.data(), 64, obj, 1);
+            std::string oid(buf3.data());
             if (oid == "2.5.29.15" || oid == "2.5.29.14" || oid == "2.5.29.19" || oid == "2.5.29.35" ||
                 oid == "2.5.29.32")
             {
@@ -560,12 +564,7 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
     }
 
     // If we don't find the oid for this type of cert return false;
-    if (!found_thisoid)
-    {
-        return false;
-    }
-
-    return true;
+    return found_thisoid;
 }
 
 } // namespace detail

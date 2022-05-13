@@ -1,13 +1,13 @@
 #ifdef ROBOTRACONTEUR_USE_STDAFX
 #include "stdafx.h"
 #endif
-
+// NOLINTBEGIN
 #include "CompareArray.h"
 
 namespace RobotRaconteurTest
 {
 template <>
-void ca<double>(RR_INTRUSIVE_PTR<RRArray<double> > v1, RR_INTRUSIVE_PTR<RRArray<double> > v2)
+void ca<double>(const RR_INTRUSIVE_PTR<RRArray<double> >& v1, const RR_INTRUSIVE_PTR<RRArray<double> >& v2)
 {
     RR_NULL_CHECK(v1);
     RR_NULL_CHECK(v2);
@@ -21,7 +21,7 @@ void ca<double>(RR_INTRUSIVE_PTR<RRArray<double> > v1, RR_INTRUSIVE_PTR<RRArray<
 }
 
 template <>
-void ca<cdouble>(RR_INTRUSIVE_PTR<RRArray<cdouble> > v1, RR_INTRUSIVE_PTR<RRArray<cdouble> > v2)
+void ca<cdouble>(const RR_INTRUSIVE_PTR<RRArray<cdouble> >& v1, const RR_INTRUSIVE_PTR<RRArray<cdouble> >& v2)
 {
     RR_NULL_CHECK(v1);
     RR_NULL_CHECK(v2);
@@ -37,7 +37,7 @@ void ca<cdouble>(RR_INTRUSIVE_PTR<RRArray<cdouble> > v1, RR_INTRUSIVE_PTR<RRArra
 }
 
 template <>
-void ca<cfloat>(RR_INTRUSIVE_PTR<RRArray<cfloat> > v1, RR_INTRUSIVE_PTR<RRArray<cfloat> > v2)
+void ca<cfloat>(const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v1, const RR_INTRUSIVE_PTR<RRArray<cfloat> >& v2)
 {
     RR_NULL_CHECK(v1);
     RR_NULL_CHECK(v2);
@@ -52,3 +52,4 @@ void ca<cfloat>(RR_INTRUSIVE_PTR<RRArray<cfloat> > v1, RR_INTRUSIVE_PTR<RRArray<
     }
 }
 } // namespace RobotRaconteurTest
+  // NOLINTEND

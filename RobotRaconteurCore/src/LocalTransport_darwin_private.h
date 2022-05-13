@@ -30,7 +30,7 @@ class DarwinLocalTransportDiscovery : public LocalTransportDiscovery,
                                       public RR_ENABLE_SHARED_FROM_THIS<DarwinLocalTransportDiscovery>
 {
   public:
-    DarwinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    DarwinLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node);
     virtual void Init();
     virtual void Shutdown();
     virtual ~DarwinLocalTransportDiscovery();

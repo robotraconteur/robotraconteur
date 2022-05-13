@@ -257,16 +257,16 @@ class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsS
                        boost::function<void(const boost::system::error_code&)> handler);
 
     void async_write_some1(const boost::system::error_code& error, size_t bytes_transferred, size_t len,
-                           boost::function<void(const boost::system::error_code&, size_t)> handler);
+                           const boost::function<void(const boost::system::error_code&, size_t)>& handler);
     void async_write_some2(const boost::system::error_code& error,
-                           boost::function<void(const boost::system::error_code&, size_t)> handler);
+                           const boost::function<void(const boost::system::error_code&, size_t)>& handler);
 
     void async_read_some1(boost::asio::mutable_buffer& b, const boost::system::error_code& error,
                           size_t bytes_transferred,
-                          boost::function<void(const boost::system::error_code&, size_t)> handler);
+                          const boost::function<void(const boost::system::error_code&, size_t)>& handler);
 
     void async_read_some2(const boost::system::error_code& error, boost::asio::mutable_buffer& b,
-                          boost::function<void(const boost::system::error_code&, size_t)> handler);
+                          const boost::function<void(const boost::system::error_code&, size_t)>& handler);
 
     void do_shutdown1();
     void do_shutdown2(const boost::system::error_code& error, size_t bytes_transferred);
@@ -281,7 +281,7 @@ class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsS
 
   public:
     TlsSchannelAsyncStreamAdapter(
-        RR_BOOST_ASIO_IO_CONTEXT& _io_context, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context,
+        RR_BOOST_ASIO_IO_CONTEXT& _io_context, const boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext>& context,
         direction_type direction, boost::string_ref servername,
         boost::function<void(mutable_buffers&,
                              boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)>
@@ -295,10 +295,10 @@ class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsS
     virtual void async_handshake(boost::function<void(const boost::system::error_code&)> handler);
 
     virtual void async_write_some(const_buffers& b,
-                                  boost::function<void(const boost::system::error_code&, size_t)> handler);
+                                  const boost::function<void(const boost::system::error_code&, size_t)>& handler);
 
     virtual void async_read_some(mutable_buffers& b,
-                                 boost::function<void(const boost::system::error_code&, size_t)> handler);
+                                 const boost::function<void(const boost::system::error_code&, size_t)>& handler);
 
     virtual void async_shutdown(boost::function<void(const boost::system::error_code&)> handler);
 

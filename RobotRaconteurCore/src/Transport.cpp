@@ -28,7 +28,11 @@
 namespace RobotRaconteur
 {
 
-Transport::Transport(RR_SHARED_PTR<RobotRaconteurNode> node) { this->node = node; }
+Transport::Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node)
+{
+    this->node = node;
+    TransportID = 0;
+}
 
 RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode()
 {
@@ -56,22 +60,27 @@ RR_SHARED_PTR<ITransportConnection> Transport::GetCurrentThreadTransport()
 
     if (!m_CurrentThreadTransport.get())
         throw InvalidOperationException("Not set");
-    return *m_CurrentThreadTransport.get();
+    return *m_CurrentThreadTransport;
 }
 
 void Transport::PeriodicCleanupTask() {}
 
-uint32_t Transport::TransportCapability(boost::string_ref name) { return 0; }
+uint32_t Transport::TransportCapability(boost::string_ref name)
+{
+    RR_UNUSED(name);
+    return 0;
+}
 
-void Transport::FireTransportEventListener(RR_SHARED_PTR<Transport> shared_this, TransportListenerEventType ev,
-                                           RR_SHARED_PTR<void> parameter)
+void Transport::FireTransportEventListener(const RR_SHARED_PTR<Transport>& shared_this, TransportListenerEventType ev,
+                                           const RR_SHARED_PTR<void>& parameter)
 {
     TransportListeners(shared_this, ev, parameter);
 }
 
-RR_INTRUSIVE_PTR<Message> Transport::SpecialRequest(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc)
+RR_INTRUSIVE_PTR<Message> Transport::SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m,
+                                                    const RR_SHARED_PTR<ITransportConnection>& tc)
 {
-    if (m->entries.size() >= 1)
+    if (!m->entries.empty())
     {
         uint32_t type = (static_cast<uint32_t>(m->entries[0]->EntryType));
         if (type < 500 && (type % 2 == 1))
@@ -92,17 +101,19 @@ std::vector<NodeDiscoveryInfo> Transport::GetDetectedNodes(const std::vector<std
 
     RR_SHARED_PTR<detail::sync_async_handler<std::vector<NodeDiscoveryInfo> > > t =
         RR_MAKE_SHARED<detail::sync_async_handler<std::vector<NodeDiscoveryInfo> > >();
-    boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> h =
+    boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> h =
         boost::bind(&detail::sync_async_handler<std::vector<NodeDiscoveryInfo> >::operator(), t,
                     RR_BOOST_PLACEHOLDERS(_1), RR_SHARED_PTR<RobotRaconteurException>());
     AsyncGetDetectedNodes(schemes, h);
     return *t->end();
 }
 
-void Transport::AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                      boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler,
-                                      int32_t timeout)
+void Transport::AsyncGetDetectedNodes(
+    const std::vector<std::string>& schemes,
+    const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler, int32_t timeout)
 {
+    RR_UNUSED(schemes);
+    RR_UNUSED(timeout);
     RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > n = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
     RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, n), true);
 }
@@ -122,7 +133,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
         throw ConnectionException("Invalid Connection URL");
 
     o.scheme = url_result[1];
-    if (o.scheme == "")
+    if (o.scheme.empty())
         throw ConnectionException("Invalid Connection URL");
 
     if (o.scheme == "tcp")
@@ -131,7 +142,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
             throw ConnectionException("Invalid Connection URL");
 
         o.host = url_result[2];
-        if (o.host == "")
+        if (o.host.empty())
             throw ConnectionException("Invalid Connection URL");
 
         std::string ap = url_result[4];
@@ -144,7 +155,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
         if (s.size() < 2)
             throw ConnectionException("Invalid Connection URL");
         std::string noden = s.at(0);
-        if (noden.find("{") != std::string::npos || noden.find("[") != std::string::npos)
+        if (noden.find('{') != std::string::npos || noden.find('[') != std::string::npos)
         {
             o.nodeid = NodeID(noden);
         }
@@ -174,7 +185,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
 
     o.host = url_result[2];
     std::string port_str = url_result[3];
-    if (port_str == "")
+    if (port_str.empty())
     {
         o.port = -1;
 

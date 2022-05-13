@@ -52,7 +52,7 @@ NodeID Endpoint::GetRemoteNodeID()
     return ret;
 }
 
-void Endpoint::SetRemoteNodeID(NodeID id)
+void Endpoint::SetRemoteNodeID(const NodeID& id)
 {
     boost::unique_lock<boost::shared_mutex> lock(m_RemoteNodeName_lock);
     m_RemoteNodeID = id;
@@ -67,7 +67,7 @@ RR_SHARED_PTR<ITransportConnection> Endpoint::GetTransportConnection()
     boost::mutex::scoped_lock lock(m_TransportConnection_lock);
     return m_TransportConnection.lock();
 }
-void Endpoint::SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c)
+void Endpoint::SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c)
 {
     boost::mutex::scoped_lock lock(m_TransportConnection_lock);
     m_TransportConnection = c;
@@ -81,8 +81,8 @@ boost::posix_time::ptime Endpoint::GetLastMessageSentTime() { return m_LastMessa
 
 void Endpoint::SetLastMessageSentTime(boost::posix_time::ptime time) { m_LastMessageSentTime.store(time); }
 
-void Endpoint::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback)
+void Endpoint::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     if (!m->header)
         m->header = CreateMessageHeader();
@@ -110,7 +110,7 @@ void Endpoint::AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
     GetNode()->AsyncSendMessage(m, callback);
 }
 
-void Endpoint::SendMessage(RR_INTRUSIVE_PTR<Message> m)
+void Endpoint::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
 {
     if (!m->header)
         m->header = CreateMessageHeader();
@@ -139,7 +139,7 @@ void Endpoint::SendMessage(RR_INTRUSIVE_PTR<Message> m)
 
 void Endpoint::PeriodicCleanupTask() {}
 
-void Endpoint::CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m)
+void Endpoint::CheckEndpointCapabilityMessage(const RR_INTRUSIVE_PTR<Message>& m)
 {
     uint32_t capability = 0;
     RR_INTRUSIVE_PTR<MessageEntry> e;
@@ -181,21 +181,25 @@ void Endpoint::CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m)
     SendMessage(ret);
 }
 
-uint32_t Endpoint::EndpointCapability(boost::string_ref name) { return static_cast<uint32_t>(0); }
-
-Endpoint::Endpoint(RR_SHARED_PTR<RobotRaconteurNode> node)
+uint32_t Endpoint::EndpointCapability(boost::string_ref name)
 {
-    m_LocalEndpoint.store(0);
-    m_RemoteEndpoint.store(0);
+    RR_UNUSED(name);
+    return static_cast<uint32_t>(0);
+}
+
+Endpoint::Endpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node)
+    : m_LocalEndpoint(0), m_RemoteEndpoint(0), MessageNumber(0), m_transport(std::numeric_limits<uint32_t>::max())
+
+{
+
     m_RemoteNodeName.clear();
     m_RemoteNodeID = NodeID::GetAny();
     // TransportConnection = 0;
     m_LastMessageReceivedTime.store(boost::posix_time::microsec_clock::universal_time());
     m_LastMessageSentTime.store(boost::posix_time::microsec_clock::universal_time());
-    MessageNumber.store(0);
+
     // MessageNumberLock = RR_MAKE_SHARED<Object>();
     this->node = node;
-    m_transport.store(std::numeric_limits<uint32_t>::max());
 }
 
 RR_SHARED_PTR<RobotRaconteurNode> Endpoint::GetNode()

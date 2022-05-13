@@ -445,7 +445,8 @@ class WinUsbDeviceManager : public UsbDeviceManager
     RR_SHARED_PTR<SetupApi_Functions> setupapi_f;
 
   public:
-    WinUsbDeviceManager(RR_SHARED_PTR<HardwareTransport> parent, RR_SHARED_PTR<SetupApi_Functions> setupapi_f);
+    WinUsbDeviceManager(const RR_SHARED_PTR<HardwareTransport>& parent,
+                        const RR_SHARED_PTR<SetupApi_Functions>& setupapi_f);
     virtual ~WinUsbDeviceManager();
 
   protected:
@@ -469,29 +470,30 @@ class WinUsbDevice_Handle
 class WinUsbDevice_Initialize : public UsbDevice_Initialize
 {
   public:
-    WinUsbDevice_Initialize(RR_SHARED_PTR<UsbDevice> parent, RR_SHARED_PTR<WinUsb_Functions> f,
+    WinUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                             const UsbDeviceManager_detected_device& detected_device);
     virtual ~WinUsbDevice_Initialize() {}
 
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
                                       boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     // Call with lock
     virtual void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                             boost::asio::mutable_buffer& buf,
                                             boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     // Call with lock
     virtual UsbDeviceStatus OpenDevice(RR_SHARED_PTR<void>& dev_h);
 
     // Call with lock
-    virtual UsbDeviceStatus ReadPipeSettings(RR_SHARED_PTR<void> dev_h, RR_SHARED_PTR<UsbDevice_Settings>& settings);
+    virtual UsbDeviceStatus ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
+                                             RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
     // Call with lock
-    virtual UsbDeviceStatus ReadInterfaceSettings(RR_SHARED_PTR<void> dev_h,
+    virtual UsbDeviceStatus ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
                                                   RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
   protected:
@@ -501,7 +503,7 @@ class WinUsbDevice_Initialize : public UsbDevice_Initialize
 class WinUsbDevice_Claim : public UsbDevice_Claim
 {
   public:
-    WinUsbDevice_Claim(RR_SHARED_PTR<UsbDevice> parent, RR_SHARED_PTR<WinUsb_Functions> f,
+    WinUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                        const UsbDeviceManager_detected_device& detected_device);
     virtual ~WinUsbDevice_Claim() {}
 
@@ -509,12 +511,12 @@ class WinUsbDevice_Claim : public UsbDevice_Claim
     virtual void AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                       boost::asio::mutable_buffer& buf,
                                       boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                      RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                      const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     virtual void AsyncControlTransferNoLock(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                             boost::asio::mutable_buffer& buf,
                                             boost::function<void(const boost::system::error_code&, size_t)> handler,
-                                            RR_SHARED_PTR<void> dev_h = RR_SHARED_PTR<void>());
+                                            const RR_SHARED_PTR<void>& dev_h = RR_SHARED_PTR<void>());
 
     virtual void AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf,
                                boost::function<void(const boost::system::error_code&, size_t)> handler);
@@ -552,7 +554,7 @@ class WinUsbDevice : public UsbDevice
     RR_SHARED_PTR<WinUsb_Functions> f;
 
   public:
-    WinUsbDevice(RR_SHARED_PTR<WinUsbDeviceManager> parent, RR_SHARED_PTR<WinUsb_Functions> f,
+    WinUsbDevice(const RR_SHARED_PTR<WinUsbDeviceManager>& parent, const RR_SHARED_PTR<WinUsb_Functions>& f,
                  const UsbDeviceManager_detected_device& device);
     virtual ~WinUsbDevice();
 
@@ -563,7 +565,7 @@ class WinUsbDevice : public UsbDevice
 class WinsockBluetoothConnector : public BluetoothConnector<SOCKADDR_BTH, AF_BTH, BTHPROTO_RFCOMM>
 {
   public:
-    WinsockBluetoothConnector(RR_SHARED_PTR<HardwareTransport> parent);
+    WinsockBluetoothConnector(const RR_SHARED_PTR<HardwareTransport>& parent);
 
     virtual std::list<SOCKADDR_BTH> GetDeviceAddresses();
 
@@ -574,9 +576,11 @@ class HardwareTransport_win_discovery
     : public HardwareTransport_discovery<WinUsbDeviceManager, WinsockBluetoothConnector>
 {
   public:
-    HardwareTransport_win_discovery(RR_SHARED_PTR<HardwareTransport> parent, const std::vector<std::string>& schemes,
-                                    RR_SHARED_PTR<WinUsbDeviceManager> usb, RR_SHARED_PTR<WinsockBluetoothConnector> bt,
-                                    RR_SHARED_PTR<void> f_void);
+    HardwareTransport_win_discovery(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                    const std::vector<std::string>& schemes,
+                                    const RR_SHARED_PTR<WinUsbDeviceManager>& usb,
+                                    const RR_SHARED_PTR<WinsockBluetoothConnector>& bt,
+                                    const RR_SHARED_PTR<void>& f_void);
     virtual ~HardwareTransport_win_discovery() {}
 
     virtual void Init();
@@ -608,21 +612,21 @@ class HardwareTransport_win_discovery
     boost::thread window_thread;
 };
 
-boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(RR_SHARED_PTR<void> f,
+boost::optional<std::wstring> HardwareTransport_win_find_deviceinterface(const RR_SHARED_PTR<void>& f,
                                                                          const GUID* interface_guid,
                                                                          const NodeID& nodeid,
                                                                          boost::string_ref nodename);
 
-boost::optional<std::wstring> HardwareTransport_win_find_usb(RR_SHARED_PTR<void> f, const NodeID& nodeid,
+boost::optional<std::wstring> HardwareTransport_win_find_usb(const RR_SHARED_PTR<void>& f, const NodeID& nodeid,
                                                              boost::string_ref nodename);
 
-boost::optional<std::wstring> HardwareTransport_win_find_pci(RR_SHARED_PTR<void> f, const NodeID& nodeid,
+boost::optional<std::wstring> HardwareTransport_win_find_pci(const RR_SHARED_PTR<void>& f, const NodeID& nodeid,
                                                              boost::string_ref nodename);
 
-boost::optional<std::wstring> HardwareTransport_win_find_bluetooth(RR_SHARED_PTR<void> f, const NodeID& nodeid,
+boost::optional<std::wstring> HardwareTransport_win_find_bluetooth(const RR_SHARED_PTR<void>& f, const NodeID& nodeid,
                                                                    boost::string_ref nodename);
 
-std::list<boost::tuple<NodeID, std::string> > HardwareTransport_win_find_deviceinterfaces(RR_SHARED_PTR<void> f,
+std::list<boost::tuple<NodeID, std::string> > HardwareTransport_win_find_deviceinterfaces(const RR_SHARED_PTR<void>& f,
                                                                                           const GUID* interface_guid);
 
 } // namespace detail

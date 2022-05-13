@@ -40,7 +40,7 @@ static void DarwinLocalTransportDiscovery_FSCallback(ConstFSEventStreamRef strea
     this_->Refresh();
 }
 
-DarwinLocalTransportDiscovery::DarwinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node)
+DarwinLocalTransportDiscovery::DarwinLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node)
     : LocalTransportDiscovery(node)
 {
     runloop = NULL;

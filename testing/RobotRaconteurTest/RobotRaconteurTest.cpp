@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 // RobotRaconteurTest.cpp : Defines the entry point for the console application.
 //
 
@@ -12,10 +14,10 @@
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 
-#include "MessageSerializationTest.h"
-#include "MessageSerializationTest4.h"
+// #include "MessageSerializationTest.h"
+// #include "MessageSerializationTest4.h"
 
-#include "AsyncMessageTest.h"
+// #include "AsyncMessageTest.h"
 
 #include <RobotRaconteur.h>
 /*#include "com__robotraconteur__testing__TestService1.h"
@@ -33,6 +35,8 @@
 #include "ServiceTestClient3.h"
 
 #include "boost/foreach.hpp"
+
+#define RR_NO_BACKTRACE
 
 #ifndef RR_NO_BACKTRACE
 #ifndef _WIN32
@@ -130,7 +134,7 @@ void servicetest7(RR_SHARED_PTR<PipeEndpoint<double> > p)
     }
 }
 
-void servicetest6(uint32_t pnum, RR_SHARED_PTR<RobotRaconteurException> e) {}
+void servicetest6(uint32_t pnum, const RR_SHARED_PTR<RobotRaconteurException>& e) {}
 
 void servicetest5(RR_SHARED_PTR<PipeEndpoint<double> > p, RR_SHARED_PTR<WireConnection<double> > w,
                   const TimerEvent& ev)
@@ -148,16 +152,18 @@ void servicetest5(RR_SHARED_PTR<PipeEndpoint<double> > p, RR_SHARED_PTR<WireConn
     servicetest_count++;
 }
 
-void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp);
+void servicetest3(const std::string& url1, const RR_SHARED_PTR<RRObject>& obj,
+                  const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-void servicetest4(std::string url1)
+void servicetest4(const std::string& url1)
 {
     RobotRaconteurNode::s()->AsyncConnectService(
-        url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "",
+        url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "",
         boost::bind(&servicetest3, url1, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 }
 
-void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
+void servicetest3(const std::string& url1, const RR_SHARED_PTR<RRObject>& obj,
+                  const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -170,7 +176,7 @@ void servicetest3(std::string url1, RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<R
     RobotRaconteurNode::s()->AsyncDisconnectService(obj, boost::bind(&servicetest4, url1));
 }
 
-void servicetest2(RR_SHARED_PTR<async_testroot> o, double d, RR_SHARED_PTR<RobotRaconteurException> exp)
+void servicetest2(const RR_SHARED_PTR<async_testroot>& o, double d, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -183,7 +189,7 @@ void servicetest2(RR_SHARED_PTR<async_testroot> o, double d, RR_SHARED_PTR<Robot
     o->async_func3(1, 2, boost::bind(&servicetest2, o, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 }
 
-void servicetest1(RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
+void servicetest1(const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -208,9 +214,9 @@ void servicetest1(RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurExcep
 int latencyitercount = 0;
 RR_SHARED_PTR<AutoResetEvent> latency_event;
 
-void latencytest1(RR_SHARED_PTR<async_testroot> obj, RR_SHARED_PTR<RobotRaconteurException> exp);
+void latencytest1(const RR_SHARED_PTR<async_testroot>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
-void latencytest1(RR_SHARED_PTR<async_testroot> obj, RR_SHARED_PTR<RobotRaconteurException> exp)
+void latencytest1(const RR_SHARED_PTR<async_testroot>& obj, const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
     if (exp)
     {
@@ -238,25 +244,25 @@ void latencytest1(RR_SHARED_PTR<async_testroot> obj, RR_SHARED_PTR<RobotRaconteu
     }
 }
 
-void servicesubscription_connected(RR_SHARED_PTR<ServiceSubscription> sub, const ServiceSubscriptionClientID& noden,
-                                   RR_SHARED_PTR<RRObject> obj)
+void servicesubscription_connected(const RR_SHARED_PTR<ServiceSubscription>& sub,
+                                   const ServiceSubscriptionClientID& noden, const RR_SHARED_PTR<RRObject>& obj)
 {
     cout << "Subscription Connected: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
 
-void servicesubscription_disconnected(RR_SHARED_PTR<ServiceSubscription> sub, const ServiceSubscriptionClientID& noden,
-                                      RR_SHARED_PTR<RRObject> obj)
+void servicesubscription_disconnected(const RR_SHARED_PTR<ServiceSubscription>& sub,
+                                      const ServiceSubscriptionClientID& noden, const RR_SHARED_PTR<RRObject>& obj)
 {
     cout << "Subscription Disconnected: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
 
-void serviceinfo2subscription_detected(RR_SHARED_PTR<ServiceInfo2Subscription> sub,
+void serviceinfo2subscription_detected(const RR_SHARED_PTR<ServiceInfo2Subscription>& sub,
                                        const ServiceSubscriptionClientID& noden, const ServiceInfo2& info)
 {
     cout << "ServiceInfo2 detected: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
 }
 
-void serviceinfo2subscription_lost(RR_SHARED_PTR<ServiceInfo2Subscription> sub,
+void serviceinfo2subscription_lost(const RR_SHARED_PTR<ServiceInfo2Subscription>& sub,
                                    const ServiceSubscriptionClientID& noden, const ServiceInfo2& info)
 {
     cout << "ServiceInfo2 lost: " << noden.NodeID.ToString() << ", " << noden.ServiceName << endl;
@@ -270,7 +276,7 @@ void subscribertest_waitwire(RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<Rob
 
 void subscribertest_wirechanged(
     RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > w1,
-    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > val, const TimeSpec& time)
+    const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& val, const TimeSpec& time)
 {
     // cout << "Wire value: " << RRArrayToScalar(val) << endl;
 }
@@ -309,15 +315,16 @@ void singlethreadserver_quit_thread_func()
     singlethreadserver_keep_going = false;
 }
 
-static void asyncgetdefaultclient_handler(RR_SHARED_PTR<testroot> obj, RR_SHARED_PTR<RobotRaconteurException> err)
+static void asyncgetdefaultclient_handler(const RR_SHARED_PTR<testroot>& obj,
+                                          const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     std::cout << "Got default client callback" << std::endl;
 }
 
-static void asyncgetdefaultclient_failed_handler(RR_SHARED_PTR<ServiceSubscription> sub,
+static void asyncgetdefaultclient_failed_handler(const RR_SHARED_PTR<ServiceSubscription>& sub,
                                                  const ServiceSubscriptionClientID& id,
                                                  const std::vector<std::string>& url,
-                                                 RR_SHARED_PTR<RobotRaconteurException> err)
+                                                 const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     std::cout << "Connect to " << id.NodeID.ToString() << " with url: " << boost::join(url, ",")
               << " failed: " << err->ToString() << std::endl;
@@ -362,41 +369,41 @@ int main(int argc, char* argv[])
     else
         command = "loopback";
 
-    if (command == "messagetest")
-    {
-        MessageSerializationTest::Test();
-        MessageSerializationTest4::Test();
-        std::cout << "Done!" << std::endl;
-        return 0;
-    }
+    // if (command == "messagetest")
+    // {
+    //     MessageSerializationTest::Test();
+    //     MessageSerializationTest4::Test();
+    //     std::cout << "Done!" << std::endl;
+    //     return 0;
+    // }
 
-    if (command == "messagerandomtest")
-    {
-        size_t n = 100;
-        if (argc > 2)
-        {
-            n = boost::lexical_cast<size_t>(string(argv[2]));
-        }
-        MessageSerializationTest::RandomTest(n);
-        MessageSerializationTest4::RandomTest(n);
-        std::cout << "Done!" << std::endl;
-        return 0;
-    }
+    // if (command == "messagerandomtest")
+    // {
+    //     size_t n = 100;
+    //     if (argc > 2)
+    //     {
+    //         n = boost::lexical_cast<size_t>(string(argv[2]));
+    //     }
+    //     MessageSerializationTest::RandomTest(n);
+    //     MessageSerializationTest4::RandomTest(n);
+    //     std::cout << "Done!" << std::endl;
+    //     return 0;
+    // }
 
-    if (command == "asyncmessagerandomtest")
-    {
-        size_t n = 100;
-        if (argc > 2)
-        {
-            n = boost::lexical_cast<size_t>(string(argv[2]));
-        }
-        AsyncMessageReaderTest::RandomTest(n);
-        AsyncMessageReaderTest::RandomTest4(n);
-        AsyncMessageWriterTest::RandomTest(n);
-        AsyncMessageWriterTest::RandomTest4(n);
-        std::cout << "Done!" << std::endl;
-        return 0;
-    }
+    // if (command == "asyncmessagerandomtest")
+    // {
+    //     size_t n = 100;
+    //     if (argc > 2)
+    //     {
+    //         n = boost::lexical_cast<size_t>(string(argv[2]));
+    //     }
+    //     AsyncMessageReaderTest::RandomTest(n);
+    //     AsyncMessageReaderTest::RandomTest4(n);
+    //     AsyncMessageWriterTest::RandomTest(n);
+    //     AsyncMessageWriterTest::RandomTest4(n);
+    //     std::cout << "Done!" << std::endl;
+    //     return 0;
+    // }
 
     if (command == "loopback")
     {
@@ -1100,7 +1107,7 @@ int main(int argc, char* argv[])
         // >(),NULL,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
         RR_SHARED_PTR<RRObject> obj = RobotRaconteurNode::s()->ConnectService(
-            url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "");
+            url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "");
         RR_SHARED_PTR<async_testroot> o = rr_cast<async_testroot>(obj);
         RR_SHARED_PTR<testroot> o2 = rr_cast<testroot>(obj);
         o->async_func3(1, 2, boost::bind(&servicetest2, o, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
@@ -1163,7 +1170,7 @@ int main(int argc, char* argv[])
         // >(),NULL,"",boost::bind(&servicetest3,url1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
         RR_SHARED_PTR<RRObject> obj = RobotRaconteurNode::s()->ConnectService(
-            url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "");
+            url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "");
         RR_SHARED_PTR<async_testroot> o = rr_cast<async_testroot>(obj);
         RR_SHARED_PTR<testroot> o2 = rr_cast<testroot>(obj);
 
@@ -1326,7 +1333,7 @@ int main(int argc, char* argv[])
             RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
         RR_SHARED_PTR<RRObject> obj = RobotRaconteurNode::s()->ConnectService(
-            url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "");
+            url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "");
         RR_SHARED_PTR<testroot> o = rr_cast<testroot>(obj);
         o->get_d1();
 
@@ -1341,8 +1348,8 @@ int main(int argc, char* argv[])
 
     if (command == "multidimarraytest")
     {
-        MultiDimArrayTest::TestDouble();
-        MultiDimArrayTest::TestByte();
+        // MultiDimArrayTest::TestDouble();
+        // MultiDimArrayTest::TestByte();
         return 0;
     }
 
@@ -1805,7 +1812,8 @@ int main(int argc, char* argv[])
             defs2.push_back(def2);
         }
 
-        VerifyServiceDefinitions(defs);
+        std::vector<ServiceDefinitionParseException> warnings;
+        VerifyServiceDefinitions(defs, warnings);
 
         for (size_t i = 0; i < defs.size(); i++)
         {
@@ -1815,14 +1823,14 @@ int main(int argc, char* argv[])
             }
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition> def, defs)
+        BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& def, defs)
         {
             cout << def->ToString() << endl;
         }
 
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition> def, defs)
+        BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& def, defs)
         {
-            BOOST_FOREACH (RR_SHARED_PTR<ConstantDefinition> c, def->Constants)
+            BOOST_FOREACH (const RR_SHARED_PTR<ConstantDefinition>& c, def->Constants)
             {
                 if (c->Name == "strconst")
                 {
@@ -2201,7 +2209,7 @@ int main(int argc, char* argv[])
         {
             schemes.push_back("rr+local");
         }
-        BOOST_FOREACH (std::string scheme, schemes)
+        BOOST_FOREACH (const std::string& scheme, schemes)
         {
             std::vector<std::string> schemes2;
             schemes2.push_back(scheme);
@@ -2263,7 +2271,7 @@ int main(int argc, char* argv[])
         std::vector<NodeID> n;
         std::vector<std::string> n1;
         boost::split(n1, argv[2], boost::is_any_of(","));
-        BOOST_FOREACH (std::string n2, n1)
+        BOOST_FOREACH (const std::string& n2, n1)
         {
             n.push_back(NodeID(n2));
         }
@@ -2318,3 +2326,5 @@ int main(int argc, char* argv[])
 
     throw runtime_error("Unknown test command");
 }
+
+// NOLINTEND

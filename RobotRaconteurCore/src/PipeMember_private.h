@@ -21,10 +21,10 @@ namespace RobotRaconteur
 class ROBOTRACONTEUR_CORE_API PipeEndpointBaseListener
 {
   public:
-    virtual void PipeEndpointClosed(RR_SHARED_PTR<PipeEndpointBase> endpoint) = 0;
-    virtual void PipePacketReceived(RR_SHARED_PTR<PipeEndpointBase> endpoint,
-                                    boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func) = 0;
-    virtual void PipePacketAckReceived(RR_SHARED_PTR<PipeEndpointBase> endpoint, uint32_t pnum) = 0;
+    virtual void PipeEndpointClosed(const RR_SHARED_PTR<PipeEndpointBase>& endpoint) = 0;
+    virtual void PipePacketReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint,
+                                    const boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)>& receive_packet_func) = 0;
+    virtual void PipePacketAckReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint, uint32_t pnum) = 0;
     virtual ~PipeEndpointBaseListener() {}
 };
 } // namespace RobotRaconteur

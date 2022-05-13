@@ -130,7 +130,7 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageWriterImpl : public AsyncMessageWriter
 
   public:
     AsyncMessageWriterImpl();
-    virtual ~AsyncMessageWriterImpl() {}
+    RR_OVIRTUAL ~AsyncMessageWriterImpl() RR_OVERRIDE {}
 
     size_t message_len();
 
@@ -158,14 +158,14 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageWriterImpl : public AsyncMessageWriter
     void pop_state();
 
     // TODO: use const data
-    void push_state(state_type new_state, state_type pop_state, size_t relative_limit, RR_INTRUSIVE_PTR<RRValue> data,
-                    size_t param1 = 0, size_t param2 = 0);
+    void push_state(state_type new_state, state_type pop_state, size_t relative_limit,
+                    const RR_INTRUSIVE_PTR<RRValue>& data, size_t param1 = 0, size_t param2 = 0);
     void push_state(state_type new_state, state_type pop_state, size_t relative_limit, void* ptrdata, size_t param1 = 0,
                     size_t param2 = 0);
 
     void prepare_continue(mutable_buffers& work_bufs, size_t& work_bufs_used, const_buffers& write_bufs);
 
-    size_t quota_available();
+    size_t quota_available() const;
     size_t work_bufs_available();
 
     bool write_all_bytes(const void* p, size_t len);
@@ -188,15 +188,15 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageWriterImpl : public AsyncMessageWriter
     bool write_string4(MessageStringPtr& str, state_type next_state);
     bool write_string4(MessageStringPtr& str); // next_state=state()++
 
-    virtual void Reset();
-    virtual void BeginWrite(RR_INTRUSIVE_PTR<Message> m, uint16_t version);
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
+    RR_OVIRTUAL void BeginWrite(const RR_INTRUSIVE_PTR<Message>& m, uint16_t version) RR_OVERRIDE;
 
-    virtual return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used,
-                              const_buffers& write_bufs);
-    virtual return_type Write4(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used,
-                               const_buffers& write_bufs);
+    RR_OVIRTUAL return_type Write(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used,
+                                  const_buffers& write_bufs) RR_OVERRIDE;
+    RR_OVIRTUAL return_type Write4(size_t write_quota, mutable_buffers& work_bufs, size_t& work_bufs_used,
+                                   const_buffers& write_bufs) RR_OVERRIDE;
 
-    virtual size_t WriteRemaining();
+    RR_OVIRTUAL size_t WriteRemaining() RR_OVERRIDE;
 };
 
 } // namespace RobotRaconteur

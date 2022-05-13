@@ -28,8 +28,8 @@ namespace RobotRaconteur
 	public:		
 
 	RR_RELEASE_GIL()
-		virtual boost::intrusive_ptr<MessageElement> Next(boost::intrusive_ptr<MessageElement> v);
-		virtual void AsyncNext(boost::intrusive_ptr<MessageElement> v, int32_t timeout, AsyncRequestDirector* handler, int32_t id);
+		virtual boost::intrusive_ptr<MessageElement> Next(const boost::intrusive_ptr<MessageElement>& v);
+		virtual void AsyncNext(const boost::intrusive_ptr<MessageElement>& v, int32_t timeout, AsyncRequestDirector* handler, int32_t id);
 
 		virtual void Abort();
 		virtual void AsyncAbort(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
@@ -46,7 +46,7 @@ namespace RobotRaconteur
 	{
 	public:
 		virtual ~AsyncGeneratorClientReturnDirector() {}
-		virtual void handler(boost::shared_ptr<WrappedGeneratorClient> ret, HandlerErrorInfo& error);
+		virtual void handler(const boost::shared_ptr<WrappedGeneratorClient>& ret, HandlerErrorInfo& error) = 0;
 	};
 
 	class WrappedGeneratorServerDirector
@@ -55,10 +55,10 @@ namespace RobotRaconteur
 		WrappedGeneratorServerDirector();
 		virtual ~WrappedGeneratorServerDirector() {}
 
-		virtual boost::intrusive_ptr<MessageElement> Next(boost::intrusive_ptr<MessageElement> m,boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adaptor);
+		virtual boost::intrusive_ptr<MessageElement> Next(boost::intrusive_ptr<MessageElement> m,const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adaptor) = 0;
 
-		virtual void Abort(boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adapter);
-		virtual void Close(boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter> async_adapter);
+		virtual void Abort(const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adapter) = 0;
+		virtual void Close(const boost::shared_ptr<RobotRaconteur::WrappedServiceSkelAsyncAdapter>& async_adapter) = 0;
 
 		int32_t objectheapid;
 	};

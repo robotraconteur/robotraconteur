@@ -32,7 +32,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ServiceFactory::GetNode()
     return n;
 }
 
-void ServiceFactory::SetNode(RR_SHARED_PTR<RobotRaconteurNode> node)
+void ServiceFactory::SetNode(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
     if (!this->node.expired())
         throw InvalidOperationException("Factory already registered");

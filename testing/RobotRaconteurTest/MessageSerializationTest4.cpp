@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #endif
 
+// NOLINTBEGIN
+
 #include "MessageSerializationTest4.h"
 
 using namespace RobotRaconteur;
@@ -600,3 +602,4 @@ void MessageSerializationTest4::RandomTest(size_t iterations)
 }
 
 } // namespace RobotRaconteurTest
+  // NOLINTEND
