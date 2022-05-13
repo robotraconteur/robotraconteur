@@ -25,7 +25,7 @@ class rr_array_near_util_impl<double>
     {
         if (a1 == a2)
             return true;
-        if (isnan(a1) && isnan(a2))
+        if (std::isnan(a1) && std::isnan(a2))
             return true;
         return abs(a1 - a2) < 1e-14;
     }
@@ -39,7 +39,7 @@ class rr_array_near_util_impl<float>
     {
         if (a1 == a2)
             return true;
-        if (isnan(a1) && isnan(a2))
+        if (std::isnan(a1) && std::isnan(a2))
             return true;
         return abs(a1 - a2) < 1e-5f;
     }
