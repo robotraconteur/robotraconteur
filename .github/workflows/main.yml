@@ -543,7 +543,8 @@ jobs:
       run: >
         cmake -G "Ninja"
         -DBoost_USE_STATIC_LIBS=ON
-        -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON        
+        -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+        -DBUILD_TESTING=OFF    
         -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
