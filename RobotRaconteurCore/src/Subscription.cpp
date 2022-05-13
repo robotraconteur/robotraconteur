@@ -2762,7 +2762,7 @@ void PipeSubscription_connection::RetryConnect1(const TimerEvent& ev)
 void PipeSubscription_connection::Close()
 {
     RR_SHARED_PTR<PipeEndpointBase> c = connection.lock();
-    if (c)
+    if (!c)
         return;
     {
         connection.reset();
