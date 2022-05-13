@@ -813,7 +813,8 @@ jobs:
     - name: configure_host
       working-directory: build2_host
       run: >
-        cmake -G "Unix Makefiles" -DBUILD_GEN=ON 
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON
+        -DBUILD_TESTING=OFF
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -O0"
         -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
