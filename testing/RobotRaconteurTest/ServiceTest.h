@@ -282,8 +282,8 @@ class RobotRaconteurTest_testroot : public virtual testroot,
 
     virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > get_p1()
         RR_OVERRIDE;
-    virtual void set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > >& value)
-        RR_OVERRIDE;
+    virtual void set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > >&
+                            value) RR_OVERRIDE;
 
     void p1_connect_callback(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p);
     void p1_packet_received(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p);
@@ -309,20 +309,21 @@ class RobotRaconteurTest_testroot : public virtual testroot,
         RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > > get_cb3() RR_OVERRIDE;
-    virtual void set_cb3(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > >& value)
-        RR_OVERRIDE;
+    virtual void set_cb3(
+        const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > >& value) RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > get_cb_meaning_of_life() RR_OVERRIDE;
-    virtual void set_cb_meaning_of_life(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > >& value)
-        RR_OVERRIDE;
+    virtual void set_cb_meaning_of_life(
+        const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > >& value) RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > get_cb_errtest() RR_OVERRIDE;
-    virtual void set_cb_errtest(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value) RR_OVERRIDE;
+    virtual void set_cb_errtest(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)
+        RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > get_w1()
         RR_OVERRIDE;
-    virtual void set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > >& value)
-        RR_OVERRIDE;
+    virtual void set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > >&
+                            value) RR_OVERRIDE;
 
     void w1_connect_callback(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire);
     void w1_value_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > wire,

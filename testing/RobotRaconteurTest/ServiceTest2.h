@@ -87,12 +87,14 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
     virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_p1()
         RR_OVERRIDE;
     virtual void set_p1(
-        const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > >& value) RR_OVERRIDE;
+        const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > >& value)
+        RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_p2()
         RR_OVERRIDE;
     virtual void set_p2(
-        const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > >& value) RR_OVERRIDE;
+        const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > >& value)
+        RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > get_p3()
         RR_OVERRIDE;
@@ -103,12 +105,14 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
     virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_w1()
         RR_OVERRIDE;
     virtual void set_w1(
-        const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > >& value) RR_OVERRIDE;
+        const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > >& value)
+        RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > > get_w2()
         RR_OVERRIDE;
     virtual void set_w2(
-        const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > >& value) RR_OVERRIDE;
+        const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > > >& value)
+        RR_OVERRIDE;
 
     virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t> > > > get_w3()
         RR_OVERRIDE;

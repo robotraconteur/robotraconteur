@@ -2695,7 +2695,8 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > > RobotRacont
     return p2;
 }
 
-void RobotRaconteurTest_testroot::set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > >& value)
+void RobotRaconteurTest_testroot::set_p2(
+    const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2> > >& value)
 {
     p2 = value;
     p2->SetPipeConnectCallback(
@@ -2777,7 +2778,8 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > RobotRaconteu
     return cb1;
 }
 
-void RobotRaconteurTest_testroot::set_cb1(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)
+void RobotRaconteurTest_testroot::set_cb1(
+    const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)
 {
     cb1 = value;
 }
@@ -2891,7 +2893,8 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > > RobotRacont
     return w2;
 }
 
-void RobotRaconteurTest_testroot::set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > >& value)
+void RobotRaconteurTest_testroot::set_w2(
+    const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2> > >& value)
 {
     w2 = value;
     w2->SetWireConnectCallback(
