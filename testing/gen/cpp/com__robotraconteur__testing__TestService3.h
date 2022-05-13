@@ -315,31 +315,31 @@ virtual RR_SHARED_PTR<obj4 > get_o4()=0;
 virtual RR_SHARED_PTR<obj5 > get_nolock_test()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_unreliable1()=0;
-virtual void set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
+virtual void set_unreliable1(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p1()=0;
-virtual void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;
+virtual void set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_p2()=0;
-virtual void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;
+virtual void set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_p3()=0;
-virtual void set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)=0;
+virtual void set_p3(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_peekwire()=0;
-virtual void set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)=0;
+virtual void set_peekwire(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_pokewire()=0;
-virtual void set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)=0;
+virtual void set_pokewire(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w1()=0;
-virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;
+virtual void set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > get_w2()=0;
-virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)=0;
+virtual void set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3()=0;
-virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)=0;
+virtual void set_w3(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_readmem()=0;
 
@@ -440,16 +440,16 @@ virtual int32_t f1()=0;
 virtual int32_t f2()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q1()=0;
-virtual void set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
+virtual void set_q1(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > get_q2()=0;
-virtual void set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)=0;
+virtual void set_q2(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w1()=0;
-virtual void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)=0;
+virtual void set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > get_w2()=0;
-virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)=0;
+virtual void set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m1()=0;
 

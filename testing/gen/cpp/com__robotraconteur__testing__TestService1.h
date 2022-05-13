@@ -270,31 +270,31 @@ virtual RR_SHARED_PTR<sub1 > get_o4(const std::string& ind)=0;
 virtual RR_SHARED_PTR<RobotRaconteur::RRObject > get_o6()=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > get_p2()=0;
-virtual void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > value)=0;
+virtual void set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Pipe<double > > get_broadcastpipe()=0;
-virtual void set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur::Pipe<double > > value)=0;
+virtual void set_broadcastpipe(const RR_SHARED_PTR<RobotRaconteur::Pipe<double > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > get_cb1()=0;
-virtual void set_cb1(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value)=0;
+virtual void set_cb1(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double) > > > get_cb3()=0;
-virtual void set_cb3(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > > value)=0;
+virtual void set_cb3(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t() > > > get_cb_meaning_of_life()=0;
-virtual void set_cb_meaning_of_life(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > value)=0;
+virtual void set_cb_meaning_of_life(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > get_cb_errtest()=0;
-virtual void set_cb_errtest(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value)=0;
+virtual void set_cb_errtest(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > get_w2()=0;
-virtual void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > value)=0;
+virtual void set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3()=0;
-virtual void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)=0;
+virtual void set_w3(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::Wire<double > > get_broadcastwire()=0;
-virtual void set_broadcastwire(RR_SHARED_PTR<RobotRaconteur::Wire<double > > value)=0;
+virtual void set_broadcastwire(const RR_SHARED_PTR<RobotRaconteur::Wire<double > >& value)=0;
 
 virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<double > > get_m2()=0;
 

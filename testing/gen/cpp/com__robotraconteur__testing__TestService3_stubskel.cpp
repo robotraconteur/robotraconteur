@@ -1161,7 +1161,7 @@ RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > value=rrvar_unreliable1;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void testroot3_stub::set_unreliable1(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1172,7 +1172,7 @@ RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArra
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_stub::set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1183,7 +1183,7 @@ RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArra
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_stub::set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1194,7 +1194,7 @@ RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRMult
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+void testroot3_stub::set_p3(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1205,7 +1205,7 @@ RR_SHARED_PTR<RobotRaconteur::WireClient<int32_t > > value=rrvar_peekwire;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void testroot3_stub::set_peekwire(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1216,7 +1216,7 @@ RR_SHARED_PTR<RobotRaconteur::WireClient<int32_t > > value=rrvar_pokewire;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void testroot3_stub::set_pokewire(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1227,7 +1227,7 @@ RR_SHARED_PTR<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArra
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_stub::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1238,7 +1238,7 @@ RR_SHARED_PTR<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArra
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_stub::set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1249,7 +1249,7 @@ RR_SHARED_PTR<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRMult
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void testroot3_stub::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+void testroot3_stub::set_w3(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -4085,7 +4085,7 @@ RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > value=rrvar_q1;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void obj5_stub::set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void obj5_stub::set_q1(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -4096,7 +4096,7 @@ RR_SHARED_PTR<RobotRaconteur::PipeClient<int32_t > > value=rrvar_q2;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void obj5_stub::set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void obj5_stub::set_q2(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -4107,7 +4107,7 @@ RR_SHARED_PTR<RobotRaconteur::WireClient<int32_t > > value=rrvar_w1;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void obj5_stub::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void obj5_stub::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -4118,7 +4118,7 @@ RR_SHARED_PTR<RobotRaconteur::WireClient<int32_t > > value=rrvar_w2;
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void obj5_stub::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void obj5_stub::set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -8519,7 +8519,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_unreliable1) throw RobotRaconteur::InvalidOperationException("Pipe not set");
 return rrvar_unreliable1->GetPipe();
 }
-void testroot3_default_impl::set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void testroot3_default_impl::set_unreliable1(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_unreliable1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
@@ -8530,7 +8530,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int3
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_default_impl::set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -8538,7 +8538,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int3
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_impl::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_default_impl::set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -8546,7 +8546,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimAr
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_impl::set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+void testroot3_default_impl::set_p3(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -8556,7 +8556,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_peekwire) throw RobotRaconteur::InvalidOperationException("Wire not set");
 return rrvar_peekwire->GetWire();
 }
-void testroot3_default_impl::set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void testroot3_default_impl::set_peekwire(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 if (rrvar_peekwire) throw RobotRaconteur::InvalidOperationException("Wire already set");
 rrvar_peekwire = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
@@ -8567,7 +8567,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_pokewire) throw RobotRaconteur::InvalidOperationException("Wire not set");
 return rrvar_pokewire->GetWire();
 }
-void testroot3_default_impl::set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void testroot3_default_impl::set_pokewire(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 if (rrvar_pokewire) throw RobotRaconteur::InvalidOperationException("Wire already set");
 rrvar_pokewire = RR_MAKE_SHARED<RobotRaconteur::WireUnicastReceiver<int32_t > >();
@@ -8576,7 +8576,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int3
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_default_impl::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -8584,7 +8584,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int3
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_default_impl::set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -8592,7 +8592,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimAr
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_impl::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+void testroot3_default_impl::set_w3(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -8772,7 +8772,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_q1) throw RobotRaconteur::InvalidOperationException("Pipe not set");
 return rrvar_q1->GetPipe();
 }
-void obj5_default_impl::set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void obj5_default_impl::set_q1(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_q1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
@@ -8785,7 +8785,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_q2) throw RobotRaconteur::InvalidOperationException("Pipe not set");
 return rrvar_q2->GetPipe();
 }
-void obj5_default_impl::set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void obj5_default_impl::set_q2(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_q2) throw RobotRaconteur::InvalidOperationException("Pipe already set");
@@ -8798,7 +8798,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_w1) throw RobotRaconteur::InvalidOperationException("Wire not set");
 return rrvar_w1->GetWire();
 }
-void obj5_default_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void obj5_default_impl::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 if (rrvar_w1) throw RobotRaconteur::InvalidOperationException("Wire already set");
 rrvar_w1 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
@@ -8809,7 +8809,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_w2) throw RobotRaconteur::InvalidOperationException("Wire not set");
 return rrvar_w2->GetWire();
 }
-void obj5_default_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void obj5_default_impl::set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 if (rrvar_w2) throw RobotRaconteur::InvalidOperationException("Wire already set");
 rrvar_w2 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
@@ -9263,7 +9263,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_unreliable1) throw RobotRaconteur::InvalidOperationException("Pipe not set");
 return rrvar_unreliable1->GetPipe();
 }
-void testroot3_default_abstract_impl::set_unreliable1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void testroot3_default_abstract_impl::set_unreliable1(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_unreliable1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
@@ -9274,7 +9274,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int3
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_abstract_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_default_abstract_impl::set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -9282,7 +9282,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int3
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_abstract_impl::set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_default_abstract_impl::set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -9290,7 +9290,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimAr
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_abstract_impl::set_p3(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+void testroot3_default_abstract_impl::set_p3(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -9300,7 +9300,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_peekwire) throw RobotRaconteur::InvalidOperationException("Wire not set");
 return rrvar_peekwire->GetWire();
 }
-void testroot3_default_abstract_impl::set_peekwire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void testroot3_default_abstract_impl::set_peekwire(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 if (rrvar_peekwire) throw RobotRaconteur::InvalidOperationException("Wire already set");
 rrvar_peekwire = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
@@ -9311,7 +9311,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_pokewire) throw RobotRaconteur::InvalidOperationException("Wire not set");
 return rrvar_pokewire->GetWire();
 }
-void testroot3_default_abstract_impl::set_pokewire(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void testroot3_default_abstract_impl::set_pokewire(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 if (rrvar_pokewire) throw RobotRaconteur::InvalidOperationException("Wire already set");
 rrvar_pokewire = RR_MAKE_SHARED<RobotRaconteur::WireUnicastReceiver<int32_t > >();
@@ -9320,7 +9320,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int3
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_abstract_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_default_abstract_impl::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -9328,7 +9328,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int3
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_abstract_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > > value)
+void testroot3_default_abstract_impl::set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -9336,7 +9336,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimAr
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void testroot3_default_abstract_impl::set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value)
+void testroot3_default_abstract_impl::set_w3(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -9457,7 +9457,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_q1) throw RobotRaconteur::InvalidOperationException("Pipe not set");
 return rrvar_q1->GetPipe();
 }
-void obj5_default_abstract_impl::set_q1(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void obj5_default_abstract_impl::set_q1(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_q1) throw RobotRaconteur::InvalidOperationException("Pipe already set");
@@ -9470,7 +9470,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_q2) throw RobotRaconteur::InvalidOperationException("Pipe not set");
 return rrvar_q2->GetPipe();
 }
-void obj5_default_abstract_impl::set_q2(RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > > value)
+void obj5_default_abstract_impl::set_q2(const RR_SHARED_PTR<RobotRaconteur::Pipe<int32_t > >& value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_q2) throw RobotRaconteur::InvalidOperationException("Pipe already set");
@@ -9483,7 +9483,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_w1) throw RobotRaconteur::InvalidOperationException("Wire not set");
 return rrvar_w1->GetWire();
 }
-void obj5_default_abstract_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void obj5_default_abstract_impl::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 if (rrvar_w1) throw RobotRaconteur::InvalidOperationException("Wire already set");
 rrvar_w1 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();
@@ -9494,7 +9494,7 @@ boost::mutex::scoped_lock lock(this_lock);
 if (!rrvar_w2) throw RobotRaconteur::InvalidOperationException("Wire not set");
 return rrvar_w2->GetWire();
 }
-void obj5_default_abstract_impl::set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > > value)
+void obj5_default_abstract_impl::set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<int32_t > >& value)
 {
 if (rrvar_w2) throw RobotRaconteur::InvalidOperationException("Wire already set");
 rrvar_w2 = RR_MAKE_SHARED<RobotRaconteur::WireBroadcaster<int32_t > >();

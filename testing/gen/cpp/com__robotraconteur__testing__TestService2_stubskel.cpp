@@ -290,7 +290,7 @@ RR_SHARED_PTR<RobotRaconteur::PipeClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArra
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void baseobj_stub::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
+void baseobj_stub::set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -301,7 +301,7 @@ RR_SHARED_PTR<RobotRaconteur::CallbackClient<boost::function<void(double, double
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void baseobj_stub::set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)
+void baseobj_stub::set_cb2(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -311,7 +311,7 @@ RR_SHARED_PTR<RobotRaconteur::WireClient<RR_INTRUSIVE_PTR<RobotRaconteur::RRArra
 if (!value) throw RobotRaconteur::InvalidOperationException("Stub has been closed");
 return value;
 }
-void baseobj_stub::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
+void baseobj_stub::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value)
 {
 throw RobotRaconteur::InvalidOperationException("Not valid for client");
 }
@@ -1115,7 +1115,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void baseobj_default_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
+void baseobj_default_impl::set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -1124,7 +1124,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > 
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_cb2;
 }
-void baseobj_default_impl::set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)
+void baseobj_default_impl::set_cb2(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >& value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_cb2) throw RobotRaconteur::InvalidOperationException("Callback already set");
@@ -1134,7 +1134,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void baseobj_default_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
+void baseobj_default_impl::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -1191,7 +1191,7 @@ RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void baseobj_default_abstract_impl::set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
+void baseobj_default_abstract_impl::set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }
@@ -1200,7 +1200,7 @@ RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > 
 boost::mutex::scoped_lock lock(this_lock);
 return rrvar_cb2;
 }
-void baseobj_default_abstract_impl::set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value)
+void baseobj_default_abstract_impl::set_cb2(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >& value)
 {
 boost::mutex::scoped_lock lock(this_lock);
 if (rrvar_cb2) throw RobotRaconteur::InvalidOperationException("Callback already set");
@@ -1210,7 +1210,7 @@ RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<doub
 {
 throw RobotRaconteur::NotImplementedException("");
 }
-void baseobj_default_abstract_impl::set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value)
+void baseobj_default_abstract_impl::set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value)
 {
 throw RobotRaconteur::NotImplementedException("");
 }

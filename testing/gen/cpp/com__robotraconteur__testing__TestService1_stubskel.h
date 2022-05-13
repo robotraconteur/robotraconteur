@@ -609,40 +609,40 @@ RR_OVIRTUAL RR_SHARED_PTR<com::robotraconteur::testing::TestService2::subobj > g
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::RRObject > get_o6() RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > get_p1() RR_OVERRIDE;
-RR_OVIRTUAL void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > get_p2() RR_OVERRIDE;
-RR_OVIRTUAL void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<double > > get_broadcastpipe() RR_OVERRIDE;
-RR_OVIRTUAL void set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur::Pipe<double > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_broadcastpipe(const RR_SHARED_PTR<RobotRaconteur::Pipe<double > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > get_cb1() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb1(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb1(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > > get_cb2() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb2(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double) > > > get_cb3() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb3(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb3(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t() > > > get_cb_meaning_of_life() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb_meaning_of_life(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb_meaning_of_life(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > get_cb_errtest() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb_errtest(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb_errtest(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > get_w1() RR_OVERRIDE;
-RR_OVIRTUAL void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > get_w2() RR_OVERRIDE;
-RR_OVIRTUAL void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3() RR_OVERRIDE;
-RR_OVIRTUAL void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_w3(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<double > > get_broadcastwire() RR_OVERRIDE;
-RR_OVIRTUAL void set_broadcastwire(RR_SHARED_PTR<RobotRaconteur::Wire<double > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_broadcastwire(const RR_SHARED_PTR<RobotRaconteur::Wire<double > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1() RR_OVERRIDE;
 
@@ -1900,40 +1900,40 @@ RR_OVIRTUAL RR_SHARED_PTR<com::robotraconteur::testing::TestService2::subobj > g
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::RRObject > get_o6() RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > get_p1() RR_OVERRIDE;
-RR_OVIRTUAL void set_p1(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_p1(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > get_p2() RR_OVERRIDE;
-RR_OVIRTUAL void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<double > > get_broadcastpipe() RR_OVERRIDE;
-RR_OVIRTUAL void set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur::Pipe<double > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_broadcastpipe(const RR_SHARED_PTR<RobotRaconteur::Pipe<double > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > get_cb1() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb1(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb1(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double) > > > get_cb2() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb2(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb2(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void(double, double)> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double) > > > get_cb3() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb3(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb3(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t() > > > get_cb_meaning_of_life() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb_meaning_of_life(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb_meaning_of_life(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > get_cb_errtest() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb_errtest(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb_errtest(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > get_w1() RR_OVERRIDE;
-RR_OVIRTUAL void set_w1(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_w1(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > get_w2() RR_OVERRIDE;
-RR_OVIRTUAL void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3() RR_OVERRIDE;
-RR_OVIRTUAL void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_w3(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<double > > get_broadcastwire() RR_OVERRIDE;
-RR_OVIRTUAL void set_broadcastwire(RR_SHARED_PTR<RobotRaconteur::Wire<double > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_broadcastwire(const RR_SHARED_PTR<RobotRaconteur::Wire<double > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1() RR_OVERRIDE;
 
@@ -2282,31 +2282,31 @@ RR_OVIRTUAL RR_SHARED_PTR<sub1 > get_o4(const std::string& ind) RR_OVERRIDE;
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::RRObject > get_o6() RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > get_p2() RR_OVERRIDE;
-RR_OVIRTUAL void set_p2(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_p2(const RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<teststruct2 > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Pipe<double > > get_broadcastpipe() RR_OVERRIDE;
-RR_OVIRTUAL void set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur::Pipe<double > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_broadcastpipe(const RR_SHARED_PTR<RobotRaconteur::Pipe<double > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > get_cb1() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb1(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb1(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double) > > > get_cb3() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb3(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb3(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<double(double, double)> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t() > > > get_cb_meaning_of_life() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb_meaning_of_life(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb_meaning_of_life(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<int32_t()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void() > > > get_cb_errtest() RR_OVERRIDE;
-RR_OVIRTUAL void set_cb_errtest(RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_cb_errtest(const RR_SHARED_PTR<RobotRaconteur::Callback<boost::function<void()> > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > get_w2() RR_OVERRIDE;
-RR_OVIRTUAL void set_w2(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_w2(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<teststruct2 > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > get_w3() RR_OVERRIDE;
-RR_OVIRTUAL void set_w3(RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_w3(const RR_SHARED_PTR<RobotRaconteur::Wire<RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<int32_t > > > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::Wire<double > > get_broadcastwire() RR_OVERRIDE;
-RR_OVIRTUAL void set_broadcastwire(RR_SHARED_PTR<RobotRaconteur::Wire<double > > value) RR_OVERRIDE;
+RR_OVIRTUAL void set_broadcastwire(const RR_SHARED_PTR<RobotRaconteur::Wire<double > >& value) RR_OVERRIDE;
 
 RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<double > > get_m2() RR_OVERRIDE;
 
