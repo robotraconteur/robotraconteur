@@ -66,9 +66,8 @@ if(BUILD_GEN)
     add_subdirectory(RobotRaconteurGen)
 endif()
 
-set(BUILD_TEST "" CACHE BOOL "Build RobotRaconteurTest")
-if(BUILD_TEST)
-    add_subdirectory(testing/RobotRaconteurTest)
+if(BUILD_TESTING)
+    add_subdirectory(test)
 endif()
 
 set(BUILD_PYTHON "" CACHE BOOL "Build Python wrappers")

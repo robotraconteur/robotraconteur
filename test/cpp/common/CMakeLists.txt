@@ -1,0 +1,2 @@
+add_library(robotraconteur_test_cpp_common INTERFACE)
+target_include_directories(robotraconteur_test_cpp_common INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)

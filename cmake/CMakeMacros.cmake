@@ -35,10 +35,10 @@ function(RRConfigureTest test_name cmd template_in)
         set(ROBOTRACONTEUR_CORE_BIN_DIR ${CMAKE_BINARY_DIR}/${OUT_DIR_NAME}/bin)
         set(ROBOTRACONTEUR_CORE_LIB_DIR ${CMAKE_BINARY_DIR}/${OUT_DIR_NAME}/lib)
         if(WIN32)
-            configure_file("${CMAKE_SOURCE_DIR}/testing/templates/${template_in}.bat.in"
+            configure_file("${CMAKE_SOURCE_DIR}/test/templates/${template_in}.bat.in"
                            "${CMAKE_BINARY_DIR}/${OUT_DIR_NAME}/test/${test_name}.bat" @ONLY)
         else()
-            configure_file("${CMAKE_SOURCE_DIR}/testing/templates/${template_in}.in"
+            configure_file("${CMAKE_SOURCE_DIR}/test/templates/${template_in}.in"
                            "${CMAKE_BINARY_DIR}/${OUT_DIR_NAME}/test/${test_name}" @ONLY)
         endif()
     endforeach()
