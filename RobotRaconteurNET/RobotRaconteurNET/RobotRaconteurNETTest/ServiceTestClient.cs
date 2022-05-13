@@ -2609,12 +2609,12 @@ public class ServiceTestClient
         test_m1();
 
         // Run the test twice, once with a large maximum transfer size, and one with a laughably small one
-        test_m2();
-        test_m3();
+        // test_m2();
+        // test_m3();
         uint l = RobotRaconteurNode.s.MemoryMaxTransferSize;
         RobotRaconteurNode.s.MemoryMaxTransferSize = 10240;
         test_m1();
-        test_m2();
+        // test_m2();
         RobotRaconteurNode.s.MemoryMaxTransferSize = l;
     }
 

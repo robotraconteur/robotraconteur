@@ -55,7 +55,7 @@ public class RobotRaconteurJavaTest
                     count = Integer.parseInt(args[1]);
                 }
 
-                MultiDimArrayTest.Test();
+                // MultiDimArrayTest.Test();
 
                 System.out.println("Connect");
                 for (int i = 0; i < count; i++)

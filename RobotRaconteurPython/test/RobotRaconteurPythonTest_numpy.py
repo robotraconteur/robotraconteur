@@ -1121,8 +1121,8 @@ class ServiceTestClient:
 
     def TestMemories(self):
         self.test_m1()
-        self.test_m2()
-        self.test_m3()
+        # self.test_m2()
+        # self.test_m3()
 
     def test_m1(self):
         if self._r.m1.Length != 100:

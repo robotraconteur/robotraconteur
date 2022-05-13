@@ -2966,13 +2966,13 @@ public class ServiceTestClient
     {
 
         test_m1();
-        test_m2();
-        test_m3();
+        // test_m2();
+        // test_m3();
 
         long l = RobotRaconteurNode.s().getMemoryMaxTransferSize();
         RobotRaconteurNode.s().setMemoryMaxTransferSize(10240);
         test_m1();
-        test_m2();
+        // test_m2();
         RobotRaconteurNode.s().setMemoryMaxTransferSize(l);
     }
 

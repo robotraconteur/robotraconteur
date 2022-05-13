@@ -16,49 +16,30 @@ robotraconteur_generate_thunk(
     INCLUDE_DIRS
     ${ROBOTRACONTEUR_TEST_ROBDEF_DIR})
 
-add_library(robotraconteur_test_service_test_lib STATIC 
-ServiceTest.cpp
-ServiceTestClient.cpp
-ServiceTest2.cpp
-ServiceTestClient2.cpp
-ServiceTest3.cpp
-ServiceTestClient3.cpp
-CompareArray.cpp
-service_test_utils.cpp
- ${RR_THUNK_SRCS})
+add_library(
+    robotraconteur_test_service_test_lib STATIC
+    ServiceTest.cpp
+    ServiceTestClient.cpp
+    ServiceTest2.cpp
+    ServiceTestClient2.cpp
+    ServiceTest3.cpp
+    ServiceTestClient3.cpp
+    CompareArray.cpp
+    service_test_utils.cpp
+    ${RR_THUNK_SRCS})
 target_link_libraries(robotraconteur_test_service_test_lib PUBLIC RobotRaconteurCore robotraconteur_test_cpp_common
                                                                   robotraconteur_test_lfsr GTest::Main)
 target_include_directories(robotraconteur_test_service_test_lib PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-rr_service_test_add_test(
-    service
-    SRC
-    service_test.cpp
-    ${RR_THUNK_SRCS})
+rr_service_test_add_test(service SRC service_test.cpp ${RR_THUNK_SRCS})
 
-rr_service_test_add_test(
-    single_thread_service
-    SRC
-    single_thread_test.cpp
-    ${RR_THUNK_SRCS})
+rr_service_test_add_test(single_thread_service SRC single_thread_test.cpp ${RR_THUNK_SRCS})
 
-rr_service_test_add_test(
-    service2
-    SRC
-    service_test2.cpp
-    ${RR_THUNK_SRCS})
+rr_service_test_add_test(service2 SRC service_test2.cpp ${RR_THUNK_SRCS})
 
-rr_service_test_add_test(
-    service3
-    SRC
-    service_test3.cpp
-    ${RR_THUNK_SRCS})
+rr_service_test_add_test(service3 SRC service_test3.cpp ${RR_THUNK_SRCS})
 
-rr_service_test_add_exe(
-    server
-    SRC
-    test_server.cpp
-    service_test_utils.cpp)
+rr_service_test_add_exe(server SRC test_server.cpp service_test_utils.cpp)
 
 rr_service_test_add_exe(findservicebytype SRC findservicebytype.cpp)
 
@@ -82,18 +63,9 @@ rr_service_test_add_exe(serviceinfo2subscribertest SRC serviceinfo2subscribertes
 
 rr_service_test_add_exe(subscriberurltest SRC subscriberurltest.cpp)
 
-rr_service_test_add_test(
-    discovery_loopback
-    SRC
-    discovery_loopback.cpp
+rr_service_test_add_test(discovery_loopback SRC discovery_loopback.cpp)
 
-    )
-
-rr_service_test_add_test(
-    intra_loopback
-    SRC
-    intra_loopback.cpp
-)
+rr_service_test_add_test(intra_loopback SRC intra_loopback.cpp)
 
 rr_service_test_add_exe(
     certauthserver
@@ -105,8 +77,4 @@ rr_service_test_add_exe(
     CompareArray.cpp
     service_test_utils.cpp)
 
-rr_service_test_add_exe(
-    certauthclient
-    SRC
-    certauthclient.cpp
-)
+rr_service_test_add_exe(certauthclient SRC certauthclient.cpp)

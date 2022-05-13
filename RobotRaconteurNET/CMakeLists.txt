@@ -114,7 +114,7 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
         LANG
         csharp
         INCLUDE_DIRS
-        "${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest"
+        "${CMAKE_SOURCE_DIR}/test/robdef"
         OUTDIR
         "${CMAKE_CURRENT_BINARY_DIR}/test")
 

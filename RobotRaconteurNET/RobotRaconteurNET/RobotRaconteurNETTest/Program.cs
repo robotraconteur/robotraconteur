@@ -53,7 +53,7 @@ class Program
             RobotRaconteurNode.s.RegisterServiceType(
                 new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
 
-            MultiDimArrayTest.Test();
+            // MultiDimArrayTest.Test();
 
             RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
             sup.RegisterServices(t);
@@ -106,7 +106,7 @@ class Program
                                                    RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT |
                                                        RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
             {
-                MultiDimArrayTest.Test();
+                // MultiDimArrayTest.Test();
 
                 RobotRaconteurTestServiceSupport2 sup = new RobotRaconteurTestServiceSupport2();
                 sup.RegisterServices(setup.TcpTransport);
@@ -161,7 +161,7 @@ class Program
             RobotRaconteurNode.s.RegisterServiceType(
                 new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
 
-            MultiDimArrayTest.Test();
+            // MultiDimArrayTest.Test();
 
             RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
             sup.RegisterServices(t);
@@ -201,7 +201,7 @@ class Program
             RobotRaconteurNode.s.RegisterServiceType(
                 new com.robotraconteur.testing.TestService3.com__robotraconteur__testing__TestService3Factory());
 
-            MultiDimArrayTest.Test();
+            // MultiDimArrayTest.Test();
 
             RobotRaconteurTestServiceSupport2 sup = new RobotRaconteurTestServiceSupport2();
             sup.RegisterServices(t);

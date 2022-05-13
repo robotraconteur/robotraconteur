@@ -143,7 +143,7 @@ endif()
 
 set(RR_PYTHON_TEST_CMD "\"${CMAKE_COMMAND}\"")
 set(RR_PYTHON_TEST_CMD_ARGS
-    "-E env PYTHONPATH=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest \"${PYTHON_EXECUTABLE}\" ${CMAKE_SOURCE_DIR}/RobotRaconteurPython/test/RobotRaconteurPythonTest.py"
+    "-E env PYTHONPATH=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/test/robdef \"${PYTHON_EXECUTABLE}\" ${CMAKE_SOURCE_DIR}/RobotRaconteurPython/test/RobotRaconteurPythonTest.py"
 )
 rrconfiguretest(
     test_prog_python

@@ -133,7 +133,7 @@ robotraconteur_generate_thunk(
     LANG
     java
     INCLUDE_DIRS
-    "${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest"
+    "${CMAKE_SOURCE_DIR}/test/robdef"
     OUTDIR
     "${CMAKE_CURRENT_BINARY_DIR}/test_src")
 
