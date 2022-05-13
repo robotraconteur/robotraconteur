@@ -8,7 +8,6 @@
 using namespace RobotRaconteur;
 using namespace std;
 
-
 int main(int argc, char* argv[])
 {
     if (argc < 2)
@@ -23,8 +22,7 @@ int main(int argc, char* argv[])
         RR_SHARED_PTR<CommandLineConfigParser> config =
             RR_MAKE_SHARED<CommandLineConfigParser>(RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT_ALLOWED_OVERRIDE);
         config->SetDefaults("authclient", 0,
-                            RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT |
-                                RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT |
+                            RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT | RobotRaconteurNodeSetupFlags_LOAD_TLS_CERT |
                                 RobotRaconteurNodeSetupFlags_REQUIRE_TLS);
         config->ParseCommandLine(argc, argv);
 

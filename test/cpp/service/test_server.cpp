@@ -10,14 +10,13 @@
 #include "robotraconteur_generated.h"
 
 using namespace RobotRaconteur;
-//using namespace RobotRaconteur::test;
+// using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
 static RR_SHARED_PTR<TcpTransport> c;
 
-TEST(RobotRaconteurTestServer,Server)
+TEST(RobotRaconteurTestServer, Server)
 {
-    
 
     RobotRaconteurTestServiceSupport s;
     s.RegisterServices(c);
@@ -30,15 +29,13 @@ TEST(RobotRaconteurTestServer,Server)
 
     std::cout << "Server started, press enter to quit" << std::endl;
     getchar();
-    
 }
-
 
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
-    
-    ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES,"testprog",22222,argc,argv);    
+
+    ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "testprog", 22222, argc, argv);
     c = node_setup.GetTcpTransport();
 
     return RUN_ALL_TESTS();

@@ -21,18 +21,18 @@ static void DoTest(RR_INTRUSIVE_PTR<Message> m, uint16_t version, LFSRSeqGen& rn
     size_t message_size = 0;
 
     if (version == 2)
-    {		
-        //Write to stream and read back
+    {
+        // Write to stream and read back
         message_size = m->ComputeSize();
         buf.reset(new uint8_t[message_size]);
         ArrayBinaryWriter w(buf.get(), 0, message_size);
         m->Write(w);
 
-        EXPECT_EQ(w.Position(),m->ComputeSize());
+        EXPECT_EQ(w.Position(), m->ComputeSize());
     }
     else if (version == 4)
     {
-        //Write to stream and read back
+        // Write to stream and read back
         message_size = m->ComputeSize4();
         buf.reset(new uint8_t[message_size]);
         ArrayBinaryWriter w(buf.get(), 0, message_size);
@@ -59,10 +59,10 @@ static void DoTest(RR_INTRUSIVE_PTR<Message> m, uint16_t version, LFSRSeqGen& rn
     {
         size_t n1 = boost::asio::buffer_size(buf2);
         n1 = std::min(n1, (size_t)16193);
-        size_t new_size = rng.NextDist(0,n1);
+        size_t new_size = rng.NextDist(0, n1);
         new_size = std::max(new_size, (size_t)16);
         new_size = std::min(new_size, n1);
-        
+
         const_buffers buf3 = buffers_truncate(buf2, new_size);
         size_t buf_used;
         if (boost::asio::buffer_size(continue_bufs) == 0)
@@ -94,7 +94,8 @@ static void DoTest(RR_INTRUSIVE_PTR<Message> m, uint16_t version, LFSRSeqGen& rn
             ASSERT_EQ(buf_used, 0);
             buffers_consume(buf2, n);
         }
-        //std::cout << "Read " << buf_used << " continue_bufs: " << boost::asio::buffer_size(continue_bufs) << std::endl;
+        // std::cout << "Read " << buf_used << " continue_bufs: " << boost::asio::buffer_size(continue_bufs) <<
+        // std::endl;
     }
 
     ASSERT_TRUE(r->MessageReady());
@@ -103,7 +104,7 @@ static void DoTest(RR_INTRUSIVE_PTR<Message> m, uint16_t version, LFSRSeqGen& rn
     CompareMessage(m, m2);
 }
 
-TEST(AsyncMessageReaderTest,Test1)
+TEST(AsyncMessageReaderTest, Test1)
 {
     LFSRSeqGen rng((uint32_t)std::time(0), "async_message_reader_test_test1");
 
@@ -115,7 +116,7 @@ TEST(AsyncMessageReaderTest,Test1)
     }
     {
         RR_INTRUSIVE_PTR<Message> m3 = NewTestMessage();
-        m3->entries.resize(1);			
+        m3->entries.resize(1);
         DoTest(m3, 4, rng);
     }
     {
@@ -129,7 +130,8 @@ TEST(AsyncMessageReaderTest,Test1)
         m4->entries.at(2)->MemberNameCode = 13;
         m4->entries.at(0)->elements.at(0)->ElementFlags = MessageElementFlags_ELEMENT_NUMBER;
         m4->entries.at(0)->elements.at(0)->ElementNumber = 7483948;
-        m4->entries.at(0)->elements.at(1)->ElementFlags = MessageElementFlags_ELEMENT_NAME_CODE | MessageElementFlags_ELEMENT_TYPE_NAME_CODE;
+        m4->entries.at(0)->elements.at(1)->ElementFlags =
+            MessageElementFlags_ELEMENT_NAME_CODE | MessageElementFlags_ELEMENT_TYPE_NAME_CODE;
         m4->entries.at(0)->elements.at(1)->ElementNameCode = 5;
         m4->entries.at(0)->elements.at(1)->ElementTypeNameCode = 11;
         m4->entries.at(0)->elements.at(2)->ElementNumber = -113;
@@ -137,7 +139,7 @@ TEST(AsyncMessageReaderTest,Test1)
     }
 }
 
-TEST(AsyncMessageReaderTest,RandomTest)
+TEST(AsyncMessageReaderTest, RandomTest)
 {
     size_t iterations = 100;
     LFSRSeqGen rng((uint32_t)std::time(0), "async_message_reader_test_random_test");
@@ -153,7 +155,7 @@ TEST(AsyncMessageReaderTest,RandomTest)
     }
 }
 
-TEST(AsyncMessageReaderTest,RandomTest4)
+TEST(AsyncMessageReaderTest, RandomTest4)
 {
     size_t iterations = 100;
     LFSRSeqGen rng((uint32_t)std::time(0), "async_message_reader_test_random_test4");
@@ -171,7 +173,7 @@ TEST(AsyncMessageReaderTest,RandomTest4)
 
 static void DoTestW(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t version, LFSRSeqGen& rng)
 {
-    
+
     boost::shared_array<uint8_t> buf;
     size_t message_size = 0;
 
@@ -190,7 +192,7 @@ static void DoTestW(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t versio
     {
         FAIL();
     }
-    
+
     buf.reset(new uint8_t[message_size]);
     boost::asio::mutable_buffer buf2(buf.get(), message_size);
 
@@ -206,8 +208,8 @@ static void DoTestW(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t versio
         work_bufs.push_back(boost::asio::buffer(work_buf1.get(), 4096));
         const_buffers write_bufs;
         size_t work_bufs_used;
-                    
-        size_t quota = rng.NextDist(0, 16*1024);
+
+        size_t quota = rng.NextDist(0, 16 * 1024);
 
         if (version == 2)
         {
@@ -215,12 +217,12 @@ static void DoTestW(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t versio
         }
         else if (version == 4)
         {
-            ret=wr->Write4(quota, work_bufs, work_bufs_used, write_bufs);
+            ret = wr->Write4(quota, work_bufs, work_bufs_used, write_bufs);
         }
         else
         {
             FAIL();
-        }			
+        }
 
         size_t n = boost::asio::buffer_copy(buf2, write_bufs);
         buf2 = buf2 + n;
@@ -228,11 +230,10 @@ static void DoTestW(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t versio
 
     EXPECT_EQ(boost::asio::buffer_size(buf2), 0);
 
-
-    RR_INTRUSIVE_PTR<Message> m2=CreateMessage();
+    RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
     ArrayBinaryReader r(buf.get(), 0, message_size);
     if (version == 2)
-    {			
+    {
         m2->Read(r);
         EXPECT_EQ(r.Position(), message_size);
     }
@@ -249,8 +250,8 @@ static void DoTestW(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t versio
     CompareMessage(m, m2);
 }
 
-TEST(AsyncMessageWriterTest,Test1)
-{    
+TEST(AsyncMessageWriterTest, Test1)
+{
     LFSRSeqGen rng((uint32_t)std::time(0), "async_message_writer_test_test1");
     {
         RR_INTRUSIVE_PTR<Message> m1 = NewTestMessage();
@@ -279,7 +280,8 @@ TEST(AsyncMessageWriterTest,Test1)
         m4->entries.at(2)->MemberNameCode = 13;
         m4->entries.at(0)->elements.at(0)->ElementFlags = MessageElementFlags_ELEMENT_NUMBER;
         m4->entries.at(0)->elements.at(0)->ElementNumber = 7483948;
-        m4->entries.at(0)->elements.at(1)->ElementFlags = MessageElementFlags_ELEMENT_NAME_CODE | MessageElementFlags_ELEMENT_TYPE_NAME_CODE;
+        m4->entries.at(0)->elements.at(1)->ElementFlags =
+            MessageElementFlags_ELEMENT_NAME_CODE | MessageElementFlags_ELEMENT_TYPE_NAME_CODE;
         m4->entries.at(0)->elements.at(1)->ElementNameCode = 5;
         m4->entries.at(0)->elements.at(1)->ElementTypeNameCode = 11;
         m4->entries.at(0)->elements.at(2)->ElementNumber = -113;
@@ -287,7 +289,7 @@ TEST(AsyncMessageWriterTest,Test1)
     }
 }
 
-TEST(AsyncMessageWriterTest,RandomTest)
+TEST(AsyncMessageWriterTest, RandomTest)
 {
     size_t iterations = 100;
     LFSRSeqGen rng((uint32_t)std::time(0), "async_message_writer_test_random_test");
@@ -303,7 +305,7 @@ TEST(AsyncMessageWriterTest,RandomTest)
     }
 }
 
-TEST(AsyncMessageWriterTest,RandomTest4)
+TEST(AsyncMessageWriterTest, RandomTest4)
 {
     size_t iterations = 100;
     LFSRSeqGen rng((uint32_t)std::time(0), "async_message_writer_test_random_test4");
@@ -311,13 +313,12 @@ TEST(AsyncMessageWriterTest,RandomTest4)
     for (size_t i = 0; i < iterations; i++)
     {
         RR_INTRUSIVE_PTR<Message> m = NewRandomTestMessage4(rng);
-        
+
         DoTestW(m, 4, rng);
         if (i % 10 == 0)
         {
             std::cout << "Message4 write: " << i << " size: " << m->ComputeSize4() << std::endl;
         }
-        
     }
 }
 

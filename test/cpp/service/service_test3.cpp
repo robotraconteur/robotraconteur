@@ -12,11 +12,9 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
-
 static std::string service3_url;
 
-
-TEST(RobotRaconteurService,Properties3Test)
+TEST(RobotRaconteurService, Properties3Test)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -26,7 +24,7 @@ TEST(RobotRaconteurService,Properties3Test)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,Functions3Test)
+TEST(RobotRaconteurService, Functions3Test)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -42,7 +40,7 @@ int main(int argc, char* argv[])
     TestServerNodeConfig server("unit_service_test3");
     service3_url = server.GetServiceURL("RobotRaconteurTestService3");
 
-    ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES,argc,argv);
+    ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES, argc, argv);
 
     int ret = RUN_ALL_TESTS();
 

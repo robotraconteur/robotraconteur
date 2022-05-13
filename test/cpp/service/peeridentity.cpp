@@ -8,7 +8,6 @@ using namespace com::robotraconteur::testing::TestService1;
 using namespace com::robotraconteur::testing::TestService2;
 using namespace com::robotraconteur::testing::TestService3;
 
-
 int main(int argc, char* argv[])
 {
     if (argc < 2)
@@ -52,10 +51,8 @@ int main(int argc, char* argv[])
     RobotRaconteurNode::s()->RegisterTransport(c);
     RobotRaconteurNode::s()->RegisterTransport(c2);
     RobotRaconteurNode::s()->RegisterTransport(c5);
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
     cout << RobotRaconteurNode::s()->NodeID().ToString() << endl;
 

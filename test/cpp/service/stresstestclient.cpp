@@ -100,7 +100,6 @@ void servicetest1(const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotR
     }
 }
 
-
 int main(int argc, char* argv[])
 {
     if (argc < 2)
@@ -116,7 +115,7 @@ int main(int argc, char* argv[])
 
     RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
     c->EnableNodeAnnounce(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL |
-                            IPNodeDiscoveryFlags_SITE_LOCAL);
+                          IPNodeDiscoveryFlags_SITE_LOCAL);
     c->EnableNodeDiscoveryListening(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL |
                                     IPNodeDiscoveryFlags_SITE_LOCAL);
 
@@ -127,10 +126,8 @@ int main(int argc, char* argv[])
     RobotRaconteurNode::s()->RegisterTransport(c3);
 
     RobotRaconteurNode::s()->RegisterTransport(c);
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
     servicetest_count = 0;
     servicetest_connectcount = 0;
@@ -162,7 +159,7 @@ int main(int argc, char* argv[])
     RobotRaconteurNode::s()->DisconnectService(obj);
     RobotRaconteurNode::s()->Shutdown();
     cout << "Test completed, no errors detected!" << endl;
-    boost::this_thread::sleep(boost::posix_time::seconds(10));    
+    boost::this_thread::sleep(boost::posix_time::seconds(10));
 
     return 0;
 }

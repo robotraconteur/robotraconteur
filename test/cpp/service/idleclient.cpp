@@ -8,7 +8,6 @@ using namespace com::robotraconteur::testing::TestService1;
 using namespace com::robotraconteur::testing::TestService2;
 using namespace com::robotraconteur::testing::TestService3;
 
-
 int main(int argc, char* argv[])
 {
     if (argc < 2)
@@ -29,7 +28,7 @@ int main(int argc, char* argv[])
 
     RR_SHARED_PTR<TcpTransport> c = RR_MAKE_SHARED<TcpTransport>();
     c->EnableNodeAnnounce(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL |
-                            IPNodeDiscoveryFlags_SITE_LOCAL);
+                          IPNodeDiscoveryFlags_SITE_LOCAL);
     c->EnableNodeDiscoveryListening(IPNodeDiscoveryFlags_NODE_LOCAL | IPNodeDiscoveryFlags_LINK_LOCAL |
                                     IPNodeDiscoveryFlags_SITE_LOCAL);
 
@@ -38,10 +37,8 @@ int main(int argc, char* argv[])
     c2->EnableNodeDiscoveryListening();
 
     RobotRaconteurNode::s()->RegisterTransport(c);
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
     RR_SHARED_PTR<RRObject> obj = RobotRaconteurNode::s()->ConnectService(
         url1, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "");

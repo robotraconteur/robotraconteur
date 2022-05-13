@@ -12,7 +12,7 @@ namespace test
 
 class GTestThreadLocalListener : public testing::EmptyTestEventListener
 {
-public:
+  public:
     GTestThreadLocalListener();
     virtual void OnTestPartResult(const testing::TestPartResult& test_part_result);
     uint32_t FailureCount();
@@ -26,7 +26,7 @@ public:
 
 class ThrowIfFailures
 {
-public:
+  public:
     ThrowIfFailures();
     uint32_t FailureCount();
     std::string FailuresMessage();
@@ -38,7 +38,7 @@ public:
 
 class TestServerNodeConfig
 {
-public:
+  public:
     TestServerNodeConfig(const std::string& nodename);
     std::string GetServiceURL(const std::string& service_name);
     void Shutdown();
@@ -49,5 +49,5 @@ public:
     std::string node_endpoint_url;
 };
 
-}
-}
+} // namespace test
+} // namespace RobotRaconteur

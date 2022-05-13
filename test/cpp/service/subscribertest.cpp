@@ -8,7 +8,6 @@ using namespace com::robotraconteur::testing::TestService1;
 using namespace com::robotraconteur::testing::TestService2;
 using namespace com::robotraconteur::testing::TestService3;
 
-
 // TODO: Use GTest
 
 void servicesubscription_connected(const RR_SHARED_PTR<ServiceSubscription>& sub,
@@ -52,7 +51,6 @@ void subscribertest_pipereceived(RR_SHARED_PTR<PipeSubscription<double> > p1)
     }
 }
 
-
 int main(int argc, char* argv[])
 {
     if (argc < 2)
@@ -78,10 +76,8 @@ int main(int argc, char* argv[])
     RR_SHARED_PTR<HardwareTransport> c5 = RR_MAKE_SHARED<HardwareTransport>();
     RobotRaconteurNode::s()->RegisterTransport(c5);
 
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
     std::vector<std::string> servicetypes;
     servicetypes.push_back(servicetype);

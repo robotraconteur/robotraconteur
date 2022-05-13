@@ -8,7 +8,6 @@ using namespace com::robotraconteur::testing::TestService1;
 using namespace com::robotraconteur::testing::TestService2;
 using namespace com::robotraconteur::testing::TestService3;
 
-
 // TODO: Use GTest
 
 void serviceinfo2subscription_detected(const RR_SHARED_PTR<ServiceInfo2Subscription>& sub,
@@ -27,8 +26,7 @@ int main(int argc, char* argv[])
 {
     if (argc < 2)
     {
-        cout << "Usage for serviceinfo2subscribertest:  serviceinfo2subscribertest servicetype"
-                << endl;
+        cout << "Usage for serviceinfo2subscribertest:  serviceinfo2subscribertest servicetype" << endl;
         return -1;
     }
 
@@ -49,15 +47,12 @@ int main(int argc, char* argv[])
     RR_SHARED_PTR<HardwareTransport> c5 = RR_MAKE_SHARED<HardwareTransport>();
     RobotRaconteurNode::s()->RegisterTransport(c5);
 
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
     std::vector<std::string> servicetypes;
     servicetypes.push_back(servicetype);
-    RR_SHARED_PTR<ServiceInfo2Subscription> subscription =
-        RobotRaconteurNode::s()->SubscribeServiceInfo2(servicetypes);
+    RR_SHARED_PTR<ServiceInfo2Subscription> subscription = RobotRaconteurNode::s()->SubscribeServiceInfo2(servicetypes);
 
     subscription->AddServiceDetectedListener(serviceinfo2subscription_detected);
     subscription->AddServiceLostListener(serviceinfo2subscription_lost);

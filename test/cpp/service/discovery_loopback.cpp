@@ -16,7 +16,7 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
-TEST(RobotRaconteurService,DiscoveryLoopback)
+TEST(RobotRaconteurService, DiscoveryLoopback)
 {
     std::vector<std::string> args;
     ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "discovery_test_server_node", 0, args);
@@ -52,7 +52,7 @@ TEST(RobotRaconteurService,DiscoveryLoopback)
         expected_service_names.insert("RobotRaconteurTestService");
         expected_service_names.insert("RobotRaconteurTestService_auth");
 
-        EXPECT_EQ(discovered_services.size(),2);
+        EXPECT_EQ(discovered_services.size(), 2);
 
         BOOST_FOREACH (ServiceInfo2 s, discovered_services)
         {
@@ -64,23 +64,21 @@ TEST(RobotRaconteurService,DiscoveryLoopback)
             if (s.Name == "RobotRaconteurTestService")
             {
                 RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> c;
-                ASSERT_NO_THROW(c =
-                    rr_cast<com::robotraconteur::testing::TestService1::testroot>(
-                        client_node->ConnectService(s.ConnectionURL)));
+                ASSERT_NO_THROW(c = rr_cast<com::robotraconteur::testing::TestService1::testroot>(
+                                    client_node->ConnectService(s.ConnectionURL)));
                 EXPECT_NO_THROW(c->get_d1());
                 EXPECT_NO_THROW(client_node->DisconnectService(c));
             }
         }
 
-        EXPECT_EQ(expected_service_names.size(),0);
+        EXPECT_EQ(expected_service_names.size(), 0);
     }
-    
 }
 
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
-    
+
     int ret = RUN_ALL_TESTS();
 
     return ret;

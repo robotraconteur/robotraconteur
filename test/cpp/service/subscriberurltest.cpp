@@ -8,7 +8,6 @@ using namespace com::robotraconteur::testing::TestService1;
 using namespace com::robotraconteur::testing::TestService2;
 using namespace com::robotraconteur::testing::TestService3;
 
-
 // TODO: Use GTest
 
 void servicesubscription_connected(const RR_SHARED_PTR<ServiceSubscription>& sub,
@@ -63,10 +62,8 @@ int main(int argc, char* argv[])
     RR_SHARED_PTR<HardwareTransport> c5 = RR_MAKE_SHARED<HardwareTransport>();
     RobotRaconteurNode::s()->RegisterTransport(c5);
 
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
     std::vector<std::string> urls;
     urls.push_back(url);
@@ -76,8 +73,8 @@ int main(int argc, char* argv[])
     subscription->AddClientDisconnectListener(servicesubscription_disconnected);
 
     subscription->AddClientConnectFailedListener(boost::bind(&asyncgetdefaultclient_failed_handler,
-                                                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
-                                                                RR_BOOST_PLACEHOLDERS(_3), RR_BOOST_PLACEHOLDERS(_4)));
+                                                             RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
+                                                             RR_BOOST_PLACEHOLDERS(_3), RR_BOOST_PLACEHOLDERS(_4)));
     subscription->AsyncGetDefaultClient<testroot>(
         boost::bind(&asyncgetdefaultclient_handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), 5000);
     RR_SHARED_PTR<testroot> defaultclient2 = subscription->GetDefaultClientWait<testroot>(10000);

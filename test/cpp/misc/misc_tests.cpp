@@ -3,11 +3,9 @@
 #include <gtest/gtest.h>
 #include <RobotRaconteur.h>
 
-
 using namespace RobotRaconteur;
 
-
-TEST(RobotRaconteurMisc,LogMacros)
+TEST(RobotRaconteurMisc, LogMacros)
 {
     RR_WEAK_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
     RobotRaconteurNode::s()->SetNodeID(NodeID("8cded4c3-5b4a-4682-8b0e-5a01f8eb3378"));
@@ -17,17 +15,17 @@ TEST(RobotRaconteurMisc,LogMacros)
     ROBOTRACONTEUR_LOG_ERROR_DEFAULT("Testing ROBOTRACONTEUR_LOG_ERROR_DEFAULT");
     ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, User, 294573, "Testing ROBOTRACONTEUR_LOG_ERROR_COMPONENT");
     ROBOTRACONTEUR_LOG_INFO_COMPONENT_PATH(node, User, 294573, "service.path", "my_member",
-                                            "Testing ROBOTRACONTEUR_LOG_ERROR_COMPONENT_PATH");
+                                           "Testing ROBOTRACONTEUR_LOG_ERROR_COMPONENT_PATH");
     ROBOTRACONTEUR_LOG_DEBUG_COMPONENTNAME(node, User, "my_component", "my_object", 294573,
-                                            "Testing ROBOTRACONTEUR_LOG_ERROR_COMPONENTNAME");
+                                           "Testing ROBOTRACONTEUR_LOG_ERROR_COMPONENTNAME");
     ROBOTRACONTEUR_LOG_TRACE_COMPONENTNAME_PATH(node, User, "my_component", "my_object", 294573, "service.path",
                                                 "my_member", "Testing ROBOTRACONTEUR_LOG_ERROR_COMPONENTNAME_PATH");
     ROBOTRACONTEUR_LOG_TRACE_THROTTLE(node, User, 294573, 100, "Testing ROBOTRACONTEUR_LOG_ERROR_THROTTLE");
     ROBOTRACONTEUR_LOG_TRACE_THROTTLE_PATH(node, User, 294573, "service.path", "my_member", 101,
-                                            "Testing ROBOTRACONTEUR_LOG_ERROR_THROTTLE_PATH");
+                                           "Testing ROBOTRACONTEUR_LOG_ERROR_THROTTLE_PATH");
     ROBOTRACONTEUR_LOG_TRACE_THROTTLE_COMPONENTNAME_PATH(node, User, "my_component", "my_object", 294573,
-                                                            "service.path", "my_member", 102,
-                                                            "Testing ROBOTRACONTEUR_LOG_ERROR_COMPONENTNAME_PATH");
+                                                         "service.path", "my_member", 102,
+                                                         "Testing ROBOTRACONTEUR_LOG_ERROR_COMPONENTNAME_PATH");
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Default, -1, "default component")
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "node component")
@@ -48,15 +46,12 @@ TEST(RobotRaconteurMisc,LogMacros)
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, UserClient, -1, "user_client component")
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, UserService, -1, "user_service component")
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, ThirdParty, -1, "third_party component")
-
 }
-
-
 
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
-    
+
     int ret = RUN_ALL_TESTS();
 
     return ret;

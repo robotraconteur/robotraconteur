@@ -3,7 +3,6 @@
 using namespace RobotRaconteur;
 using namespace std;
 
-
 int main(int argc, char* argv[])
 {
     if (argc < 3)
@@ -41,7 +40,7 @@ int main(int argc, char* argv[])
 
         vector<string> a;
         for (std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >::iterator ee = e->Attributes.begin();
-                ee != e->Attributes.end(); ee++)
+             ee != e->Attributes.end(); ee++)
         {
             RR_INTRUSIVE_PTR<RRArray<char> > d = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(ee->second);
             if (d)

@@ -15,21 +15,19 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
-
 static std::string service_url;
-
 
 static RR_BOOST_ASIO_IO_CONTEXT asio_io_context;
 
-TEST(RobotRaconteurServiceSingleThread,SingleThreadTest)
+TEST(RobotRaconteurServiceSingleThread, SingleThreadTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
-    
-    RR_SHARED_PTR<IOContextThreadPool> thread_pool = RR_MAKE_SHARED<IOContextThreadPool>(RobotRaconteurNode::sp(), boost::ref(asio_io_context), false);
+
+    RR_SHARED_PTR<IOContextThreadPool> thread_pool =
+        RR_MAKE_SHARED<IOContextThreadPool>(RobotRaconteurNode::sp(), boost::ref(asio_io_context), false);
 
     RobotRaconteurNode::s()->SetThreadPool(thread_pool);
 
-    
     ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES);
 
     ServiceTestClient cl;

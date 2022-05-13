@@ -1,14 +1,14 @@
 #include "robotraconteur_test_lfsr_cpp.h"
 #include <iostream>
 
-template<typename T>
+template <typename T>
 void print_array(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> > a)
 {
     size_t len = a->size();
-    for (size_t i=0; i<len; i++)
+    for (size_t i = 0; i < len; i++)
     {
         std::cout << +a->at(i);
-        if (i+1 < len)
+        if (i + 1 < len)
         {
             std::cout << " ";
         }
@@ -19,10 +19,10 @@ void print_array(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> > a)
 void print_array_bool(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > a)
 {
     size_t len = a->size();
-    for (size_t i=0; i<len; i++)
+    for (size_t i = 0; i < len; i++)
     {
         std::cout << ((bool)a->at(i).value ? "true" : "false");
-        if (i+1 < len)
+        if (i + 1 < len)
         {
             std::cout << " ";
         }
@@ -30,11 +30,11 @@ void print_array_bool(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::r
     std::cout << std::endl;
 }
 
-template<typename T>
+template <typename T>
 void print_array_complex(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> > a)
 {
     size_t len = a->size();
-    for (size_t i=0; i<len; i++)
+    for (size_t i = 0; i < len; i++)
     {
         T v = a->at(i);
         if (v.imag < 0)
@@ -45,7 +45,7 @@ void print_array_complex(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> > a)
         {
             std::cout << v.real << "+" << v.imag << "i";
         }
-        if (i+1 < len)
+        if (i + 1 < len)
         {
             std::cout << " ";
         }

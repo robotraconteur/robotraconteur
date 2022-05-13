@@ -1,4 +1,3 @@
-
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/macros.cmake)
 
 find_package(GTest)

@@ -10,26 +10,26 @@ using namespace std;
 
 static std::string ReadFile(const std::string& fname)
 {
-	ifstream file(fname.c_str(), ios_base::in);
+    ifstream file(fname.c_str(), ios_base::in);
 
-	if (!file.is_open()) throw std::runtime_error("File not found");
+    if (!file.is_open())
+        throw std::runtime_error("File not found");
 
-	int8_t bom1, bom2, bom3;
-	file >> bom1 >> bom2 >> bom3;
-	if (!(bom1 == -17 && bom2 == -69 && bom3 == -65))
-	{
-		file.seekg(0, ifstream::beg);
-	}
+    int8_t bom1, bom2, bom3;
+    file >> bom1 >> bom2 >> bom3;
+    if (!(bom1 == -17 && bom2 == -69 && bom3 == -65))
+    {
+        file.seekg(0, ifstream::beg);
+    }
 
-	stringstream buffer;
-	buffer << file.rdbuf();
-	file.close();
+    stringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
 
-	return buffer.str();
-
+    return buffer.str();
 }
 
-TEST(RobDef,RobDefTest)
+TEST(RobDef, RobDefTest)
 {
     RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Debug);
 
@@ -37,10 +37,10 @@ TEST(RobDef,RobDefTest)
     robdef_filenames.push_back("com.robotraconteur.testing.TestService1.robdef");
     robdef_filenames.push_back("com.robotraconteur.testing.TestService2.robdef");
     robdef_filenames.push_back("com.robotraconteur.testing.TestService3.robdef");
-    
+
     std::vector<RR_SHARED_PTR<ServiceDefinition> > defs;
     std::vector<RR_SHARED_PTR<ServiceDefinition> > defs2;
-    BOOST_FOREACH(const std::string& fname, robdef_filenames)
+    BOOST_FOREACH (const std::string& fname, robdef_filenames)
     {
         std::string robdef_text;
         ASSERT_NO_THROW(robdef_text = ReadFile(ROBOTRACONTEUR_TEST_ROBDEF_DIR "/" + fname));
@@ -57,12 +57,12 @@ TEST(RobDef,RobDefTest)
 
     for (size_t i = 0; i < defs.size(); i++)
     {
-        EXPECT_TRUE(CompareServiceDefinitions(defs[i], defs2[i]));       
+        EXPECT_TRUE(CompareServiceDefinitions(defs[i], defs2[i]));
     }
-    
-    BOOST_FOREACH(RR_SHARED_PTR<ServiceDefinition> def, defs)
+
+    BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition> def, defs)
     {
-        BOOST_FOREACH(RR_SHARED_PTR<ConstantDefinition> c, def->Constants)
+        BOOST_FOREACH (RR_SHARED_PTR<ConstantDefinition> c, def->Constants)
         {
             if (c->Name == "strconst")
             {
@@ -82,7 +82,7 @@ TEST(RobDef,RobDefTest)
 
             if (c->Name == "int32const_array")
             {
-                RR_INTRUSIVE_PTR<RRArray<int32_t> > a = c->ValueToArray<int32_t>();					
+                RR_INTRUSIVE_PTR<RRArray<int32_t> > a = c->ValueToArray<int32_t>();
                 std::cout << "int32const_array: " << a->size() << std::endl;
             }
 
@@ -95,14 +95,13 @@ TEST(RobDef,RobDefTest)
             if (c->Name == "structconst")
             {
                 std::vector<ConstantDefinition_StructField> s = c->ValueToStructFields();
-                BOOST_FOREACH(const ConstantDefinition_StructField& f, s)
+                BOOST_FOREACH (const ConstantDefinition_StructField& f, s)
                 {
                     std::cout << f.Name << ": " << f.ConstantRefName << " ";
                 }
 
                 std::cout << std::endl;
             }
-
         }
     }
 

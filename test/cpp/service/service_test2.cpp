@@ -12,11 +12,9 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
-
 static std::string service2_url;
 
-
-TEST(RobotRaconteurService,WirePeekPokeTest)
+TEST(RobotRaconteurService, WirePeekPokeTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -26,7 +24,7 @@ TEST(RobotRaconteurService,WirePeekPokeTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,EnumsTest)
+TEST(RobotRaconteurService, EnumsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -36,7 +34,7 @@ TEST(RobotRaconteurService,EnumsTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,PodsTest)
+TEST(RobotRaconteurService, PodsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -46,7 +44,7 @@ TEST(RobotRaconteurService,PodsTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,MemoriesTest)
+TEST(RobotRaconteurService, MemoriesTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -56,7 +54,7 @@ TEST(RobotRaconteurService,MemoriesTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,GeneratorsTest)
+TEST(RobotRaconteurService, GeneratorsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -66,7 +64,7 @@ TEST(RobotRaconteurService,GeneratorsTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,NamedArraysTest)
+TEST(RobotRaconteurService, NamedArraysTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -76,7 +74,7 @@ TEST(RobotRaconteurService,NamedArraysTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,NamedArrayMemoriesTest)
+TEST(RobotRaconteurService, NamedArrayMemoriesTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -86,7 +84,7 @@ TEST(RobotRaconteurService,NamedArrayMemoriesTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,ComplexTest)
+TEST(RobotRaconteurService, ComplexTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -96,7 +94,7 @@ TEST(RobotRaconteurService,ComplexTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,ComplexMemoriesTest)
+TEST(RobotRaconteurService, ComplexMemoriesTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -106,7 +104,7 @@ TEST(RobotRaconteurService,ComplexMemoriesTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,NoLockTest)
+TEST(RobotRaconteurService, NoLockTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -116,7 +114,7 @@ TEST(RobotRaconteurService,NoLockTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,BoolsTest)
+TEST(RobotRaconteurService, BoolsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -126,7 +124,7 @@ TEST(RobotRaconteurService,BoolsTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,BoolMemoriesTest)
+TEST(RobotRaconteurService, BoolMemoriesTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -136,7 +134,7 @@ TEST(RobotRaconteurService,BoolMemoriesTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService,ExceptionParamsTest)
+TEST(RobotRaconteurService, ExceptionParamsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -153,7 +151,7 @@ int main(int argc, char* argv[])
     TestServerNodeConfig server("unit_service_test2");
     service2_url = server.GetServiceURL("RobotRaconteurTestService2");
 
-    ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES,argc,argv);
+    ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES, argc, argv);
 
     int ret = RUN_ALL_TESTS();
 

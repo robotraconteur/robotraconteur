@@ -8,7 +8,6 @@ using namespace com::robotraconteur::testing::TestService1;
 using namespace com::robotraconteur::testing::TestService2;
 using namespace com::robotraconteur::testing::TestService3;
 
-
 // TODO: Use GTest
 
 void servicesubscription_connected(const RR_SHARED_PTR<ServiceSubscription>& sub,
@@ -36,29 +35,28 @@ bool subscribertest_filter_predicate(const ServiceInfo2& node)
 int main(int argc, char* argv[])
 {
     if (argc < 2)
-        {
-            cout << "Usage for subscriberfiltertest:  subscriberfiltertest servicetype" << endl;
-            return -1;
-        }
+    {
+        cout << "Usage for subscriberfiltertest:  subscriberfiltertest servicetype" << endl;
+        return -1;
+    }
 
-        string servicetype = string(argv[1]);
-        // vector<string> schemes;
-        // boost::split(schemes, argv[3], boost::is_from_range(',', ','));
+    string servicetype = string(argv[1]);
+    // vector<string> schemes;
+    // boost::split(schemes, argv[3], boost::is_from_range(',', ','));
 
-        RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
-        RR_SHARED_PTR<ServiceSubscriptionFilter> f = RR_MAKE_SHARED<ServiceSubscriptionFilter>();
+    RR_SHARED_PTR<ServiceSubscriptionFilter> f = RR_MAKE_SHARED<ServiceSubscriptionFilter>();
 
-        if (argc >= 3)
-        {
+    if (argc >= 3)
+    {
         std::string subcommand = string(argv[2]);
 
         if (subcommand == "nodeid")
         {
             if (argc < 4)
             {
-                cout << "Usage for subscriberfiltertest:  subscriberfiltertest nodeid <nodeid>"
-                        << endl;
+                cout << "Usage for subscriberfiltertest:  subscriberfiltertest nodeid <nodeid>" << endl;
                 return -1;
             }
 
@@ -72,7 +70,7 @@ int main(int argc, char* argv[])
             {
                 cout << "Usage for subscriberfiltertest:  subscriberfiltertest nodename "
                         "<nodename>"
-                        << endl;
+                     << endl;
                 return -1;
             }
 
@@ -86,7 +84,7 @@ int main(int argc, char* argv[])
             {
                 cout << "Usage for subscriberfiltertest:  subscriberfiltertest nodeidscheme "
                         "<nodeid> <schemes>"
-                        << endl;
+                     << endl;
                 return -1;
             }
 
@@ -104,7 +102,7 @@ int main(int argc, char* argv[])
             {
                 cout << "Usage for subscriberfiltertest:  subscriberfiltertest nodeidauth "
                         "<nodeid> <username> <password>"
-                        << endl;
+                     << endl;
                 return -1;
             }
 
@@ -122,7 +120,7 @@ int main(int argc, char* argv[])
             {
                 cout << "Usage for subscriberfiltertest:  subscriberfiltertest servicename "
                         "<servicename>"
-                        << endl;
+                     << endl;
                 return -1;
             }
 
@@ -132,8 +130,7 @@ int main(int argc, char* argv[])
         {
             if (argc < 3)
             {
-                cout << "Usage for subscriberfiltertest:  subscriberfiltertest predicate"
-                        << endl;
+                cout << "Usage for subscriberfiltertest:  subscriberfiltertest predicate" << endl;
                 return -1;
             }
 
@@ -157,15 +154,12 @@ int main(int argc, char* argv[])
     RR_SHARED_PTR<HardwareTransport> c5 = RR_MAKE_SHARED<HardwareTransport>();
     RobotRaconteurNode::s()->RegisterTransport(c5);
 
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
-    RobotRaconteurNode::s()->RegisterServiceType(
-        RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
+    RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
     std::vector<std::string> servicetypes;
     servicetypes.push_back(servicetype);
-    RR_SHARED_PTR<ServiceSubscription> subscription =
-        RobotRaconteurNode::s()->SubscribeServiceByType(servicetypes, f);
+    RR_SHARED_PTR<ServiceSubscription> subscription = RobotRaconteurNode::s()->SubscribeServiceByType(servicetypes, f);
 
     subscription->AddClientConnectListener(servicesubscription_connected);
     subscription->AddClientDisconnectListener(servicesubscription_disconnected);
