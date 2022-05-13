@@ -16,8 +16,9 @@ robotraconteur_generate_thunk(
     INCLUDE_DIRS
     ${ROBOTRACONTEUR_TEST_ROBDEF_DIR})
 
-add_library(
-    robotraconteur_test_service_test_lib STATIC
+rr_service_test_add_lib(
+    service_lib
+    SRC
     ServiceTest.cpp
     ServiceTestClient.cpp
     ServiceTest2.cpp
@@ -27,9 +28,6 @@ add_library(
     CompareArray.cpp
     service_test_utils.cpp
     ${RR_THUNK_SRCS})
-target_link_libraries(robotraconteur_test_service_test_lib PUBLIC RobotRaconteurCore robotraconteur_test_cpp_common
-                                                                  robotraconteur_test_lfsr GTest::Main)
-target_include_directories(robotraconteur_test_service_test_lib PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 rr_service_test_add_test(service SRC service_test.cpp ${RR_THUNK_SRCS})
 
