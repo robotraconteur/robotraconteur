@@ -22,14 +22,13 @@ TEST(RobotRaconteurService, DiscoveryLoopback)
     RR_SHARED_PTR<RobotRaconteurNode> client_node = RR_MAKE_SHARED<RobotRaconteurNode>();
     client_node->Init();
     ClientNodeSetup client_node_setup(client_node, ROBOTRACONTEUR_SERVICE_TYPES, args);
-    
+
     uint32_t server_flags = RobotRaconteurNodeSetupFlags_SERVER_DEFAULT;
     server_flags &= ~RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER;
-    ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "discovery_test_server_node", 0,server_flags);
+    ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "discovery_test_server_node", 0, server_flags);
 
     RobotRaconteurTestServiceSupport s;
     s.RegisterServices(node_setup.GetTcpTransport());
-
 
     boost::this_thread::sleep(boost::posix_time::milliseconds(5000));
 
