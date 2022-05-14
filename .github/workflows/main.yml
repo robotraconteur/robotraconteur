@@ -72,9 +72,7 @@ jobs:
     - name: build-swig
       if: steps.cache-swig.outputs.cache-hit != 'true'
       run: |
-        sudo apt remove swig -qq || true
-        sudo rm -f /usr/bin/swig*
-        sudo rm -rf /usr/share/swig*
+        sudo apt remove swig* -qq || true
         rm -rf swig_build_dir
         mkdir -p swig_build_dir
         cd swig_build_dir
@@ -89,9 +87,7 @@ jobs:
       if: steps.cache-swig.outputs.cache-hit == 'true'
       working-directory: swig_build_dir/swig-4.0.2
       run: |
-        sudo apt remove swig -qq
-        sudo rm -f /usr/bin/swig*
-        sudo rm -rf /usr/share/swig*
+        sudo apt remove swig* -qq || true
         sudo make install
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -702,9 +698,7 @@ jobs:
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: remove-swig      
       run: |
-        sudo apt remove swig -qq || true
-        sudo rm -f /usr/bin/swig*
-        sudo rm -rf /usr/share/swig*
+        sudo apt remove swig* -qq || true
     - uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: "latest"
@@ -796,9 +790,7 @@ jobs:
     - name: build-swig
       if: steps.cache-swig.outputs.cache-hit != 'true'
       run: |
-        sudo apt remove swig -qq || true
-        sudo rm -f /usr/bin/swig*
-        sudo rm -rf /usr/share/swig*
+        sudo apt remove swig* -qq || true
         rm -rf swig_build_dir
         mkdir -p swig_build_dir
         cd swig_build_dir
@@ -813,9 +805,7 @@ jobs:
       if: steps.cache-swig.outputs.cache-hit == 'true'
       working-directory: swig_build_dir/swig-4.0.2
       run: |
-        sudo apt remove swig -qq
-        sudo rm -f /usr/bin/swig*
-        sudo rm -rf /usr/share/swig*
+        sudo apt remove swig* -qq || true
         sudo make install
     - name: mkdir build2_host
       run: mkdir -p build2_host
