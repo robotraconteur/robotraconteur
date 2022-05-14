@@ -19,6 +19,10 @@ using namespace RobotRaconteurTest;
 TEST(RobotRaconteurService, DiscoveryLoopback)
 {
     std::vector<std::string> args;
+    RR_SHARED_PTR<RobotRaconteurNode> client_node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    client_node->Init();
+    ClientNodeSetup client_node_setup(client_node, ROBOTRACONTEUR_SERVICE_TYPES, args);
+    
     uint32_t server_flags = RobotRaconteurNodeSetupFlags_SERVER_DEFAULT;
     server_flags &= ~RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER;
     ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "discovery_test_server_node", 0,server_flags);
@@ -26,21 +30,18 @@ TEST(RobotRaconteurService, DiscoveryLoopback)
     RobotRaconteurTestServiceSupport s;
     s.RegisterServices(node_setup.GetTcpTransport());
 
-    RR_SHARED_PTR<RobotRaconteurNode> client_node = RR_MAKE_SHARED<RobotRaconteurNode>();
-    client_node->Init();
-    ClientNodeSetup client_node_setup(client_node, ROBOTRACONTEUR_SERVICE_TYPES, args);
 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(2000));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(5000));
 
     std::vector<std::string> schemes;
     if (node_setup.GetTcpTransport())
     {
         schemes.push_back("rr+tcp");
     }
-    if (node_setup.GetLocalTransport())
-    {
-        schemes.push_back("rr+local");
-    }
+    // if (node_setup.GetLocalTransport())
+    // {
+    //     schemes.push_back("rr+local");
+    // }
     BOOST_FOREACH (const std::string& scheme, schemes)
     {
         std::vector<std::string> schemes2;
