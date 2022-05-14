@@ -97,7 +97,9 @@ TestServerNodeConfig::TestServerNodeConfig(const std::string& nodename)
     {
         node = RR_MAKE_SHARED<RobotRaconteurNode>();
         node->Init();
-        server = RR_MAKE_SHARED<ServerNodeSetup>(node, ROBOTRACONTEUR_SERVICE_TYPES, nodename, 0);
+        uint32_t server_flags = RobotRaconteurNodeSetupFlags_SERVER_DEFAULT;
+        server_flags &= ~RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER;
+        server = RR_MAKE_SHARED<ServerNodeSetup>(node, ROBOTRACONTEUR_SERVICE_TYPES, nodename, 0, server_flags);
 
         RR_SHARED_PTR<TcpTransport> c = server->GetTcpTransport();
 
