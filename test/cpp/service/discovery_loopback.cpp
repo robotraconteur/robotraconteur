@@ -28,7 +28,7 @@ TEST(RobotRaconteurService, DiscoveryLoopback)
     client_node->Init();
     ClientNodeSetup client_node_setup(client_node, ROBOTRACONTEUR_SERVICE_TYPES, args);
 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(2000));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(5000));
 
     std::vector<std::string> schemes;
     if (node_setup.GetTcpTransport())
