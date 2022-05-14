@@ -133,7 +133,7 @@ jobs:
       if: ${{ matrix.config.container != '' }}
       working-directory: build2
       run: |
-        ctest . -C Release -E robotraconteur_test_discovery_loopback -E RobotRaconteurService.DiscoveryLoopback --output-on-failure
+        ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
