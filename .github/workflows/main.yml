@@ -58,7 +58,7 @@ jobs:
       run: |
         git clone https://github.com/google/googletest
         cd googletest
-        git checkout v1.11.0
+        git checkout release-1.11.0
         cmake .
         cmake --build .
         sudo cmake --build . --target install
