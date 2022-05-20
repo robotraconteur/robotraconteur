@@ -93,7 +93,7 @@ uint32_t robotraconteur_test_lfsr_next_uint64(uint32_t lfsr, uint64_t* val_out)
     uint64_t val_out1 = lfsr2;
     val_out1 = (val_out1 << 32) | lfsr3;
     *val_out = val_out1;
-    return lfsr2;
+    return lfsr3;
 }
 
 uint32_t robotraconteur_test_lfsr_next_float(uint32_t lfsr, float* val_out)
@@ -134,7 +134,7 @@ uint32_t robotraconteur_test_lfsr_next_char(uint32_t lfsr, char* val_out)
 {
     const char chars[] = " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
-    uint32_t ind = lfsr2 % sizeof(chars);
+    uint32_t ind = lfsr2 % strlen(chars);
     *val_out = chars[ind];
     return lfsr2;
 }
