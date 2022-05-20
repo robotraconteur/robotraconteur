@@ -1,5 +1,6 @@
 #include "robotraconteur_test_lfsr.h"
 #include <assert.h>
+#include <string.h>
 
 uint32_t robotraconteur_test_lfsr_initkey(uint32_t seed, const char* key, uint32_t key_len)
 {
