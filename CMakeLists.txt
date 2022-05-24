@@ -66,43 +66,44 @@ if(BUILD_GEN)
     add_subdirectory(RobotRaconteurGen)
 endif()
 
-if(BUILD_TESTING)
-    add_subdirectory(test)
-endif()
 
 set(BUILD_PYTHON "" CACHE BOOL "Build Python wrappers")
 if(BUILD_PYTHON)
-    add_subdirectory(RobotRaconteurPython)
+add_subdirectory(RobotRaconteurPython)
 endif()
 
 set(BUILD_PYTHON3 "" CACHE BOOL "Build Python 3.x wrappers")
 if(BUILD_PYTHON3)
-    add_subdirectory(RobotRaconteurPython3)
+add_subdirectory(RobotRaconteurPython3)
 endif()
 
 set(BUILD_NET "" CACHE BOOL "Build .NET wrappers")
 if(BUILD_NET)
-    add_subdirectory(RobotRaconteurNET)
+add_subdirectory(RobotRaconteurNET)
 endif()
 
 set(BUILD_JAVA "" CACHE BOOL "Build Java wrappers")
 if(BUILD_JAVA)
-    add_subdirectory(RobotRaconteurJava)
+add_subdirectory(RobotRaconteurJava)
 endif()
 
 set(BUILD_MATLAB_MEX OFF CACHE BOOL OFF)
 if(BUILD_MATLAB_MEX)
-    add_subdirectory(RobotRaconteurMex)
+add_subdirectory(RobotRaconteurMex)
 endif()
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/generated_src)
-    set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
+set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
 else()
-    set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
+set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
+endif()
+
+if(BUILD_TESTING)
+    add_subdirectory(test)
 endif()
 
 if(BUILD_PYTHON OR BUILD_NET OR BUILD_JAVA)
-    if(USE_PREGENERATED_SOURCE)
+if(USE_PREGENERATED_SOURCE)
         set(PREGENERATED_SOURCE_DIR ${CMAKE_SOURCE_DIR}/generated_src CACHE PATH "generated_src directory location")
         if(NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
            OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python3/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
