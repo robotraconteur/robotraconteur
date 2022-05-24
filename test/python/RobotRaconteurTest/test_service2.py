@@ -6,6 +6,8 @@ import sys
 
 
 def test_servicetest2_types():
+    if sys.version_info < (3, 0):
+        return
     node = RR.RobotRaconteurNode()
     node.Init()
 
