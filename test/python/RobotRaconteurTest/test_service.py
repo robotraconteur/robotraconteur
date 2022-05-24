@@ -2,6 +2,7 @@ import pytest
 from .ServiceTestClient import ServiceTestClient
 import os
 from RobotRaconteur.Client import *
+import sys
 
 
 def _member_test(fn, test_server_node_config):
@@ -44,6 +45,8 @@ def test_wires(test_server_node_config):
 
 
 def test_memories(test_server_node_config):
+    if sys.version_info < (3, 0):
+        return
     _member_test(lambda c: c.TestMemories(), test_server_node_config)
 
 

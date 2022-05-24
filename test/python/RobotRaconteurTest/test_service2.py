@@ -2,6 +2,7 @@ from RobotRaconteur.Client import *
 from RobotRaconteur.RobotRaconteurPythonUtil import PackMessageElement, UnpackMessageElement
 from .ServiceTest2 import ServiceTest2_fill_teststruct3, ServiceTest2_verify_teststruct3
 from .ServiceTestClient2 import ServiceTestClient2
+import sys
 
 
 def test_servicetest2_types():
@@ -47,6 +48,8 @@ def test_pods(test_server_node_config):
 
 
 def test_memories(test_server_node_config):
+    if sys.version_info < (3, 0):
+        return
     _member_test(lambda c: c.TestMemories(), test_server_node_config)
 
 
