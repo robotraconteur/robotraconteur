@@ -128,25 +128,6 @@ if(BUILD_PYTHON3_WHEEL)
     endif()
 endif()
 
-set(RR_PYTHON_TEST_CMD "\"${CMAKE_COMMAND}\"")
-set(RR_PYTHON_TEST_CMD_ARGS
-    "-E env PYTHONPATH=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python3 ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/test/robdef \"${PYTHON3_EXECUTABLE}\" ${CMAKE_SOURCE_DIR}/RobotRaconteurPython/test/RobotRaconteurPythonTest.py"
-)
-rrconfiguretest(
-    test_prog_python3
-    "${RR_PYTHON_TEST_CMD}"
-    "test_prog"
-    NOCTEST
-    NODEBUG
-    ARGS
-    "${RR_PYTHON_TEST_CMD_ARGS}")
-rrconfiguretest(test_python3_loopback "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS
-                "${RR_PYTHON_TEST_CMD_ARGS} loopback")
-rrconfiguretest(test_python3_loopback2 "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS
-                "${RR_PYTHON_TEST_CMD_ARGS} loopback2")
-rrconfiguretest(test_python3_loopback3 "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS
-                "${RR_PYTHON_TEST_CMD_ARGS} loopback3")
-
 if(ROBOTRACONTEUR_ROS)
 
     # This mess is taken from github.com/ros/catkin/cmake/python.cmake...

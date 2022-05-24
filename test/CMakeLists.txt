@@ -5,3 +5,7 @@ find_package(GTest)
 add_subdirectory(robdef)
 add_subdirectory(lfsr)
 add_subdirectory(cpp)
+
+if(BUILD_PYTHON OR BUILD_PYTHON3)
+    add_subdirectory(python)
+endif()

@@ -36,10 +36,10 @@ function(RRConfigureTest test_name cmd template_in)
         set(ROBOTRACONTEUR_CORE_LIB_DIR ${CMAKE_BINARY_DIR}/${OUT_DIR_NAME}/lib)
         if(WIN32)
             configure_file("${CMAKE_SOURCE_DIR}/test/templates/${template_in}.bat.in"
-                           "${CMAKE_BINARY_DIR}/${OUT_DIR_NAME}/test/${test_name}.bat" @ONLY)
+                           "${CMAKE_BINARY_DIR}/test/${OUT_DIR_NAME}/scripts/${test_name}.bat" @ONLY)
         else()
             configure_file("${CMAKE_SOURCE_DIR}/test/templates/${template_in}.in"
-                           "${CMAKE_BINARY_DIR}/${OUT_DIR_NAME}/test/${test_name}" @ONLY)
+                           "${CMAKE_BINARY_DIR}/test/${OUT_DIR_NAME}/scripts/${test_name}" @ONLY)
         endif()
     endforeach()
     if(WIN32)
@@ -47,40 +47,40 @@ function(RRConfigureTest test_name cmd template_in)
             if(NOT RRConfigureTest_NODEBUG)
                 add_test(
                     NAME ${test_name}
-                    COMMAND "${CMAKE_BINARY_DIR}/out_debug/test/${test_name}.bat"
+                    COMMAND "${CMAKE_BINARY_DIR}/test/out_debug/scripts/${test_name}.bat"
                     CONFIGURATIONS Debug
-                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/out_debug/test")
+                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/out_debug/scripts")
             endif()
             add_test(
                 NAME "${test_name}_rel"
-                COMMAND "${CMAKE_BINARY_DIR}/out/test/${test_name}.bat"
+                COMMAND "${CMAKE_BINARY_DIR}/test/out/scripts/${test_name}.bat"
                 CONFIGURATIONS Release
-                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/out/test")
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/out/scripts")
             add_test(
                 NAME "${test_name}_reldeb"
-                COMMAND "${CMAKE_BINARY_DIR}/out_reldebug/test/${test_name}.bat"
+                COMMAND "${CMAKE_BINARY_DIR}/test/out_reldebug/scripts/${test_name}.bat"
                 CONFIGURATIONS RelWithDebInfo
-                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/out_reldebug/test")
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/out_reldebug/scripts")
         endif()
     else()
         if(NOT RRConfigureTest_NOCTEST)
             if(NOT RRConfigureTest_NODEBUG)
                 add_test(
                     NAME ${test_name}
-                    COMMAND "${CMAKE_BINARY_DIR}/out_debug/test/${test_name}"
+                    COMMAND "${CMAKE_BINARY_DIR}/test/out_debug/scripts/${test_name}"
                     CONFIGURATIONS Debug
-                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/out_debug/test")
+                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/out_debug/scripts")
             endif()
             add_test(
                 NAME "${test_name}_rel"
-                COMMAND "${CMAKE_BINARY_DIR}/out/test/${test_name}"
+                COMMAND "${CMAKE_BINARY_DIR}/test/out/scripts/${test_name}"
                 CONFIGURATIONS Release
-                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/out/test")
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/out/scripts")
             add_test(
                 NAME "${test_name}_reldeb"
-                COMMAND "${CMAKE_BINARY_DIR}/out_reldebug/test/${test_name}"
+                COMMAND "${CMAKE_BINARY_DIR}/test/out_reldebug/scripts/${test_name}"
                 CONFIGURATIONS RelWithDebInfo
-                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/out_reldebug/test")
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/out_reldebug/scripts")
         endif()
     endif()
 endfunction()
