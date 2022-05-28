@@ -17,3 +17,7 @@ endif()
 if(BUILD_JAVA)
     add_subdirectory(java)
 endif()
+
+if(BUILD_MATLAB_MEX)
+    add_subdirectory(matlab)
+endif()

@@ -76,3 +76,14 @@ rr_service_test_add_exe(
     service_test_utils.cpp)
 
 rr_service_test_add_exe(certauthclient SRC certauthclient.cpp)
+
+rr_service_test_add_lib(
+    server_lib
+    SERVICELIB
+    TYPE
+    SHARED
+    DEFINE
+    ROBOTRACONTEUR_TEST_SERVER_LIB_EXPORTS
+    SRC
+    test_server_lib.cpp
+    service_test_utils.cpp)
