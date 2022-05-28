@@ -22,12 +22,10 @@ class ServiceTest2_pod
 
     private static void verify_double_array(ServiceTest2_test_sequence_gen gen, double[] v, int len)
     {
-        if (v.length != len)
-            throw new RuntimeException();
+        RRAssert.areEqual(v.length, len);
         for (int i = 0; i < len; i++)
         {
-            if (v[i] != gen.get_double())
-                throw new RuntimeException();
+            RRAssert.areEqual(v[i], gen.get_double());
         }
     }
 
@@ -43,12 +41,10 @@ class ServiceTest2_pod
 
     private static void verify_uint32_array(ServiceTest2_test_sequence_gen gen, long[] v, int len)
     {
-        if (v.length != len)
-            throw new RuntimeException();
+        RRAssert.areEqual(v.length, len);
         for (int i = 0; i < len; i++)
         {
-            if (v[i] != gen.get_uint32())
-                throw new RuntimeException();
+            RRAssert.areEqual(v[i], gen.get_uint32());
         }
     }
 
@@ -64,12 +60,10 @@ class ServiceTest2_pod
 
     private static void verify_int8_array(ServiceTest2_test_sequence_gen gen, byte[] v, int len)
     {
-        if (v.length != len)
-            throw new RuntimeException();
+        RRAssert.areEqual(v.length, len);
         for (int i = 0; i < len; i++)
         {
-            if (v[i] != gen.get_int8())
-                throw new RuntimeException();
+            RRAssert.areEqual(v[i], gen.get_int8());
         }
     }
 
@@ -116,8 +110,7 @@ class ServiceTest2_pod
     public static void verify_testpod1(testpod1 s, long seed)
     {
         ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
-        if (s.d1 != gen.get_double())
-            throw new RuntimeException();
+        RRAssert.areEqual(s.d1, gen.get_double());
         verify_double_array(gen, s.d2, 6);
         verify_double_array(gen, s.d3, (int)(gen.get_uint32() % 6));
 
@@ -133,8 +126,7 @@ class ServiceTest2_pod
             verify_transform(s.t2[i], gen.get_uint32());
 
         int t3_len = (int)(gen.get_uint32() % 15);
-        if (s.t3.length != t3_len)
-            throw new RuntimeException("");
+        RRAssert.areEqual(s.t3.length, t3_len);
         for (int i = 0; i < t3_len; i++)
             verify_transform(s.t3[i], gen.get_uint32());
 
@@ -153,8 +145,7 @@ class ServiceTest2_pod
     public static void verify_testpod2(testpod2 s, long seed)
     {
         ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
-        if (s.i1 != gen.get_int8())
-            throw new RuntimeException();
+        RRAssert.areEqual(s.i1, gen.get_int8());
         verify_int8_array(gen, s.i2, 15);
         verify_int8_array(gen, s.i3, (int)(gen.get_uint32() % 15));
     }
@@ -174,8 +165,7 @@ class ServiceTest2_pod
     public static void verify_testpod1_array(testpod1[] v, int len, long seed)
     {
         ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
-        if (v.length != len)
-            throw new RuntimeException();
+        RRAssert.areEqual(v.length, len);
         for (int i = 0; i < len; i++)
         {
             verify_testpod1(v[i], gen.get_uint32());
@@ -196,8 +186,7 @@ class ServiceTest2_pod
 
     public static void verify_testpod1_multidimarray(PodMultiDimArray v, int m, int n, long seed)
     {
-        if (!Arrays.equals(v.dims, new int[] {m, n}))
-            throw new RuntimeException();
+        RRAssert.isTrue(Arrays.equals(v.dims, new int[] {m, n}));
         verify_testpod1_array((testpod1[])v.pod_array, m * n, seed);
     }
 
@@ -210,8 +199,7 @@ class ServiceTest2_pod
         else
         {
             PodMultiDimArray v2 = (PodMultiDimArray)v;
-            if (!Arrays.equals(v2.dims, new int[] {m, n}))
-                throw new RuntimeException();
+            RRAssert.isTrue(Arrays.equals(v2.dims, new int[] {m, n}));
             verify_testpod1_array((testpod1[])v2.pod_array, m * n, seed);
         }
     }
@@ -229,8 +217,7 @@ class ServiceTest2_pod
 
     public static void verify_testpod2_array(ServiceTest2_test_sequence_gen gen, testpod2[] v, int len)
     {
-        if (v.length != len)
-            throw new RuntimeException();
+        RRAssert.areEqual(v.length, len);
         for (int i = 0; i < len; i++)
         {
             verify_testpod2(v[i], gen.get_uint32());
@@ -331,8 +318,7 @@ class ServiceTest2_pod
 
     public static void verify_teststruct3(teststruct3 v, long seed)
     {
-        if (v == null)
-            throw new RuntimeException();
+        RRAssert.areNotEqual(v, null);
         ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
 
         verify_testpod1(v.s1, gen.get_uint32());
@@ -345,24 +331,18 @@ class ServiceTest2_pod
         long s6_seed = gen.get_uint32();
         verify_testpod1_multidimarray(v.s6, (int)(s6_seed % 6), (int)(s6_seed % 3), s6_seed);
 
-        if (v.s7 == null)
-            throw new RuntimeException();
-        if (v.s7.size() != 1)
-            throw new RuntimeException();
+        RRAssert.areNotEqual(v.s7, null);
+        RRAssert.areEqual(v.s7.size(), 1);
         testpod1 s7_0 = v.s7.get(0)[0];
         verify_testpod1(s7_0, gen.get_uint32());
 
-        if (v.s8 == null)
-            throw new RuntimeException();
-        if (v.s8.size() != 2)
-            throw new RuntimeException();
+        RRAssert.areNotEqual(v.s8, null);
+        RRAssert.areEqual(v.s8.size(), 2);
         verify_testpod1_array(v.s8.get(0), 2, gen.get_uint32());
         verify_testpod1_array(v.s8.get(1), 4, gen.get_uint32());
 
-        if (v.s9 == null)
-            throw new RuntimeException();
-        if (v.s9.size() != 2)
-            throw new RuntimeException();
+        RRAssert.areNotEqual(v.s9, null);
+        RRAssert.areEqual(v.s9.size(), 2);
         verify_testpod1_multidimarray(v.s9.get(0), 2, 3, gen.get_uint32());
         verify_testpod1_multidimarray(v.s9.get(1), 4, 5, gen.get_uint32());
 
@@ -372,25 +352,20 @@ class ServiceTest2_pod
         verify_testpod1_array((testpod1[])v.s11, 3, gen.get_uint32());
         verify_testpod1_multidimarray(v.s12, 2, 2, gen.get_uint32());
 
-        if (v.s13 == null)
-            throw new RuntimeException();
+        RRAssert.areNotEqual(v.s13, null);
         Object s13_1 = ((List<Object>)v.s13).get(0);
         testpod1[] s13 = (testpod1[])((List<Object>)v.s13).get(0);
         verify_testpod1(s13[0], gen.get_uint32());
 
-        if (v.s14 == null)
-            throw new RuntimeException();
+        RRAssert.areNotEqual(v.s14, null);
         List<Object> v14 = (List<Object>)v.s14;
-        if (v14.size() != 2)
-            throw new RuntimeException();
+        RRAssert.areEqual(v14.size(), 2);
         verify_testpod1_array((testpod1[])v14.get(0), 3, gen.get_uint32());
         verify_testpod1_array((testpod1[])v14.get(1), 5, gen.get_uint32());
 
-        if (v.s15 == null)
-            throw new RuntimeException();
+        RRAssert.areNotEqual(v.s15, null);
         List<Object> v15 = (List<Object>)v.s15;
-        if (v15.size() != 2)
-            throw new RuntimeException();
+        RRAssert.areEqual(v15.size(), 2);
         verify_testpod1_multidimarray(v15.get(0), 7, 2, gen.get_uint32());
         verify_testpod1_multidimarray(v15.get(1), 5, 1, gen.get_uint32());
 
@@ -402,46 +377,35 @@ class ServiceTest2_pod
         verify_transform_array((transform[])(v.t4), 10, gen.get_uint32());
         verify_transform_multidimarray((NamedMultiDimArray)(v.t5), 6, 5, gen.get_uint32());
 
-        if (v.t6 == null)
-            throw new RuntimeException("");
-        if (v.t6.size() != 1)
-            throw new RuntimeException("");
+        RRAssert.areNotEqual(v.t6, null);
+        RRAssert.areEqual(v.t6.size(), 1);
         transform[] t6_0 = v.t6.get(0);
         verify_transform(t6_0[0], gen.get_uint32());
 
-        if (v.t7 == null)
-            throw new RuntimeException("");
-        if (v.t7.size() != 2)
-            throw new RuntimeException("");
+        RRAssert.areNotEqual(v.t7, null);
+        RRAssert.areEqual(v.t7.size(), 2);
         verify_transform_array(v.t7.get(0), 4, gen.get_uint32());
         verify_transform_array(v.t7.get(1), 4, gen.get_uint32());
 
-        if (v.t8 == null)
-            throw new RuntimeException("");
-        if (v.t8.size() != 2)
-            throw new RuntimeException("");
+        RRAssert.areNotEqual(v.t8, null);
+        RRAssert.areEqual(v.t8.size(), 2);
         verify_transform_multidimarray(v.t8.get(0), 2, 4, gen.get_uint32());
         verify_transform_multidimarray(v.t8.get(1), 2, 4, gen.get_uint32());
 
-        if (v.t9 == null)
-            throw new RuntimeException("");
+        RRAssert.areNotEqual(v.t9, null);
         Object t9_1 = ((List<Object>)v.t9).get(0);
         transform[] t9 = (transform[])t9_1;
         verify_transform(t9[0], gen.get_uint32());
 
-        if (v.t10 == null)
-            throw new RuntimeException("");
+        RRAssert.areNotEqual(v.t10, null);
         List<Object> t10 = (List<Object>)v.t10;
-        if (t10.size() != 2)
-            throw new RuntimeException("");
+        RRAssert.areEqual(t10.size(), 2);
         verify_transform_array((transform[])t10.get(0), 3, gen.get_uint32());
         verify_transform_array((transform[])t10.get(1), 5, gen.get_uint32());
 
-        if (v.t11 == null)
-            throw new RuntimeException("");
+        RRAssert.areNotEqual(v.t11, null);
         List<Object> t11 = (List<Object>)v.t11;
-        if (t11.size() != 2)
-            throw new RuntimeException("");
+        RRAssert.areEqual(t11.size(), 2);
         verify_transform_multidimarray((NamedMultiDimArray)t11.get(0), 7, 2, gen.get_uint32());
         verify_transform_multidimarray((NamedMultiDimArray)t11.get(1), 5, 1, gen.get_uint32());
     }
@@ -460,8 +424,7 @@ class ServiceTest2_pod
         ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
         double[] a = t.getNumericArray();
         for (int i = 0; i < 7; i++)
-            if (a[i] != gen.get_double())
-                throw new RuntimeException();
+            RRAssert.areEqual(a[i], gen.get_double());
     }
 
     public static transform[] fill_transform_array(int len, long seed)
@@ -479,8 +442,7 @@ class ServiceTest2_pod
     public static void verify_transform_array(transform[] t, int len, long seed)
     {
         ServiceTest2_test_sequence_gen gen = new ServiceTest2_test_sequence_gen(seed);
-        if (t.length != len)
-            throw new RuntimeException("");
+        RRAssert.areEqual(t.length, len);
         for (int i = 0; i < len; i++)
             verify_transform(t[i], gen.get_uint32());
     }
@@ -492,8 +454,7 @@ class ServiceTest2_pod
 
     public static void verify_transform_multidimarray(NamedMultiDimArray a, int m, int n, long seed)
     {
-        if (!Arrays.equals(a.dims, new int[] {m, n}))
-            throw new RuntimeException();
+        RRAssert.isTrue(Arrays.equals(a.dims, new int[] {m, n}));
         verify_transform_array((transform[])a.namedarray_array, m * n, seed);
     }
 }

@@ -1,5 +1,4 @@
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/exceptionsrc)
 
 if(NOT ANDROID)
@@ -65,6 +64,8 @@ if((WIN32 AND MINGW) OR CYGWIN OR CMAKE_SYSTEM_NAME STREQUAL MSYS)
     set_target_properties(RobotRaconteurJavaNative PROPERTIES PREFIX "")
 endif()
 
+rrsettargetdirs(RobotRaconteurJavaNative "Java" "Java")
+
 if(NOT ANDROID)
     add_custom_target(
         RobotRaconteurJava ALL
@@ -118,56 +119,6 @@ endif()
 
 include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
 
-if(NOT RobotRaconteur_GEN)
-    set(RobotRaconteur_GEN RobotRaconteurGen)
-endif()
-
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_src")
-
-robotraconteur_generate_thunk(
-    RR_THUNK_SRCS
-    com.robotraconteur.testing.TestService1.robdef
-    com.robotraconteur.testing.TestService2.robdef
-    com.robotraconteur.testing.TestService3.robdef
-    com.robotraconteur.testing.TestService4.robdef
-    LANG
-    java
-    INCLUDE_DIRS
-    "${CMAKE_SOURCE_DIR}/test/robdef"
-    OUTDIR
-    "${CMAKE_CURRENT_BINARY_DIR}/test_src")
-
-add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS})
-
-add_custom_target(
-    RobotRaconteurJavaTest ALL
-    "${Java_JAVAC_EXECUTABLE}"
-    -encoding
-    UTF8
-    -target
-    7
-    -source
-    7
-    -Xlint:none
-    com/robotraconteur/javatest/*.java
-    ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService1/*.java
-    ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService2/*.java
-    ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService3/*.java
-    -d
-    "${CMAKE_CURRENT_BINARY_DIR}/test"
-    -classpath
-    "${CMAKE_CURRENT_BINARY_DIR}/bin"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test")
-add_dependencies(RobotRaconteurJavaTest RobotRaconteurJava RobotRaconteurJavaTest_gen)
-
-add_custom_command(
-    TARGET RobotRaconteurJavaTest
-    POST_BUILD
-    COMMAND "${Java_JAR_EXECUTABLE}" cf "$<TARGET_FILE_DIR:RobotRaconteurJavaNative>/RobotRaconteurJavaTest.jar" *
-    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test")
-
-rrsettargetdirs(RobotRaconteurJavaNative "Java" "Java")
-
 set_target_properties(RobotRaconteurJavaNative PROPERTIES OUTPUT_NAME "RobotRaconteurJavaNative")
 
 if(NOT DEFINED RobotRaconteur_DIR)
@@ -175,7 +126,6 @@ if(NOT DEFINED RobotRaconteur_DIR)
 endif()
 
 add_dependencies(RobotRaconteurJava RobotRaconteurJavaNative)
-add_dependencies(RobotRaconteurJavaTest RobotRaconteurJava)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -219,24 +169,3 @@ endif()
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Manifest.txt.in" "${CMAKE_CURRENT_BINARY_DIR}/bin/Manifest.txt" @ONLY)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/JavaExceptions.cmake")
-
-set(RR_JAVA_TEST_CMD "${Java_JAVA_EXECUTABLE}")
-if(WIN32)
-    set(RR_JAVA_TEST_CMD_ARG
-        "-cp ${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Java/RobotRaconteur.jar\\\;${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Java/RobotRaconteurJavaTest.jar -Djava.library.path=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Java/ com.robotraconteur.javatest.RobotRaconteurJavaTest"
-    )
-else()
-    set(RR_JAVA_TEST_CMD_ARG
-        "-cp ${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Java/RobotRaconteur.jar:${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Java/RobotRaconteurJavaTest.jar -Djava.library.path=${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Java/ com.robotraconteur.javatest.RobotRaconteurJavaTest"
-    )
-endif()
-rrconfiguretest(
-    test_prog_java
-    "${RR_JAVA_TEST_CMD}"
-    "test_prog"
-    NOCTEST
-    NODEBUG
-    ARGS
-    "${RR_JAVA_TEST_CMD_ARG}")
-rrconfiguretest(test_java_loopback "${RR_JAVA_TEST_CMD}" "test_prog" ARGS "${RR_JAVA_TEST_CMD_ARG} loopback")
-rrconfiguretest(test_java_loopback2 "${RR_JAVA_TEST_CMD}" "test_prog" ARGS "${RR_JAVA_TEST_CMD_ARG} loopback2")

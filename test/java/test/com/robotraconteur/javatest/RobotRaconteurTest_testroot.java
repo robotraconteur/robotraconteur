@@ -19,10 +19,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_d1(double value)
     {
-        if (value != 3.456)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value, 3.456);
     }
 
     public final double[] get_d2()
@@ -186,91 +183,55 @@ public class RobotRaconteurTest_testroot implements testroot
 
     public final void ca(double[] v1, double[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(float[] v1, float[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(byte[] v1, byte[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(short[] v1, short[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(int[] v1, int[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(long[] v1, long[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
@@ -360,10 +321,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_s1(float value)
     {
-        if (value != 3847.9283f)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value, 3847.9283f);
     }
 
     public final float[] get_s2()
@@ -566,10 +524,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_i8_1(byte value)
     {
-        if (value != 45)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value, 45);
     }
 
     // C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
@@ -680,10 +635,7 @@ public class RobotRaconteurTest_testroot implements testroot
     // ORIGINAL LINE: public void set_u8_1(byte value)
     public final void set_u8_1(UnsignedByte value)
     {
-        if (value.value != -24)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.value, -24);
     }
 
     public final UnsignedBytes get_u8_2()
@@ -820,10 +772,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_i16_1(short value)
     {
-        if (value != 2387)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value, 2387);
     }
     public final short[] get_i16_2()
     {
@@ -955,10 +904,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_u16_1(UnsignedShort value)
     {
-        if (value.value != -10804)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.value, -10804);
     }
 
     public final UnsignedShorts get_u16_2()
@@ -1012,10 +958,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_i32_1(int value)
     {
-        if (value != -9837284)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value, -9837284);
     }
 
     public final int[] get_i32_2()
@@ -1263,12 +1206,10 @@ public class RobotRaconteurTest_testroot implements testroot
 
     public void set_i32_huge(int[] value)
     {
-        if (value.length != 2621440)
-            throw new RuntimeException();
+        RRAssert.areEqual(value.length, 2621440);
         for (int i = 0; i < 2621440; i++)
         {
-            if (value[i] != -i)
-                throw new RuntimeException();
+            RRAssert.areEqual(value[i], -i);
         }
     }
 
@@ -1279,10 +1220,7 @@ public class RobotRaconteurTest_testroot implements testroot
 
     public final void set_u32_1(UnsignedInt value)
     {
-        if (value.value != 1550099195)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.value, 1550099195);
     }
 
     public final UnsignedInts get_u32_2()
@@ -1477,10 +1415,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_i64_1(long value)
     {
-        if (value != 8621740821050813024L)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value, 8621740821050813024L);
     }
 
     public final long[] get_i64_2()
@@ -1575,10 +1510,7 @@ public class RobotRaconteurTest_testroot implements testroot
 
     public final void set_u64_1(UnsignedLong value)
     {
-        if (value.value != 1465640522145789825L)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.value, 1465640522145789825L);
     }
 
     public final UnsignedLongs get_u64_2()
@@ -1669,10 +1601,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_str1(String value)
     {
-        if (!value.equals("Hello Server!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value, "Hello Server!");
     }
 
     public final teststruct1 get_struct1()
@@ -1795,57 +1724,21 @@ public class RobotRaconteurTest_testroot implements testroot
                3.508303e+10,  -4.579380e-17, 1.128779e+05,  -1.064335e+11, 1.795376e-06,  -1.903884e+09, 2.699039e-03,
                3.658452e+15,  4.534803e+15,  1.366079e-03,  -3.557323e+07, -4.920382e+18, -3.358988e-07, -4.024967e-11,
                -4.784915e+16, 1.490340e-18,  -4.343678e+08, -1.955643e+14});
-        if (!value.str2.equals("Hello world 2!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.str2, "Hello world 2!");
 
-        if (value.vec3.size() != 4)
-        {
-            throw new RuntimeException();
-        }
-        if (!value.vec3.get(10).equals("Hello Server!"))
-        {
-            throw new RuntimeException();
-        }
-        if (!value.vec3.get(11).equals("Hello Server, again"))
-        {
-            throw new RuntimeException();
-        }
-        if (!value.vec3.get(46372).equals("Test string!"))
-        {
-            throw new RuntimeException();
-        }
-        if (!value.vec3.get(46373).equals("Test string again"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.vec3.size(), 4);
+        RRAssert.areEqual(value.vec3.get(10), "Hello Server!");
+        RRAssert.areEqual(value.vec3.get(11), "Hello Server, again");
+        RRAssert.areEqual(value.vec3.get(46372), "Test string!");
+        RRAssert.areEqual(value.vec3.get(46373), "Test string again");
 
-        if (value.dict4.size() != 2)
-        {
-            throw new RuntimeException();
-        }
-        if (!value.dict4.get("cteststring1").equals("Hello Server!"))
-        {
-            throw new RuntimeException();
-        }
-        if (!value.dict4.get("cteststring2").equals("Hello Server, again"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.dict4.size(), 2);
+        RRAssert.areEqual(value.dict4.get("cteststring1"), "Hello Server!");
+        RRAssert.areEqual(value.dict4.get("cteststring2"), "Hello Server, again");
 
-        if (value.list5.size() != 2)
-        {
-            throw new RuntimeException();
-        }
-        if (!value.list5.get(0).equals("Hello Server!"))
-        {
-            throw new RuntimeException();
-        }
-        if (!value.list5.get(1).equals("Hello Server, again"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.list5.size(), 2);
+        RRAssert.areEqual(value.list5.get(0), "Hello Server!");
+        RRAssert.areEqual(value.list5.get(1), "Hello Server, again");
 
         ca(value.struct1.mydat,
            new double[] {
@@ -1974,22 +1867,10 @@ public class RobotRaconteurTest_testroot implements testroot
 
     public final void set_is_d1(java.util.Map<Integer, double[]> value)
     {
-        if (value.size() != 3)
-        {
-            throw new RuntimeException();
-        }
-        if (value.get(928)[0] != 4.074501e-07)
-        {
-            throw new RuntimeException();
-        }
-        if (value.get(394820)[0] != -4.535303e+05)
-        {
-            throw new RuntimeException();
-        }
-        if (value.get(623)[0] != -2.956241e-20)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 3);
+        RRAssert.areEqual(value.get(928)[0], 4.074501e-07);
+        RRAssert.areEqual(value.get(394820)[0], -4.535303e+05);
+        RRAssert.areEqual(value.get(623)[0], -2.956241e-20);
     }
     public final java.util.Map<String, double[]> get_is_d2()
     {
@@ -2000,18 +1881,9 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_is_d2(java.util.Map<String, double[]> value)
     {
-        if (value.size() != 2)
-        {
-            throw new RuntimeException();
-        }
-        if (value.get("testval3")[0] != 5.242474e+10)
-        {
-            throw new RuntimeException();
-        }
-        if (value.get("testval4")[0] != 2.208636e+08)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 2);
+        RRAssert.areEqual(value.get("testval3")[0], 5.242474e+10);
+        RRAssert.areEqual(value.get("testval4")[0], 2.208636e+08);
     }
 
     public final java.util.Map<Integer, double[]> get_is_d3()
@@ -2029,10 +1901,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_is_d3(java.util.Map<Integer, double[]> value)
     {
-        if (value.size() != 2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 2);
         ca(value.get(47), new double[] {4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
                                         -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
                                         4.350998e+03,  4.539570e+11,  8.981827e+09,  3.326114e+01,  2.975688e+06,
@@ -2058,10 +1927,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_is_d4(java.util.Map<String, double[]> value)
     {
-        if (value.size() != 2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 2);
         ca(value.get("testval3"),
            new double[] {1.771838e+06, 3.037284e-01,  -1.739742e-02, 1.399508e-20,  3.605232e-21,
                          3.517522e+14, 4.887514e+14,  3.505442e-03,  -3.968972e+18, 1.422037e-20,
@@ -2100,10 +1966,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_is_d5(java.util.Map<Integer, MultiDimArray> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
         MultiDimArray a = value.get(328);
         ca(a.dims, new int[] {10, 20});
         ca((double[])a.array,
@@ -2158,10 +2021,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_is_d6(java.util.Map<String, MultiDimArray> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
         MultiDimArray a = value.get("testval2");
         ca(a.dims, new int[] {8, 10});
         ca((double[])a.array,
@@ -2189,14 +2049,8 @@ public class RobotRaconteurTest_testroot implements testroot
 
     public final void set_is_str1(java.util.Map<Integer, String> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!value.get(24).equals("Hello client"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
+        RRAssert.areEqual(value.get(24), "Hello client");
     }
 
     public final java.util.Map<String, String> get_is_str2()
@@ -2208,14 +2062,8 @@ public class RobotRaconteurTest_testroot implements testroot
 
     public final void set_is_str2(java.util.Map<String, String> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!value.get("testval2").equals("Hello client"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
+        RRAssert.areEqual(value.get("testval2"), "Hello client");
     }
 
     public final java.util.Map<Integer, teststruct2> get_is_struct1()
@@ -2231,10 +2079,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_is_struct1(java.util.Map<Integer, teststruct2> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
         teststruct2 s = value.get(372);
         ca(s.mydat, new double[] {-2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
                                   -3.256612e-02, -1.855481e-19, 3.801916e+07,  2.145894e+09,  4.487676e+12,
@@ -2255,10 +2100,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_is_struct2(java.util.Map<String, teststruct2> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
         teststruct2 s = value.get("testval2");
         ca(s.mydat, new double[] {6.931327e-21,  4.527137e-02,  1.260822e-18,  3.592805e-12,  1.088317e-05,
                                   3.305865e+03,  -9.798828e-20, 1.497504e+18,  -3.653592e+01, 1.473952e+10,
@@ -2323,10 +2165,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_var_str(Object value)
     {
-        if (!((String)value).equals("Hello Server!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(((String)value), "Hello Server!");
     }
 
     public final Object get_var_struct()
@@ -2356,14 +2195,8 @@ public class RobotRaconteurTest_testroot implements testroot
     public final void set_var_vector(Object value)
     {
         java.util.HashMap<Integer, Object> d = (java.util.HashMap<Integer, Object>)value;
-        if (d.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!((String)d.get(11)).equals("Hello Server!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(d.size(), 1);
+        RRAssert.areEqual(((String)d.get(11)), "Hello Server!");
     }
 
     public final Object get_var_dictionary()
@@ -2375,14 +2208,8 @@ public class RobotRaconteurTest_testroot implements testroot
     public final void set_var_dictionary(Object value)
     {
         java.util.HashMap<String, Object> d = (java.util.HashMap<String, Object>)value;
-        if (d.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!((String)d.get("test2")).equals("Hello Server!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(d.size(), 1);
+        RRAssert.areEqual(((String)d.get("test2")), "Hello Server!");
     }
 
     public final Object get_var_list()
@@ -2394,14 +2221,8 @@ public class RobotRaconteurTest_testroot implements testroot
     public final void set_var_list(Object value)
     {
         java.util.List<Object> d = (java.util.List<Object>)value;
-        if (d.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!((String)d.get(0)).equals("Hello Server!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(d.size(), 1);
+        RRAssert.areEqual(((String)d.get(0)), "Hello Server!");
     }
 
     public final Object get_var_multidimarray()
@@ -2438,10 +2259,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void set_nulltest(teststruct1 value)
     {
-        if (value != null)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value, null);
     }
 
     class func1_run implements Runnable
@@ -2812,10 +2630,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     public final void pipe_check_error()
     {
-        if (!ack_recv)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(ack_recv);
     }
 
     public final void test_callbacks()
@@ -2823,14 +2638,9 @@ public class RobotRaconteurTest_testroot implements testroot
         get_cb1().getClientFunction(ServerEndpoint.getCurrentEndpoint()).action();
         get_cb2().getClientFunction(ServerEndpoint.getCurrentEndpoint()).action(739.2, 0.392);
         double res = get_cb3().getClientFunction(ServerEndpoint.getCurrentEndpoint()).func(34.0, 45.0);
-        if (res != (34 + 45 + 3.14))
-        {
-            throw new RuntimeException();
-        }
-        if (get_cb_meaning_of_life().getClientFunction(ServerEndpoint.getCurrentEndpoint()).func() != 42)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(res, (34 + 45 + 3.14));
+        RRAssert.areEqual(
+            get_cb_meaning_of_life().getClientFunction(ServerEndpoint.getCurrentEndpoint()).func().longValue(), 42);
 
         boolean errthrown = false;
 
@@ -2843,10 +2653,7 @@ public class RobotRaconteurTest_testroot implements testroot
             errthrown = true;
         }
 
-        if (!errthrown)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(errthrown);
     }
 
     private Callback<Action> m_cb1;
@@ -3054,22 +2861,10 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     @Override public void set_list_d1(List<double[]> value)
     {
-        if (value.size() != 3)
-        {
-            throw new RuntimeException();
-        }
-        if (value.get(0)[0] != 4.074501e-07)
-        {
-            throw new RuntimeException();
-        }
-        if (value.get(1)[0] != -4.535303e+05)
-        {
-            throw new RuntimeException();
-        }
-        if (value.get(2)[0] != -2.956241e-20)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 3);
+        RRAssert.areEqual(value.get(0)[0], 4.074501e-07);
+        RRAssert.areEqual(value.get(1)[0], -4.535303e+05);
+        RRAssert.areEqual(value.get(2)[0], -2.956241e-20);
     }
     @Override public List<double[]> get_list_d3()
     {
@@ -3086,10 +2881,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     @Override public void set_list_d3(List<double[]> value)
     {
-        if (value.size() != 2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 2);
         ca(value.get(0), new double[] {4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
                                        -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
                                        4.350998e+03,  4.539570e+11,  8.981827e+09,  3.326114e+01,  2.975688e+06,
@@ -3125,10 +2917,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     @Override public void set_list_d5(List<MultiDimArray> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
         MultiDimArray a = value.get(0);
         ca(a.dims, new int[] {10, 20});
         ca((double[])a.array,
@@ -3171,14 +2960,8 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     @Override public void set_list_str1(List<String> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!value.get(0).equals("Hello client"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
+        RRAssert.areEqual(value.get(0), "Hello client");
     }
     @Override public List<teststruct2> get_list_struct1()
     {
@@ -3193,10 +2976,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     @Override public void set_list_struct1(List<teststruct2> value)
     {
-        if (value.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(value.size(), 1);
         teststruct2 s = value.get(0);
         ca(s.mydat, new double[] {-2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
                                   -3.256612e-02, -1.855481e-19, 3.801916e+07,  2.145894e+09,  4.487676e+12,
@@ -3227,8 +3007,7 @@ public class RobotRaconteurTest_testroot implements testroot
     {
         m_broadcastpipe = value;
         m_broadcastpipe_broadcaster = new PipeBroadcaster<double[]>(value, 3);
-        if (m_broadcastpipe_broadcaster.getMaxBacklog() != 3)
-            throw new RuntimeException();
+        RRAssert.areEqual(m_broadcastpipe_broadcaster.getMaxBacklog(), 3);
         m_broadcastpipe_broadcaster.setMaxBacklog(3);
 
         BroadcastPipeTimerHandler h = new BroadcastPipeTimerHandler();
@@ -3268,8 +3047,7 @@ public class RobotRaconteurTest_testroot implements testroot
     }
     @Override public void set_broadcastwire(Wire<double[]> value)
     {
-        if (m_broadcastwire != null)
-            throw new RuntimeException("");
+        RRAssert.areEqual(m_broadcastwire, null);
         m_broadcastwire = value;
         m_broadcastwire_broadcaster = new WireBroadcaster<double[]>(value);
 

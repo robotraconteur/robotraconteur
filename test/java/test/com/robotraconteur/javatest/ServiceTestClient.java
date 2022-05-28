@@ -16,91 +16,55 @@ public class ServiceTestClient
 {
     public final void ca(double[] v1, double[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(float[] v1, float[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(byte[] v1, byte[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(short[] v1, short[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(int[] v1, int[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(long[] v1, long[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
@@ -151,10 +115,7 @@ public class ServiceTestClient
     public final void TestProperties1()
     {
         r.set_d1(3.456);
-        if (r.get_d1() != 12.345)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_d1(), 12.345);
         r.set_d2(new double[] {
             8.805544e-12,  3.735066e+12,  3.491919e+17,  4.979833e+12,  -4.042302e+00, 2.927731e-12,  5.945355e+11,
             -3.965351e+06, 4.866934e-14,  1.314597e+04,  -2.059923e-11, -5.447989e-20, 1.267732e-21,  -2.603983e+10,
@@ -387,10 +348,7 @@ public class ServiceTestClient
                                                -3.468374e-03, -5.037849e-14, -4.140513e-08, 4.553774e+03});
 
         r.set_s1(3847.9283f);
-        if (r.get_s1() != 7.8573f)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_s1(), 7.8573f);
         r.set_s2(new float[] {
             -1.374271e+12f, 1.798486e-08f,  -4.845395e-08f, -4.785331e+12f, -2.914127e+04f, -1.753064e-17f,
             -4.063563e-09f, 2.758058e+04f,  -1.988908e+11f, -1.535073e-18f, 2.439972e-02f,  -3.237377e-12f,
@@ -577,10 +535,7 @@ public class ServiceTestClient
                         -2.657970e-16f, 1.140528e+10f,  -2.802143e+14f, -3.835574e+00f});
 
         r.set_i8_1((byte)45);
-        if (r.get_i8_1() != -66)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_i8_1(), -66);
         r.set_i8_2(new byte[] {
             -66,  34,  -121, -118, -12,  -83,  -43,  55,   -53,  31,   -100, -37,  -116, 69,  22,   -60,  59,   32,
             51,   46,  109,  36,   31,   49,   -99,  -69,  -99,  -89,  27,   -18,  -77,  -63, -101, -122, -60,  58,
@@ -675,10 +630,7 @@ public class ServiceTestClient
                49,   -53,  114,  -122, -28,  -28,  94,   -37,  -90,  -32,  80,   15,   4,    -101, -78});
 
         r.set_u8_1(new UnsignedByte((byte)-24));
-        if (r.get_u8_1().value != -34)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_u8_1().value, -34);
         r.set_u8_2(new UnsignedBytes(new byte[] {
             52,   40,   13,   -71,  -119, 3,    -83,  -20,  60,   18,   -50,  -32,  -25,  19,   31,   -117, -79,  -55,
             100,  37,   8,    94,   -111, -121, -39,  32,   59,   26,   -13,  -43,  97,   78,   -111, -120, -114, -7,
@@ -799,10 +751,7 @@ public class ServiceTestClient
                        -122, 110,  -32,  -107, -39,  -43,  122,  -56});
 
         r.set_i16_1((short)2387);
-        if (r.get_i16_1() != -13428)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_i16_1(), -13428);
         r.set_i16_2(new short[] {
             -29064, 7306,   1457,   -19474, -671,   22876,  -14357, -18020, -23418, -10298, 1040,   -2415,  -22890,
             4293,   25366,  12606,  -31678, -15908, -11164, 20643,  -239,   -15149, 25272,  17505,  24037,  8264,
@@ -922,10 +871,7 @@ public class ServiceTestClient
                -12986, -3952,  7133,   9587,   30652,  -21444, 23859,  22577});
 
         r.set_u16_1(new UnsignedShort((short)-10804));
-        if (r.get_u16_1().value != -4555)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_u16_1().value, -4555);
         r.set_u16_2(new UnsignedShorts(new short[] {
             27153,  -21540, -24104, -7232,  12942,  -6660,  28186,  11185,  10827,  17769,  13091,  23017,  17671,
             -16423, 6987,   -29989, 2024,   -32037, 26956,  11772,  20498,  -22673, -515,   31883,  -3596,  6622,
@@ -969,10 +915,7 @@ public class ServiceTestClient
 
     {
         r.set_i32_1(-9837284);
-        if (r.get_i32_1() != 898734)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_i32_1(), 898734);
         r.set_i32_2(new int[] {
             -966485083,  547919123,   -1194190604, 1550099195,  -86896479,   -1346998266, -111775936,  1595883280,
             95277373,    -483593724,  -1194231658, -1664247993, -1125879490, -774112094,  -908971354,  1257430739,
@@ -1209,20 +1152,15 @@ public class ServiceTestClient
         }
         {
             int[] i32_huge_2 = r.get_i32_huge();
-            if (i32_huge_2.length != 2621440)
-                throw new RuntimeException();
+            RRAssert.areEqual(i32_huge_2.length, 2621440);
             for (int i = 0; i < 2621440; i++)
             {
-                if (i32_huge_2[i] != i)
-                    throw new RuntimeException();
+                RRAssert.areEqual(i32_huge_2[i], i);
             }
         }
 
         r.set_u32_1(new UnsignedInt(1550099195));
-        if (r.get_u32_1().value != (547919123))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_u32_1().value, (547919123));
         r.set_u32_2(new UnsignedInts(new int[] {
             237099665,   1725693514,  -623677081,  -1456844721, -2120731457, 1926762547,  837710207,   -1619660906,
             -998207748,  -1058254520, 1185582523,  -870412668,  2120088772,  -622239668,  1229489468,  299615394,
@@ -1403,10 +1341,7 @@ public class ServiceTestClient
                -513616022,  517873620,   16783814,    376212454,   1269327062,  -2104221434});
 
         r.set_i64_1(8621740821050813024L);
-        if (r.get_i64_1() != -1357833931563696072L)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_i64_1(), -1357833931563696072L);
         r.set_i64_2(
             new long[] {-1418708830105823852L, -1357833931563696072L, -8308127073437794904L, 6203263204523798112L,
                         7076661289157584762L,  -3645491092747259726L, 2969229117250121621L,  -8403401867791621438L,
@@ -1488,10 +1423,7 @@ public class ServiceTestClient
                        1761514773996835425L,  -8886871075540730292L});
 
         r.set_u64_1(new UnsignedLong(1465640522145789825L));
-        if (r.get_u64_1().value != -5056882102845907238L)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_u64_1().value, -5056882102845907238L);
         r.set_u64_2(new UnsignedLongs(
             new long[] {6515978873578326855L,  1465640522145789825L,  -4307096894728024268L, -1070518354348353871L,
                         4827355217349405315L,  5237172857588412536L,  -7260880644454427167L, -6523793363246663430L,
@@ -1567,10 +1499,7 @@ public class ServiceTestClient
                        7704933404615957344L,  -3954510047685011380L});
 
         r.set_str1("Hello Server!");
-        if (!r.get_str1().equals("Hello Client!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_str1(), "Hello Client!");
 
         // read in and check the large structure struct1
         teststruct1 s1 = r.get_struct1();
@@ -1585,60 +1514,21 @@ public class ServiceTestClient
                -3.709450e+15, -2.379431e-09, -3.034066e+05, -3.072796e+01, -1.057111e-14, 4.753235e+07,  -2.725014e+07,
                -4.895406e-20, 5.339502e-20,  9.375211e-11,  1.632454e-03,  1.051386e+01,  1.915580e+17,  -1.999453e-09,
                -3.087190e-02, -3.222377e+15, 4.219576e+03,  -1.401039e+05, 3.950473e-15,  -1.620577e+10});
-        if (!s1.str2.equals("Hello world!"))
-        {
-            throw new RuntimeException();
-        }
-        if (s1.vec3.size() != 3)
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.vec3.get(1).equals("Hello Client!"))
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.vec3.get(2).equals("Hello Client, again"))
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.vec3.get(4372).equals("This is yet another test string"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(s1.str2, "Hello world!");
+        RRAssert.areEqual(s1.vec3.size(), 3);
+        RRAssert.areEqual(s1.vec3.get(1), "Hello Client!");
+        RRAssert.areEqual(s1.vec3.get(2), "Hello Client, again");
+        RRAssert.areEqual(s1.vec3.get(4372), "This is yet another test string");
 
-        if (s1.dict4.size() != 3)
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.dict4.get("teststring1").equals("Hello Client!"))
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.dict4.get("teststring2").equals("Hello Client, again"))
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.dict4.get("anotherstr").equals("This is yet another test string"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(s1.dict4.size(), 3);
+        RRAssert.areEqual(s1.dict4.get("teststring1"), "Hello Client!");
+        RRAssert.areEqual(s1.dict4.get("teststring2"), "Hello Client, again");
+        RRAssert.areEqual(s1.dict4.get("anotherstr"), "This is yet another test string");
 
-        if (s1.list5.size() != 3)
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.list5.get(0).equals("Hello Client!"))
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.list5.get(1).equals("Hello Client, again"))
-        {
-            throw new RuntimeException();
-        }
-        if (!s1.list5.get(2).equals("This is yet another test string"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(s1.list5.size(), 3);
+        RRAssert.areEqual(s1.list5.get(0), "Hello Client!");
+        RRAssert.areEqual(s1.list5.get(1), "Hello Client, again");
+        RRAssert.areEqual(s1.list5.get(2), "This is yet another test string");
 
         ca(s1.struct1.mydat,
            new double[] {-2.457273e-05, -3.349504e-13, 4.139542e-09,  -3.944556e+04, 2.761296e+04,  8.570027e+16,
@@ -1653,10 +1543,7 @@ public class ServiceTestClient
                          6.340994e-13,  -4.582535e+07, 3.977645e-06,  -3.785260e-07, -4.102542e+06, 4.751411e-16,
                          4.203566e-14,  -3.894958e+00, -4.585783e-14, 2.432993e+15,  -3.592680e+14, -1.560186e-12});
 
-        if (s1.dstruct2.size() != 2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(s1.dstruct2.size(), 2);
         ca(s1.dstruct2.get("test1").mydat,
            new double[] {3.785355e-17,  -2.518001e+17, 4.016500e+08,  6.566648e-04,  1.284318e+07,  -2.674821e-13,
                          -4.955749e-14, -1.699098e+00, 2.901400e+05,  1.499143e+13,  -2.252822e-05, -2.653172e-14,
@@ -1671,10 +1558,7 @@ public class ServiceTestClient
                          -4.969544e-21, 2.530419e-01, 4.393913e-09, 3.837331e+04, -4.315065e-04, -1.073834e-17,
                          1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13, -1.937982e+02});
 
-        if (s1.lstruct3.size() != 2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(s1.lstruct3.size(), 2);
         ca(s1.lstruct3.get(0).mydat,
            new double[] {3.785355e-17,  -2.518001e+17, 4.016500e+08,  6.566648e-04,  1.284318e+07,  -2.674821e-13,
                          -4.955749e-14, -1.699098e+00, 2.901400e+05,  1.499143e+13,  -2.252822e-05, -2.653172e-14,
@@ -1708,10 +1592,7 @@ public class ServiceTestClient
                1.698043e-13,  8.655885e-18,  -2.598418e-15, 6.685593e+05,  2.895287e+13,  -3.098095e-05, -3.764497e-06,
                3.192785e-12,  2.098857e-08});
 
-        if (!((String)s1.var3).equals("This is a vartype string"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(((String)s1.var3), "This is a vartype string");
     }
     public void TestProperties3()
     {
@@ -1868,22 +1749,10 @@ public class ServiceTestClient
 
         // Test is_d1
         java.util.Map<Integer, double[]> is_d1_1 = r.get_is_d1();
-        if (is_d1_1.size() != 3)
-        {
-            throw new RuntimeException();
-        }
-        if (is_d1_1.get(9285)[0] != 1.643392e-01)
-        {
-            throw new RuntimeException();
-        }
-        if (is_d1_1.get(74822)[0] != 1.537133e+09)
-        {
-            throw new RuntimeException();
-        }
-        if (is_d1_1.get(4)[0] != 1.369505e-03)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(is_d1_1.size(), 3);
+        RRAssert.areEqual(is_d1_1.get(9285)[0], 1.643392e-01);
+        RRAssert.areEqual(is_d1_1.get(74822)[0], 1.537133e+09);
+        RRAssert.areEqual(is_d1_1.get(4)[0], 1.369505e-03);
 
         java.util.HashMap<Integer, double[]> is_d1_2 = new java.util.HashMap<Integer, double[]>();
         is_d1_2.put(928, new double[] {4.074501e-07});
@@ -1893,18 +1762,9 @@ public class ServiceTestClient
 
         // Test is_d2
         Map<String, double[]> is_d2_1 = r.get_is_d2();
-        if (is_d2_1.size() != 2)
-        {
-            throw new RuntimeException();
-        }
-        if (is_d2_1.get("testval1")[0] != -1.079664e+16)
-        {
-            throw new RuntimeException();
-        }
-        if (is_d2_1.get("testval2")[0] != 2.224846e+00)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(is_d2_1.size(), 2);
+        RRAssert.areEqual(is_d2_1.get("testval1")[0], -1.079664e+16);
+        RRAssert.areEqual(is_d2_1.get("testval2")[0], 2.224846e+00);
 
         java.util.HashMap<String, double[]> is_d2_2 = new java.util.HashMap<String, double[]>();
         is_d2_2.put("testval3", new double[] {5.242474e+10});
@@ -1914,10 +1774,7 @@ public class ServiceTestClient
         // Test is_d3
 
         java.util.Map<Integer, double[]> is_d3_1 = r.get_is_d3();
-        if (is_d3_1.size() != 2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(is_d3_1.size(), 2);
         ca(is_d3_1.get(12), new double[] {8.609080e-13,  3.946603e+03,  2.994203e-10,  3.200877e+14,  1.747361e-09,
                                           2.827056e-16,  -3.676613e-18, 1.886901e-14,  -9.970511e-12, 1.932468e-18,
                                           -3.629253e-05, 4.903023e-12,  -3.919949e-10, 4.982164e+07,  3.823096e-20,
@@ -1941,10 +1798,7 @@ public class ServiceTestClient
         // Test is_d4
 
         java.util.Map<String, double[]> is_d4_1 = r.get_is_d4();
-        if (is_d4_1.size() != 2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(is_d4_1.size(), 2);
         ca(is_d4_1.get("testval1"),
            new double[] {1.113851e-04,  3.830104e+07, 4.571169e-21,  -4.064180e-05, 2.889736e+01,
                          -1.790060e-06, 4.608538e+00, 4.687713e-04,  1.387717e-08,  3.914187e-18,
@@ -1970,10 +1824,7 @@ public class ServiceTestClient
 
         // Test is_d5
         java.util.Map<Integer, MultiDimArray> is_d5_1 = r.get_is_d5();
-        if (is_d5_1.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(is_d5_1.size(), 1);
         MultiDimArray is_d5_1_1 = is_d5_1.get(564);
         ca(is_d5_1_1.dims, new int[] {10, 10});
         ca((double[])is_d5_1_1.array,
@@ -2031,10 +1882,7 @@ public class ServiceTestClient
 
         // Test is_d6
         java.util.Map<String, MultiDimArray> is_d6_1 = r.get_is_d6();
-        if (is_d6_1.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(is_d6_1.size(), 1);
         MultiDimArray is_d6_1_1 = is_d6_1.get("testval1");
         ca(is_d6_1_1.dims, new int[] {5, 10});
         ca((double[])is_d6_1_1.array,
@@ -2069,14 +1917,8 @@ public class ServiceTestClient
 
         // Test is_str1
         java.util.Map<Integer, String> is_str1_1 = r.get_is_str1();
-        if (is_str1_1.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!is_str1_1.get(23).equals("Hello server"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(is_str1_1.size(), 1);
+        RRAssert.areEqual(is_str1_1.get(23), "Hello server");
 
         java.util.HashMap<Integer, String> is_str1_2 = new java.util.HashMap<Integer, String>();
         is_str1_2.put(24, "Hello client");
@@ -2084,14 +1926,8 @@ public class ServiceTestClient
 
         // Test is_str2
         java.util.Map<String, String> is_str2_1 = r.get_is_str2();
-        if (is_str2_1.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!is_str2_1.get("testval1").equals("Hello server"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(is_str2_1.size(), 1);
+        RRAssert.areEqual(is_str2_1.get("testval1"), "Hello server");
 
         java.util.HashMap<String, String> is_str2_2 = new java.util.HashMap<String, String>();
         is_str2_2.put("testval2", "Hello client");
@@ -2133,22 +1969,10 @@ public class ServiceTestClient
 
         // Test list_d1
         java.util.List<double[]> list_d1_1 = r.get_list_d1();
-        if (list_d1_1.size() != 3)
-        {
-            throw new RuntimeException();
-        }
-        if (list_d1_1.get(0)[0] != 1.643392e-01)
-        {
-            throw new RuntimeException();
-        }
-        if (list_d1_1.get(1)[0] != 1.537133e+09)
-        {
-            throw new RuntimeException();
-        }
-        if (list_d1_1.get(2)[0] != 1.369505e-03)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(list_d1_1.size(), 3);
+        RRAssert.areEqual(list_d1_1.get(0)[0], 1.643392e-01);
+        RRAssert.areEqual(list_d1_1.get(1)[0], 1.537133e+09);
+        RRAssert.areEqual(list_d1_1.get(2)[0], 1.369505e-03);
 
         java.util.List<double[]> list_d1_2 = new java.util.ArrayList<double[]>();
         list_d1_2.add(new double[] {4.074501e-07});
@@ -2159,10 +1983,7 @@ public class ServiceTestClient
         // Test is_d3
 
         java.util.List<double[]> list_d3_1 = r.get_list_d3();
-        if (list_d3_1.size() != 2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(list_d3_1.size(), 2);
         ca(list_d3_1.get(0), new double[] {8.609080e-13,  3.946603e+03,  2.994203e-10,  3.200877e+14,  1.747361e-09,
                                            2.827056e-16,  -3.676613e-18, 1.886901e-14,  -9.970511e-12, 1.932468e-18,
                                            -3.629253e-05, 4.903023e-12,  -3.919949e-10, 4.982164e+07,  3.823096e-20,
@@ -2185,10 +2006,7 @@ public class ServiceTestClient
 
         // Test list_d5
         java.util.List<MultiDimArray> list_d5_1 = r.get_list_d5();
-        if (list_d5_1.size() != 1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(list_d5_1.size(), 1);
         MultiDimArray list_d5_1_1 = list_d5_1.get(0);
         ca(list_d5_1_1.dims, new int[] {10, 10});
         ca((double[])list_d5_1_1.array,
@@ -2247,14 +2065,8 @@ public class ServiceTestClient
 
         // Test list_str1
         java.util.List<String> list_str1_1 = r.get_list_str1();
-        if (list_str1_1.size() != 1)
-        {
-            throw new RuntimeException();
-        }
-        if (!list_str1_1.get(0).equals("Hello server"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(list_str1_1.size(), 1);
+        RRAssert.areEqual(list_str1_1.get(0), "Hello server");
 
         java.util.List<String> list_str1_2 = new java.util.ArrayList<String>();
         list_str1_2.add("Hello client");
@@ -2302,10 +2114,7 @@ public class ServiceTestClient
                                  514305170, 1896372264, 1385916382});
 
         // Test var_str
-        if (!((String)r.get_var_str()).equals("Hello Client!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(((String)r.get_var_str()), "Hello Client!");
         r.set_var_str("Hello Server!");
 
         // Test var_struct
@@ -2323,28 +2132,20 @@ public class ServiceTestClient
         r.set_var_struct(var_struct_1);
 
         // Test var_vector
-        if (!((String)(((java.util.Map<Integer, Object>)r.get_var_vector())).get(10)).equals("Hello Client!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(((String)(((java.util.Map<Integer, Object>)r.get_var_vector())).get(10)), "Hello Client!");
         java.util.HashMap<Integer, Object> var_vector_1 = new java.util.HashMap<Integer, Object>();
         var_vector_1.put(11, "Hello Server!");
         r.set_var_vector(var_vector_1);
 
         // Test var_dictionary
-        if (!((String)((java.util.HashMap<String, Object>)r.get_var_dictionary()).get("test1")).equals("Hello Client!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(((String)((java.util.HashMap<String, Object>)r.get_var_dictionary()).get("test1")),
+                          "Hello Client!");
         java.util.HashMap<String, Object> var_dictionary_1 = new java.util.HashMap<String, Object>();
         var_dictionary_1.put("test2", "Hello Server!");
         r.set_var_dictionary(var_dictionary_1);
 
         // Test var_vector
-        if (!((String)(((java.util.List<Object>)r.get_var_list())).get(0)).equals("Hello Client!"))
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(((String)(((java.util.List<Object>)r.get_var_list())).get(0)), "Hello Client!");
         java.util.List<Object> var_list_1 = new java.util.ArrayList<Object>();
         var_list_1.add("Hello Server!");
         r.set_var_list(var_list_1);
@@ -2375,10 +2176,7 @@ public class ServiceTestClient
             err1 = true;
         }
 
-        if (!err1)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(err1);
 
         boolean err2 = false;
         try
@@ -2389,16 +2187,10 @@ public class ServiceTestClient
         {
             err2 = true;
         }
-        if (!err2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(err2);
 
         // Test nulltest
-        if (r.get_nulltest() != null)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_nulltest(), null);
         r.set_nulltest(null);
     }
 
@@ -2407,14 +2199,8 @@ public class ServiceTestClient
 
         r.func1();
         r.func2(10, 20.34);
-        if (r.func3(2, 3.45) != 5.45)
-        {
-            throw new RuntimeException();
-        }
-        if (r.meaning_of_life() != 42)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.func3(2, 3.45), 5.45);
+        RRAssert.areEqual(r.meaning_of_life(), 42);
 
         boolean errthrown = false;
 
@@ -2427,10 +2213,7 @@ public class ServiceTestClient
             System.out.println(e.toString());
             errthrown = true;
         }
-        if (!errthrown)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(errthrown);
 
         errthrown = false;
         try
@@ -2442,10 +2225,7 @@ public class ServiceTestClient
             System.out.println(e.toString());
             errthrown = true;
         }
-        if (!errthrown)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(errthrown);
 
         errthrown = false;
         try
@@ -2457,10 +2237,7 @@ public class ServiceTestClient
             System.out.println(e.toString());
             errthrown = true;
         }
-        if (!errthrown)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(errthrown);
 
         errthrown = false;
         try
@@ -2472,10 +2249,7 @@ public class ServiceTestClient
             System.out.println(e.toString());
             errthrown = true;
         }
-        if (!errthrown)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(errthrown);
     }
 
     public final void TestEvents()
@@ -2604,8 +2378,7 @@ public class ServiceTestClient
         {
             err1 = true;
         }
-        if (!err1)
-            throw new RuntimeException("");
+        RRAssert.isTrue(err1);
 
         sub2 o6_2 = (sub2)r.get_o6();
         o6_2.set_data("Hello world!");
@@ -2676,7 +2449,7 @@ public class ServiceTestClient
         }
         catch (Exception e)
         {
-            throw new RuntimeException();
+            RRAssert.fail();
         }
 
         ca(e1.receivePacket(), new double[] {1, 2, 3, 4});
@@ -2690,10 +2463,7 @@ public class ServiceTestClient
         ca(e3.receivePacket().mydat, new double[] {738.29});
         ca(e3.receivePacket().mydat, new double[] {89.83});
 
-        if (!ack_recv)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(ack_recv);
 
         r.pipe_check_error();
 
@@ -2820,10 +2590,11 @@ public class ServiceTestClient
 
         r.test_callbacks();
 
-        if (!cb1_called || !cb2_called || !cb3_called || !cb4_called || !cb5_called)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(cb1_called);
+        RRAssert.isTrue(cb2_called);
+        RRAssert.isTrue(cb3_called);
+        RRAssert.isTrue(cb4_called);
+        RRAssert.isTrue(cb5_called);
     }
 
     class cb1_func implements Action
@@ -2838,10 +2609,8 @@ public class ServiceTestClient
     {
         public void action(Double d1, Double d2)
         {
-            if (d1 != 739.2 || d2 != 0.392)
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(d1, 739.2);
+            RRAssert.areEqual(d2, 0.392);
             cb2_called = true;
         }
     }
@@ -2932,10 +2701,9 @@ public class ServiceTestClient
         ca((int[])in3.array, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368, 296469979, 645365194,
                                         2043654604, -1672941174, 710030901});
 
-        if (!w1_called || !w2_called || !w3_called)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(w1_called);
+        RRAssert.isTrue(w2_called);
+        RRAssert.isTrue(w3_called);
     }
 
     class w1_changed implements Action3<Wire<double[]>.WireConnection, double[], TimeSpec>
@@ -2978,10 +2746,7 @@ public class ServiceTestClient
 
     private void test_m1()
     {
-        if (r.get_m1().length() != 100)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_m1().length(), 100);
         double[] m1_1 = new double[11];
         r.get_m1().read(10, m1_1, 1, 10);
         ca(m1_1, new double[] {0, -1.478723e-16, 1.507042e-05, -2.046271e+13, 4.014775e+06, 4.140740e+10, 1.318907e+16,
@@ -3017,10 +2782,7 @@ public class ServiceTestClient
 
     private void test_m2()
     {
-        if (r.get_m2().dimCount() != 5)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(r.get_m2().dimCount(), 5);
         long[] m2_dims = r.get_m2().dimensions();
         ca(m2_dims, new long[] {10, 10, 10, 10, 10});
 
@@ -3136,10 +2898,7 @@ public class ServiceTestClient
             {}
         }
 
-        if (!err)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isTrue(err);
     }
 
     public final void TestObjectLock(String url)
@@ -3322,10 +3081,7 @@ public class ServiceTestClient
         // Thread.sleep(10);
         r1.func3(2.2, 3.3);
         r1_o.set_d1(new double[] {0.0});
-        if (t2)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.isFalse(t2);
         t1 = false;
         RobotRaconteurNode.s().monitorExit(r1_o);
     }

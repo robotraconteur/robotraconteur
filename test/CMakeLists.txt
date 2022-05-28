@@ -13,3 +13,7 @@ endif()
 if(BUILD_NET)
     add_subdirectory(net)
 endif()
+
+if(BUILD_JAVA)
+    add_subdirectory(java)
+endif()

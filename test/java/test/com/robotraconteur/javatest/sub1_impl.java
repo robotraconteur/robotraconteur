@@ -100,15 +100,12 @@ public class sub1_impl implements sub1, IRobotRaconteurMonitorObject
         try
         {
 
-            if (!lock.tryLock(timeout))
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.isTrue(lock.tryLock(timeout));
         }
         catch (Exception e)
         {
             e.printStackTrace(System.out);
-            throw new RuntimeException(e);
+            RRAssert.fail();
         }
     }
 

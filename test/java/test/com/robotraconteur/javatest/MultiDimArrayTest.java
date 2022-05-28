@@ -179,91 +179,55 @@ public class MultiDimArrayTest
 
     public static final void ca(double[] v1, double[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public static final void ca(float[] v1, float[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public static final void ca(byte[] v1, byte[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public static final void ca(short[] v1, short[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public static final void ca(int[] v1, int[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public static final void ca(long[] v1, long[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 }

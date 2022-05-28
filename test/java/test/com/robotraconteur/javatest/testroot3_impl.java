@@ -114,8 +114,7 @@ public class testroot3_impl implements testroot3
     }
     public void set_testenum1_prop(testenum1 value)
     {
-        if (value != testenum1.hexval1)
-            throw new RuntimeException("");
+        RRAssert.areEqual(value, testenum1.hexval1);
     }
     public obj4 get_o4()
     {
@@ -410,77 +409,47 @@ public class testroot3_impl implements testroot3
 
     public final void ca(CDouble[] v1, CDouble[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (!v1[i].equals(v2[i]))
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(CDouble[] v1, CDouble[] v2, int len)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
 
         for (int i = 0; i < len; i++)
         {
-            if (!v1[i].equals(v2[i]))
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(CSingle[] v1, CSingle[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (!v1[i].equals(v2[i]))
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(int[] v1, int[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
     public final void ca(boolean[] v1, boolean[] v2)
     {
-        if (v1.length != v2.length)
-        {
-            throw new RuntimeException();
-        }
+        RRAssert.areEqual(v1.length, v2.length);
         for (int i = 0; i < v1.length; i++)
         {
-            if (v1[i] != v2[i])
-            {
-                throw new RuntimeException();
-            }
+            RRAssert.areEqual(v1[i], v2[i]);
         }
     }
 
@@ -507,8 +476,7 @@ public class testroot3_impl implements testroot3
     @Override public void set_c1(CDouble value)
     {
         CDouble c1_2 = new CDouble(5.708705e+01, -2.328294e-03);
-        if (!value.equals(c1_2))
-            throw new RuntimeException();
+        RRAssert.areEqual(value, c1_2);
     }
     @Override public CDouble[] get_c2()
     {
@@ -591,8 +559,7 @@ public class testroot3_impl implements testroot3
     @Override public void set_c7(CSingle value)
     {
         CSingle c7_2 = new CSingle(9.303345e-12f, -3.865684e-05f);
-        if (!value.equals(c7_2))
-            throw new RuntimeException();
+        RRAssert.areEqual(value, c7_2);
     }
     @Override public CSingle[] get_c8()
     {
@@ -665,8 +632,7 @@ public class testroot3_impl implements testroot3
     }
     @Override public void set_b1(boolean value)
     {
-        if (value != true)
-            throw new RuntimeException();
+        RRAssert.areEqual(value, true);
     }
     @Override public boolean[] get_b2()
     {
@@ -693,8 +659,7 @@ public class testroot3_impl implements testroot3
     }
     @Override public void set_b4(List<boolean[]> value)
     {
-        if (value.get(0)[0] != true)
-            throw new RuntimeException();
+        RRAssert.areEqual(value.get(0)[0], true);
     }
     @Override public List<boolean[]> get_b5()
     {

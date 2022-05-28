@@ -330,6 +330,7 @@ public class RobotRaconteurJavaTest
                 if (args.length < 2)
                 {
                     System.out.println("Usage for peeridentity: RobotRaconteurTest peeridentity url [nodeid]");
+                    System.exit(1);
                     return;
                 }
 
@@ -612,12 +613,21 @@ public class RobotRaconteurJavaTest
                 return;
             }
 
+            if (command.equals("lfsrprint"))
+            {
+                LFSRSeqGen_Print.printLFSR();
+                RobotRaconteurNode.s().shutdown();
+                return;
+            }
+
             throw new Exception("Unknown command");
         }
         catch (Exception e)
         {
             e.printStackTrace(System.out);
             RobotRaconteurNode.s().shutdown();
+            System.exit(1);
+            return;
         }
     }
 
