@@ -7,6 +7,17 @@ on:
     types:
       - created
 
+env:
+  VCPKG_PKGS: >-
+    boost-algorithm boost-array boost-asio 
+    boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
+    boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
+    boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
+    boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
+    boost-utility boost-uuid boost-program-options gtest
+    
+
+
 jobs:
   build-ubuntu:
 
@@ -59,7 +70,7 @@ jobs:
         git clone https://github.com/google/googletest
         cd googletest
         git checkout release-1.8.1
-        cmake .
+        cmake -DCMAKE_CXX_FLAGS="-fPIC" .
         cmake --build .
         sudo cmake --build . --target install
     - name: cache-swig
@@ -174,25 +185,25 @@ jobs:
       with:
         path: vcpkg
         repository: microsoft/vcpkg
+    - name: bootstrap vcpkg
+      working-directory: vcpkg
+      run: bootstrap-vcpkg.bat
+    - name: vcpkg dry run
+      working-directory: vcpkg
+      shell: cmd
+      run: |
+        vcpkg install --dry-run --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
     - name: cache-vcpkg-archives
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-vcpkg-archives
       uses: actions/cache@v2
       with:
         path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-${{matrix.config.arch}}-vcpkg-${{ hashFiles('vcpkg/ports/boost-config/*') }}-${{ hashFiles('vcpkg/ports/openssl/*') }}-main
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: bootstrap-vcpkg.bat
+        key: ${{ runner.os }}-${{matrix.config.arch}}-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-main
     - name: vcpkg
       working-directory: vcpkg
       run: >
-        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} boost-algorithm boost-array boost-asio 
-        boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
-        boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
-        boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
-        boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
-        boost-utility boost-uuid boost-program-options gtest
+        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }}
     - uses: actions/setup-java@v1
       with:
         java-version: 8
@@ -388,25 +399,25 @@ jobs:
       with:
         path: vcpkg
         repository: microsoft/vcpkg
+    - name: bootstrap vcpkg
+      working-directory: vcpkg
+      run: ./bootstrap-vcpkg.sh
+    - name: vcpkg dry run
+      working-directory: vcpkg
+      shell: bash
+      run: |
+        vcpkg install --dry-run ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
     - name: cache-vcpkg-archives
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-vcpkg-archives
       uses: actions/cache@v2
       with:
         path: /home/runner/.cache/vcpkg/archives
-        key: ${{ runner.os }}-matlab-vcpkg-${{ hashFiles('vcpkg/ports/boost-config/*') }}-${{ hashFiles('vcpkg/ports/openssl/*') }}-main
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: ./bootstrap-vcpkg.sh
+        key: ${{ runner.os }}-matlab-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-main
     - name: vcpkg
       working-directory: vcpkg
       run: >
-        vcpkg install boost-algorithm boost-array boost-asio boost-assign boost-atomic
-        boost-bind boost-config boost-container boost-date-time boost-smart-ptr 
-        boost-filesystem boost-foreach boost-format boost-function boost-interprocess
-        boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
-        boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
-        boost-utility boost-uuid boost-program-options gtest
+        vcpkg install ${{ env.VCPKG_PKGS }}
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -501,25 +512,25 @@ jobs:
       with:
         path: vcpkg
         repository: microsoft/vcpkg
+    - name: bootstrap vcpkg
+      working-directory: vcpkg
+      run: bootstrap-vcpkg.bat
+    - name: vcpkg dry run
+      working-directory: vcpkg
+      shell: cmd
+      run: |
+        vcpkg install --dry-run --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
     - name: cache-vcpkg-archives
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-vcpkg-archives
       uses: actions/cache@v2
       with:
         path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-${{ matrix.config.arch }}-${{ hashFiles('vcpkg/ports/boost-config/*') }}-${{ hashFiles('vcpkg/ports/openssl/*') }}-vcpkg-build-python-version
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: bootstrap-vcpkg.bat
+        key: ${{ runner.os }}-${{ matrix.config.arch }}-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-vcpkg-build-python-version
     - name: vcpkg
       working-directory: vcpkg
       run: >
-        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} boost-algorithm boost-array boost-asio 
-        boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
-        boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
-        boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
-        boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
-        boost-utility boost-uuid boost-program-options gtest
+        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }}
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
@@ -901,16 +912,21 @@ jobs:
     - name: bootstrap vcpkg
       working-directory: vcpkg
       run: ./bootstrap-vcpkg.sh
+    - name: vcpkg dry run
+      working-directory: vcpkg
+      run: |
+        ./vcpkg install --dry-run --triplet arm64-ios openssl ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
+    - name: cache-vcpkg-archives
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      id: cache-vcpkg-archives
+      uses: actions/cache@v2
+      with:
+        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
+        key: ${{ runner.os }}-arm64-ios-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-iphone
     - name: vcpkg
       working-directory: vcpkg
       run: >
-        ./vcpkg install --triplet arm64-ios openssl
-        boost-algorithm boost-array boost-asio
-        boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time
-        boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
-        boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
-        boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered
-        boost-utility boost-uuid boost-program-options gtest
+        ./vcpkg install --triplet arm64-ios openssl ${{ env.VCPKG_PKGS }}
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
