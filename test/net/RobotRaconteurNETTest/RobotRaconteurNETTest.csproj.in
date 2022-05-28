@@ -98,10 +98,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RobotRaconteurNET" Condition="'$(Configuration)' == 'Release'">
-      <HintPath>..\out\NET\RobotRaconteurNET.dll</HintPath>
+      <HintPath>..\..\out\NET\RobotRaconteurNET.dll</HintPath>
     </Reference>
 	<Reference Include="RobotRaconteurNET" Condition="'$(Configuration)' == 'Debug'">
-      <HintPath>..\out_debug\NET\RobotRaconteurNET.dll</HintPath>
+      <HintPath>..\..\out_debug\NET\RobotRaconteurNET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -111,7 +111,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup>
-	<RRSourceDir>@CMAKE_CURRENT_SOURCE_DIR@\RobotRaconteurNET\RobotRaconteurNETTest\</RRSourceDir>
+	<RRSourceDir>@CMAKE_CURRENT_SOURCE_DIR@\RobotRaconteurNETTest\</RRSourceDir>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(RRSourceDir)\MultiDimArrayTest.cs" >
@@ -122,6 +122,9 @@
 	</Compile>
     <Compile Include="$(RRSourceDir)\Properties\AssemblyInfo.cs">
 		<Link>AssemblyInfo.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\RRAssert.cs">
+		<Link>RRAssert.cs</Link>
 	</Compile>
 	<Compile Include="test\com__robotraconteur__testing__TestService1.cs"/>
 	<Compile Include="test\com__robotraconteur__testing__TestService2.cs"/>	
@@ -151,6 +154,12 @@
 	</Compile>
   <Compile Include="$(RRSourceDir)\ServiceTestClient3.cs">
 		<Link>ServiceTestClient2.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\LFSRSeqGen.cs">
+		<Link>LFSRSeqGen.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\LFSRSeqGen.cs">
+		<Link>LFSRSeqGen.cs</Link>
 	</Compile>
   </ItemGroup>
   <ItemGroup>

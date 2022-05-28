@@ -3038,4 +3038,48 @@ public partial class NativeUserAuthenticator
     }
 }
 
+public partial class AuthenticatedUser
+{
+    public string Username
+    {
+        get {
+            return _GetUsername();
+        }
+    }
+
+    public string[] Privileges
+    {
+        get {
+            vectorstring s = _GetPrivileges();
+            string[] o = new string[s.Count];
+            s.CopyTo(o);
+            return o;
+        }
+    }
+
+    public string[] Properties
+    {
+        get {
+            vectorstring s = _GetProperties();
+            string[] o = new string[s.Count];
+            s.CopyTo(o);
+            return o;
+        }
+    }
+
+    public DateTime LoginTime
+    {
+        get {
+            return _GetLoginTime();
+        }
+    }
+
+    public DateTime LastAccessTime
+    {
+        get {
+            return _GetLastAccessTime();
+        }
+    }
+}
+
 }

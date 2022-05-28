@@ -62,13 +62,13 @@ class MultiDimArrayTest
     }
 
     public static void ca<T>(T[] v1, T[] v2)
+        where T : IComparable, IComparable<T>
     {
-        if (v1.Length != v2.Length)
-            throw new Exception();
+        RRAssert.AreEqual(v1.Length, v2.Length);
+
         for (int i = 0; i < v1.Length; i++)
         {
-            if (!Object.Equals(v1[i], v2[i]))
-                throw new Exception();
+            RRAssert.AreEqual<T>(v1[i], v2[i]);
         }
     }
 

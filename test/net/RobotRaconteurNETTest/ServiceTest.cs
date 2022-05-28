@@ -61,8 +61,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return 12.345;
         }
         set {
-            if (value != 3.456)
-                throw new Exception();
+            RRAssert.AreEqual(value, 3.456);
         }
     }
 
@@ -239,13 +238,13 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
     }
 
     public void ca<T>(T[] v1, T[] v2)
+        where T : IComparable, IComparable<T>
     {
-        if (v1.Length != v2.Length)
-            throw new Exception();
+        RRAssert.AreEqual(v1.Length, v2.Length);
+
         for (int i = 0; i < v1.Length; i++)
         {
-            if (!Object.Equals(v1[i], v2[i]))
-                throw new Exception();
+            RRAssert.AreEqual<T>(v1[i], v2[i]);
         }
     }
 
@@ -361,8 +360,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return 7.8573f;
         }
         set {
-            if (value != 3847.9283f)
-                throw new Exception();
+            RRAssert.AreEqual(value, 3847.9283f);
         }
     }
 
@@ -567,8 +565,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return -66;
         }
         set {
-            if (value != 45)
-                throw new Exception();
+            RRAssert.AreEqual(value, 45);
         }
     }
 
@@ -682,8 +679,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return 222;
         }
         set {
-            if (value != 232)
-                throw new Exception();
+            RRAssert.AreEqual(value, 232);
         }
     }
 
@@ -813,8 +809,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return -13428;
         }
         set {
-            if (value != 2387)
-                throw new Exception();
+            RRAssert.AreEqual(value, 2387);
         }
     }
     public short[] i16_2
@@ -950,8 +945,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return 60981;
         }
         set {
-            if (value != 54732)
-                throw new Exception();
+            RRAssert.AreEqual(value, 54732);
         }
     }
 
@@ -1003,8 +997,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return 898734;
         }
         set {
-            if (value != -9837284)
-                throw new Exception();
+            RRAssert.AreEqual(value, -9837284);
         }
     }
 
@@ -1254,12 +1247,11 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Length != 2621440)
-                throw new Exception();
+            RRAssert.AreEqual(value.Length, 2621440);
+
             for (int i = 0; i < 2621440; i++)
             {
-                if (value[i] != -i)
-                    throw new Exception();
+                RRAssert.AreEqual(value[i], -i);
             }
         }
     }
@@ -1270,8 +1262,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return 547919123;
         }
         set {
-            if (value != 1550099195)
-                throw new Exception();
+            RRAssert.AreEqual<uint>(value, 1550099195);
         }
     }
 
@@ -1468,8 +1459,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return -1357833931563696072;
         }
         set {
-            if (value != 8621740821050813024)
-                throw new Exception();
+            RRAssert.AreEqual(value, 8621740821050813024);
         }
     }
     public long[] i64_2
@@ -1564,8 +1554,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return 13389861970863644378;
         }
         set {
-            if (value != 1465640522145789825)
-                throw new Exception();
+            RRAssert.AreEqual<ulong>(value, 1465640522145789825);
         }
     }
 
@@ -1655,8 +1644,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return "Hello Client!";
         }
         set {
-            if (value != "Hello Server!")
-                throw new Exception();
+            RRAssert.AreEqual(value, "Hello Server!");
         }
     }
 
@@ -1786,33 +1774,23 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
                 3.658452e+15,  4.534803e+15,  1.366079e-03,  -3.557323e+07, -4.920382e+18, -3.358988e-07, -4.024967e-11,
                 -4.784915e+16, 1.490340e-18,  -4.343678e+08, -1.955643e+14
             });
-            if (value.str2 != "Hello world 2!")
-                throw new Exception();
+            RRAssert.AreEqual(value.str2, "Hello world 2!");
+            RRAssert.AreEqual(value.vec3.Count, 4);
+            RRAssert.AreEqual(value.vec3[10], "Hello Server!");
+            RRAssert.AreEqual(value.vec3[11], "Hello Server, again");
+            RRAssert.AreEqual(value.vec3[46372], "Test string!");
+            RRAssert.AreEqual(value.vec3[46373], "Test string again");
+            RRAssert.AreEqual(value.dict4.Count, 2);
 
-            if (value.vec3.Count != 4)
-                throw new Exception();
-            if (value.vec3[10] != "Hello Server!")
-                throw new Exception();
-            if (value.vec3[11] != "Hello Server, again")
-                throw new Exception();
-            if (value.vec3[46372] != "Test string!")
-                throw new Exception();
-            if (value.vec3[46373] != "Test string again")
-                throw new Exception();
+            RRAssert.AreEqual(value.dict4["cteststring1"], "Hello Server!");
 
-            if (value.dict4.Count != 2)
-                throw new Exception();
-            if (value.dict4["cteststring1"] != "Hello Server!")
-                throw new Exception();
-            if (value.dict4["cteststring2"] != "Hello Server, again")
-                throw new Exception();
+            RRAssert.AreEqual(value.dict4["cteststring2"], "Hello Server, again");
 
-            if (value.list5.Count != 2)
-                throw new Exception();
-            if (value.list5[0] != "Hello Server!")
-                throw new Exception();
-            if (value.list5[1] != "Hello Server, again")
-                throw new Exception();
+            RRAssert.AreEqual(value.list5.Count, 2);
+
+            RRAssert.AreEqual(value.list5[0], "Hello Server!");
+
+            RRAssert.AreEqual(value.list5[1], "Hello Server, again");
 
             ca<double>(value.struct1.mydat, new double[] {
                 1.783093e+12,  -2.874045e-19, -2.311319e-19, -3.099234e-12, 1.000951e+16,  3.775247e-12,  -5.853550e-18,
@@ -1945,14 +1923,10 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
         }
 
         set {
-            if (value.Count != 3)
-                throw new Exception();
-            if (value[928] != 4.074501e-07)
-                throw new Exception();
-            if (value[394820] != -4.535303e+05)
-                throw new Exception();
-            if (value[623] != -2.956241e-20)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 3);
+            RRAssert.AreEqual(value[928], 4.074501e-07);
+            RRAssert.AreEqual(value[394820], -4.535303e+05);
+            RRAssert.AreEqual(value[623], -2.956241e-20);
         }
     }
     public Dictionary<string, double> is_d2
@@ -1964,12 +1938,9 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 2)
-                throw new Exception();
-            if (value["testval3"] != 5.242474e+10)
-                throw new Exception();
-            if (value["testval4"] != 2.208636e+08)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 2);
+            RRAssert.AreEqual(value["testval3"], 5.242474e+10);
+            RRAssert.AreEqual(value["testval4"], 2.208636e+08);
         }
     }
 
@@ -1988,8 +1959,8 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 2)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 2);
+
             ca<double>(value[47],
                        new double[] { 4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
                                       -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
@@ -2019,8 +1990,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 2)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 2);
             ca<double>(value["testval3"],
                        new double[] { 1.771838e+06, 3.037284e-01,  -1.739742e-02, 1.399508e-20,  3.605232e-21,
                                       3.517522e+14, 4.887514e+14,  3.505442e-03,  -3.968972e+18, 1.422037e-20,
@@ -2059,8 +2029,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 1)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
             MultiDimArray a = value[328];
             ca<uint>(a.Dims, new uint[] { 10, 20 });
             ca<double>((double[])a.Array_, new double[] {
@@ -2115,8 +2084,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 1)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
             MultiDimArray a = value["testval2"];
             ca<uint>(a.Dims, new uint[] { 8, 10 });
             ca<double>((double[])a.Array_, new double[] {
@@ -2145,10 +2113,8 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
         }
 
         set {
-            if (value.Count != 1)
-                throw new Exception();
-            if (value[24] != "Hello client")
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
+            RRAssert.AreEqual(value[24], "Hello client");
         }
     }
 
@@ -2161,10 +2127,8 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
         }
 
         set {
-            if (value.Count != 1)
-                throw new Exception();
-            if (value["testval2"] != "Hello client")
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
+            RRAssert.AreEqual(value["testval2"], "Hello client");
         }
     }
 
@@ -2181,8 +2145,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 1)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
             teststruct2 s = value[372];
             ca<double>(s.mydat,
                        new double[] { -2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
@@ -2205,8 +2168,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 1)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
             teststruct2 s = value["testval2"];
             ca<double>(s.mydat,
                        new double[] { 6.931327e-21,  4.527137e-02,  1.260822e-18,  3.592805e-12,  1.088317e-05,
@@ -2227,14 +2189,10 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
         }
 
         set {
-            if (value.Count != 3)
-                throw new Exception();
-            if (value[0] != 4.074501e-07)
-                throw new Exception();
-            if (value[1] != -4.535303e+05)
-                throw new Exception();
-            if (value[2] != -2.956241e-20)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 3);
+            RRAssert.AreEqual(value[0], 4.074501e-07);
+            RRAssert.AreEqual(value[1], -4.535303e+05);
+            RRAssert.AreEqual(value[2], -2.956241e-20);
         }
     }
 
@@ -2253,8 +2211,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 2)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 2);
             ca<double>(value[0],
                        new double[] { 4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
                                       -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
@@ -2293,8 +2250,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 1)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
             MultiDimArray a = value[0];
             ca<uint>(a.Dims, new uint[] { 10, 20 });
             ca<double>((double[])a.Array_, new double[] {
@@ -2340,10 +2296,8 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
         }
 
         set {
-            if (value.Count != 1)
-                throw new Exception();
-            if (value[0] != "Hello client")
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
+            RRAssert.AreEqual(value[0], "Hello client");
         }
     }
 
@@ -2360,8 +2314,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return o;
         }
         set {
-            if (value.Count != 1)
-                throw new Exception();
+            RRAssert.AreEqual(value.Count, 1);
             teststruct2 s = value[0];
             ca<double>(s.mydat,
                        new double[] { -2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
@@ -2432,8 +2385,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return "Hello Client!";
         }
         set {
-            if ((string)value != "Hello Server!")
-                throw new Exception();
+            RRAssert.AreEqual((string)value, "Hello Server!");
         }
     }
 
@@ -2465,10 +2417,8 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
         }
         set {
             Dictionary<int, object> d = (Dictionary<int, object>)value;
-            if (d.Count != 1)
-                throw new Exception();
-            if (((string)d[11]) != "Hello Server!")
-                throw new Exception();
+            RRAssert.AreEqual(d.Count, 1);
+            RRAssert.AreEqual(((string)d[11]), "Hello Server!");
         }
     }
 
@@ -2481,10 +2431,8 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
         }
         set {
             Dictionary<string, object> d = (Dictionary<string, object>)value;
-            if (d.Count != 1)
-                throw new Exception();
-            if (((string)d["test2"]) != "Hello Server!")
-                throw new Exception();
+            RRAssert.AreEqual(d.Count, 1);
+            RRAssert.AreEqual(((string)d["test2"]), "Hello Server!");
         }
     }
 
@@ -2497,10 +2445,8 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
         }
         set {
             List<object> d = (List<object>)value;
-            if (d.Count != 1)
-                throw new Exception();
-            if (((string)d[0]) != "Hello Server!")
-                throw new Exception();
+            RRAssert.AreEqual(d.Count, 1);
+            RRAssert.AreEqual(((string)d[0]), "Hello Server!");
         }
     }
 
@@ -2540,8 +2486,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
             return null;
         }
         set {
-            if (value != null)
-                throw new Exception();
+            RRAssert.AreEqual((object)value, (object)null);
         }
     }
 
@@ -2832,8 +2777,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
 
            public void pipe_check_error()
            {
-               if (!ack_recv)
-                   throw new Exception();
+               RRAssert.IsTrue(ack_recv);
            }
 
            Pipe<double> m_broadcastpipe = null;
@@ -2846,8 +2790,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
                set {
                    m_broadcastpipe = value;
                    m_broadcastpipe_broadcaster = new PipeBroadcaster<double>(value, 3);
-                   if (m_broadcastpipe_broadcaster.MaxBacklog != 3)
-                       throw new Exception();
+                   RRAssert.AreEqual(m_broadcastpipe_broadcaster.MaxBacklog, 3);
                    m_broadcastpipe_broadcaster.MaxBacklog = 3;
 
                    RobotRaconteur.Timer t = RobotRaconteurNode.s.CreateTimer(100, delegate(TimerEvent ev) {
@@ -2866,24 +2809,11 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
                cb1.GetClientFunction(ServerEndpoint.CurrentEndpoint)();
                cb2.GetClientFunction(ServerEndpoint.CurrentEndpoint)(739.2, 0.392);
                double res = cb3.GetClientFunction(ServerEndpoint.CurrentEndpoint)(34, 45);
-               if (res != (34 + 45 + 3.14))
-                   throw new Exception();
-               if (cb_meaning_of_life.GetClientFunction(ServerEndpoint.CurrentEndpoint)() != 42)
-                   throw new Exception();
+               RRAssert.AreEqual(res, (34 + 45 + 3.14));
+               RRAssert.AreEqual(cb_meaning_of_life.GetClientFunction(ServerEndpoint.CurrentEndpoint)(), 42);
 
-               bool errthrown = false;
-
-               try
-               {
-                   cb_errtest.GetClientFunction(ServerEndpoint.CurrentEndpoint)();
-               }
-               catch (RobotRaconteurRemoteException)
-               {
-                   errthrown = true;
-               }
-
-               if (!errthrown)
-                   throw new Exception();
+               RRAssert.ThrowsException<RobotRaconteurRemoteException>(
+                   () => cb_errtest.GetClientFunction(ServerEndpoint.CurrentEndpoint)());
            }
 
            Callback<Action> m_cb1;

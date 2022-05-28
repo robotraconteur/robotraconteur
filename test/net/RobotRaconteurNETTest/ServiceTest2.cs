@@ -73,8 +73,7 @@ public class testroot3_impl : testroot3_default_impl, IRRServiceObject
             return testenum1.anothervalue;
         }
         set {
-            if (value != testenum1.hexval1)
-                throw new Exception();
+            RRAssert.AreEqual((uint)value, (uint)testenum1.hexval1);
         }
     }
 
@@ -247,13 +246,30 @@ public class testroot3_impl : testroot3_default_impl, IRRServiceObject
     }
 
     public void ca<T>(T[] v1, T[] v2)
+        where T : IComparable, IComparable<T>
     {
-        if (v1.Length != v2.Length)
-            throw new Exception();
+        RRAssert.AreEqual(v1.Length, v2.Length);
         for (int i = 0; i < v1.Length; i++)
         {
-            if (!Object.Equals(v1[i], v2[i]))
-                throw new Exception();
+            RRAssert.AreEqual(v1[i], v2[i]);
+        }
+    }
+
+    public void ca(CDouble[] v1, CDouble[] v2)
+    {
+        RRAssert.AreEqual(v1.Length, v2.Length);
+        for (int i = 0; i < v1.Length; i++)
+        {
+            RRAssert.AreEqual((object)v1[i], (object)v2[i]);
+        }
+    }
+
+    public void ca(CSingle[] v1, CSingle[] v2)
+    {
+        RRAssert.AreEqual(v1.Length, v2.Length);
+        for (int i = 0; i < v1.Length; i++)
+        {
+            RRAssert.AreEqual((object)v1[i], (object)v2[i]);
         }
     }
 
@@ -280,8 +296,7 @@ public class testroot3_impl : testroot3_default_impl, IRRServiceObject
         }
         set {
             var c1_2 = new CDouble(5.708705e+01, -2.328294e-03);
-            if (value != c1_2)
-                throw new Exception();
+            RRAssert.AreEqual((object)value, (object)c1_2);
         }
     }
     public override CDouble[] c2
@@ -355,8 +370,7 @@ public class testroot3_impl : testroot3_default_impl, IRRServiceObject
         }
         set {
             var c7_2 = new CSingle(9.303345e-12f, -3.865684e-05f);
-            if (value != c7_2)
-                throw new Exception();
+            RRAssert.AreEqual((object)value, (object)c7_2);
         }
     }
     public override CSingle[] c8
@@ -411,8 +425,7 @@ public class testroot3_impl : testroot3_default_impl, IRRServiceObject
             return true;
         }
         set {
-            if (value != true)
-                throw new Exception();
+            RRAssert.AreEqual(value, true);
         }
     }
 
@@ -445,8 +458,7 @@ public class testroot3_impl : testroot3_default_impl, IRRServiceObject
             return o;
         }
         set {
-            if (value[0] != true)
-                throw new Exception();
+            RRAssert.AreEqual(value[0], true);
         }
     }
 
@@ -3481,12 +3493,10 @@ static class ServiceTest2_pod
 
     private static void verify_double_array(ServiceTest2_test_sequence_gen gen, double[] v, int len)
     {
-        if (v.Length != len)
-            throw new Exception();
+        RRAssert.AreEqual(v.Length, len);
         for (int i = 0; i < len; i++)
         {
-            if (v[i] != gen.get_double())
-                throw new Exception();
+            RRAssert.AreEqual(v[i], gen.get_double());
         }
     }
 
@@ -3502,12 +3512,10 @@ static class ServiceTest2_pod
 
     private static void verify_uint32_array(ServiceTest2_test_sequence_gen gen, uint[] v, int len)
     {
-        if (v.Length != len)
-            throw new Exception();
+        RRAssert.AreEqual(v.Length, len);
         for (int i = 0; i < len; i++)
         {
-            if (v[i] != gen.get_uint32())
-                throw new Exception();
+            RRAssert.AreEqual(v[i], gen.get_uint32());
         }
     }
 
@@ -3523,12 +3531,10 @@ static class ServiceTest2_pod
 
     private static void verify_int8_array(ServiceTest2_test_sequence_gen gen, sbyte[] v, int len)
     {
-        if (v.Length != len)
-            throw new Exception();
+        RRAssert.AreEqual(v.Length, len);
         for (int i = 0; i < len; i++)
         {
-            if (v[i] != gen.get_int8())
-                throw new Exception();
+            RRAssert.AreEqual(v[i], gen.get_int8());
         }
     }
 
@@ -3564,8 +3570,7 @@ static class ServiceTest2_pod
     public static void verify_testpod1(ref testpod1 s, uint seed)
     {
         var gen = new ServiceTest2_test_sequence_gen(seed);
-        if (s.d1 != gen.get_double())
-            throw new Exception();
+        RRAssert.AreEqual(s.d1, gen.get_double());
         verify_double_array(gen, s.d2, 6);
         verify_double_array(gen, s.d3, (int)(gen.get_uint32() % 6));
 
@@ -3581,8 +3586,7 @@ static class ServiceTest2_pod
             verify_transform(ref s.t2[i], gen.get_uint32());
 
         int t3_len = (int)(gen.get_uint32() % 15);
-        if (s.t3.Length != t3_len)
-            throw new Exception("");
+        RRAssert.AreEqual(s.t3.Length, t3_len);
         for (int i = 0; i < t3_len; i++)
             verify_transform(ref s.t3[i], gen.get_uint32());
 
@@ -3601,8 +3605,7 @@ static class ServiceTest2_pod
     public static void verify_testpod2(ref testpod2 s, uint seed)
     {
         var gen = new ServiceTest2_test_sequence_gen(seed);
-        if (s.i1 != gen.get_int8())
-            throw new Exception();
+        RRAssert.AreEqual(s.i1, gen.get_int8());
         verify_int8_array(gen, s.i2, 15);
         verify_int8_array(gen, s.i3, (int)(gen.get_uint32() % 15));
     }
@@ -3621,8 +3624,7 @@ static class ServiceTest2_pod
     public static void verify_testpod1_array(testpod1[] v, int len, uint seed)
     {
         var gen = new ServiceTest2_test_sequence_gen(seed);
-        if (v.Length != len)
-            throw new Exception();
+        RRAssert.AreEqual(v.Length, len);
         for (int i = 0; i < len; i++)
         {
             verify_testpod1(ref v[i], gen.get_uint32());
@@ -3642,8 +3644,8 @@ static class ServiceTest2_pod
 
     public static void verify_testpod1_multidimarray(PodMultiDimArray v, uint m, uint n, uint seed)
     {
-        if (!v.Dims.SequenceEqual(new uint[] { m, n }))
-            throw new Exception();
+        RRAssert.IsTrue(v.Dims.SequenceEqual(new uint[] { m, n }));
+
         verify_testpod1_array((testpod1[])v.pod_array, (int)(m * n), seed);
     }
 
@@ -3656,8 +3658,8 @@ static class ServiceTest2_pod
         else
         {
             var v2 = (PodMultiDimArray)v;
-            if (!v2.Dims.SequenceEqual(new uint[] { m, n }))
-                throw new Exception();
+            RRAssert.IsTrue(v2.Dims.SequenceEqual(new uint[] { m, n }));
+
             verify_testpod1_array((testpod1[])(v2.pod_array), (int)(m * n), seed);
         }
     }
@@ -3674,8 +3676,7 @@ static class ServiceTest2_pod
 
     public static void verify_testpod2_array(ServiceTest2_test_sequence_gen gen, testpod2[] v, int len)
     {
-        if (v.Length != len)
-            throw new Exception();
+        RRAssert.AreEqual(v.Length, len);
         for (int i = 0; i < len; i++)
         {
             verify_testpod2(ref v[i], gen.get_uint32());
@@ -3769,8 +3770,7 @@ static class ServiceTest2_pod
 
     public static void verify_teststruct3(teststruct3 v, uint seed)
     {
-        if (v == null)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v, null);
         var gen = new ServiceTest2_test_sequence_gen(seed);
 
         verify_testpod1(ref v.s1, gen.get_uint32());
@@ -3783,24 +3783,18 @@ static class ServiceTest2_pod
         var s6_seed = gen.get_uint32();
         verify_testpod1_multidimarray(v.s6, (uint)(s6_seed % 6), (uint)(s6_seed % 3), s6_seed);
 
-        if (v.s7 == null)
-            throw new Exception("");
-        if (v.s7.Count != 1)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.s7, null);
+        RRAssert.AreEqual(v.s7.Count, 1);
         var s7_0 = v.s7[0];
         verify_testpod1(ref s7_0, gen.get_uint32());
 
-        if (v.s8 == null)
-            throw new Exception("");
-        if (v.s8.Count != 2)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.s8, null);
+        RRAssert.AreEqual(v.s8.Count, 2);
         verify_testpod1_array(v.s8[0], 2, gen.get_uint32());
         verify_testpod1_array(v.s8[1], 4, gen.get_uint32());
 
-        if (v.s9 == null)
-            throw new Exception("");
-        if (v.s9.Count != 2)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.s9, null);
+        RRAssert.AreEqual(v.s9.Count, 2);
         verify_testpod1_multidimarray(v.s9[0], 2, 3, gen.get_uint32());
         verify_testpod1_multidimarray(v.s9[1], 4, 5, gen.get_uint32());
 
@@ -3810,24 +3804,19 @@ static class ServiceTest2_pod
         verify_testpod1_array((testpod1[])v.s11, 3, gen.get_uint32());
         verify_testpod1_multidimarray(v.s12, 2, 2, gen.get_uint32());
 
-        if (v.s13 == null)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.s13, null);
         var s13 = (testpod1[])((List<object>)v.s13)[0];
         verify_testpod1(ref s13[0], gen.get_uint32());
 
-        if (v.s14 == null)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.s14, null);
         var v14 = (List<object>)v.s14;
-        if (v14.Count != 2)
-            throw new Exception("");
+        RRAssert.AreEqual(v14.Count, 2);
         verify_testpod1_array((testpod1[])v14[0], 3, gen.get_uint32());
         verify_testpod1_array((testpod1[])v14[1], 5, gen.get_uint32());
 
-        if (v.s15 == null)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.s15, null);
         var v15 = (List<object>)v.s15;
-        if (v15.Count != 2)
-            throw new Exception("");
+        RRAssert.AreEqual(v15.Count, 2);
         verify_testpod1_multidimarray(v15[0], 7, 2, gen.get_uint32());
         verify_testpod1_multidimarray(v15[1], 5, 1, gen.get_uint32());
 
@@ -3839,45 +3828,34 @@ static class ServiceTest2_pod
         verify_transform_array((transform[])(v.t4), 10, gen.get_uint32());
         verify_transform_multidimarray((NamedMultiDimArray)(v.t5), 6, 5, gen.get_uint32());
 
-        if (v.t6 == null)
-            throw new Exception("");
-        if (v.t6.Count != 1)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.t6, null);
+        RRAssert.AreEqual(v.t6.Count, 1);
         var t6_0 = v.t6[0];
         verify_transform(ref t6_0, gen.get_uint32());
 
-        if (v.t7 == null)
-            throw new Exception("");
-        if (v.t7.Count != 2)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.t7, null);
+        RRAssert.AreEqual(v.t7.Count, 2);
         verify_transform_array(v.t7[0], 4, gen.get_uint32());
         verify_transform_array(v.t7[1], 4, gen.get_uint32());
 
-        if (v.t8 == null)
-            throw new Exception("");
-        if (v.t8.Count != 2)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.t8, null);
+        RRAssert.AreEqual(v.t8.Count, 2);
         verify_transform_multidimarray(v.t8[0], 2, 4, gen.get_uint32());
         verify_transform_multidimarray(v.t8[1], 2, 4, gen.get_uint32());
 
-        if (v.t9 == null)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.t9, null);
         var t9 = (transform[])((List<object>)v.t9)[0];
         verify_transform(ref t9[0], gen.get_uint32());
 
-        if (v.t10 == null)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.t10, null);
         var t10 = (List<object>)v.t10;
-        if (t10.Count != 2)
-            throw new Exception("");
+        RRAssert.AreEqual(t10.Count, 2);
         verify_transform_array((transform[])t10[0], 3, gen.get_uint32());
         verify_transform_array((transform[])t10[1], 5, gen.get_uint32());
 
-        if (v.t11 == null)
-            throw new Exception("");
+        RRAssert.AreNotEqual(v.t11, null);
         var t11 = (List<object>)v.t11;
-        if (t11.Count != 2)
-            throw new Exception("");
+        RRAssert.AreEqual(t11.Count, 2);
         verify_transform_multidimarray((NamedMultiDimArray)t11[0], 7, 2, gen.get_uint32());
         verify_transform_multidimarray((NamedMultiDimArray)t11[1], 5, 1, gen.get_uint32());
     }
@@ -3897,8 +3875,7 @@ static class ServiceTest2_pod
         var gen = new ServiceTest2_test_sequence_gen(seed);
         var a = t.GetNumericArray();
         for (int i = 0; i < 7; i++)
-            if (a[i] != gen.get_double())
-                throw new Exception();
+            RRAssert.AreEqual(a[i], gen.get_double());
     }
 
     public static transform[] fill_transform_array(int len, uint seed)
@@ -3913,8 +3890,7 @@ static class ServiceTest2_pod
     public static void verify_transform_array(transform[] t, int len, uint seed)
     {
         var gen = new ServiceTest2_test_sequence_gen(seed);
-        if (t.Length != len)
-            throw new Exception();
+        RRAssert.AreEqual(t.Length, len);
         for (int i = 0; i < len; i++)
             verify_transform(ref t[i], gen.get_uint32());
     }
@@ -3926,8 +3902,7 @@ static class ServiceTest2_pod
 
     public static void verify_transform_multidimarray(NamedMultiDimArray a, uint m, uint n, uint seed)
     {
-        if (!a.Dims.SequenceEqual(new uint[] { m, n }))
-            throw new Exception();
+        RRAssert.IsTrue(a.Dims.SequenceEqual(new uint[] { m, n }));
         verify_transform_array((transform[])a.namedarray_array, (int)(m * n), seed);
     }
 }

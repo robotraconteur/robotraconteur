@@ -1056,6 +1056,13 @@ class Program
             }
         }
 
+        if (command == "lfsrprint")
+        {
+            LFSRSeqGen_Print.PrintLFSR();
+            RobotRaconteurNode.s.Shutdown();
+            return;
+        }
+
         throw new Exception("Unknown command");
     }
 

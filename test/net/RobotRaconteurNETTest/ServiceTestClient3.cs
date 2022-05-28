@@ -38,10 +38,7 @@ public class ServiceTestClient3
 
     public void TestProperties()
     {
-        if (r.d1 != 8.5515)
-        {
-            throw new Exception("");
-        }
+        RRAssert.AreEqual(r.d1, 8.5515);
 
         r.d1 = 3.0819;
 
@@ -53,15 +50,9 @@ public class ServiceTestClient3
         catch (ArgumentException err)
         {
             thrown1 = true;
-            if (err.Message != "Test message 1")
-            {
-                throw new Exception("");
-            }
+            RRAssert.AreEqual(err.Message, "Test message 1");
         }
-        if (!thrown1)
-        {
-            throw new Exception("");
-        }
+        RRAssert.IsTrue(thrown1);
 
         bool thrown2 = false;
         try
@@ -71,15 +62,9 @@ public class ServiceTestClient3
         catch (InvalidOperationException err)
         {
             thrown2 = true;
-            if (err.Message != "")
-            {
-                throw new Exception("");
-            }
+            RRAssert.AreEqual(err.Message, "");
         }
-        if (!thrown2)
-        {
-            throw new Exception("");
-        }
+        RRAssert.IsTrue(thrown2);
     }
 
     public void TestFunctions()
@@ -96,10 +81,7 @@ public class ServiceTestClient3
         {
             thrown1 = true;
         }
-        if (!thrown1)
-        {
-            throw new Exception("");
-        }
+        RRAssert.IsTrue(thrown1);
 
         bool thrown2 = false;
         try
@@ -110,10 +92,7 @@ public class ServiceTestClient3
         {
             thrown2 = true;
         }
-        if (!thrown2)
-        {
-            throw new Exception("");
-        }
+        RRAssert.IsTrue(thrown2);
     }
 }
 }

@@ -9,3 +9,7 @@ add_subdirectory(cpp)
 if(BUILD_PYTHON OR BUILD_PYTHON3)
     add_subdirectory(python)
 endif()
+
+if(BUILD_NET)
+    add_subdirectory(net)
+endif()

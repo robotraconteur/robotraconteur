@@ -31,8 +31,7 @@ public class ServiceTestClient2
     {
         ConnectService(url);
 
-        if (r.testenum1_prop != testenum1.anothervalue)
-            throw new Exception();
+        RRAssert.AreEqual((int)r.testenum1_prop, (int)testenum1.anothervalue);
         r.testenum1_prop = testenum1.hexval1;
 
         r.get_o4();
@@ -71,14 +70,12 @@ public class ServiceTestClient2
     {
         TimeSpec ts;
         int v = r.peekwire.PeekInValue(out ts);
-        if (v != 56295674)
-            throw new Exception();
+        RRAssert.AreEqual(v, 56295674);
 
         TimeSpec ts2;
         r.pokewire.PokeOutValue(75738265);
         int v2 = r.pokewire.PeekOutValue(out ts2);
-        if (v2 != 75738265)
-            throw new Exception();
+        RRAssert.AreEqual(v2, 75738265);
 
         var w = r.pokewire.Connect();
         for (int i = 0; i < 3; i++)
@@ -90,8 +87,7 @@ public class ServiceTestClient2
 
         TimeSpec ts3;
         var v3 = r.pokewire.PeekOutValue(out ts3);
-        if (v3 != 8638356)
-            throw new Exception();
+        RRAssert.AreEqual(v3, 8638356);
     }
 
     public void AsyncTestWirePeekPoke()
@@ -104,25 +100,18 @@ public class ServiceTestClient2
     {
         var v1 = await r.peekwire.AsyncPeekInValue();
 
-        if (v1.Item1 != 56295674)
-        {
-            throw new Exception();
-        }
+        RRAssert.AreEqual(v1.Item1, 56295674);
 
         await r.pokewire.AsyncPokeOutValue(75738261);
 
         var v3 = await r.pokewire.AsyncPeekOutValue();
 
-        if (v3.Item1 != 75738261)
-        {
-            throw new Exception();
-        }
+        RRAssert.AreEqual(v3.Item1, 75738261);
     }
 
     public void TestEnums()
     {
-        if (r.testenum1_prop != testenum1.anothervalue)
-            throw new Exception("");
+        RRAssert.AreEqual((int)r.testenum1_prop, (int)testenum1.anothervalue);
 
         r.testenum1_prop = testenum1.hexval1;
     }
@@ -217,8 +206,7 @@ public class ServiceTestClient2
             ServiceTest2_pod.fill_testpod2(ref o1[i], 59174 + i);
         }
 
-        if (r.pod_m1.Length != 1024)
-            throw new Exception("");
+        RRAssert.AreEqual<ulong>(r.pod_m1.Length, 1024);
 
         r.pod_m1.Write(52, o1, 3, 17);
 
@@ -296,8 +284,7 @@ public class ServiceTestClient2
         for (uint i = 0; i < s.Length; i++)
             ServiceTest2_pod.fill_transform(ref s[i], 79174 + i);
 
-        if (r.namedarray_m1.Length != 512)
-            throw new Exception();
+        RRAssert.AreEqual<ulong>(r.namedarray_m1.Length, 512);
         r.namedarray_m1.Write(23, s, 3, 21);
 
         var s2 = new transform[32];
@@ -327,16 +314,39 @@ public class ServiceTestClient2
     }
 
     public void ca<T>(T[] v1, T[] v2, int count = -1)
+        where T : IComparable, IComparable<T>
     {
-        if (v1.Length != v2.Length)
-            throw new Exception();
+        RRAssert.AreEqual(v1.Length, v2.Length);
         int len = v1.Length;
         if (count > 0)
             len = count;
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < len; i++)
         {
-            if (!Object.Equals(v1[i], v2[i]))
-                throw new Exception();
+            RRAssert.AreEqual(v1[i], v2[i]);
+        }
+    }
+
+    public void ca(CDouble[] v1, CDouble[] v2, int count = -1)
+    {
+        RRAssert.AreEqual(v1.Length, v2.Length);
+        int len = v1.Length;
+        if (count > 0)
+            len = count;
+        for (int i = 0; i < len; i++)
+        {
+            RRAssert.AreEqual((object)v1[i], (object)v2[i]);
+        }
+    }
+
+    public void ca(CSingle[] v1, CSingle[] v2, int count = -1)
+    {
+        RRAssert.AreEqual(v1.Length, v2.Length);
+        int len = v1.Length;
+        if (count > 0)
+            len = count;
+        for (int i = 0; i < len; i++)
+        {
+            RRAssert.AreEqual((object)v1[i], (object)v2[i]);
         }
     }
 
@@ -359,8 +369,7 @@ public class ServiceTestClient2
     void TestComplex()
     {
         var c1_1 = new CDouble(5.708705e+01, -2.328294e-03);
-        if (r.c1 != c1_1)
-            throw new Exception();
+        RRAssert.AreEqual((object)r.c1, (object)c1_1);
 
         var c1_2 = new CDouble(5.708705e+01, -2.328294e-03);
         r.c1 = c1_2;
@@ -417,8 +426,7 @@ public class ServiceTestClient2
         r.c5 = (c5_2);
 
         var c7_1 = new CSingle(-5.527021e-18f, -9.848457e+03f);
-        if (r.c7 != c7_1)
-            throw new Exception();
+        RRAssert.AreEqual((object)r.c7, (object)c7_1);
 
         var c7_2 = new CSingle(9.303345e-12f, -3.865684e-05f);
         r.c7 = (c7_2);
@@ -498,21 +506,21 @@ public class ServiceTestClient2
     void TestNoLock()
     {
         var o5 = r.get_nolock_test();
-        ShouldBeErr<ObjectLockedException>(() => a(o5.p1));
+        RRAssert.ThrowsException<ObjectLockedException>(() => a(o5.p1));
 
         a(o5.p2);
         o5.p2 = 0;
         a(o5.p3);
-        ShouldBeErr<ObjectLockedException>(() => o5.p3 = 0);
+        RRAssert.ThrowsException<ObjectLockedException>(() => o5.p3 = 0);
 
-        ShouldBeErr<ObjectLockedException>(() => o5.f1());
+        RRAssert.ThrowsException<ObjectLockedException>(() => o5.f1());
         o5.f2();
-        ShouldBeErr<ObjectLockedException>(() => o5.q1.Connect(-1).Close());
+        RRAssert.ThrowsException<ObjectLockedException>(() => o5.q1.Connect(-1).Close());
         o5.q2.Connect(-1).Close();
-        ShouldBeErr<ObjectLockedException>(() => o5.w1.Connect().Close());
+        RRAssert.ThrowsException<ObjectLockedException>(() => o5.w1.Connect().Close());
         o5.w2.Connect().Close();
 
-        ShouldBeErr<ObjectLockedException>(() => a(o5.m1.Length));
+        RRAssert.ThrowsException<ObjectLockedException>(() => a(o5.m1.Length));
 
         var b1 = new int[100];
 
@@ -522,14 +530,13 @@ public class ServiceTestClient2
 
         a(o5.m3.Length);
         o5.m3.Read(0, b1, 0, 10);
-        ShouldBeErr<ObjectLockedException>(() => o5.m3.Write(0, b1, 0, 10));
+        RRAssert.ThrowsException<ObjectLockedException>(() => o5.m3.Write(0, b1, 0, 10));
     }
 
     void TestBools()
     {
         r.b1 = true;
-        if (r.b1 != true)
-            throw new Exception();
+        RRAssert.AreEqual(r.b1, true);
 
         r.b2 = new bool[] { true, false, false, true, true, true, false, true };
         ca(r.b2, new bool[] { true, false, true, true, false, true, false });
@@ -540,8 +547,7 @@ public class ServiceTestClient2
         r.b3 = new MultiDimArray(new uint[] { 2, 1 }, new bool[] { true, false });
 
         var b4_1 = r.b4;
-        if (b4_1[0] != true)
-            throw new Exception();
+        RRAssert.AreEqual(b4_1[0], true);
         var b4_2 = new List<bool>();
         b4_2.Add(true);
         r.b4 = b4_2;
@@ -567,8 +573,7 @@ public class ServiceTestClient2
         c_m5.Read(99, v2, 0, 10);
         for (int i = 1; i < 9; i++)
         {
-            if (v2[i] != v1_1[i])
-                throw new Exception();
+            RRAssert.AreEqual(v2[i], v1_1[i]);
         }
 
         var c_m6 = r.c_m6;
@@ -581,24 +586,6 @@ public class ServiceTestClient2
         ca((bool[])v3.Array_, (bool[])v4.Array_);
     }
 
-    private void ShouldBeErr<T>(Action a)
-        where T : Exception
-    {
-        bool err = false;
-
-        try
-        {
-            a();
-        }
-        catch (T)
-        {
-            err = true;
-        }
-
-        if (!err)
-            throw new Exception();
-    }
-
     private void TestExceptionParams()
     {
         bool exp1_caught = false;
@@ -609,37 +596,16 @@ public class ServiceTestClient2
         catch (InvalidOperationException exp)
         {
             exp1_caught = true;
-            if (exp.Message != "test error")
-            {
-                throw new Exception("");
-            }
-            if ((string)exp.Data["ErrorSubName"] != "my_error")
-            {
-                throw new Exception("");
-            }
-            if (exp.Data["ErrorParam"] == null)
-            {
-                throw new Exception("");
-            }
+            RRAssert.AreEqual(exp.Message, "test error");
+            RRAssert.AreEqual((string)exp.Data["ErrorSubName"], "my_error");
+            RRAssert.AreNotEqual(exp.Data["ErrorParam"], null);
             var param_map = (Dictionary<string, object>)(exp.Data["ErrorParam"]);
-            if (param_map.Count != 2)
-            {
-                throw new Exception("");
-            }
-            if (((int[])param_map["param1"])[0] != 10)
-            {
-                throw new Exception("");
-            }
-            if ((string)param_map["param2"] != "20")
-            {
-                throw new Exception("");
-            }
+            RRAssert.AreEqual(param_map.Count, 2);
+            RRAssert.AreEqual(((int[])param_map["param1"])[0], 10);
+            RRAssert.AreEqual((string)param_map["param2"], "20");
         }
 
-        if (!exp1_caught)
-        {
-            throw new Exception("");
-        }
+        RRAssert.IsTrue(exp1_caught);
 
         bool exp2_caught = false;
         try
@@ -649,37 +615,16 @@ public class ServiceTestClient2
         catch (com.robotraconteur.testing.TestService3.test_exception4 exp)
         {
             exp2_caught = true;
-            if (exp.Message != "test error2")
-            {
-                throw new Exception("");
-            }
-            if ((string)exp.ErrorSubName != "my_error2")
-            {
-                throw new Exception("");
-            }
-            if (exp.ErrorParam == null)
-            {
-                throw new Exception("");
-            }
+            RRAssert.AreEqual(exp.Message, "test error2");
+            RRAssert.AreEqual((string)exp.ErrorSubName, "my_error2");
+            RRAssert.AreNotEqual(exp.ErrorParam, null);
             var param_map = (Dictionary<string, object>)(exp.ErrorParam);
-            if (param_map.Count != 2)
-            {
-                throw new Exception("");
-            }
-            if (((int[])param_map["param1"])[0] != 30)
-            {
-                throw new Exception("");
-            }
-            if ((string)param_map["param2"] != "40")
-            {
-                throw new Exception("");
-            }
+            RRAssert.AreEqual(param_map.Count, 2);
+            RRAssert.AreEqual(((int[])param_map["param1"])[0], 30);
+            RRAssert.AreEqual((string)param_map["param2"], "40");
         }
 
-        if (!exp2_caught)
-        {
-            throw new Exception("");
-        }
+        RRAssert.IsTrue(exp2_caught);
     }
 }
 

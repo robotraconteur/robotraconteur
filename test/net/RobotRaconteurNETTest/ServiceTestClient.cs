@@ -15,13 +15,13 @@ public class ServiceTestClient
 {
 
     public void ca<T>(T[] v1, T[] v2)
+        where T : IComparable, IComparable<T>
     {
-        if (v1.Length != v2.Length)
-            throw new Exception();
+        RRAssert.AreEqual(v1.Length, v2.Length);
+
         for (int i = 0; i < v1.Length; i++)
         {
-            if (!Object.Equals(v1[i], v2[i]))
-                throw new Exception();
+            RRAssert.AreEqual<T>(v1[i], v2[i]);
         }
     }
 
@@ -67,8 +67,7 @@ public class ServiceTestClient
     public void TestProperties()
     {
         r.d1 = 3.456;
-        if (r.d1 != 12.345)
-            throw new Exception();
+        RRAssert.AreEqual(r.d1, 12.345);
         r.d2 = new double[] {
             8.805544e-12,  3.735066e+12,  3.491919e+17,  4.979833e+12,  -4.042302e+00, 2.927731e-12,  5.945355e+11,
             -3.965351e+06, 4.866934e-14,  1.314597e+04,  -2.059923e-11, -5.447989e-20, 1.267732e-21,  -2.603983e+10,
@@ -296,8 +295,7 @@ public class ServiceTestClient
                                   -3.468374e-03, -5.037849e-14, -4.140513e-08, 4.553774e+03 });
 
         r.s1 = 3847.9283f;
-        if (r.s1 != 7.8573f)
-            throw new Exception();
+        RRAssert.AreEqual(r.s1, 7.8573f);
         r.s2 = new float[] {
             -1.374271e+12f, 1.798486e-08f,  -4.845395e-08f, -4.785331e+12f, -2.914127e+04f, -1.753064e-17f,
             -4.063563e-09f, 2.758058e+04f,  -1.988908e+11f, -1.535073e-18f, 2.439972e-02f,  -3.237377e-12f,
@@ -486,8 +484,7 @@ public class ServiceTestClient
         });
 
         r.i8_1 = 45;
-        if (r.i8_1 != -66)
-            throw new Exception();
+        RRAssert.AreEqual(r.i8_1, -66);
         r.i8_2 = new sbyte[] {
             -66,  34,  -121, -118, -12,  -83,  -43,  55,   -53,  31,   -100, -37,  -116, 69,  22,   -60,  59,   32,
             51,   46,  109,  36,   31,   49,   -99,  -69,  -99,  -89,  27,   -18,  -77,  -63, -101, -122, -60,  58,
@@ -580,8 +577,7 @@ public class ServiceTestClient
         });
 
         r.u8_1 = 232;
-        if (r.u8_1 != 222)
-            throw new Exception();
+        RRAssert.AreEqual(r.u8_1, 222);
         r.u8_2 = new byte[] {
             52,  40,  13,  185, 137, 3,   173, 236, 60,  18,  206, 224, 231, 19,  31,  139, 177, 201, 100, 37,  8,
             94,  145, 135, 217, 32,  59,  26,  243, 213, 97,  78,  145, 136, 142, 249, 46,  247, 20,  240, 47,  211,
@@ -685,8 +681,7 @@ public class ServiceTestClient
         });
 
         r.i16_1 = 2387;
-        if (r.i16_1 != -13428)
-            throw new Exception();
+        RRAssert.AreEqual(r.i16_1, -13428);
         r.i16_2 = new short[] {
             -29064, 7306,   1457,   -19474, -671,   22876,  -14357, -18020, -23418, -10298, 1040,   -2415,  -22890,
             4293,   25366,  12606,  -31678, -15908, -11164, 20643,  -239,   -15149, 25272,  17505,  24037,  8264,
@@ -807,8 +802,7 @@ public class ServiceTestClient
         });
 
         r.u16_1 = 54732;
-        if (r.u16_1 != 60981)
-            throw new Exception();
+        RRAssert.AreEqual(r.u16_1, 60981);
         r.u16_2 = new ushort[] {
             27153, 43996, 41432, 58304, 12942, 58876, 28186, 11185, 10827, 17769, 13091, 23017, 17671, 49113, 6987,
             35547, 2024,  33499, 26956, 11772, 20498, 42863, 65021, 31883, 61940, 6622,  59235, 6137,  51350, 48773,
@@ -844,8 +838,7 @@ public class ServiceTestClient
         });
 
         r.i32_1 = -9837284;
-        if (r.i32_1 != 898734)
-            throw new Exception();
+        RRAssert.AreEqual(r.i32_1, 898734);
         r.i32_2 = new int[] {
             -966485083,  547919123,   -1194190604, 1550099195,  -86896479,   -1346998266, -111775936,  1595883280,
             95277373,    -483593724,  -1194231658, -1664247993, -1125879490, -774112094,  -908971354,  1257430739,
@@ -1083,18 +1076,15 @@ public class ServiceTestClient
         }
         {
             var i32_huge_2 = r.i32_huge;
-            if (i32_huge_2.Length != 2621440)
-                throw new Exception();
+            RRAssert.AreEqual(i32_huge_2.Length, 2621440);
             for (int i = 0; i < 2621440; i++)
             {
-                if (i32_huge_2[i] != i)
-                    throw new Exception();
+                RRAssert.AreEqual(i32_huge_2[i], i);
             }
         }
 
         r.u32_1 = 1550099195;
-        if (r.u32_1 != 547919123)
-            throw new Exception();
+        RRAssert.AreEqual<uint>(r.u32_1, 547919123);
         r.u32_2 = new uint[] {
             237099665,  1725693514, 3671290215, 2838122575, 2174235839, 1926762547, 837710207,  2675306390, 3296759548,
             3236712776, 1185582523, 3424554628, 2120088772, 3672727628, 1229489468, 299615394,  2391828662, 2161918065,
@@ -1257,8 +1247,7 @@ public class ServiceTestClient
         });
 
         r.i64_1 = 8621740821050813024;
-        if (r.i64_1 != -1357833931563696072)
-            throw new Exception();
+        RRAssert.AreEqual(r.i64_1, -1357833931563696072);
         r.i64_2 = new long[] { -1418708830105823852, -1357833931563696072, -8308127073437794904, 6203263204523798112,
                                7076661289157584762,  -3645491092747259726, 2969229117250121621,  -8403401867791621438,
                                -5706351777107258259, 6979420050019736435,  1350986631885231652,  -8626678967587677100,
@@ -1339,8 +1328,7 @@ public class ServiceTestClient
                               1761514773996835425,  -8886871075540730292 });
 
         r.u64_1 = 1465640522145789825;
-        if (r.u64_1 != 13389861970863644378)
-            throw new Exception();
+        RRAssert.AreEqual<ulong>(r.u64_1, 13389861970863644378);
         r.u64_2 = new ulong[] { 6515978873578326855,  1465640522145789825,  14139647178981527348, 17376225719361197745,
                                 4827355217349405315,  5237172857588412536,  11185863429255124449, 11922950710462888186,
                                 9723873762901963012,  2360891509504070464,  17595800616336901155, 4676383109049523121,
@@ -1415,8 +1403,7 @@ public class ServiceTestClient
                                 7704933404615957344,  14492234026024540236 });
 
         r.str1 = "Hello Server!";
-        if (r.str1 != "Hello Client!")
-            throw new Exception();
+        RRAssert.AreEqual(r.str1, "Hello Client!");
 
         // Read in and check the large structure struct1
         teststruct1 s1 = r.struct1;
@@ -1431,34 +1418,20 @@ public class ServiceTestClient
             -4.895406e-20, 5.339502e-20,  9.375211e-11,  1.632454e-03,  1.051386e+01,  1.915580e+17,  -1.999453e-09,
             -3.087190e-02, -3.222377e+15, 4.219576e+03,  -1.401039e+05, 3.950473e-15,  -1.620577e+10
         });
-        if (s1.str2 != "Hello world!")
-            throw new Exception();
-        if (s1.vec3.Count != 3)
-            throw new Exception();
-        if (s1.vec3[1] != "Hello Client!")
-            throw new Exception();
-        if (s1.vec3[2] != "Hello Client, again")
-            throw new Exception();
-        if (s1.vec3[4372] != "This is yet another test string")
-            throw new Exception();
+        RRAssert.AreEqual(s1.str2, "Hello world!");
+        RRAssert.AreEqual(s1.vec3.Count, 3);
+        RRAssert.AreEqual(s1.vec3[1], "Hello Client!");
+        RRAssert.AreEqual(s1.vec3[2], "Hello Client, again");
+        RRAssert.AreEqual(s1.vec3[4372], "This is yet another test string");
+        RRAssert.AreEqual(s1.dict4.Count, 3);
+        RRAssert.AreEqual(s1.dict4["teststring1"], "Hello Client!");
+        RRAssert.AreEqual(s1.dict4["teststring2"], "Hello Client, again");
+        RRAssert.AreEqual(s1.dict4["anotherstr"], "This is yet another test string");
 
-        if (s1.dict4.Count != 3)
-            throw new Exception();
-        if (s1.dict4["teststring1"] != "Hello Client!")
-            throw new Exception();
-        if (s1.dict4["teststring2"] != "Hello Client, again")
-            throw new Exception();
-        if (s1.dict4["anotherstr"] != "This is yet another test string")
-            throw new Exception();
-
-        if (s1.list5.Count != 3)
-            throw new Exception();
-        if (s1.list5[0] != "Hello Client!")
-            throw new Exception();
-        if (s1.list5[1] != "Hello Client, again")
-            throw new Exception();
-        if (s1.list5[2] != "This is yet another test string")
-            throw new Exception();
+        RRAssert.AreEqual(s1.list5.Count, 3);
+        RRAssert.AreEqual(s1.list5[0], "Hello Client!");
+        RRAssert.AreEqual(s1.list5[1], "Hello Client, again");
+        RRAssert.AreEqual(s1.list5[2], "This is yet another test string");
 
         ca<double>(s1.struct1.mydat, new double[] {
             -2.457273e-05, -3.349504e-13, 4.139542e-09,  -3.944556e+04, 2.761296e+04,  8.570027e+16,  -2.472613e-03,
@@ -1473,8 +1446,7 @@ public class ServiceTestClient
             2.432993e+15,  -3.592680e+14, -1.560186e-12
         });
 
-        if (s1.dstruct2.Count != 2)
-            throw new Exception();
+        RRAssert.AreEqual(s1.dstruct2.Count, 2);
         ca<double>(s1.dstruct2["test1"].mydat, new double[] {
             3.785355e-17,  -2.518001e+17, 4.016500e+08,  6.566648e-04,  1.284318e+07,  -2.674821e-13, -4.955749e-14,
             -1.699098e+00, 2.901400e+05,  1.499143e+13,  -2.252822e-05, -2.653172e-14, -2.482811e+07, 2.353638e+18,
@@ -1490,8 +1462,7 @@ public class ServiceTestClient
                                   1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13,
                                   -1.937982e+02 });
 
-        if (s1.lstruct3.Count != 2)
-            throw new Exception();
+        RRAssert.AreEqual(s1.lstruct3.Count, 2);
         ca<double>(s1.lstruct3[0].mydat, new double[] {
             3.785355e-17,  -2.518001e+17, 4.016500e+08,  6.566648e-04,  1.284318e+07,  -2.674821e-13, -4.955749e-14,
             -1.699098e+00, 2.901400e+05,  1.499143e+13,  -2.252822e-05, -2.653172e-14, -2.482811e+07, 2.353638e+18,
@@ -1526,8 +1497,7 @@ public class ServiceTestClient
             3.192785e-12,  2.098857e-08
         });
 
-        if ((string)s1.var3 != "This is a vartype string")
-            throw new Exception();
+        RRAssert.AreEqual((string)s1.var3, "This is a vartype string");
 
         // Set large structure for struct1
         teststruct1 s2 = new teststruct1();
@@ -1688,14 +1658,10 @@ public class ServiceTestClient
 
         // Test is_d1
         Dictionary<int, double> is_d1_1 = r.is_d1;
-        if (is_d1_1.Count != 3)
-            throw new Exception();
-        if (is_d1_1[9285] != 1.643392e-01)
-            throw new Exception();
-        if (is_d1_1[74822] != 1.537133e+09)
-            throw new Exception();
-        if (is_d1_1[4] != 1.369505e-03)
-            throw new Exception();
+        RRAssert.AreEqual(is_d1_1.Count, 3);
+        RRAssert.AreEqual(is_d1_1[9285], 1.643392e-01);
+        RRAssert.AreEqual(is_d1_1[74822], 1.537133e+09);
+        RRAssert.AreEqual(is_d1_1[4], 1.369505e-03);
 
         Dictionary<int, double> is_d1_2 = new Dictionary<int, double>();
         is_d1_2.Add(928, 4.074501e-07);
@@ -1705,12 +1671,9 @@ public class ServiceTestClient
 
         // Test is_d2
         Dictionary<string, double> is_d2_1 = r.is_d2;
-        if (is_d2_1.Count != 2)
-            throw new Exception();
-        if (is_d2_1["testval1"] != -1.079664e+16)
-            throw new Exception();
-        if (is_d2_1["testval2"] != 2.224846e+00)
-            throw new Exception();
+        RRAssert.AreEqual(is_d2_1.Count, 2);
+        RRAssert.AreEqual(is_d2_1["testval1"], -1.079664e+16);
+        RRAssert.AreEqual(is_d2_1["testval2"], 2.224846e+00);
 
         Dictionary<string, double> is_d2_2 = new Dictionary<string, double>();
         is_d2_2.Add("testval3", 5.242474e+10);
@@ -1720,8 +1683,7 @@ public class ServiceTestClient
         // Test is_d3
 
         Dictionary<int, double[]> is_d3_1 = r.is_d3;
-        if (is_d3_1.Count != 2)
-            throw new Exception();
+        RRAssert.AreEqual(is_d3_1.Count, 2);
         ca<double>(is_d3_1[12],
                    new double[] { 8.609080e-13,  3.946603e+03,  2.994203e-10,  3.200877e+14,  1.747361e-09,
                                   2.827056e-16,  -3.676613e-18, 1.886901e-14,  -9.970511e-12, 1.932468e-18,
@@ -1747,8 +1709,7 @@ public class ServiceTestClient
         // Test is_d4
 
         Dictionary<string, double[]> is_d4_1 = r.is_d4;
-        if (is_d4_1.Count != 2)
-            throw new Exception();
+        RRAssert.AreEqual(is_d4_1.Count, 2);
         ca<double>(is_d4_1["testval1"],
                    new double[] { 1.113851e-04,  3.830104e+07, 4.571169e-21,  -4.064180e-05, 2.889736e+01,
                                   -1.790060e-06, 4.608538e+00, 4.687713e-04,  1.387717e-08,  3.914187e-18,
@@ -1775,8 +1736,7 @@ public class ServiceTestClient
 
         // Test is_d5
         Dictionary<int, MultiDimArray> is_d5_1 = r.is_d5;
-        if (is_d5_1.Count != 1)
-            throw new Exception();
+        RRAssert.AreEqual(is_d5_1.Count, 1);
         MultiDimArray is_d5_1_1 = is_d5_1[564];
         ca<uint>(is_d5_1_1.Dims, new uint[] { 10, 10 });
         ca<double>((double[])is_d5_1_1.Array_, new double[] {
@@ -1833,8 +1793,7 @@ public class ServiceTestClient
 
         // Test is_d6
         Dictionary<string, MultiDimArray> is_d6_1 = r.is_d6;
-        if (is_d6_1.Count != 1)
-            throw new Exception();
+        RRAssert.AreEqual(is_d6_1.Count, 1);
         MultiDimArray is_d6_1_1 = is_d6_1["testval1"];
         ca<uint>(is_d6_1_1.Dims, new uint[] { 5, 10 });
         ca<double>((double[])is_d6_1_1.Array_, new double[] {
@@ -1868,10 +1827,8 @@ public class ServiceTestClient
 
         // Test is_str1
         Dictionary<int, string> is_str1_1 = r.is_str1;
-        if (is_str1_1.Count != 1)
-            throw new Exception();
-        if (is_str1_1[23] != "Hello server")
-            throw new Exception();
+        RRAssert.AreEqual(is_str1_1.Count, 1);
+        RRAssert.AreEqual(is_str1_1[23], "Hello server");
 
         Dictionary<int, string> is_str1_2 = new Dictionary<int, string>();
         is_str1_2.Add(24, "Hello client");
@@ -1879,10 +1836,8 @@ public class ServiceTestClient
 
         // Test is_str2
         Dictionary<string, string> is_str2_1 = r.is_str2;
-        if (is_str2_1.Count != 1)
-            throw new Exception();
-        if (is_str2_1["testval1"] != "Hello server")
-            throw new Exception();
+        RRAssert.AreEqual(is_str2_1.Count, 1);
+        RRAssert.AreEqual(is_str2_1["testval1"], "Hello server");
 
         Dictionary<string, string> is_str2_2 = new Dictionary<string, string>();
         is_str2_2.Add("testval2", "Hello client");
@@ -1926,14 +1881,10 @@ public class ServiceTestClient
 
         // Test list_d1
         List<double> list_d1_1 = r.list_d1;
-        if (list_d1_1.Count != 3)
-            throw new Exception();
-        if (list_d1_1[0] != 1.643392e-01)
-            throw new Exception();
-        if (list_d1_1[1] != 1.537133e+09)
-            throw new Exception();
-        if (list_d1_1[2] != 1.369505e-03)
-            throw new Exception();
+        RRAssert.AreEqual(list_d1_1.Count, 3);
+        RRAssert.AreEqual(list_d1_1[0], 1.643392e-01);
+        RRAssert.AreEqual(list_d1_1[1], 1.537133e+09);
+        RRAssert.AreEqual(list_d1_1[2], 1.369505e-03);
 
         List<double> list_d1_2 = new List<double>();
         list_d1_2.Add(4.074501e-07);
@@ -1943,8 +1894,7 @@ public class ServiceTestClient
 
         // Test list_d3
         List<double[]> list_d3_1 = r.list_d3;
-        if (list_d3_1.Count != 2)
-            throw new Exception();
+        RRAssert.AreEqual(list_d3_1.Count, 2);
         ca<double>(list_d3_1[0],
                    new double[] { 8.609080e-13,  3.946603e+03,  2.994203e-10,  3.200877e+14,  1.747361e-09,
                                   2.827056e-16,  -3.676613e-18, 1.886901e-14,  -9.970511e-12, 1.932468e-18,
@@ -1969,8 +1919,7 @@ public class ServiceTestClient
 
         // Test list_d5
         List<MultiDimArray> list_d5_1 = r.list_d5;
-        if (list_d5_1.Count != 1)
-            throw new Exception();
+        RRAssert.AreEqual(list_d5_1.Count, 1);
         MultiDimArray list_d5_1_1 = list_d5_1[0];
         ca<uint>(list_d5_1_1.Dims, new uint[] { 10, 10 });
         ca<double>((double[])list_d5_1_1.Array_, new double[] {
@@ -2027,10 +1976,8 @@ public class ServiceTestClient
 
         // Test list_str1
         List<string> list_str1_1 = r.list_str1;
-        if (list_str1_1.Count != 1)
-            throw new Exception();
-        if (list_str1_1[0] != "Hello server")
-            throw new Exception();
+        RRAssert.AreEqual(list_str1_1.Count, 1);
+        RRAssert.AreEqual(list_str1_1[0], "Hello server");
 
         List<string> list_str1_2 = new List<string>();
         list_str1_2.Add("Hello client");
@@ -2080,8 +2027,7 @@ public class ServiceTestClient
                                 970815027,   545593183,  514305170,  1896372264,  1385916382 };
 
         // Test var_str
-        if ((string)r.var_str != "Hello Client!")
-            throw new Exception();
+        RRAssert.AreEqual((string)r.var_str, "Hello Client!");
         r.var_str = "Hello Server!";
 
         // Test var_struct
@@ -2099,22 +2045,19 @@ public class ServiceTestClient
         r.var_struct = var_struct_1;
 
         // Test var_vector
-        if (((string)((Dictionary<int, object>)r.var_vector)[10]) != "Hello Client!")
-            throw new Exception();
+        RRAssert.AreEqual(((string)((Dictionary<int, object>)r.var_vector)[10]), "Hello Client!");
         Dictionary<int, object> var_vector_1 = new Dictionary<int, object>();
         var_vector_1.Add(11, "Hello Server!");
         r.var_vector = var_vector_1;
 
         // Test var_dictionary
-        if (((string)((Dictionary<string, object>)r.var_dictionary)["test1"]) != "Hello Client!")
-            throw new Exception();
+        RRAssert.AreEqual(((string)((Dictionary<string, object>)r.var_dictionary)["test1"]), "Hello Client!");
         Dictionary<string, object> var_dictionary_1 = new Dictionary<string, object>();
         var_dictionary_1.Add("test2", "Hello Server!");
         r.var_dictionary = var_dictionary_1;
 
         // Test var_list
-        if (((string)((List<object>)r.var_list)[0]) != "Hello Client!")
-            throw new Exception();
+        RRAssert.AreEqual(((string)((List<object>)r.var_list)[0]), "Hello Client!");
         List<object> var_list_1 = new List<object>();
         var_list_1.Add("Hello Server!");
         r.var_list = var_list_1;
@@ -2135,34 +2078,12 @@ public class ServiceTestClient
 
         // Test errtest and make sure an exception is thrown
 
-        bool err1 = false;
-        try
-        {
-            r.errtest = 1;
-        }
-        catch (Exception)
-        {
-            err1 = true;
-        }
+        RRAssert.ThrowsException<Exception>(delegate() { r.errtest = 1; });
 
-        if (!err1)
-            throw new Exception();
-
-        bool err2 = false;
-        try
-        {
-            double d = r.errtest;
-        }
-        catch (Exception)
-        {
-            err2 = true;
-        }
-        if (!err2)
-            throw new Exception();
+        RRAssert.ThrowsException<Exception>(delegate() { double d = r.errtest; });
 
         // Test nulltest
-        if (r.nulltest != null)
-            throw new Exception();
+        RRAssert.AreEqual((object)r.nulltest, (object)null);
         r.nulltest = null;
     }
 
@@ -2171,63 +2092,16 @@ public class ServiceTestClient
 
         r.func1();
         r.func2(10, 20.34);
-        if (r.func3(2, 3.45) != 5.45)
-            throw new Exception();
-        if (r.meaning_of_life() != 42)
-            throw new Exception();
+        RRAssert.AreEqual(r.func3(2, 3.45), 5.45);
+        RRAssert.AreEqual(r.meaning_of_life(), 42);
 
-        bool errthrown = false;
+        RRAssert.ThrowsException<Exception>(delegate() { r.func_errtest(); });
 
-        try
-        {
-            r.func_errtest();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-            errthrown = true;
-        }
-        if (!errthrown)
-            throw new Exception();
+        RRAssert.ThrowsException<DataTypeException>(delegate() { r.func_errtest1(); });
 
-        errthrown = false;
-        try
-        {
-            r.func_errtest1();
-        }
-        catch (DataTypeException e)
-        {
-            Console.WriteLine(e.ToString());
-            errthrown = true;
-        }
-        if (!errthrown)
-            throw new Exception();
+        RRAssert.ThrowsException<testexception1>(delegate() { r.func_errtest2(); });
 
-        errthrown = false;
-        try
-        {
-            r.func_errtest2();
-        }
-        catch (testexception1 e)
-        {
-            Console.WriteLine(e.ToString());
-            errthrown = true;
-        }
-        if (!errthrown)
-            throw new Exception();
-
-        errthrown = false;
-        try
-        {
-            r.func_errtest3();
-        }
-        catch (testexception3 e)
-        {
-            Console.WriteLine(e.ToString());
-            errthrown = true;
-        }
-        if (!errthrown)
-            throw new Exception();
+        RRAssert.ThrowsException<testexception3>(delegate() { r.func_errtest3(); });
     }
 
     bool ev1_set = false;
@@ -2251,11 +2125,10 @@ public class ServiceTestClient
             r.func2(27.3, 98.23);
 
             if (!ev1_set)
-                if (!ev1_event.WaitOne(5000))
-                    throw new Exception();
+                RRAssert.IsTrue(ev1_event.WaitOne(5000));
+
             if (!ev2_set)
-                if (!ev2_event.WaitOne(5000))
-                    throw new Exception();
+                RRAssert.IsTrue(ev2_event.WaitOne(5000));
         }
         finally
         {
@@ -2324,36 +2197,18 @@ public class ServiceTestClient
         o6_1_1.data = "Hello world!";
 
         r.o6_op(1);
-        ShouldBeErr<Exception>(delegate() { o6_1.d1 = new double[] { 0.0 }; });
-        ShouldBeErr<Exception>(delegate() { o6_1_1.data = "Hello world!"; });
+        RRAssert.ThrowsException<Exception>(delegate() { o6_1.d1 = new double[] { 0.0 }; });
+        RRAssert.ThrowsException<Exception>(delegate() { o6_1_1.data = "Hello world!"; });
 
         sub2 o6_2 = (sub2)r.get_o6();
         o6_2.data = "Hello world!";
 
         r.o6_op(2);
-        ShouldBeErr<Exception>(delegate() { o6_2.data = "Hello world!"; });
+        RRAssert.ThrowsException<Exception>(delegate() { o6_2.data = "Hello world!"; });
 
         com.robotraconteur.testing.TestService2.subobj o6_3 =
             (com.robotraconteur.testing.TestService2.subobj)r.get_o6();
         o6_3.add_val(2);
-    }
-
-    private void ShouldBeErr<T>(Action a)
-        where T : Exception
-    {
-        bool err = false;
-
-        try
-        {
-            a();
-        }
-        catch (T)
-        {
-            err = true;
-        }
-
-        if (!err)
-            throw new Exception();
     }
 
     System.Threading.AutoResetEvent ee1;
@@ -2397,12 +2252,9 @@ public class ServiceTestClient
         e3.SendPacket(s1);
         e3.SendPacket(s2);
 
-        if (!ee1.WaitOne(5000))
-            throw new Exception();
-        if (!ee2.WaitOne(5000))
-            throw new Exception();
-        if (!ee3.WaitOne(5000))
-            throw new Exception();
+        RRAssert.IsTrue(ee1.WaitOne(5000));
+        RRAssert.IsTrue(ee2.WaitOne(5000));
+        RRAssert.IsTrue(ee3.WaitOne(5000));
 
         ca<double>(e1.ReceivePacket(), new double[] { 1, 2, 3, 4 });
         ca<double>(e1.ReceivePacket(), new double[] { 5, 6, 7, 8 });
@@ -2415,8 +2267,7 @@ public class ServiceTestClient
         ca<double>(e3.ReceivePacket().mydat, new double[] { 738.29 });
         ca<double>(e3.ReceivePacket().mydat, new double[] { 89.83 });
 
-        if (!ack_recv)
-            throw new Exception();
+        RRAssert.IsTrue(ack_recv);
 
         r.pipe_check_error();
 
@@ -2490,8 +2341,11 @@ public class ServiceTestClient
 
         r.test_callbacks();
 
-        if (!cb1_called || !cb2_called || !cb3_called || !cb4_called || !cb5_called)
-            throw new Exception();
+        RRAssert.IsTrue(cb1_called);
+        RRAssert.IsTrue(cb2_called);
+        RRAssert.IsTrue(cb3_called);
+        RRAssert.IsTrue(cb4_called);
+        RRAssert.IsTrue(cb5_called);
     }
 
     public void cb1_func()
@@ -2501,8 +2355,9 @@ public class ServiceTestClient
 
     public void cb2_func(double d1, double d2)
     {
-        if (d1 != 739.2 || d2 != 0.392)
-            throw new Exception();
+        RRAssert.AreEqual(d1, 739.2);
+        RRAssert.AreEqual(d2, 0.392);
+
         cb2_called = true;
     }
 
@@ -2582,10 +2437,11 @@ public class ServiceTestClient
 
         w1.InValueLifespan = 1;
         Thread.Sleep(10);
-        ShouldBeErr<Exception>(delegate() { double[] in1_2 = w1.InValue; });
+        RRAssert.ThrowsException<Exception>(delegate() { double[] in1_2 = w1.InValue; });
 
-        if (!w1_called || !w2_called || !w3_called)
-            throw new Exception();
+        RRAssert.IsTrue(w1_called);
+        RRAssert.IsTrue(w2_called);
+        RRAssert.IsTrue(w3_called);
     }
 
     void w1_changed(Wire<double[]>.WireConnection c, double[] value, TimeSpec t)
@@ -2620,8 +2476,7 @@ public class ServiceTestClient
 
     private void test_m1()
     {
-        if (r.m1.Length != 100)
-            throw new Exception();
+        RRAssert.AreEqual<ulong>(r.m1.Length, 100);
         double[] m1_1 = new double[11];
         r.m1.Read(10, m1_1, 1, 10);
         ca<double>(m1_1, new double[] { 0, -1.478723e-16, 1.507042e-05, -2.046271e+13, 4.014775e+06, 4.140740e+10,
@@ -2658,8 +2513,7 @@ public class ServiceTestClient
 
     private void test_m2()
     {
-        if (r.m2.DimCount != 5)
-            throw new Exception();
+        RRAssert.AreEqual(r.m2.DimCount, 5);
         ulong[] m2_dims = r.m2.Dimensions;
         ca<ulong>(m2_dims, new ulong[] { 10, 10, 10, 10, 10 });
 
@@ -2755,27 +2609,11 @@ public class ServiceTestClient
         RobotRaconteurNode.s.DisconnectService(r2);
 
         // Check an invalid password
-        bool err = false;
 
-        testroot r3 = null;
-        try
-        {
-            r3 = (testroot)RobotRaconteurNode.s.ConnectService(url, "testuser2", cred1);
+        RRAssert.ThrowsException<Exception>(delegate() {
+            var r3 = (testroot)RobotRaconteurNode.s.ConnectService(url, "testuser2", cred1);
             r3.func3(2.2, 3.3);
-        }
-        catch (Exception)
-        {
-            err = true;
-            try
-            {
-                RobotRaconteurNode.s.DisconnectService(r3);
-            }
-            catch
-            {}
-        }
-
-        if (!err)
-            throw new Exception();
+        });
 
         bool err2 = false;
         // Check no password
@@ -2796,8 +2634,7 @@ public class ServiceTestClient
             {}
         }
 
-        if (!err2)
-            throw new Exception();
+        RRAssert.IsTrue(err2);
     }
 
     public void TestObjectLock(string url)
@@ -2852,8 +2689,8 @@ public class ServiceTestClient
         r3.func3(2.2, 3.3);
 
         // Check that objects that shouldn't be able to access the objects can't
-        ShouldBeErr<Exception>(delegate() { r3_o.d1 = new double[] { 1.0 }; });
-        ShouldBeErr<Exception>(delegate() { r3_o_o2.data = "Hello world"; });
+        RRAssert.ThrowsException<Exception>(delegate() { r3_o.d1 = new double[] { 1.0 }; });
+        RRAssert.ThrowsException<Exception>(delegate() { r3_o_o2.data = "Hello world"; });
 
         // Unlock and recheck all
         RobotRaconteurNode.s.ReleaseObjectLock(r1_o);
@@ -2871,13 +2708,13 @@ public class ServiceTestClient
         // Relock, test that the lock is active, and then close the connection.  The lock should release.  The
         // second session is closed first, and should not release the lock.
         RobotRaconteurNode.s.RequestObjectLock(r1_o, RobotRaconteurObjectLockFlags.USER_LOCK);
-        ShouldBeErr<Exception>(delegate() { r3_o.d1 = new double[] { 1.0 }; });
+        RRAssert.ThrowsException<Exception>(delegate() { r3_o.d1 = new double[] { 1.0 }; });
 
         r2_o.d1 = new double[] { 1.0 };
         RobotRaconteurNode.s.DisconnectService(r2);
 
         // Object still should be locked
-        ShouldBeErr<Exception>(delegate() { r3_o.d1 = new double[] { 1.0 }; });
+        RRAssert.ThrowsException<Exception>(delegate() { r3_o.d1 = new double[] { 1.0 }; });
 
         // Now close the session and lock should be released
         RobotRaconteurNode.s.DisconnectService(r1);
@@ -2894,8 +2731,8 @@ public class ServiceTestClient
         // Test the exclusive client lock
         RobotRaconteurNode.s.RequestObjectLock(r1_o, RobotRaconteurObjectLockFlags.CLIENT_LOCK);
         r1_o.d1 = new double[] { 1.0 };
-        ShouldBeErr<Exception>(delegate() { r2_o.d1 = new double[] { 1.0 }; });
-        ShouldBeErr<Exception>(delegate() { r3_o.d1 = new double[] { 1.0 }; });
+        RRAssert.ThrowsException<Exception>(delegate() { r2_o.d1 = new double[] { 1.0 }; });
+        RRAssert.ThrowsException<Exception>(delegate() { r3_o.d1 = new double[] { 1.0 }; });
 
         // Test the lock override by testsuperpass
         Dictionary<string, object> cred5 = new Dictionary<string, object>();
@@ -2953,11 +2790,10 @@ public class ServiceTestClient
                 {
                     r2.func3(2.2, 3.3);
             r2_o_o2.data = "Hello world";
-            // ShouldBeErr<ObjectLockedException>(delegate() { r2_o.d1 = new double[] { 0.0 }; });
+            // RRAssert.ThrowsException<ObjectLockedException>(delegate() { r2_o.d1 = new double[] { 0.0 }; });
             e1.Set();
             RobotRaconteurNode.s.MonitorEnter(r2_o);
-            if (t1)
-                throw new Exception();
+            RRAssert.IsFalse(t1);
             t2 = true;
 
             r2_o.d1 = new double[] { 0.0 };
@@ -2972,13 +2808,11 @@ public class ServiceTestClient
 RobotRaconteurNode.s.MonitorEnter(r1_o);
 t.Start();
 t1 = true;
-if (!e1.WaitOne(1000))
-    throw new Exception();
+RRAssert.IsTrue(e1.WaitOne(1000));
 Thread.Sleep(10);
 r1.func3(2.2, 3.3);
 r1_o.d1 = new double[] { 0.0 };
-if (t2)
-    throw new Exception();
+RRAssert.IsFalse(t2);
 t1 = false;
 RobotRaconteurNode.s.MonitorExit(r1_o);
 
@@ -2987,8 +2821,7 @@ t.Join();
 RobotRaconteurNode.s.DisconnectService(r1);
 RobotRaconteurNode.s.DisconnectService(r2);
 
-if (threaderr)
-    throw new Exception();
+RRAssert.IsFalse(threaderr);
 
 }
 
@@ -2996,10 +2829,7 @@ public void TestAsync(string url)
 {
     var t1 = TestAsync1(url);
     t1.Wait(10000);
-    if (t1.IsFaulted)
-    {
-        throw new Exception();
-    }
+    RRAssert.IsFalse(t1.IsFaulted);
 }
 
 async Task TestAsync1(string url)
@@ -3170,25 +3000,13 @@ async Task TestAsync1(string url)
     await r1.async_func1();
 
     var v2 = await r1.async_func3(2, 3.45);
-    if (v2 != 5.45)
-        throw new Exception("");
+    RRAssert.AreEqual(v2, 5.45);
 
-    bool err_thrown = false;
-    try
-    {
-        await r1.async_func_errtest();
-    }
-    catch
-    {
-        err_thrown = true;
-    }
-    if (!err_thrown)
-        throw new Exception();
+    await RRAssert.ThrowsExceptionAsync<Exception>(async delegate() { await r1.async_func_errtest(); });
 
     var o1 = await r1.async_get_o1();
 
-    if (o1 == null)
-        throw new Exception("");
+    RRAssert.AreNotEqual(o1, null);
     double[] d1 = o1.d1;
 
     var r2 = (testroot)r;
