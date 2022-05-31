@@ -20,7 +20,7 @@ class HardwareTransport : public Transport
 {
 public:
 	HardwareTransport();
-	HardwareTransport(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
+	HardwareTransport(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
 	
 	virtual std::string GetUrlSchemeString() const;
 	void Close();

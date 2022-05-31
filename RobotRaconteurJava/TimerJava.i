@@ -48,7 +48,7 @@ struct WallTimer_initstruct
 
 %javamethodmodifiers WallTimer "";
 
-WallTimer(const boost::posix_time::time_duration& period, bool oneshot, boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node, WallTimer_initstruct init )
+WallTimer(const boost::posix_time::time_duration& period, bool oneshot, const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node, WallTimer_initstruct init )
 {
 	boost::shared_ptr<AsyncTimerEventReturnDirector> sphandler(init.handler,boost::bind(&ReleaseDirector<AsyncTimerEventReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),init.id));
 	return new WallTimer(period,boost::bind(&TimerHandlerFunc,RR_BOOST_PLACEHOLDERS(_1),sphandler),oneshot,node);

@@ -34,7 +34,7 @@ public abstract class SyncGenerator3<ParamType> implements Generator3<ParamType>
         }
         return;
     }
-    
+
     public void asyncNext(ParamType param, Action1<RuntimeException> handler, int timeout)
     {
         try

@@ -1,21 +1,21 @@
 package com.robotraconteur;
 
-public class UnsignedShort {
-public short value;
-
-public UnsignedShort()
+public class UnsignedShort
 {
-	this.value=0;
-}
+    public short value;
 
-public UnsignedShort(short value)
-{
-	this.value=value;		
-}
+    public UnsignedShort()
+    {
+        this.value = 0;
+    }
 
-public UnsignedShorts array()
-{
-	return new UnsignedShorts(new short[] {value});
-	
-}
+    public UnsignedShort(short value)
+    {
+        this.value = value;
+    }
+
+    public UnsignedShorts array()
+    {
+        return new UnsignedShorts(new short[] {value});
+    }
 }

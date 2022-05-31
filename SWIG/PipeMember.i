@@ -28,9 +28,9 @@ class WrappedPipeEndpointDirector
 {
 public:
 	virtual ~WrappedPipeEndpointDirector() {}
-	virtual void PipeEndpointClosedCallback();
-	virtual void PacketReceivedEvent();
-	virtual void PacketAckReceivedEvent(uint32_t packetnum);
+	virtual void PipeEndpointClosedCallback() = 0;
+	virtual void PacketReceivedEvent() = 0;
+	virtual void PacketAckReceivedEvent(uint32_t packetnum) = 0;
 
 };
 
@@ -38,7 +38,7 @@ class AsyncPipeEndpointReturnDirector
 {
 public:
 	virtual ~AsyncPipeEndpointReturnDirector();
-	virtual void handler(boost::shared_ptr<RobotRaconteur::WrappedPipeEndpoint> ep, HandlerErrorInfo& error);
+	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedPipeEndpoint>& ep, HandlerErrorInfo& error) = 0;
 };
 
 class WrappedTryReceivePacketWaitResult
@@ -54,7 +54,7 @@ class WrappedPipeEndpoint
 
 public:
 RR_RELEASE_GIL()
-	virtual uint32_t SendPacket(boost::intrusive_ptr<RobotRaconteur::MessageElement> packet);
+	virtual uint32_t SendPacket(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& packet);
 RR_KEEP_GIL()
 	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> ReceivePacket();
 	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> PeekNextPacket();
@@ -79,7 +79,7 @@ RR_KEEP_GIL()
 	bool IsUnreliable();
 	MemberDefinition_Direction Direction();
 	
-	virtual void AsyncSendPacket(boost::intrusive_ptr<RobotRaconteur::MessageElement> packet, AsyncUInt32ReturnDirector* handler, int32_t id);
+	virtual void AsyncSendPacket(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& packet, AsyncUInt32ReturnDirector* handler, int32_t id);
 	void AsyncClose(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
 
@@ -111,7 +111,7 @@ class WrappedPipeServerConnectDirector
 {
 public:
 	virtual ~WrappedPipeServerConnectDirector() {}
-	virtual void PipeConnectCallback(boost::shared_ptr<WrappedPipeEndpoint> pipeendpoint) {};
+	virtual void PipeConnectCallback(const boost::shared_ptr<WrappedPipeEndpoint>& pipeendpoint) = 0;
 };
 
 %nodefaultctor WrappedPipeServer;
@@ -138,13 +138,13 @@ class WrappedPipeBroadcaster
 {
 public:
 
-	void Init(boost::shared_ptr<WrappedPipeServer> pipe, int32_t maximum_backlog = -1);
+	void Init(const boost::shared_ptr<WrappedPipeServer>& pipe, int32_t maximum_backlog = -1);
 
 RR_RELEASE_GIL()
-	void SendPacket(boost::intrusive_ptr<MessageElement> packet);
+	void SendPacket(const boost::intrusive_ptr<MessageElement>& packet);
 RR_KEEP_GIL()
 
-	void AsyncSendPacket(boost::intrusive_ptr<MessageElement> packet, AsyncVoidNoErrReturnDirector* handler, int32_t id);	
+	void AsyncSendPacket(const boost::intrusive_ptr<MessageElement>& packet, AsyncVoidNoErrReturnDirector* handler, int32_t id);	
 
 	size_t GetActivePipeEndpointCount();
 

@@ -72,7 +72,7 @@ Services may optionally use authentication to protect the service from unauthori
 
 The `listener` parameter is an optional callback function to listen for client events. The signature of the callback function is expected to match:
 
-    void listener(ClientContextPtr, ClientServiceListenerEventType, boost::shared_ptr<void>)
+    void listener(ClientContextPtr, ClientServiceListenerEventType, const boost::shared_ptr<void>&)
 
 The possible event types can be found in RobotRaconteur::ClientServiceListenerEventType .
 
@@ -84,7 +84,7 @@ An example of using the event listener:
     example::my_service::MyObjectPtr c = rr_cast<example::my_service::MyObject>(
         RobotRaconteurNode::s()->ConnectService(
             url, "", nullptr, 
-            [](ClientContextPtr ctx, ClientServiceListenerEventType evt, boost::shared_ptr<void> p)
+            [](ClientContextPtr ctx, ClientServiceListenerEventType evt, const boost::shared_ptr<void>& p)
             {
                 switch (evt)
                 {

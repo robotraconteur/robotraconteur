@@ -18,73 +18,70 @@
 
 namespace RobotRaconteur
 {
-    class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnection, public boost::enable_shared_from_this<IntraTransportConnection>
-	{
-	public:
+class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnection,
+                                                         public boost::enable_shared_from_this<IntraTransportConnection>
+{
+  public:
+    IntraTransportConnection(const RR_SHARED_PTR<IntraTransport>& parent, bool server, uint32_t local_endpoint);
 
-		IntraTransportConnection(RR_SHARED_PTR<IntraTransport> parent, bool server, uint32_t local_endpoint);
-		
-		virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);	
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m);
 
-        virtual void AcceptMessage(RR_INTRUSIVE_PTR<Message> m);	
-				
-	public:
+    virtual void AcceptMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
-        virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
-		virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m, boost::function<void (RR_SHARED_PTR<RobotRaconteurException> )>& handler);
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE;
 
-		virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-		virtual  uint32_t GetLocalEndpoint();
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE;
 
-		virtual  uint32_t GetRemoteEndpoint();
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE;
 
-        virtual  NodeID GetRemoteNodeID();
+    RR_OVIRTUAL NodeID GetRemoteNodeID() RR_OVERRIDE;
 
-        virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurNode> GetNode() RR_OVERRIDE;
 
-		virtual void CheckConnection(uint32_t endpoint);
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
-        virtual bool CheckCapabilityActive(uint32_t flag);
+    RR_OVIRTUAL bool CheckCapabilityActive(uint32_t flag) RR_OVERRIDE;
 
-        void SetPeer(RR_SHARED_PTR<IntraTransportConnection> peer);
+    void SetPeer(const RR_SHARED_PTR<IntraTransportConnection>& peer);
 
-        bool IsConnected();
+    bool IsConnected();
 
-        virtual RR_SHARED_PTR<Transport> GetTransport();
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE;
 
-	protected:
+  protected:
+    static void ProcessNextRecvMessage(RR_WEAK_PTR<IntraTransportConnection> c);
 
-        static void ProcessNextRecvMessage(RR_WEAK_PTR<IntraTransportConnection> c);
+    void SimpleAsyncEndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-        void SimpleAsyncEndSendMessage(RR_SHARED_PTR<RobotRaconteurException> err);
+    void RemoteClose();
 
-        void RemoteClose();
+    static void RemoteClose1(RR_WEAK_PTR<IntraTransportConnection> c);
 
-        static void RemoteClose1(RR_WEAK_PTR<IntraTransportConnection> c);
+    bool server;
 
-		bool server;
+    RR_WEAK_PTR<IntraTransport> parent;
+    RR_WEAK_PTR<RobotRaconteurNode> node;
 
-		RR_WEAK_PTR<IntraTransport> parent;
-        RR_WEAK_PTR<RobotRaconteurNode> node;
+    uint32_t m_RemoteEndpoint;
+    uint32_t m_LocalEndpoint;
+    NodeID RemoteNodeID;
+    boost::shared_mutex RemoteNodeID_lock;
 
-		uint32_t m_RemoteEndpoint;
-		uint32_t m_LocalEndpoint;
-        NodeID RemoteNodeID;
-		boost::shared_mutex RemoteNodeID_lock;
+    boost::recursive_mutex close_lock;
 
-		boost::recursive_mutex close_lock;
+    RR_WEAK_PTR<IntraTransportConnection> peer;
+    RR_SHARED_PTR<IntraTransportConnection> peer_storage;
 
-        RR_WEAK_PTR<IntraTransportConnection> peer;
-        RR_SHARED_PTR<IntraTransportConnection> peer_storage;
+    boost::atomic<bool> connected;
 
-        boost::atomic<bool> connected;
-
-        boost::mutex recv_queue_lock;
-        std::list<RR_INTRUSIVE_PTR<Message> > recv_queue;
-        bool recv_queue_post_requested;
-		
-	};
-}
-
+    boost::mutex recv_queue_lock;
+    std::list<RR_INTRUSIVE_PTR<Message> > recv_queue;
+    bool recv_queue_post_requested;
+};
+} // namespace RobotRaconteur

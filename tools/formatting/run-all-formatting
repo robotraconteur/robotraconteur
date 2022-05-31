@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+SCRIPT=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+$SCRIPTPATH/run-clang-format
+$SCRIPTPATH/run-cmake-format
+$SCRIPTPATH/run-autopep8

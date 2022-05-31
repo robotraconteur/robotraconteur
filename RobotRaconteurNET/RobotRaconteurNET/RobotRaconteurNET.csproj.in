@@ -113,8 +113,8 @@
     <Compile Include="$(RRSourceDir)\MultiDimArray.cs" >
 		<Link>MultiDimArray.cs</Link>
 	</Compile>
-    <Compile Include="$(RRSourceDir)\RobotRaconteurNET_support.cs" >
-		<Link>RobotRaconteurNet_support.cs</Link>
+    <Compile Include="$(RRSourceDir)\Util.cs" >
+		<Link>Util.cs</Link>
 	</Compile>
     <Compile Include="$(RRSourceDir)\Service.cs" >
 		<Link>Service.cs</Link>
@@ -124,6 +124,30 @@
 	</Compile>
 	<Compile Include="$(RRSourceDir)\Memory.cs" >
 		<Link>Memory.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\AsyncUtil.cs" >
+		<Link>AsyncUtil.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\DataTypes.cs" >
+		<Link>DataTypes.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\Discovery.cs" >
+		<Link>Discovery.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\Message.cs" >
+		<Link>Message.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\NodeSetup.cs" >
+		<Link>NodeSetup.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\RobotRaconteurNode.cs" >
+		<Link>RobotRaconteurNode.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\Subscription.cs" >
+		<Link>Subscription.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\Timer.cs" >
+		<Link>Timer.cs</Link>
 	</Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />  

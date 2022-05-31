@@ -3,23 +3,23 @@ package com.robotraconteur;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 
-public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryDirector {
+public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryDirector
+{
 
-	PodArrayMemory<T> mem;
+    PodArrayMemory<T> mem;
 
-	Class<?> mem_type;
-    //public int memoryid = 0;
+    Class<?> mem_type;
+    // public int memoryid = 0;
 
     public WrappedPodArrayMemoryDirectorJava(PodArrayMemory<T> mem, Class<?> mem_type)
     {
         this.mem = mem;
 
         this.setObjectheapid(RRObjectHeap.addObject(this));
-        this.mem_type=mem_type;
+        this.mem_type = mem_type;
     }
 
-    @Override
-    public BigInteger length()
+    @Override public BigInteger length()
     {
         try
         {
@@ -27,71 +27,71 @@ public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryD
         }
         catch (Exception e)
         {
-        	MessageEntry merr = new MessageEntry();
+            MessageEntry merr = new MessageEntry();
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
+                RRDirectorExceptionHelper.setError(merr, RRDirectorExceptionHelper.exceptionToStackTraceString(e));
                 return BigInteger.valueOf(0);
-            }
-        	finally
-        	{
-        		merr.finalize();
-        	}
-
-        }
-    }
-
-    @Override
-    public MessageElementNestedElementList read(BigInteger memorypos, BigInteger bufferpos, BigInteger count)
-    {
-        try
-        {
-            T buffer3 = (T)Array.newInstance(mem_type,count.intValue());
-            mem.read(memorypos.longValue(), buffer3, (long)0, count.longValue());
-
-            return (MessageElementNestedElementList)RobotRaconteurNode.s().packStructure(buffer3);                
-        }
-        catch (Exception e)
-        {
-        	MessageEntry merr = new MessageEntry();
-            try
-            {
-                RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
             }
             finally
             {
-            	merr.finalize();
+                merr.finalize();
+            }
+        }
+    }
+
+    @Override public MessageElementNestedElementList read(BigInteger memorypos, BigInteger bufferpos, BigInteger count)
+    {
+        try
+        {
+            T buffer3 = (T)Array.newInstance(mem_type, count.intValue());
+            mem.read(memorypos.longValue(), buffer3, (long)0, count.longValue());
+
+            return (MessageElementNestedElementList)RobotRaconteurNode.s().packStructure(buffer3);
+        }
+        catch (Exception e)
+        {
+            MessageEntry merr = new MessageEntry();
+            try
+            {
+                RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
+                RRDirectorExceptionHelper.setError(merr, RRDirectorExceptionHelper.exceptionToStackTraceString(e));
+            }
+            finally
+            {
+                merr.finalize();
             }
             return null;
         }
     }
 
     @Override
-    public void write(BigInteger memorypos, MessageElementNestedElementList buffer, BigInteger bufferpos, BigInteger count)
+    public void write(BigInteger memorypos, MessageElementNestedElementList buffer, BigInteger bufferpos,
+                      BigInteger count)
     {
         try
         {
-			T buffer2 = (T)RobotRaconteurNode.s().unpackStructure(buffer);
-			mem.write(memorypos.longValue(), buffer2, bufferpos.longValue(), count.longValue());
+            T buffer2 = (T)RobotRaconteurNode.s().unpackStructure(buffer);
+            mem.write(memorypos.longValue(), buffer2, bufferpos.longValue(), count.longValue());
         }
         catch (Exception e)
         {
-        	MessageEntry merr = new MessageEntry();
+            MessageEntry merr = new MessageEntry();
             try
             {
                 RobotRaconteurExceptionUtil.exceptionToMessageEntry(e, merr);
-                RRDirectorExceptionHelper.setError(merr,RRDirectorExceptionHelper.exceptionToStackTraceString(e));
+                RRDirectorExceptionHelper.setError(merr, RRDirectorExceptionHelper.exceptionToStackTraceString(e));
             }
             finally
             {
-            	merr.finalize();
+                merr.finalize();
             }
         }
         finally
         {
-        	if (buffer!=null) buffer.finalize();
+            if (buffer != null)
+                buffer.finalize();
         }
     }
 }

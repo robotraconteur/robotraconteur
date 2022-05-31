@@ -357,3 +357,4 @@ build/
 *.asv
 
 vcpkg
+.cache

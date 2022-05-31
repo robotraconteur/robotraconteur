@@ -13,12 +13,12 @@
 # limitations under the License.
 
 import RobotRaconteur as RR
-RRN=RR.RobotRaconteurNode.s
+RRN = RR.RobotRaconteurNode.s
 
-node_setup=RR.ClientNodeSetup(argv=__import__("sys").argv)
+node_setup = RR.ClientNodeSetup(argv=__import__("sys").argv)
 node_setup.ReleaseNode()
 
-local_transport=node_setup.local_transport
-tcp_transport=node_setup.tcp_transport
-hardware_transport=node_setup.hardware_transport
-intra_transport=node_setup.intra_transport
+local_transport = node_setup.local_transport
+tcp_transport = node_setup.tcp_transport
+hardware_transport = node_setup.hardware_transport
+intra_transport = node_setup.intra_transport

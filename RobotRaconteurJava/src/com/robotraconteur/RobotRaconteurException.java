@@ -17,79 +17,75 @@ package com.robotraconteur;
 //  You should have received a copy of the Lesser GNU General Public License
 //  along with Robot Raconteur.  If not, see <http://www.gnu.org/licenses/>.
 
-
-/** 
+/**
  The base class for Robot Raconteur exceptions.  These exception contain a Robot Raconteur error code
 */
 public class RobotRaconteurException extends RuntimeException
 {
-	/** 
-	 Initializes an empty exception
-	*/
-	public RobotRaconteurException()
-	{
-		super();
-	}
+    /**
+     Initializes an empty exception
+    */
+    public RobotRaconteurException()
+    {
+        super();
+    }
 
-	/** 
-	 Initializes a new exception
-	 
-	 @param ErrorCode The error code
-	 @param error The Robot Raconteur error name
-	 @param message The Robot Raconteur error message
-	*/
-	public RobotRaconteurException(MessageErrorType ErrorCode, String error, String message)
-	{
-		super(message);
-		this.error = error;
-		this.errorCode = ErrorCode;
-	}
+    /**
+     Initializes a new exception
 
-	public RobotRaconteurException(MessageErrorType ErrorCode, String error, String message, String subname, Object param_)
-	{
-		super(message);
-		this.error = error;
-		this.errorCode = ErrorCode;
-		this.errorSubName = subname;
-		this.errorParam = param_;
-	}
+     @param ErrorCode The error code
+     @param error The Robot Raconteur error name
+     @param message The Robot Raconteur error message
+    */
+    public RobotRaconteurException(MessageErrorType ErrorCode, String error, String message)
+    {
+        super(message);
+        this.error = error;
+        this.errorCode = ErrorCode;
+    }
 
-	/** 
-	 Initializes a Robot Raconteur exception that contains a C# exception
-	 
-	 @param message The message
-	 @param innerexception The C# contained by this exception
-	*/
-	public RobotRaconteurException(String message, RuntimeException innerexception)
-	{
-		super(message, innerexception);
+    public RobotRaconteurException(MessageErrorType ErrorCode, String error, String message, String subname,
+                                   Object param_)
+    {
+        super(message);
+        this.error = error;
+        this.errorCode = ErrorCode;
+        this.errorSubName = subname;
+        this.errorParam = param_;
+    }
 
-	}
+    /**
+     Initializes a Robot Raconteur exception that contains a C# exception
 
-	/** 
-	 The error code
-	*/
-	public MessageErrorType errorCode = MessageErrorType.MessageErrorType_None;
+     @param message The message
+     @param innerexception The C# contained by this exception
+    */
+    public RobotRaconteurException(String message, RuntimeException innerexception)
+    {
+        super(message, innerexception);
+    }
 
-	/** 
-	 The error name
-	*/
-	public String error = "";
+    /**
+     The error code
+    */
+    public MessageErrorType errorCode = MessageErrorType.MessageErrorType_None;
 
-	public String errorSubName = null;
+    /**
+     The error name
+    */
+    public String error = "";
 
-	public Object errorParam = null;
+    public String errorSubName = null;
 
-	/** 
-	 Returns as tring representation of this exception
-	 
-	 @return The string representation
-	*/
-	@Override
-	public String toString()
-	{
-		return "RobotRaconteurException: " + error + ": " + this.getMessage();
-	}
+    public Object errorParam = null;
 
+    /**
+     Returns as tring representation of this exception
 
+     @return The string representation
+    */
+    @Override public String toString()
+    {
+        return "RobotRaconteurException: " + error + ": " + this.getMessage();
+    }
 }
