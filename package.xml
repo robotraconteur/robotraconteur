@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>robotraconteur</name>
-  <version>0.15.5</version>
+  <version>0.16.0</version>
   <description>Robot Raconteur ROS Package</description>
 
   <maintainer email="wason@wasontech.com">John Wason</maintainer>
@@ -13,6 +13,7 @@
   <author email="wason@wasontech.com">John Wason</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>swig</buildtool_depend>
   <depend>boost</depend>
   <depend>openssl</depend>
   <depend>libssl-dev</depend>
@@ -22,6 +23,7 @@
   <depend>zlib</depend>
   <depend>python3-dev</depend>
   <depend>python3-numpy</depend>
+  <test_depend>gtest</test_depend>
   <!-- <depend>roslib</depend> -->
     
   <export>    
