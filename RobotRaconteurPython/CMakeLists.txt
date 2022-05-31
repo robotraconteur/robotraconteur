@@ -166,7 +166,7 @@ set(RR_BUILD_CONFIG_DIR \"out\")
 endif()
 message(STATUS \"Running setup.py in ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python\")
 execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install -f
---root=/ --prefix=\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA} 
+--root=/ --prefix=\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA}
 --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python
 RESULT_VARIABLE ret)
 if(ret AND NOT ret EQUAL 0)

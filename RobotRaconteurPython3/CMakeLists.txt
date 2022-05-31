@@ -153,7 +153,7 @@ set(RR_BUILD_CONFIG_DIR \"out\")
 endif()
 message(STATUS \"Running setup.py in ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python3\")
 execute_process(COMMAND ${PYTHON3_EXECUTABLE} setup.py install -f
---root=/ --prefix=\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA} 
+--root=/ --prefix=\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX} ${SETUPTOOLS_ARG_EXTRA}
 --single-version-externally-managed WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/$\{RR_BUILD_CONFIG_DIR\}/Python3
 RESULT_VARIABLE ret)
 if(ret AND NOT ret EQUAL 0)
@@ -162,15 +162,20 @@ endif()
 ")
 endif()
 
-if (ROBOTRACONTEUR_ROS)
-# Allows Colcon to find non-Ament packages when using workspace underlays
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur "")
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur DESTINATION share/ament_index/resource_index/packages)
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv "prepend-non-duplicate;AMENT_PREFIX_PATH;")
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv DESTINATION share/robotraconteur/hook)
+if(ROBOTRACONTEUR_ROS)
+    # Allows Colcon to find non-Ament packages when using workspace underlays
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur "")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur
+            DESTINATION share/ament_index/resource_index/packages)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv
+         "prepend-non-duplicate;AMENT_PREFIX_PATH;")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv
+            DESTINATION share/robotraconteur/hook)
 
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv "prepend-non-duplicate;PYTHONPATH;lib/python3/dist-packages")
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv DESTINATION share/robotraconteur/hook)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv
+         "prepend-non-duplicate;PYTHONPATH;lib/python3/dist-packages")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv
+            DESTINATION share/robotraconteur/hook)
 endif()
 
 if(BUILD_DOCUMENTATION)
