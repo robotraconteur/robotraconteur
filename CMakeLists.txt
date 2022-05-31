@@ -50,7 +50,7 @@ else()
     set(RobotRaconteur_CORE_LIBRARY RobotRaconteurCore)
 endif()
 
-set(ROBOTRACONTEUR_ROS "" CACHE BOOL "Build Robot Raconteur for ROS workspace")
+set(ROBOTRACONTEUR_ROS ON CACHE BOOL "Build Robot Raconteur for ROS workspace")
 if(ROBOTRACONTEUR_ROS)
     set(BUILD_GEN true CACHE BOOL "Build RobotRaconteurGen")
     set(BUILD_TESTING true CACHE BOOL "Build RobotRaconteurTest")
