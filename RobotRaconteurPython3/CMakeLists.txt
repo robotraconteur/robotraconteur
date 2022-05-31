@@ -162,6 +162,17 @@ endif()
 ")
 endif()
 
+if (ROBOTRACONTEUR_ROS)
+# Allows Colcon to find non-Ament packages when using workspace underlays
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur "")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur DESTINATION share/ament_index/resource_index/packages)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv "prepend-non-duplicate;AMENT_PREFIX_PATH;")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv DESTINATION share/robotraconteur/hook)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv "prepend-non-duplicate;PYTHONPATH;lib/python3/dist-packages")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv DESTINATION share/robotraconteur/hook)
+endif()
+
 if(BUILD_DOCUMENTATION)
 
     find_program(SPHINX_EXECUTABLE NAMES sphinx-build)
