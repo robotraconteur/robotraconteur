@@ -76,6 +76,10 @@ if(MSVC)
     target_compile_options(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PRIVATE "/bigobj")
 endif()
 
+if(CMAKE_COMPILER_IS_GNUCXX)
+    target_compile_options(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PRIVATE "-fPIC" "-Wno-deprecated" "-Wno-deprecated-declarations")
+endif()
+
 rrsettargetdirs(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} "Python3/RobotRaconteur" "Python3/RobotRaconteur")
 
 if(WIN32)

@@ -305,7 +305,7 @@ if(ANDROID)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    target_compile_options(RobotRaconteurCore PRIVATE "-fPIC")
+    target_compile_options(RobotRaconteurCore PRIVATE "-fPIC" "-Wno-deprecated" "-Wno-deprecated-declarations")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
