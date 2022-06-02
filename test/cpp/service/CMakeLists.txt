@@ -61,7 +61,7 @@ rr_service_test_add_exe(serviceinfo2subscribertest SRC serviceinfo2subscribertes
 
 rr_service_test_add_exe(subscriberurltest SRC subscriberurltest.cpp)
 
-rr_service_test_add_test(discovery_loopback SRC discovery_loopback.cpp)
+# rr_service_test_add_test(discovery_loopback SRC discovery_loopback.cpp)
 
 rr_service_test_add_test(intra_loopback SRC intra_loopback.cpp)
 
