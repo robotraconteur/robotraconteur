@@ -61,7 +61,7 @@ if(ROBOTRACONTEUR_ROS)
     endif()
 endif()
 
-set(BUILD_GEN "" CACHE BOOL "Build RobotRaconteurGen")
+set(BUILD_GEN ON CACHE BOOL "Build RobotRaconteurGen")
 if(BUILD_GEN)
     add_subdirectory(RobotRaconteurGen)
 endif()
