@@ -169,7 +169,7 @@ Also checkout the PyRI Open source teach pendant: https://github.com/pyri-projec
 
 ## Installation
 
-See [docs/installation.md](docs/installation.md) for installation instructions. 
+See [docs/common/installation.md](docs/common/installation.md) for installation instructions. 
 
 The following platforms are supported:
 
@@ -183,7 +183,7 @@ The following platforms are supported:
 
 ## Building
 
-See [docs/building.md](docs/building.md) for build instructions. 
+See [docs/common/building.md](docs/common/building.md) for build instructions. 
 
 ## ROS Support
 
