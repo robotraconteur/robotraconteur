@@ -23,27 +23,28 @@ namespace RobotRaconteur
 class HardwareTransportConnection : public detail::ASIOStreamBaseTransport
 {
   public:
-    HardwareTransportConnection(RR_SHARED_PTR<HardwareTransport> parent, bool server, uint32_t local_endpoint);
+    HardwareTransportConnection(const RR_SHARED_PTR<HardwareTransport>& parent, bool server, uint32_t local_endpoint);
 
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
   protected:
-    void AsyncAttachSocket1(std::string noden, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    void AsyncAttachSocket1(const std::string& noden,
+                            const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
     virtual void Close1() = 0;
 
     std::string scheme;
 
   public:
-    virtual uint32_t GetLocalEndpoint();
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE;
 
-    virtual uint32_t GetRemoteEndpoint();
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE;
 
-    virtual void CheckConnection(uint32_t endpoint);
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    virtual RR_SHARED_PTR<Transport> GetTransport();
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE;
 
   protected:
     bool server;
@@ -65,26 +66,28 @@ class HardwareTransportConnection_driver : public HardwareTransportConnection
 #else
     typedef boost::asio::posix::stream_descriptor socket_type;
 #endif
-    HardwareTransportConnection_driver(RR_SHARED_PTR<HardwareTransport> parent, bool server, uint32_t local_endpoint,
-                                       boost::string_ref scheme);
+    HardwareTransportConnection_driver(const RR_SHARED_PTR<HardwareTransport>& parent, bool server,
+                                       uint32_t local_endpoint, boost::string_ref scheme);
 
-    void AsyncAttachSocket(RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket, std::string noden,
-                           boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    void AsyncAttachSocket(const RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type>& socket,
+                           const std::string& noden,
+                           const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   protected:
-    virtual void async_write_some(
+    RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    virtual void async_read_some(
+    RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    virtual size_t available();
+    RR_OVIRTUAL size_t available() RR_OVERRIDE;
 
-    virtual void Close1();
+    RR_OVIRTUAL void Close1() RR_OVERRIDE;
 
-  protected:
     RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket;
     boost::mutex socket_lock;
 };
@@ -93,37 +96,43 @@ class HardwareTransportConnection_bluetooth : public HardwareTransportConnection
 {
 
   public:
-    HardwareTransportConnection_bluetooth(RR_SHARED_PTR<HardwareTransport> parent, bool server,
+    HardwareTransportConnection_bluetooth(const RR_SHARED_PTR<HardwareTransport>& parent, bool server,
                                           uint32_t local_endpoint);
 
-    void AsyncAttachSocket(RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket> socket, std::string noden,
-                           boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    void AsyncAttachSocket(const RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>& socket,
+                           const std::string& noden,
+                           const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
   protected:
-    virtual void async_write_some(
+    RR_OVIRTUAL void async_write_some(
         const_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    virtual void async_read_some(
+    RR_OVIRTUAL void async_read_some(
         mutable_buffers& b,
-        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler);
+        const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
+        RR_OVERRIDE;
 
-    virtual size_t available();
+    RR_OVIRTUAL size_t available() RR_OVERRIDE;
 
-    virtual void Close1();
+    RR_OVIRTUAL void Close1() RR_OVERRIDE;
 
-  protected:
     RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket> socket;
     boost::mutex socket_lock;
 };
 
-void HardwareTransport_attach_transport(
-    RR_SHARED_PTR<HardwareTransport> parent, RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type> socket,
-    bool server, uint32_t endpoint, std::string noden, boost::string_ref scheme,
-    boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+void HardwareTransport_attach_transport(const RR_SHARED_PTR<HardwareTransport>& parent,
+                                        const RR_SHARED_PTR<HardwareTransportConnection_driver::socket_type>& socket,
+                                        bool server, uint32_t endpoint, const std::string& noden,
+                                        boost::string_ref scheme,
+                                        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                                                             const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
 void HardwareTransport_attach_transport_bluetooth(
-    RR_SHARED_PTR<HardwareTransport> parent, RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket> socket,
-    bool server, uint32_t endpoint, std::string noden,
-    boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    const RR_SHARED_PTR<HardwareTransport>& parent,
+    const RR_SHARED_PTR<boost::asio::generic::stream_protocol::socket>& socket, bool server, uint32_t endpoint,
+    const std::string& noden,
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
+        callback);
 } // namespace RobotRaconteur

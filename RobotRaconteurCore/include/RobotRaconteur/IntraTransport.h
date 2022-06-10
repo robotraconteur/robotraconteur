@@ -80,30 +80,31 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
      *
      * @param node The node that will use the transport. Default is the singleton node
      */
-    IntraTransport(RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp());
+    IntraTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
 
-    virtual ~IntraTransport();
+    RR_OVIRTUAL ~IntraTransport() RR_OVERRIDE;
 
-  public:
-    virtual bool IsServer() const;
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE;
 
-    virtual bool IsClient() const;
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE;
 
-    virtual std::string GetUrlSchemeString() const;
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE;
 
-    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
-    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE;
 
-    virtual void AsyncCreateTransportConnection(
-        boost::string_ref url, RR_SHARED_PTR<Endpoint> e,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    RR_OVIRTUAL void AsyncCreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE;
 
-    virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                          RR_SHARED_PTR<Endpoint> e);
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE;
 
-    virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e);
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE;
 
     /**
      * @brief Start the server to listen for incoming client connections
@@ -112,28 +113,29 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
     virtual void StartServer();
 
   protected:
-    virtual void CloseTransportConnection_timed(const boost::system::error_code& err, RR_SHARED_PTR<Endpoint> e,
-                                                RR_SHARED_PTR<void> timer);
+    virtual void CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
+                                                const RR_SHARED_PTR<void>& timer);
 
   public:
-    virtual bool CanConnectService(boost::string_ref url);
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE;
 
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
-    virtual void CheckConnection(uint32_t endpoint);
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE;
 
-    virtual void PeriodicCleanupTask();
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE;
 
-    uint32_t TransportCapability(boost::string_ref name);
+    RR_OVIRTUAL uint32_t TransportCapability(boost::string_ref name) RR_OVERRIDE;
 
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m);
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
-    virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                       boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler,
-                                       int32_t timeout = RR_TIMEOUT_INFINITE);
+    RR_OVIRTUAL void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE;
 
     template <typename T, typename F>
-    boost::signals2::connection AddCloseListener(RR_SHARED_PTR<T> t, const F& f)
+    boost::signals2::connection AddCloseListener(const RR_SHARED_PTR<T>& t, const F& f)
     {
         boost::mutex::scoped_lock lock(closed_lock);
         if (closed)
@@ -148,13 +150,13 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
 
     bool TryGetNodeInfo(NodeID& node_id, std::string& node_name, std::string& service_nonce);
 
-    void LocalNodeServicesChanged();
+    RR_OVIRTUAL void LocalNodeServicesChanged() RR_OVERRIDE;
 
     void SendNodeDiscovery();
 
   protected:
-    virtual void register_transport(RR_SHARED_PTR<ITransportConnection> connection);
-    virtual void erase_transport(RR_SHARED_PTR<ITransportConnection> connection);
+    virtual void register_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
+    virtual void erase_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
 
     void NodeDetected(const NodeDiscoveryInfo& info);
 

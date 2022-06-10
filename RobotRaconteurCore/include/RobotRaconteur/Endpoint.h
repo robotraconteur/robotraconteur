@@ -72,13 +72,13 @@ class ROBOTRACONTEUR_CORE_API Endpoint : private boost::noncopyable
     void SetRemoteNodeName(boost::string_ref name);
 
     NodeID GetRemoteNodeID();
-    void SetRemoteNodeID(NodeID id);
+    void SetRemoteNodeID(const NodeID& id);
 
     uint32_t GetTransport();
     void SetTransport(uint32_t transport);
 
     virtual RR_SHARED_PTR<ITransportConnection> GetTransportConnection();
-    virtual void SetTransportConnection(RR_SHARED_PTR<ITransportConnection> c);
+    virtual void SetTransportConnection(const RR_SHARED_PTR<ITransportConnection>& c);
 
     boost::posix_time::ptime GetLastMessageReceivedTime();
     void SetLastMessageReceivedTime(boost::posix_time::ptime time);
@@ -86,25 +86,24 @@ class ROBOTRACONTEUR_CORE_API Endpoint : private boost::noncopyable
     boost::posix_time::ptime GetLastMessageSentTime();
     void SetLastMessageSentTime(boost::posix_time::ptime time);
 
-    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
-    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& callback);
+    virtual void AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
+                                  const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m) = 0;
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
     virtual void PeriodicCleanupTask();
 
     virtual void TransportConnectionClosed(uint32_t endpoint);
 
   protected:
-    virtual void CheckEndpointCapabilityMessage(RR_INTRUSIVE_PTR<Message> m);
+    virtual void CheckEndpointCapabilityMessage(const RR_INTRUSIVE_PTR<Message>& m);
 
   public:
     virtual uint32_t EndpointCapability(boost::string_ref name);
 
-  public:
-    Endpoint(RR_SHARED_PTR<RobotRaconteurNode> node);
+    Endpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     virtual ~Endpoint() {}
 

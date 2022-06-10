@@ -43,9 +43,10 @@ AndroidHardwareDirector::AndroidHardwareDirector() {}
 AndroidHardwareDirector::~AndroidHardwareDirector() {}
 
 void AndroidHardwareDirector::ConnectBluetooth(
-    RR_SHARED_PTR<HardwareTransport> parent, const ParseConnectionURLResult& url, boost::string_ref noden,
+    const RR_SHARED_PTR<HardwareTransport>& parent, const ParseConnectionURLResult& url, boost::string_ref noden,
     uint32_t endpoint,
-    boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)> handler)
+    boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
+        handler)
 {
 
     boost::mutex::scoped_lock lock(director_lock);
@@ -73,7 +74,7 @@ void AndroidHardwareDirector::ConnectBluetooth(
 AndroidHardwareDirector* AndroidHardwareDirector::director = NULL;
 boost::mutex AndroidHardwareDirector::director_lock;
 
-int32_t AndroidHardwareHelper::ConnectBluetooth_success(RR_SHARED_PTR<AndroidBluetoothConnector_params> p)
+int32_t AndroidHardwareHelper::ConnectBluetooth_success(const RR_SHARED_PTR<AndroidBluetoothConnector_params>& p)
 {
     if (!p)
         throw InvalidOperationException("");
@@ -98,7 +99,7 @@ int32_t AndroidHardwareHelper::ConnectBluetooth_success(RR_SHARED_PTR<AndroidBlu
     return fds[1];
 }
 
-void AndroidHardwareHelper::ConnectBluetooth_error(RR_SHARED_PTR<AndroidBluetoothConnector_params> p,
+void AndroidHardwareHelper::ConnectBluetooth_error(const RR_SHARED_PTR<AndroidBluetoothConnector_params>& p,
                                                    boost::string_ref message)
 {
     RobotRaconteurNode::TryPostToThreadPool(
@@ -113,7 +114,7 @@ RR_SHARED_PTR<AndroidBluetoothConnector_params> AndroidHardwareHelper::VoidToAnd
         *static_cast<RR_SHARED_PTR<AndroidBluetoothConnector_params>*>(p));
 }
 
-std::vector<int8_t> AndroidHardwareHelper::MessageToVector(RR_INTRUSIVE_PTR<Message> m)
+std::vector<int8_t> AndroidHardwareHelper::MessageToVector(const RR_INTRUSIVE_PTR<Message>& m)
 {
     if (!m)
         throw InvalidArgumentException("");

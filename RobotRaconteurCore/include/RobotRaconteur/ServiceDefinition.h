@@ -224,11 +224,11 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinitionParseException : public ServiceDe
      *
      * @return std::string The diagnostic message
      */
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
-    virtual const char* what() const throw();
+    RR_OVIRTUAL const char* what() const throw() RR_OVERRIDE;
 
-    ~ServiceDefinitionParseException() throw() {}
+    RR_OVIRTUAL ~ServiceDefinitionParseException() throw() RR_OVERRIDE {}
 
   private:
     std::string what_store;
@@ -278,11 +278,11 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinitionVerifyException : public ServiceD
      *
      * @return std::string The diagnostic message
      */
-    virtual std::string ToString();
+    virtual std::string ToString() const;
 
-    virtual const char* what() const throw();
+    RR_OVIRTUAL const char* what() const throw() RR_OVERRIDE;
 
-    ~ServiceDefinitionVerifyException() throw() {}
+    RR_OVIRTUAL ~ServiceDefinitionVerifyException() throw() RR_OVERRIDE {}
 
   private:
     std::string what_store;
@@ -395,7 +395,7 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinition : public RR_ENABLE_SHARED_FROM_T
      *
      * @param os The stream to write the service definition to
      */
-    virtual void ToStream(std::ostream& os);
+    virtual void ToStream(std::ostream& os) const;
 
     /**
      * @brief Parse a service definition from a stream
@@ -435,7 +435,7 @@ class ROBOTRACONTEUR_CORE_API ServiceDefinition : public RR_ENABLE_SHARED_FROM_T
      *
      * @param ver The test Robot Raconteur version. If all zero (unspecified), uses current library version
      */
-    void CheckVersion(RobotRaconteurVersion ver = RobotRaconteurVersion(0, 0));
+    void CheckVersion(const RobotRaconteurVersion& ver = RobotRaconteurVersion(0, 0)) const;
 
     /**
      * @brief Construct a new empty ServiceDefinition
@@ -465,7 +465,7 @@ class ROBOTRACONTEUR_CORE_API NamedTypeDefinition
     /** @brief The unqualified name of the type */
     std::string Name;
     /** @brief The type code of the type */
-    virtual DataTypes RRDataType() = 0;
+    virtual DataTypes RRDataType() const = 0;
     /**
      * @brief Resolves and returns the qualified name
      *
@@ -479,6 +479,7 @@ class ROBOTRACONTEUR_CORE_API NamedTypeDefinition
      * of the type, or throw an exception if it is unable.
      */
     virtual std::string ResolveQualifiedName() = 0;
+    virtual ~NamedTypeDefinition() {}
 };
 
 /**
@@ -551,9 +552,9 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      *
      * @param def The parent service definition containing this service entry
      */
-    ServiceEntryDefinition(RR_SHARED_PTR<ServiceDefinition> def);
+    ServiceEntryDefinition(const RR_SHARED_PTR<ServiceDefinition>& def);
 
-    virtual ~ServiceEntryDefinition() {}
+    RR_OVIRTUAL ~ServiceEntryDefinition() RR_OVERRIDE {}
 
     /**
      * @brief Convert service entry definition to a string
@@ -571,7 +572,7 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      *
      * @param os The stream to write the service entry definition to
      */
-    virtual void ToStream(std::ostream& os);
+    virtual void ToStream(std::ostream& os) const;
 
     /**
      * @brief Parse a service entry definition from a string
@@ -638,8 +639,8 @@ class ROBOTRACONTEUR_CORE_API ServiceEntryDefinition : public RR_ENABLE_SHARED_F
      */
     void Reset();
 
-    virtual DataTypes RRDataType();
-    virtual std::string ResolveQualifiedName();
+    RR_OVIRTUAL DataTypes RRDataType() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ResolveQualifiedName() RR_OVERRIDE;
 };
 
 /**
@@ -684,7 +685,7 @@ class ROBOTRACONTEUR_CORE_API MemberDefinition : public RR_ENABLE_SHARED_FROM_TH
      */
     std::string DocString;
 
-    MemberDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    MemberDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
     /**
      * @brief Get member locking behavior
@@ -697,7 +698,7 @@ class ROBOTRACONTEUR_CORE_API MemberDefinition : public RR_ENABLE_SHARED_FROM_TH
      *
      * @return MemberDefinition_NoLock The locking behavior
      */
-    virtual MemberDefinition_NoLock NoLock();
+    virtual MemberDefinition_NoLock NoLock() const;
 
     virtual ~MemberDefinition() {}
 
@@ -736,16 +737,16 @@ class ROBOTRACONTEUR_CORE_API PropertyDefinition : public MemberDefinition
      *
      * @param ServiceEntry The parent service entry definition
      */
-    PropertyDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    PropertyDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual ~PropertyDefinition() {}
+    RR_OVIRTUAL ~PropertyDefinition() RR_OVERRIDE {}
 
     /**
      * @brief Convert to a property definition string
      *
      * Use ToString(true) to convert to a field definition
      */
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Convert to a property or field definition string
@@ -756,7 +757,7 @@ class ROBOTRACONTEUR_CORE_API PropertyDefinition : public MemberDefinition
      * @param isstruct true for field, false for property
      * @return std::string The property or field as a string
      */
-    std::string ToString(bool isstruct);
+    std::string ToString(bool isstruct) const;
 
     /**
      * @brief Parse a property or field definition from string
@@ -770,7 +771,7 @@ class ROBOTRACONTEUR_CORE_API PropertyDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    virtual void Reset();
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 
     /**
      * @brief The direction of the property
@@ -810,9 +811,9 @@ class ROBOTRACONTEUR_CORE_API FunctionDefinition : public MemberDefinition
      *
      * @param ServiceEntry The parent service entry definition
      */
-    FunctionDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    FunctionDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a function definition from string
@@ -826,7 +827,7 @@ class ROBOTRACONTEUR_CORE_API FunctionDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    virtual void Reset();
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 
     /**
      * @brief Check if function member is a generator function
@@ -863,9 +864,9 @@ class ROBOTRACONTEUR_CORE_API EventDefinition : public MemberDefinition
      *
      * @param ServiceEntry The parent service entry definition
      */
-    EventDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    EventDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse an event definition from string
@@ -879,7 +880,7 @@ class ROBOTRACONTEUR_CORE_API EventDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    virtual void Reset();
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 };
 
 /**
@@ -928,9 +929,9 @@ class ROBOTRACONTEUR_CORE_API ObjRefDefinition : public MemberDefinition
      *
      * @param ServiceEntry The parent service entry definition
      */
-    ObjRefDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    ObjRefDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse an objref definition from string
@@ -944,7 +945,7 @@ class ROBOTRACONTEUR_CORE_API ObjRefDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    virtual void Reset();
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 };
 
 /**
@@ -969,9 +970,9 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      *
      * @param ServiceEntry The parent service entry definition
      */
-    PipeDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    PipeDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a pipe definition from string
@@ -985,7 +986,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    virtual void Reset();
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 
     /**
      * @brief The direction of the pipe
@@ -996,7 +997,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      *
      * @return MemberDefinition_Direction The direction of the pipe
      */
-    MemberDefinition_Direction Direction();
+    MemberDefinition_Direction Direction() const;
 
     /**
      * @brief Pipe reliability
@@ -1008,7 +1009,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
      * @return true Pipe is unreliable
      * @return false Pipe is reliable
      */
-    bool IsUnreliable();
+    bool IsUnreliable() const;
 };
 
 /**
@@ -1023,7 +1024,7 @@ class ROBOTRACONTEUR_CORE_API PipeDefinition : public MemberDefinition
 class ROBOTRACONTEUR_CORE_API CallbackDefinition : public MemberDefinition
 {
   public:
-    virtual ~CallbackDefinition() {}
+    RR_OVIRTUAL ~CallbackDefinition() RR_OVERRIDE {}
 
     /** @brief The return type of the callback. May be `void`. */
     RR_SHARED_PTR<TypeDefinition> ReturnType;
@@ -1037,9 +1038,9 @@ class ROBOTRACONTEUR_CORE_API CallbackDefinition : public MemberDefinition
      *
      * @param ServiceEntry The parent service entry definition
      */
-    CallbackDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    CallbackDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a callback definition from string
@@ -1053,7 +1054,7 @@ class ROBOTRACONTEUR_CORE_API CallbackDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    virtual void Reset();
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 };
 
 /**
@@ -1078,9 +1079,9 @@ class ROBOTRACONTEUR_CORE_API WireDefinition : public MemberDefinition
      *
      * @param ServiceEntry The parent service entry definition
      */
-    WireDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    WireDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a wire definition from string
@@ -1094,7 +1095,7 @@ class ROBOTRACONTEUR_CORE_API WireDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    virtual void Reset();
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 
     /**
      * @brief The direction of the wire
@@ -1130,9 +1131,9 @@ class ROBOTRACONTEUR_CORE_API MemoryDefinition : public MemberDefinition
      *
      * @param ServiceEntry The parent service entry definition
      */
-    MemoryDefinition(RR_SHARED_PTR<ServiceEntryDefinition> ServiceEntry);
+    MemoryDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& ServiceEntry);
 
-    virtual std::string ToString();
+    RR_OVIRTUAL std::string ToString() RR_OVERRIDE;
 
     /**
      * @brief Parse a memory definition from string
@@ -1146,7 +1147,7 @@ class ROBOTRACONTEUR_CORE_API MemoryDefinition : public MemberDefinition
      * @brief Clear all fields
      *
      */
-    virtual void Reset();
+    RR_OVIRTUAL void Reset() RR_OVERRIDE;
 
     /**
      * @brief The direction of the memory
@@ -1209,7 +1210,7 @@ class ROBOTRACONTEUR_CORE_API TypeDefinition
      *
      * @param member The parent member definition
      */
-    TypeDefinition(RR_SHARED_PTR<MemberDefinition> member);
+    TypeDefinition(const RR_SHARED_PTR<MemberDefinition>& member);
 
     /**
      * @brief Convert property definition to string
@@ -1335,9 +1336,10 @@ class ROBOTRACONTEUR_CORE_API TypeDefinition
      * @return RR_SHARED_PTR<NamedTypeDefinition> The resolved type definition
      */
     RR_SHARED_PTR<NamedTypeDefinition> ResolveNamedType(
-        std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(),
-        RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(),
-        RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
+        const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs =
+            std::vector<RR_SHARED_PTR<ServiceDefinition> >(),
+        const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>(),
+        const RR_SHARED_PTR<RRObject>& client = RR_SHARED_PTR<RRObject>());
 
     // Don't modify directly, use ResolveNamedType. Left public for specalized use.
     RR_WEAK_PTR<NamedTypeDefinition> ResolveNamedType_cache;
@@ -1375,7 +1377,7 @@ class ROBOTRACONTEUR_CORE_API ExceptionDefinition
      *
      * @param service The parent service definition
      */
-    ExceptionDefinition(RR_SHARED_PTR<ServiceDefinition> service);
+    ExceptionDefinition(const RR_SHARED_PTR<ServiceDefinition>& service);
 
     /**
      * @brief Convert exception definition to string
@@ -1431,7 +1433,7 @@ class ROBOTRACONTEUR_CORE_API UsingDefinition
      *
      * @param service The parent service definition
      */
-    UsingDefinition(RR_SHARED_PTR<ServiceDefinition> service);
+    UsingDefinition(const RR_SHARED_PTR<ServiceDefinition>& service);
 
     /**
      * @brief Convert using definition to string
@@ -1511,7 +1513,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      *
      * @param service The parent service definition
      */
-    ConstantDefinition(RR_SHARED_PTR<ServiceDefinition> service);
+    ConstantDefinition(const RR_SHARED_PTR<ServiceDefinition>& service);
 
     /**
      * @brief Construct a new ConstantDefinition with a parent ServiceEntryDefinition
@@ -1520,7 +1522,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      *
      * @param service_entry The parent service entry definition
      */
-    ConstantDefinition(RR_SHARED_PTR<ServiceEntryDefinition> service_entry);
+    ConstantDefinition(const RR_SHARED_PTR<ServiceEntryDefinition>& service_entry);
 
     /**
      * @brief Convert constant definition to string
@@ -1559,7 +1561,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      * @return true The constant definition value is valid
      * @return false The constant definition value is invalid
      */
-    bool VerifyValue();
+    bool VerifyValue() const;
 
     /**
      * @brief Convert the constant value to a numeric scalar
@@ -1568,7 +1570,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      * @return T The numeric scalar
      */
     template <typename T>
-    T ValueToScalar()
+    T ValueToScalar() const
     {
         T v;
         if (!detail::try_convert_string_to_number(boost::trim_copy(Value), v))
@@ -1585,7 +1587,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      * @return RR_INTRUSIVE_PTR<RRArray<T> > The numeric primitive array
      */
     template <typename T>
-    RR_INTRUSIVE_PTR<RRArray<T> > ValueToArray()
+    RR_INTRUSIVE_PTR<RRArray<T> > ValueToArray() const
     {
         boost::iterator_range<std::string::const_iterator> value1(Value);
         value1 = boost::trim_copy_if(value1, boost::is_any_of(" \t{}"));
@@ -1638,7 +1640,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
      *
      * @return std::vector<ConstantDefinition_StructField> The constant as structure fields
      */
-    std::vector<ConstantDefinition_StructField> ValueToStructFields();
+    std::vector<ConstantDefinition_StructField> ValueToStructFields() const;
 
     static std::string UnescapeString(boost::string_ref in);
     static std::string EscapeString(boost::string_ref in);
@@ -1652,7 +1654,7 @@ class ROBOTRACONTEUR_CORE_API ConstantDefinition
 class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
 {
   public:
-    virtual ~EnumDefinition();
+    RR_OVIRTUAL ~EnumDefinition() RR_OVERRIDE;
 
     /** @brief The values in the enum */
     std::vector<EnumDefinitionValue> Values;
@@ -1677,7 +1679,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
      *
      * @param service The parent service definition
      */
-    EnumDefinition(RR_SHARED_PTR<ServiceDefinition> service);
+    EnumDefinition(const RR_SHARED_PTR<ServiceDefinition>& service);
 
     /**
      * @brief Convert enum definition to string
@@ -1700,7 +1702,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
      * @return true Enum values are valid
      * @return false Enum values are invalid
      */
-    bool VerifyValues();
+    bool VerifyValues() const;
 
     /**
      * @brief Clear all fields
@@ -1708,8 +1710,8 @@ class ROBOTRACONTEUR_CORE_API EnumDefinition : public NamedTypeDefinition
      */
     void Reset();
 
-    virtual DataTypes RRDataType();
-    virtual std::string ResolveQualifiedName();
+    RR_OVIRTUAL DataTypes RRDataType() const RR_OVERRIDE;
+    RR_OVIRTUAL std::string ResolveQualifiedName() RR_OVERRIDE;
 };
 
 /**
@@ -1753,7 +1755,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinitionValue
  * @param def The collection of service definitions to verify
  * @param warnings A vector to receive non-fatal verification warnings
  */
-ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def,
+ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& def,
                                                       std::vector<ServiceDefinitionParseException>& warnings);
 
 /**
@@ -1769,7 +1771,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
  *
  * @param def The collection of service definitions to verify
  */
-ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<ServiceDefinition> > def);
+ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& def);
 
 /**
  * @brief Compare two service definitions to see if they are identical
@@ -1779,8 +1781,8 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(std::vector<RR_SHARED_PTR<
  * @return true Service definitions are identical
  * @return false Service definitions are different
  */
-ROBOTRACONTEUR_CORE_API bool CompareServiceDefinitions(RR_SHARED_PTR<ServiceDefinition> def1,
-                                                       RR_SHARED_PTR<ServiceDefinition> def2);
+ROBOTRACONTEUR_CORE_API bool CompareServiceDefinitions(const RR_SHARED_PTR<ServiceDefinition>& def1,
+                                                       const RR_SHARED_PTR<ServiceDefinition>& def2);
 
 /**
  * @brief Split a qualified name into its service definition name and unqualified name parts
@@ -1802,9 +1804,9 @@ ROBOTRACONTEUR_CORE_API boost::tuple<boost::string_ref, boost::string_ref> Split
  * @return RR_SHARED_PTR<T> The found element, or null if not found
  */
 template <typename T>
-RR_SHARED_PTR<T> TryFindByName(std::vector<RR_SHARED_PTR<T> >& v, boost::string_ref name)
+RR_SHARED_PTR<T> TryFindByName(const std::vector<RR_SHARED_PTR<T> >& v, boost::string_ref name)
 {
-    for (typename std::vector<RR_SHARED_PTR<T> >::iterator e = v.begin(); e != v.end(); ++e)
+    for (typename std::vector<RR_SHARED_PTR<T> >::const_iterator e = v.begin(); e != v.end(); ++e)
     {
         if (*e)
         {
@@ -1819,16 +1821,16 @@ RR_SHARED_PTR<T> TryFindByName(std::vector<RR_SHARED_PTR<T> >& v, boost::string_
 }
 
 ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(
-    RR_SHARED_PTR<ServiceEntryDefinition> def,
-    std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(),
-    RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(),
-    RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
+    const RR_SHARED_PTR<ServiceEntryDefinition>& def,
+    const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(),
+    const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>(),
+    const RR_SHARED_PTR<RRObject>& client = RR_SHARED_PTR<RRObject>());
 
 ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(
-    RR_SHARED_PTR<ServiceEntryDefinition> def,
-    std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(),
-    RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(),
-    RR_SHARED_PTR<RRObject> client = RR_SHARED_PTR<RRObject>());
+    const RR_SHARED_PTR<ServiceEntryDefinition>& def,
+    const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs = std::vector<RR_SHARED_PTR<ServiceDefinition> >(),
+    const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>(),
+    const RR_SHARED_PTR<RRObject>& client = RR_SHARED_PTR<RRObject>());
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for ServiceDefinition shared_ptr */

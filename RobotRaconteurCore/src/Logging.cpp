@@ -19,6 +19,14 @@
 namespace RobotRaconteur
 {
 
+RRLogRecord::RRLogRecord()
+{
+    Level = RobotRaconteur_LogLevel_Warning;
+    Component = RobotRaconteur_LogComponent_Default;
+    SourceLine = 0;
+    Endpoint = 0;
+}
+
 std::ostream& operator<<(std::ostream& out, const RRLogRecord& record)
 {
     out << "[" << to_iso_extended_string(record.Time) << "] [" << RRLogRecord_Level_ToString(record.Level) << "] ["
@@ -53,7 +61,7 @@ std::ostream& operator<<(std::ostream& out, const RRLogRecord& record)
     return out;
 }
 
-RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node)
+RRLogRecordStream::RRLogRecordStream(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
     BOOST_ASSERT_MSG(node, "RRLogRecordStream node must not be nullptr");
     this->node = node;
@@ -63,7 +71,7 @@ RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node)
     record.Time = boost::posix_time::microsec_clock::local_time();
 }
 
-RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl,
+RRLogRecordStream::RRLogRecordStream(const RR_SHARED_PTR<RobotRaconteurNode>& node, RobotRaconteur_LogLevel lvl,
                                      RobotRaconteur_LogComponent component, int64_t ep,
                                      const boost::posix_time::ptime& time, const std::string& source_file,
                                      uint32_t source_line, const std::string& thread_id)
@@ -81,7 +89,7 @@ RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, Rob
     record.ThreadID = thread_id;
 }
 
-RRLogRecordStream::RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl,
+RRLogRecordStream::RRLogRecordStream(const RR_SHARED_PTR<RobotRaconteurNode>& node, RobotRaconteur_LogLevel lvl,
                                      RobotRaconteur_LogComponent component, const std::string& component_name,
                                      const std::string& component_object_id, int64_t ep,
                                      const std::string& service_path, const std::string& member,

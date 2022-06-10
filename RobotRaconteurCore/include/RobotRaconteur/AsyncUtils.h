@@ -50,7 +50,7 @@ class sync_async_handler : private boost::noncopyable
 
     sync_async_handler() { ev = RR_MAKE_SHARED<AutoResetEvent>(); }
 
-    sync_async_handler(RR_SHARED_PTR<RobotRaconteurException> err)
+    sync_async_handler(const RR_SHARED_PTR<RobotRaconteurException>& err)
     {
         ev = RR_MAKE_SHARED<AutoResetEvent>();
         this->err = err;
@@ -58,14 +58,14 @@ class sync_async_handler : private boost::noncopyable
 
     void operator()() { ev->Set(); }
 
-    void operator()(RR_SHARED_PTR<RobotRaconteurException> err)
+    void operator()(const RR_SHARED_PTR<RobotRaconteurException>& err)
     {
         boost::mutex::scoped_lock lock(data_lock);
         this->err = err;
         ev->Set();
     }
 
-    void operator()(RR_SHARED_PTR<T> data, RR_SHARED_PTR<RobotRaconteurException> err)
+    void operator()(const RR_SHARED_PTR<T>& data, const RR_SHARED_PTR<RobotRaconteurException>& err)
     {
         boost::mutex::scoped_lock lock(data_lock);
         this->err = err;
@@ -136,13 +136,13 @@ class sync_async_handler : private boost::noncopyable
     }
 };
 
-RR_SHARED_PTR<Timer> async_timeout_wrapper_CreateTimer(RR_SHARED_PTR<RobotRaconteurNode> node,
+RR_SHARED_PTR<Timer> async_timeout_wrapper_CreateTimer(const RR_SHARED_PTR<RobotRaconteurNode>& node,
                                                        const boost::posix_time::time_duration& period,
                                                        RR_MOVE_ARG(boost::function<void(const TimerEvent&)>) handler,
                                                        bool oneshot);
 
 template <typename T>
-void async_timeout_wrapper_closer(RR_SHARED_PTR<T> d)
+void async_timeout_wrapper_closer(const RR_SHARED_PTR<T>& d)
 {
     try
     {
@@ -153,7 +153,7 @@ void async_timeout_wrapper_closer(RR_SHARED_PTR<T> d)
 }
 
 template <typename T, typename T2>
-void async_timeout_wrapper_closer(RR_SHARED_PTR<T> d)
+void async_timeout_wrapper_closer(const RR_SHARED_PTR<T>& d)
 {
     try
     {
@@ -170,30 +170,28 @@ template <typename T>
 class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wrapper<T> >, private boost::noncopyable
 {
   private:
-    boost::function<void(RR_SHARED_PTR<T>, RR_SHARED_PTR<RobotRaconteurException>)> handler_;
+    boost::function<void(const RR_SHARED_PTR<T>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler_;
     RR_SHARED_PTR<Timer> timeout_timer_;
     boost::mutex handled_lock;
     bool handled;
     RR_SHARED_PTR<RobotRaconteurException> timeout_exception_;
-    boost::function<void(RR_SHARED_PTR<T>)> deleter_;
+    boost::function<void(const RR_SHARED_PTR<T>&)> deleter_;
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
   public:
-    async_timeout_wrapper(RR_SHARED_PTR<RobotRaconteurNode> node,
-                          boost::function<void(RR_SHARED_PTR<T>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
-                          RR_MOVE_ARG(boost::function<void(RR_SHARED_PTR<T>)>) deleter = 0)
+    async_timeout_wrapper(
+        const RR_SHARED_PTR<RobotRaconteurNode>& node,
+        boost::function<void(const RR_SHARED_PTR<T>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<T>&)>) deleter = 0)
+        : handler_(handler), handled(false), node(node)
     {
-        handler_ = handler;
-
-        handled = false;
         deleter_.swap(deleter);
-        this->node = node;
     }
 
-    void start_timer(int32_t timeout, RR_SHARED_PTR<RobotRaconteurException> timeout_exception =
+    void start_timer(int32_t timeout, const RR_SHARED_PTR<RobotRaconteurException>& timeout_exception =
                                           RR_MAKE_SHARED<ConnectionException>("Timeout during operation"));
 
-    void operator()(RR_SHARED_PTR<T> data, RR_SHARED_PTR<RobotRaconteurException> err)
+    void operator()(const RR_SHARED_PTR<T>& data, const RR_SHARED_PTR<RobotRaconteurException>& err)
     {
         {
             boost::mutex::scoped_lock lock(handled_lock);
@@ -218,7 +216,7 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
         handler_(data, err);
     }
 
-    void handle_error(RR_SHARED_PTR<RobotRaconteurException> err)
+    void handle_error(const RR_SHARED_PTR<RobotRaconteurException>& err)
     {
         {
             boost::mutex::scoped_lock lock(handled_lock);
@@ -267,11 +265,12 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
 };
 
 template <typename T>
-void async_timeout_wrapper<T>::start_timer(int32_t timeout, RR_SHARED_PTR<RobotRaconteurException> timeout_exception)
+void async_timeout_wrapper<T>::start_timer(int32_t timeout,
+                                           const RR_SHARED_PTR<RobotRaconteurException>& timeout_exception)
 {
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
     if (!n)
-        InvalidOperationException("Node has been released");
+        throw InvalidOperationException("Node has been released");
 
     boost::mutex::scoped_lock lock(handled_lock);
 
@@ -286,7 +285,7 @@ void async_timeout_wrapper<T>::start_timer(int32_t timeout, RR_SHARED_PTR<RobotR
                                                           this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
                                               true);
         timeout_timer_->Start();
-        timeout_exception_ = timeout_exception;
+        timeout_exception_ = RR_MOVE(timeout_exception);
     }
 }
 
@@ -381,7 +380,7 @@ class ROBOTRACONTEUR_CORE_API async_signal_pool_semaphore
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
   public:
-    async_signal_pool_semaphore(RR_SHARED_PTR<RobotRaconteurNode> node) { this->node = node; }
+    async_signal_pool_semaphore(const RR_SHARED_PTR<RobotRaconteurNode>& node) : node(node) {}
 
     template <typename F>
     void try_fire_next(BOOST_ASIO_MOVE_ARG(F) h)
@@ -402,7 +401,7 @@ class ROBOTRACONTEUR_CORE_API async_signal_pool_semaphore
     }
 
   protected:
-    void do_fire_next(boost::function<void()>& h)
+    void do_fire_next(const boost::function<void()>& h)
     {
         try
         {
@@ -438,20 +437,23 @@ class ROBOTRACONTEUR_CORE_API async_signal_pool_semaphore
         BOOST_SCOPE_EXIT_END;
     }
 
-    void do_post(RR_SHARED_PTR<RobotRaconteurNode> node1, RR_MOVE_ARG(boost::function<void()>) h);
+    void do_post(const RR_SHARED_PTR<RobotRaconteurNode>& node1, RR_MOVE_ARG(boost::function<void()>) h);
 
     void handle_exception(std::exception* exp);
 };
 
 ROBOTRACONTEUR_CORE_API void InvokeHandler_HandleException(RR_WEAK_PTR<RobotRaconteurNode> node, std::exception& exp);
 
-ROBOTRACONTEUR_CORE_API void InvokeHandler_DoPost(RR_WEAK_PTR<RobotRaconteurNode> node, boost::function<void()>& h,
-                                                  bool shutdown_op = false, bool throw_on_released = true);
+ROBOTRACONTEUR_CORE_API void InvokeHandler_DoPost(RR_WEAK_PTR<RobotRaconteurNode> node,
+                                                  const boost::function<void()>& h, bool shutdown_op = false,
+                                                  bool throw_on_released = true);
 
-ROBOTRACONTEUR_CORE_API void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node, boost::function<void()>& handler);
+ROBOTRACONTEUR_CORE_API void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
+                                           const boost::function<void()>& handler);
 
 template <typename T>
-void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node, typename boost::function<void(T)>& handler, T& value)
+void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node, const typename boost::function<void(const T&)>& handler,
+                   const T& value)
 {
     try
     {
@@ -459,24 +461,29 @@ void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node, typename boost::functio
     }
     catch (std::exception& exp)
     {
-        InvokeHandler_HandleException(node, exp);
+        InvokeHandler_HandleException(RR_MOVE(node), exp);
     }
 }
 
-ROBOTRACONTEUR_CORE_API void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
-                                           boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler);
+ROBOTRACONTEUR_CORE_API void InvokeHandler(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
 ROBOTRACONTEUR_CORE_API void InvokeHandlerWithException(
-    RR_WEAK_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-    RR_SHARED_PTR<RobotRaconteurException> exp);
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const RR_SHARED_PTR<RobotRaconteurException>& exp);
 
 ROBOTRACONTEUR_CORE_API void InvokeHandlerWithException(
-    RR_WEAK_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-    std::exception& exp, MessageErrorType default_err = MessageErrorType_UnknownError);
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler, std::exception& exp,
+    MessageErrorType default_err = MessageErrorType_UnknownError);
 
 template <typename T>
-void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
-                   typename boost::function<void(T, RR_SHARED_PTR<RobotRaconteurException>)>& handler, T& value)
+void InvokeHandler(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const typename boost::function<void(const T&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const T& value)
 {
     try
     {
@@ -484,30 +491,32 @@ void InvokeHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
     }
     catch (std::exception& exp)
     {
-        InvokeHandler_HandleException(node, exp);
+        InvokeHandler_HandleException(RR_MOVE(node), exp);
     }
 }
 
 template <typename T>
-void InvokeHandlerWithException(RR_WEAK_PTR<RobotRaconteurNode> node,
-                                typename boost::function<void(T, RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-                                RR_SHARED_PTR<RobotRaconteurException> exp)
+void InvokeHandlerWithException(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const typename boost::function<void(T, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const RR_SHARED_PTR<RobotRaconteurException>& exp)
 {
-    typename boost::initialized<T> default_value;
+    typename boost::initialized<typename boost::remove_reference<T>::type> default_value;
     try
     {
         handler(default_value, exp);
     }
     catch (std::exception& exp)
     {
-        InvokeHandler_HandleException(node, exp);
+        InvokeHandler_HandleException(RR_MOVE(node), exp);
     }
 }
 
 template <typename T>
-void InvokeHandlerWithException(RR_WEAK_PTR<RobotRaconteurNode> node,
-                                typename boost::function<void(T, RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-                                std::exception& exp, MessageErrorType default_err = MessageErrorType_UnknownError)
+void InvokeHandlerWithException(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const typename boost::function<void(T, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    std::exception& exp, MessageErrorType default_err = MessageErrorType_UnknownError)
 {
     typename boost::initialized<typename boost::remove_const<typename boost::remove_reference<T>::type>::type>
         default_value;
@@ -519,64 +528,68 @@ void InvokeHandlerWithException(RR_WEAK_PTR<RobotRaconteurNode> node,
     }
     catch (std::exception& exp)
     {
-        InvokeHandler_HandleException(node, exp);
+        InvokeHandler_HandleException(RR_MOVE(node), exp);
     }
 }
 
-ROBOTRACONTEUR_CORE_API void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node, boost::function<void()>& handler,
+ROBOTRACONTEUR_CORE_API void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node, const boost::function<void()>& handler,
                                          bool shutdown_op = false, bool throw_on_released = true);
 
 template <typename T>
-void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node, typename boost::function<void(T)>& handler, T& value,
-                 bool shutdown_op = false, bool throw_on_released = true)
+void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node, const typename boost::function<void(const T&)>& handler,
+                 const T& value, bool shutdown_op = false, bool throw_on_released = true)
 {
     boost::function<void()> h = boost::bind(handler, value);
-    InvokeHandler_DoPost(node, h, shutdown_op, throw_on_released);
+    InvokeHandler_DoPost(RR_MOVE(node), h, shutdown_op, throw_on_released);
 }
 
-ROBOTRACONTEUR_CORE_API void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
-                                         boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-                                         bool shutdown_op = false, bool throw_on_released = true);
+ROBOTRACONTEUR_CORE_API void PostHandler(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler, bool shutdown_op = false,
+    bool throw_on_released = true);
 
 ROBOTRACONTEUR_CORE_API void PostHandlerWithException(
-    RR_WEAK_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-    RR_SHARED_PTR<RobotRaconteurException> exp, bool shutdown_op = false, bool throw_on_released = true);
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const RR_SHARED_PTR<RobotRaconteurException>& exp, bool shutdown_op = false, bool throw_on_released = true);
 
 ROBOTRACONTEUR_CORE_API void PostHandlerWithException(
-    RR_WEAK_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-    std::exception& exp, MessageErrorType default_err = MessageErrorType_UnknownError, bool shutdown_op = false,
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler, std::exception& exp,
+    MessageErrorType default_err = MessageErrorType_UnknownError, bool shutdown_op = false,
     bool throw_on_released = true);
 
 template <typename T>
 void PostHandler(RR_WEAK_PTR<RobotRaconteurNode> node,
-                 typename boost::function<void(T, RR_SHARED_PTR<RobotRaconteurException>)>& handler, T& value,
-                 bool shutdown_op = false, bool throw_on_released = true)
+                 const typename boost::function<void(const T&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+                 const T& value, bool shutdown_op = false, bool throw_on_released = true)
 {
     boost::function<void()> h = boost::bind(handler, value, RR_SHARED_PTR<RobotRaconteurException>());
-    InvokeHandler_DoPost(node, h, shutdown_op, throw_on_released);
+    InvokeHandler_DoPost(RR_MOVE(node), h, shutdown_op, throw_on_released);
 }
 
 template <typename T>
-void PostHandlerWithException(RR_WEAK_PTR<RobotRaconteurNode> node,
-                              typename boost::function<void(T, RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-                              RR_SHARED_PTR<RobotRaconteurException> exp, bool shutdown_op = false,
-                              bool throw_on_released = true)
+void PostHandlerWithException(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const typename boost::function<void(T, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const RR_SHARED_PTR<RobotRaconteurException>& exp, bool shutdown_op = false, bool throw_on_released = true)
 {
-    typename boost::initialized<T> default_value;
+    typename boost::initialized<typename boost::remove_reference<T>::type> default_value;
     boost::function<void()> h = boost::bind(handler, default_value, exp);
-    InvokeHandler_DoPost(node, h, shutdown_op, throw_on_released);
+    InvokeHandler_DoPost(RR_MOVE(node), h, shutdown_op, throw_on_released);
 }
 
 template <typename T>
-void PostHandlerWithException(RR_WEAK_PTR<RobotRaconteurNode> node,
-                              typename boost::function<void(T, RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-                              std::exception& exp, MessageErrorType default_err = MessageErrorType_UnknownError,
-                              bool shutdown_op = false, bool throw_on_released = true)
+void PostHandlerWithException(
+    RR_WEAK_PTR<RobotRaconteurNode> node,
+    const typename boost::function<void(T, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    std::exception& exp, MessageErrorType default_err = MessageErrorType_UnknownError, bool shutdown_op = false,
+    bool throw_on_released = true)
 {
-    typename boost::initialized<T> default_value;
+    typename boost::initialized<typename boost::remove_reference<T>::type> default_value;
     RR_SHARED_PTR<RobotRaconteurException> err = RobotRaconteurExceptionUtil::ExceptionToSharedPtr(exp, default_err);
     boost::function<void()> h = boost::bind(handler, default_value, err);
-    InvokeHandler_DoPost(node, h, shutdown_op, throw_on_released);
+    InvokeHandler_DoPost(RR_MOVE(node), h, shutdown_op, throw_on_released);
 }
 
 } // namespace detail

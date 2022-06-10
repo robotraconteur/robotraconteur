@@ -31,5 +31,6 @@ class IPeriodicCleanupTask
 
   public:
     virtual void PeriodicCleanupTask() = 0;
+    virtual ~IPeriodicCleanupTask(){};
 };
 } // namespace RobotRaconteur

@@ -33,7 +33,7 @@ class HardwareTransport_discovery
       public:
         boost::mutex this_lock;
         bool handled;
-        boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> handler;
+        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> handler;
         int32_t count;
         RR_SHARED_PTR<boost::asio::deadline_timer> timer;
         RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > ret;
@@ -41,8 +41,8 @@ class HardwareTransport_discovery
         refresh_op() : handled(false), count(0) {}
     };
 
-    HardwareTransport_discovery(RR_SHARED_PTR<HardwareTransport> parent, const std::vector<std::string>& schemes,
-                                RR_SHARED_PTR<usb_manager> usb, RR_SHARED_PTR<bluetooth_connector> bt)
+    HardwareTransport_discovery(const RR_SHARED_PTR<HardwareTransport>& parent, const std::vector<std::string>& schemes,
+                                const RR_SHARED_PTR<usb_manager>& usb, const RR_SHARED_PTR<bluetooth_connector>& bt)
     {
         this->parent = parent;
         this->usb = usb;
@@ -67,7 +67,7 @@ class HardwareTransport_discovery
 
     virtual std::vector<NodeDiscoveryInfo> GetDriverDevices() = 0;
 
-    void GetUsbDevices(boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> handler)
+    void GetUsbDevices(boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> handler)
     {
         try
         {
@@ -84,7 +84,7 @@ class HardwareTransport_discovery
         }
     }
 
-    void GetBluetoothDevices(boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> handler)
+    void GetBluetoothDevices(boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> handler)
     {
         if (!bt)
         {
@@ -124,7 +124,7 @@ class HardwareTransport_discovery
         }
     }
 
-    void GetAll(boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> handler, int32_t timeout)
+    void GetAll(boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> handler, int32_t timeout)
     {
         // TODO: Test this function
 
@@ -140,7 +140,7 @@ class HardwareTransport_discovery
 
         boost::mutex::scoped_lock op_lock(op->this_lock);
 
-        op->timer.reset(new boost::asio::deadline_timer(p->get_io_context()));
+        op->timer = RR_SHARED_PTR<boost::asio::deadline_timer>(new boost::asio::deadline_timer(p->get_io_context()));
         if (timeout >= 0)
         {
             op->timer->expires_from_now(boost::posix_time::milliseconds(timeout));
@@ -183,7 +183,7 @@ class HardwareTransport_discovery
     }
 
   protected:
-    void GetUsbDevices1(boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> handler)
+    void GetUsbDevices1(boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> handler)
     {
         RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > o = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
         try
@@ -214,7 +214,7 @@ class HardwareTransport_discovery
         handler(o);
     }
 
-    void GetBluetoothDevices1(RR_SHARED_PTR<refresh_op> op, typename bluetooth_connector::btaddr_type addr)
+    void GetBluetoothDevices1(const RR_SHARED_PTR<refresh_op>& op, typename bluetooth_connector::btaddr_type addr)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node = GetParent()->GetNode();
 
@@ -242,13 +242,13 @@ class HardwareTransport_discovery
             return;
 
         op->handled = true;
-        boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> f = op->handler;
+        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> f = op->handler;
         op->handler.clear();
         lock.unlock();
         f(op->ret);
     }
 
-    void GetBluetoothDevices2(RR_SHARED_PTR<refresh_op> op)
+    void GetBluetoothDevices2(const RR_SHARED_PTR<refresh_op>& op)
     {
         RR_SHARED_PTR<RobotRaconteurNode> n = GetParent()->GetNode();
         RR_SHARED_PTR<ThreadPool> p = n->GetThreadPool();
@@ -272,7 +272,7 @@ class HardwareTransport_discovery
         }
     }
 
-    void GetBluetoothDevices3(RR_SHARED_PTR<refresh_op> op, typename bluetooth_connector::btaddr_type addr)
+    void GetBluetoothDevices3(const RR_SHARED_PTR<refresh_op>& op, typename bluetooth_connector::btaddr_type addr)
     {
         RR_SHARED_PTR<RobotRaconteurNode> node = GetParent()->GetNode();
 
@@ -305,7 +305,7 @@ class HardwareTransport_discovery
         GetAll1(o, op);
     }
 
-    void GetAll1(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > nodeinfo, RR_SHARED_PTR<refresh_op> op)
+    void GetAll1(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& nodeinfo, const RR_SHARED_PTR<refresh_op>& op)
     {
         boost::mutex::scoped_lock lock(op->this_lock);
 
@@ -321,7 +321,7 @@ class HardwareTransport_discovery
         if (op->count > 0)
             return;
         op->handled = true;
-        boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> f = op->handler;
+        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> f = op->handler;
         op->handler.clear();
         if (op->timer)
             op->timer->cancel();
@@ -330,7 +330,7 @@ class HardwareTransport_discovery
         f(op->ret);
     }
 
-    void GetAll2(const boost::system::error_code& ec, RR_SHARED_PTR<refresh_op> op)
+    void GetAll2(const boost::system::error_code& ec, const RR_SHARED_PTR<refresh_op>& op)
     {
         if (ec)
             return;
@@ -339,14 +339,14 @@ class HardwareTransport_discovery
         if (op->handled)
             return;
         op->handled = true;
-        boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)> f = op->handler;
+        boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> f = op->handler;
         op->handler.clear();
         op->timer.reset();
         lock.unlock();
         f(op->ret);
     }
 
-    void OnDeviceChanged(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > d)
+    void OnDeviceChanged(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& d)
     {
         if (!d)
             return;
@@ -410,7 +410,7 @@ class HardwareTransport_discovery
         }
     }
 
-    void OnBluetoothChanged1(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > d)
+    void OnBluetoothChanged1(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& d)
     {
         if (!d)
             return;

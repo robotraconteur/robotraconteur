@@ -87,9 +87,9 @@ class Generator : private boost::noncopyable
      * @param handler A handler function to receive the return value or an exception
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
      */
-    virtual void AsyncNext(const Param& v,
-                           boost::function<void(const Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                           int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+    virtual void AsyncNext(
+        const Param& v, boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     /**
      * @brief Abort the generator
      *
@@ -106,7 +106,7 @@ class Generator : private boost::noncopyable
      * @param handler The handler to call when abort is complete
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
      */
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     /**
      * @brief Close the generator
@@ -125,7 +125,7 @@ class Generator : private boost::noncopyable
      * @param handler The handler to call when close is complete
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
      */
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     virtual ~Generator() {}
 };
@@ -157,17 +157,18 @@ class Generator<Return, void> : private boost::noncopyable
      * @param handler A handler function to receive the return value or an exception
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
      */
-    virtual void AsyncNext(boost::function<void(const Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                           int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
+    virtual void AsyncNext(
+        boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     /** @copydoc Generator::Abort() */
     virtual void Abort() = 0;
     /** @copydoc Generator::AsyncAbort() */
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     /** @copydoc Generator::Close() */
     virtual void Close() = 0;
     /** @copydoc Generator::AsyncClose() */
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     /**
      * @brief Automatically call Next() repeatedly and return std::vector of results
@@ -219,17 +220,18 @@ class Generator<void, Param> : private boost::noncopyable
      * @param handler The handler to call when next is complete
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.
      */
-    virtual void AsyncNext(const Param& v, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncNext(const Param& v,
+                           boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
                            int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     /** @copydoc Generator::Abort() */
     virtual void Abort() = 0;
     /** @copydoc Generator::AsyncAbort() */
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     /** @copydoc Generator::Close() */
     virtual void Close() = 0;
     /** @copydoc Generator::AsyncClose() */
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE) = 0;
     virtual ~Generator() {}
 };
@@ -244,31 +246,31 @@ class ROBOTRACONTEUR_CORE_API GeneratorClientBase
     uint32_t endpoint;
     std::string service_path;
 
-    GeneratorClientBase(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub);
+    GeneratorClientBase(boost::string_ref name, int32_t id, const RR_SHARED_PTR<ServiceStub>& stub);
 
-    virtual RR_INTRUSIVE_PTR<MessageElement> NextBase(RR_INTRUSIVE_PTR<MessageElement> v);
+    virtual RR_INTRUSIVE_PTR<MessageElement> NextBase(const RR_INTRUSIVE_PTR<MessageElement>& v);
     virtual void AsyncNextBase(
-        RR_INTRUSIVE_PTR<MessageElement> v,
-        boost::function<void(RR_INTRUSIVE_PTR<MessageElement>, RR_SHARED_PTR<RobotRaconteurException>,
-                             RR_SHARED_PTR<RobotRaconteurNode>)>
+        const RR_INTRUSIVE_PTR<MessageElement>& v,
+        boost::function<void(const RR_INTRUSIVE_PTR<MessageElement>&, const RR_SHARED_PTR<RobotRaconteurException>&,
+                             const RR_SHARED_PTR<RobotRaconteurNode>&)>
             handler,
         int32_t timeout);
 
     static void AsyncNextBase1(
-        RR_INTRUSIVE_PTR<MessageEntry> ret, RR_SHARED_PTR<RobotRaconteurException> err,
-        boost::function<void(RR_INTRUSIVE_PTR<MessageElement>, RR_SHARED_PTR<RobotRaconteurException>,
-                             RR_SHARED_PTR<RobotRaconteurNode>)>
+        const RR_INTRUSIVE_PTR<MessageEntry>& ret, const RR_SHARED_PTR<RobotRaconteurException>& err,
+        boost::function<void(const RR_INTRUSIVE_PTR<MessageElement>&, const RR_SHARED_PTR<RobotRaconteurException>&,
+                             const RR_SHARED_PTR<RobotRaconteurNode>&)>
             handler,
-        RR_WEAK_PTR<RobotRaconteurNode> node);
+        const RR_WEAK_PTR<RobotRaconteurNode>& node);
 
   public:
     RR_SHARED_PTR<ServiceStub> GetStub();
 
     virtual void Abort();
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE);
     virtual void Close();
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
+    virtual void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                             int32_t timeout = RR_TIMEOUT_INFINITE);
     std::string GetMemberName();
 
@@ -279,9 +281,9 @@ namespace detail
 {
 template <typename Return>
 static void GeneratorClient_AsyncNext1(
-    RR_INTRUSIVE_PTR<MessageElement> v2, RR_SHARED_PTR<RobotRaconteurException> err,
-    RR_SHARED_PTR<RobotRaconteurNode> node,
-    boost::function<void(Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler)
+    const RR_INTRUSIVE_PTR<MessageElement>& v2, const RR_SHARED_PTR<RobotRaconteurException>& err,
+    const RR_SHARED_PTR<RobotRaconteurNode>& node,
+    boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler)
 {
     if (err)
     {
@@ -302,19 +304,20 @@ static void GeneratorClient_AsyncNext1(
 }
 
 ROBOTRACONTEUR_CORE_API void GeneratorClient_AsyncNext2(
-    RR_INTRUSIVE_PTR<MessageElement> v2, RR_SHARED_PTR<RobotRaconteurException> err,
-    RR_SHARED_PTR<RobotRaconteurNode> node, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler);
+    const RR_INTRUSIVE_PTR<MessageElement>& v2, const RR_SHARED_PTR<RobotRaconteurException>& err,
+    const RR_SHARED_PTR<RobotRaconteurNode>& node,
+    boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler);
 } // namespace detail
 
 template <typename Return, typename Param>
 class GeneratorClient : public Generator<Return, Param>, public GeneratorClientBase
 {
   public:
-    GeneratorClient(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
+    GeneratorClient(boost::string_ref name, int32_t id, const RR_SHARED_PTR<ServiceStub>& stub)
         : GeneratorClientBase(name, id, stub)
     {}
 
-    virtual Return Next(const Param& v)
+    RR_OVIRTUAL Return Next(const Param& v) RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<MessageElement> v1 = CreateMessageElement(
             "", GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(
@@ -323,9 +326,9 @@ class GeneratorClient : public Generator<Return, Param>, public GeneratorClientB
         return RRPrimUtil<Return>::PreUnpack(
             GetStub()->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Return>::BoxedType>(v2));
     }
-    virtual void AsyncNext(const Param& v,
-                           boost::function<void(Return, RR_SHARED_PTR<RobotRaconteurException>)> handler,
-                           int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncNext(
+        const Param& v, boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<MessageElement> v1 = CreateMessageElement(
             "", GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(
@@ -335,15 +338,15 @@ class GeneratorClient : public Generator<Return, Param>, public GeneratorClientB
                                         RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), handler),
                       timeout);
     }
-    virtual void Abort() { GeneratorClientBase::Abort(); }
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void Abort() RR_OVERRIDE { GeneratorClientBase::Abort(); }
+    RR_OVIRTUAL void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         GeneratorClientBase::AsyncAbort(handler, timeout);
     }
-    virtual void Close() { GeneratorClientBase::Close(); }
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void Close() RR_OVERRIDE { GeneratorClientBase::Close(); }
+    RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         GeneratorClientBase::AsyncAbort(handler, timeout);
     }
@@ -353,33 +356,34 @@ template <typename Return>
 class GeneratorClient<Return, void> : public Generator<Return, void>, public GeneratorClientBase
 {
   public:
-    GeneratorClient(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
+    GeneratorClient(boost::string_ref name, int32_t id, const RR_SHARED_PTR<ServiceStub>& stub)
         : GeneratorClientBase(name, id, stub)
     {}
 
-    virtual Return Next()
+    RR_OVIRTUAL Return Next() RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<MessageElement> v2 = NextBase(RR_INTRUSIVE_PTR<MessageElement>());
         return RRPrimUtil<Return>::PreUnpack(
             GetStub()->RRGetNode()->template UnpackAnyType<typename RRPrimUtil<Return>::BoxedType>(v2));
     }
-    virtual void AsyncNext(boost::function<void(Return, RR_SHARED_PTR<RobotRaconteurException>)> handler,
-                           int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncNext(
+        boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         AsyncNextBase(RR_INTRUSIVE_PTR<MessageElement>(),
                       boost::bind<void>(&detail::GeneratorClient_AsyncNext1<Return>, RR_BOOST_PLACEHOLDERS(_1),
                                         RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), handler),
                       timeout);
     }
-    virtual void Abort() { GeneratorClientBase::Abort(); }
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void Abort() RR_OVERRIDE { GeneratorClientBase::Abort(); }
+    RR_OVIRTUAL void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         GeneratorClientBase::AsyncAbort(handler, timeout);
     }
-    virtual void Close() { GeneratorClientBase::Close(); }
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void Close() RR_OVERRIDE { GeneratorClientBase::Close(); }
+    RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         GeneratorClientBase::AsyncAbort(handler, timeout);
     }
@@ -389,37 +393,38 @@ template <typename Param>
 class GeneratorClient<void, Param> : public Generator<void, Param>, public GeneratorClientBase
 {
   public:
-    GeneratorClient(boost::string_ref name, int32_t id, RR_SHARED_PTR<ServiceStub> stub)
+    GeneratorClient(boost::string_ref name, int32_t id, const RR_SHARED_PTR<ServiceStub>& stub)
         : GeneratorClientBase(name, id, stub)
     {}
 
-    virtual void Next(const Param& v)
+    RR_OVIRTUAL void Next(const Param& v) RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<MessageElement> v1 = CreateMessageElement(
             "", GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(
                     RRPrimUtil<Param>::PrePack(v)));
         NextBase(v1);
     }
-    virtual void AsyncNext(const Param& v, boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> handler,
-                           int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncNext(const Param& v,
+                               boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                               int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<MessageElement> v1 = CreateMessageElement(
             "", GetStub()->RRGetNode()->template PackAnyType<typename RRPrimUtil<Param>::BoxedType>(
                     RRPrimUtil<Param>::PrePack(v)));
         AsyncNextBase(v1,
                       boost::bind<void>(&detail::GeneratorClient_AsyncNext2, RR_BOOST_PLACEHOLDERS(_1),
-                                        RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), handler),
+                                        RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), RR_MOVE(handler)),
                       timeout);
     }
-    virtual void Abort() { GeneratorClientBase::Abort(); }
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void Abort() RR_OVERRIDE { GeneratorClientBase::Abort(); }
+    RR_OVIRTUAL void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         GeneratorClientBase::AsyncAbort(handler, timeout);
     }
-    virtual void Close() { GeneratorClientBase::Close(); }
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void Close() RR_OVERRIDE { GeneratorClientBase::Close(); }
+    RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
         GeneratorClientBase::AsyncAbort(handler, timeout);
     }
@@ -440,37 +445,38 @@ class ROBOTRACONTEUR_CORE_API GeneratorServerBase : private boost::noncopyable
 
     boost::posix_time::ptime last_access_time;
 
-    GeneratorServerBase(boost::string_ref name, int32_t index, RR_SHARED_PTR<ServiceSkel> skel,
-                        RR_SHARED_PTR<ServerEndpoint> ep);
+    GeneratorServerBase(boost::string_ref name, int32_t index, const RR_SHARED_PTR<ServiceSkel>& skel,
+                        const RR_SHARED_PTR<ServerEndpoint>& ep);
 
   public:
     friend class ServiceSkel;
 
-    virtual void CallNext(RR_INTRUSIVE_PTR<MessageEntry> m) = 0;
+    virtual void CallNext(const RR_INTRUSIVE_PTR<MessageEntry>& m) = 0;
 
     virtual uint32_t GetEndpoint();
 
     virtual ~GeneratorServerBase() {}
 
   protected:
-    static void EndAsyncCallNext(RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageElement> ret,
-                                 RR_SHARED_PTR<RobotRaconteurException> err, int32_t index,
-                                 RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep);
+    static void EndAsyncCallNext(const RR_WEAK_PTR<ServiceSkel>& skel, const RR_INTRUSIVE_PTR<MessageElement>& ret,
+                                 const RR_SHARED_PTR<RobotRaconteurException>& err, int32_t index,
+                                 const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<ServerEndpoint>& ep);
 
     template <typename Return>
-    static void CallNext1(Return v2, RR_SHARED_PTR<RobotRaconteurException> err, int32_t index,
-                          RR_WEAK_PTR<ServiceSkel> skel, RR_INTRUSIVE_PTR<MessageEntry> m,
-                          RR_SHARED_PTR<ServerEndpoint> ep)
+    static void CallNext1(Return v2, const RR_SHARED_PTR<RobotRaconteurException>& err, int32_t index,
+                          const RR_WEAK_PTR<ServiceSkel>& skel, const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                          const RR_SHARED_PTR<ServerEndpoint>& ep)
     {
         RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
+        RR_SHARED_PTR<RobotRaconteurException> err2 = err;
         // TODO: Improve null handling
-        if (!skel1 && !err)
+        if (!skel1 && !err2)
         {
-            err = RR_MAKE_SHARED<InvalidOperationException>("Service skel released");
+            err2 = RR_MAKE_SHARED<InvalidOperationException>("Service skel released");
         }
-        if (err)
+        if (err2)
         {
-            GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), err, index, m, ep);
+            GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), err2, index, m, ep);
         }
 
         RR_INTRUSIVE_PTR<MessageElement> v3 =
@@ -479,22 +485,24 @@ class ROBOTRACONTEUR_CORE_API GeneratorServerBase : private boost::noncopyable
         GeneratorServerBase::EndAsyncCallNext(skel, v3, err, index, m, ep);
     }
 
-    static void CallNext2(RR_SHARED_PTR<RobotRaconteurException> err, int32_t index, RR_WEAK_PTR<ServiceSkel> skel,
-                          RR_INTRUSIVE_PTR<MessageEntry> m, RR_SHARED_PTR<ServerEndpoint> ep)
+    static void CallNext2(const RR_SHARED_PTR<RobotRaconteurException>& err, int32_t index,
+                          const RR_WEAK_PTR<ServiceSkel>& skel, const RR_INTRUSIVE_PTR<MessageEntry>& m,
+                          const RR_SHARED_PTR<ServerEndpoint>& ep)
     {
         RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
+        RR_SHARED_PTR<RobotRaconteurException> err2 = err;
         // TODO: Improve null handling
-        if (!skel1 && !err)
+        if (!skel1 && !err2)
         {
-            err = RR_MAKE_SHARED<InvalidOperationException>("Service skel released");
+            err2 = RR_MAKE_SHARED<InvalidOperationException>("Service skel released");
         }
-        if (err)
+        if (err2)
         {
-            GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), err, index, m, ep);
+            GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), err2, index, m, ep);
         }
 
         RR_INTRUSIVE_PTR<MessageElement> v3;
-        GeneratorServerBase::EndAsyncCallNext(skel, v3, err, index, m, ep);
+        GeneratorServerBase::EndAsyncCallNext(skel, v3, err2, index, m, ep);
     }
 };
 
@@ -505,8 +513,8 @@ class GeneratorServer : public GeneratorServerBase
     RR_SHARED_PTR<Generator<Return, Param> > generator;
 
   public:
-    GeneratorServer(RR_SHARED_PTR<Generator<Return, Param> > generator, boost::string_ref name, int32_t id,
-                    RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
+    GeneratorServer(const RR_SHARED_PTR<Generator<Return, Param> >& generator, boost::string_ref name, int32_t id,
+                    const RR_SHARED_PTR<ServiceSkel>& skel, const RR_SHARED_PTR<ServerEndpoint>& ep)
         : GeneratorServerBase(name, id, skel, ep)
     {
         if (!generator)
@@ -514,7 +522,7 @@ class GeneratorServer : public GeneratorServerBase
         this->generator = generator;
     }
 
-    virtual void CallNext(RR_INTRUSIVE_PTR<MessageEntry> m)
+    RR_OVIRTUAL void CallNext(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), service_path, name,
                                                 "Generator CallNext with id " << index);
@@ -548,7 +556,7 @@ class GeneratorServer : public GeneratorServerBase
         }
     }
 
-    virtual ~GeneratorServer() {}
+    RR_OVIRTUAL ~GeneratorServer() RR_OVERRIDE {}
 };
 
 template <typename Return>
@@ -559,7 +567,7 @@ class GeneratorServer<Return, void> : public GeneratorServerBase
 
   public:
     GeneratorServer(RR_SHARED_PTR<Generator<Return, void> > generator, boost::string_ref name, int32_t id,
-                    RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
+                    const RR_SHARED_PTR<ServiceSkel>& skel, const RR_SHARED_PTR<ServerEndpoint>& ep)
         : GeneratorServerBase(name, id, skel, ep)
     {
         if (!generator)
@@ -567,7 +575,7 @@ class GeneratorServer<Return, void> : public GeneratorServerBase
         this->generator = generator;
     }
 
-    virtual void CallNext(RR_INTRUSIVE_PTR<MessageEntry> m)
+    RR_OVIRTUAL void CallNext(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE
     {
         RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
         if (!skel1)
@@ -594,7 +602,7 @@ class GeneratorServer<Return, void> : public GeneratorServerBase
                                                    RR_BOOST_PLACEHOLDERS(_2), index, skel, m, ep));
         }
     }
-    virtual ~GeneratorServer() {}
+    RR_OVIRTUAL ~GeneratorServer() RR_OVERRIDE {}
 };
 
 template <typename Param>
@@ -605,7 +613,7 @@ class GeneratorServer<void, Param> : public GeneratorServerBase
 
   public:
     GeneratorServer(RR_SHARED_PTR<Generator<void, Param> > generator, boost::string_ref name, int32_t id,
-                    RR_SHARED_PTR<ServiceSkel> skel, RR_SHARED_PTR<ServerEndpoint> ep)
+                    const RR_SHARED_PTR<ServiceSkel>& skel, const RR_SHARED_PTR<ServerEndpoint>& ep)
         : GeneratorServerBase(name, id, skel, ep)
     {
         if (!generator)
@@ -613,7 +621,7 @@ class GeneratorServer<void, Param> : public GeneratorServerBase
         this->generator = generator;
     }
 
-    virtual void CallNext(RR_INTRUSIVE_PTR<MessageEntry> m)
+    RR_OVIRTUAL void CallNext(const RR_INTRUSIVE_PTR<MessageEntry>& m) RR_OVERRIDE
     {
         RR_SHARED_PTR<ServiceSkel> skel1 = skel.lock();
         if (!skel1)
@@ -643,8 +651,10 @@ class GeneratorServer<void, Param> : public GeneratorServerBase
                 v, boost::bind<void>(&GeneratorServerBase::CallNext2, RR_BOOST_PLACEHOLDERS(_1), index, skel, m, ep));
         }
     }
-    virtual ~GeneratorServer() {}
+    RR_OVIRTUAL ~GeneratorServer() RR_OVERRIDE {}
 };
+
+// NOLINTBEGIN(cppcoreguidelines-virtual-class-destructor)
 
 /**
  * @brief Helper class for synchronous service generators
@@ -659,12 +669,13 @@ class SyncGenerator : public Generator<Return, Param>
 {
   public:
     /** @copydoc Generator<Return,Param>::Next() */
-    virtual Return Next(const Param& v) = 0;
+    RR_OVIRTUAL Return Next(const Param& v) RR_OVERRIDE = 0;
     /** @copydoc Generator<Return,Param>::AsyncNext() */
-    virtual void AsyncNext(const Param& v,
-                           boost::function<void(const Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                           int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncNext(
+        const Param& v, boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         Return r;
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
@@ -679,11 +690,12 @@ class SyncGenerator : public Generator<Return, Param>
         detail::InvokeHandler(node, handler, r);
     }
     /** @copydoc Generator<Return,Param>::Abort() */
-    virtual void Abort() = 0;
+    RR_OVIRTUAL void Abort() RR_OVERRIDE = 0;
     /** @copydoc Generator<Return,Param>::AsyncAbort() */
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
         {
@@ -697,11 +709,12 @@ class SyncGenerator : public Generator<Return, Param>
         detail::InvokeHandler(node, handler);
     }
     /** @copydoc Generator<Return,Param>::Close() */
-    virtual void Close() = 0;
+    RR_OVIRTUAL void Close() RR_OVERRIDE = 0;
     /** @copydoc Generator<Return,Param>::AsyncClose() */
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
         {
@@ -714,7 +727,7 @@ class SyncGenerator : public Generator<Return, Param>
         }
         detail::InvokeHandler(node, handler);
     }
-    virtual ~SyncGenerator() {}
+    RR_OVIRTUAL ~SyncGenerator() RR_OVERRIDE {}
 };
 
 /** @copydoc SyncGenerator */
@@ -723,11 +736,13 @@ class SyncGenerator<Return, void> : public Generator<Return, void>
 {
   public:
     /** @copydoc Generator<Return,void>::Next() */
-    virtual Return Next() = 0;
+    RR_OVIRTUAL Return Next() RR_OVERRIDE = 0;
     /** @copydoc Generator<Return,void>::AsyncNext() */
-    virtual void AsyncNext(boost::function<void(const Return, RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                           int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncNext(
+        boost::function<void(const Return&, const RR_SHARED_PTR<RobotRaconteurException>& err)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         Return r;
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
@@ -742,11 +757,12 @@ class SyncGenerator<Return, void> : public Generator<Return, void>
         detail::InvokeHandler(node, handler, r);
     }
     /** @copydoc Generator<Return,void>::Abort() */
-    virtual void Abort() = 0;
+    RR_OVIRTUAL void Abort() RR_OVERRIDE = 0;
     /** @copydoc Generator<Return,void>::AsyncAbort() */
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
         {
@@ -760,11 +776,12 @@ class SyncGenerator<Return, void> : public Generator<Return, void>
         detail::InvokeHandler(node, handler);
     }
     /** @copydoc Generator<Return,void>::Close() */
-    virtual void Close() = 0;
+    RR_OVIRTUAL void Close() RR_OVERRIDE = 0;
     /** @copydoc Generator<Return,void>::AsyncClose() */
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
         {
@@ -777,7 +794,7 @@ class SyncGenerator<Return, void> : public Generator<Return, void>
         }
         detail::InvokeHandler(node, handler);
     }
-    virtual ~SyncGenerator() {}
+    RR_OVIRTUAL ~SyncGenerator() RR_OVERRIDE {}
 };
 
 /** @copydoc SyncGenerator */
@@ -786,11 +803,13 @@ class SyncGenerator<void, Param> : public Generator<void, Param>
 {
   public:
     /** @copydoc Generator<void,Param>::Next() */
-    virtual void Next(const Param& v) = 0;
+    RR_OVIRTUAL void Next(const Param& v) RR_OVERRIDE = 0;
     /** @copydoc Generator<void,Param>::AsyncNext() */
-    virtual void AsyncNext(const Param& v, boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                           int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncNext(const Param& v,
+                               boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                               int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
         {
@@ -804,11 +823,12 @@ class SyncGenerator<void, Param> : public Generator<void, Param>
         detail::InvokeHandler(node, handler);
     }
     /** @copydoc Generator<void,Param>::Abort() */
-    virtual void Abort() = 0;
+    RR_OVIRTUAL void Abort() RR_OVERRIDE = 0;
     /** @copydoc Generator<void,Param>::AsyncAbort() */
-    virtual void AsyncAbort(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncAbort(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
         {
@@ -822,11 +842,12 @@ class SyncGenerator<void, Param> : public Generator<void, Param>
         detail::InvokeHandler(node, handler);
     }
     /** @copydoc Generator<void,Param>::Close() */
-    virtual void Close() = 0;
+    RR_OVIRTUAL void Close() RR_OVERRIDE = 0;
     /** @copydoc Generator<void,Param>::AsyncClose() */
-    virtual void AsyncClose(boost::function<void(RR_SHARED_PTR<RobotRaconteurException> err)> handler,
-                            int32_t timeout = RR_TIMEOUT_INFINITE)
+    RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+                                int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
+        RR_UNUSED(timeout);
         RR_WEAK_PTR<RobotRaconteurNode> node;
         try
         {
@@ -839,8 +860,10 @@ class SyncGenerator<void, Param> : public Generator<void, Param>
         }
         detail::InvokeHandler(node, handler);
     }
-    virtual ~SyncGenerator() {}
+    RR_OVIRTUAL ~SyncGenerator() RR_OVERRIDE {}
 };
+
+// NOLINTEND(cppcoreguidelines-virtual-class-destructor)
 
 /**
  * @brief Utility class to use a C++ range with Generator<Return,void>.
@@ -864,12 +887,12 @@ class RangeGenerator : public SyncGenerator<typename T::value_type, void>
     RangeGenerator(const T& range)
     {
         this->range = range;
+        aborted = false;
         this->iter = this->range.begin();
-        this->aborted = false;
     }
 
     /** @copydoc SyncGenerator<void,Param>::Next() */
-    virtual typename T::value_type Next()
+    RR_OVIRTUAL typename T::value_type Next() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(range_lock);
 
@@ -886,19 +909,19 @@ class RangeGenerator : public SyncGenerator<typename T::value_type, void>
         return *iter++;
     }
     /** @copydoc SyncGenerator<void,Param>::Abort() */
-    virtual void Abort()
+    RR_OVIRTUAL void Abort() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(range_lock);
         iter = range.end();
         aborted = true;
     }
     /** @copydoc SyncGenerator<void,Param>::Close() */
-    virtual void Close()
+    RR_OVIRTUAL void Close() RR_OVERRIDE
     {
         boost::mutex::scoped_lock lock(range_lock);
         iter = range.end();
     }
-    virtual ~RangeGenerator() {}
+    RR_OVIRTUAL ~RangeGenerator() RR_OVERRIDE {}
 };
 
 /**

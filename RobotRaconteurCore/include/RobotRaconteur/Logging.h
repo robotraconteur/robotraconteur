@@ -76,6 +76,8 @@ class ROBOTRACONTEUR_CORE_API RRLogRecord
     std::string ThreadID;
     /** @brief The source coroutine fiber */
     std::string FiberID;
+
+    RRLogRecord();
 };
 
 /** @brief Write a RRlogRecord to a stream */
@@ -96,11 +98,11 @@ class ROBOTRACONTEUR_CORE_API RRLogRecordStream : public boost::intrusive_ref_co
     std::stringstream ss;
 
   public:
-    RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node);
-    RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl,
+    RRLogRecordStream(const RR_SHARED_PTR<RobotRaconteurNode>& node);
+    RRLogRecordStream(const RR_SHARED_PTR<RobotRaconteurNode>& node, RobotRaconteur_LogLevel lvl,
                       RobotRaconteur_LogComponent component, int64_t ep, const boost::posix_time::ptime& time,
                       const std::string& source_file, uint32_t source_line, const std::string& thread_id);
-    RRLogRecordStream(RR_SHARED_PTR<RobotRaconteurNode> node, RobotRaconteur_LogLevel lvl,
+    RRLogRecordStream(const RR_SHARED_PTR<RobotRaconteurNode>& node, RobotRaconteur_LogLevel lvl,
                       RobotRaconteur_LogComponent component, const std::string& component_name,
                       const std::string& component_object_id, int64_t ep, const std::string& service_path,
                       const std::string& member, const boost::posix_time::ptime& time, const std::string& source_file,
@@ -135,6 +137,7 @@ class ROBOTRACONTEUR_CORE_API LogRecordHandler
      * @param record The log record
      */
     virtual void HandleLogRecord(const RRLogRecord& record) = 0;
+    virtual ~LogRecordHandler() {}
 };
 
 /**
@@ -154,13 +157,15 @@ class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
      * @param append If true, log messages are appended. If false, the file is truncated when opened
      */
     void OpenFile(const std::string& filename, bool append = true);
-    virtual void HandleLogRecord(const RRLogRecord& record);
+    RR_OVIRTUAL void HandleLogRecord(const RRLogRecord& record) RR_OVERRIDE;
 };
 
 #define ROBOTRACONTEUR_LOG_EMPTY_NODE
 #define ROBOTRACONTEUR_LOG_DEFAULT_NODE RobotRaconteur::RobotRaconteurNode::weak_sp()
 
 #ifndef ROBOTRACONTEUR_DISABLE_LOGGING
+
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define ROBOTRACONTEUR_LOG(node, lvl, component, component_name, component_object_id, ep, service_path, member, args)  \
     {                                                                                                                  \
         boost::intrusive_ptr<RobotRaconteur::RRLogRecordStream> ____rr_log_record_stream____ =                         \
@@ -172,7 +177,10 @@ class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
         {                                                                                                              \
             ____rr_log_record_stream____->Stream() << args;                                                            \
         }                                                                                                              \
-    }                                                                                                                  \
+    }
+
+// NOLINTEND(bugprone-macro-parentheses)
+
 // TODO: Implement throttling
 #define ROBOTRACONTEUR_LOG_THROTTLE(node, lvl, component, component_name, component_object_id, ep, service_path,       \
                                     member, limit, args)                                                               \

@@ -36,7 +36,7 @@ function(RR_TEST_GEN lang)
     string(REPLACE ";" " " RR_TEST_ROBDEFS_1 "${RR_TEST_ROBDEFS}")
     set(RR_TEST_GEN_CMD "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurGen")
     set(RR_TEST_GEN_CMD_ARGS
-        "--thunksource --lang=${lang} -I ${CMAKE_SOURCE_DIR}/testing/RobotRaconteurTest --output-dir ${CMAKE_CURRENT_BINARY_DIR}/gen/@OUT_DIR_NAME@/${lang} ${RR_TEST_ROBDEFS_1}"
+        "--thunksource --lang=${lang} -I ${CMAKE_SOURCE_DIR}/test/robdef --output-dir ${CMAKE_CURRENT_BINARY_DIR}/gen/@OUT_DIR_NAME@/${lang} ${RR_TEST_ROBDEFS_1}"
     )
 
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gen/out/${lang}")
@@ -45,14 +45,14 @@ function(RR_TEST_GEN lang)
 
     set(GEN_FILE_LIST "")
 
-    file(GLOB_RECURSE ROBOTRACONTEUR_GEN_TEST_FILES RELATIVE "${CMAKE_SOURCE_DIR}/testing/gen/${lang}"
-         "${CMAKE_SOURCE_DIR}/testing/gen/${lang}/*")
+    file(GLOB_RECURSE ROBOTRACONTEUR_GEN_TEST_FILES RELATIVE "${CMAKE_SOURCE_DIR}/test/gen/${lang}"
+         "${CMAKE_SOURCE_DIR}/test/gen/${lang}/*")
     foreach(F ${ROBOTRACONTEUR_GEN_TEST_FILES})
         if(WIN32)
-            configure_file("${CMAKE_SOURCE_DIR}/testing/gen/${lang}/${F}"
+            configure_file("${CMAKE_SOURCE_DIR}/test/gen/${lang}/${F}"
                            "${CMAKE_CURRENT_BINARY_DIR}/gen/test/${lang}/${F}" NEWLINE_STYLE CRLF)
         else()
-            configure_file("${CMAKE_SOURCE_DIR}/testing/gen/${lang}/${F}"
+            configure_file("${CMAKE_SOURCE_DIR}/test/gen/${lang}/${F}"
                            "${CMAKE_CURRENT_BINARY_DIR}/gen/test/${lang}/${F}" NEWLINE_STYLE LF)
         endif()
         set(GEN_FILE_LIST

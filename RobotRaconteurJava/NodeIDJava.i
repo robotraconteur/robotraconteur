@@ -64,7 +64,7 @@ public:
 
 	%javamethodmodifiers NodeID(std::vector<uint8_t> id) "private";
 	//NodeID(std::vector<uint8_t> id);
-	NodeID(std::string id);
+	NodeID(const std::string& id);
 
 	
 	

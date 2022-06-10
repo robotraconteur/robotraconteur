@@ -75,8 +75,9 @@ bool LinuxLocalTransportDiscovery_dir::Init(const boost::filesystem::path& path)
 
 bool LinuxLocalTransportDiscovery_dir::Refresh()
 {
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
     char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
-    const struct inotify_event* event;
+    const struct inotify_event* event = NULL;
 
     if (notify_fd < 0)
         return false;
@@ -107,7 +108,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
         }
     }
 
-    int len = read(notify_fd, buf, sizeof(buf));
+    ssize_t len = read(notify_fd, buf, sizeof(buf));
     if (len == -1 && errno != EAGAIN)
     {
         return errno == EAGAIN;
@@ -142,7 +143,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
     return true;
 }
 
-LinuxLocalTransportDiscovery::LinuxLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node)
+LinuxLocalTransportDiscovery::LinuxLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node)
     : LocalTransportDiscovery(node)
 {
     public_wd = -1;
@@ -151,23 +152,25 @@ LinuxLocalTransportDiscovery::LinuxLocalTransportDiscovery(RR_SHARED_PTR<RobotRa
 void LinuxLocalTransportDiscovery::Init()
 {
     shutdown_evt = RR_MAKE_SHARED<LocalTransportUtil::FD>(eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK));
-    if (!shutdown_evt.get() < 0)
+    if (shutdown_evt->fd() < 0)
         throw InternalErrorException("Internal error");
 
     public_evt = RR_MAKE_SHARED<LocalTransportUtil::FD>(inotify_init1(IN_NONBLOCK | IN_CLOEXEC));
     if (public_evt->fd() < 0)
         throw InternalErrorException("Internal error");
 
-    boost::thread(boost::bind(&LinuxLocalTransportDiscovery::run, shared_from_this()));
+    poll_thread = boost::thread(boost::bind(&LinuxLocalTransportDiscovery::run, shared_from_this()));
 }
 
 void LinuxLocalTransportDiscovery::Shutdown()
 {
-    int ret;
+    int ret = 0;
     do
     {
         ret = eventfd_write(shutdown_evt->fd(), 1);
     } while (ret < 0 && errno == EINTR);
+
+    poll_thread.join();
 }
 
 LinuxLocalTransportDiscovery::~LinuxLocalTransportDiscovery() {}
@@ -214,7 +217,7 @@ void LinuxLocalTransportDiscovery::run()
 
         std::vector<struct pollfd> poll_fds;
 
-        struct pollfd shutdown_evt_poll;
+        struct pollfd shutdown_evt_poll = {};
         shutdown_evt_poll.fd = shutdown_evt->fd();
         shutdown_evt_poll.events = POLLIN | POLLERR | POLLRDHUP;
         shutdown_evt_poll.revents = 0;
@@ -222,7 +225,7 @@ void LinuxLocalTransportDiscovery::run()
 
         if (private_dir)
         {
-            struct pollfd private_dir_poll;
+            struct pollfd private_dir_poll = {};
             private_dir_poll.fd = private_dir->notify_fd;
             private_dir_poll.events = POLLIN | POLLERR | POLLRDHUP;
             private_dir_poll.revents = 0;
@@ -231,7 +234,7 @@ void LinuxLocalTransportDiscovery::run()
 
         if (public_evt && public_evt->fd() > 0)
         {
-            struct pollfd public_evt_poll;
+            struct pollfd public_evt_poll = {};
             public_evt_poll.fd = public_evt->fd();
             public_evt_poll.events = POLLIN | POLLERR | POLLRDHUP;
             public_evt_poll.revents = 0;
@@ -246,7 +249,7 @@ void LinuxLocalTransportDiscovery::run()
                 continue;
             if (e->second->notify_fd > 0)
             {
-                struct pollfd public_dir_poll;
+                struct pollfd public_dir_poll = {};
                 public_dir_poll.fd = e->second->notify_fd;
                 public_dir_poll.events = POLLIN | POLLERR | POLLRDHUP;
                 public_dir_poll.revents = 0;
@@ -254,7 +257,7 @@ void LinuxLocalTransportDiscovery::run()
             }
         }
 
-        int ret;
+        int ret = 0;
 
         if (!refresh_now)
         {
@@ -263,7 +266,7 @@ void LinuxLocalTransportDiscovery::run()
             if (ret < 0 && errno != EINTR)
                 return;
 
-            struct pollfd shutdown_evt_poll2;
+            struct pollfd shutdown_evt_poll2 = {};
             shutdown_evt_poll2.fd = shutdown_evt->fd();
             shutdown_evt_poll2.events = POLLIN | POLLERR | POLLRDHUP;
             shutdown_evt_poll2.revents = 0;
@@ -274,7 +277,7 @@ void LinuxLocalTransportDiscovery::run()
                 return;
         }
 
-        eventfd_t shutdown_evt_val;
+        eventfd_t shutdown_evt_val = 0;
         if (eventfd_read(shutdown_evt->fd(), &shutdown_evt_val) >= 0)
         {
             return;
@@ -362,10 +365,11 @@ void LinuxLocalTransportDiscovery::refresh_public()
 {
     if (public_wd > 0)
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
         char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
-        const struct inotify_event* event;
+        const struct inotify_event* event = NULL;
 
-        int len = read(public_evt->fd(), buf, sizeof(buf));
+        ssize_t len = read(public_evt->fd(), buf, sizeof(buf));
         if (len > 0)
         {
             for (char* ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len)

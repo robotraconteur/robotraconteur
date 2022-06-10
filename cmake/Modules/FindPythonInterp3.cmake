@@ -29,6 +29,8 @@
 unset(_Python3_NAMES)
 
 set(_PYTHON3_VERSIONS
+    3.11
+    3.10
     3.9
     3.8
     3.7

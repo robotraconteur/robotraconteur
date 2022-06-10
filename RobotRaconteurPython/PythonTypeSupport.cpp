@@ -48,7 +48,7 @@ class NpyIterAutoPtr
 };
 
 template <typename T>
-T find_by_name(std::vector<T> t, std::string& name)
+T find_by_name(const std::vector<T>& t, const std::string& name)
 {
     BOOST_FOREACH (T t1, t)
     {
@@ -62,7 +62,7 @@ T find_by_name(std::vector<T> t, std::string& name)
 }
 
 template <typename T>
-T find_by_name(std::vector<T> t, boost::string_ref name)
+T find_by_name(const std::vector<T>& t, boost::string_ref name)
 {
     BOOST_FOREACH (T t1, t)
     {
@@ -145,8 +145,8 @@ PyAutoPtr<PyObject> stringToPyObject(boost::string_ref s)
 
 PyAutoPtr<PyObject> stringToPyObject(const char* s) { return stringToPyObject(boost::string_ref(s, strlen(s))); }
 
-void VerifyMultiDimArrayLength(boost::intrusive_ptr<MessageElementNestedElementList> data,
-                               boost::shared_ptr<TypeDefinition> type1)
+void VerifyMultiDimArrayLength(const boost::intrusive_ptr<MessageElementNestedElementList>& data,
+                               const boost::shared_ptr<TypeDefinition>& type1)
 {
     boost::intrusive_ptr<RRArray<uint32_t> > data_dims =
         MessageElement::FindElement(data->Elements, "dims")->CastData<RRArray<uint32_t> >();
@@ -171,7 +171,7 @@ void VerifyMultiDimArrayLength(boost::intrusive_ptr<MessageElementNestedElementL
         throw DataTypeException("Array dimension mismatch");
 }
 
-PyObject* GetStructureType(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj,
+PyObject* GetStructureType(const std::string& type, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
                            boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
 {
     PyObject* modules_dict = PyImport_GetModuleDict();
@@ -400,15 +400,16 @@ PyObject* GetStructureType(const std::string& type, boost::shared_ptr<RobotRacon
     return new_struct_type;
 }
 
-PyObject* NewStructure(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj,
-                       boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
+PyObject* NewStructure(const std::string& type, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                       const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
 {
     PyAutoPtr<PyObject> struct_type(GetStructureType(type, obj, node));
     return PyObject_CallObject(struct_type.get(), NULL);
 }
 
-PyObject* GetNumPyDescrForType(const std::string& type, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj,
-                               boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
+PyObject* GetNumPyDescrForType(const std::string& type,
+                               const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                               const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
 {
     RR_SHARED_PTR<TypeDefinition> type1 = RR_MAKE_SHARED<TypeDefinition>();
     type1->Type = DataTypes_pod_t;
@@ -420,9 +421,9 @@ PyObject* GetNumPyDescrForType(const std::string& type, boost::shared_ptr<RobotR
     return GetNumPyDescrForType(rr_cast<ServiceEntryDefinition>(n), obj, node);
 }
 
-PyObject* GetNumPyDescrForType(RR_SHARED_PTR<TypeDefinition> type,
-                               boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj,
-                               boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
+PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<TypeDefinition>& type,
+                               const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                               const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
 {
     std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs;
     RR_SHARED_PTR<NamedTypeDefinition> n = type->ResolveNamedType(other_defs, node, obj);
@@ -431,9 +432,9 @@ PyObject* GetNumPyDescrForType(RR_SHARED_PTR<TypeDefinition> type,
     return GetNumPyDescrForType(rr_cast<ServiceEntryDefinition>(n), obj, node);
 }
 
-PyObject* GetNumPyDescrForType(RR_SHARED_PTR<ServiceEntryDefinition> e,
-                               boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj,
-                               boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
+PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
+                               const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                               const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
 {
     PyAutoPtr<PyObject> decr_list(PyList_New(e->Members.size()));
     for (size_t i = 0; i < e->Members.size(); i++)
@@ -519,8 +520,8 @@ class PackMessageElementImpl
 {
   public:
     boost::intrusive_ptr<MessageElementNestedElementList> PackMessageElement_namedarray(
-        PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj,
-        boost::shared_ptr<RobotRaconteurNode> node)
+        PyObject* data, const boost::shared_ptr<TypeDefinition>& type1,
+        const boost::shared_ptr<WrappedServiceStub>& obj, const boost::shared_ptr<RobotRaconteurNode>& node)
     {
         if (!PyArray_Check(data))
         {
@@ -600,8 +601,8 @@ class PackMessageElementImpl
     }
 
     boost::intrusive_ptr<MessageElementNestedElementList> PackMessageElement_pod(
-        PyObject* data, boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> obj,
-        boost::shared_ptr<RobotRaconteurNode> node)
+        PyObject* data, const boost::shared_ptr<TypeDefinition>& type1,
+        const boost::shared_ptr<WrappedServiceStub>& obj, const boost::shared_ptr<RobotRaconteurNode>& node)
     {
         if (!PyArray_Check(data))
         {
@@ -669,7 +670,7 @@ class PackMessageElementImpl
             PyAutoPtr<PyObject> a(PySequence_GetItem(data2.get(), i));
 
             std::vector<boost::intrusive_ptr<MessageElement> > m_struct;
-            BOOST_FOREACH (boost::shared_ptr<MemberDefinition> m_def, struct_def->Members)
+            BOOST_FOREACH (const boost::shared_ptr<MemberDefinition>& m_def, struct_def->Members)
             {
                 boost::shared_ptr<PropertyDefinition> p_def = boost::dynamic_pointer_cast<PropertyDefinition>(m_def);
                 if (!p_def)
@@ -778,8 +779,9 @@ class PackMessageElementImpl
         return CreateMessageElementNestedElementList(DataTypes_pod_array_t, typestr2, ret);
     }
 
-    boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, boost::shared_ptr<TypeDefinition> type1,
-                                                            boost::shared_ptr<WrappedServiceStub> obj,
+    boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data,
+                                                            const boost::shared_ptr<TypeDefinition>& type1,
+                                                            const boost::shared_ptr<WrappedServiceStub>& obj,
                                                             boost::shared_ptr<RobotRaconteurNode> node)
     {
         if (!type1)
@@ -1071,7 +1073,7 @@ class PackMessageElementImpl
                 element->ElementTypeName = typestr;
 
                 std::vector<boost::intrusive_ptr<MessageElement> > mret;
-                BOOST_FOREACH (boost::shared_ptr<MemberDefinition> m_def, struct_def->Members)
+                BOOST_FOREACH (const boost::shared_ptr<MemberDefinition>& m_def, struct_def->Members)
                 {
                     boost::shared_ptr<PropertyDefinition> p_def =
                         boost::dynamic_pointer_cast<PropertyDefinition>(m_def);
@@ -1249,7 +1251,7 @@ class PackMessageElementImpl
     std::vector<std::string> field_name;
     std::vector<RR_SHARED_PTR<TypeDefinition> > field_type;
 
-    void push_field_level(const std::string& new_var, RR_SHARED_PTR<TypeDefinition> new_type)
+    void push_field_level(const std::string& new_var, const RR_SHARED_PTR<TypeDefinition>& new_type)
     {
         field_name.push_back(new_var);
         field_type.push_back(new_type);
@@ -1275,7 +1277,7 @@ class PackMessageElementImpl
         return boost::make_tuple(name, type);
     }
 
-    std::string get_exception_message(std::string msg)
+    std::string get_exception_message(const std::string& msg)
     {
         boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
 
@@ -1302,8 +1304,8 @@ class PackMessageElementImpl
     }
 };
 
-boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, boost::shared_ptr<TypeDefinition> type1,
-                                                        boost::shared_ptr<WrappedServiceStub> obj,
+boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, const boost::shared_ptr<TypeDefinition>& type1,
+                                                        const boost::shared_ptr<WrappedServiceStub>& obj,
                                                         boost::shared_ptr<RobotRaconteurNode> node)
 {
     PackMessageElementImpl p;
@@ -1331,8 +1333,8 @@ boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, boost::s
     }
 }
 
-boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, boost::shared_ptr<TypeDefinition> type1,
-                                                        boost::shared_ptr<ServerContext> obj,
+boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, const boost::shared_ptr<TypeDefinition>& type1,
+                                                        const boost::shared_ptr<ServerContext>& obj,
                                                         boost::shared_ptr<RobotRaconteurNode> node)
 {
     if (!node && obj)
@@ -1346,10 +1348,10 @@ boost::intrusive_ptr<MessageElement> PackMessageElement(PyObject* data, boost::s
 class UnpackMessageElementImpl
 {
   public:
-    PyObject* UnpackMessageElement_namedarray(boost::intrusive_ptr<MessageElement> element,
-                                              boost::shared_ptr<TypeDefinition> type1,
-                                              boost::shared_ptr<WrappedServiceStub> stub,
-                                              boost::shared_ptr<RobotRaconteurNode> node)
+    PyObject* UnpackMessageElement_namedarray(const boost::intrusive_ptr<MessageElement>& element,
+                                              const boost::shared_ptr<TypeDefinition>& type1,
+                                              const boost::shared_ptr<WrappedServiceStub>& stub,
+                                              const boost::shared_ptr<RobotRaconteurNode>& node)
     {
         std::string typestr = element->ElementTypeName.str().to_string();
 
@@ -1416,10 +1418,10 @@ class UnpackMessageElementImpl
         return ret.detach();
     }
 
-    PyObject* UnpackMessageElement_pod(boost::intrusive_ptr<MessageElement> element,
-                                       boost::shared_ptr<TypeDefinition> type1,
-                                       boost::shared_ptr<WrappedServiceStub> stub,
-                                       boost::shared_ptr<RobotRaconteurNode> node)
+    PyObject* UnpackMessageElement_pod(const boost::intrusive_ptr<MessageElement>& element,
+                                       const boost::shared_ptr<TypeDefinition>& type1,
+                                       const boost::shared_ptr<WrappedServiceStub>& stub,
+                                       const boost::shared_ptr<RobotRaconteurNode>& node)
     {
         std::string typestr = element->ElementTypeName.str().to_string();
         boost::tuple<boost::string_ref, boost::string_ref> typestr_s = SplitQualifiedName(typestr);
@@ -1492,7 +1494,7 @@ class UnpackMessageElementImpl
 
             boost::intrusive_ptr<MessageElementNestedElementList> s = el1->CastDataToNestedList(DataTypes_pod_t);
 
-            BOOST_FOREACH (boost::shared_ptr<MemberDefinition> m, struct_def->Members)
+            BOOST_FOREACH (const boost::shared_ptr<MemberDefinition>& m, struct_def->Members)
             {
                 boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
                 boost::intrusive_ptr<MessageElement> el = MessageElement::FindElement(s->Elements, p->Name);
@@ -1627,8 +1629,9 @@ class UnpackMessageElementImpl
         return a.detach();
     }
 
-    PyObject* UnpackMessageElement(boost::intrusive_ptr<MessageElement> element,
-                                   boost::shared_ptr<TypeDefinition> type1, boost::shared_ptr<WrappedServiceStub> stub,
+    PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
+                                   const boost::shared_ptr<TypeDefinition>& type1,
+                                   const boost::shared_ptr<WrappedServiceStub>& stub,
                                    boost::shared_ptr<RobotRaconteurNode> node)
     {
         if (!element)
@@ -1970,7 +1973,7 @@ class UnpackMessageElementImpl
             boost::intrusive_ptr<MessageElementNestedElementList> s =
                 element->CastDataToNestedList(DataTypes_structure_t);
 
-            BOOST_FOREACH (boost::shared_ptr<MemberDefinition> m, struct_def->Members)
+            BOOST_FOREACH (const boost::shared_ptr<MemberDefinition>& m, struct_def->Members)
             {
                 boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(m);
                 push_field_level(p->Name, p->Type);
@@ -2209,7 +2212,7 @@ class UnpackMessageElementImpl
     std::vector<std::string> field_name;
     std::vector<RR_SHARED_PTR<TypeDefinition> > field_type;
 
-    void push_field_level(const std::string& new_var, RR_SHARED_PTR<TypeDefinition> new_type)
+    void push_field_level(const std::string& new_var, const RR_SHARED_PTR<TypeDefinition>& new_type)
     {
         field_name.push_back(new_var);
         field_type.push_back(new_type);
@@ -2235,7 +2238,7 @@ class UnpackMessageElementImpl
         return boost::make_tuple(name, type);
     }
 
-    std::string get_exception_message(std::string msg)
+    std::string get_exception_message(const std::string& msg)
     {
         boost::tuple<std::string, RR_SHARED_PTR<TypeDefinition> > f = get_current_field();
 
@@ -2262,8 +2265,10 @@ class UnpackMessageElementImpl
     }
 };
 
-PyObject* UnpackMessageElement(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1,
-                               boost::shared_ptr<WrappedServiceStub> stub, boost::shared_ptr<RobotRaconteurNode> node)
+PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
+                               const boost::shared_ptr<TypeDefinition>& type1,
+                               const boost::shared_ptr<WrappedServiceStub>& stub,
+                               boost::shared_ptr<RobotRaconteurNode> node)
 {
     UnpackMessageElementImpl u;
     if (type1)
@@ -2290,8 +2295,9 @@ PyObject* UnpackMessageElement(boost::intrusive_ptr<MessageElement> element, boo
     }
 }
 
-PyObject* UnpackMessageElement(boost::intrusive_ptr<MessageElement> element, boost::shared_ptr<TypeDefinition> type1,
-                               boost::shared_ptr<ServerContext> obj, boost::shared_ptr<RobotRaconteurNode> node)
+PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element,
+                               const boost::shared_ptr<TypeDefinition>& type1,
+                               const boost::shared_ptr<ServerContext>& obj, boost::shared_ptr<RobotRaconteurNode> node)
 {
     if (!node && obj)
     {
@@ -2302,7 +2308,8 @@ PyObject* UnpackMessageElement(boost::intrusive_ptr<MessageElement> element, boo
 }
 
 template <typename type2>
-boost::intrusive_ptr<RRBaseArray> PackToRRArray1_int(PyObject* array_, boost::intrusive_ptr<RRBaseArray> destrrarray)
+boost::intrusive_ptr<RRBaseArray> PackToRRArray1_int(PyObject* array_,
+                                                     const boost::intrusive_ptr<RRBaseArray>& destrrarray)
 {
     PyAutoPtr<PyObject> array_fast(PySequence_Fast(array_, "Internal error"));
     if (array_fast.get() == NULL)
@@ -2410,7 +2417,8 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_int(PyObject* array_, boost::in
 }
 
 template <typename type2>
-boost::intrusive_ptr<RRBaseArray> PackToRRArray1_float(PyObject* array_, boost::intrusive_ptr<RRBaseArray> destrrarray)
+boost::intrusive_ptr<RRBaseArray> PackToRRArray1_float(PyObject* array_,
+                                                       const boost::intrusive_ptr<RRBaseArray>& destrrarray)
 {
     PyAutoPtr<PyObject> array_fast(PySequence_Fast(array_, "Internal error"));
     if (array_fast.get() == NULL)
@@ -2496,7 +2504,7 @@ struct complex_scalar_type<cfloat>
 
 template <typename type2>
 boost::intrusive_ptr<RRBaseArray> PackToRRArray1_complex(PyObject* array_,
-                                                         boost::intrusive_ptr<RRBaseArray> destrrarray)
+                                                         const boost::intrusive_ptr<RRBaseArray>& destrrarray)
 {
     PyAutoPtr<PyObject> array_fast(PySequence_Fast(array_, "Internal error"));
     if (array_fast.get() == NULL)
@@ -2564,7 +2572,8 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_complex(PyObject* array_,
     return array2;
 }
 
-boost::intrusive_ptr<RRBaseArray> PackToRRArray1_bool(PyObject* array_, boost::intrusive_ptr<RRBaseArray> destrrarray)
+boost::intrusive_ptr<RRBaseArray> PackToRRArray1_bool(PyObject* array_,
+                                                      const boost::intrusive_ptr<RRBaseArray>& destrrarray)
 {
     PyAutoPtr<PyObject> array_fast(PySequence_Fast(array_, "Internal error"));
     if (array_fast.get() == NULL)
@@ -2612,7 +2621,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_bool(PyObject* array_, boost::i
     return array2;
 }
 
-boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, boost::shared_ptr<TypeDefinition> type1,
+boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1,
                                                 boost::intrusive_ptr<RRBaseArray> destrrarray)
 {
     if (!type1)
@@ -2780,7 +2789,8 @@ static PyObject* RR_PyInt_FromLong(long ival)
 #endif
 }
 
-PyObject* UnpackFromRRArray(boost::intrusive_ptr<RRBaseArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
+PyObject* UnpackFromRRArray(const boost::intrusive_ptr<RRBaseArray>& rrarray,
+                            const boost::shared_ptr<TypeDefinition>& type1)
 {
 
     if (type1)
@@ -2825,7 +2835,7 @@ PyObject* UnpackFromRRArray(boost::intrusive_ptr<RRBaseArray> rrarray, boost::sh
     return UnpackFromRRArray_numpy(rrarray, type1);
 }
 
-boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, boost::shared_ptr<TypeDefinition> type1,
+boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1,
                                                       boost::intrusive_ptr<RRBaseArray> destrrarray)
 {
     if (!PyArray_Check(array_))
@@ -2892,7 +2902,8 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, boost::s
     return destrrarray;
 }
 
-PyObject* UnpackFromRRArray_numpy(boost::intrusive_ptr<RRBaseArray> rrarray, boost::shared_ptr<TypeDefinition> type1)
+PyObject* UnpackFromRRArray_numpy(const boost::intrusive_ptr<RRBaseArray>& rrarray,
+                                  const boost::shared_ptr<TypeDefinition>& type1)
 {
     if (!rrarray)
     {
@@ -2947,7 +2958,7 @@ PyObject* UnpackFromRRArray_numpy(boost::intrusive_ptr<RRBaseArray> rrarray, boo
 }
 
 boost::tuple<boost::intrusive_ptr<RRBaseArray>, boost::intrusive_ptr<RRBaseArray> > PackToMultiDimArray_numpy1(
-    PyArrayObject* array1, RR_SHARED_PTR<TypeDefinition> type1)
+    PyArrayObject* array1, const RR_SHARED_PTR<TypeDefinition>& type1)
 {
     int npy_type = PyArray_TYPE(array1);
     switch (npy_type)
@@ -3008,7 +3019,7 @@ boost::tuple<boost::intrusive_ptr<RRBaseArray>, boost::intrusive_ptr<RRBaseArray
 }
 
 boost::intrusive_ptr<MessageElementNestedElementList> PackToRRMultiDimArray_numpy(
-    PyObject* array_, boost::shared_ptr<TypeDefinition> type1)
+    PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1)
 {
     // if (!_NumPyAvailable) throw InvalidOperationException("NumPy is not available");
 
@@ -3078,8 +3089,8 @@ static PyObject* UnpackFromRRMultiDimArray_numpy1(boost::intrusive_ptr<RRBaseArr
     return array_b.detach();
 }
 
-PyObject* UnpackFromRRMultiDimArray_numpy(boost::intrusive_ptr<MessageElementNestedElementList> rrarray,
-                                          boost::shared_ptr<TypeDefinition> type1)
+PyObject* UnpackFromRRMultiDimArray_numpy(const boost::intrusive_ptr<MessageElementNestedElementList>& rrarray,
+                                          const boost::shared_ptr<TypeDefinition>& type1)
 {
     if (!rrarray)
     {
@@ -3230,9 +3241,9 @@ PyArray_Descr* RRTypeIdToNumPyDataType(DataTypes rr_type)
 
 }*/
 
-DataTypes GetNamedTypeEntryType(boost::shared_ptr<RobotRaconteur::TypeDefinition> type1,
-                                boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj,
-                                boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
+DataTypes GetNamedTypeEntryType(const boost::shared_ptr<RobotRaconteur::TypeDefinition>& type1,
+                                const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                                const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
 {
     if (!type1)
         throw InvalidArgumentException("Type must not be null");

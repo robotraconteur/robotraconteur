@@ -104,6 +104,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilter
     boost::function<bool(const ServiceInfo2&)> Predicate;
     /** The maximum number of connections the subscription will create. Zero means unlimited connections. **/
     uint32_t MaxConnections;
+
+    ServiceSubscriptionFilter();
 };
 
 /**
@@ -154,12 +156,13 @@ class IServiceSubscription
 
   protected:
     virtual void Init(const std::vector<std::string>& service_types,
-                      RR_SHARED_PTR<ServiceSubscriptionFilter> filter) = 0;
+                      const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter) = 0;
     virtual void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) = 0;
     virtual void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) = 0;
 
   public:
     virtual void Close() = 0;
+    virtual ~IServiceSubscription(){};
 };
 
 /**
@@ -207,7 +210,7 @@ class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription : public IServiceSubscrip
      * @return event_connection The Boost.Signals2 connection
      */
     event_connection AddServiceDetectedListener(
-        boost::function<void(RR_SHARED_PTR<ServiceInfo2Subscription>, const ServiceSubscriptionClientID&,
+        boost::function<void(const RR_SHARED_PTR<ServiceInfo2Subscription>&, const ServiceSubscriptionClientID&,
                              const ServiceInfo2&)>
             handler);
 
@@ -225,7 +228,7 @@ class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription : public IServiceSubscrip
      * @return event_connection The Boost.Signals2 connection
      */
     event_connection AddServiceLostListener(
-        boost::function<void(RR_SHARED_PTR<ServiceInfo2Subscription>, const ServiceSubscriptionClientID&,
+        boost::function<void(const RR_SHARED_PTR<ServiceInfo2Subscription>&, const ServiceSubscriptionClientID&,
                              const ServiceInfo2&)>
             handler);
 
@@ -235,7 +238,7 @@ class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription : public IServiceSubscrip
      * Closes the subscription. Subscriptions are automatically closed when the node is shut down.
      *
      */
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
@@ -254,21 +257,22 @@ class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription : public IServiceSubscrip
 
     uint32_t retry_delay;
 
-    boost::signals2::signal<void(RR_SHARED_PTR<ServiceInfo2Subscription>, const ServiceSubscriptionClientID&,
+    boost::signals2::signal<void(const RR_SHARED_PTR<ServiceInfo2Subscription>&, const ServiceSubscriptionClientID&,
                                  const ServiceInfo2&)>
         detected_listeners;
-    boost::signals2::signal<void(RR_SHARED_PTR<ServiceInfo2Subscription>, const ServiceSubscriptionClientID&,
+    boost::signals2::signal<void(const RR_SHARED_PTR<ServiceInfo2Subscription>&, const ServiceSubscriptionClientID&,
                                  const ServiceInfo2&)>
         lost_listeners;
 
   public:
     // Do not call, use RobotRaconteurNode()->SubscribeServiceInfo2()
-    ServiceInfo2Subscription(RR_SHARED_PTR<detail::Discovery> parent);
+    ServiceInfo2Subscription(const RR_SHARED_PTR<detail::Discovery>& parent);
 
   protected:
-    virtual void Init(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter);
-    virtual void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage);
-    virtual void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage);
+    RR_OVIRTUAL void Init(const std::vector<std::string>& service_types,
+                          const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter) RR_OVERRIDE;
+    RR_OVIRTUAL void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE;
+    RR_OVIRTUAL void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE;
 
     void fire_ServiceDetectedListener(const ServiceSubscriptionClientID& noden, const ServiceInfo2& info);
     void fire_ServiceLostListener(const ServiceSubscriptionClientID& noden, const ServiceInfo2& info);
@@ -278,8 +282,8 @@ namespace detail
 {
 template <typename T>
 void AsyncGetDefaultClient_handler_adapter(
-    boost::function<void(RR_SHARED_PTR<T>, RR_SHARED_PTR<RobotRaconteurException>)>& handler,
-    RR_SHARED_PTR<RRObject> obj, RR_SHARED_PTR<RobotRaconteurException> err)
+    const boost::function<void(const RR_SHARED_PTR<T>&, const RR_SHARED_PTR<RobotRaconteurException>&)>& handler,
+    const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
     if (err)
     {
@@ -364,8 +368,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * @return event_connection The Boost.Signals2 connection
      */
     event_connection AddClientConnectListener(
-        boost::function<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&,
-                             RR_SHARED_PTR<RRObject>)>
+        boost::function<void(const RR_SHARED_PTR<ServiceSubscription>&, const ServiceSubscriptionClientID&,
+                             const RR_SHARED_PTR<RRObject>&)>
             handler);
 
     /**
@@ -381,8 +385,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * @return event_connection The Boost.Signals2 connection
      */
     event_connection AddClientDisconnectListener(
-        boost::function<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&,
-                             RR_SHARED_PTR<RRObject>)>
+        boost::function<void(const RR_SHARED_PTR<ServiceSubscription>&, const ServiceSubscriptionClientID&,
+                             const RR_SHARED_PTR<RRObject>&)>
             handler);
 
     /**
@@ -399,8 +403,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * @return event_connection The Boost.Signals2 connection
      */
     event_connection AddClientConnectFailedListener(
-        boost::function<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&,
-                             const std::vector<std::string>&, RR_SHARED_PTR<RobotRaconteurException>)>
+        boost::function<void(const RR_SHARED_PTR<ServiceSubscription>&, const ServiceSubscriptionClientID&,
+                             const std::vector<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
             handler);
 
     /**
@@ -409,7 +413,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * Close the subscription. Subscriptions are automatically closed when the node is shut down.
      *
      */
-    virtual void Close();
+    RR_OVIRTUAL void Close() RR_OVERRIDE;
 
     /**
      * @brief Claim a client that was connected by the subscription
@@ -420,7 +424,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      *
      * @param client The client to be claimed
      */
-    virtual void ClaimClient(RR_SHARED_PTR<RRObject> client);
+    virtual void ClaimClient(const RR_SHARED_PTR<RRObject>& client);
 
     /**
      * @brief Release a client previously clamed with ClaimClient()
@@ -429,7 +433,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      *
      * @param client The client to release claim
      */
-    virtual void ReleaseClient(RR_SHARED_PTR<RRObject> client);
+    virtual void ReleaseClient(const RR_SHARED_PTR<RRObject>& client);
 
     /**
      * @brief Get the connect retry delay in milliseconds
@@ -608,8 +612,9 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * @param timeout Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout
      */
     template <typename T>
-    void AsyncGetDefaultClient(boost::function<void(RR_SHARED_PTR<T>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
-                               int32_t timeout = RR_TIMEOUT_INFINITE)
+    void AsyncGetDefaultClient(
+        boost::function<void(const RR_SHARED_PTR<T>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE)
     {
         AsyncGetDefaultClientBase(boost::bind(&detail::AsyncGetDefaultClient_handler_adapter<T>, handler,
                                               RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
@@ -640,10 +645,10 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * @param object_type (Optional) The desired root object proxy type. Optional but highly recommended.
      * @param close_connected (Optional, default false) Close existing connections
      */
-    void UpdateServiceURL(
-        boost::string_ref url, boost::string_ref username = "",
-        RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
-        boost::string_ref object_type = "", bool close_connected = false);
+    void UpdateServiceURL(boost::string_ref url, boost::string_ref username = "",
+                          const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
+                              (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+                          boost::string_ref object_type = "", bool close_connected = false);
 
     /**
      * @brief Update the service connection URL
@@ -658,10 +663,10 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * @param object_type The desired root object proxy type. Optional but highly recommended.
      * @param close_connected (Optional, default false) Close existing connections
      */
-    void UpdateServiceURL(
-        const std::vector<std::string>& url, boost::string_ref username = "",
-        RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
-        boost::string_ref object_type = "", bool close_connected = false);
+    void UpdateServiceURL(const std::vector<std::string>& url, boost::string_ref username = "",
+                          const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
+                              (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+                          boost::string_ref object_type = "", bool close_connected = false);
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
@@ -680,14 +685,14 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
 
     uint32_t retry_delay;
 
-    boost::signals2::signal<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&,
-                                 RR_SHARED_PTR<RRObject>)>
+    boost::signals2::signal<void(const RR_SHARED_PTR<ServiceSubscription>&, const ServiceSubscriptionClientID&,
+                                 const RR_SHARED_PTR<RRObject>&)>
         connect_listeners;
-    boost::signals2::signal<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&,
-                                 RR_SHARED_PTR<RRObject>)>
+    boost::signals2::signal<void(const RR_SHARED_PTR<ServiceSubscription>&, const ServiceSubscriptionClientID&,
+                                 const RR_SHARED_PTR<RRObject>&)>
         disconnect_listeners;
-    boost::signals2::signal<void(RR_SHARED_PTR<ServiceSubscription>, const ServiceSubscriptionClientID&,
-                                 const std::vector<std::string>&, RR_SHARED_PTR<RobotRaconteurException>)>
+    boost::signals2::signal<void(const RR_SHARED_PTR<ServiceSubscription>&, const ServiceSubscriptionClientID&,
+                                 const std::vector<std::string>&, const RR_SHARED_PTR<RobotRaconteurException>&)>
         connect_failed_listeners;
 
     RR_SHARED_PTR<RR_BOOST_ASIO_STRAND> listener_strand;
@@ -702,37 +707,40 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
 
   public:
     // Do not call, use RobotRaconteurNode()->SubscribeService()
-    ServiceSubscription(RR_SHARED_PTR<detail::Discovery> parent);
+    ServiceSubscription(const RR_SHARED_PTR<detail::Discovery>& parent);
 
   protected:
-    virtual void Init(const std::vector<std::string>& service_types, RR_SHARED_PTR<ServiceSubscriptionFilter> filter);
-    virtual void InitServiceURL(
-        const std::vector<std::string>& url, boost::string_ref username = "",
-        RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > credentials = (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
-        boost::string_ref objecttype = "");
-    virtual void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage);
-    virtual void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage);
+    RR_OVIRTUAL void Init(const std::vector<std::string>& service_types,
+                          const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter) RR_OVERRIDE;
+    virtual void InitServiceURL(const std::vector<std::string>& url, boost::string_ref username = "",
+                                const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials =
+                                    (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
+                                boost::string_ref objecttype = "");
+    RR_OVIRTUAL void NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE;
+    RR_OVIRTUAL void NodeLost(RR_SHARED_PTR<detail::Discovery_nodestorage> storage) RR_OVERRIDE;
 
-    void ClientConnected(RR_SHARED_PTR<RRObject> c, RR_SHARED_PTR<RobotRaconteurException> err,
-                         RR_SHARED_PTR<detail::ServiceSubscription_client> c2, const std::vector<std::string>& url);
-    void ConnectRetry(RR_SHARED_PTR<detail::ServiceSubscription_client> c2);
-    void ConnectRetry2(RR_SHARED_PTR<detail::ServiceSubscription_client> c2);
+    void ClientConnected(const RR_SHARED_PTR<RRObject>& c, const RR_SHARED_PTR<RobotRaconteurException>& err,
+                         const RR_SHARED_PTR<detail::ServiceSubscription_client>& c2,
+                         const std::vector<std::string>& url);
+    void ConnectRetry(const RR_SHARED_PTR<detail::ServiceSubscription_client>& c2);
+    void ConnectRetry2(const RR_SHARED_PTR<detail::ServiceSubscription_client>& c2);
 
-    static void ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, RR_SHARED_PTR<ClientContext> ctx,
-                            ClientServiceListenerEventType evt, RR_SHARED_PTR<void> p,
+    static void ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, const RR_SHARED_PTR<ClientContext>& ctx,
+                            ClientServiceListenerEventType evt, const RR_SHARED_PTR<void>& p,
                             RR_WEAK_PTR<detail::ServiceSubscription_client> c2);
 
-    void fire_ClientConnectListeners(const ServiceSubscriptionClientID& noden, RR_SHARED_PTR<RRObject> client);
-    void fire_ClientDisconnectListeners(const ServiceSubscriptionClientID& noden, RR_SHARED_PTR<RRObject> client);
+    void fire_ClientConnectListeners(const ServiceSubscriptionClientID& noden, const RR_SHARED_PTR<RRObject>& client);
+    void fire_ClientDisconnectListeners(const ServiceSubscriptionClientID& noden,
+                                        const RR_SHARED_PTR<RRObject>& client);
     void fire_ClientConnectFailedListeners(const ServiceSubscriptionClientID& noden,
                                            const std::vector<std::string>& url,
-                                           RR_SHARED_PTR<RobotRaconteurException> err);
+                                           const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    void SubscribeWire1(RR_SHARED_PTR<WireSubscriptionBase> s);
-    void SubscribePipe1(RR_SHARED_PTR<PipeSubscriptionBase> s);
+    void SubscribeWire1(const RR_SHARED_PTR<WireSubscriptionBase>& s);
+    void SubscribePipe1(const RR_SHARED_PTR<PipeSubscriptionBase>& s);
 
-    void WireSubscriptionClosed(RR_SHARED_PTR<WireSubscriptionBase> s);
-    void PipeSubscriptionClosed(RR_SHARED_PTR<PipeSubscriptionBase> s);
+    void WireSubscriptionClosed(const RR_SHARED_PTR<WireSubscriptionBase>& s);
+    void PipeSubscriptionClosed(const RR_SHARED_PTR<PipeSubscriptionBase>& s);
 
     RR_SHARED_PTR<RRObject> GetDefaultClientBase();
     bool TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out);
@@ -741,7 +749,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
     bool TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>& client_out, int32_t timeout = RR_TIMEOUT_INFINITE);
 
     void AsyncGetDefaultClientBase(
-        boost::function<void(RR_SHARED_PTR<RRObject>, RR_SHARED_PTR<RobotRaconteurException>)> handler,
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 };
 
@@ -761,6 +769,8 @@ class ROBOTRACONTEUR_CORE_API WireSubscriptionBase : public RR_ENABLE_SHARED_FRO
     friend class detail::WireSubscription_send_iterator;
 
     typedef boost::signals2::connection event_connection;
+
+    virtual ~WireSubscriptionBase() {}
 
     RR_INTRUSIVE_PTR<RRValue> GetInValueBase(TimeSpec* time = NULL,
                                              RR_SHARED_PTR<WireConnectionBase>* connection = NULL);
@@ -837,18 +847,18 @@ class ROBOTRACONTEUR_CORE_API WireSubscriptionBase : public RR_ENABLE_SHARED_FRO
      */
     void Close();
 
-    WireSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername,
+    WireSubscriptionBase(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref membername,
                          boost::string_ref servicepath);
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
   protected:
-    void ClientConnected(const ServiceSubscriptionClientID& client_id, RR_SHARED_PTR<RRObject> client);
-    void ClientDisconnected(const ServiceSubscriptionClientID& client_id, RR_SHARED_PTR<RRObject> client);
+    void ClientConnected(const ServiceSubscriptionClientID& client_id, const RR_SHARED_PTR<RRObject>& client);
+    void ClientDisconnected(const ServiceSubscriptionClientID& client_id, const RR_SHARED_PTR<RRObject>& client);
 
-    void WireConnectionClosed(RR_SHARED_PTR<detail::WireSubscription_connection> wire);
-    void WireValueChanged(RR_SHARED_PTR<detail::WireSubscription_connection> wire, RR_INTRUSIVE_PTR<RRValue> value,
-                          const TimeSpec& time);
+    void WireConnectionClosed(const RR_SHARED_PTR<detail::WireSubscription_connection>& wire);
+    void WireValueChanged(const RR_SHARED_PTR<detail::WireSubscription_connection>& wire,
+                          const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time);
 
     boost::mutex this_lock;
     boost::unordered_map<ServiceSubscriptionClientID, RR_SHARED_PTR<detail::WireSubscription_connection> > connections;
@@ -870,8 +880,8 @@ class ROBOTRACONTEUR_CORE_API WireSubscriptionBase : public RR_ENABLE_SHARED_FRO
     std::string membername;
     std::string servicepath;
 
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time,
-                                       RR_SHARED_PTR<WireConnectionBase> connection);
+    virtual void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
+                                       const RR_SHARED_PTR<WireConnectionBase>& connection);
     virtual bool isempty_WireValueChanged();
     RR_SHARED_PTR<detail::async_signal_pool_semaphore> wire_value_changed_semaphore;
 };
@@ -903,7 +913,7 @@ template <typename T>
 class WireSubscription : public WireSubscriptionBase
 {
   public:
-    WireSubscription(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername,
+    WireSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref membername,
                      boost::string_ref servicepath)
         : WireSubscriptionBase(parent, membername, servicepath)
     {}
@@ -977,22 +987,24 @@ class WireSubscription : public WireSubscriptionBase
      * @return event_connection The Boost.Signals2 connection
      */
     event_connection AddWireValueChangedListener(
-        boost::function<void(RR_SHARED_PTR<WireSubscription<T> >, const T&, const TimeSpec&)> f)
+        boost::function<void(const RR_SHARED_PTR<WireSubscription<T> >&, const T&, const TimeSpec&)> f)
     {
         return wire_value_changed.connect(f);
     }
 
   protected:
-    boost::signals2::signal<void(RR_SHARED_PTR<WireSubscription<T> >, const T&, const TimeSpec&)> wire_value_changed;
+    boost::signals2::signal<void(const RR_SHARED_PTR<WireSubscription<T> >&, const T&, const TimeSpec&)>
+        wire_value_changed;
 
-    virtual void fire_WireValueChanged(RR_INTRUSIVE_PTR<RRValue> value, const TimeSpec& time,
-                                       RR_SHARED_PTR<WireConnectionBase> connection)
+    RR_OVIRTUAL void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
+                                           const RR_SHARED_PTR<WireConnectionBase>& connection) RR_OVERRIDE
     {
+        RR_UNUSED(connection);
         wire_value_changed(RR_STATIC_POINTER_CAST<WireSubscription<T> >(shared_from_this()),
                            RRPrimUtil<T>::PreUnpack(value), time);
     }
 
-    virtual bool isempty_WireValueChanged() { return wire_value_changed.empty(); }
+    RR_OVIRTUAL bool isempty_WireValueChanged() RR_OVERRIDE { return wire_value_changed.empty(); }
 };
 
 /**
@@ -1011,6 +1023,8 @@ class ROBOTRACONTEUR_CORE_API PipeSubscriptionBase : public RR_ENABLE_SHARED_FRO
     friend class detail::PipeSubscription_send_iterator;
 
     typedef boost::signals2::connection event_connection;
+
+    virtual ~PipeSubscriptionBase() {}
 
     RR_INTRUSIVE_PTR<RRValue> ReceivePacketBase();
     bool TryReceivePacketBase(RR_INTRUSIVE_PTR<RRValue>& packet);
@@ -1063,19 +1077,19 @@ class ROBOTRACONTEUR_CORE_API PipeSubscriptionBase : public RR_ENABLE_SHARED_FRO
      */
     void Close();
 
-    PipeSubscriptionBase(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername,
+    PipeSubscriptionBase(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref membername,
                          boost::string_ref servicepath = "", int32_t max_recv_packets = -1,
                          int32_t max_send_backlog = 5);
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
   protected:
-    void ClientConnected(const ServiceSubscriptionClientID& client_id, RR_SHARED_PTR<RRObject> client);
-    void ClientDisconnected(const ServiceSubscriptionClientID& client_id, RR_SHARED_PTR<RRObject> client);
+    void ClientConnected(const ServiceSubscriptionClientID& client_id, const RR_SHARED_PTR<RRObject>& client);
+    void ClientDisconnected(const ServiceSubscriptionClientID& client_id, const RR_SHARED_PTR<RRObject>& client);
 
-    void PipeEndpointClosed(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe);
-    void PipeEndpointPacketReceived(RR_SHARED_PTR<detail::PipeSubscription_connection> pipe,
-                                    RR_INTRUSIVE_PTR<RRValue> packet);
+    void PipeEndpointClosed(const RR_SHARED_PTR<detail::PipeSubscription_connection>& pipe);
+    void PipeEndpointPacketReceived(const RR_SHARED_PTR<detail::PipeSubscription_connection>& pipe,
+                                    const RR_INTRUSIVE_PTR<RRValue>& value);
 
     boost::mutex this_lock;
     boost::unordered_map<ServiceSubscriptionClientID, RR_SHARED_PTR<detail::PipeSubscription_connection> > connections;
@@ -1126,10 +1140,12 @@ template <typename T>
 class PipeSubscription : public PipeSubscriptionBase
 {
   public:
-    PipeSubscription(RR_SHARED_PTR<ServiceSubscription> parent, boost::string_ref membername,
+    PipeSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref membername,
                      boost::string_ref servicepath = "", int32_t max_recv_packets = -1, int32_t max_send_backlog = 5)
         : PipeSubscriptionBase(parent, membername, servicepath, max_recv_packets)
-    {}
+    {
+        RR_UNUSED(max_send_backlog);
+    }
 
     /**
      * @brief Dequeue a packet from the receive queue
@@ -1210,20 +1226,20 @@ class PipeSubscription : public PipeSubscriptionBase
      * @param f The callback function
      * @return event_connection The Boost.Signals2 connection
      */
-    event_connection AddPipePacketReceivedListener(boost::function<void(RR_SHARED_PTR<PipeSubscription<T> >)> f)
+    event_connection AddPipePacketReceivedListener(boost::function<void(const RR_SHARED_PTR<PipeSubscription<T> >&)> f)
     {
         return pipe_packet_received.connect(f);
     }
 
   protected:
-    boost::signals2::signal<void(RR_SHARED_PTR<PipeSubscription<T> >)> pipe_packet_received;
+    boost::signals2::signal<void(const RR_SHARED_PTR<PipeSubscription<T> >&)> pipe_packet_received;
 
-    virtual void fire_PipePacketReceived()
+    RR_OVIRTUAL void fire_PipePacketReceived() RR_OVERRIDE
     {
         pipe_packet_received(RR_STATIC_POINTER_CAST<PipeSubscription<T> >(shared_from_this()));
     }
 
-    virtual bool isempty_PipePacketReceived() { return pipe_packet_received.empty(); }
+    RR_OVIRTUAL bool isempty_PipePacketReceived() RR_OVERRIDE { return pipe_packet_received.empty(); }
 };
 
 namespace detail
@@ -1239,7 +1255,7 @@ class ROBOTRACONTEUR_CORE_API WireSubscription_send_iterator
         current_connection;
 
   public:
-    WireSubscription_send_iterator(RR_SHARED_PTR<WireSubscriptionBase> subscription);
+    WireSubscription_send_iterator(const RR_SHARED_PTR<WireSubscriptionBase>& subscription);
     RR_SHARED_PTR<WireConnectionBase> Next();
     void SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& value);
     virtual ~WireSubscription_send_iterator();
@@ -1256,7 +1272,7 @@ class ROBOTRACONTEUR_CORE_API PipeSubscription_send_iterator
         current_connection;
 
   public:
-    PipeSubscription_send_iterator(RR_SHARED_PTR<PipeSubscriptionBase> subscription);
+    PipeSubscription_send_iterator(const RR_SHARED_PTR<PipeSubscriptionBase>& subscription);
     RR_SHARED_PTR<PipeEndpointBase> Next();
     void AsyncSendPacket(const RR_INTRUSIVE_PTR<RRValue>& packet);
     virtual ~PipeSubscription_send_iterator();
@@ -1265,8 +1281,10 @@ class ROBOTRACONTEUR_CORE_API PipeSubscription_send_iterator
 class ROBOTRACONTEUR_CORE_API ServiceSubscription_custom_member_subscribers
 {
   public:
-    static void SubscribeWire(RR_SHARED_PTR<ServiceSubscription> s, RR_SHARED_PTR<WireSubscriptionBase> o);
-    static void SubscribePipe(RR_SHARED_PTR<ServiceSubscription> s, RR_SHARED_PTR<PipeSubscriptionBase> o);
+    static void SubscribeWire(const RR_SHARED_PTR<ServiceSubscription>& s,
+                              const RR_SHARED_PTR<WireSubscriptionBase>& o);
+    static void SubscribePipe(const RR_SHARED_PTR<ServiceSubscription>& s,
+                              const RR_SHARED_PTR<PipeSubscriptionBase>& o);
 };
 } // namespace detail
 

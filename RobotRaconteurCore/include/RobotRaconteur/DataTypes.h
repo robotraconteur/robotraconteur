@@ -47,7 +47,6 @@
 
 #include <boost/utility/value_init.hpp>
 #include <boost/container/static_vector.hpp>
-#include <boost/array.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range/adaptor/map.hpp>
 #include <boost/range/numeric.hpp>
@@ -300,7 +299,7 @@ class ROBOTRACONTEUR_CORE_API MessageStringPtr
 #endif
     // WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
     template <size_t N>
-    inline MessageStringPtr(const char (&str)[N])
+    inline MessageStringPtr(const char (&str)[N]) // NOLINT(cppcoreguidelines-avoid-c-arrays)
     {
         init_literal(str, strlen(str));
     }
@@ -333,7 +332,7 @@ class ROBOTRACONTEUR_CORE_API MessageStringRef
 
     // WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
     template <size_t N>
-    inline MessageStringRef(const char (&str)[N])
+    inline MessageStringRef(const char (&str)[N]) // NOLINT(cppcoreguidelines-avoid-c-arrays)
     {
         init_literal(str, strlen(str));
     }
@@ -396,7 +395,7 @@ static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value);
  * @return T The scalar value of the first element in the array
  */
 template <typename T>
-static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value);
+static T RRArrayToScalar(const RR_INTRUSIVE_PTR<RRArray<T> >& value);
 
 /**
  * @brief Convert a string to an array of characters
@@ -416,7 +415,7 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRArray<char> > stringToRRArray(boost::
  * @param arr The array of characters
  * @return std::string
  */
-ROBOTRACONTEUR_CORE_API std::string RRArrayToString(RR_INTRUSIVE_PTR<RRArray<char> > arr);
+ROBOTRACONTEUR_CORE_API std::string RRArrayToString(const RR_INTRUSIVE_PTR<RRArray<char> >& arr);
 
 template <typename T>
 class RRPrimUtil
@@ -467,7 +466,7 @@ class RRPrimUtil<std::string>
     static MessageStringPtr GetElementTypeString() { return MessageStringPtr(""); }
     static boost::string_ref GetRRElementTypeString() { return ""; }
     static RR_INTRUSIVE_PTR<RRValue> PrePack(boost::string_ref val) { return rr_cast<RRValue>(stringToRRArray(val)); }
-    static std::string PreUnpack(RR_INTRUSIVE_PTR<RRValue> val)
+    static std::string PreUnpack(const RR_INTRUSIVE_PTR<RRValue>& val)
     {
         return RRArrayToString(rr_cast<RRArray<char> >(val));
     }
@@ -525,13 +524,13 @@ ROBOTRACONTEUR_CORE_API bool IsTypeNumeric(DataTypes type);
 class ROBOTRACONTEUR_CORE_API RRBaseArray : public MessageElementData
 {
   public:
-    virtual MessageStringPtr GetTypeString()
+    RR_OVIRTUAL MessageStringPtr GetTypeString() RR_OVERRIDE
     {
         std::string type = GetRRDataTypeString(GetTypeID());
         return type + "[]";
     }
 
-    virtual ~RRBaseArray() {}
+    RR_OVIRTUAL ~RRBaseArray() RR_OVERRIDE {}
 
     /**
      * @brief Get the number of elements in the array
@@ -540,7 +539,7 @@ class ROBOTRACONTEUR_CORE_API RRBaseArray : public MessageElementData
      */
     virtual size_t size() = 0;
 
-    virtual std::string RRType();
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE;
 
     /**
      * @brief Get a void pointer to the contained array
@@ -578,28 +577,23 @@ template <typename T>
 class RRArray : public RRBaseArray
 {
   public:
-    virtual DataTypes GetTypeID() { return RRPrimUtil<T>::GetTypeID(); }
+    RR_OVIRTUAL DataTypes GetTypeID() RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
 
-    RRArray(T* data, size_t length, bool owned)
-    {
-        this->data_ = data;
-        this->owned = owned;
-        this->element_count = length;
-    }
+    RRArray(T* data, size_t length, bool owned) : data_(data), owned(owned), element_count(length) {}
 
-    virtual ~RRArray()
+    RR_OVIRTUAL ~RRArray() RR_OVERRIDE
     {
         if (owned)
             delete[] data_;
     }
 
-    virtual void* void_ptr() { return data(); }
+    RR_OVIRTUAL void* void_ptr() RR_OVERRIDE { return data(); }
 
     T* operator->() const { return data; }
 
-    virtual size_t size() { return element_count; }
+    RR_OVIRTUAL size_t size() RR_OVERRIDE { return element_count; }
 
-    virtual size_t ElementSize() { return sizeof(T); }
+    RR_OVIRTUAL size_t ElementSize() RR_OVERRIDE { return sizeof(T); }
 
     // C++ container support functions based on boost::array
 
@@ -803,11 +797,11 @@ class RRMap : public RRValue
   public:
     RRMap() {}
 
-    RRMap(std::map<K, RR_INTRUSIVE_PTR<T> > mapin) { map = mapin; }
+    RRMap(const std::map<K, RR_INTRUSIVE_PTR<T> >& mapin) : map(mapin) {}
 
-    virtual ~RRMap() {}
+    RR_OVIRTUAL ~RRMap() RR_OVERRIDE {}
 
-    virtual std::string RRType() { return RRMap_keytype<K>::get_map_rrtype(); }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return RRMap_keytype<K>::get_map_rrtype(); }
 
     // C++ container support based on boost::container::map
 
@@ -875,7 +869,11 @@ class RRMap : public RRValue
     /** @brief inserts elements */
     std::pair<iterator, bool> insert(const value_type& x) { return map.insert(x); }
     /** @brief inserts elements */
-    iterator insert(const_iterator p, const value_type& x) { return map.insert(x); }
+    iterator insert(const_iterator p, const value_type& x)
+    {
+        RR_UNUSED(p);
+        return map.insert(x);
+    }
     /** @brief inserts elements */
     template <class InputIterator>
     void insert(InputIterator first, InputIterator last)
@@ -927,9 +925,9 @@ class RRList : public RRValue
 
     RRList(std::list<RR_INTRUSIVE_PTR<T> > listin) { list = listin; }
 
-    virtual ~RRList() {}
+    RR_OVIRTUAL ~RRList() RR_OVERRIDE {}
 
-    virtual std::string RRType() { return "RobotRaconteur.RRList"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRList"; }
 
     // C++ container support based on boost::container::list
 
@@ -1036,7 +1034,7 @@ class RRList : public RRValue
 class ROBOTRACONTEUR_CORE_API RRStructure : public RRValue
 {
   public:
-    virtual ~RRStructure() {}
+    RR_OVIRTUAL ~RRStructure() RR_OVERRIDE {}
 };
 
 /**
@@ -1057,8 +1055,7 @@ class ROBOTRACONTEUR_CORE_API RRStructure : public RRValue
 template <typename T>
 static RR_INTRUSIVE_PTR<RRArray<T> > AllocateRRArray(size_t length)
 {
-    T* data = new T[length];
-    return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(data, length, true));
+    return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(new T[length], length, true));
 }
 
 /**
@@ -1100,9 +1097,9 @@ static RR_INTRUSIVE_PTR<RRArray<T> > AttachRRArray(T* data, size_t length, bool 
 template <typename T>
 static RR_INTRUSIVE_PTR<RRArray<T> > AttachRRArrayCopy(const T* data, const size_t length)
 {
-    T* data_copy = new T[length];
-    memcpy(data_copy, data, length * sizeof(T));
-    return RR_INTRUSIVE_PTR<RRArray<T> >(new RRArray<T>(data_copy, length, true));
+    RR_INTRUSIVE_PTR<RRArray<T> > ret(new RRArray<T>(new T[length], length, true));
+    memcpy(ret->void_ptr(), data, length * sizeof(T));
+    return ret;
 }
 
 /**
@@ -1174,9 +1171,7 @@ ROBOTRACONTEUR_CORE_API size_t RRArrayElementSize(DataTypes type);
 template <typename T>
 static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value)
 {
-    T* data = new T[1];
-    data[0] = value;
-    return AttachRRArray(data, 1, true);
+    return AttachRRArrayCopy(&value, 1);
 }
 
 /**
@@ -1187,7 +1182,7 @@ static RR_INTRUSIVE_PTR<RRArray<T> > ScalarToRRArray(T value)
  * @return T The scalar value of the first element in the array
  */
 template <typename T>
-static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value)
+static T RRArrayToScalar(const RR_INTRUSIVE_PTR<RRArray<T> >& value)
 {
     if (!value)
     {
@@ -1214,7 +1209,7 @@ static T RRArrayToScalar(RR_INTRUSIVE_PTR<RRArray<T> > value)
  * from in
  */
 template <typename Y, typename U>
-static std::vector<Y> RRArrayToVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
+static std::vector<Y> RRArrayToVector(const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1236,7 +1231,7 @@ static std::vector<Y> RRArrayToVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
  * values converted from in
  */
 template <typename Y, typename U>
-static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(std::vector<U> in)
+static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(const std::vector<U>& in)
 {
     RR_INTRUSIVE_PTR<RRArray<Y> > out = AllocateRRArray<Y>(in.size());
     for (size_t i = 0; i < in.size(); i++)
@@ -1257,13 +1252,13 @@ static RR_INTRUSIVE_PTR<RRArray<Y> > VectorToRRArray(std::vector<U> in)
  * converted from in
  */
 template <typename Y, std::size_t N, typename U>
-static boost::array<Y, N> RRArrayToArray(RR_INTRUSIVE_PTR<RRArray<U> > in)
+static boost::array<Y, N> RRArrayToArray(const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
     if (in->size() != N)
         throw OutOfRangeException("Array is incorrect size");
-    boost::array<Y, N> out;
+    boost::array<Y, N> out = {};
     for (size_t i = 0; i < N; i++)
         out[i] = boost::numeric_cast<Y>((*in)[i]);
     return out;
@@ -1281,7 +1276,7 @@ static boost::array<Y, N> RRArrayToArray(RR_INTRUSIVE_PTR<RRArray<U> > in)
  * @param out The target boost::array for converted elements
  */
 template <typename Y, std::size_t N, typename U>
-static void RRArrayToArray(boost::array<Y, N>& out, RR_INTRUSIVE_PTR<RRArray<U> > in)
+static void RRArrayToArray(boost::array<Y, N>& out, const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1327,7 +1322,7 @@ static RR_INTRUSIVE_PTR<RRArray<Y> > ArrayToRRArray(boost::array<U, N> in)
  * boost::container::static_vector with values converted from in
  */
 template <typename Y, std::size_t N, typename U>
-static boost::container::static_vector<Y, N> RRArrayToStaticVector(RR_INTRUSIVE_PTR<RRArray<U> > in)
+static boost::container::static_vector<Y, N> RRArrayToStaticVector(const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1354,7 +1349,7 @@ static boost::container::static_vector<Y, N> RRArrayToStaticVector(RR_INTRUSIVE_
  * @param in The input RRArray to be converted
  */
 template <typename Y, std::size_t N, typename U>
-static void RRArrayToStaticVector(boost::container::static_vector<Y, N>& out, RR_INTRUSIVE_PTR<RRArray<U> > in)
+static void RRArrayToStaticVector(boost::container::static_vector<Y, N>& out, const RR_INTRUSIVE_PTR<RRArray<U> >& in)
 {
     if (!in)
         throw NullValueException("Unexpected null array");
@@ -1406,7 +1401,7 @@ RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector
  * @param list The input RRList to be converted
  * @return std::vector<std::string> The converted string vector
  */
-std::vector<std::string> RRListToStringVector(RR_INTRUSIVE_PTR<RRList<RRArray<char> > > list);
+std::vector<std::string> RRListToStringVector(const RR_INTRUSIVE_PTR<RRList<RRArray<char> > >& list);
 
 /**
  * @brief Checks if a value RR_INTRUSIVE_PTR is null
@@ -1499,7 +1494,8 @@ const RR_INTRUSIVE_PTR<T>& rr_null_check(const RR_INTRUSIVE_PTR<T>& ptr, const c
 #define RR_NULL_CHECK rr_null_check
 
 template <typename T>
-static RR_INTRUSIVE_PTR<RRArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRArray<T> > a, size_t len, bool varlength)
+static RR_INTRUSIVE_PTR<RRArray<T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRArray<T> >& a, size_t len,
+                                                         bool varlength)
 {
     if (!a)
         throw NullValueException("Arrays must not be null");
@@ -1518,7 +1514,8 @@ static RR_INTRUSIVE_PTR<RRArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRArra
 }
 
 template <typename T>
-static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRList<T> > a, size_t len, bool varlength)
+static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRList<T> >& a, size_t len,
+                                                        bool varlength)
 {
     if (!a)
         return a;
@@ -1530,11 +1527,12 @@ static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRList<
 }
 
 template <typename K, typename T>
-static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRMap<K, T> > a, size_t len, bool varlength)
+static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRMap<K, T> >& a, size_t len,
+                                                          bool varlength)
 {
     if (!a)
         return a;
-    BOOST_FOREACH (RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
     {
         VerifyRRArrayLength(aa, len, varlength);
     }
@@ -1551,7 +1549,7 @@ static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRMap
 class ROBOTRACONTEUR_CORE_API RRMultiDimBaseArray : public RRValue
 {
   public:
-    virtual ~RRMultiDimBaseArray() {}
+    RR_OVIRTUAL ~RRMultiDimBaseArray() RR_OVERRIDE {}
 
     virtual DataTypes GetElementTypeID() = 0;
 };
@@ -1603,17 +1601,17 @@ class RRMultiDimArray : public RRMultiDimBaseArray
 
     RRMultiDimArray(){};
 
-    RRMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > Dims, RR_INTRUSIVE_PTR<RRArray<T> > Array)
+    RRMultiDimArray(const RR_INTRUSIVE_PTR<RRArray<uint32_t> >& Dims, const RR_INTRUSIVE_PTR<RRArray<T> >& Array)
     {
         this->Dims = Dims;
         this->Array = Array;
     }
 
-    virtual ~RRMultiDimArray() {}
+    RR_OVIRTUAL ~RRMultiDimArray() RR_OVERRIDE {}
 
-    virtual std::string RRType() { return "RobotRaconteur.RRMultiDimArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRMultiDimArray"; }
 
-    virtual DataTypes GetElementTypeID() { return RRPrimUtil<T>::GetTypeID(); }
+    RR_OVIRTUAL DataTypes GetElementTypeID() RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
 
     /**
      * @brief Retrieve a subset of an array
@@ -1623,8 +1621,9 @@ class RRMultiDimArray : public RRMultiDimBaseArray
      * @param bufferpos Position within buffer to store data
      * @param count Count of data to retrieve
      */
-    virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer,
-                                  std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+    virtual void RetrieveSubArray(const std::vector<uint32_t>& memorypos,
+                                  const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
+                                  const std::vector<uint32_t>& bufferpos, const std::vector<uint32_t>& count)
     {
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -1632,9 +1631,9 @@ class RRMultiDimArray : public RRMultiDimBaseArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len;
-        uint32_t indexa;
-        uint32_t indexb;
+        uint32_t len = 0;
+        uint32_t indexa = 0;
+        uint32_t indexb = 0;
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -1650,8 +1649,9 @@ class RRMultiDimArray : public RRMultiDimBaseArray
      * @param bufferpos Position within buffer to assign from
      * @param count Count of data to assign
      */
-    virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRMultiDimArray<T> > buffer,
-                                std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+    virtual void AssignSubArray(const std::vector<uint32_t>& memorypos,
+                                const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& buffer,
+                                const std::vector<uint32_t>& bufferpos, const std::vector<uint32_t>& count)
     {
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -1659,9 +1659,9 @@ class RRMultiDimArray : public RRMultiDimBaseArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len;
-        uint32_t indexa;
-        uint32_t indexb;
+        uint32_t len = 0;
+        uint32_t indexa = 0;
+        uint32_t indexb = 0;
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -1671,9 +1671,9 @@ class RRMultiDimArray : public RRMultiDimBaseArray
 };
 
 template <size_t Ndims, typename T>
-static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR<RRMultiDimArray<T> > a,
+static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > VerifyRRMultiDimArrayLength(const RR_INTRUSIVE_PTR<RRMultiDimArray<T> >& a,
                                                                          size_t n_elems,
-                                                                         boost::array<uint32_t, Ndims> dims)
+                                                                         const boost::array<uint32_t, Ndims>& dims)
 {
     if (!a)
         throw NullValueException("Arrays must not be null");
@@ -1700,14 +1700,14 @@ static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_INTR
 }
 
 template <size_t Ndims, typename T>
-static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR<RRList<T> > a, size_t n_elems,
-                                                                boost::array<uint32_t, Ndims> dims)
+static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRMultiDimArrayLength(const RR_INTRUSIVE_PTR<RRList<T> >& a, size_t n_elems,
+                                                                const boost::array<uint32_t, Ndims>& dims)
 {
     if (!a)
         throw NullValueException("Arrays must not be null");
     else
     {
-        BOOST_FOREACH (RR_INTRUSIVE_PTR<T>& aa, (*a))
+        BOOST_FOREACH (const RR_INTRUSIVE_PTR<T>& aa, (*a))
         {
             VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
         }
@@ -1716,14 +1716,15 @@ static RR_INTRUSIVE_PTR<RRList<T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR
 }
 
 template <size_t Ndims, typename K, typename T>
-static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR<RRMap<K, T> > a, size_t n_elems,
-                                                                  boost::array<uint32_t, Ndims> dims)
+static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRMultiDimArrayLength(const RR_INTRUSIVE_PTR<RRMap<K, T> >& a,
+                                                                  size_t n_elems,
+                                                                  const boost::array<uint32_t, Ndims>& dims)
 {
     if (!a)
         throw NullValueException("Arrays must not be null");
     else
     {
-        BOOST_FOREACH (RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
+        BOOST_FOREACH (const RR_INTRUSIVE_PTR<T>& aa, *a | boost::adaptors::map_values)
         {
             VerifyRRMultiDimArrayLength<Ndims>(aa, n_elems, dims);
         }
@@ -1742,7 +1743,7 @@ static RR_INTRUSIVE_PTR<RRMap<K, T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_P
  * @return RR_INTRUSIVE_PTR<RRMultiDimArray<T> > The allocated multidimensional array
  */
 template <typename T>
-static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(std::vector<uint32_t> dims)
+static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray(const std::vector<uint32_t>& dims)
 {
     uint32_t n_elems = boost::accumulate(dims, 1, std::multiplies<uint32_t>());
     return new RRMultiDimArray<T>(VectorToRRArray<uint32_t>(dims), AllocateEmptyRRArray<T>(n_elems));
@@ -1773,10 +1774,10 @@ static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateEmptyRRMultiDimArray()
  * @return RR_INTRUSIVE_PTR<RRMultiDimArray<T> > The allocated multidimensional array
  */
 template <typename T>
-static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateRRMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims,
-                                                                     RR_INTRUSIVE_PTR<RRArray<T> > array_)
+static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateRRMultiDimArray(const RR_INTRUSIVE_PTR<RRArray<uint32_t> >& dims,
+                                                                     const RR_INTRUSIVE_PTR<RRArray<T> >& array_)
 {
-    return new RRMultiDimArray<T>(dims, array_);
+    return new RRMultiDimArray<T>(dims, array_); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1788,7 +1789,7 @@ static RR_INTRUSIVE_PTR<RRMultiDimArray<T> > AllocateRRMultiDimArray(RR_INTRUSIV
 template <typename T>
 RR_INTRUSIVE_PTR<RRList<T> > AllocateEmptyRRList()
 {
-    return new RRList<T>();
+    return new RRList<T>(); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1802,7 +1803,7 @@ RR_INTRUSIVE_PTR<RRList<T> > AllocateEmptyRRList()
 template <typename T, typename U>
 RR_INTRUSIVE_PTR<RRList<T> > AllocateRRList(const U& c)
 {
-    return new RRList<T>(c);
+    return new RRList<T>(c); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1815,7 +1816,7 @@ RR_INTRUSIVE_PTR<RRList<T> > AllocateRRList(const U& c)
 template <typename K, typename T>
 RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateEmptyRRMap()
 {
-    return new RRMap<K, T>();
+    return new RRMap<K, T>(); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1830,7 +1831,7 @@ RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateEmptyRRMap()
 template <typename K, typename T, typename U>
 RR_INTRUSIVE_PTR<RRMap<K, T> > AllocateRRMap(const U& c)
 {
-    return new RRMap<K, T>(c);
+    return new RRMap<K, T>(c); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -1880,15 +1881,15 @@ class RRPodArray : public RRPodBaseArray
   public:
     RRPodArray(size_t n) { pod_array.resize(n); }
 
-    RRPodArray(typename std::vector<T>& array_in) { pod_array = array_in; }
+    RRPodArray(typename std::vector<T>& array_in) : pod_array(array_in) {}
 
     RRPodArray(const T& value_in) { pod_array.push_back(value_in); }
 
-    virtual ~RRPodArray() {}
+    RR_OVIRTUAL ~RRPodArray() RR_OVERRIDE {}
 
-    virtual std::string RRType() { return "RobotRaconteur.RRPodArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRPodArray"; }
 
-    virtual boost::string_ref RRElementTypeString() { return RRPrimUtil<T>::GetRRElementTypeString(); }
+    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
 
     // C++ container support based on boost::container::vector
 
@@ -2032,17 +2033,17 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
 
     RRPodMultiDimArray() {}
 
-    RRPodMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims, RR_INTRUSIVE_PTR<RRPodArray<T> > a)
+    RRPodMultiDimArray(const RR_INTRUSIVE_PTR<RRArray<uint32_t> >& dims, const RR_INTRUSIVE_PTR<RRPodArray<T> >& a)
     {
         this->Dims = dims;
         this->PodArray = a;
     }
 
-    virtual ~RRPodMultiDimArray() {}
+    RR_OVIRTUAL ~RRPodMultiDimArray() RR_OVERRIDE {}
 
-    virtual std::string RRType() { return "RobotRaconteur.RRPodMultiDimArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRPodMultiDimArray"; }
 
-    virtual boost::string_ref RRElementTypeString() { return RRPrimUtil<T>::GetRRElementTypeString(); }
+    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
 
     /**
      * @brief Retrieve a subset of an array
@@ -2052,8 +2053,9 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
      * @param bufferpos Position within buffer to store data
      * @param count Count of data to retrieve
      */
-    virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer,
-                                  std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+    virtual void RetrieveSubArray(const std::vector<uint32_t>& memorypos,
+                                  const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
+                                  const std::vector<uint32_t>& bufferpos, const std::vector<uint32_t>& count)
     {
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -2061,9 +2063,9 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len;
-        uint32_t indexa;
-        uint32_t indexb;
+        uint32_t len = 0;
+        uint32_t indexa = 0;
+        uint32_t indexb = 0;
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -2082,8 +2084,9 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
      * @param bufferpos Position within buffer to assign from
      * @param count Count of data to assign
      */
-    virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > buffer,
-                                std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+    virtual void AssignSubArray(const std::vector<uint32_t>& memorypos,
+                                const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& buffer,
+                                const std::vector<uint32_t>& bufferpos, const std::vector<uint32_t>& count)
     {
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -2091,9 +2094,9 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len;
-        uint32_t indexa;
-        uint32_t indexb;
+        uint32_t len = 0;
+        uint32_t indexa = 0;
+        uint32_t indexb = 0;
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -2115,7 +2118,7 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
 template <typename T>
 static RR_INTRUSIVE_PTR<RRPodArray<T> > ScalarToRRPodArray(const T& value)
 {
-    return new RRPodArray<T>(value);
+    return new RRPodArray<T>(value); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -2126,7 +2129,7 @@ static RR_INTRUSIVE_PTR<RRPodArray<T> > ScalarToRRPodArray(const T& value)
  * @return T The first pod in the array
  */
 template <typename T>
-static T RRPodArrayToScalar(RR_INTRUSIVE_PTR<RRPodArray<T> > value)
+static T RRPodArrayToScalar(const RR_INTRUSIVE_PTR<RRPodArray<T> >& value)
 {
     if (!value)
     {
@@ -2155,7 +2158,7 @@ static T RRPodArrayToScalar(RR_INTRUSIVE_PTR<RRPodArray<T> > value)
 template <typename T>
 static RR_INTRUSIVE_PTR<RRPodArray<T> > AllocateEmptyRRPodArray(size_t length)
 {
-    return new RRPodArray<T>(length);
+    return new RRPodArray<T>(length); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -2172,7 +2175,7 @@ static RR_INTRUSIVE_PTR<RRPodArray<T> > AllocateEmptyRRPodArray(size_t length)
  * @return RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > The allocated multidimensional array
  */
 template <typename T>
-static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > AllocateEmptyRRPodMultiDimArray(std::vector<uint32_t> dims)
+static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > AllocateEmptyRRPodMultiDimArray(const std::vector<uint32_t>& dims)
 {
     uint32_t n_elems = boost::accumulate(dims, 1, std::multiplies<uint32_t>());
     return new RRPodMultiDimArray<T>(VectorToRRArray<uint32_t>(dims), AllocateEmptyRRPodArray<T>(n_elems));
@@ -2270,7 +2273,7 @@ class RRNamedArray : public RRNamedBaseArray
      *
      * @param rr_array The array to use for storage
      */
-    RRNamedArray(RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > rr_array)
+    RRNamedArray(const RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> >& rr_array)
     {
         if (!rr_array)
             throw NullValueException("Numeric array for namedarray must not be null");
@@ -2285,19 +2288,19 @@ class RRNamedArray : public RRNamedBaseArray
     /** @brief get a void pointer to the underlying numeric array */
     virtual void* void_ptr() { return rr_array->void_ptr(); }
     /** @brief get the number of bytes per `namedarray` element of the array */
-    virtual size_t ElementSize() { return sizeof(T); }
+    RR_OVIRTUAL size_t ElementSize() RR_OVERRIDE { return sizeof(T); }
     /** @brief get the type of the underlying numeric array */
-    virtual DataTypes ElementArrayType() { return RRPrimUtil<T>::GetElementArrayTypeID(); }
+    RR_OVIRTUAL DataTypes ElementArrayType() RR_OVERRIDE { return RRPrimUtil<T>::GetElementArrayTypeID(); }
     /** @brief get the total number of elements in the underlying numeric array */
-    virtual size_t ElementArrayCount() { return RRPrimUtil<T>::ElementArrayCount; }
+    RR_OVIRTUAL size_t ElementArrayCount() RR_OVERRIDE { return RRPrimUtil<T>::ElementArrayCount; }
     /** @brief get the underlying numeric RRArray */
     virtual RR_INTRUSIVE_PTR<RRArray<typename RRPrimUtil<T>::ElementArrayType> > GetNumericArray() { return rr_array; }
     /** @brief get the underlying numeric array as an RRBaseArray */
-    virtual RR_INTRUSIVE_PTR<RRBaseArray> GetNumericBaseArray() { return rr_array; }
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RRBaseArray> GetNumericBaseArray() RR_OVERRIDE { return rr_array; }
 
-    virtual std::string RRType() { return "RobotRaconteur.RRNamedArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRNamedArray"; }
 
-    virtual boost::string_ref RRElementTypeString() { return RRPrimUtil<T>::GetRRElementTypeString(); }
+    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
 
     // C++ container support functions based on boost::array
 
@@ -2445,17 +2448,17 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
 
     RRNamedMultiDimArray() {}
 
-    RRNamedMultiDimArray(RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims, RR_INTRUSIVE_PTR<RRNamedArray<T> > a)
+    RRNamedMultiDimArray(const RR_INTRUSIVE_PTR<RRArray<uint32_t> >& dims, const RR_INTRUSIVE_PTR<RRNamedArray<T> >& a)
     {
         this->Dims = dims;
         this->NamedArray = a;
     }
 
-    virtual ~RRNamedMultiDimArray() {}
+    RR_OVIRTUAL ~RRNamedMultiDimArray() RR_OVERRIDE {}
 
-    virtual std::string RRType() { return "RobotRaconteur.RRNamedMultiDimArray"; }
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "RobotRaconteur.RRNamedMultiDimArray"; }
 
-    virtual boost::string_ref RRElementTypeString() { return RRPrimUtil<T>::GetRRElementTypeString(); }
+    RR_OVIRTUAL boost::string_ref RRElementTypeString() RR_OVERRIDE { return RRPrimUtil<T>::GetRRElementTypeString(); }
 
     /**
      * @brief Retrieve a subset of an array
@@ -2465,8 +2468,9 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
      * @param bufferpos Position within buffer to store data
      * @param count Count of data to retrieve
      */
-    virtual void RetrieveSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer,
-                                  std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+    virtual void RetrieveSubArray(const std::vector<uint32_t>& memorypos,
+                                  const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
+                                  const std::vector<uint32_t>& bufferpos, const std::vector<uint32_t>& count)
     {
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -2474,9 +2478,9 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len;
-        uint32_t indexa;
-        uint32_t indexb;
+        uint32_t len = 0;
+        uint32_t indexa = 0;
+        uint32_t indexb = 0;
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -2495,8 +2499,9 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
      * @param bufferpos Position within buffer to assign from
      * @param count Count of data to assign
      */
-    virtual void AssignSubArray(std::vector<uint32_t> memorypos, RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > buffer,
-                                std::vector<uint32_t> bufferpos, std::vector<uint32_t> count)
+    virtual void AssignSubArray(const std::vector<uint32_t>& memorypos,
+                                const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& buffer,
+                                const std::vector<uint32_t>& bufferpos, const std::vector<uint32_t>& count)
     {
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
@@ -2504,9 +2509,9 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
-        uint32_t len;
-        uint32_t indexa;
-        uint32_t indexb;
+        uint32_t len = 0;
+        uint32_t indexa = 0;
+        uint32_t indexb = 0;
 
         while (iter->Next(indexa, indexb, len))
         {
@@ -2536,7 +2541,7 @@ static RR_INTRUSIVE_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t lengt
 {
     typedef typename RRPrimUtil<T>::ElementArrayType a_type;
     RR_INTRUSIVE_PTR<RRArray<a_type> > a = AllocateRRArray<a_type>(length * RRPrimUtil<T>::GetElementArrayCount());
-    return new RRNamedArray<T>(a);
+    return new RRNamedArray<T>(a); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 /**
@@ -2553,7 +2558,7 @@ static RR_INTRUSIVE_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t lengt
  * @return RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > The allocated multidimensional array
  */
 template <typename T>
-static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > AllocateEmptyRRNamedMultiDimArray(std::vector<uint32_t> dims)
+static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > AllocateEmptyRRNamedMultiDimArray(const std::vector<uint32_t>& dims)
 {
     uint32_t n_elems = boost::accumulate(dims, 1, std::multiplies<uint32_t>());
     return new RRNamedMultiDimArray<T>(VectorToRRArray<uint32_t>(dims), AllocateEmptyRRNamedArray<T>(n_elems));
@@ -2606,7 +2611,7 @@ static RR_INTRUSIVE_PTR<RRNamedArray<T> > ScalarToRRNamedArray(const T& value)
  * @return T The first namedarray in the array
  */
 template <typename T>
-static T RRNamedArrayToScalar(RR_INTRUSIVE_PTR<RRNamedArray<T> > value)
+static T RRNamedArrayToScalar(const RR_INTRUSIVE_PTR<RRNamedArray<T> >& value)
 {
     if (!value)
     {
@@ -2666,25 +2671,23 @@ class ROBOTRACONTEUR_CORE_API TimeSpec
      */
     TimeSpec(int64_t seconds, int32_t nanoseconds);
 
-  public:
     /** @brief equality comparison */
-    bool operator==(const TimeSpec& t2);
+    bool operator==(const TimeSpec& t2) const;
     /** @brief inequality comparison */
-    bool operator!=(const TimeSpec& t2);
+    bool operator!=(const TimeSpec& t2) const;
     /** @brief subtraction operator */
-    TimeSpec operator-(const TimeSpec& t2);
+    TimeSpec operator-(const TimeSpec& t2) const;
     /** @brief addition operator */
-    TimeSpec operator+(const TimeSpec& t2);
+    TimeSpec operator+(const TimeSpec& t2) const;
     /** @brief greater-than comparison */
-    bool operator>(const TimeSpec& t2);
+    bool operator>(const TimeSpec& t2) const;
     /** @brief greater-than-or-equal comparison */
-    bool operator>=(const TimeSpec& t2);
+    bool operator>=(const TimeSpec& t2) const;
     /** @brief less-then comparison */
-    bool operator<(const TimeSpec& t2);
+    bool operator<(const TimeSpec& t2) const;
     /** @brief less-than-or-equal comparison */
-    bool operator<=(const TimeSpec& t2);
+    bool operator<=(const TimeSpec& t2) const;
 
-  public:
     /** @brief normalize nanoseconds to be within 0 and 1e9-1 */
     void cleanup_nanosecs();
 };

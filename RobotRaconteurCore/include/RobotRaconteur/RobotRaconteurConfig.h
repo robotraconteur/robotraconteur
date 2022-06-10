@@ -25,8 +25,8 @@
 
 #ifndef ROBOTRACONTEUR_VERSION
 // Boost Style Version Number
-#define ROBOTRACONTEUR_VERSION 001504
-#define ROBOTRACONTEUR_VERSION_TEXT "0.15.4"
+#define ROBOTRACONTEUR_VERSION 001600
+#define ROBOTRACONTEUR_VERSION_TEXT "0.16.0"
 #endif
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ == 7)
@@ -128,10 +128,10 @@
 #define RR_BOOST_ASIO_IO_CONTEXT boost::asio::io_context
 #define RR_BOOST_ASIO_STRAND boost::asio::strand<boost::asio::io_context::executor_type>
 #define RR_BOOST_ASIO_POST(context, func) boost::asio::post(context, func)
-#define RR_BOOST_ASIO_BUFFER_CAST(type, buf) (type) buf.data()
+#define RR_BOOST_ASIO_BUFFER_CAST(type, buf) (type)(buf).data()
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) boost::asio::bind_executor(strand, f)
 #define RR_BOOST_ASIO_NEW_STRAND(context)                                                                              \
-    (new boost::asio::strand<boost::asio::io_context::executor_type>(context.get_executor()))
+    (new boost::asio::strand<boost::asio::io_context::executor_type>((context).get_executor()))
 #endif
 
 #if BOOST_VERSION <= 105900
@@ -139,3 +139,22 @@
 #else
 #define RR_BOOST_PLACEHOLDERS(arg) boost::placeholders::arg
 #endif
+
+#define RR_UNUSED(var_) ((void)(var_))
+
+#ifndef BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
+#define RR_MEMBER_ARRAY_INIT(x) , x({})
+#define RR_MEMBER_ARRAY_INIT2(x) : x({})
+#else
+#define RR_MEMBER_ARRAY_INIT(x)
+#define RR_MEMBER_ARRAY_INIT2(x)
+#endif
+
+#ifndef BOOST_NO_CXX11_OVERRIDE
+#define RR_OVERRIDE override
+#define RR_OVIRTUAL
+#else
+#define RR_OVERRIDE
+#define RR_OVIRTUAL virtual
+#endif
+#define RR_NULL_FN 0

@@ -36,11 +36,12 @@ namespace RobotRaconteur
 class ROBOTRACONTEUR_CORE_API StructureStub
 {
   public:
-    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(RR_INTRUSIVE_PTR<RRValue> s) = 0;
+    virtual RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(const RR_INTRUSIVE_PTR<RRValue>& s) = 0;
 
-    virtual RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(RR_INTRUSIVE_PTR<MessageElementNestedElementList> m) = 0;
+    virtual RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(
+        const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& m) = 0;
 
-    StructureStub(RR_SHARED_PTR<RobotRaconteurNode> node);
+    StructureStub(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
     RR_SHARED_PTR<RobotRaconteurNode> RRGetNode() { return GetNode(); }
@@ -86,7 +87,7 @@ class pod_field_array : public boost::array<T, N>
 
   public:
     pod_field_array() : len(0) {}
-    pod_field_array(size_t n) { resize(n); }
+    pod_field_array(size_t n) : len(0) { resize(n); }
     typename boost::array<T, N>::iterator end() { return boost::array<T, N>::elems + len; }
     typename boost::array<T, N>::const_iterator end() const { return boost::array<T, N>::elems + len; }
     typename boost::array<T, N>::const_iterator cend() const { return boost::array<T, N>::elems + len; }
@@ -148,6 +149,7 @@ void RRArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_INT
     memcpy(&v[0], i->data(), sizeof(T) * i->size());
 }
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define RRPodStubNumberType(type)                                                                                      \
     template <>                                                                                                        \
     class PodStub<type>                                                                                                \
@@ -184,6 +186,7 @@ void RRArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_INT
             RRArrayTo_pod_field_array(v, a);                                                                           \
         }                                                                                                              \
     };
+// NOLINTEND(bugprone-macro-parentheses)
 
 RRPodStubNumberType(double);
 RRPodStubNumberType(float);
@@ -202,7 +205,7 @@ RR_INTRUSIVE_PTR<RRNamedArray<T> > pod_field_array_ToRRNamedArray(const pod_fiel
     typedef typename RRPrimUtil<T>::ElementArrayType element_type;
     typename RR_INTRUSIVE_PTR<RRArray<element_type> > a = AttachRRArrayCopy<element_type>(
         reinterpret_cast<const element_type*>(&i[0]), i.size() * RRPrimUtil<T>::GetElementArrayCount());
-    return new RRNamedArray<T>(a);
+    return new RRNamedArray<T>(a); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 template <typename T, size_t N, bool varlength>
@@ -214,6 +217,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
     memcpy(&v[0], i->GetNumericArray()->data(), sizeof(T) * i->size());
 }
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define RRPodStubNamedArrayType(type)                                                                                  \
     template <>                                                                                                        \
     class PodStub<type>                                                                                                \
@@ -272,7 +276,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
             memcpy(&v, a1->data(), a1->size() * sizeof(element_type));                                                 \
         }                                                                                                              \
     };
-
+// NOLINTEND(bugprone-macro-parentheses)
 template <typename T, size_t N, bool varlength>
 class PodStub<pod_field_array<T, N, varlength> >
 {
@@ -307,7 +311,7 @@ class PodStub<pod_field_array<T, N, varlength> >
         for (int32_t i = 0; i < boost::numeric_cast<int32_t>(a->Elements.size()); i++)
         {
             RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(i);
-            int32_t key;
+            int32_t key = 0;
             if (!MessageElement_GetElementNumber(m, key))
             {
                 throw DataTypeException("Invalid pod array format");
@@ -346,7 +350,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodToArray(const T
 }
 
 template <typename T>
-void PodStub_UnpackPodFromArray(T& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+void PodStub_UnpackPodFromArray(T& v, const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     if (!a)
         throw DataTypeException("Pod scalar array must not be null");
@@ -358,7 +362,7 @@ void PodStub_UnpackPodFromArray(T& v, RR_INTRUSIVE_PTR<MessageElementNestedEleme
         throw DataTypeException("Invalid pod scalar array format");
 
     RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(0);
-    int32_t key;
+    int32_t key = 0;
     if (!MessageElement_GetElementNumber(m, key))
     {
         throw DataTypeException("Invalid pod scalar array format");
@@ -371,7 +375,7 @@ void PodStub_UnpackPodFromArray(T& v, RR_INTRUSIVE_PTR<MessageElementNestedEleme
 }
 
 template <typename T>
-T PodStub_UnpackPodFromArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+T PodStub_UnpackPodFromArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     T v;
     PodStub_UnpackPodFromArray<T>(v, a);
@@ -379,7 +383,7 @@ T PodStub_UnpackPodFromArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a
 }
 
 template <typename T>
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodArray(RR_INTRUSIVE_PTR<RRPodArray<T> > a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodArray(const RR_INTRUSIVE_PTR<RRPodArray<T> >& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
@@ -396,7 +400,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodArray(RR_INTRUS
 }
 
 template <typename T>
-RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<RRPodArray<T> >();
@@ -407,7 +411,7 @@ RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(RR_INTRUSIVE_PTR<Message
     for (size_t i = 0; i < a->Elements.size(); i++)
     {
         RR_INTRUSIVE_PTR<MessageElement> m = a->Elements.at(i);
-        int32_t key;
+        int32_t key = 0;
         if (!MessageElement_GetElementNumber(m, key))
         {
             throw DataTypeException("Invalid pod array format");
@@ -423,7 +427,7 @@ RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(RR_INTRUSIVE_PTR<Message
 
 template <typename T>
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodMultiDimArray(
-    RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > a)
+    const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
@@ -440,7 +444,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PodStub_PackPodMultiDimArray(
 
 template <typename T>
 RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > PodStub_UnpackPodMultiDimArray(
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)
+    const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& m)
 {
     if (!m)
         return RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >();
@@ -510,7 +514,7 @@ RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > MessageElement_UnpackPodMultiDimArray(
 }
 
 template <typename T>
-static RR_INTRUSIVE_PTR<RRPodArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRPodArray<T> > a, size_t len,
+static RR_INTRUSIVE_PTR<RRPodArray<T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRPodArray<T> >& a, size_t len,
                                                             bool varlength)
 {
     if (!a)
@@ -530,9 +534,8 @@ static RR_INTRUSIVE_PTR<RRPodArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRP
 }
 
 template <size_t Ndims, typename T>
-static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > VerifyRRMultiDimArrayLength(RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > a,
-                                                                            size_t n_elems,
-                                                                            boost::array<uint32_t, Ndims> dims)
+static RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > VerifyRRMultiDimArrayLength(
+    const RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> >& a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 {
     if (!a)
         throw NullValueException("Arrays must not be null");
@@ -573,7 +576,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArrayT
 }
 
 template <typename T>
-void NamedArrayStub_UnpackNamedArrayFromArray(T& v, RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+void NamedArrayStub_UnpackNamedArrayFromArray(T& v, const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     typedef typename RRPrimUtil<T>::ElementArrayType element_type;
     if (!a)
@@ -593,15 +596,16 @@ void NamedArrayStub_UnpackNamedArrayFromArray(T& v, RR_INTRUSIVE_PTR<MessageElem
 }
 
 template <typename T>
-T NamedArrayStub_UnpackNamedArrayFromArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+T NamedArrayStub_UnpackNamedArrayFromArray(const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
-    T o;
+    T o; // NOLINT(cppcoreguidelines-pro-type-member-init)
     NamedArrayStub_UnpackNamedArrayFromArray(o, a);
     return o;
 }
 
 template <typename T>
-RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArray(RR_INTRUSIVE_PTR<RRNamedArray<T> > a)
+RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArray(
+    const RR_INTRUSIVE_PTR<RRNamedArray<T> >& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
@@ -612,7 +616,8 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArray(
 }
 
 template <typename T>
-RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(RR_INTRUSIVE_PTR<MessageElementNestedElementList> a)
+RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(
+    const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& a)
 {
     typedef typename RRPrimUtil<T>::ElementArrayType element_type;
     if (!a)
@@ -623,12 +628,12 @@ RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(RR_INTRUSIVE_
         throw DataTypeException("Invalid namedarray type");
     typename RR_INTRUSIVE_PTR<RRArray<element_type> > a2 =
         MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
-    return new RRNamedArray<T>(a2);
+    return new RRNamedArray<T>(a2); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
 template <typename T>
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedMultiDimArray(
-    RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > a)
+    const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& a)
 {
     if (!a)
         return RR_INTRUSIVE_PTR<MessageElementNestedElementList>();
@@ -645,7 +650,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedMultiD
 
 template <typename T>
 RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > NamedArrayStub_UnpackNamedMultiDimArray(
-    RR_INTRUSIVE_PTR<MessageElementNestedElementList> m)
+    const RR_INTRUSIVE_PTR<MessageElementNestedElementList>& m)
 {
     if (!m)
         return RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >();
@@ -716,7 +721,7 @@ RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > MessageElement_UnpackNamedMultiDimArr
 }
 
 template <typename T>
-static RR_INTRUSIVE_PTR<RRNamedArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<RRNamedArray<T> > a, size_t len,
+static RR_INTRUSIVE_PTR<RRNamedArray<T> > VerifyRRArrayLength(const RR_INTRUSIVE_PTR<RRNamedArray<T> >& a, size_t len,
                                                               bool varlength)
 {
     if (!a)
@@ -737,7 +742,7 @@ static RR_INTRUSIVE_PTR<RRNamedArray<T> > VerifyRRArrayLength(RR_INTRUSIVE_PTR<R
 
 template <size_t Ndims, typename T>
 static RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > VerifyRRMultiDimArrayLength(
-    RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
+    const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& a, size_t n_elems, boost::array<uint32_t, Ndims> dims)
 {
     if (!a)
         throw NullValueException("Arrays must not be null");

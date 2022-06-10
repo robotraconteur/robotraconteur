@@ -44,7 +44,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext;
  *
  * The security policy is passed as a parameter to
  * RobotRaconteurNode::RegisterService(boost::string_ref, boost::string_ref,
- * boost::shared_ptr<RRObject>,  boost::shared_ptr< ServiceSecurityPolicy > securitypolicy),
+ * const boost::shared_ptr<RRObject>&,  boost::shared_ptr< ServiceSecurityPolicy > securitypolicy),
  * or set using ServerContext::SetSecurityPolicy().
  *
  * See \ref security for more information.
@@ -70,7 +70,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSecurityPolicy
      * @param Authenticator The user authenticator
      * @param Policies The security policies
      */
-    ServiceSecurityPolicy(RR_SHARED_PTR<UserAuthenticator> Authenticator,
+    ServiceSecurityPolicy(const RR_SHARED_PTR<UserAuthenticator>& Authenticator,
                           const std::map<std::string, std::string>& Policies);
 };
 
@@ -130,7 +130,7 @@ class ROBOTRACONTEUR_CORE_API AuthenticatedUser
      * @param context The context of the service
      */
     AuthenticatedUser(boost::string_ref username, const std::vector<std::string>& privileges,
-                      const std::vector<std::string>& properties, RR_SHARED_PTR<ServerContext> context);
+                      const std::vector<std::string>& properties, const RR_SHARED_PTR<ServerContext>& context);
 
     /** @brief Update the last access time to now */
     virtual void UpdateLastAccess();
@@ -170,7 +170,7 @@ class ROBOTRACONTEUR_CORE_API UserAuthenticator
      */
     virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(
         boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& credentials,
-        RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> transport) = 0;
+        const RR_SHARED_PTR<ServerContext>& context, const RR_SHARED_PTR<ITransportConnection>& transport) = 0;
 
     virtual ~UserAuthenticator() {}
 };
@@ -210,7 +210,6 @@ class ROBOTRACONTEUR_CORE_API PasswordFileUserAuthenticator : public UserAuthent
         std::vector<NodeID> allowed_client_nodeid;
     };
 
-  private:
     std::map<std::string, RR_SHARED_PTR<User> > validusers;
     bool require_verified_client;
 
@@ -229,20 +228,17 @@ class ROBOTRACONTEUR_CORE_API PasswordFileUserAuthenticator : public UserAuthent
      */
     PasswordFileUserAuthenticator(boost::string_ref data, bool require_verified_client = false);
 
-    virtual ~PasswordFileUserAuthenticator() {}
+    RR_OVIRTUAL ~PasswordFileUserAuthenticator() RR_OVERRIDE {}
 
   private:
     void load(boost::string_ref data);
 
   public:
-    virtual RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(
+    RR_OVIRTUAL RR_SHARED_PTR<AuthenticatedUser> AuthenticateUser(
         boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& credentials,
-        RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> transport);
+        const RR_SHARED_PTR<ServerContext>& context, const RR_SHARED_PTR<ITransportConnection>& transport) RR_OVERRIDE;
 
     static std::string MD5Hash(boost::string_ref text);
-
-  private:
-    void InitializeInstanceFields();
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

@@ -136,7 +136,10 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS)
     endif()
 
     if(NOT RobotRaconteurGen_EXECUTABLE)
-        set(RobotRaconteurGen_EXECUTABLE RobotRaconteurGen)
+        if(NOT TARGET RobotRaconteurGen)
+            message(FATAL_ERROR "RobotRaconteurGen not found")
+        endif()
+        set(RobotRaconteurGen_EXECUTABLE "$<TARGET_FILE:RobotRaconteurGen>")
         set(RR_GEN_DEPENDS RobotRaconteurGen)
     endif()
 

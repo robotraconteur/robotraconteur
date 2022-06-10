@@ -28,7 +28,7 @@ namespace RobotRaconteur
 {
 public:
 	virtual ~AsyncHandlerDirector() {}
-	virtual void handler(void* m, uint32_t error_code, std::string errorname, std::string errormessage);
+	virtual void handler(void* m, uint32_t error_code,const std::string& errorname,const std::string& errormessage);
 
 };*/
 
@@ -46,7 +46,7 @@ class AsyncRequestDirector
 {
 public:
 	virtual ~AsyncRequestDirector() {}
-	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> ret, HandlerErrorInfo& error);
+	virtual void handler(boost::intrusive_ptr<RobotRaconteur::MessageElement> ret, HandlerErrorInfo& error) = 0;
 
 };
 
@@ -54,28 +54,28 @@ class AsyncVoidReturnDirector
 {
 public:
 	virtual ~AsyncVoidReturnDirector() {}
-	virtual void handler(HandlerErrorInfo& error);
+	virtual void handler(HandlerErrorInfo& error) = 0;
 };
 
 class AsyncVoidNoErrReturnDirector
 {
 public:
 	virtual ~AsyncVoidNoErrReturnDirector() {}
-	virtual void handler();
+	virtual void handler() = 0;
 };
 
 class AsyncStringReturnDirector
 {
 public:
 	virtual ~AsyncStringReturnDirector() {}
-	virtual void handler(const std::string& ret, HandlerErrorInfo& error);
+	virtual void handler(const std::string& ret, HandlerErrorInfo& error) = 0;
 };
 
 class AsyncUInt32ReturnDirector
 {
 public:
 	virtual ~AsyncUInt32ReturnDirector() {}
-	virtual void handler(uint32_t ret, HandlerErrorInfo& error);
+	virtual void handler(uint32_t ret, HandlerErrorInfo& error) = 0;
 };
 
 }

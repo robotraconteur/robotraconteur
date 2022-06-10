@@ -68,7 +68,7 @@ class ROBOTRACONTEUR_CORE_API ITransportTimeProvider
     virtual TimeSpec NodeSyncTimeSpec() = 0;
 
     virtual RR_SHARED_PTR<Timer> CreateTimer(const boost::posix_time::time_duration& duration,
-                                             boost::function<void(const TimerEvent&)>& handler,
+                                             const boost::function<void(const TimerEvent&)>& handler,
                                              bool oneshot = false) = 0;
 
     virtual RR_SHARED_PTR<Rate> CreateRate(double frequency) = 0;
@@ -85,10 +85,11 @@ class ROBOTRACONTEUR_CORE_API ITransportConnection : boost::noncopyable
   public:
     virtual ~ITransportConnection() {}
 
-    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m) = 0;
+    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
-    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler) = 0;
+    virtual void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
     virtual void Close() = 0;
 
@@ -120,30 +121,26 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
   public:
     friend class RobotRaconteurNode;
     friend class ITransport;
-    virtual ~Transport() {}
+    RR_OVIRTUAL ~Transport() RR_OVERRIDE {}
 
   protected:
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
   public:
-    Transport(RR_SHARED_PTR<RobotRaconteurNode> node);
+    Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     static boost::thread_specific_ptr<std::string> m_CurrentThreadTransportConnectionURL;
 
     static std::string GetCurrentTransportConnectionURL();
 
-  public:
     static boost::thread_specific_ptr<RR_SHARED_PTR<ITransportConnection> > m_CurrentThreadTransport;
 
-  public:
     static RR_SHARED_PTR<ITransportConnection> GetCurrentThreadTransport();
 
     //		public event MessageHandler MessageReceivedEvent;
 
-  public:
     uint32_t TransportID;
 
-  public:
     virtual void CheckConnection(uint32_t endpoint) = 0;
 
     virtual bool IsClient() const = 0;
@@ -157,52 +154,53 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
     virtual bool CanConnectService(boost::string_ref url) = 0;
 
     virtual RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                          RR_SHARED_PTR<Endpoint> e) = 0;
+                                                                          const RR_SHARED_PTR<Endpoint>& e) = 0;
 
     virtual void AsyncCreateTransportConnection(
-        boost::string_ref url, RR_SHARED_PTR<Endpoint> e,
-        boost::function<void(RR_SHARED_PTR<ITransportConnection>, RR_SHARED_PTR<RobotRaconteurException>)>&
-            handler) = 0;
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
-    virtual void CloseTransportConnection(RR_SHARED_PTR<Endpoint> e) = 0;
+    virtual void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) = 0;
 
-    virtual void SendMessage(RR_INTRUSIVE_PTR<Message> m) = 0;
+    virtual void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
-    virtual void AsyncSendMessage(RR_INTRUSIVE_PTR<Message> m,
-                                  boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)>& handler) = 0;
+    virtual void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) = 0;
 
-  public:
-    virtual void MessageReceived(RR_INTRUSIVE_PTR<Message> m) = 0;
+    virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
-    RR_INTRUSIVE_PTR<Message> SpecialRequest(RR_INTRUSIVE_PTR<Message> m, RR_SHARED_PTR<ITransportConnection> tc);
+    RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m,
+                                             const RR_SHARED_PTR<ITransportConnection>& tc);
 
-  public:
     virtual void Close();
 
-    virtual void PeriodicCleanupTask();
+    RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE;
 
     virtual uint32_t TransportCapability(boost::string_ref name);
 
     // typedef void (*TransportListenerDelegate)(const RR_SHARED_PTR<Transport> &transport, TransportListenerEventType
     // ev, const RR_SHARED_PTR<void> &parameter);
 
-    boost::signals2::signal<void(RR_SHARED_PTR<Transport> transport, TransportListenerEventType ev,
-                                 RR_SHARED_PTR<void> parameter)>
+    boost::signals2::signal<void(const RR_SHARED_PTR<Transport>& transport, TransportListenerEventType ev,
+                                 const RR_SHARED_PTR<void>& parameter)>
         TransportListeners;
 
     virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
     virtual std::vector<NodeDiscoveryInfo> GetDetectedNodes(const std::vector<std::string>& schemes);
 
-    virtual void AsyncGetDetectedNodes(const std::vector<std::string>& schemes,
-                                       boost::function<void(RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >)>& handler,
-                                       int32_t timeout = RR_TIMEOUT_INFINITE);
+    virtual void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE);
 
   protected:
     virtual void LocalNodeServicesChanged();
 
-    void FireTransportEventListener(RR_SHARED_PTR<Transport> shared_this, TransportListenerEventType ev,
-                                    RR_SHARED_PTR<void> parameter);
+    void FireTransportEventListener(const RR_SHARED_PTR<Transport>& shared_this, TransportListenerEventType ev,
+                                    const RR_SHARED_PTR<void>& parameter);
 
     void TransportConnectionClosed(uint32_t endpoint);
 };

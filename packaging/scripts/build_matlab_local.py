@@ -111,7 +111,7 @@ def main():
         "scripts/buildsystems/vcpkg.cmake").absolute()
     assert vcpkg_toolchain_file.exists()
 
-    subprocess.check_call("cmake -G \"Ninja\" -DBUILD_GEN=ON -DBUILD_TEST=ON -DBoost_USE_STATIC_LIBS=ON "
+    subprocess.check_call("cmake -G \"Ninja\" -DBUILD_GEN=ON -DBUILD_TESTING=ON -DBoost_USE_STATIC_LIBS=ON "
                           "-DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON Boost_NO_SYSTEM_PATHS=ON "
                           f"-DVCPKG_TARGET_TRIPLET={vcpkg_triplet} "
                           f"-DCMAKE_TOOLCHAIN_FILE={vcpkg_toolchain_file} "

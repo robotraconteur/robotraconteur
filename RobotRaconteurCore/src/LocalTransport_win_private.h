@@ -59,7 +59,7 @@ boost::optional<std::wstring> GetSIDStringForName(std::wstring name);
 
 bool IsPipeSameUserOrService(HANDLE pipe, bool allow_service);
 BOOL GetNamedPipeServerProcessId(HANDLE pipe, PULONG pid, PBOOL available);
-bool IsPipeUser(HANDLE pipe, std::string username);
+bool IsPipeUser(HANDLE pipe, const std::string& username);
 
 RR_SHARED_PTR<std::ifstream> HandleToIStream(HANDLE h);
 RR_SHARED_PTR<std::ofstream> HandleToOStream(HANDLE h);
@@ -76,7 +76,7 @@ class WinLocalTransportDiscovery : public LocalTransportDiscovery,
                                    public RR_ENABLE_SHARED_FROM_THIS<WinLocalTransportDiscovery>
 {
   public:
-    WinLocalTransportDiscovery(RR_SHARED_PTR<RobotRaconteurNode> node);
+    WinLocalTransportDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node);
     virtual void Init();
     virtual void Shutdown();
     virtual ~WinLocalTransportDiscovery();

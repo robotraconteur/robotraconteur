@@ -60,23 +60,22 @@ class ROBOTRACONTEUR_CORE_API StringTable : private boost::noncopyable
     bool AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
     void AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
 
-  public:
-    void MessageReplaceStringsWithCodes(RR_INTRUSIVE_PTR<Message> m);
-    void MessageReplaceCodesWithStrings(RR_INTRUSIVE_PTR<Message> m);
+    void MessageReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<Message>& m);
+    void MessageReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<Message>& m);
 
     std::vector<uint32_t> GetTableFlags();
     void SetTableFlags(std::vector<uint32_t> flags);
 
   protected:
-    void MessageEntryReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageEntry> e,
+    void MessageEntryReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<MessageEntry>& e,
                                              boost::unordered_map<MessageStringPtr, uint32_t>& local_table,
                                              uint32_t& next_local_code, uint32_t& table_size);
-    void MessageElementReplaceStringsWithCodes(RR_INTRUSIVE_PTR<MessageElement> e,
+    void MessageElementReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<MessageElement>& e,
                                                boost::unordered_map<MessageStringPtr, uint32_t>& local_table,
                                                uint32_t& next_local_code, uint32_t& table_size);
-    void MessageEntryReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageEntry> e,
+    void MessageEntryReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<MessageEntry>& e,
                                              boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
-    void MessageElementReplaceCodesWithStrings(RR_INTRUSIVE_PTR<MessageElement> e,
+    void MessageElementReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<MessageElement>& e,
                                                boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
 
     void DoReplaceString(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code,
@@ -85,10 +84,9 @@ class ROBOTRACONTEUR_CORE_API StringTable : private boost::noncopyable
     void DoReplaceCode(MessageStringPtr& str, uint32_t& code, uint8_t& flags, uint32_t flag_str, uint32_t flag_code,
                        boost::unordered_map<uint32_t, MessageStringPtr>& local_table);
 
-    bool _AddCode(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
-    void _AddCodesCSV(const std::string& csv, const std::vector<uint32_t>& table_flags);
+    bool AddCode_p(uint32_t code, MessageStringRef str, const std::vector<uint32_t>& table_flags);
+    void AddCodesCSV_p(const std::string& csv, const std::vector<uint32_t>& table_flags);
 
-  protected:
     bool server;
 
     size_t max_entry_count;

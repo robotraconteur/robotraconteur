@@ -113,7 +113,7 @@ size_t MessageElementLengthFromBytes(const uint8_t* bytes, size_t bytes_len)
 	ArrayBinaryReader r(bytes, 0, bytes_len);
 	return r.ReadNumber<uint32_t>();
 }
-PyObject* MessageElementToBytes(boost::intrusive_ptr<RobotRaconteur::MessageElement> m, uint32_t ver = 2)
+PyObject* MessageElementToBytes(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& m, uint32_t ver = 2)
 {
 	using namespace RobotRaconteur;
 	if (m==NULL)

@@ -671,7 +671,7 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCER
 void TlsSchannelAsyncStreamAdapter_ASIO_adapter::close() { next_layer_.close(); }
 
 TlsSchannelAsyncStreamAdapter::TlsSchannelAsyncStreamAdapter(
-    RR_BOOST_ASIO_IO_CONTEXT& _io_context_, boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext> context,
+    RR_BOOST_ASIO_IO_CONTEXT& _io_context_, const boost::shared_ptr<TlsSchannelAsyncStreamAdapterContext>& context,
     direction_type direction, boost::string_ref servername,
     boost::function<void(mutable_buffers&,
                          boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>)>
@@ -1266,14 +1266,14 @@ void TlsSchannelAsyncStreamAdapter::do_handshake6(const boost::system::error_cod
 }
 
 static void TlsSchannelAsyncStreamAdapter_async_write_some_buf_adaptor(
-    RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter> t, RR_SHARED_PTR<const_buffers> b,
-    boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const RR_SHARED_PTR<TlsSchannelAsyncStreamAdapter>& t, const RR_SHARED_PTR<const_buffers>& b,
+    const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     t->async_write_some(*b, handler);
 }
 
 void TlsSchannelAsyncStreamAdapter::async_write_some(
-    const_buffers& b, boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const_buffers& b, const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     boost::mutex::scoped_lock lock(stream_lock);
 
@@ -1374,7 +1374,7 @@ void TlsSchannelAsyncStreamAdapter::async_write_some(
 
 void TlsSchannelAsyncStreamAdapter::async_write_some1(
     const boost::system::error_code& error, size_t bytes_transferred, size_t len,
-    boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
 
     boost::mutex::scoped_lock lock(stream_lock);
@@ -1444,7 +1444,8 @@ void TlsSchannelAsyncStreamAdapter::async_write_some1(
 }
 
 void TlsSchannelAsyncStreamAdapter::async_write_some2(
-    const boost::system::error_code& error, boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const boost::system::error_code& error,
+    const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     // Error handler for async_write_some
 
@@ -1476,7 +1477,7 @@ void TlsSchannelAsyncStreamAdapter::async_write_some2(
 }
 
 void TlsSchannelAsyncStreamAdapter::async_read_some(
-    mutable_buffers& b, boost::function<void(const boost::system::error_code&, size_t)> handler)
+    mutable_buffers& b, const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
 
     boost::mutex::scoped_lock lock(stream_lock);
@@ -1498,6 +1499,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some(
         if (diff > boost::asio::buffer_size(b3))
         {
             size_t d = boost::asio::buffer_size(b3);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             memcpy(RR_BOOST_ASIO_BUFFER_CAST(void*, b3), recv_buffer_un.get(), d);
             size_t p2 = d;
             memmove(recv_buffer_un.get(), recv_buffer_un.get() + d, recv_buffer_un_end_pos - d);
@@ -1510,6 +1512,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some(
         else
         {
             size_t d = recv_buffer_un_end_pos;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             memcpy(RR_BOOST_ASIO_BUFFER_CAST(void*, b3), recv_buffer_un.get(), d);
             recv_buffer_un_end_pos = 0;
             boost::system::error_code ec;
@@ -1542,7 +1545,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some(
 
 void TlsSchannelAsyncStreamAdapter::async_read_some1(
     boost::asio::mutable_buffer& b, const boost::system::error_code& error, size_t bytes_transferred,
-    boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     boost::mutex::scoped_lock lock(stream_lock);
     if (bytes_transferred == 0)
@@ -1714,6 +1717,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
 
     if (pDataBuffer->cbBuffer <= boost::asio::buffer_size(b))
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         MoveMemory(RR_BOOST_ASIO_BUFFER_CAST(void*, b), pDataBuffer->pvBuffer, pDataBuffer->cbBuffer);
         if (pExtraBuffer)
         {
@@ -1736,6 +1740,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
     {
         size_t bsize = boost::asio::buffer_size(b);
         size_t extra_size = pDataBuffer->cbBuffer - bsize;
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         MoveMemory(RR_BOOST_ASIO_BUFFER_CAST(void*, b), pDataBuffer->pvBuffer, bsize);
         MoveMemory(recv_buffer_un.get(), ((uint8_t*)pDataBuffer->pvBuffer) + bsize, extra_size);
         recv_buffer_un_end_pos = boost::numeric_cast<uint32_t>(extra_size);
@@ -1759,7 +1764,7 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
 
 void TlsSchannelAsyncStreamAdapter::async_read_some2(
     const boost::system::error_code& error, boost::asio::mutable_buffer& b,
-    boost::function<void(const boost::system::error_code&, size_t)> handler)
+    const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     {
         // boost::mutex::scoped_lock lock(stream_lock);

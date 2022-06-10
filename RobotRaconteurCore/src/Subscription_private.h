@@ -68,9 +68,9 @@ class ServiceSubscription_retrytimer : public RR_ENABLE_SHARED_FROM_THIS<Service
     boost::mutex this_lock;
     boost::initialized<bool> cancelled;
 
-    ServiceSubscription_retrytimer(RR_SHARED_PTR<ServiceSubscription> parent);
+    ServiceSubscription_retrytimer(const RR_SHARED_PTR<ServiceSubscription>& parent);
 
-    void Start(RR_SHARED_PTR<ServiceSubscription_client> c2, uint32_t timeout);
+    void Start(const RR_SHARED_PTR<ServiceSubscription_client>& c2, uint32_t timeout);
     void Cancel();
     int64_t MillisecondsRemaining();
 
@@ -88,16 +88,17 @@ class WireSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<WireSubscr
     friend class WireSubscription_send_iterator;
 
     WireSubscription_connection();
-    void Init(RR_SHARED_PTR<WireSubscriptionBase> parent, RR_SHARED_PTR<RRObject> client);
+    void Init(const RR_SHARED_PTR<WireSubscriptionBase>& parent, const RR_SHARED_PTR<RRObject>& client);
 
-    void ClientConnected1(RR_SHARED_PTR<ServiceStub> stub);
+    void ClientConnected1(const RR_SHARED_PTR<ServiceStub>& stub);
 
-    void ClientConnected2(RR_SHARED_PTR<WireConnectionBase> connection, RR_SHARED_PTR<RobotRaconteurException> err);
+    void ClientConnected2(const RR_SHARED_PTR<WireConnectionBase>& connection,
+                          const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    void WireConnectionClosed(RR_SHARED_PTR<WireConnectionBase> connection);
-    void WireValueChanged(RR_SHARED_PTR<WireConnectionBase> connection, RR_INTRUSIVE_PTR<RRValue> value,
-                          const TimeSpec& time);
-    ~WireSubscription_connection();
+    RR_OVIRTUAL void WireConnectionClosed(const RR_SHARED_PTR<WireConnectionBase>& connection) RR_OVERRIDE;
+    RR_OVIRTUAL void WireValueChanged(const RR_SHARED_PTR<WireConnectionBase>& connection,
+                                      const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time) RR_OVERRIDE;
+    RR_OVIRTUAL ~WireSubscription_connection() RR_OVERRIDE;
 
     void SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& value);
 
@@ -124,16 +125,18 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
     friend class PipeSubscription_send_iterator;
 
     PipeSubscription_connection();
-    void Init(RR_SHARED_PTR<PipeSubscriptionBase> parent, RR_SHARED_PTR<RRObject> client);
+    void Init(const RR_SHARED_PTR<PipeSubscriptionBase>& parent, const RR_SHARED_PTR<RRObject>& client);
 
-    void ClientConnected1(RR_SHARED_PTR<ServiceStub> stub);
+    void ClientConnected1(const RR_SHARED_PTR<ServiceStub>& stub);
 
-    void ClientConnected2(RR_SHARED_PTR<PipeEndpointBase> connection, RR_SHARED_PTR<RobotRaconteurException> err);
+    void ClientConnected2(const RR_SHARED_PTR<PipeEndpointBase>& connection,
+                          const RR_SHARED_PTR<RobotRaconteurException>& err);
 
-    virtual void PipeEndpointClosed(RR_SHARED_PTR<PipeEndpointBase> endpoint);
-    virtual void PipePacketReceived(RR_SHARED_PTR<PipeEndpointBase> endpoint,
-                                    boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)> receive_packet_func);
-    virtual void PipePacketAckReceived(RR_SHARED_PTR<PipeEndpointBase> endpoint, uint32_t pnum);
+    RR_OVIRTUAL void PipeEndpointClosed(const RR_SHARED_PTR<PipeEndpointBase>& endpoint) RR_OVERRIDE;
+    RR_OVIRTUAL void PipePacketReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint,
+                                        const boost::function<bool(RR_INTRUSIVE_PTR<RRValue>&)>& receive_packet_func)
+        RR_OVERRIDE;
+    RR_OVIRTUAL void PipePacketAckReceived(const RR_SHARED_PTR<PipeEndpointBase>& endpoint, uint32_t pnum) RR_OVERRIDE;
 
     // Call with PipeSubscription::this_lock locked
     bool DoSendPacket();
@@ -145,7 +148,7 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
 
     void Close();
 
-    ~PipeSubscription_connection();
+    RR_OVIRTUAL ~PipeSubscription_connection() RR_OVERRIDE;
 
   protected:
     RR_WEAK_PTR<PipeSubscriptionBase> parent;
@@ -161,7 +164,7 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
     boost::initialized<bool> send_copy_element;
 
     static void pipe_packet_send_handler(RR_WEAK_PTR<PipeSubscription_connection> connection, int32_t pnum,
-                                         RR_SHARED_PTR<RobotRaconteurException> err, int32_t send_key);
+                                         const RR_SHARED_PTR<RobotRaconteurException>& err, int32_t send_key);
 
     RR_SHARED_PTR<Timer> retry_timer;
 };

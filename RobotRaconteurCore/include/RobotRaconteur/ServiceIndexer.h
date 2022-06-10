@@ -32,18 +32,20 @@ class ServiceIndexer : public virtual RobotRaconteurServiceIndex::ServiceIndex
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
   public:
-    ServiceIndexer(RR_SHARED_PTR<RobotRaconteurNode> node);
+    ServiceIndexer(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >
-    GetLocalNodeServices();
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::ServiceInfo> >
+    GetLocalNodeServices() RR_OVERRIDE;
 
-    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes();
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > GetRoutedNodes()
+        RR_OVERRIDE;
 
-    virtual RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > GetDetectedNodes();
+    RR_OVIRTUAL RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> >
+    GetDetectedNodes() RR_OVERRIDE;
 
-    virtual boost::signals2::signal<void()>& get_LocalNodeServicesChanged();
+    RR_OVIRTUAL boost::signals2::signal<void()>& get_LocalNodeServicesChanged() RR_OVERRIDE;
 
   private:
     boost::signals2::signal<void()> ev;

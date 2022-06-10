@@ -40,14 +40,11 @@ class ROBOTRACONTEUR_CORE_API ServerContext_ObjectLock : public RR_ENABLE_SHARED
     std::string GetRootServicePath() const;
     uint32_t GetEndpoint() const;
 
-    void AddSkel(RR_SHARED_PTR<ServiceSkel> skel);
+    void AddSkel(const RR_SHARED_PTR<ServiceSkel>& skel);
 
-    void ReleaseSkel(RR_SHARED_PTR<ServiceSkel> skel);
+    void ReleaseSkel(const RR_SHARED_PTR<ServiceSkel>& skel);
 
     void ReleaseLock();
-
-  private:
-    void InitializeInstanceFields();
 };
 
 class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
@@ -72,7 +69,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
 
     bool IsLocked() const;
 
-    ServerContext_MonitorObjectSkel(RR_SHARED_PTR<ServiceSkel> skel);
+    ServerContext_MonitorObjectSkel(const RR_SHARED_PTR<ServiceSkel>& skel);
 
     std::string MonitorEnter(uint32_t local_endpoint, int32_t timeout);
 
@@ -88,9 +85,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
     void thread_func();
 
     boost::mutex close_lock;
-
-  private:
-    void InitializeInstanceFields();
 };
 
 } // namespace RobotRaconteur

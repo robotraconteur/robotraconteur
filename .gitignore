@@ -357,3 +357,4 @@ generated_src
 *.asv
 
 vcpkg
+.cache

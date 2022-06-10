@@ -160,7 +160,7 @@ void Message::Read4(ArrayBinaryReader& r)
     }
 }
 
-uint16_t MessageHeader::ComputeSize()
+uint16_t MessageHeader::ComputeSize() // NOLINT(readability-make-member-function-const)
 {
     uint32_t s1 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(SenderNodeName));
     uint32_t s2 = boost::numeric_cast<uint32_t>(ArrayBinaryWriter::GetStringByteCount8(ReceiverNodeName));
@@ -193,7 +193,7 @@ void MessageHeader::UpdateHeader(uint32_t message_size, uint16_t entry_count)
     EntryCount = entry_count;
 }
 
-void MessageHeader::Write(ArrayBinaryWriter& w)
+void MessageHeader::Write(ArrayBinaryWriter& w) // NOLINT(readability-make-member-function-const)
 {
     w.PushRelativeLimit(HeaderSize);
     w.WriteString8("RRAC");
@@ -237,7 +237,7 @@ void MessageHeader::Read(ArrayBinaryReader& r)
 {
     MessageStringPtr magic = r.ReadString8(4).str();
     if (magic != "RRAC")
-        throw ProtocolException("Incorrect message seed");
+        throw ProtocolException("Incorrect message magic");
     MessageSize = r.ReadNumber<uint32_t>();
     uint16_t version = r.ReadNumber<uint16_t>();
     if (version != 2)
@@ -247,14 +247,14 @@ void MessageHeader::Read(ArrayBinaryReader& r)
 
     r.PushRelativeLimit(HeaderSize - 12);
 
-    boost::array<uint8_t, 16> bSenderNodeID;
+    boost::array<uint8_t, 16> bSenderNodeID = {};
     for (int32_t i = 0; i < 16; i++)
     {
         bSenderNodeID[i] = r.ReadNumber<uint8_t>();
     };
     SenderNodeID = NodeID(bSenderNodeID);
 
-    boost::array<uint8_t, 16> bReceiverNodeID;
+    boost::array<uint8_t, 16> bReceiverNodeID = {};
     for (int32_t i = 0; i < 16; i++)
     {
         bReceiverNodeID[i] = r.ReadNumber<uint8_t>();
@@ -350,7 +350,7 @@ void MessageHeader::UpdateHeader4(uint32_t message_entry_size, uint16_t entry_co
         MessageFlags |= MessageFlags_MULTIPLE_ENTRIES;
     }
 
-    if (MetaData.str().size() == 0 && MessageID == 0 && MessageResID == 0)
+    if (MetaData.str().empty() && MessageID == 0 && MessageResID == 0)
     {
         MessageFlags &= ~MessageFlags_META_INFO;
     }
@@ -359,7 +359,7 @@ void MessageHeader::UpdateHeader4(uint32_t message_entry_size, uint16_t entry_co
         MessageFlags |= MessageFlags_META_INFO;
     }
 
-    if (Extended.size() == 0)
+    if (Extended.empty())
     {
         MessageFlags &= ~MessageFlags_EXTENDED;
     }
@@ -468,14 +468,14 @@ void MessageHeader::Read4(ArrayBinaryReader& r)
     if (MessageFlags & MessageFlags_ROUTING_INFO)
     {
 
-        boost::array<uint8_t, 16> bSenderNodeID;
+        boost::array<uint8_t, 16> bSenderNodeID = {};
         for (int32_t i = 0; i < 16; i++)
         {
             bSenderNodeID[i] = r.ReadNumber<uint8_t>();
         };
         SenderNodeID = NodeID(bSenderNodeID);
 
-        boost::array<uint8_t, 16> bReceiverNodeID;
+        boost::array<uint8_t, 16> bReceiverNodeID = {};
         for (int32_t i = 0; i < 16; i++)
         {
             bReceiverNodeID[i] = r.ReadNumber<uint8_t>();
@@ -649,7 +649,7 @@ bool MessageEntry::TryFindElement(MessageStringRef name, RR_INTRUSIVE_PTR<Messag
 }
 
 RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(MessageStringRef name,
-                                                          RR_INTRUSIVE_PTR<MessageElementData> data)
+                                                          const RR_INTRUSIVE_PTR<MessageElementData>& data)
 {
     RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement();
     m->ElementName = name;
@@ -660,7 +660,7 @@ RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(MessageStringRef name,
     return m;
 }
 
-RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(RR_INTRUSIVE_PTR<MessageElement> m)
+RR_INTRUSIVE_PTR<MessageElement> MessageEntry::AddElement(const RR_INTRUSIVE_PTR<MessageElement>& m)
 {
 
     elements.push_back(m);
@@ -819,7 +819,7 @@ void MessageEntry::UpdateData4()
         EntryFlags &= ~MessageEntryFlags_ERROR;
     }
 
-    if (MetaData.str().size() > 0)
+    if (!MetaData.str().empty())
     {
         EntryFlags |= MessageEntryFlags_META_INFO;
     }
@@ -828,7 +828,7 @@ void MessageEntry::UpdateData4()
         EntryFlags &= ~MessageEntryFlags_META_INFO;
     }
 
-    if (Extended.size() == 0)
+    if (Extended.empty())
     {
         EntryFlags &= ~MessageFlags_EXTENDED;
     }
@@ -994,7 +994,7 @@ MessageElement::MessageElement()
     Extended.clear();
 }
 
-MessageElement::MessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin)
+MessageElement::MessageElement(MessageStringRef name, const RR_INTRUSIVE_PTR<MessageElementData>& datin)
 {
     ElementSize = 0;
     DataCount = 0;
@@ -1013,7 +1013,7 @@ MessageElement::MessageElement(MessageStringRef name, RR_INTRUSIVE_PTR<MessageEl
 
 RR_INTRUSIVE_PTR<MessageElementData> MessageElement::GetData() { return dat; }
 
-void MessageElement::SetData(const RR_INTRUSIVE_PTR<MessageElementData> value)
+void MessageElement::SetData(const RR_INTRUSIVE_PTR<MessageElementData>& value)
 {
     dat = value;
 
@@ -1481,7 +1481,7 @@ void MessageElement::UpdateData4()
         throw ProtocolException("Cannot set both element name and number");
     }
 
-    if (ElementTypeName.str().size() > 0)
+    if (!ElementTypeName.str().empty())
     {
         ElementFlags |= MessageElementFlags_ELEMENT_TYPE_NAME_STR;
     }
@@ -1490,7 +1490,7 @@ void MessageElement::UpdateData4()
         ElementFlags &= ~MessageElementFlags_ELEMENT_TYPE_NAME_STR;
     }
 
-    if (MetaData.str().size() > 0)
+    if (!MetaData.str().empty())
     {
         ElementFlags |= MessageElementFlags_META_INFO;
     }
@@ -1499,7 +1499,7 @@ void MessageElement::UpdateData4()
         ElementFlags &= ~MessageElementFlags_META_INFO;
     }
 
-    if (Extended.size() == 0)
+    if (Extended.empty())
     {
         ElementFlags &= ~MessageElementFlags_EXTENDED;
     }
@@ -1739,10 +1739,7 @@ bool MessageElement::ContainsElement(std::vector<RR_INTRUSIVE_PTR<MessageElement
     std::vector<RR_INTRUSIVE_PTR<MessageElement> >::iterator m1 =
         boost::find_if(m, boost::bind(&MessageElement::ElementName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
-    if (m1 == m.end())
-        return false;
-
-    return true;
+    return (m1 != m.end());
 }
 
 std::string MessageElement::CastDataToString()
@@ -1796,12 +1793,12 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageEntry> CreateMessageEntry(Messag
 }
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement() { return new MessageElement(); }
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(
-    MessageStringRef name, RR_INTRUSIVE_PTR<MessageElementData> datin)
+    MessageStringRef name, const RR_INTRUSIVE_PTR<MessageElementData>& datin)
 {
     return new MessageElement(name, datin);
 }
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(
-    int32_t number, RR_INTRUSIVE_PTR<MessageElementData> datin)
+    int32_t number, const RR_INTRUSIVE_PTR<MessageElementData>& datin)
 {
     MessageElement* m = new MessageElement("", datin);
     m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
@@ -1821,7 +1818,7 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> Create
     return new MessageElementNestedElementList(type_, type_name_, std::move(elements_));
 }
 #endif
-RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m)
+RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(const RR_INTRUSIVE_PTR<Message>& m)
 {
     if (!m)
         return RR_INTRUSIVE_PTR<Message>();
@@ -1857,7 +1854,7 @@ RR_INTRUSIVE_PTR<Message> ShallowCopyMessage(RR_INTRUSIVE_PTR<Message> m)
     return m2;
 }
 
-RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> mm)
+RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(const RR_INTRUSIVE_PTR<MessageEntry>& mm)
 {
     if (!mm)
         return RR_INTRUSIVE_PTR<MessageEntry>();
@@ -1883,7 +1880,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ShallowCopyMessageEntry(RR_INTRUSIVE_PTR<MessageE
     return mm2;
 }
 
-RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(RR_INTRUSIVE_PTR<MessageElement> mm)
+RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(const RR_INTRUSIVE_PTR<MessageElement>& mm)
 {
     if (!mm)
         return RR_INTRUSIVE_PTR<MessageElement>();
@@ -1936,7 +1933,7 @@ RR_INTRUSIVE_PTR<MessageElement> ShallowCopyMessageElement(RR_INTRUSIVE_PTR<Mess
     return mm2;
 }
 
-bool MessageElement_GetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t& number)
+bool MessageElement_GetElementNumber(const RR_INTRUSIVE_PTR<MessageElement>& m, int32_t& number)
 {
     if (m->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
     {
@@ -1945,7 +1942,7 @@ bool MessageElement_GetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t
     }
     else if (m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
     {
-        int32_t _number;
+        int32_t _number = 0;
         if (!boost::conversion::try_lexical_convert<int32_t>(m->ElementName.str(), _number))
         {
             return false;
@@ -1959,14 +1956,14 @@ bool MessageElement_GetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t
     }
 }
 
-void MessageElement_SetElementNumber(RR_INTRUSIVE_PTR<MessageElement> m, int32_t number)
+void MessageElement_SetElementNumber(const RR_INTRUSIVE_PTR<MessageElement>& m, int32_t number)
 {
     m->ElementFlags &= ~MessageElementFlags_ELEMENT_NAME_STR;
     m->ElementFlags |= MessageElementFlags_ELEMENT_NUMBER;
     m->ElementNumber = number;
 }
 
-bool MessageElement_GetElementName(RR_INTRUSIVE_PTR<MessageElement> m, MessageStringPtr& name)
+bool MessageElement_GetElementName(const RR_INTRUSIVE_PTR<MessageElement>& m, MessageStringPtr& name)
 {
     if (!(m->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR))
     {

@@ -46,7 +46,7 @@ ServiceSecurityPolicy::ServiceSecurityPolicy()
     Policies.clear();
 }
 
-ServiceSecurityPolicy::ServiceSecurityPolicy(RR_SHARED_PTR<UserAuthenticator> Authenticator,
+ServiceSecurityPolicy::ServiceSecurityPolicy(const RR_SHARED_PTR<UserAuthenticator>& Authenticator,
                                              const std::map<std::string, std::string>& Policies)
 {
     this->Authenticator = Authenticator;
@@ -68,7 +68,8 @@ boost::posix_time::ptime AuthenticatedUser::GetLastAccessTime()
 }
 
 AuthenticatedUser::AuthenticatedUser(boost::string_ref username, const std::vector<std::string>& privileges,
-                                     const std::vector<std::string>& properties, RR_SHARED_PTR<ServerContext> context)
+                                     const std::vector<std::string>& properties,
+                                     const RR_SHARED_PTR<ServerContext>& context)
 {
     this->m_Username = RR_MOVE(username.to_string());
     this->m_Privileges = privileges;
@@ -89,7 +90,6 @@ void AuthenticatedUser::UpdateLastAccess()
 
 PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(std::istream& file, bool require_verified_client)
 {
-    InitializeInstanceFields();
     std::stringstream buffer;
     buffer << file.rdbuf();
     load(buffer.str());
@@ -98,7 +98,6 @@ PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(std::istream& file,
 
 PasswordFileUserAuthenticator::PasswordFileUserAuthenticator(boost::string_ref data, bool require_verified_client)
 {
-    InitializeInstanceFields();
     load(data);
     this->require_verified_client = require_verified_client;
 }
@@ -129,7 +128,7 @@ void PasswordFileUserAuthenticator::load(boost::string_ref data)
         {
             std::vector<std::string> n_ids;
             boost::split(n_ids, g.at(3), boost::is_from_range(',', ','));
-            BOOST_FOREACH (std::string n_id, n_ids)
+            BOOST_FOREACH (const std::string& n_id, n_ids)
             {
                 u->allowed_client_nodeid.push_back(NodeID(n_id));
             }
@@ -141,7 +140,7 @@ void PasswordFileUserAuthenticator::load(boost::string_ref data)
 
 RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser(
     boost::string_ref username, const std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >& credentials,
-    RR_SHARED_PTR<ServerContext> context, RR_SHARED_PTR<ITransportConnection> transport)
+    const RR_SHARED_PTR<ServerContext>& context, const RR_SHARED_PTR<ITransportConnection>& transport)
 {
 
     std::map<std::string, RR_SHARED_PTR<PasswordFileUserAuthenticator::User> >::iterator u =
@@ -245,8 +244,8 @@ std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
 
     return s2;
 #else
-    uint8_t md[MD5_DIGEST_LENGTH];
-    MD5(reinterpret_cast<const uint8_t*>(text.data()), text.size(), reinterpret_cast<uint8_t*>(md));
+    boost::array<uint8_t, MD5_DIGEST_LENGTH> md = {};
+    MD5(reinterpret_cast<const uint8_t*>(text.data()), text.size(), reinterpret_cast<uint8_t*>(md.data()));
 
     std::string s2;
     for (size_t i = 0; i < 16; i++)
@@ -263,5 +262,4 @@ std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
 #endif
 }
 
-void PasswordFileUserAuthenticator::InitializeInstanceFields() {}
 } // namespace RobotRaconteur
