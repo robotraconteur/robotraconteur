@@ -837,13 +837,12 @@ jobs:
       run: |
         git clone --depth=1 https://github.com/moritz-wundke/Boost-for-Android.git boost_android
         cd boost_android
-        ./build-android.sh $ANDROID_NDK_LATEST_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.74.0 
+        ./build-android.sh $ANDROID_NDK_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.74.0 
     - name: build_openssl
       run: |
         git clone --branch OpenSSL_1_1_1n https://github.com/openssl/openssl.git
         cd openssl
-        export PATH=$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH 
-        export ANDROID_NDK_HOME=$ANDROID_NDK_LATEST_HOME
+        export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH 
         ./Configure ${{ matrix.config.openssl_arch }} --prefix=$GITHUB_WORKSPACE/openssl_install_${{ matrix.config.android_abi }}
         make -j4
         make install_sw
@@ -857,7 +856,7 @@ jobs:
         -DBUILD_JAVA=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
-        -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake 
+        -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake 
         -DANDROID_PLATFORM=android-24
         -DBUILD_JAVA=ON 
         -DBOOST_ROOT:PATH=$GITHUB_WORKSPACE/boost_android/build/out/${{ matrix.config.android_abi }}/ 
