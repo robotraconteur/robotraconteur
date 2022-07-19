@@ -1990,36 +1990,40 @@ class PackMxArrayToMessageElementImpl
                                                                  const RR_SHARED_PTR<ServiceStub>& stub,
                                                                  bool allow_null = true)
     {
-        if (mxIsEmpty(pm) && allow_null)
+        if (std::string(mxGetClassName(pm)) == "RobotRaconteurNull" && allow_null)
         {
-            if (IsTypeNumeric(tdef->Type) && tdef->ContainerType == DataTypes_ContainerTypes_none)
+            if (tdef && (tdef->ContainerType == DataTypes_ContainerTypes_none))
             {
-                if (tdef->ArrayType == DataTypes_ArrayTypes_none)
-                    throw DataTypeException("Scalar cannot be null");
-
-                if (!tdef->ArrayVarLength)
-                    throw DataTypeException("Array cannot be null");
-
-                if (!tdef->ArrayType == DataTypes_ArrayTypes_array)
+                std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+                if (IsTypeNumeric(tdef->Type))
                 {
-                    return CreateMessageElement(tdef->Name, AllocateRRArrayByType(tdef->Type, 0));
+                    throw DataTypeException("Scalars and arrays must not be None");
                 }
-                /*else
+                if (tdef->Type == DataTypes_string_t)
                 {
-                    boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
-                    tdef->CopyTo(*tdef2);
-                    tdef2->ArrayType = DataTypes_ArrayTypes_array;
+                    throw DataTypeException("Strings must not be None");
+                }
 
-                    mxArray* empty=mxCreateNumericMatrix(1,0,::rrDataTypeToMxClassID(tdef2->Type),::mxREAL);
-                    RR_INTRUSIVE_PTR<MessageElement> o=PackMxArrayToMessageElement(empty,tdef2,stub);
-                    mxDestroyArray(empty);
-                    return o;
-                }*/
-            }
-            else
-            {
-                return CreateMessageElement(tdef->Name, RR_INTRUSIVE_PTR<MessageElementData>());
-            }
+                if (tdef->Type == DataTypes_namedtype_t)
+                {
+                    DataTypes tdef_namedtype = tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
+                    if (tdef_namedtype == DataTypes_pod_t)
+                    {
+                        throw DataTypeException("Pods must not be None");
+                    }
+                    if (tdef_namedtype == DataTypes_namedarray_t)
+                    {
+                        throw DataTypeException("NamedArrays must not be None");
+                    }
+                    if (tdef_namedtype == DataTypes_enum_t)
+                    {
+                        throw DataTypeException("Enums must not be None");
+                    }
+                }
+            }            
+            
+            return CreateMessageElement(tdef->Name, RR_INTRUSIVE_PTR<MessageElementData>());
+            
         }
 
         if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 ||
@@ -2861,14 +2865,28 @@ class UnpackMessageElementToMxArrayImpl
                 {
                     throw DataTypeException("Strings must not be None");
                 }
-                if (tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType() == DataTypes_pod_t)
+
+                if (tdef->Type == DataTypes_namedtype_t)
                 {
-                    throw DataTypeException("Pods must not be None");
+                    DataTypes tdef_namedtype = tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
+                    if (tdef_namedtype == DataTypes_pod_t)
+                    {
+                        throw DataTypeException("Pods must not be None");
+                    }
+                    if (tdef_namedtype == DataTypes_namedarray_t)
+                    {
+                        throw DataTypeException("NamedArrays must not be None");
+                    }
+                    if (tdef_namedtype == DataTypes_enum_t)
+                    {
+                        throw DataTypeException("Enums must not be None");
+                    }
                 }
             }
 
-            mwSize empty_dims[] = {1, 0};
-            return mxCreateNumericArray(2, empty_dims, mxDOUBLE_CLASS, mxREAL);
+            mxArray* o = NULL;
+            mexCallMATLAB(1, &o, 0, NULL, "RobotRaconteurNull");
+            return o;
         }
 
         if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 ||
