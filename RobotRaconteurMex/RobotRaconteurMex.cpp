@@ -2006,7 +2006,8 @@ class PackMxArrayToMessageElementImpl
 
                 if (tdef->Type == DataTypes_namedtype_t)
                 {
-                    DataTypes tdef_namedtype = tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
+                    DataTypes tdef_namedtype =
+                        tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
                     if (tdef_namedtype == DataTypes_pod_t)
                     {
                         throw DataTypeException("Pods must not be None");
@@ -2020,10 +2021,9 @@ class PackMxArrayToMessageElementImpl
                         throw DataTypeException("Enums must not be None");
                     }
                 }
-            }            
-            
+            }
+
             return CreateMessageElement(tdef->Name, RR_INTRUSIVE_PTR<MessageElementData>());
-            
         }
 
         if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 ||
@@ -2868,7 +2868,8 @@ class UnpackMessageElementToMxArrayImpl
 
                 if (tdef->Type == DataTypes_namedtype_t)
                 {
-                    DataTypes tdef_namedtype = tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
+                    DataTypes tdef_namedtype =
+                        tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
                     if (tdef_namedtype == DataTypes_pod_t)
                     {
                         throw DataTypeException("Pods must not be None");
