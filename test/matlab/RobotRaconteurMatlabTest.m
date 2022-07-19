@@ -135,6 +135,9 @@ var_struct_1.RobotRaconteurStructureType='com.robotraconteur.testing.TestService
 var_struct_1.mydat=[-4.945426e-20, 1.763386e+13, 3.431578e-04, 4.411409e+17, -2.690201e+03, 3.025939e-10, -3.659846e+11, -4.780435e-10, -3.246816e+14, -1.815578e+04, 2.236455e+10, -4.639041e+14, 1.767930e+10, -1.636094e+05, -4.392462e-01, 2.225260e+04, -5.250245e+18, 8.755282e-12, 2.005819e-10, 2.702210e+04]';
 c.var_struct=var_struct_1;
 
+c.nulltest=RobotRaconteurNull()
+assert(isa(c.nulltest,'RobotRaconteurNull'))
+
 c.func1();
 c.func2(1,2);
 assert (c.func3(3,4)==7)
