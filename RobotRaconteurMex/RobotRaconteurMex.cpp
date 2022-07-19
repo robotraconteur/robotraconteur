@@ -1990,7 +1990,7 @@ class PackMxArrayToMessageElementImpl
                                                                  const RR_SHARED_PTR<ServiceStub>& stub,
                                                                  bool allow_null = true)
     {
-        if (std::string(mxGetClassName(pm)) == "RobotRaconteurNull" && allow_null)
+        if (std::string(mxGetClassName(pm)) == "missing" && allow_null)
         {
             if (tdef && (tdef->ContainerType == DataTypes_ContainerTypes_none))
             {
@@ -2886,7 +2886,7 @@ class UnpackMessageElementToMxArrayImpl
             }
 
             mxArray* o = NULL;
-            mexCallMATLAB(1, &o, 0, NULL, "RobotRaconteurNull");
+            mexCallMATLAB(1, &o, 0, NULL, "missing");
             return o;
         }
 
