@@ -40,7 +40,7 @@ add_custom_command(TARGET RobotRaconteurMex PRE_BUILD COMMAND "${CMAKE_COMMAND}"
 
 set(RR_MEX_M_DIRS @RobotRaconteur @RobotRaconteurObject @RobotRaconteurEventListener @RobotRaconteurMemoryClient @RobotRaconteurRate 
 @RobotRaconteurEventData @RobotRaconteurGenerator @RobotRaconteurPipeEndpoint @RobotRaconteurWireConnection @RobotRaconteurWireSubscription 
-@RobotRaconteurPipeSubscription @RobotRaconteurServiceSubscription @RobotRaconteurServiceInfo2Subscription)
+@RobotRaconteurPipeSubscription @RobotRaconteurServiceSubscription @RobotRaconteurServiceInfo2Subscription @RobotRaconteurVarValue)
 
 set(RR_MEX_M_FILES RobotRaconteurObjectServerConnectEvent.m RobotRaconteurObjectServerDispatchEvent.m 
 RobotRaconteurAsyncOps.m RobotRaconteurFramework.m RobotRaconteurValueTypes.m)
