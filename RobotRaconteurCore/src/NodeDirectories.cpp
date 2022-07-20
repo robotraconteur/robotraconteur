@@ -1,5 +1,6 @@
 #include "RobotRaconteur/NodeDirectories.h"
 #include "RobotRaconteur/Logging.h"
+#include "NodeDirectories_private.h"
 
 #ifdef ROBOTRACONTEUR_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -295,5 +296,256 @@ namespace RobotRaconteur
     #endif
 
     }
+
+    void CreateUserNodeDirectory(const boost::filesystem::path& dir)
+    {
+        boost::filesystem::create_directories(dir);
+    }
+
+    void CreateSystemPrivateNodeDirectory(const boost::filesystem::path& dir)
+    {
+        // TODO: file permissions
+        boost::filesystem::create_directories(dir);
+    }
+
+    void CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir)
+    {
+        // TODO: file permissions
+        boost::filesystem::create_directories(dir);
+    }
+
+    NodeDirectoriesFD::NodeDirectoriesFD()
+{
+#ifdef ROBOTRACONTEUR_WINDOWS
+    fd = NULL;
+#else
+    fd = -1;
+#endif
+}
+
+NodeDirectoriesFD::~NodeDirectoriesFD()
+{
+#ifdef ROBOTRACONTEUR_WINDOWS
+    CloseHandle(fd);
+#else
+    close(fd);
+#endif
+}
+
+void NodeDirectoriesFD::open_read(const boost::filesystem::path& path, boost::system::error_code& err)
+{
+#ifdef BOOST_WINDOWS
+    HANDLE h = CreateFileW(path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL,
+                           OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (h == INVALID_HANDLE_VALUE)
+    {
+        err = boost::system::error_code(GetLastError(), boost::system::system_category());
+        return;
+    }
+
+    fd = h;
+#else
+    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDONLY);
+    if (fd1 < 0)
+    {
+        err = boost::system::error_code(errno, boost::system::system_category());
+        return;
+    }
+    fd = fd1;
+#endif
+}
+void NodeDirectoriesFD::open_lock_write(const boost::filesystem::path& path, bool delete_on_close,
+                                       boost::system::error_code& err)
+{
+    RR_UNUSED(delete_on_close);
+#ifdef BOOST_WINDOWS
+    DWORD flags = FILE_ATTRIBUTE_NORMAL;
+    if (delete_on_close)
+    {
+        flags |= FILE_FLAG_DELETE_ON_CLOSE;
+    }
+    HANDLE h = CreateFileW(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, flags, NULL);
+    if (h == INVALID_HANDLE_VALUE)
+    {
+        err = boost::system::error_code(GetLastError(), boost::system::system_category());
+        return;
+    }
+
+    fd = h;
+#else
+    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+    if (fd1 < 0)
+    {
+        err = boost::system::error_code(errno, boost::system::system_category());
+        return;
+    }
+
+    struct ::flock lock = {};
+    lock.l_type = F_WRLCK;
+    lock.l_whence = SEEK_SET;
+    lock.l_start = 0;
+    lock.l_len = 0;
+    if (::fcntl(fd1, F_SETLK, &lock) < 0)
+    {
+        close(fd1);
+        err = boost::system::error_code(boost::system::errc::no_lock_available, boost::system::system_category());
+        return;
+    }
+
+    fd = fd1;
+#endif
+}
+
+/*void NodeDirectoriesFD::reopen_lock_write(bool delete_on_close, boost::system::error_code& err)
+{
+    DWORD flags = FILE_ATTRIBUTE_NORMAL;
+    if (delete_on_close)
+    {
+        flags |= FILE_FLAG_DELETE_ON_CLOSE;
+    }
+    HANDLE h = ReOpenFile(fd, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, flags);
+    if (h == INVALID_HANDLE_VALUE)
+    {
+        err = boost::system::error_code(GetLastError(), boost::system::system_category());
+        return;
+    }
+
+    fd = h;
+}*/
+
+bool NodeDirectoriesFD::read(std::string& data) // NOLINT(readability-make-member-function-const)
+{
+#ifdef ROBOTRACONTEUR_WINDOWS
+    if (::SetFilePointer(fd, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+        return false;
+    DWORD len = GetFileSize(fd, NULL);
+    if (len == INVALID_FILE_SIZE)
+        return false;
+    if (len > 16 * 1024)
+        return false;
+    std::string ret;
+    ret.resize(len);
+    DWORD bytes_read;
+    if (!::ReadFile(fd, &ret[0], len, &bytes_read, NULL))
+    {
+        return false;
+    }
+
+    if (bytes_read != len)
+        return false;
+    data = ret;
+    return true;
+#else
+    if (lseek(fd, 0, SEEK_END) < 0)
+        return false;
+    off_t len = lseek(fd, 0, SEEK_CUR);
+    if (len < 0)
+        return false;
+    if (lseek(fd, 0, SEEK_SET) < 0)
+        return false;
+
+    std::string ret;
+    ret.resize(len);
+
+    ssize_t retval = ::read(fd, &ret[0], len);
+    if (retval < 0)
+    {
+        return false;
+    }
+
+    if (retval != len)
+        return false;
+    data = ret;
+    return true;
+#endif
+}
+
+bool NodeDirectoriesFD::read_info()
+{
+    std::string in;
+    if (!read(in))
+        return false;
+
+    std::vector<std::string> lines;
+    boost::split(lines, in, boost::is_any_of("\n"), boost::algorithm::token_compress_on);
+    info.clear();
+    BOOST_FOREACH (std::string& l, lines)
+    {
+        boost::regex r("^\\s*([\\w+\\.\\-]+)\\s*\\:\\s*(.*)\\s*$");
+        boost::smatch r_match;
+        if (!boost::regex_match(l, r_match, r))
+        {
+            continue;
+        }
+        info.insert(std::make_pair(boost::trim_copy(r_match[1].str()), boost::trim_copy(r_match[2].str())));
+    }
+    return true;
+}
+
+bool NodeDirectoriesFD::write(boost::string_ref data) // NOLINT(readability-make-member-function-const)
+{
+#ifdef ROBOTRACONTEUR_WINDOWS
+    DWORD bytes_written = 0;
+    if (!::WriteFile(fd, &data[0], data.size(), &bytes_written, NULL))
+        return false;
+    if (bytes_written != data.size())
+        return false;
+    if (!FlushFileBuffers(fd))
+        return false;
+#else
+    ssize_t ret = ::write(fd, &data[0], data.size());
+    if (ret != data.size())
+        return false;
+    if (fsync(fd) < 0)
+        return false;
+#endif
+    return true;
+}
+
+bool NodeDirectoriesFD::write_info()
+{
+    std::string data;
+    for (std::map<std::string, std::string>::iterator e = info.begin(); e != info.end(); e++)
+    {
+        data += e->first + ": " + e->second + "\n";
+    }
+
+    return write(data);
+}
+
+bool NodeDirectoriesFD::reset() // NOLINT(readability-make-member-function-const)
+{
+#ifdef ROBOTRACONTEUR_WINDOWS
+    if (::SetFilePointer(fd, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+        return false;
+    if (!::SetEndOfFile(fd))
+        return false;
+#else
+    if (lseek(fd, 0, SEEK_SET) < 0)
+        return false;
+    if (ftruncate(fd, 0) < 0)
+        return false;
+#endif
+    return true;
+}
+
+size_t NodeDirectoriesFD::file_len() // NOLINT(readability-make-member-function-const)
+{
+#ifdef ROBOTRACONTEUR_WINDOWS
+    return ::GetFileSize(fd, NULL);
+#else
+    off_t init_pos = lseek(fd, 0, SEEK_CUR);
+    if (init_pos < 0)
+        return -1;
+    if (lseek(fd, 0, SEEK_END) < 0)
+        return -1;
+    off_t len = lseek(fd, 0, SEEK_CUR);
+    if (len < 0)
+        return -1;
+    if (lseek(fd, init_pos, SEEK_SET) < 0)
+        return -1;
+    return len;
+#endif
+}
 
 }

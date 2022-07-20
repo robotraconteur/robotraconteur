@@ -135,6 +135,8 @@ namespace RobotRaconteur
         boost::filesystem::path user_run_dir;
     };
 
+    class NodeDirectoriesFD;
+
     /**
      * @brief Get the Default Node Directories object
      * 
@@ -147,5 +149,13 @@ namespace RobotRaconteur
     ROBOTRACONTEUR_CORE_API std::string GetLogonUserName();
 
     ROBOTRACONTEUR_CORE_API bool IsLogonUserRoot();
+
+    ROBOTRACONTEUR_CORE_API void CreateUserNodeDirectory(const boost::filesystem::path& dir);
+
+    ROBOTRACONTEUR_CORE_API void CreateSystemPrivateNodeDirectory(const boost::filesystem::path& dir);
+
+    ROBOTRACONTEUR_CORE_API void CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir);
+
+    
 
 }
