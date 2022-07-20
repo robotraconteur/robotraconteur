@@ -2026,14 +2026,14 @@ class PackMxArrayToMessageElementImpl
             return CreateMessageElement(tdef->Name, RR_INTRUSIVE_PTR<MessageElementData>());
         }
 
-        if (tdef->Type == DataTypes_varvalue_t  && tdef->ContainerType == DataTypes_ContainerTypes_none )
+        if (tdef->Type == DataTypes_varvalue_t && tdef->ContainerType == DataTypes_ContainerTypes_none)
         {
             if (std::string(mxGetClassName(pm)) != "RobotRaconteurVarValue")
             {
                 throw DataTypeException("varvalue types must use RobotRaconteurVarValue");
             }
 
-            mxArray* mxdata = mxGetProperty(pm,0,"data");
+            mxArray* mxdata = mxGetProperty(pm, 0, "data");
             if (!mxdata)
             {
                 throw DataTypeException("Invalid RobotRaconteurVarValue");
@@ -2044,10 +2044,9 @@ class PackMxArrayToMessageElementImpl
             tdef2->FromString(datatype);
             tdef2->Name = tdef->Name;
             tdef2->member = tdef->member;
-            
-            return PackMxArrayToMessageElement(mxdata, tdef2, stub);                
-        }
 
+            return PackMxArrayToMessageElement(mxdata, tdef2, stub);
+        }
 
         if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 ||
             tdef->ContainerType == DataTypes_ContainerTypes_map_string)
@@ -2831,18 +2830,18 @@ class UnpackMessageElementToMxArrayImpl
 
                 if (tdef_3t)
                 {
-                    
-                    {
-                    mxArray* vardata = UnpackMessageElementToMxArray(m, tdef_3t, stub);
 
-                    std::string tdef_3t_str = tdef_3t->ToString();
-                    mxArray* tdef_3t_mx = mxCreateString(tdef_3t_str.c_str());
-                    mxArray* o = NULL;
-                    mxArray* prhs[2];
-                    prhs[0] = vardata;
-                    prhs[1] = tdef_3t_mx;
-                    mexCallMATLAB(1, &o, 2, prhs, "RobotRaconteurVarValue");
-                    return o;
+                    {
+                        mxArray* vardata = UnpackMessageElementToMxArray(m, tdef_3t, stub);
+
+                        std::string tdef_3t_str = tdef_3t->ToString();
+                        mxArray* tdef_3t_mx = mxCreateString(tdef_3t_str.c_str());
+                        mxArray* o = NULL;
+                        mxArray* prhs[2];
+                        prhs[0] = vardata;
+                        prhs[1] = tdef_3t_mx;
+                        mexCallMATLAB(1, &o, 2, prhs, "RobotRaconteurVarValue");
+                        return o;
                     }
                 }
 
@@ -2918,10 +2917,9 @@ class UnpackMessageElementToMxArrayImpl
                     tdef_2t->ArrayType = DataTypes_ArrayTypes_multidimarray;
                     tdef_2t->ArrayVarLength = true;
                     tdef_2t->ArrayLength.push_back(0);
-                    tdef_2t->Type =
-                        MessageElement::FindElement(
-                            m->CastDataToNestedList(DataTypes_multidimarray_t)->Elements, "array")
-                            ->ElementType;
+                    tdef_2t->Type = MessageElement::FindElement(
+                                        m->CastDataToNestedList(DataTypes_multidimarray_t)->Elements, "array")
+                                        ->ElementType;
                     if (!IsTypeNumeric(tdef_2t->Type))
                         throw DataTypeException("Invalid MultiDimArray");
                 }
@@ -2929,9 +2927,9 @@ class UnpackMessageElementToMxArrayImpl
                 {
                     throw DataTypeException("Invalid data type for field " + tdef->Name);
                 }
-                
+
                 {
-                    mxArray* vardata =  UnpackMessageElementToMxArray(m, tdef_2t, stub);
+                    mxArray* vardata = UnpackMessageElementToMxArray(m, tdef_2t, stub);
 
                     std::string tdef_2t_str = tdef_2t->ToString();
                     mxArray* tdef_2t_mx = mxCreateString(tdef_2t_str.c_str());
@@ -2944,171 +2942,168 @@ class UnpackMessageElementToMxArrayImpl
                 }
             }
             else
+            {
+                if (m->ElementType == DataTypes_list_t)
                 {
-                    if (m->ElementType == DataTypes_list_t)
+                    boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
+                    type2->Type = DataTypes_varvalue_t;
+                    type2->Name = "value";
+
+                    boost::intrusive_ptr<MessageElementNestedElementList> l = m->CastDataToNestedList(DataTypes_list_t);
+                    mwSize dims = (mwSize)l->Elements.size();
+
+                    mxArray* v = mxCreateCellArray(1, &dims);
+
+                    mwIndex count = 0;
+
+                    for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
                     {
-                        boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
-                        type2->Type = DataTypes_varvalue_t;
-                        type2->Name = "value";
+                        boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
 
-                        boost::intrusive_ptr<MessageElementNestedElementList> l =
-                            m->CastDataToNestedList(DataTypes_list_t);                        
-                        mwSize dims = (mwSize)l->Elements.size();
-
-                        mxArray* v = mxCreateCellArray(1, &dims);
-
-                        mwIndex count = 0;
-
-                        for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
+                        if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
                         {
-                            boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
-
-                            if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-                            {
-                                if (i != el1->ElementNumber)
-                                    throw DataTypeException("Invalid list");
-                            }
-                            else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-                            {
-                                if (i != boost::lexical_cast<int32_t>(el1->ElementName.str()))
-                                    throw DataTypeException("Invalid list");
-                            }
-                            else
-                            {
+                            if (i != el1->ElementNumber)
                                 throw DataTypeException("Invalid list");
-                            }
-
-                            push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", type2);
-                            mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
-                            mxSetCell(v, count, mxdata);
-
-                            count++;
-                            pop_field_level();
                         }
-
-                        return v;
-                    }
-
-                    if (m->ElementType == DataTypes_vector_t)
-                    {
-                        boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
-                        type2->Type = DataTypes_varvalue_t;
-                        type2->Name = "value";
-
-                        boost::intrusive_ptr<MessageElementNestedElementList> l =
-                            m->CastDataToNestedList(DataTypes_vector_t);
-                        mwIndex count = 0;
-
-                        mxArray* o = NULL;
-                        mxArray* prhs[4];
-                        prhs[0] = mxCreateString("KeyType");
-                        prhs[1] = mxCreateString("int32");
-                        prhs[2] = mxCreateString("ValueType");
-                        prhs[3] = mxCreateString("any");
-
-                        mexCallMATLAB(1, &o, 4, prhs, "containers.Map");
-
-                        for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
+                        else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
                         {
-                            boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
-                            const char* fnames[] = {"type", "subs"};
-                            mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
-                            mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
-
-                            mxArray* mxkey = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
-                            int32_t* key = (int32_t*)mxGetData(mxkey);
-                            if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
-                            {
-                                key[0] = el1->ElementNumber;
-                            }
-                            else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
-                            {
-                                key[0] = boost::lexical_cast<int32_t>(el1->ElementName.str());
-                            }
-                            else
-                            {
-                                throw DataTypeException("Invalid key type");
-                            }
-
-                            push_field_level("[" + boost::lexical_cast<std::string>(key[0]) + "]", type2);
-                            mxArray* k_cell = mxCreateCellMatrix(1, 1);
-
-                            mxSetCell(k_cell, 0, mxkey);
-
-                            mxSetFieldByNumber(subs, 0, 1, k_cell);
-
-                            mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
-
-                            mxArray* prhs2[3];
-                            prhs2[0] = o;
-                            prhs2[1] = subs;
-                            prhs2[2] = mxdata;
-
-                            mexCallMATLAB(0, NULL, 3, prhs2, "subsasgn");
-
-                            count++;
-                            pop_field_level();
+                            if (i != boost::lexical_cast<int32_t>(el1->ElementName.str()))
+                                throw DataTypeException("Invalid list");
                         }
-
-                        return o;
-                    }
-
-                    if (m->ElementType == DataTypes_dictionary_t)
-                    {
-                        boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
-                        type2->Type = DataTypes_varvalue_t;
-                        type2->Name = "value";
-
-                        boost::intrusive_ptr<MessageElementNestedElementList> l =
-                            m->CastDataToNestedList(DataTypes_dictionary_t);
-                        mwIndex count = 0;
-
-                        mxArray* o = NULL;
-                        mxArray* prhs[4];
-                        prhs[0] = mxCreateString("KeyType");
-                        prhs[1] = mxCreateString("char");
-                        prhs[2] = mxCreateString("ValueType");
-                        prhs[3] = mxCreateString("any");
-
-                        mexCallMATLAB(1, &o, 4, prhs, "containers.Map");
-
-                        for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
+                        else
                         {
-                            boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
-
-                            push_field_level("[\"" + el1->ElementName.str() + "\"]", type2);
-                            const char* fnames[] = {"type", "subs"};
-                            mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
-                            mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
-
-                            std::string key1 = el1->ElementName.str().to_string();
-                            mxArray* mxkey = mxCreateString(key1.c_str());
-                            mxSetFieldByNumber(subs, 0, 1, mxkey);
-
-                            // mxSetCell(k,count,mxkey);
-
-                            mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
-                            // mxSetCell(v,count,mxdata);
-
-                            mxArray* prhs2[3];
-                            prhs2[0] = o;
-                            prhs2[1] = subs;
-                            prhs2[2] = mxdata;
-
-                            mexCallMATLAB(0, NULL, 3, prhs2, "subsasgn");
-
-                            count++;
-                            pop_field_level();
+                            throw DataTypeException("Invalid list");
                         }
 
-                        return o;
+                        push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", type2);
+                        mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
+                        mxSetCell(v, count, mxdata);
+
+                        count++;
+                        pop_field_level();
                     }
+
+                    return v;
                 }
 
-                throw DataTypeException("Invalid message collection type");
-            }
-        
+                if (m->ElementType == DataTypes_vector_t)
+                {
+                    boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
+                    type2->Type = DataTypes_varvalue_t;
+                    type2->Name = "value";
 
+                    boost::intrusive_ptr<MessageElementNestedElementList> l =
+                        m->CastDataToNestedList(DataTypes_vector_t);
+                    mwIndex count = 0;
+
+                    mxArray* o = NULL;
+                    mxArray* prhs[4];
+                    prhs[0] = mxCreateString("KeyType");
+                    prhs[1] = mxCreateString("int32");
+                    prhs[2] = mxCreateString("ValueType");
+                    prhs[3] = mxCreateString("any");
+
+                    mexCallMATLAB(1, &o, 4, prhs, "containers.Map");
+
+                    for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
+                    {
+                        boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
+                        const char* fnames[] = {"type", "subs"};
+                        mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
+                        mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
+
+                        mxArray* mxkey = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+                        int32_t* key = (int32_t*)mxGetData(mxkey);
+                        if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
+                        {
+                            key[0] = el1->ElementNumber;
+                        }
+                        else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
+                        {
+                            key[0] = boost::lexical_cast<int32_t>(el1->ElementName.str());
+                        }
+                        else
+                        {
+                            throw DataTypeException("Invalid key type");
+                        }
+
+                        push_field_level("[" + boost::lexical_cast<std::string>(key[0]) + "]", type2);
+                        mxArray* k_cell = mxCreateCellMatrix(1, 1);
+
+                        mxSetCell(k_cell, 0, mxkey);
+
+                        mxSetFieldByNumber(subs, 0, 1, k_cell);
+
+                        mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
+
+                        mxArray* prhs2[3];
+                        prhs2[0] = o;
+                        prhs2[1] = subs;
+                        prhs2[2] = mxdata;
+
+                        mexCallMATLAB(0, NULL, 3, prhs2, "subsasgn");
+
+                        count++;
+                        pop_field_level();
+                    }
+
+                    return o;
+                }
+
+                if (m->ElementType == DataTypes_dictionary_t)
+                {
+                    boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
+                    type2->Type = DataTypes_varvalue_t;
+                    type2->Name = "value";
+
+                    boost::intrusive_ptr<MessageElementNestedElementList> l =
+                        m->CastDataToNestedList(DataTypes_dictionary_t);
+                    mwIndex count = 0;
+
+                    mxArray* o = NULL;
+                    mxArray* prhs[4];
+                    prhs[0] = mxCreateString("KeyType");
+                    prhs[1] = mxCreateString("char");
+                    prhs[2] = mxCreateString("ValueType");
+                    prhs[3] = mxCreateString("any");
+
+                    mexCallMATLAB(1, &o, 4, prhs, "containers.Map");
+
+                    for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
+                    {
+                        boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
+
+                        push_field_level("[\"" + el1->ElementName.str() + "\"]", type2);
+                        const char* fnames[] = {"type", "subs"};
+                        mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
+                        mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
+
+                        std::string key1 = el1->ElementName.str().to_string();
+                        mxArray* mxkey = mxCreateString(key1.c_str());
+                        mxSetFieldByNumber(subs, 0, 1, mxkey);
+
+                        // mxSetCell(k,count,mxkey);
+
+                        mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
+                        // mxSetCell(v,count,mxdata);
+
+                        mxArray* prhs2[3];
+                        prhs2[0] = o;
+                        prhs2[1] = subs;
+                        prhs2[2] = mxdata;
+
+                        mexCallMATLAB(0, NULL, 3, prhs2, "subsasgn");
+
+                        count++;
+                        pop_field_level();
+                    }
+
+                    return o;
+                }
+            }
+
+            throw DataTypeException("Invalid message collection type");
+        }
 
         if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 ||
             tdef->ContainerType == DataTypes_ContainerTypes_map_string)
@@ -3524,7 +3519,7 @@ class UnpackMessageElementToMxArrayImpl
             default:
                 throw DataTypeException("Unknown named type id");
             }
-        }        
+        }
 
         throw DataTypeException("Unknown data type");
     }

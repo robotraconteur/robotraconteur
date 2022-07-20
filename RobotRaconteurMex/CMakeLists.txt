@@ -38,23 +38,34 @@ rrsettargetdirs(RobotRaconteurMex "Matlab" "Matlab")
 add_custom_command(TARGET RobotRaconteurMex PRE_BUILD COMMAND "${CMAKE_COMMAND}" -E make_directory
                                                               $<TARGET_FILE_DIR:RobotRaconteurMex>)
 
-set(RR_MEX_M_DIRS @RobotRaconteur @RobotRaconteurObject @RobotRaconteurEventListener @RobotRaconteurMemoryClient @RobotRaconteurRate 
-@RobotRaconteurEventData @RobotRaconteurGenerator @RobotRaconteurPipeEndpoint @RobotRaconteurWireConnection @RobotRaconteurWireSubscription 
-@RobotRaconteurPipeSubscription @RobotRaconteurServiceSubscription @RobotRaconteurServiceInfo2Subscription @RobotRaconteurVarValue)
+set(RR_MEX_M_DIRS
+    @RobotRaconteur
+    @RobotRaconteurObject
+    @RobotRaconteurEventListener
+    @RobotRaconteurMemoryClient
+    @RobotRaconteurRate
+    @RobotRaconteurEventData
+    @RobotRaconteurGenerator
+    @RobotRaconteurPipeEndpoint
+    @RobotRaconteurWireConnection
+    @RobotRaconteurWireSubscription
+    @RobotRaconteurPipeSubscription
+    @RobotRaconteurServiceSubscription
+    @RobotRaconteurServiceInfo2Subscription
+    @RobotRaconteurVarValue)
 
-set(RR_MEX_M_FILES RobotRaconteurObjectServerConnectEvent.m RobotRaconteurObjectServerDispatchEvent.m 
-RobotRaconteurAsyncOps.m RobotRaconteurFramework.m RobotRaconteurValueTypes.m)
+set(RR_MEX_M_FILES RobotRaconteurObjectServerConnectEvent.m RobotRaconteurObjectServerDispatchEvent.m
+                   RobotRaconteurAsyncOps.m RobotRaconteurFramework.m RobotRaconteurValueTypes.m)
 
 foreach(_M_DIR ${RR_MEX_M_DIRS})
-add_custom_command(
-    TARGET RobotRaconteurMex POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${_M_DIR}
-            $<TARGET_FILE_DIR:RobotRaconteurMex>/${_M_DIR})
+    add_custom_command(
+        TARGET RobotRaconteurMex POST_BUILD
+        COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${_M_DIR}
+                $<TARGET_FILE_DIR:RobotRaconteurMex>/${_M_DIR})
 endforeach()
 
 foreach(_M_FILE ${RR_MEX_M_FILES})
-add_custom_command(
-    TARGET RobotRaconteurMex POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${_M_FILE}
-            $<TARGET_FILE_DIR:RobotRaconteurMex>/${_M_FILE})
+    add_custom_command(
+        TARGET RobotRaconteurMex POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${_M_FILE}
+                                                    $<TARGET_FILE_DIR:RobotRaconteurMex>/${_M_FILE})
 endforeach()
