@@ -142,7 +142,7 @@ namespace RobotRaconteur
      * @param create_user_dirs Create user directories if they don't exist (optional)
      * @return NodeDirectories The default node directories
      */
-    ROBOTRACONTEUR_CORE_API NodeDirectories GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>(), bool create_user_dirs=true);
+    ROBOTRACONTEUR_CORE_API NodeDirectories GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>());
 
     ROBOTRACONTEUR_CORE_API std::string GetLogonUserName();
 

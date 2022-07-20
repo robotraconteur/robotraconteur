@@ -141,7 +141,7 @@ namespace RobotRaconteur
             ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Node, -1, "Error resolving " << dir_type << ":" << e.what()); \
         }}
 
-    NodeDirectories GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node, bool create_user_dirs)
+    NodeDirectories GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node)
     {
         NodeDirectories ret;
 #ifdef ROBOTRACONTEUR_WINDOWS
