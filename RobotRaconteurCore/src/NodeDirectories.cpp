@@ -187,7 +187,7 @@ namespace RobotRaconteur
             CATCH_DIR_RESOLVE(ret.user_cache_dir = detail::user_unix_home_dir(".cache/RobotRaconteur", "XDG_CACHE_HOME", "ROBOTRACONTEUR_USER_CACHE_DIR"),"user_cache_dir");
 
 #ifdef ROBOTRACONTEUR_APPLE
-            CATCH_DIR_RESOLVE(ret.user_run_dir = detail::user_apple_run_dir("ROBOTRACONTEUR_USER_RUN_DIR"),"user_run_dir)";
+            CATCH_DIR_RESOLVE(ret.user_run_dir = detail::user_apple_run_dir("ROBOTRACONTEUR_USER_RUN_DIR"),"user_run_dir");
 #else
             CATCH_DIR_RESOLVE(ret.user_run_dir = detail::user_unix_run_dir("XDG_RUNTIME_DIR", "ROBOTRACONTEUR_USER_RUN_DIR"),"user_run_dir");
 #endif
