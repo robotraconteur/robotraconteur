@@ -130,6 +130,7 @@ namespace RobotRaconteur
          * 
          * Default value Unix: $XDG_RUNTIME_DIR/robotraconteur or /tmp/robotraconteur-run-$UID
          * Default value Windows: %LOCALAPPDATA%\RobotRaconteur\run
+         * Default value for root: {system_run_dir}/root
          * Environmental variable override: ROBOTRACONTEUR_USER_RUN_DIR
          */
         boost::filesystem::path user_run_dir;
@@ -156,6 +157,7 @@ namespace RobotRaconteur
 
     ROBOTRACONTEUR_CORE_API void CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir);
 
-    
+    ROBOTRACONTEUR_CORE_API void CreateUserRunDirectory(const NodeDirectories& node_dirs);
+
 
 }

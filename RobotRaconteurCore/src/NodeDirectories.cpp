@@ -132,6 +132,17 @@ namespace RobotRaconteur
         }
 #endif
 
+    static bool is_sub_dir(boost::filesystem::path p, boost::filesystem::path root) 
+    {
+        while(p != boost::filesystem::path()) {
+            if(p == root) {
+                return true;
+            }
+            p = p.parent_path();
+        }
+        return false;
+    }
+
     }
 
     #define CATCH_DIR_RESOLVE(cmd, dir_type) \
@@ -169,7 +180,7 @@ namespace RobotRaconteur
             ret.user_config_dir = ret.system_config_dir;
             ret.user_state_dir = ret.system_state_dir;
             ret.user_cache_dir = ret.system_cache_dir;
-            ret.user_run_dir = ret.system_run_dir;
+            ret.user_run_dir = ret.system_run_dir / "root";
         }
         else
         {
@@ -312,6 +323,24 @@ namespace RobotRaconteur
     {
         // TODO: file permissions
         boost::filesystem::create_directories(dir);
+    }
+
+    void CreateUserRunDirectory(const NodeDirectories& node_dirs)
+    {
+        if (node_dirs.user_run_dir == node_dirs.system_run_dir)
+        {
+            // TODO: Create directory accessible by RobotRaconteur group
+            boost::filesystem::create_directories(node_dirs.user_run_dir);
+        }
+        else if (detail::is_sub_dir(node_dirs.user_run_dir, node_dirs.system_run_dir))
+        {
+            // TODO: Create system_run_dir accessible by RobotRaconteur group, and private remaining
+            boost::filesystem::create_directories(node_dirs.user_run_dir);
+        }
+        else
+        {
+            boost::filesystem::create_directories(node_dirs.user_run_dir);
+        }
     }
 
     NodeDirectoriesFD::NodeDirectoriesFD()
