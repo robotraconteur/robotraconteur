@@ -547,7 +547,7 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
     {
         boost::mutex::scoped_lock lock(acceptor_lock);
 
-        boost::tuple<NodeID, RR_SHARED_PTR<detail::LocalTransportFD> > p =
+        boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > p =
             detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(name);
 
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
@@ -647,7 +647,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
         if (!nodename_lock)
             throw NodeNameAlreadyInUse();
 
-        boost::tuple<NodeID, RR_SHARED_PTR<detail::LocalTransportFD> > nodeid1 =
+        boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > nodeid1 =
             detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(name);
         NodeID& nodeid = nodeid1.get<0>();
 
@@ -742,12 +742,12 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
         info.insert(std::make_pair("socket", pipename));
         info.insert(std::make_pair("ServiceStateNonce", GetNode()->GetServiceStateNonce()));
 
-        RR_SHARED_PTR<detail::LocalTransportFD> h_pid_id_s = detail::LocalTransportUtil::CreatePidFile(pid_id_fname);
-        RR_SHARED_PTR<detail::LocalTransportFD> h_pid_name_s =
+        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_id_s = detail::LocalTransportUtil::CreatePidFile(pid_id_fname);
+        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_name_s =
             detail::LocalTransportUtil::CreatePidFile(pid_name_fname, true);
-        RR_SHARED_PTR<detail::LocalTransportFD> h_info_id_s =
+        RR_SHARED_PTR<NodeDirectoriesFD> h_info_id_s =
             detail::LocalTransportUtil::CreateInfoFile(info_id_fname, info);
-        RR_SHARED_PTR<detail::LocalTransportFD> h_info_name_s =
+        RR_SHARED_PTR<NodeDirectoriesFD> h_info_name_s =
             detail::LocalTransportUtil::CreateInfoFile(info_name_fname, info, true);
 
         try
@@ -918,8 +918,8 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
         info.insert(std::make_pair("socket", pipename));
         info.insert(std::make_pair("ServiceStateNonce", GetNode()->GetServiceStateNonce()));
 
-        RR_SHARED_PTR<detail::LocalTransportFD> h_pid_id_s = detail::LocalTransportUtil::CreatePidFile(pid_id_fname);
-        RR_SHARED_PTR<detail::LocalTransportFD> h_info_id_s =
+        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_id_s = detail::LocalTransportUtil::CreatePidFile(pid_id_fname);
+        RR_SHARED_PTR<NodeDirectoriesFD> h_info_id_s =
             detail::LocalTransportUtil::CreateInfoFile(info_id_fname, info);
 
         try
@@ -1919,7 +1919,7 @@ boost::optional<boost::filesystem::path> GetTransportPublicSearchPath()
 
 bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data)
 {
-    detail::LocalTransportFD fd;
+    NodeDirectoriesFD fd;
 
     boost::system::error_code open_err;
     fd.open_read(fname, open_err);
@@ -1933,7 +1933,7 @@ bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, st
     return true;
 }
 
-boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLock(boost::string_ref nodename)
+boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndLock(boost::string_ref nodename)
 {
     NodeID nodeid;
 
@@ -1946,7 +1946,7 @@ boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLo
 
 #ifdef ROBOTRACONTEUR_WINDOWS
 
-    RR_SHARED_PTR<LocalTransportFD> fd = RR_MAKE_SHARED<LocalTransportFD>();
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
 
     boost::system::error_code open_err;
     fd->open_lock_write(p, false, open_err);
@@ -1965,7 +1965,7 @@ boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLo
     boost::filesystem::create_directories(p_lock);
     p_lock /= nodename + ".pid";
 
-    RR_SHARED_PTR<LocalTransportFD> fd_run = RR_MAKE_SHARED<LocalTransportFD>();
+    RR_SHARED_PTR<NodeDirectoriesFD> fd_run = RR_MAKE_SHARED<NodeDirectoriesFD>();
 
     boost::system::error_code open_run_err;
     fd_run->open_lock_write(p_lock, false, open_run_err);
@@ -1982,7 +1982,7 @@ boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLo
     if (!fd_run->write(pid_str))
         throw SystemResourceException("Could not initialize LocalTransport server");
 
-    RR_SHARED_PTR<LocalTransportFD> fd = RR_MAKE_SHARED<LocalTransportFD>();
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
 
     boost::system::error_code open_err;
     fd->open_lock_write(p, false, open_err);
@@ -2033,12 +2033,12 @@ boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLo
 #endif
 }
 
-RR_SHARED_PTR<LocalTransportFD> CreatePidFile(const boost::filesystem::path& path, bool for_name)
+RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path, bool for_name)
 {
 
 #ifdef ROBOTRACONTEUR_WINDOWS
     std::string pid_str = boost::lexical_cast<std::string>(GetCurrentProcessId());
-    RR_SHARED_PTR<LocalTransportFD> fd = RR_MAKE_SHARED<LocalTransportFD>();
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
     boost::system::error_code open_err;
     fd->open_lock_write(path, true, open_err);
     if (open_err)
@@ -2065,7 +2065,7 @@ RR_SHARED_PTR<LocalTransportFD> CreatePidFile(const boost::filesystem::path& pat
     BOOST_SCOPE_EXIT_END
 #endif
 
-    RR_SHARED_PTR<LocalTransportFD> fd = RR_MAKE_SHARED<LocalTransportFD>();
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
 
     boost::system::error_code open_err;
     fd->open_lock_write(path, true, open_err);
@@ -2091,7 +2091,7 @@ RR_SHARED_PTR<LocalTransportFD> CreatePidFile(const boost::filesystem::path& pat
 
     return fd;
 }
-RR_SHARED_PTR<LocalTransportFD> CreateInfoFile(const boost::filesystem::path& path,
+RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path,
                                                std::map<std::string, std::string> info, bool for_name)
 {
 
@@ -2099,7 +2099,7 @@ RR_SHARED_PTR<LocalTransportFD> CreateInfoFile(const boost::filesystem::path& pa
 
 #ifdef ROBOTRACONTEUR_WINDOWS
     std::string pid_str = boost::lexical_cast<std::string>(GetCurrentProcessId()) + "\n";
-    RR_SHARED_PTR<LocalTransportFD> fd = RR_MAKE_SHARED<LocalTransportFD>();
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
     boost::system::error_code open_err;
     fd->open_lock_write(path, true, open_err);
     if (open_err)
@@ -2126,7 +2126,7 @@ RR_SHARED_PTR<LocalTransportFD> CreateInfoFile(const boost::filesystem::path& pa
     BOOST_SCOPE_EXIT_END
 #endif
 
-    RR_SHARED_PTR<LocalTransportFD> fd = RR_MAKE_SHARED<LocalTransportFD>();
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
 
     boost::system::error_code open_err;
     fd->open_lock_write(path, true, open_err);
@@ -2158,7 +2158,7 @@ RR_SHARED_PTR<LocalTransportFD> CreateInfoFile(const boost::filesystem::path& pa
     return fd;
 }
 
-void RefreshInfoFile(const RR_SHARED_PTR<LocalTransportFD>& h_info, boost::string_ref service_nonce)
+void RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, boost::string_ref service_nonce)
 {
 
     if (!h_info)
@@ -2462,240 +2462,6 @@ void LocalTransportDiscovery::Refresh()
         catch (std::exception&)
         {}
     }
-}
-
-LocalTransportFD::LocalTransportFD()
-{
-#ifdef ROBOTRACONTEUR_WINDOWS
-    fd = NULL;
-#else
-    fd = -1;
-#endif
-}
-
-LocalTransportFD::~LocalTransportFD()
-{
-#ifdef ROBOTRACONTEUR_WINDOWS
-    CloseHandle(fd);
-#else
-    close(fd);
-#endif
-}
-
-void LocalTransportFD::open_read(const boost::filesystem::path& path, boost::system::error_code& err)
-{
-#ifdef BOOST_WINDOWS
-    HANDLE h = CreateFileW(path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL,
-                           OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    if (h == INVALID_HANDLE_VALUE)
-    {
-        err = boost::system::error_code(GetLastError(), boost::system::system_category());
-        return;
-    }
-
-    fd = h;
-#else
-    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDONLY);
-    if (fd1 < 0)
-    {
-        err = boost::system::error_code(errno, boost::system::system_category());
-        return;
-    }
-    fd = fd1;
-#endif
-}
-void LocalTransportFD::open_lock_write(const boost::filesystem::path& path, bool delete_on_close,
-                                       boost::system::error_code& err)
-{
-    RR_UNUSED(delete_on_close);
-#ifdef BOOST_WINDOWS
-    DWORD flags = FILE_ATTRIBUTE_NORMAL;
-    if (delete_on_close)
-    {
-        flags |= FILE_FLAG_DELETE_ON_CLOSE;
-    }
-    HANDLE h = CreateFileW(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, flags, NULL);
-    if (h == INVALID_HANDLE_VALUE)
-    {
-        err = boost::system::error_code(GetLastError(), boost::system::system_category());
-        return;
-    }
-
-    fd = h;
-#else
-    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
-    if (fd1 < 0)
-    {
-        err = boost::system::error_code(errno, boost::system::system_category());
-        return;
-    }
-
-    struct ::flock lock = {};
-    lock.l_type = F_WRLCK;
-    lock.l_whence = SEEK_SET;
-    lock.l_start = 0;
-    lock.l_len = 0;
-    if (::fcntl(fd1, F_SETLK, &lock) < 0)
-    {
-        close(fd1);
-        err = boost::system::error_code(boost::system::errc::no_lock_available, boost::system::system_category());
-        return;
-    }
-
-    fd = fd1;
-#endif
-}
-
-/*void LocalTransportFD::reopen_lock_write(bool delete_on_close, boost::system::error_code& err)
-{
-    DWORD flags = FILE_ATTRIBUTE_NORMAL;
-    if (delete_on_close)
-    {
-        flags |= FILE_FLAG_DELETE_ON_CLOSE;
-    }
-    HANDLE h = ReOpenFile(fd, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, flags);
-    if (h == INVALID_HANDLE_VALUE)
-    {
-        err = boost::system::error_code(GetLastError(), boost::system::system_category());
-        return;
-    }
-
-    fd = h;
-}*/
-
-bool LocalTransportFD::read(std::string& data) // NOLINT(readability-make-member-function-const)
-{
-#ifdef ROBOTRACONTEUR_WINDOWS
-    if (::SetFilePointer(fd, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-        return false;
-    DWORD len = GetFileSize(fd, NULL);
-    if (len == INVALID_FILE_SIZE)
-        return false;
-    if (len > 16 * 1024)
-        return false;
-    std::string ret;
-    ret.resize(len);
-    DWORD bytes_read;
-    if (!::ReadFile(fd, &ret[0], len, &bytes_read, NULL))
-    {
-        return false;
-    }
-
-    if (bytes_read != len)
-        return false;
-    data = ret;
-    return true;
-#else
-    if (lseek(fd, 0, SEEK_END) < 0)
-        return false;
-    off_t len = lseek(fd, 0, SEEK_CUR);
-    if (len < 0)
-        return false;
-    if (lseek(fd, 0, SEEK_SET) < 0)
-        return false;
-
-    std::string ret;
-    ret.resize(len);
-
-    ssize_t retval = ::read(fd, &ret[0], len);
-    if (retval < 0)
-    {
-        return false;
-    }
-
-    if (retval != len)
-        return false;
-    data = ret;
-    return true;
-#endif
-}
-
-bool LocalTransportFD::read_info()
-{
-    std::string in;
-    if (!read(in))
-        return false;
-
-    std::vector<std::string> lines;
-    boost::split(lines, in, boost::is_any_of("\n"), boost::algorithm::token_compress_on);
-    info.clear();
-    BOOST_FOREACH (std::string& l, lines)
-    {
-        boost::regex r("^\\s*([\\w+\\.\\-]+)\\s*\\:\\s*(.*)\\s*$");
-        boost::smatch r_match;
-        if (!boost::regex_match(l, r_match, r))
-        {
-            continue;
-        }
-        info.insert(std::make_pair(boost::trim_copy(r_match[1].str()), boost::trim_copy(r_match[2].str())));
-    }
-    return true;
-}
-
-bool LocalTransportFD::write(boost::string_ref data) // NOLINT(readability-make-member-function-const)
-{
-#ifdef ROBOTRACONTEUR_WINDOWS
-    DWORD bytes_written = 0;
-    if (!::WriteFile(fd, &data[0], data.size(), &bytes_written, NULL))
-        return false;
-    if (bytes_written != data.size())
-        return false;
-    if (!FlushFileBuffers(fd))
-        return false;
-#else
-    ssize_t ret = ::write(fd, &data[0], data.size());
-    if (ret != data.size())
-        return false;
-    if (fsync(fd) < 0)
-        return false;
-#endif
-    return true;
-}
-
-bool LocalTransportFD::write_info()
-{
-    std::string data;
-    for (std::map<std::string, std::string>::iterator e = info.begin(); e != info.end(); e++)
-    {
-        data += e->first + ": " + e->second + "\n";
-    }
-
-    return write(data);
-}
-
-bool LocalTransportFD::reset() // NOLINT(readability-make-member-function-const)
-{
-#ifdef ROBOTRACONTEUR_WINDOWS
-    if (::SetFilePointer(fd, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-        return false;
-    if (!::SetEndOfFile(fd))
-        return false;
-#else
-    if (lseek(fd, 0, SEEK_SET) < 0)
-        return false;
-    if (ftruncate(fd, 0) < 0)
-        return false;
-#endif
-    return true;
-}
-
-size_t LocalTransportFD::file_len() // NOLINT(readability-make-member-function-const)
-{
-#ifdef ROBOTRACONTEUR_WINDOWS
-    return ::GetFileSize(fd, NULL);
-#else
-    off_t init_pos = lseek(fd, 0, SEEK_CUR);
-    if (init_pos < 0)
-        return -1;
-    if (lseek(fd, 0, SEEK_END) < 0)
-        return -1;
-    off_t len = lseek(fd, 0, SEEK_CUR);
-    if (len < 0)
-        return -1;
-    if (lseek(fd, init_pos, SEEK_SET) < 0)
-        return -1;
-    return len;
-#endif
 }
 
 } // namespace detail

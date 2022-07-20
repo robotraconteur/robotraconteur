@@ -52,8 +52,12 @@ typedef sockaddr_un sockaddr_un_type;
 
 #include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/shared_array.hpp>
 
-#include "LocalTransport_private.h"
+#include "RobotRaconteur/RobotRaconteurNode.h"
+
+#include "NodeDirectories_private.h"
 
 #include "RobotRaconteur/Tap.h"
 
@@ -281,8 +285,8 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
 class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImpl>
 {
   public:
-    RR_SHARED_PTR<LocalTransportFD> all_accept;
-    RR_SHARED_PTR<LocalTransportFD> log_accept;
+    RR_SHARED_PTR<NodeDirectoriesFD> all_accept;
+    RR_SHARED_PTR<NodeDirectoriesFD> log_accept;
 
     RR_SHARED_PTR<RR_BOOST_ASIO_IO_CONTEXT> io_context;
 
@@ -303,7 +307,8 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
 
         try
         {
-            boost::filesystem::path run_path = LocalTransportUtil::GetUserRunPath();
+            NodeDirectories node_dirs = GetDefaultNodeDirectories();
+            boost::filesystem::path run_path = node_dirs.user_run_dir;
             boost::filesystem::path tap_path = run_path / "tap";
             boost::filesystem::path all_tap_path = tap_path / "all";
             boost::filesystem::path log_tap_path = tap_path / "log";
