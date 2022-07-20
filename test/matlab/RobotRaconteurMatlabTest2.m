@@ -300,39 +300,31 @@ function RobotRaconteurMatlabTest2(url)
         o.s9 = {};
         o.s9{1,1} = (create_testpod1_multidimarray(2, 3, gen.get_uint32()));
         o.s9{2,1} = (create_testpod1_multidimarray(4, 5, gen.get_uint32()));
+               
+        o.s10 = RobotRaconteurVarValue(fill_testpod1(gen.get_uint32()),'com.robotraconteur.testing.TestService3.testpod1');
+        
+        o.s11 = RobotRaconteurVarValue(create_testpod1_array(3, gen.get_uint32()),'com.robotraconteur.testing.TestService3.testpod1[]');
+        o.s12 = RobotRaconteurVarValue(create_testpod1_multidimarray(2, 2, gen.get_uint32()),'com.robotraconteur.testing.TestService3.testpod1[*]');
 
-        
-        function b = add_varvalue(a)
-           for i=1:numel(a)
-            a(i).RobotRaconteurStructureType='com.robotraconteur.testing.TestService3.testpod1';
-           end
-           b=a;
-        end
-        
-        o.s10 = add_varvalue(fill_testpod1(gen.get_uint32()));
-        
-        o.s11 = add_varvalue(create_testpod1_array(3, gen.get_uint32()));
-        o.s12 = add_varvalue(create_testpod1_multidimarray(2, 2, gen.get_uint32()));
-
-        s13 = add_varvalue(fill_testpod1(gen.get_uint32()));
-        o.s13 = { s13};
+        s13 = RobotRaconteurVarValue(fill_testpod1(gen.get_uint32()),'com.robotraconteur.testing.TestService3.testpod1');
+        o.s13 = RobotRaconteurVarValue({ s13}, 'varvalue{list}');
 
         s14 = {};
-        s14{1,1} = add_varvalue(create_testpod1_array(3, gen.get_uint32()));
-        s14{2,1} = add_varvalue(create_testpod1_array(5, gen.get_uint32()));
-        o.s14 = s14;
+        s14{1,1} = RobotRaconteurVarValue(create_testpod1_array(3, gen.get_uint32()),'com.robotraconteur.testing.TestService3.testpod1[]');
+        s14{2,1} = RobotRaconteurVarValue(create_testpod1_array(5, gen.get_uint32()),'com.robotraconteur.testing.TestService3.testpod1[]');
+        o.s14 = RobotRaconteurVarValue(s14,'varvalue{list}');
 
         s15 = {};
-        s15{1,1} = add_varvalue(create_testpod1_multidimarray(7, 2, gen.get_uint32()));
-        s15{2,1} = add_varvalue(create_testpod1_multidimarray(5, 1, gen.get_uint32()));
-        o.s15 = s15;
+        s15{1,1} = RobotRaconteurVarValue(create_testpod1_multidimarray(7, 2, gen.get_uint32()),'com.robotraconteur.testing.TestService3.testpod1[*]');
+        s15{2,1} = RobotRaconteurVarValue(create_testpod1_multidimarray(5, 1, gen.get_uint32()),'com.robotraconteur.testing.TestService3.testpod1[*]');
+        o.s15 = RobotRaconteurVarValue(s15,'varvalue{list}')';
         
         o.t1 = fill_transform(gen.get_uint32());
         o.t2 = create_transform_array(4,gen.get_uint32());
         o.t3 = create_transform_multidimarray(2,4,gen.get_uint32());
         
-        o.t4 = create_transform_array(10, gen.get_uint32());
-        o.t5 = create_transform_multidimarray(6, 5, gen.get_uint32());
+        o.t4 = RobotRaconteurVarValue(create_transform_array(10, gen.get_uint32()),'com.robotraconteur.testing.TestService3.transform[]');
+        o.t5 = RobotRaconteurVarValue(create_transform_multidimarray(6, 5, gen.get_uint32()),'com.robotraconteur.testing.TestService3.transform[*]');
         
         t6 = {};
         t6{1,1} = fill_transform(gen.get_uint32());
@@ -349,18 +341,18 @@ function RobotRaconteurMatlabTest2(url)
         o.t8 = t8;
         
         t9 = {};
-        t9{1,1} = fill_transform(gen.get_uint32());
-        o.t9 = t9;
+        t9{1,1} = RobotRaconteurVarValue(fill_transform(gen.get_uint32()),'com.robotraconteur.testing.TestService3.transform');
+        o.t9 = RobotRaconteurVarValue(t9,'varvalue{list}');
         
         t10 = {};
-        t10{1,1} = create_transform_array(3, gen.get_uint32());
-        t10{2,1} = create_transform_array(5, gen.get_uint32());
-        o.t10 = t10;
+        t10{1,1} = RobotRaconteurVarValue(create_transform_array(3, gen.get_uint32()),'com.robotraconteur.testing.TestService3.transform[]');
+        t10{2,1} = RobotRaconteurVarValue(create_transform_array(5, gen.get_uint32()),'com.robotraconteur.testing.TestService3.transform[]');
+        o.t10 = RobotRaconteurVarValue(t10,'varvalue{list}');
         
         t11 = {};
-        t11{1,1} = create_transform_multidimarray(7, 2, gen.get_uint32());
-        t11{2,1} = create_transform_multidimarray(5, 1, gen.get_uint32());
-        o.t11 = t11;
+        t11{1,1} = RobotRaconteurVarValue(create_transform_multidimarray(7, 2, gen.get_uint32()),'com.robotraconteur.testing.TestService3.transform[*]');
+        t11{2,1} = RobotRaconteurVarValue(create_transform_multidimarray(5, 1, gen.get_uint32()),'com.robotraconteur.testing.TestService3.transform[*]');
+        o.t11 = RobotRaconteurVarValue(t11,'varvalue{list}');
     
     end
 
@@ -390,23 +382,25 @@ function RobotRaconteurMatlabTest2(url)
         verify_testpod1_multidimarray(v.s9{2}, 4, 5, gen.get_uint32())
 
         s10 = v.s10;
-        verify_testpod1(s10, gen.get_uint32())
+        verify_testpod1(s10.data, gen.get_uint32())
 
-        verify_testpod1_array(v.s11, 3, gen.get_uint32())
-        verify_testpod1_multidimarray(v.s12, 2, 2, gen.get_uint32())
+        verify_testpod1_array(v.s11.data, 3, gen.get_uint32())
+        verify_testpod1_multidimarray(v.s12.data, 2, 2, gen.get_uint32())
 
-        s13 = v.s13{1};
-        verify_testpod1(s13(1), gen.get_uint32())
+        s13 = v.s13.data{1};
+        verify_testpod1(s13(1).data, gen.get_uint32())
 
-        v14 = v.s14;
+        v14_1 = v.s14;
+        v14 = v14_1.data;
         assert(numel(v14) == 2)
-        verify_testpod1_array(v14{1}, 3, gen.get_uint32())
-        verify_testpod1_array(v14{2}, 5, gen.get_uint32())
+        verify_testpod1_array(v14{1}.data, 3, gen.get_uint32())
+        verify_testpod1_array(v14{2}.data, 5, gen.get_uint32())
 
-        v15 = v.s15;
+        v15_1 = v.s15;
+        v15 = v15_1.data;
         assert  (numel(v15) == 2) 
-        verify_testpod1_multidimarray(v15{1}, 7, 2, gen.get_uint32())
-        verify_testpod1_multidimarray(v15{2}, 5, 1, gen.get_uint32())
+        verify_testpod1_multidimarray(v15{1}.data, 7, 2, gen.get_uint32())
+        verify_testpod1_multidimarray(v15{2}.data, 5, 1, gen.get_uint32())
     end
 
     function o = fill_transform(seed)
