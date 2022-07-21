@@ -23,6 +23,10 @@
 
 #include "RobotRaconteur/NodeDirectories.h"
 
+#ifdef ROBOTRACONTEUR_WINDOWS
+#include <windef.h>
+#endif
+
 #pragma once
 
 namespace RobotRaconteur
