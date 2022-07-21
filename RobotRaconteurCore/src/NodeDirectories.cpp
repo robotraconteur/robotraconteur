@@ -342,6 +342,8 @@ namespace RobotRaconteur
 
     }
 
+    // TODO
+    /*
     void NodeDirectoriesUtil::CreateUserNodeDirectory(const boost::filesystem::path& dir)
     {
         boost::filesystem::create_directories(dir);
@@ -375,7 +377,7 @@ namespace RobotRaconteur
         {
             boost::filesystem::create_directories(node_dirs.user_run_dir);
         }
-    }
+    }*/
 
     NodeDirectoriesFD::NodeDirectoriesFD()
 {

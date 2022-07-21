@@ -177,7 +177,8 @@ namespace RobotRaconteur
      * 
      * @param dir The directories tree to create
      */
-    static void CreateUserNodeDirectory(const boost::filesystem::path& dir);
+    // TODO
+    //static void CreateUserNodeDirectory(const boost::filesystem::path& dir);
 
     /**
      * @brief Create directories with private system permissions
@@ -186,7 +187,8 @@ namespace RobotRaconteur
      * 
      * @param dir The directories tree to create
      */
-    static void CreateSystemPrivateNodeDirectory(const boost::filesystem::path& dir);
+    // TODO
+    // static void CreateSystemPrivateNodeDirectory(const boost::filesystem::path& dir);
 
     /**
      * @brief Create directories with public system permissions
@@ -197,14 +199,16 @@ namespace RobotRaconteur
      * 
      * @param dir The directories tree to create
      */
-    static void CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir);
+    // TODO
+    // static void CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir);
 
     /**
      * @brief Create a directory with user run permissions
      * 
      * @param node_dirs The directories to create
      */
-    static void CreateUserRunDirectory(const NodeDirectories& node_dirs);
+    // TODO
+    // static void CreateUserRunDirectory(const NodeDirectories& node_dirs);
 
     /**
      * @brief Read an info file with key-value pairs
