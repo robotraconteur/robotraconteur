@@ -108,6 +108,7 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 
 %include "LoggingPython.i"
 
+%include "NodeDirectories.i"
 %include "RobotRaconteurNodePython.i"
 
 %include "PythonTypeSupport.i"

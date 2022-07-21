@@ -3184,4 +3184,35 @@ void RobotRaconteurNode::SetMessageTap(const RR_SHARED_PTR<MessageTap>& message_
     tap = message_tap;
 }
 
+NodeDirectories RobotRaconteurNode::GetNodeDirectories()
+{
+    boost::upgrade_lock<boost::shared_mutex> lock(node_directories_lock);
+
+    if (node_directories)
+    {
+        return *node_directories;
+    }
+
+    boost::upgrade_to_unique_lock<boost::shared_mutex> lock2(lock);
+    RR_SHARED_PTR<NodeDirectories> dirs = RR_MAKE_SHARED<NodeDirectories>();
+    *dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories(shared_from_this());
+    node_directories = dirs;
+    return *dirs;
+}
+
+void RobotRaconteurNode::SetNodeDirectories(const NodeDirectories& dir)
+{
+    boost::unique_lock<boost::shared_mutex> lock(node_directories_lock);
+    if (node_directories)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(
+            weak_this, Node, -1, "RobotRaconteurNode attempt to set node directories when already configured");
+        throw InvalidOperationException("Node directories already configured");
+    }
+
+    RR_SHARED_PTR<NodeDirectories> dirs = RR_MAKE_SHARED<NodeDirectories>();
+    *dirs = dir;
+    node_directories = dirs;
+}
+
 } // namespace RobotRaconteur

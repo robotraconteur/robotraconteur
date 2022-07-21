@@ -50,6 +50,7 @@ class LinuxLocalTransportDiscovery : public LocalTransportDiscovery,
     int public_wd;
     std::map<std::string, RR_SHARED_PTR<LinuxLocalTransportDiscovery_dir> > public_user_dirs;
     boost::thread poll_thread;
+    NodeDirectories node_dirs;
 };
 } // namespace detail
 } // namespace RobotRaconteur

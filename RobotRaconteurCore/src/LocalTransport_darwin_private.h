@@ -41,6 +41,7 @@ class DarwinLocalTransportDiscovery : public LocalTransportDiscovery,
     void* runloop;
     boost::mutex runloop_lock;
     bool running;
+    NodeDirectories node_dirs;
 #endif
 };
 

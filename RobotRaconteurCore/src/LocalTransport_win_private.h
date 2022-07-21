@@ -87,6 +87,7 @@ class WinLocalTransportDiscovery : public LocalTransportDiscovery,
     RR_SHARED_PTR<void> shutdown_evt;
     RR_SHARED_PTR<void> private_evt;
     RR_SHARED_PTR<void> public_evt;
+    NodeDirectories node_dirs;
 };
 } // namespace detail
 } // namespace RobotRaconteur
