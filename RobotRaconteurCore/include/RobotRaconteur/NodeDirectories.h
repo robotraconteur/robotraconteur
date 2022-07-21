@@ -159,5 +159,43 @@ namespace RobotRaconteur
 
     ROBOTRACONTEUR_CORE_API void CreateUserRunDirectory(const NodeDirectories& node_dirs);
 
+    /**
+     * @brief Structure to hold result of GetUuidForNameAndLock
+     * 
+     */
+    class ROBOTRACONTEUR_CORE_API GetUuidForNameAndLockResult
+    {
+    public:
+
+        /**
+         * @brief The UUID assigned to the name in specified domain
+         * 
+         * Note: NodeID data type used for convenience. This may or may not be a node id.
+         */
+        NodeID uuid;
+        /**
+         * @brief The identifier name
+         * 
+         */
+        std::string name;
+        /**
+         * @brief The scope of the identifier
+         * 
+         */
+        std::vector<std::string> scope;
+        /**
+         * @brief Lock for identifier. Release fd to release the lock.
+         * 
+         */
+        RR_SHARED_PTR<NodeDirectoriesFD> fd;
+    };
+
+    GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_dirs, boost::string_ref name, const std::vector<std::string>& scope);
+
+    class ROBOTRACONTEUR_CORE_API UuidNameAlreadyInUse : public std::runtime_error
+    {
+    public:
+        UuidNameAlreadyInUse() : runtime_error("Name for UUID already in use"){};
+    };
 
 }

@@ -3197,6 +3197,7 @@ NodeDirectories RobotRaconteurNode::GetNodeDirectories()
     RR_SHARED_PTR<NodeDirectories> dirs = RR_MAKE_SHARED<NodeDirectories>();
     *dirs = GetDefaultNodeDirectories(shared_from_this());
     node_directories = dirs;
+    return *dirs;
 }
 
 void RobotRaconteurNode::SetNodeDirectories(const NodeDirectories& dir)

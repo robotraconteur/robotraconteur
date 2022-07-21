@@ -579,4 +579,121 @@ size_t NodeDirectoriesFD::file_len() // NOLINT(readability-make-member-function-
 #endif
 }
 
+GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_dirs, boost::string_ref name, const std::vector<std::string>& scope)
+{
+    if (scope.empty())
+    {
+        throw InvalidOperationException("GetUuidForNameAndLock scope cannot be empty");
+    }
+
+    NodeID nodeid;
+
+    if (!boost::regex_match(name.begin(), name.end(), boost::regex("^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$")))
+    {
+        throw InvalidArgumentException("\"" + name + "\" is an invalid NodeName");
+    }
+
+    boost::filesystem::path p = node_dirs.user_config_dir;
+    BOOST_FOREACH(const std::string& s, scope)
+    {
+        p /= s;
+    }    
+    p /= name.to_string();
+
+#ifdef ROBOTRACONTEUR_WINDOWS
+
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
+
+    boost::system::error_code open_err;
+    fd->open_lock_write(p, false, open_err);
+    if (open_err)
+    {
+        if (open_err.value() == ERROR_SHARING_VIOLATION)
+        {
+            throw UuidNameAlreadyInUse();
+        }
+
+        throw SystemResourceException("Could not initialize UUID name store");
+    }
+
+#else
+    boost::filesystem::path p_lock = detail::LocalTransportUtil::GetUserRunPath(node_dirs) / "nodeids";
+    boost::filesystem::create_directories(p_lock);
+    p_lock /= nodename + ".pid";
+
+    RR_SHARED_PTR<NodeDirectoriesFD> fd_run = RR_MAKE_SHARED<NodeDirectoriesFD>();
+
+    boost::system::error_code open_run_err;
+    fd_run->open_lock_write(p_lock, false, open_run_err);
+    if (open_run_err)
+    {
+        if (open_run_err.value() == boost::system::errc::no_lock_available)
+        {
+            throw UuidNameAlreadyInUse();
+        }
+        throw SystemResourceException("Could not initialize UUID name store");
+    }
+
+    std::string pid_str = boost::lexical_cast<std::string>(getpid());
+    if (!fd_run->write(pid_str))
+        throw SystemResourceException("Could not initialize UUID name store");
+
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
+
+    boost::system::error_code open_err;
+    fd->open_lock_write(p, false, open_err);
+    if (open_err)
+    {
+        if (open_err.value() == boost::system::errc::read_only_file_system)
+        {
+            open_err = boost::system::error_code();
+            fd->open_read(p, open_err);
+            if (open_err)
+            {
+                throw InvalidOperationException("UUID name not set on read only filesystem");
+            }
+        }
+        else
+        {
+            throw SystemResourceException("Could not initialize UUID store");
+        }
+    }
+
+#endif
+    size_t len = fd->file_len();
+
+    if (len == 0 || len == -1 || len > 16384)
+    {
+        nodeid = NodeID::NewUniqueID();
+        std::string dat = nodeid.ToString();
+        fd->write(dat);
+    }
+    else
+    {
+        std::string nodeid_str;
+        fd->read(nodeid_str);
+        try
+        {
+            boost::trim(nodeid_str);
+            nodeid = NodeID(nodeid_str);
+        }
+        catch (std::exception&)
+        {
+            throw IOException("Error in UUID name store file");
+        }
+    }
+
+    GetUuidForNameAndLockResult res;
+    res.name = name.to_string();
+    res.scope = scope;
+    res.uuid = nodeid;
+
+#ifdef ROBOTRACONTEUR_WINDOWS
+    res.fd = fd;
+#else
+    res.fd = fd_run;
+#endif
+    return res;
+}
+
 }

@@ -53,8 +53,6 @@ boost::optional<boost::filesystem::path> GetTransportPublicSearchPath(const Node
 
 bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data);
 
-boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndLock(const NodeDirectories& node_dirs, boost::string_ref nodename);
-
 RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path, bool for_name = false);
 RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path,
                                                std::map<std::string, std::string> info, bool for_name = false);

@@ -52,6 +52,7 @@ typedef sockaddr_un sockaddr_un_type;
 
 #include <boost/bind/placeholders.hpp>
 #include <boost/asio.hpp>
+#include <boost/assign/list_of.hpp>
 
 #ifdef ROBOTRACONTEUR_CORE_USE_STDAFX
 #include "stdafx.h"
@@ -550,20 +551,19 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
     {
         boost::mutex::scoped_lock lock(acceptor_lock);
 
-        boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > p =
-            detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(node_dirs,name);
+        GetUuidForNameAndLockResult p = GetUuidForNameAndLock(node_dirs,name,boost::assign::list_of("nodeids"));
 
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
-                                           "LocalTransport loaded NodeID " << p.get<0>().ToString() << "for NodeName \""
+                                           "LocalTransport loaded NodeID " << p.uuid.ToString() << "for NodeName \""
                                                                            << name << "\"");
 
         try
         {
-            GetNode()->SetNodeID(p.get<0>());
+            GetNode()->SetNodeID(p.uuid);
         }
         catch (std::exception&)
         {
-            if (GetNode()->NodeID() != p.get<0>())
+            if (GetNode()->NodeID() != p.uuid)
                 throw;
         }
 
@@ -579,7 +579,7 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
 
         {
             boost::mutex::scoped_lock lock(fds_lock);
-            fds->h_nodename_s = p.get<1>();
+            fds->h_nodename_s = p.fd;
         }
     }
     catch (std::exception& exp)
@@ -652,9 +652,8 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
         if (!nodename_lock)
             throw NodeNameAlreadyInUse();
 
-        boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > nodeid1 =
-            detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(node_dirs,name);
-        NodeID& nodeid = nodeid1.get<0>();
+        GetUuidForNameAndLockResult nodeid1 = GetUuidForNameAndLock(node_dirs,name,boost::assign::list_of("nodeids"));
+        NodeID& nodeid = nodeid1.uuid;
 
         RR_SHARED_PTR<detail::LocalTransportNodeIDLock> nodeid_lock = detail::LocalTransportNodeIDLock::Lock(nodeid);
         if (!nodeid_lock)
@@ -783,7 +782,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 
         {
             boost::mutex::scoped_lock lock(fds_lock);
-            fds->h_nodename_s = nodeid1.get<1>();
+            fds->h_nodename_s = nodeid1.fd;
             fds->h_pid_id_s = h_pid_id_s;
             fds->h_info_id_s = h_info_id_s;
             fds->h_pid_name_s = h_pid_name_s;
@@ -1798,106 +1797,6 @@ bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, st
 
     data = fd.info;
     return true;
-}
-
-boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndLock(const NodeDirectories& node_dirs, boost::string_ref nodename)
-{
-    NodeID nodeid;
-
-    if (!boost::regex_match(nodename.begin(), nodename.end(), boost::regex("^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$")))
-    {
-        throw InvalidArgumentException("\"" + nodename + "\" is an invalid NodeName");
-    }
-
-    boost::filesystem::path p = GetUserNodeIDPath(node_dirs) / nodename.to_string();
-
-#ifdef ROBOTRACONTEUR_WINDOWS
-
-    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
-
-    boost::system::error_code open_err;
-    fd->open_lock_write(p, false, open_err);
-    if (open_err)
-    {
-        if (open_err.value() == ERROR_SHARING_VIOLATION)
-        {
-            throw NodeNameAlreadyInUse();
-        }
-
-        throw SystemResourceException("Could not initialize LocalTransport server");
-    }
-
-#else
-    boost::filesystem::path p_lock = detail::LocalTransportUtil::GetUserRunPath(node_dirs) / "nodeids";
-    boost::filesystem::create_directories(p_lock);
-    p_lock /= nodename + ".pid";
-
-    RR_SHARED_PTR<NodeDirectoriesFD> fd_run = RR_MAKE_SHARED<NodeDirectoriesFD>();
-
-    boost::system::error_code open_run_err;
-    fd_run->open_lock_write(p_lock, false, open_run_err);
-    if (open_run_err)
-    {
-        if (open_run_err.value() == boost::system::errc::no_lock_available)
-        {
-            throw NodeNameAlreadyInUse();
-        }
-        throw SystemResourceException("Could not initialize LocalTransport server");
-    }
-
-    std::string pid_str = boost::lexical_cast<std::string>(getpid());
-    if (!fd_run->write(pid_str))
-        throw SystemResourceException("Could not initialize LocalTransport server");
-
-    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
-
-    boost::system::error_code open_err;
-    fd->open_lock_write(p, false, open_err);
-    if (open_err)
-    {
-        if (open_err.value() == boost::system::errc::read_only_file_system)
-        {
-            open_err = boost::system::error_code();
-            fd->open_read(p, open_err);
-            if (open_err)
-            {
-                throw InvalidOperationException("LocalTransport NodeID not set on read only filesystem");
-            }
-        }
-        else
-        {
-            throw SystemResourceException("Could not initialize LocalTransport server");
-        }
-    }
-
-#endif
-    size_t len = fd->file_len();
-
-    if (len == 0 || len == -1 || len > 16384)
-    {
-        nodeid = NodeID::NewUniqueID();
-        std::string dat = nodeid.ToString();
-        fd->write(dat);
-    }
-    else
-    {
-        std::string nodeid_str;
-        fd->read(nodeid_str);
-        try
-        {
-            boost::trim(nodeid_str);
-            nodeid = NodeID(nodeid_str);
-        }
-        catch (std::exception&)
-        {
-            throw IOException("Error in NodeID mapping settings file");
-        }
-    }
-#ifdef ROBOTRACONTEUR_WINDOWS
-    return boost::make_tuple(nodeid, fd);
-#else
-    return boost::make_tuple(nodeid, fd_run);
-#endif
 }
 
 RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path, bool for_name)
