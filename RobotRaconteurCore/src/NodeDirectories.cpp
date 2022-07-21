@@ -48,6 +48,12 @@ namespace RobotRaconteur
                 return boost::filesystem::path(rr_env_var_val);
             }
 
+            const char* rr_user_home = std::getenv("ROBOTRACONTEUR_USER_HOME");
+            if (rr_user_home)
+            {
+                return boost::filesystem::path(rr_user_home) / default_rel_dir;
+            }
+
             const char* xdg_env_val = std::getenv(xdg_env.c_str());
             if (xdg_env_val)
             {
@@ -69,6 +75,12 @@ namespace RobotRaconteur
             if (rr_env_var_val)
             {
                 return boost::filesystem::path(rr_env_var_val);
+            }
+
+            const char* rr_sys_prefix = std::getenv("ROBOTRACONTEUR_SYSTEM_PREFIX");
+            if (rr_sys_prefix)
+            {
+                return boost::filesystem::path(rr_sys_prefix) / default_dir;
             }
 
             return boost::filesystem::path(default_dir);
@@ -119,6 +131,12 @@ namespace RobotRaconteur
 #ifdef ROBOTRACONTEUR_WINDOWS
         static boost::filesystem::path get_user_localappdata()
         {
+            const char* rr_user_local_appdata = std::getenv("ROBOTRACONTEUR_USER_LOCALAPPDATA");
+            if (rr_user_local_appdata)
+            {
+                return boost::filesystem::path(rr_user_local_appdata);
+            }
+
             boost::scoped_array<char> sysdata_path1(new char[MAX_PATH]);
             if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
             {
@@ -131,6 +149,12 @@ namespace RobotRaconteur
 
         static boost::filesystem::path get_common_appdata()
         {
+            const char* rr_user_common_appdata = std::getenv("ROBOTRACONTEUR_SYSTEM_PROGRAMDATA");
+            if (rr_user_common_appdata)
+            {
+                return boost::filesystem::path(rr_user_common_appdata);
+            }
+
             boost::scoped_array<wchar_t> sysdata_path1(new wchar_t[MAX_PATH]);
             if (FAILED(SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
             {
