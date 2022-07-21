@@ -50,6 +50,11 @@ void DarwinLocalTransportDiscovery::Init()
 {
     boost::mutex::scoped_lock lock(runloop_lock);
     running = true;
+    RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
+    if (node1)
+    {
+        node_dirs = node1->GetNodeDirectories();
+    }
     boost::thread(boost::bind(&DarwinLocalTransportDiscovery::run, shared_from_this()));
 }
 void DarwinLocalTransportDiscovery::Shutdown()
@@ -78,8 +83,8 @@ void DarwinLocalTransportDiscovery::run()
             runloop = CFRunLoopGetCurrent();
         }
 
-        std::string private_path = (LocalTransportUtil::GetUserRunPath() / "transport" / "local").string();
-        std::string public_path = "/var/run/robotraconteur/transport/local";
+        std::string private_path = (node_dirs.user_run_dir / "transport" / "local").string();
+        std::string public_path = (node_dirs.system_run_dir / "transport" / "local").string();
 
         CFStringRef cf_paths[2];
         cf_paths[0] = CFStringCreateWithCString(kCFAllocatorDefault, private_path.c_str(), kCFStringEncodingUTF8);
