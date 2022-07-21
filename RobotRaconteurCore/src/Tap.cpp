@@ -271,7 +271,7 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
 
         try
         {
-            NodeDirectories node_dirs = GetDefaultNodeDirectories();
+            NodeDirectories node_dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories();
             boost::filesystem::path run_path = node_dirs.user_run_dir;
             boost::filesystem::path tap_path = run_path / "tap";
             boost::filesystem::path all_tap_path = tap_path / "all";

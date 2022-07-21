@@ -3195,7 +3195,7 @@ NodeDirectories RobotRaconteurNode::GetNodeDirectories()
 
     boost::upgrade_to_unique_lock<boost::shared_mutex> lock2(lock);
     RR_SHARED_PTR<NodeDirectories> dirs = RR_MAKE_SHARED<NodeDirectories>();
-    *dirs = GetDefaultNodeDirectories(shared_from_this());
+    *dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories(shared_from_this());
     node_directories = dirs;
     return *dirs;
 }

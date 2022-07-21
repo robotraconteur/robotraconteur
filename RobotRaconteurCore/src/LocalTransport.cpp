@@ -207,7 +207,7 @@ void LocalTransport::AsyncCreateTransportConnection(
         throw ConnectionException("NodeID and/or NodeName must be specified for LocalTransport");
     }
 
-    std::string my_username = GetLogonUserName();
+    std::string my_username = NodeDirectoriesUtil::GetLogonUserName();
     NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
 
     boost::filesystem::path user_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
@@ -258,7 +258,7 @@ void LocalTransport::AsyncCreateTransportConnection(
             search_paths.push_back(*public_user_path);
         }
 
-        usernames.push_back(GetLogonUserName());
+        usernames.push_back(NodeDirectoriesUtil::GetLogonUserName());
 
         if (public_search_path)
         {
@@ -715,8 +715,8 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
         RR_SHARED_PTR<NodeDirectoriesFD> h_info_name_s;
         try
         {
-            h_pid_id_s = CreatePidFile(pid_id_fname);
-            h_info_id_s = CreateInfoFile(info_id_fname, info);
+            h_pid_id_s = NodeDirectoriesUtil::CreatePidFile(pid_id_fname);
+            h_info_id_s = NodeDirectoriesUtil::CreateInfoFile(info_id_fname, info);
         }
         catch (NodeDirectoriesResourceAlreadyInUse&)
         {
@@ -724,8 +724,8 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
         }
         try
         {
-            h_pid_name_s = CreatePidFile(pid_name_fname);
-            h_info_name_s =CreateInfoFile(info_name_fname, info);
+            h_pid_name_s = NodeDirectoriesUtil::CreatePidFile(pid_name_fname);
+            h_info_name_s =NodeDirectoriesUtil::CreateInfoFile(info_name_fname, info);
         }
         catch (NodeDirectoriesResourceAlreadyInUse&)
         {
@@ -906,8 +906,8 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
         RR_SHARED_PTR<NodeDirectoriesFD> h_info_id_s;
         try
         {
-            h_pid_id_s = CreatePidFile(pid_id_fname);
-            h_info_id_s = CreateInfoFile(info_id_fname, info);
+            h_pid_id_s = NodeDirectoriesUtil::CreatePidFile(pid_id_fname);
+            h_info_id_s = NodeDirectoriesUtil::CreateInfoFile(info_id_fname, info);
         }
         catch (NodeDirectoriesResourceAlreadyInUse&)
         {
@@ -1098,7 +1098,7 @@ void LocalTransport::AsyncGetDetectedNodes(
 
     boost::filesystem::path private_search_dir = detail::LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
 
-    std::string my_username = GetLogonUserName();
+    std::string my_username = NodeDirectoriesUtil::GetLogonUserName();
     detail::LocalTransportUtil::FindNodesInDirectory(*o, private_search_dir, "rr+local", GetNode()->NowNodeTime(),
                                                      my_username);
 
@@ -1263,10 +1263,10 @@ void LocalTransport::LocalNodeServicesChanged()
 
         std::map<std::string,std::string> updated_info;
         updated_info.insert(std::make_pair("ServiceStateNonce",service_nonce));
-        RefreshInfoFile(fds->h_info_id_s, updated_info);
+        NodeDirectoriesUtil::RefreshInfoFile(fds->h_info_id_s, updated_info);
         if (fds->h_info_name_s)
         {
-            RefreshInfoFile(fds->h_info_name_s, updated_info);
+            NodeDirectoriesUtil::RefreshInfoFile(fds->h_info_name_s, updated_info);
         }
     }
 }
@@ -1782,7 +1782,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
             }
 
             std::map<std::string, std::string> info;
-            if (!ReadInfoFile(*dir_itr, info))
+            if (!NodeDirectoriesUtil::ReadInfoFile(*dir_itr, info))
             {
                 continue;
             }
@@ -1849,7 +1849,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
             }
 
             std::map<std::string, std::string> info;
-            if (!ReadInfoFile(*dir_itr, info))
+            if (!NodeDirectoriesUtil::ReadInfoFile(*dir_itr, info))
             {
                 continue;
             }
@@ -1904,7 +1904,7 @@ RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
             boost::filesystem::path e2 = e / "by-nodeid";
             e2 /= url.nodeid.ToString("D") + ".info";
 
-            if (!ReadInfoFile(e2, info_data))
+            if (!NodeDirectoriesUtil::ReadInfoFile(e2, info_data))
             {
                 continue;
             }
@@ -1926,7 +1926,7 @@ RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
                 e3 /= url.nodename + ".info";
 
                 std::map<std::string, std::string> info_data2;
-                if (!ReadInfoFile(e3, info_data2))
+                if (!NodeDirectoriesUtil::ReadInfoFile(e3, info_data2))
                 {
                     continue;
                 }
@@ -1950,7 +1950,7 @@ RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
             boost::filesystem::path e2 = e / "by-nodename";
             e2 /= url.nodename + ".info";
 
-            if (!ReadInfoFile(e2, info_data))
+            if (!NodeDirectoriesUtil::ReadInfoFile(e2, info_data))
             {
                 continue;
             }

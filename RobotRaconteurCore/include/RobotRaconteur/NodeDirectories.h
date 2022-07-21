@@ -138,6 +138,14 @@ namespace RobotRaconteur
 
     class NodeDirectoriesFD;
 
+
+    /**
+     * @brief Utility functions for working with NodeDirectories
+     * 
+     */
+    class ROBOTRACONTEUR_CORE_API NodeDirectoriesUtil
+    {
+    public:
     /**
      * @brief Get the Default Node Directories object
      * 
@@ -145,19 +153,103 @@ namespace RobotRaconteur
      * @param create_user_dirs Create user directories if they don't exist (optional)
      * @return NodeDirectories The default node directories
      */
-    ROBOTRACONTEUR_CORE_API NodeDirectories GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>());
+    static NodeDirectories GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>());
 
-    ROBOTRACONTEUR_CORE_API std::string GetLogonUserName();
+    /**
+     * @brief Get the logon name of the current user
+     * 
+     * @return std::string
+     */
+    static std::string GetLogonUserName();
 
-    ROBOTRACONTEUR_CORE_API bool IsLogonUserRoot();
+    /**
+     * @brief Returns true if user is root
+     * 
+     * @return true 
+     * @return false 
+     */
+    static bool IsLogonUserRoot();
 
-    ROBOTRACONTEUR_CORE_API void CreateUserNodeDirectory(const boost::filesystem::path& dir);
+    /**
+     * @brief Create directories with user permissions
+     * 
+     * Parent directories are created, existing directories ignored
+     * 
+     * @param dir The directories tree to create
+     */
+    static void CreateUserNodeDirectory(const boost::filesystem::path& dir);
 
-    ROBOTRACONTEUR_CORE_API void CreateSystemPrivateNodeDirectory(const boost::filesystem::path& dir);
+    /**
+     * @brief Create directories with private system permissions
+     * 
+     * Parent directories are created, existing directories ignored
+     * 
+     * @param dir The directories tree to create
+     */
+    static void CreateSystemPrivateNodeDirectory(const boost::filesystem::path& dir);
 
-    ROBOTRACONTEUR_CORE_API void CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir);
+    /**
+     * @brief Create directories with public system permissions
+     * 
+     * Parent directories are created, existing directories ignored
+     * Typically these directories will allow the "robotraconteur" group
+     * ("RobotRaconteur" on Windows) access.
+     * 
+     * @param dir The directories tree to create
+     */
+    static void CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir);
 
-    ROBOTRACONTEUR_CORE_API void CreateUserRunDirectory(const NodeDirectories& node_dirs);
+    /**
+     * @brief Create a directory with user run permissions
+     * 
+     * @param node_dirs The directories to create
+     */
+    static void CreateUserRunDirectory(const NodeDirectories& node_dirs);
+
+    /**
+     * @brief Read an info file with key-value pairs
+     * 
+     * @param fname The file to read
+     * @param data (out) The map to fill with read values
+     * @return true Success
+     * @return false Failure
+     */
+    static bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data);
+
+    /**
+     * @brief Create a pid file
+     * 
+     * Creates a file with the current program's pid. The file will also be locked for writing. The file
+     * will be deleted and unlocked when handle is destroyed.
+     * 
+     * @param path The pid file filename
+     * @return RR_SHARED_PTR<NodeDirectoriesFD> Handle to pid file. Destroy to delete and release the file lock.
+     */
+    static RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path);
+
+    /**
+     * @brief Create an info file with key-value pairs
+     * 
+     * The file will be locked for writing. The file
+     * will be deleted and unlocked when handle is destroyed.
+     * 
+     * @param path The info filename
+     * @param info The key-value pairs to write to the file.
+     * @return RR_SHARED_PTR<NodeDirectoriesFD> Handle to pid file. Destroy to delete and release the file lock.
+     */
+    static RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path, std::map<std::string, std::string> info);
+
+    /**
+     * @brief Update key-value pairs in a file created with CreateInfoFile()
+     * 
+     * Replaces key-value pairs in a file opened with CreateInfoFile()
+     * 
+     * @param h_info Handle to the opened info file
+     * @param updated_info Key-value pairs to replace in the info file.
+     */
+    static void RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, const std::map<std::string, std::string>& updated_info);
+
+    };
 
     /**
      * @brief Structure to hold result of GetUuidForNameAndLock
@@ -190,18 +282,39 @@ namespace RobotRaconteur
         RR_SHARED_PTR<NodeDirectoriesFD> fd;
     };
 
-    GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_dirs, boost::string_ref name, const std::vector<std::string>& scope);
+    /**
+     * @brief Get a saved UUID for a name with a specified scope
+     * 
+     * Robot Raconteur uses "identifiers", which are a combination of a name and a UUID. For nodes, this is a
+     * NodeName and NodeID pair. For convenience, the UUIDs can be automatically generated on individual machines,
+     * and saved to the system. They can also be pre-specified by creating files in specific locations. The "scope"
+     * is a path that separates different types of identifiers. For nodes, the scope is "nodeids". For devices,
+     * it is something like ["identifiers","devices"].
+     * 
+     * The base directory is typically "user_config_dir", except for root users on Unix systems. In those cases,
+     * the search will initially look in "user_config_dir" (/etc/robotraconteur), but then fall back to "user_state_dir"
+     * (/var/lib/robotraconteur) to save the generated UUID.
+     * 
+     * The files contain the UUID in text form, and no other characters.
+     * 
+     * Throws NodeDirectoriesResourceAlreadyInUse if the name is already in use by another node.
+     * 
+     * @param node_dirs Node directory structure returned by RobotRaconteurNode::GetNodeDirectories()
+     * @param name The name to get a UUID
+     * @param scope The scope of the type of identifier
+     * @return GetUuidForNameAndLockResult The resulting UUID
+     */
+    ROBOTRACONTEUR_CORE_API GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_dirs, boost::string_ref name, const std::vector<std::string>& scope);
 
+    /**
+     * @brief Exception thrown by GetUuidForNameAndLockResult if the name with
+     * the specified scope is currently in use.
+     * 
+     */
     class ROBOTRACONTEUR_CORE_API NodeDirectoriesResourceAlreadyInUse : public std::runtime_error
     {
     public:
         NodeDirectoriesResourceAlreadyInUse() : runtime_error("Identifier UUID or Name already in use"){};
     };
-
-    bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data);
-
-    RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path);
-    RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path, std::map<std::string, std::string> info);
-    void RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, const std::map<std::string, std::string>& updated_info);
 
 }

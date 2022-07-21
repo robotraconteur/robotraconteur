@@ -51,7 +51,7 @@ TEST(RobotRaconteurMisc, LogMacros)
 
 TEST(RobotRaconteurMisc, NodeDirectories)
 {
-    NodeDirectories dirs = GetDefaultNodeDirectories();
+    NodeDirectories dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories();
     std::cout << "system_data_dir: " << dirs.system_data_dir << std::endl;
     std::cout << "system_config_dir: " << dirs.system_config_dir << std::endl;
     std::cout << "system_state_dir: " << dirs.system_state_dir << std::endl;

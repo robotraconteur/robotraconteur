@@ -187,7 +187,7 @@ namespace RobotRaconteur
             ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Node, -1, "Error resolving " << dir_type << ":" << e.what()); \
         }}
 
-    NodeDirectories GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node)
+    NodeDirectories NodeDirectoriesUtil::GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node)
     {
         NodeDirectories ret;
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -244,7 +244,7 @@ namespace RobotRaconteur
         return ret;
     }
 
-    std::string GetLogonUserName()
+    std::string NodeDirectoriesUtil::GetLogonUserName()
     {
     #ifdef ROBOTRACONTEUR_WINDOWS
         DWORD size = 0;
@@ -275,7 +275,7 @@ namespace RobotRaconteur
 
     #ifdef ROBOTRACONTEUR_WINDOWS
 
-    bool IsLogonUserRoot_win_compare_rid(PTOKEN_USER pTokenUser, DWORD rid)
+    static bool IsLogonUserRoot_win_compare_rid(PTOKEN_USER pTokenUser, DWORD rid)
     {
         SID_IDENTIFIER_AUTHORITY siaNT = SECURITY_NT_AUTHORITY;
         PSID pSystemSid;
@@ -290,7 +290,7 @@ namespace RobotRaconteur
         return res != 0;
     }
 
-    bool IsLogonUserRoot_win()
+    static bool IsLogonUserRoot_win()
     {
         HANDLE hToken;
         UCHAR bTokenUser[sizeof(TOKEN_USER) + 8 + 4 * SID_MAX_SUB_AUTHORITIES];
@@ -331,7 +331,7 @@ namespace RobotRaconteur
     }
     #endif
 
-    bool IsLogonUserRoot()
+    bool NodeDirectoriesUtil::IsLogonUserRoot()
     {
     #ifndef ROBOTRACONTEUR_WINDOWS
         uid_t user_uid = getuid();
@@ -342,24 +342,24 @@ namespace RobotRaconteur
 
     }
 
-    void CreateUserNodeDirectory(const boost::filesystem::path& dir)
+    void NodeDirectoriesUtil::CreateUserNodeDirectory(const boost::filesystem::path& dir)
     {
         boost::filesystem::create_directories(dir);
     }
 
-    void CreateSystemPrivateNodeDirectory(const boost::filesystem::path& dir)
-    {
-        // TODO: file permissions
-        boost::filesystem::create_directories(dir);
-    }
-
-    void CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir)
+    void NodeDirectoriesUtil::CreateSystemPrivateNodeDirectory(const boost::filesystem::path& dir)
     {
         // TODO: file permissions
         boost::filesystem::create_directories(dir);
     }
 
-    void CreateUserRunDirectory(const NodeDirectories& node_dirs)
+    void NodeDirectoriesUtil::CreateSystemPublicNodeDirectory(const boost::filesystem::path& dir)
+    {
+        // TODO: file permissions
+        boost::filesystem::create_directories(dir);
+    }
+
+    void NodeDirectoriesUtil::CreateUserRunDirectory(const NodeDirectories& node_dirs)
     {
         if (node_dirs.user_run_dir == node_dirs.system_run_dir)
         {
@@ -687,7 +687,7 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
         throw SystemResourceException("Could not initialize UUID name store");
 
     RR_SHARED_PTR<NodeDirectoriesFD> fd;
-    bool is_root = IsLogonUserRoot();
+    bool is_root = NodeDirectoriesUtil::IsLogonUserRoot();
     if (is_root)
     {
         RR_SHARED_PTR<NodeDirectoriesFD> fd_etc = RR_MAKE_SHARED<NodeDirectoriesFD>();
@@ -767,7 +767,7 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     return res;
 }
 
-bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data)
+bool NodeDirectoriesUtil::ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data)
 {
     NodeDirectoriesFD fd;
 
@@ -783,7 +783,7 @@ bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, st
     return true;
 }
 
-RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path)
+RR_SHARED_PTR<NodeDirectoriesFD> NodeDirectoriesUtil::CreatePidFile(const boost::filesystem::path& path)
 {
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -827,7 +827,7 @@ RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& pa
 
     return fd;
 }
-RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path, std::map<std::string, std::string> info)
+RR_SHARED_PTR<NodeDirectoriesFD> NodeDirectoriesUtil::CreateInfoFile(const boost::filesystem::path& path, std::map<std::string, std::string> info)
 {
 
     std::string username = GetLogonUserName();
@@ -879,7 +879,7 @@ RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& p
     return fd;
 }
 
-void RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, const std::map<std::string, std::string>& updated_info)
+void NodeDirectoriesUtil::RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, const std::map<std::string, std::string>& updated_info)
 {
 
     if (!h_info)
