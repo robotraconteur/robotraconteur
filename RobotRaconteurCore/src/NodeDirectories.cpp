@@ -8,11 +8,19 @@
 #include <Shlobj.h>
 #else
 #include <pwd.h>
+#include <unistd.h>
+#include <sys/file.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdio.h>
 #endif
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/algorithm.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/scope_exit.hpp>
 
 
 namespace RobotRaconteur
@@ -619,9 +627,13 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     }
 
 #else
-    boost::filesystem::path p_lock = detail::LocalTransportUtil::GetUserRunPath(node_dirs) / "nodeids";
+    boost::filesystem::path p_lock = node_dirs.user_run_dir;
+    BOOST_FOREACH(const std::string& s, scope)
+    {
+        p_lock /= s;
+    }
     boost::filesystem::create_directories(p_lock);
-    p_lock /= nodename + ".pid";
+    p_lock /= name + ".pid";
 
     RR_SHARED_PTR<NodeDirectoriesFD> fd_run = RR_MAKE_SHARED<NodeDirectoriesFD>();
 
@@ -747,14 +759,7 @@ RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& pa
     {
         if (open_err.value() == boost::system::errc::no_lock_available)
         {
-            if (!for_name)
-            {
-                throw NodeIDAlreadyInUse();
-            }
-            else
-            {
-                throw NodeNameAlreadyInUse();
-            }
+            throw NodeDirectoriesResourceAlreadyInUse();
         }
         throw SystemResourceException("Could not initialize LocalTransport server");
     }
@@ -800,14 +805,7 @@ RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& p
     {
         if (open_err.value() == boost::system::errc::no_lock_available)
         {
-            if (!for_name)
-            {
-                throw NodeIDAlreadyInUse();
-            }
-            else
-            {
-                throw NodeNameAlreadyInUse();
-            }
+            throw NodeDirectoriesResourceAlreadyInUse();
         }
         throw SystemResourceException("Could not initialize LocalTransport server");
     }

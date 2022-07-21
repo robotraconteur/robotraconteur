@@ -406,7 +406,7 @@ WinLocalTransportDiscovery::WinLocalTransportDiscovery(const RR_SHARED_PTR<Robot
 void WinLocalTransportDiscovery::Init()
 {
     RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
-    NodeDirectories node_dirs = node1->GetNodeDirectories();
+    node_dirs = node1->GetNodeDirectories();
     try
     {
         private_path = LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
