@@ -141,15 +141,23 @@ if(BUILD_PYTHON_WHEEL)
     endif()
 endif()
 
+# This mess is taken from github.com/ros/catkin/cmake/python.cmake...
+set(enable_setuptools_deb_layout OFF)
+if(ROBOTRACONTEUR_ROS)
+if(EXISTS "/etc/debian_version")
+  set(enable_setuptools_deb_layout ON)
+endif()
+endif()
 
-
-option(SETUPTOOLS_DEB_LAYOUT "Enable debian style python package layout" OFF)
+option(SETUPTOOLS_DEB_LAYOUT "Enable debian style python package layout" ${enable_setuptools_deb_layout})
 if(SETUPTOOLS_DEB_LAYOUT)
     message(STATUS "Using Debian Python package layout")
     set(SETUPTOOLS_ARG_EXTRA "--install-layout=deb")
 endif()
 
+option(INSTALL_PYTHON "Install Python library" OFF)
+if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON OR INSTALL_PYTHON)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python_install.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/python_install.cmake @ONLY)
-
 install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/python_install.cmake)
+endif()
 

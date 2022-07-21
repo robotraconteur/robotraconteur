@@ -1,6 +1,8 @@
 #include "StringTableGen.h"
 #include <boost/range/algorithm.hpp>
 
+using namespace RobotRaconteur;
+
 namespace RobotRaconteurGen
 {
 
