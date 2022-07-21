@@ -61,4 +61,4 @@ class NodeDirectoriesFD
     size_t file_len();
 };
 
-}
+} // namespace RobotRaconteur

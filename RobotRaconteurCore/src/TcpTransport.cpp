@@ -2943,7 +2943,7 @@ void TcpTransport::LoadTlsNodeCertificate()
 
         boost::filesystem::path certpath = certstore / (GetNode()->NodeID().ToString() + ".p12");
 
-        if (!(boost::filesystem::is_regular(certpath) || boost::filesystem::is_symlink(certpath) ))
+        if (!(boost::filesystem::is_regular(certpath) || boost::filesystem::is_symlink(certpath)))
         {
             throw SystemResourceException("Could not load node certificate");
         }
@@ -6490,7 +6490,6 @@ void TcpTransportPortSharerClient::client_thread()
 #ifdef ROBOTRACONTEUR_WINDOWS
 
             std::string fname;
-
 
             boost::optional<boost::filesystem::path> p1_1 = node_dirs.system_run_dir;
             if (p1_1)

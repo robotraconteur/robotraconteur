@@ -515,7 +515,7 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
     {
         boost::mutex::scoped_lock lock(acceptor_lock);
 
-        GetUuidForNameAndLockResult p = GetUuidForNameAndLock(node_dirs,name,boost::assign::list_of("nodeids"));
+        GetUuidForNameAndLockResult p = GetUuidForNameAndLock(node_dirs, name, boost::assign::list_of("nodeids"));
 
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
                                            "LocalTransport loaded NodeID " << p.uuid.ToString() << "for NodeName \""
@@ -616,7 +616,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
         if (!nodename_lock)
             throw NodeNameAlreadyInUse();
 
-        GetUuidForNameAndLockResult nodeid1 = GetUuidForNameAndLock(node_dirs,name,boost::assign::list_of("nodeids"));
+        GetUuidForNameAndLockResult nodeid1 = GetUuidForNameAndLock(node_dirs, name, boost::assign::list_of("nodeids"));
         NodeID& nodeid = nodeid1.uuid;
 
         RR_SHARED_PTR<detail::LocalTransportNodeIDLock> nodeid_lock = detail::LocalTransportNodeIDLock::Lock(nodeid);
@@ -659,8 +659,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
             }
             else
             {
-                pipename = node_dirs.user_run_dir.string() + ROBOTRACONTEUR_PATHSEP
-                           "socket" ROBOTRACONTEUR_PATHSEP;
+                pipename = node_dirs.user_run_dir.string() + ROBOTRACONTEUR_PATHSEP "socket" ROBOTRACONTEUR_PATHSEP;
             }
             pipename += GetNode()->GetRandomString(16) + ".sock";
 
@@ -725,7 +724,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
         try
         {
             h_pid_name_s = NodeDirectoriesUtil::CreatePidFile(pid_name_fname);
-            h_info_name_s =NodeDirectoriesUtil::CreateInfoFile(info_name_fname, info);
+            h_info_name_s = NodeDirectoriesUtil::CreateInfoFile(info_name_fname, info);
         }
         catch (NodeDirectoriesResourceAlreadyInUse&)
         {
@@ -856,8 +855,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
             }
             else
             {
-                pipename = node_dirs.user_run_dir.string() + ROBOTRACONTEUR_PATHSEP
-                           "socket" ROBOTRACONTEUR_PATHSEP;
+                pipename = node_dirs.user_run_dir.string() + ROBOTRACONTEUR_PATHSEP "socket" ROBOTRACONTEUR_PATHSEP;
             }
             pipename += GetNode()->GetRandomString(16) + ".sock";
 
@@ -1103,7 +1101,8 @@ void LocalTransport::AsyncGetDetectedNodes(
                                                      my_username);
 
     // TODO: search other users
-    boost::optional<boost::filesystem::path> search_path = detail::LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
+    boost::optional<boost::filesystem::path> search_path =
+        detail::LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
     if (search_path)
     {
         try
@@ -1261,8 +1260,8 @@ void LocalTransport::LocalNodeServicesChanged()
     {
         std::string service_nonce = GetNode()->GetServiceStateNonce();
 
-        std::map<std::string,std::string> updated_info;
-        updated_info.insert(std::make_pair("ServiceStateNonce",service_nonce));
+        std::map<std::string, std::string> updated_info;
+        updated_info.insert(std::make_pair("ServiceStateNonce", service_nonce));
         NodeDirectoriesUtil::RefreshInfoFile(fds->h_info_id_s, updated_info);
         if (fds->h_info_name_s)
         {

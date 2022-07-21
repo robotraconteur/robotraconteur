@@ -2567,21 +2567,20 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     RR_SHARED_PTR<NodeDirectories> node_directories;
 
   public:
-    
     /**
      * @brief Get the current node directories
-     * 
+     *
      * Node directories are set to default if not configured
-     * 
-     * @return NodeDirectories 
+     *
+     * @return NodeDirectories
      */
     NodeDirectories GetNodeDirectories();
 
     /**
      * @brief Set the node directories
-     * 
+     *
      * Sets the node directories. Cannot be set after GetNodeDirectories() is called
-     * 
+     *
      * @param dir The new node directories
      */
     void SetNodeDirectories(const NodeDirectories& dir);

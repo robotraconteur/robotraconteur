@@ -162,8 +162,6 @@ void LinuxLocalTransportDiscovery::Init()
     if (public_evt->fd() < 0)
         throw InternalErrorException("Internal error");
     poll_thread = boost::thread(boost::bind(&LinuxLocalTransportDiscovery::run, shared_from_this()));
-
-
 }
 
 void LinuxLocalTransportDiscovery::Shutdown()

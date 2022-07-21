@@ -3205,8 +3205,8 @@ void RobotRaconteurNode::SetNodeDirectories(const NodeDirectories& dir)
     boost::unique_lock<boost::shared_mutex> lock(node_directories_lock);
     if (node_directories)
     {
-        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1,
-                                           "RobotRaconteurNode attempt to set node directories when already configured");
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(
+            weak_this, Node, -1, "RobotRaconteurNode attempt to set node directories when already configured");
         throw InvalidOperationException("Node directories already configured");
     }
 
