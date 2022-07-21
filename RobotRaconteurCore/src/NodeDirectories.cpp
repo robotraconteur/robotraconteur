@@ -1,7 +1,3 @@
-#include "RobotRaconteur/NodeDirectories.h"
-#include "RobotRaconteur/Logging.h"
-#include "NodeDirectories_private.h"
-
 #ifdef ROBOTRACONTEUR_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -16,6 +12,10 @@
 #include <fcntl.h>
 #include <stdio.h>
 #endif
+
+#include "RobotRaconteur/NodeDirectories.h"
+#include "RobotRaconteur/Logging.h"
+#include "NodeDirectories_private.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/algorithm.hpp>
