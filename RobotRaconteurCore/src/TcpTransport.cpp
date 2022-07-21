@@ -2938,51 +2938,28 @@ void TcpTransport::LoadTlsNodeCertificate()
         c->LoadCertificateFromMyStore();
 #endif
 #ifdef ROBOTRACONTEUR_USE_OPENSSL
-        boost::scoped_array<char> sysdata_path1(new char[MAX_PATH]);
-        if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
-        {
-            throw SystemResourceException("Could not get system information");
-        }
+        NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
+        boost::filesystem::path certstore = node_dirs.user_config_dir / "certificates";
 
-        std::string sysdata_path(sysdata_path1.get());
+        boost::filesystem::path certpath = certstore / (GetNode()->NodeID().ToString() + ".p12");
 
-        std::string certpath = sysdata_path + ROBOTRACONTEUR_PATHSEP + "RobotRaconteur" + ROBOTRACONTEUR_PATHSEP +
-                               "certificates" + ROBOTRACONTEUR_PATHSEP + GetNode()->NodeID().ToString() + ".p12";
-
-        DWORD dwAttrib = GetFileAttributes(certpath.c_str());
-        if (dwAttrib == INVALID_FILE_ATTRIBUTES)
+        if (!(boost::filesystem::is_regular(certpath) || boost::filesystem::is_symlink(certpath) ))
         {
             throw SystemResourceException("Could not load node certificate");
         }
         RR_SHARED_PTR<detail::OpenSSLAuthContext> c =
             RR_STATIC_POINTER_CAST<detail::OpenSSLAuthContext>(GetTlsContext());
-        c->LoadPKCS12FromFile(certpath);
+        c->LoadPKCS12FromFile(certpath.string());
 #endif
 
 #else
+        NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
+        boost::filesystem::path certstore = node_dirs.user_config_dir / "certificates";
 
-        std::string certstore;
-
-        char* certstoreenv = std::getenv("ROBOTRACONTEUR_USER_HOME");
-        if (certstoreenv != NULL)
-        {
-            std::string sysdata_path = std::string(certstoreenv);
-
-            certstore = sysdata_path + ROBOTRACONTEUR_PATHSEP + ".config" + ROBOTRACONTEUR_PATHSEP + "RobotRaconteur" +
-                        ROBOTRACONTEUR_PATHSEP + "certificates";
-        }
-        else
-        {
-            std::string sysdata_path = std::getenv("HOME");
-
-            certstore = sysdata_path + ROBOTRACONTEUR_PATHSEP + ".config" + ROBOTRACONTEUR_PATHSEP + "RobotRaconteur" +
-                        ROBOTRACONTEUR_PATHSEP + "certificates";
-        }
-        std::string certpath = certstore + ROBOTRACONTEUR_PATHSEP + GetNode()->NodeID().ToString() + ".p12";
+        boost::filesystem::path certpath = certstore / (GetNode()->NodeID().ToString() + ".p12");
         RR_SHARED_PTR<detail::OpenSSLAuthContext> c =
             RR_STATIC_POINTER_CAST<detail::OpenSSLAuthContext>(GetTlsContext());
-        c->LoadPKCS12FromFile(certpath);
-
+        c->LoadPKCS12FromFile(certpath.string());
 #endif
         ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1,
                                           "Loaded TLS certificate for NodeID: " << GetNode()->NodeID().ToString());
