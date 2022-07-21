@@ -631,7 +631,9 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
         p /= s;
     }
 
+#ifdef ROBOTRACONTEUR_WINDOWS
     boost::filesystem::create_directories(p);
+#endif
     p /= name.to_string();
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -659,6 +661,14 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     boost::filesystem::create_directories(p_lock);
     p_lock /= name + ".pid";
 
+    boost::filesystem::path p_state = node_dirs.user_state_dir;
+    BOOST_FOREACH(const std::string& s, scope)
+    {
+        p_state /= s;
+    }
+    boost::filesystem::create_directories(p_state);
+    p_state /= name.to_string();
+
     RR_SHARED_PTR<NodeDirectoriesFD> fd_run = RR_MAKE_SHARED<NodeDirectoriesFD>();
 
     boost::system::error_code open_run_err;
@@ -676,24 +686,47 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     if (!fd_run->write(pid_str))
         throw SystemResourceException("Could not initialize UUID name store");
 
-    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
-
-    boost::system::error_code open_err;
-    fd->open_lock_write(p, false, open_err);
-    if (open_err)
+    RR_SHARED_PTR<NodeDirectoriesFD> fd;
+    bool is_root = IsLogonUserRoot();
+    if (is_root)
     {
-        if (open_err.value() == boost::system::errc::read_only_file_system)
+        RR_SHARED_PTR<NodeDirectoriesFD> fd_etc = RR_MAKE_SHARED<NodeDirectoriesFD>();
+        boost::system::error_code open_err;
+        fd_etc->open_read(p, open_err);
+        if (!open_err)
         {
-            open_err = boost::system::error_code();
-            fd->open_read(p, open_err);
-            if (open_err)
-            {
-                throw InvalidOperationException("UUID name not set on read only filesystem");
-            }
+            fd = fd_etc;
+        }
+    }
+
+    if (!fd)
+    {    
+        fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
+
+        boost::system::error_code open_err;
+        if (is_root)
+        {
+            fd->open_lock_write(p_state, false, open_err);
         }
         else
         {
-            throw SystemResourceException("Could not initialize UUID store");
+            fd->open_lock_write(p, false, open_err);
+        }
+        if (open_err)
+        {
+            if (open_err.value() == boost::system::errc::read_only_file_system)
+            {
+                open_err = boost::system::error_code();
+                fd->open_read(p, open_err);
+                if (open_err)
+                {
+                    throw InvalidOperationException("UUID name not set on read only filesystem");
+                }
+            }
+            else
+            {
+                throw SystemResourceException("Could not initialize UUID store");
+            }
         }
     }
 
