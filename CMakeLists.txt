@@ -152,3 +152,14 @@ endif()
 set(CPACK_SOURCE_ZIP ON CACHE BOOL "" FORCE)
 
 include(CPack)
+
+if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
+    # Allows Colcon to find non-Ament packages when using workspace underlays
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur "")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur
+            DESTINATION share/ament_index/resource_index/packages)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv
+         "prepend-non-duplicate;AMENT_PREFIX_PATH;")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv
+            DESTINATION share/robotraconteur/hook)
+endif()

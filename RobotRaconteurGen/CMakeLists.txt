@@ -14,14 +14,11 @@ if(${CMAKE_VERSION} VERSION_GREATER "3.16.0")
     target_precompile_headers(RobotRaconteurGen PRIVATE ${RobotRaconteurGen_header})
 endif()
 
-if(ROBOTRACONTEUR_ROS)
-    find_package(roslib REQUIRED)
-    target_link_libraries(RobotRaconteurGen PRIVATE RobotRaconteurCore ${roslib_LIBRARIES})
-    target_include_directories(RobotRaconteurGen PRIVATE ${roslib_INCLUDE_DIRS})
-    target_compile_definitions(RobotRaconteurGen PRIVATE ROBOTRACONTEUR_ROS)
-else()
-    target_link_libraries(RobotRaconteurGen RobotRaconteurCore)
-endif()
+# if(ROBOTRACONTEUR_ROS) find_package(roslib REQUIRED) target_link_libraries(RobotRaconteurGen PRIVATE
+# RobotRaconteurCore ${roslib_LIBRARIES}) target_include_directories(RobotRaconteurGen PRIVATE ${roslib_INCLUDE_DIRS})
+# target_compile_definitions(RobotRaconteurGen PRIVATE ROBOTRACONTEUR_ROS) else()
+target_link_libraries(RobotRaconteurGen RobotRaconteurCore)
+# endif()
 
 rrsettargetdirs(RobotRaconteurGen "bin" "lib")
 
