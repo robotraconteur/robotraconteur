@@ -293,7 +293,7 @@ jobs:
 
   build-osx:
 
-    runs-on: macos-10.15
+    runs-on: macos-11
     env:
       LIBRARY_PATH: /usr/local/opt/icu4c/lib
     steps:
@@ -594,7 +594,7 @@ jobs:
 
   build-osx-python:
 
-    runs-on: macos-10.15
+    runs-on: macos-11
     env:
       LIBRARY_PATH: /usr/local/opt/icu4c/lib
     strategy:

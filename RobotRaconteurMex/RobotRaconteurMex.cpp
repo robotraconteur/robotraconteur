@@ -1990,36 +1990,62 @@ class PackMxArrayToMessageElementImpl
                                                                  const RR_SHARED_PTR<ServiceStub>& stub,
                                                                  bool allow_null = true)
     {
-        if (mxIsEmpty(pm) && allow_null)
+        if (std::string(mxGetClassName(pm)) == "missing" && allow_null)
         {
-            if (IsTypeNumeric(tdef->Type) && tdef->ContainerType == DataTypes_ContainerTypes_none)
+            if (tdef && (tdef->ContainerType == DataTypes_ContainerTypes_none))
             {
-                if (tdef->ArrayType == DataTypes_ArrayTypes_none)
-                    throw DataTypeException("Scalar cannot be null");
-
-                if (!tdef->ArrayVarLength)
-                    throw DataTypeException("Array cannot be null");
-
-                if (!tdef->ArrayType == DataTypes_ArrayTypes_array)
+                std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+                if (IsTypeNumeric(tdef->Type))
                 {
-                    return CreateMessageElement(tdef->Name, AllocateRRArrayByType(tdef->Type, 0));
+                    throw DataTypeException("Scalars and arrays must not be None");
                 }
-                /*else
+                if (tdef->Type == DataTypes_string_t)
                 {
-                    boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
-                    tdef->CopyTo(*tdef2);
-                    tdef2->ArrayType = DataTypes_ArrayTypes_array;
+                    throw DataTypeException("Strings must not be None");
+                }
 
-                    mxArray* empty=mxCreateNumericMatrix(1,0,::rrDataTypeToMxClassID(tdef2->Type),::mxREAL);
-                    RR_INTRUSIVE_PTR<MessageElement> o=PackMxArrayToMessageElement(empty,tdef2,stub);
-                    mxDestroyArray(empty);
-                    return o;
-                }*/
+                if (tdef->Type == DataTypes_namedtype_t)
+                {
+                    DataTypes tdef_namedtype =
+                        tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
+                    if (tdef_namedtype == DataTypes_pod_t)
+                    {
+                        throw DataTypeException("Pods must not be None");
+                    }
+                    if (tdef_namedtype == DataTypes_namedarray_t)
+                    {
+                        throw DataTypeException("NamedArrays must not be None");
+                    }
+                    if (tdef_namedtype == DataTypes_enum_t)
+                    {
+                        throw DataTypeException("Enums must not be None");
+                    }
+                }
             }
-            else
+
+            return CreateMessageElement(tdef->Name, RR_INTRUSIVE_PTR<MessageElementData>());
+        }
+
+        if (tdef->Type == DataTypes_varvalue_t && tdef->ContainerType == DataTypes_ContainerTypes_none)
+        {
+            if (std::string(mxGetClassName(pm)) != "RobotRaconteurVarValue")
             {
-                return CreateMessageElement(tdef->Name, RR_INTRUSIVE_PTR<MessageElementData>());
+                throw DataTypeException("varvalue types must use RobotRaconteurVarValue");
             }
+
+            mxArray* mxdata = mxGetProperty(pm, 0, "data");
+            if (!mxdata)
+            {
+                throw DataTypeException("Invalid RobotRaconteurVarValue");
+            }
+            std::string datatype = mxToString(mxGetProperty(pm, 0, "datatype"));
+
+            boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
+            tdef2->FromString(datatype);
+            tdef2->Name = tdef->Name;
+            tdef2->member = tdef->member;
+
+            return PackMxArrayToMessageElement(mxdata, tdef2, stub);
         }
 
         if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 ||
@@ -2437,130 +2463,6 @@ class PackMxArrayToMessageElementImpl
             }
         }
 
-        if (tdef->Type == DataTypes_varvalue_t)
-        {
-
-            boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
-            tdef2->Name = tdef->Name;
-            tdef2->member = tdef->member;
-
-            if (mxIsNumeric(pm) || mxIsLogical(pm))
-            {
-                tdef2->Type = mxClassIDToRRDataType(mxGetClassID(pm));
-
-                bool multidim = false;
-                size_t ndims = mxGetNumberOfDimensions(pm);
-                std::vector<mwSize> dims(ndims);
-                memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
-                for (size_t i = 1; i < ndims; i++)
-                {
-                    if (dims[i] != 1)
-                        multidim = true;
-                }
-
-                if (multidim)
-                {
-                    tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-                }
-                else
-                {
-                    tdef2->ArrayType = DataTypes_ArrayTypes_array;
-                }
-                tdef2->ArrayVarLength = true;
-                tdef2->ArrayLength.push_back(0);
-
-                return PackMxArrayToMessageElement(pm, tdef2, stub);
-            }
-
-            if (mxIsChar(pm))
-            {
-                tdef2->Type = DataTypes_string_t;
-                tdef2->ArrayVarLength = true;
-                return PackMxArrayToMessageElement(pm, tdef2, stub);
-            }
-
-            if (mxIsStruct(pm))
-            {
-                int mxcount = mxGetNumberOfFields(pm);
-                mxArray* data = NULL;
-                for (int i = 0; i < mxcount; i++)
-                {
-                    std::string fname(mxGetFieldNameByNumber(pm, i));
-                    if (fname == "RobotRaconteurStructureType")
-                        data = mxGetFieldByNumber(pm, 0, i);
-                }
-                if (data == NULL)
-                    throw DataTypeException("varvalue type structures must contain a \"RobotRaconteurStructureType\" "
-                                            "field with the fully qualified name of a valid structure type");
-                std::string structuretype = mxToString(data);
-
-                tdef2->Type = DataTypes_namedtype_t;
-                tdef2->TypeString = structuretype;
-                std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-                boost::shared_ptr<NamedTypeDefinition> tdef3 =
-                    tdef2->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
-                if (tdef3->RRDataType() == DataTypes_structure_t)
-                {
-                    return PackMxArrayToMessageElement(pm, tdef2, stub);
-                }
-                else
-                {
-                    bool multidim = false;
-                    size_t ndims = mxGetNumberOfDimensions(pm);
-                    std::vector<mwSize> dims(ndims);
-                    memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
-                    for (size_t i = 1; i < ndims; i++)
-                    {
-                        if (dims[i] != 1)
-                            multidim = true;
-                    }
-
-                    if (!multidim)
-                    {
-                        tdef2->ArrayType = DataTypes_ArrayTypes_array;
-                        tdef2->ArrayLength.push_back(boost::numeric_cast<int32_t>(dims[0]));
-                    }
-                    else
-                    {
-                        tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-                        boost::range::copy(dims, std::back_inserter(tdef2->ArrayLength));
-                    }
-
-                    return PackMxArrayToMessageElement(pm, tdef2, stub);
-                }
-            }
-
-            if (mxIsCell(pm))
-            {
-
-                tdef2->Type = DataTypes_varvalue_t;
-                tdef2->ContainerType = DataTypes_ContainerTypes_list;
-
-                return PackMxArrayToMessageElement(pm, tdef2, stub);
-            }
-
-            if (std::string(mxGetClassName(pm)) == "containers.Map")
-            {
-                tdef2->Type = DataTypes_varvalue_t;
-
-                std::string keytype = mxToString(mxGetProperty(pm, 0, "KeyType"));
-                if (keytype == "int32")
-                {
-                    tdef2->ContainerType = DataTypes_ContainerTypes_map_int32;
-                }
-                else if (keytype == "char")
-                {
-                    tdef2->ContainerType = DataTypes_ContainerTypes_map_string;
-                }
-                else
-                {
-                    throw DataTypeException("Unknown key type for map");
-                }
-
-                return PackMxArrayToMessageElement(pm, tdef2, stub);
-            }
-        }
-
         throw DataTypeException("Unknown data type");
     }
 
@@ -2607,7 +2509,7 @@ class PackMxArrayToMessageElementImpl
                 {
                     f2->TypeString = f.get<1>()->ResolveNamedType()->ResolveQualifiedName();
                 }
-                catch (std::exception& e)
+                catch (std::exception&)
                 {}
             }
             std::vector<std::string> f_split;
@@ -2861,14 +2763,346 @@ class UnpackMessageElementToMxArrayImpl
                 {
                     throw DataTypeException("Strings must not be None");
                 }
-                if (tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType() == DataTypes_pod_t)
+
+                if (tdef->Type == DataTypes_namedtype_t)
                 {
-                    throw DataTypeException("Pods must not be None");
+                    DataTypes tdef_namedtype =
+                        tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
+                    if (tdef_namedtype == DataTypes_pod_t)
+                    {
+                        throw DataTypeException("Pods must not be None");
+                    }
+                    if (tdef_namedtype == DataTypes_namedarray_t)
+                    {
+                        throw DataTypeException("NamedArrays must not be None");
+                    }
+                    if (tdef_namedtype == DataTypes_enum_t)
+                    {
+                        throw DataTypeException("Enums must not be None");
+                    }
                 }
             }
 
-            mwSize empty_dims[] = {1, 0};
-            return mxCreateNumericArray(2, empty_dims, mxDOUBLE_CLASS, mxREAL);
+            mxArray* o = NULL;
+            mexCallMATLAB(1, &o, 0, NULL, "missing");
+            return o;
+        }
+
+        if (tdef && tdef->Type == DataTypes_varvalue_t)
+        {
+            if (m->ElementType == DataTypes_void_t)
+            {
+                mxArray* o = NULL;
+                mexCallMATLAB(1, &o, 0, NULL, "missing");
+                return o;
+            }
+
+            if (tdef->ContainerType == DataTypes_ContainerTypes_none)
+            {
+
+                boost::shared_ptr<TypeDefinition> tdef_3t;
+                switch (m->ElementType)
+                {
+                case DataTypes_vector_t: {
+                    tdef_3t = boost::make_shared<TypeDefinition>();
+                    tdef_3t->Type = DataTypes_varvalue_t;
+                    tdef_3t->ContainerType = DataTypes_ContainerTypes_map_int32;
+                    tdef_3t->Name = "value";
+                    break;
+                }
+                case DataTypes_dictionary_t: {
+                    tdef_3t = boost::make_shared<TypeDefinition>();
+                    tdef_3t->Type = DataTypes_varvalue_t;
+                    tdef_3t->ContainerType = DataTypes_ContainerTypes_map_string;
+                    tdef_3t->Name = "value";
+                    break;
+                }
+                case DataTypes_list_t: {
+                    tdef_3t = boost::make_shared<TypeDefinition>();
+                    tdef_3t->Type = DataTypes_varvalue_t;
+                    tdef_3t->ContainerType = DataTypes_ContainerTypes_list;
+                    tdef_3t->Name = "value";
+                    break;
+                }
+                default:
+                    break;
+                }
+
+                if (tdef_3t)
+                {
+
+                    {
+                        mxArray* vardata = UnpackMessageElementToMxArray(m, tdef_3t, stub);
+
+                        std::string tdef_3t_str = tdef_3t->ToString();
+                        mxArray* tdef_3t_mx = mxCreateString(tdef_3t_str.c_str());
+                        mxArray* o = NULL;
+                        mxArray* prhs[2];
+                        prhs[0] = vardata;
+                        prhs[1] = tdef_3t_mx;
+                        mexCallMATLAB(1, &o, 2, prhs, "RobotRaconteurVarValue");
+                        return o;
+                    }
+                }
+
+                boost::shared_ptr<TypeDefinition> tdef_2t = boost::make_shared<TypeDefinition>();
+                if (IsTypeNumeric(m->ElementType))
+                {
+                    tdef_2t->ArrayType = DataTypes_ArrayTypes_array;
+                    tdef_2t->ArrayVarLength = true;
+                    tdef_2t->Type = m->ElementType;
+                    tdef_2t->ArrayLength.push_back(0);
+                }
+                else if (m->ElementType == DataTypes_string_t)
+                {
+                    tdef_2t->Type = DataTypes_string_t;
+                }
+                else if (m->ElementType == DataTypes_structure_t)
+                {
+                    tdef_2t->Type = DataTypes_namedtype_t;
+                    tdef_2t->TypeString = m->ElementTypeName.str().to_string();
+                }
+                else if (m->ElementType == DataTypes_pod_t)
+                {
+                    tdef_2t->Type = DataTypes_namedtype_t;
+                    tdef_2t->TypeString = m->ElementTypeName.str().to_string();
+                }
+                else if (m->ElementType == DataTypes_pod_array_t)
+                {
+                    tdef_2t->Type = DataTypes_namedtype_t;
+                    tdef_2t->TypeString = m->ElementTypeName.str().to_string();
+                    tdef_2t->ArrayVarLength = true;
+                    tdef_2t->ArrayLength.push_back(0);
+                    tdef_2t->ArrayType = DataTypes_ArrayTypes_array;
+                }
+                else if (m->ElementType == DataTypes_pod_multidimarray_t)
+                {
+                    tdef_2t->Type = DataTypes_namedtype_t;
+                    tdef_2t->TypeString = m->ElementTypeName.str().to_string();
+                    tdef_2t->ArrayVarLength = true;
+                    tdef_2t->ArrayType = DataTypes_ArrayTypes_multidimarray;
+                }
+                else if (m->ElementType == DataTypes_namedarray_array_t)
+                {
+                    tdef_2t->Type = DataTypes_namedtype_t;
+                    tdef_2t->TypeString = m->ElementTypeName.str().to_string();
+                    tdef_2t->ArrayVarLength = true;
+                    tdef_2t->ArrayLength.push_back(0);
+                    tdef_2t->ArrayType = DataTypes_ArrayTypes_array;
+                }
+                else if (m->ElementType == DataTypes_namedarray_multidimarray_t)
+                {
+                    tdef_2t->Type = DataTypes_namedtype_t;
+                    tdef_2t->TypeString = m->ElementTypeName.str().to_string();
+                    tdef_2t->ArrayVarLength = true;
+                    tdef_2t->ArrayType = DataTypes_ArrayTypes_multidimarray;
+                }
+                else if (m->ElementType == DataTypes_list_t)
+                {
+                    tdef_2t->Type = DataTypes_varvalue_t;
+                    tdef_2t->ContainerType = DataTypes_ContainerTypes_list;
+                }
+                else if (m->ElementType == DataTypes_vector_t)
+                {
+                    tdef_2t->Type = DataTypes_varvalue_t;
+                    tdef_2t->ContainerType = DataTypes_ContainerTypes_map_int32;
+                }
+                else if (m->ElementType == DataTypes_dictionary_t)
+                {
+                    tdef_2t->Type = DataTypes_varvalue_t;
+                    tdef_2t->ContainerType = DataTypes_ContainerTypes_map_string;
+                }
+                else if (m->ElementType == DataTypes_multidimarray_t)
+                {
+                    tdef_2t->ArrayType = DataTypes_ArrayTypes_multidimarray;
+                    tdef_2t->ArrayVarLength = true;
+                    tdef_2t->ArrayLength.push_back(0);
+                    tdef_2t->Type = MessageElement::FindElement(
+                                        m->CastDataToNestedList(DataTypes_multidimarray_t)->Elements, "array")
+                                        ->ElementType;
+                    if (!IsTypeNumeric(tdef_2t->Type))
+                        throw DataTypeException("Invalid MultiDimArray");
+                }
+                else
+                {
+                    throw DataTypeException("Invalid data type for field " + tdef->Name);
+                }
+
+                {
+                    mxArray* vardata = UnpackMessageElementToMxArray(m, tdef_2t, stub);
+
+                    std::string tdef_2t_str = tdef_2t->ToString();
+                    mxArray* tdef_2t_mx = mxCreateString(tdef_2t_str.c_str());
+                    mxArray* o = NULL;
+                    mxArray* prhs[2];
+                    prhs[0] = vardata;
+                    prhs[1] = tdef_2t_mx;
+                    mexCallMATLAB(1, &o, 2, prhs, "RobotRaconteurVarValue");
+                    return o;
+                }
+            }
+            else
+            {
+                if (m->ElementType == DataTypes_list_t)
+                {
+                    boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
+                    type2->Type = DataTypes_varvalue_t;
+                    type2->Name = "value";
+
+                    boost::intrusive_ptr<MessageElementNestedElementList> l = m->CastDataToNestedList(DataTypes_list_t);
+                    mwSize dims = (mwSize)l->Elements.size();
+
+                    mxArray* v = mxCreateCellArray(1, &dims);
+
+                    mwIndex count = 0;
+
+                    for (uint32_t i = 0; i < boost::numeric_cast<uint32_t>(l->Elements.size()); i++)
+                    {
+                        boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
+
+                        if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
+                        {
+                            if (i != el1->ElementNumber)
+                                throw DataTypeException("Invalid list");
+                        }
+                        else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
+                        {
+                            if (i != boost::lexical_cast<int32_t>(el1->ElementName.str()))
+                                throw DataTypeException("Invalid list");
+                        }
+                        else
+                        {
+                            throw DataTypeException("Invalid list");
+                        }
+
+                        push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", type2);
+                        mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
+                        mxSetCell(v, count, mxdata);
+
+                        count++;
+                        pop_field_level();
+                    }
+
+                    return v;
+                }
+
+                if (m->ElementType == DataTypes_vector_t)
+                {
+                    boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
+                    type2->Type = DataTypes_varvalue_t;
+                    type2->Name = "value";
+
+                    boost::intrusive_ptr<MessageElementNestedElementList> l =
+                        m->CastDataToNestedList(DataTypes_vector_t);
+                    mwIndex count = 0;
+
+                    mxArray* o = NULL;
+                    mxArray* prhs[4];
+                    prhs[0] = mxCreateString("KeyType");
+                    prhs[1] = mxCreateString("int32");
+                    prhs[2] = mxCreateString("ValueType");
+                    prhs[3] = mxCreateString("any");
+
+                    mexCallMATLAB(1, &o, 4, prhs, "containers.Map");
+
+                    for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
+                    {
+                        boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
+                        const char* fnames[] = {"type", "subs"};
+                        mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
+                        mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
+
+                        mxArray* mxkey = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+                        int32_t* key = (int32_t*)mxGetData(mxkey);
+                        if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
+                        {
+                            key[0] = el1->ElementNumber;
+                        }
+                        else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
+                        {
+                            key[0] = boost::lexical_cast<int32_t>(el1->ElementName.str());
+                        }
+                        else
+                        {
+                            throw DataTypeException("Invalid key type");
+                        }
+
+                        push_field_level("[" + boost::lexical_cast<std::string>(key[0]) + "]", type2);
+                        mxArray* k_cell = mxCreateCellMatrix(1, 1);
+
+                        mxSetCell(k_cell, 0, mxkey);
+
+                        mxSetFieldByNumber(subs, 0, 1, k_cell);
+
+                        mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
+
+                        mxArray* prhs2[3];
+                        prhs2[0] = o;
+                        prhs2[1] = subs;
+                        prhs2[2] = mxdata;
+
+                        mexCallMATLAB(0, NULL, 3, prhs2, "subsasgn");
+
+                        count++;
+                        pop_field_level();
+                    }
+
+                    return o;
+                }
+
+                if (m->ElementType == DataTypes_dictionary_t)
+                {
+                    boost::shared_ptr<TypeDefinition> type2 = boost::make_shared<TypeDefinition>();
+                    type2->Type = DataTypes_varvalue_t;
+                    type2->Name = "value";
+
+                    boost::intrusive_ptr<MessageElementNestedElementList> l =
+                        m->CastDataToNestedList(DataTypes_dictionary_t);
+                    mwIndex count = 0;
+
+                    mxArray* o = NULL;
+                    mxArray* prhs[4];
+                    prhs[0] = mxCreateString("KeyType");
+                    prhs[1] = mxCreateString("char");
+                    prhs[2] = mxCreateString("ValueType");
+                    prhs[3] = mxCreateString("any");
+
+                    mexCallMATLAB(1, &o, 4, prhs, "containers.Map");
+
+                    for (int32_t i = 0; i < boost::numeric_cast<int32_t>(l->Elements.size()); i++)
+                    {
+                        boost::intrusive_ptr<MessageElement>& el1 = l->Elements[i];
+
+                        push_field_level("[\"" + el1->ElementName.str() + "\"]", type2);
+                        const char* fnames[] = {"type", "subs"};
+                        mxArray* subs = mxCreateStructMatrix(1, 1, 2, fnames);
+                        mxSetFieldByNumber(subs, 0, 0, mxCreateString("()"));
+
+                        std::string key1 = el1->ElementName.str().to_string();
+                        mxArray* mxkey = mxCreateString(key1.c_str());
+                        mxSetFieldByNumber(subs, 0, 1, mxkey);
+
+                        // mxSetCell(k,count,mxkey);
+
+                        mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
+                        // mxSetCell(v,count,mxdata);
+
+                        mxArray* prhs2[3];
+                        prhs2[0] = o;
+                        prhs2[1] = subs;
+                        prhs2[2] = mxdata;
+
+                        mexCallMATLAB(0, NULL, 3, prhs2, "subsasgn");
+
+                        count++;
+                        pop_field_level();
+                    }
+
+                    return o;
+                }
+            }
+
+            throw DataTypeException("Invalid message collection type");
         }
 
         if (tdef->ContainerType == DataTypes_ContainerTypes_map_int32 ||
@@ -3287,136 +3521,6 @@ class UnpackMessageElementToMxArrayImpl
             }
         }
 
-        if (tdef->Type == DataTypes_varvalue_t)
-        {
-            boost::shared_ptr<TypeDefinition> tdef2 = boost::make_shared<TypeDefinition>();
-            tdef2->Name = tdef->Name;
-            tdef2->member = tdef->member;
-
-            if (IsTypeNumeric(m->ElementType))
-            {
-                tdef2->ArrayVarLength = true;
-                tdef2->ArrayLength.push_back(0);
-                tdef2->ArrayType = DataTypes_ArrayTypes_array;
-                tdef2->Type = m->ElementType;
-                return UnpackMessageElementToMxArray(m, tdef2, stub);
-            }
-
-            if (m->ElementType == DataTypes_string_t)
-            {
-                tdef2->Type = m->ElementType;
-                return UnpackMessageElementToMxArray(m, tdef2, stub);
-            }
-
-            if (m->ElementType == DataTypes_structure_t || m->ElementType == DataTypes_pod_array_t ||
-                m->ElementType == DataTypes_pod_multidimarray_t)
-            {
-                tdef2->Type = DataTypes_namedtype_t;
-                tdef2->TypeString = m->ElementTypeName.str().to_string();
-                if (m->ElementType == DataTypes_pod_array_t)
-                {
-                    tdef2->ArrayType = DataTypes_ArrayTypes_array;
-                }
-                if (m->ElementType == DataTypes_pod_multidimarray_t)
-                {
-                    tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-                }
-                std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-                tdef2->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub);
-                mxArray* o = UnpackMessageElementToMxArray(m, tdef2, stub);
-
-                int fcount = mxGetNumberOfFields(o);
-                boost::shared_array<const char*> fields(new const char*[fcount + 1]);
-                fields[0] = "RobotRaconteurStructureType";
-                for (int i = 0; i < fcount; i++)
-                {
-                    const char* cfname = mxGetFieldNameByNumber(o, i);
-                    if (cfname == NULL)
-                        throw InternalErrorException("Internal error");
-                    fields[i + 1] = cfname;
-                }
-
-                mwSize dims = mxGetNumberOfElements(o);
-                mxArray* o2 = mxCreateStructArray(1, &dims, fcount + 1, fields.get());
-
-                for (size_t j = 0; j < dims; j++)
-                {
-                    std::string m_type_name = m->ElementTypeName.str().to_string();
-                    mxSetFieldByNumber(o2, j, 0, mxCreateString(m_type_name.c_str()));
-                    for (int i = 0; i < fcount; i++)
-                    {
-                        mxArray* fdata = mxGetFieldByNumber(o, j, i);
-                        mxSetFieldByNumber(o2, j, i + 1, fdata);
-                        mxSetFieldByNumber(o, j, i, NULL);
-                    }
-                }
-
-                mxDestroyArray(o);
-                if (m->ElementType == DataTypes_pod_multidimarray_t)
-                {
-                    RR_INTRUSIVE_PTR<MessageElementNestedElementList> mm =
-                        m->CastDataToNestedList(DataTypes_pod_multidimarray_t);
-                    std::vector<mwSize> dims = RRArrayToVector<mwSize>(
-                        MessageElement::FindElement(mm->Elements, "dims")->CastData<RRArray<uint32_t> >());
-                    if (mxSetDimensions(o2, &dims[0], dims.size()))
-                    {
-                        throw DataTypeException("Dimensions mismatch for pod multidimarray");
-                    }
-                }
-                return o2;
-            }
-
-            if (m->ElementType == DataTypes_namedarray_array_t)
-            {
-                tdef2->ArrayVarLength = true;
-                tdef2->ArrayLength.push_back(0);
-                tdef2->ArrayType = DataTypes_ArrayTypes_array;
-                tdef2->Type = DataTypes_namedtype_t;
-                tdef2->TypeString = m->ElementTypeName.str().to_string();
-                return UnpackMessageElementToMxArray(m, tdef2, stub);
-            }
-
-            if (m->ElementType == DataTypes_namedarray_multidimarray_t)
-            {
-                tdef2->ArrayVarLength = true;
-                tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-                tdef2->Type = DataTypes_namedtype_t;
-                tdef2->TypeString = m->ElementTypeName.str().to_string();
-                return UnpackMessageElementToMxArray(m, tdef2, stub);
-            }
-
-            if (m->ElementType == DataTypes_vector_t)
-            {
-                tdef2->Type = DataTypes_varvalue_t;
-                tdef2->ContainerType = DataTypes_ContainerTypes_map_int32;
-                return UnpackMessageElementToMxArray(m, tdef2, stub);
-            }
-
-            if (m->ElementType == DataTypes_dictionary_t)
-            {
-                tdef2->Type = DataTypes_varvalue_t;
-                tdef2->ContainerType = DataTypes_ContainerTypes_map_string;
-                return UnpackMessageElementToMxArray(m, tdef2, stub);
-            }
-
-            if (m->ElementType == DataTypes_list_t)
-            {
-                tdef2->Type = DataTypes_varvalue_t;
-                tdef2->ContainerType = DataTypes_ContainerTypes_list;
-                // tdef2->KeyType=DataTypes_string_t;
-                return UnpackMessageElementToMxArray(m, tdef2, stub);
-            }
-
-            if (m->ElementType == DataTypes_multidimarray_t)
-            {
-                tdef2->Type =
-                    MessageElement::FindElement(m->CastDataToNestedList(DataTypes_multidimarray_t)->Elements, "array")
-                        ->ElementType;
-                tdef2->ArrayType = DataTypes_ArrayTypes_multidimarray;
-                return UnpackMessageElementToMxArray(m, tdef2, stub);
-            }
-        }
-
         throw DataTypeException("Unknown data type");
     }
 
@@ -3463,7 +3567,7 @@ class UnpackMessageElementToMxArrayImpl
                 {
                     f2->TypeString = f.get<1>()->ResolveNamedType()->ResolveQualifiedName();
                 }
-                catch (std::exception& e)
+                catch (std::exception&)
                 {}
             }
             std::vector<std::string> f_split;
