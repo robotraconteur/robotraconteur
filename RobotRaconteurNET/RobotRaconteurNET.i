@@ -109,6 +109,8 @@ static void memcpy(void* destination, void* source, int64_t num)
 
 %include "LoggingNET.i"
 
+%include "NodeDirectories.i"
+
 %include "RobotRaconteurNodeNET.i"
 %include "NodeSetupNET.i"
 
