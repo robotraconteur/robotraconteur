@@ -6526,7 +6526,7 @@ void TcpTransportPortSharerClient::client_thread()
                 p1.normalize();
 
                 std::map<std::string, std::string> info;
-                if (detail::LocalTransportUtil::ReadInfoFile(p1, info))
+                if (ReadInfoFile(p1, info))
                 {
 
                     std::map<std::string, std::string>::iterator fname1 = info.find("socket");
@@ -6547,7 +6547,7 @@ void TcpTransportPortSharerClient::client_thread()
                 p1.normalize();
 
                 std::map<std::string, std::string> info;
-                if (detail::LocalTransportUtil::ReadInfoFile(p1, info))
+                if (ReadInfoFile(p1, info))
                 {
 
                     std::map<std::string, std::string>::iterator fname1 = info.find("socket");

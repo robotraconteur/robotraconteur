@@ -192,10 +192,16 @@ namespace RobotRaconteur
 
     GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_dirs, boost::string_ref name, const std::vector<std::string>& scope);
 
-    class ROBOTRACONTEUR_CORE_API UuidNameAlreadyInUse : public std::runtime_error
+    class ROBOTRACONTEUR_CORE_API NodeDirectoriesResourceAlreadyInUse : public std::runtime_error
     {
     public:
-        UuidNameAlreadyInUse() : runtime_error("Name for UUID already in use"){};
+        NodeDirectoriesResourceAlreadyInUse() : runtime_error("Identifier UUID or Name already in use"){};
     };
+
+    bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data);
+
+    RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path);
+    RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path, std::map<std::string, std::string> info);
+    void RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, const std::map<std::string, std::string>& updated_info);
 
 }

@@ -43,20 +43,11 @@ namespace detail
 {
 namespace LocalTransportUtil
 {
-boost::filesystem::path GetUserNodeIDPath(const NodeDirectories& node_dirs);
-
 boost::filesystem::path GetTransportPrivateSocketPath(const NodeDirectories& node_dirs);
 
 boost::optional<boost::filesystem::path> GetTransportPublicSocketPath(const NodeDirectories& node_dirs);
 
 boost::optional<boost::filesystem::path> GetTransportPublicSearchPath(const NodeDirectories& node_dirs);
-
-bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data);
-
-RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path, bool for_name = false);
-RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path,
-                                               std::map<std::string, std::string> info, bool for_name = false);
-void RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, boost::string_ref service_nonce);
 
 void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path,
                           boost::string_ref scheme, const boost::posix_time::ptime& now,

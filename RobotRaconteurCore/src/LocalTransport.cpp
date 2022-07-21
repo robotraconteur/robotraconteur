@@ -745,14 +745,28 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
         info.insert(std::make_pair("nodeid", nodeid.ToString()));
         info.insert(std::make_pair("socket", pipename));
         info.insert(std::make_pair("ServiceStateNonce", GetNode()->GetServiceStateNonce()));
-
-        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_id_s = detail::LocalTransportUtil::CreatePidFile(pid_id_fname);
-        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_name_s =
-            detail::LocalTransportUtil::CreatePidFile(pid_name_fname, true);
-        RR_SHARED_PTR<NodeDirectoriesFD> h_info_id_s =
-            detail::LocalTransportUtil::CreateInfoFile(info_id_fname, info);
-        RR_SHARED_PTR<NodeDirectoriesFD> h_info_name_s =
-            detail::LocalTransportUtil::CreateInfoFile(info_name_fname, info, true);
+        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_id_s;
+        RR_SHARED_PTR<NodeDirectoriesFD> h_info_id_s;
+        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_name_s;
+        RR_SHARED_PTR<NodeDirectoriesFD> h_info_name_s;
+        try
+        {
+            h_pid_id_s = CreatePidFile(pid_id_fname);
+            h_info_id_s = CreateInfoFile(info_id_fname, info);
+        }
+        catch (NodeDirectoriesResourceAlreadyInUse&)
+        {
+            throw NodeIDAlreadyInUse();
+        }
+        try
+        {
+            h_pid_name_s = CreatePidFile(pid_name_fname);
+            h_info_name_s =CreateInfoFile(info_name_fname, info);
+        }
+        catch (NodeDirectoriesResourceAlreadyInUse&)
+        {
+            throw NodeNameAlreadyInUse();
+        }
 
         try
         {
@@ -924,9 +938,17 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
         info.insert(std::make_pair("socket", pipename));
         info.insert(std::make_pair("ServiceStateNonce", GetNode()->GetServiceStateNonce()));
 
-        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_id_s = detail::LocalTransportUtil::CreatePidFile(pid_id_fname);
-        RR_SHARED_PTR<NodeDirectoriesFD> h_info_id_s =
-            detail::LocalTransportUtil::CreateInfoFile(info_id_fname, info);
+        RR_SHARED_PTR<NodeDirectoriesFD> h_pid_id_s;
+        RR_SHARED_PTR<NodeDirectoriesFD> h_info_id_s;
+        try
+        {
+            h_pid_id_s = CreatePidFile(pid_id_fname);
+            h_info_id_s = CreateInfoFile(info_id_fname, info);
+        }
+        catch (NodeDirectoriesResourceAlreadyInUse&)
+        {
+            throw NodeIDAlreadyInUse();
+        }
 
         try
         {
@@ -1275,10 +1297,12 @@ void LocalTransport::LocalNodeServicesChanged()
     {
         std::string service_nonce = GetNode()->GetServiceStateNonce();
 
-        detail::LocalTransportUtil::RefreshInfoFile(fds->h_info_id_s, service_nonce);
+        std::map<std::string,std::string> updated_info;
+        updated_info.insert(std::make_pair("ServiceStateNonce",service_nonce));
+        RefreshInfoFile(fds->h_info_id_s, updated_info);
         if (fds->h_info_name_s)
         {
-            detail::LocalTransportUtil::RefreshInfoFile(fds->h_info_name_s, service_nonce);
+            RefreshInfoFile(fds->h_info_name_s, updated_info);
         }
     }
 }
@@ -1594,17 +1618,6 @@ std::string GetLogonUserName()
 #endif
 }
 
-boost::filesystem::path GetUserNodeIDPath(const NodeDirectories& node_dirs)
-{
-    boost::filesystem::path path = node_dirs.user_config_dir / "nodeids";
-    boost::system::error_code ec1;
-    boost::filesystem::create_directories(path, ec1);
-    if (ec1)
-        throw SystemResourceException("Could not activate system for local transport");
-
-    return path;
-}
-
 boost::filesystem::path GetTransportPrivateSocketPath(const NodeDirectories& node_dirs)
 {
     boost::filesystem::path user_run_path = node_dirs.user_run_dir;
@@ -1783,169 +1796,6 @@ boost::optional<boost::filesystem::path> GetTransportPublicSearchPath(const Node
     return path1;
 }
 
-bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data)
-{
-    NodeDirectoriesFD fd;
-
-    boost::system::error_code open_err;
-    fd.open_read(fname, open_err);
-    if (open_err)
-        return false;
-
-    if (!fd.read_info())
-        return false;
-
-    data = fd.info;
-    return true;
-}
-
-RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path, bool for_name)
-{
-
-#ifdef ROBOTRACONTEUR_WINDOWS
-    std::string pid_str = boost::lexical_cast<std::string>(GetCurrentProcessId());
-    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
-    boost::system::error_code open_err;
-    fd->open_lock_write(path, true, open_err);
-    if (open_err)
-    {
-        if (open_err.value() == ERROR_SHARING_VIOLATION)
-        {
-            if (!for_name)
-            {
-                throw NodeIDAlreadyInUse();
-            }
-            else
-            {
-                throw NodeNameAlreadyInUse();
-            }
-        }
-        throw SystemResourcePermissionDeniedException("Could not initialize server");
-    }
-#else
-
-#ifndef ROBOTRACONTEUR_ANDROID
-    mode_t old_mode = umask(~(S_IRUSR | S_IWUSR | S_IRGRP));
-
-    BOOST_SCOPE_EXIT(old_mode) { umask(old_mode); }
-    BOOST_SCOPE_EXIT_END
-#endif
-
-    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
-
-    boost::system::error_code open_err;
-    fd->open_lock_write(path, true, open_err);
-    if (open_err)
-    {
-        if (open_err.value() == boost::system::errc::no_lock_available)
-        {
-            if (!for_name)
-            {
-                throw NodeIDAlreadyInUse();
-            }
-            else
-            {
-                throw NodeNameAlreadyInUse();
-            }
-        }
-        throw SystemResourceException("Could not initialize LocalTransport server");
-    }
-
-    std::string pid_str = boost::lexical_cast<std::string>(getpid());
-#endif
-    fd->write(pid_str);
-
-    return fd;
-}
-RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path,
-                                               std::map<std::string, std::string> info, bool for_name)
-{
-
-    std::string username = detail::LocalTransportUtil::GetLogonUserName();
-
-#ifdef ROBOTRACONTEUR_WINDOWS
-    std::string pid_str = boost::lexical_cast<std::string>(GetCurrentProcessId()) + "\n";
-    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
-    boost::system::error_code open_err;
-    fd->open_lock_write(path, true, open_err);
-    if (open_err)
-    {
-        if (open_err.value() == ERROR_SHARING_VIOLATION)
-        {
-            if (!for_name)
-            {
-                throw NodeIDAlreadyInUse();
-            }
-            else
-            {
-                throw NodeNameAlreadyInUse();
-            }
-        }
-        throw SystemResourcePermissionDeniedException("Could not initialize server");
-    }
-#else
-
-#ifndef ROBOTRACONTEUR_ANDROID
-    mode_t old_mode = umask(~(S_IRUSR | S_IWUSR | S_IRGRP));
-
-    BOOST_SCOPE_EXIT(old_mode) { umask(old_mode); }
-    BOOST_SCOPE_EXIT_END
-#endif
-
-    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
-
-    boost::system::error_code open_err;
-    fd->open_lock_write(path, true, open_err);
-    if (open_err)
-    {
-        if (open_err.value() == boost::system::errc::no_lock_available)
-        {
-            if (!for_name)
-            {
-                throw NodeIDAlreadyInUse();
-            }
-            else
-            {
-                throw NodeNameAlreadyInUse();
-            }
-        }
-        throw SystemResourceException("Could not initialize LocalTransport server");
-    }
-
-    std::string pid_str = boost::lexical_cast<std::string>(getpid());
-#endif
-    info.insert(std::make_pair("pid", pid_str));
-    info.insert(std::make_pair("username", username));
-
-    fd->info = info;
-    if (!fd->write_info())
-        throw SystemResourceException("Could not initialize server");
-
-    return fd;
-}
-
-void RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, boost::string_ref service_nonce)
-{
-
-    if (!h_info)
-        return;
-
-    boost::mutex::scoped_lock lock(h_info->this_lock);
-
-    std::map<std::string, std::string>::iterator e = h_info->info.find("ServiceStateNonce");
-    if (e == h_info->info.end())
-    {
-        h_info->info.insert(std::make_pair("ServiceStateNonce", service_nonce.to_string()));
-    }
-    else
-    {
-        e->second = RR_MOVE(service_nonce.to_string());
-    }
-
-    h_info->reset();
-    h_info->write_info();
-}
-
 void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path,
                           boost::string_ref scheme, const boost::posix_time::ptime& now,
                           boost::optional<std::string> username)
@@ -1968,7 +1818,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
             }
 
             std::map<std::string, std::string> info;
-            if (!detail::LocalTransportUtil::ReadInfoFile(*dir_itr, info))
+            if (!ReadInfoFile(*dir_itr, info))
             {
                 continue;
             }
@@ -2035,7 +1885,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
             }
 
             std::map<std::string, std::string> info;
-            if (!detail::LocalTransportUtil::ReadInfoFile(*dir_itr, info))
+            if (!ReadInfoFile(*dir_itr, info))
             {
                 continue;
             }
@@ -2090,7 +1940,7 @@ RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
             boost::filesystem::path e2 = e / "by-nodeid";
             e2 /= url.nodeid.ToString("D") + ".info";
 
-            if (!detail::LocalTransportUtil::ReadInfoFile(e2, info_data))
+            if (!ReadInfoFile(e2, info_data))
             {
                 continue;
             }
@@ -2112,7 +1962,7 @@ RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
                 e3 /= url.nodename + ".info";
 
                 std::map<std::string, std::string> info_data2;
-                if (!detail::LocalTransportUtil::ReadInfoFile(e3, info_data2))
+                if (!ReadInfoFile(e3, info_data2))
                 {
                     continue;
                 }
@@ -2136,7 +1986,7 @@ RR_SHARED_PTR<detail::LocalTransport_socket> FindAndConnectLocalSocket(
             boost::filesystem::path e2 = e / "by-nodename";
             e2 /= url.nodename + ".info";
 
-            if (!detail::LocalTransportUtil::ReadInfoFile(e2, info_data))
+            if (!ReadInfoFile(e2, info_data))
             {
                 continue;
             }

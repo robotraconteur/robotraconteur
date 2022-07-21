@@ -597,7 +597,9 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     BOOST_FOREACH(const std::string& s, scope)
     {
         p /= s;
-    }    
+    }
+
+    boost::filesystem::create_directories(p);
     p /= name.to_string();
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -610,7 +612,7 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     {
         if (open_err.value() == ERROR_SHARING_VIOLATION)
         {
-            throw UuidNameAlreadyInUse();
+            throw NodeDirectoriesResourceAlreadyInUse();
         }
 
         throw SystemResourceException("Could not initialize UUID name store");
@@ -629,7 +631,7 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     {
         if (open_run_err.value() == boost::system::errc::no_lock_available)
         {
-            throw UuidNameAlreadyInUse();
+            throw NodeDirectoriesResourceAlreadyInUse();
         }
         throw SystemResourceException("Could not initialize UUID name store");
     }
@@ -694,6 +696,157 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     res.fd = fd_run;
 #endif
     return res;
+}
+
+bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data)
+{
+    NodeDirectoriesFD fd;
+
+    boost::system::error_code open_err;
+    fd.open_read(fname, open_err);
+    if (open_err)
+        return false;
+
+    if (!fd.read_info())
+        return false;
+
+    data = fd.info;
+    return true;
+}
+
+RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path)
+{
+
+#ifdef ROBOTRACONTEUR_WINDOWS
+    std::string pid_str = boost::lexical_cast<std::string>(GetCurrentProcessId());
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
+    boost::system::error_code open_err;
+    fd->open_lock_write(path, true, open_err);
+    if (open_err)
+    {
+        if (open_err.value() == ERROR_SHARING_VIOLATION)
+        {
+            throw NodeDirectoriesResourceAlreadyInUse();
+        }
+        throw SystemResourcePermissionDeniedException("Could not initialize server");
+    }
+#else
+
+#ifndef ROBOTRACONTEUR_ANDROID
+    mode_t old_mode = umask(~(S_IRUSR | S_IWUSR | S_IRGRP));
+
+    BOOST_SCOPE_EXIT(old_mode) { umask(old_mode); }
+    BOOST_SCOPE_EXIT_END
+#endif
+
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
+
+    boost::system::error_code open_err;
+    fd->open_lock_write(path, true, open_err);
+    if (open_err)
+    {
+        if (open_err.value() == boost::system::errc::no_lock_available)
+        {
+            if (!for_name)
+            {
+                throw NodeIDAlreadyInUse();
+            }
+            else
+            {
+                throw NodeNameAlreadyInUse();
+            }
+        }
+        throw SystemResourceException("Could not initialize LocalTransport server");
+    }
+
+    std::string pid_str = boost::lexical_cast<std::string>(getpid());
+#endif
+    fd->write(pid_str);
+
+    return fd;
+}
+RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path, std::map<std::string, std::string> info)
+{
+
+    std::string username = GetLogonUserName();
+
+#ifdef ROBOTRACONTEUR_WINDOWS
+    std::string pid_str = boost::lexical_cast<std::string>(GetCurrentProcessId()) + "\n";
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
+    boost::system::error_code open_err;
+    fd->open_lock_write(path, true, open_err);
+    if (open_err)
+    {
+        if (open_err.value() == ERROR_SHARING_VIOLATION)
+        {
+            throw NodeDirectoriesResourceAlreadyInUse();
+        }
+        throw SystemResourcePermissionDeniedException("Could not initialize server");
+    }
+#else
+
+#ifndef ROBOTRACONTEUR_ANDROID
+    mode_t old_mode = umask(~(S_IRUSR | S_IWUSR | S_IRGRP));
+
+    BOOST_SCOPE_EXIT(old_mode) { umask(old_mode); }
+    BOOST_SCOPE_EXIT_END
+#endif
+
+    RR_SHARED_PTR<NodeDirectoriesFD> fd = RR_MAKE_SHARED<NodeDirectoriesFD>();
+
+    boost::system::error_code open_err;
+    fd->open_lock_write(path, true, open_err);
+    if (open_err)
+    {
+        if (open_err.value() == boost::system::errc::no_lock_available)
+        {
+            if (!for_name)
+            {
+                throw NodeIDAlreadyInUse();
+            }
+            else
+            {
+                throw NodeNameAlreadyInUse();
+            }
+        }
+        throw SystemResourceException("Could not initialize LocalTransport server");
+    }
+
+    std::string pid_str = boost::lexical_cast<std::string>(getpid());
+#endif
+    info.insert(std::make_pair("pid", pid_str));
+    info.insert(std::make_pair("username", username));
+
+    fd->info = info;
+    if (!fd->write_info())
+        throw SystemResourceException("Could not initialize server");
+
+    return fd;
+}
+
+void RefreshInfoFile(const RR_SHARED_PTR<NodeDirectoriesFD>& h_info, const std::map<std::string, std::string>& updated_info)
+{
+
+    if (!h_info)
+        return;
+
+    boost::mutex::scoped_lock lock(h_info->this_lock);
+
+    BOOST_FOREACH(const std::string& key, updated_info | boost::adaptors::map_keys)
+    {
+        std::map<std::string, std::string>::iterator e = h_info->info.find(key);
+        if (e == h_info->info.end())
+        {
+            h_info->info.insert(std::make_pair(key, updated_info.at(key)));
+        }
+        else
+        {
+            e->second = updated_info.at(key);
+        }
+    }
+
+    h_info->reset();
+    h_info->write_info();
 }
 
 }
