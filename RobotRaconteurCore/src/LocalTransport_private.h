@@ -43,23 +43,17 @@ namespace detail
 {
 namespace LocalTransportUtil
 {
-std::string GetLogonUserName();
+boost::filesystem::path GetUserNodeIDPath(const NodeDirectories& node_dirs);
 
-boost::filesystem::path GetUserDataPath();
+boost::filesystem::path GetTransportPrivateSocketPath(const NodeDirectories& node_dirs);
 
-boost::filesystem::path GetUserRunPath();
+boost::optional<boost::filesystem::path> GetTransportPublicSocketPath(const NodeDirectories& node_dirs);
 
-boost::filesystem::path GetUserNodeIDPath();
-
-boost::filesystem::path GetTransportPrivateSocketPath();
-
-boost::optional<boost::filesystem::path> GetTransportPublicSocketPath();
-
-boost::optional<boost::filesystem::path> GetTransportPublicSearchPath();
+boost::optional<boost::filesystem::path> GetTransportPublicSearchPath(const NodeDirectories& node_dirs);
 
 bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data);
 
-boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndLock(boost::string_ref nodename);
+boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndLock(const NodeDirectories& node_dirs, boost::string_ref nodename);
 
 RR_SHARED_PTR<NodeDirectoriesFD> CreatePidFile(const boost::filesystem::path& path, bool for_name = false);
 RR_SHARED_PTR<NodeDirectoriesFD> CreateInfoFile(const boost::filesystem::path& path,

@@ -11,6 +11,8 @@
 #endif
 
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/algorithm.hpp>
+#include <boost/algorithm/string.hpp>
 
 
 namespace RobotRaconteur

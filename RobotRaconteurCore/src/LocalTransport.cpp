@@ -242,13 +242,14 @@ void LocalTransport::AsyncCreateTransportConnection(
         throw ConnectionException("NodeID and/or NodeName must be specified for LocalTransport");
     }
 
-    std::string my_username = detail::LocalTransportUtil::GetLogonUserName();
+    std::string my_username = GetLogonUserName();
+    NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
 
-    boost::filesystem::path user_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
+    boost::filesystem::path user_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
     boost::optional<boost::filesystem::path> public_user_path =
-        detail::LocalTransportUtil::GetTransportPublicSocketPath();
+        detail::LocalTransportUtil::GetTransportPublicSocketPath(node_dirs);
     boost::optional<boost::filesystem::path> public_search_path =
-        detail::LocalTransportUtil::GetTransportPublicSearchPath();
+        detail::LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
 
     std::vector<boost::filesystem::path> search_paths;
 
@@ -292,7 +293,7 @@ void LocalTransport::AsyncCreateTransportConnection(
             search_paths.push_back(*public_user_path);
         }
 
-        usernames.push_back(detail::LocalTransportUtil::GetLogonUserName());
+        usernames.push_back(GetLogonUserName());
 
         if (public_search_path)
         {
@@ -543,12 +544,14 @@ void LocalTransport::StartClientAsNodeName(boost::string_ref name)
         throw InvalidArgumentException("\"" + name + "\" is an invalid NodeName");
     }
 
+    NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
+
     try
     {
         boost::mutex::scoped_lock lock(acceptor_lock);
 
         boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > p =
-            detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(name);
+            detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(node_dirs,name);
 
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
                                            "LocalTransport loaded NodeID " << p.get<0>().ToString() << "for NodeName \""
@@ -638,6 +641,8 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
                                        "LocalTransport starting server with NodeName \"" << name << "\"");
 
+    NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
+
     try
     {
         boost::mutex::scoped_lock lock(acceptor_lock);
@@ -648,7 +653,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
             throw NodeNameAlreadyInUse();
 
         boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > nodeid1 =
-            detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(name);
+            detail::LocalTransportUtil::GetNodeIDForNodeNameAndLock(node_dirs,name);
         NodeID& nodeid = nodeid1.get<0>();
 
         RR_SHARED_PTR<detail::LocalTransportNodeIDLock> nodeid_lock = detail::LocalTransportNodeIDLock::Lock(nodeid);
@@ -665,14 +670,14 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 
         if (!public_)
         {
-            socket_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
+            socket_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
                 node, Transport, -1, "LocalTransport server using private socket_path: \"" << socket_path << "\"");
         }
         else
         {
             boost::optional<boost::filesystem::path> socket_path1 =
-                detail::LocalTransportUtil::GetTransportPublicSocketPath();
+                detail::LocalTransportUtil::GetTransportPublicSocketPath(node_dirs);
             if (!socket_path1)
                 throw ConnectionException("Computer not initialized for public node server");
             socket_path = *socket_path1;
@@ -691,7 +696,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
             }
             else
             {
-                pipename = detail::LocalTransportUtil::GetUserRunPath().string() + ROBOTRACONTEUR_PATHSEP
+                pipename = node_dirs.user_run_dir.string() + ROBOTRACONTEUR_PATHSEP
                            "socket" ROBOTRACONTEUR_PATHSEP;
             }
             pipename += GetNode()->GetRandomString(16) + ".sock";
@@ -832,6 +837,8 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
                                        "LocalTransport starting server with NodeID " << nodeid.ToString());
 
+    NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
+
     try
     {
         boost::mutex::scoped_lock lock(acceptor_lock);
@@ -848,14 +855,14 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 
         if (!public_)
         {
-            socket_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
+            socket_path = detail::LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
                 node, Transport, -1, "LocalTransport server using private socket_path: \"" << socket_path << "\"");
         }
         else
         {
             boost::optional<boost::filesystem::path> socket_path1 =
-                detail::LocalTransportUtil::GetTransportPublicSocketPath();
+                detail::LocalTransportUtil::GetTransportPublicSocketPath(node_dirs);
             if (!socket_path1)
                 throw ConnectionException("Computer not initialized for public node server");
             socket_path = *socket_path1;
@@ -872,7 +879,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
             }
             else
             {
-                pipename = detail::LocalTransportUtil::GetUserRunPath().string() + ROBOTRACONTEUR_PATHSEP
+                pipename = node_dirs.user_run_dir.string() + ROBOTRACONTEUR_PATHSEP
                            "socket" ROBOTRACONTEUR_PATHSEP;
             }
             pipename += GetNode()->GetRandomString(16) + ".sock";
@@ -1102,14 +1109,16 @@ void LocalTransport::AsyncGetDetectedNodes(
 
     RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > o = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
 
-    boost::filesystem::path private_search_dir = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
+    NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
 
-    std::string my_username = detail::LocalTransportUtil::GetLogonUserName();
+    boost::filesystem::path private_search_dir = detail::LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
+
+    std::string my_username = GetLogonUserName();
     detail::LocalTransportUtil::FindNodesInDirectory(*o, private_search_dir, "rr+local", GetNode()->NowNodeTime(),
                                                      my_username);
 
     // TODO: search other users
-    boost::optional<boost::filesystem::path> search_path = detail::LocalTransportUtil::GetTransportPublicSearchPath();
+    boost::optional<boost::filesystem::path> search_path = detail::LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
     if (search_path)
     {
         try
@@ -1586,24 +1595,9 @@ std::string GetLogonUserName()
 #endif
 }
 
-boost::filesystem::path GetUserDataPath()
+boost::filesystem::path GetUserNodeIDPath(const NodeDirectories& node_dirs)
 {
-#ifdef ROBOTRACONTEUR_WINDOWS
-    boost::scoped_array<char> sysdata_path1(new char[MAX_PATH]);
-    if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
-    {
-        throw SystemResourceException("Could not get system information");
-    }
-
-    boost::filesystem::path sysdata_path(sysdata_path1.get());
-
-    boost::filesystem::path path = sysdata_path / "RobotRaconteur";
-#else
-    char* path1 = std::getenv("HOME");
-    if (!path1)
-        throw SystemResourceException("Home directory not set");
-    boost::filesystem::path path = boost::filesystem::path(path1) / ".config" / "RobotRaconteur";
-#endif
+    boost::filesystem::path path = node_dirs.user_config_dir / "nodeids";
     boost::system::error_code ec1;
     boost::filesystem::create_directories(path, ec1);
     if (ec1)
@@ -1612,127 +1606,9 @@ boost::filesystem::path GetUserDataPath()
     return path;
 }
 
-boost::filesystem::path GetUserRunPath()
+boost::filesystem::path GetTransportPrivateSocketPath(const NodeDirectories& node_dirs)
 {
-#ifdef ROBOTRACONTEUR_WINDOWS
-    boost::scoped_array<char> sysdata_path1(new char[MAX_PATH]);
-    if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
-    {
-        throw SystemResourceException("Could not get system information");
-    }
-
-    boost::filesystem::path sysdata_path(sysdata_path1.get());
-
-    boost::filesystem::path path = sysdata_path / "RobotRaconteur" / "run";
-    boost::system::error_code ec1;
-    boost::filesystem::create_directories(path, ec1);
-    if (ec1)
-        throw SystemResourceException("Could not activate system for local transport");
-
-#elif defined(ROBOTRACONTEUR_APPLE)
-
-    int u = getuid();
-
-    boost::filesystem::path path;
-    if (u == 0)
-    {
-        path = "/var/run/robotraconteur/root/";
-        boost::filesystem::create_directories(path);
-        chmod(path.c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
-        // path /= "robotraconteur";
-        boost::system::error_code ec1;
-        boost::filesystem::create_directories(path, ec1);
-        if (ec1)
-            throw SystemResourceException("Could not activate system for local transport");
-    }
-    else
-    {
-        char* path1 = std::getenv("TMPDIR");
-        if (!path1)
-            throw SystemResourceException("Could not activate system for local transport");
-
-        path = path1;
-        path = path.remove_trailing_separator().parent_path();
-        path /= "C";
-        if (!boost::filesystem::is_directory(path))
-            throw SystemResourceException("Could not activate system for local transport");
-        path /= "robotraconteur";
-        boost::system::error_code ec1;
-        boost::filesystem::create_directories(path, ec1);
-        if (ec1)
-            throw SystemResourceException("Could not activate system for local transport");
-    }
-
-#else
-    uid_t u = getuid();
-
-    // TODO: fix mac version
-    boost::filesystem::path path;
-    if (u == 0)
-    {
-        path = "/var/run/robotraconteur/root/";
-        boost::filesystem::create_directories(path);
-        chmod(path.c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
-        // path /= "robotraconteur";
-        boost::system::error_code ec1;
-        boost::filesystem::create_directories(path, ec1);
-        if (ec1)
-            throw SystemResourceException("Could not activate system for local transport");
-    }
-    else
-    {
-        char* path1 = std::getenv("XDG_RUNTIME_DIR");
-        if (path1 != NULL)
-        {
-            path = path1;
-            path /= "robotraconteur";
-            boost::system::error_code ec1;
-            boost::filesystem::create_directories(path, ec1);
-            if (ec1)
-                throw SystemResourceException("Could not activate system for local transport");
-        }
-        else
-        {
-
-            // path = boost::filesystem::path("/tmp/.robotraconteur-user-" + boost::lexical_cast<std::string>(u));
-
-            path = boost::filesystem::path("/var/run/user") / boost::lexical_cast<std::string>(u) / "robotraconteur";
-            boost::system::error_code ec1;
-            boost::filesystem::create_directories(path, ec1);
-            if (ec1)
-                throw SystemResourceException(
-                    "Could not activate system for local transport: $XDG_RUNTIME_DIR not set");
-            /*chmod(path.c_str(),  S_IRUSR |  S_IWUSR |  S_IXUSR);
-            struct stat s;
-            if (stat(path.c_str(), &s) < 0)
-            {
-                throw SystemResourceException("Could not activate system for local transport: permission error");
-            }
-
-            if (s.st_uid != u)
-            {
-                throw SystemResourceException("Could not activate system for local transport");
-            }*/
-        }
-    }
-#endif
-    return path;
-}
-
-boost::filesystem::path GetUserNodeIDPath()
-{
-    boost::filesystem::path path = GetUserDataPath() / "nodeids";
-    boost::system::error_code ec1;
-    boost::filesystem::create_directories(path, ec1);
-    if (ec1)
-        throw SystemResourceException("Could not activate system for local transport");
-
-    return path;
-}
-
-boost::filesystem::path GetTransportPrivateSocketPath()
-{
-    boost::filesystem::path user_run_path = GetUserRunPath();
+    boost::filesystem::path user_run_path = node_dirs.user_run_dir;
     boost::filesystem::path path = user_run_path / "transport" / "local";
 
     boost::filesystem::path bynodeid_path = path / "by-nodeid";
@@ -1763,10 +1639,10 @@ boost::filesystem::path GetTransportPrivateSocketPath()
     return path;
 }
 
-boost::optional<boost::filesystem::path> GetTransportPublicSocketPath()
+boost::optional<boost::filesystem::path> GetTransportPublicSocketPath(const NodeDirectories& node_dirs)
 {
     boost::filesystem::path path1;
-    if (boost::optional<boost::filesystem::path> path1_1 = GetTransportPublicSearchPath())
+    if (boost::optional<boost::filesystem::path> path1_1 = GetTransportPublicSearchPath(node_dirs))
     {
         path1 = *path1_1;
     }
@@ -1843,20 +1719,12 @@ boost::optional<boost::filesystem::path> GetTransportPublicSocketPath()
     return path;
 }
 
-boost::optional<boost::filesystem::path> GetTransportPublicSearchPath()
+boost::optional<boost::filesystem::path> GetTransportPublicSearchPath(const NodeDirectories& node_dirs)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
-    boost::scoped_array<wchar_t> sysdata_path1(new wchar_t[MAX_PATH]);
-    if (FAILED(SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
-    {
-        return boost::optional<boost::filesystem::path>();
-    }
-
-    boost::filesystem::path sysdata_path(sysdata_path1.get());
-
     std::string username = GetLogonUserName();
 
-    boost::filesystem::path path1 = sysdata_path / "RobotRaconteur";
+    boost::filesystem::path path1 = node_dirs.system_run_dir;
     if (!boost::filesystem::is_directory(path1))
     {
         return boost::optional<boost::filesystem::path>();
@@ -1901,12 +1769,11 @@ boost::optional<boost::filesystem::path> GetTransportPublicSearchPath()
         return boost::optional<boost::filesystem::path>();
     }
 
-    path1 /= "run";
     path1 /= "transport";
     path1 /= "local";
 
 #else
-    boost::filesystem::path path1 = "/var/run/robotraconteur/transport/local";
+    boost::filesystem::path path1 = node_dirs.system_run_dir / "transport/local";
 #endif
 
     if (!boost::filesystem::is_directory(path1))
@@ -1933,7 +1800,7 @@ bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, st
     return true;
 }
 
-boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndLock(boost::string_ref nodename)
+boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndLock(const NodeDirectories& node_dirs, boost::string_ref nodename)
 {
     NodeID nodeid;
 
@@ -1942,7 +1809,7 @@ boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndL
         throw InvalidArgumentException("\"" + nodename + "\" is an invalid NodeName");
     }
 
-    boost::filesystem::path p = GetUserNodeIDPath() / nodename.to_string();
+    boost::filesystem::path p = GetUserNodeIDPath(node_dirs) / nodename.to_string();
 
 #ifdef ROBOTRACONTEUR_WINDOWS
 
@@ -1961,7 +1828,7 @@ boost::tuple<NodeID, RR_SHARED_PTR<NodeDirectoriesFD> > GetNodeIDForNodeNameAndL
     }
 
 #else
-    boost::filesystem::path p_lock = detail::LocalTransportUtil::GetUserRunPath() / "nodeids";
+    boost::filesystem::path p_lock = detail::LocalTransportUtil::GetUserRunPath(node_dirs) / "nodeids";
     boost::filesystem::create_directories(p_lock);
     p_lock /= nodename + ".pid";
 

@@ -6477,6 +6477,9 @@ RR_SHARED_PTR<TcpTransport> TcpTransportPortSharerClient::GetParent()
 void TcpTransportPortSharerClient::client_thread()
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "TcpTransport port sharer client started");
+
+    NodeDirectories node_dirs;
+    bool node_dirs_init = false;
     while (true)
     {
         {
@@ -6502,24 +6505,20 @@ void TcpTransportPortSharerClient::client_thread()
             std::string outdata = nodeid.ToString() + " " + nodename;
             boost::trim(outdata);
 
+            if (!node_dirs_init)
+            {
+                node_dirs = GetParent()->GetNode()->GetNodeDirectories();
+            }
+
 #ifdef ROBOTRACONTEUR_WINDOWS
 
             std::string fname;
 
-            boost::scoped_array<wchar_t> sysdata_path1(new wchar_t[MAX_PATH]);
-            if (FAILED(SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
-            {
-                return;
-            }
 
-            boost::filesystem::path sysdata_path(sysdata_path1.get());
-            sysdata_path /= "RobotRaconteur";
-
-            boost::optional<boost::filesystem::path> p1_1 = sysdata_path;
+            boost::optional<boost::filesystem::path> p1_1 = node_dirs.system_run_dir;
             if (p1_1)
             {
                 boost::filesystem::path p1 = *p1_1;
-                p1 /= "run";
                 p1 /= "transport";
                 p1 /= "tcp";
                 p1 /= "portsharer";
@@ -6540,7 +6539,7 @@ void TcpTransportPortSharerClient::client_thread()
 
             if (fname.empty())
             {
-                boost::filesystem::path p1 = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
+                boost::filesystem::path p1 = detail::LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
                 p1 /= "..";
                 p1 /= "tcp";
                 p1 /= "portsharer";
