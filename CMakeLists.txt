@@ -163,4 +163,3 @@ if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv
             DESTINATION share/robotraconteur/hook)
 endif()
-

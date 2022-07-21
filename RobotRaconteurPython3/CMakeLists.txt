@@ -131,9 +131,9 @@ endif()
 # This mess is taken from github.com/ros/catkin/cmake/python.cmake...
 set(enable_setuptools_deb_layout OFF)
 if(ROBOTRACONTEUR_ROS)
-if(EXISTS "/etc/debian_version")
-  set(enable_setuptools_deb_layout ON)
-endif()
+    if(EXISTS "/etc/debian_version")
+        set(enable_setuptools_deb_layout ON)
+    endif()
 endif()
 
 option(SETUPTOOLS_DEB_LAYOUT "Enable debian style python package layout" ${enable_setuptools_deb_layout})
@@ -144,8 +144,9 @@ endif()
 
 option(INSTALL_PYTHON3 "Install Python3 library" OFF)
 if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON OR INSTALL_PYTHON3)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python3_install.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake @ONLY)
-install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python3_install.cmake.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake @ONLY)
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake)
 endif()
 
 if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
@@ -162,7 +163,6 @@ if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv
             DESTINATION share/robotraconteur/hook)
 endif()
-
 
 if(BUILD_DOCUMENTATION)
 
