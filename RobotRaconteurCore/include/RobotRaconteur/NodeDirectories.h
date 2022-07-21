@@ -153,7 +153,7 @@ class ROBOTRACONTEUR_CORE_API NodeDirectoriesUtil
      * @return NodeDirectories The default node directories
      */
     static NodeDirectories GetDefaultNodeDirectories(
-        RR_SHARED_PTR<RobotRaconteurNode> node = RR_SHARED_PTR<RobotRaconteurNode>());
+        const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>());
 
     /**
      * @brief Get the logon name of the current user

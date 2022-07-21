@@ -166,7 +166,7 @@ static boost::filesystem::path get_common_appdata()
 }
 #endif
 
-static bool is_sub_dir(boost::filesystem::path p, boost::filesystem::path root)
+static bool is_sub_dir(boost::filesystem::path p, const boost::filesystem::path& root)
 {
     while (p != boost::filesystem::path())
     {
@@ -181,6 +181,7 @@ static bool is_sub_dir(boost::filesystem::path p, boost::filesystem::path root)
 
 } // namespace detail
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
 #define CATCH_DIR_RESOLVE(cmd, dir_type)                                                                               \
     try                                                                                                                \
     {                                                                                                                  \
@@ -193,8 +194,9 @@ static bool is_sub_dir(boost::filesystem::path p, boost::filesystem::path root)
             ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Node, -1, "Error resolving " << dir_type << ":" << e.what());   \
         }                                                                                                              \
     }
+// NOLINTEND(bugprone-macro-parentheses)
 
-NodeDirectories NodeDirectoriesUtil::GetDefaultNodeDirectories(RR_SHARED_PTR<RobotRaconteurNode> node)
+NodeDirectories NodeDirectoriesUtil::GetDefaultNodeDirectories(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
     NodeDirectories ret;
 #ifdef ROBOTRACONTEUR_WINDOWS
