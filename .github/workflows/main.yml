@@ -115,6 +115,7 @@ jobs:
         ../robotraconteur
     - name: configure python2.7
       if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
+      working-directory: build2
       run: cmake . -DBUILD_PYTHON=ON
     - name: build
       working-directory: build2
