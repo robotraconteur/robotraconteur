@@ -180,30 +180,13 @@ jobs:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - name: checkout vcpkg
-      uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v3
       with:
-        path: vcpkg
-        repository: microsoft/vcpkg
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: bootstrap-vcpkg.bat
-    - name: vcpkg dry run
-      working-directory: vcpkg
-      shell: cmd
-      run: |
-        vcpkg install --dry-run --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
-    - name: cache-vcpkg-archives
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-vcpkg-archives
-      uses: actions/cache@v2
-      with:
-        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-${{matrix.config.arch}}-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-main
-    - name: vcpkg
-      working-directory: vcpkg
-      run: >
-        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }}
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: ${{ matrix.config.vcpkg_triplet }}
+        extra-args: --clean-after-build
+        cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
     - uses: actions/setup-java@v1
       with:
         java-version: 8
@@ -374,7 +357,7 @@ jobs:
     
   build-matlab:
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -393,31 +376,14 @@ jobs:
     - name: Set up MATLAB
       uses: matlab-actions/setup-matlab@v1
       with:
-        release: R2020a
-    - name: checkout vcpkg
-      uses: actions/checkout@v2
+        release: R2021b
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v3
       with:
-        path: vcpkg
-        repository: microsoft/vcpkg
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: ./bootstrap-vcpkg.sh
-    - name: vcpkg dry run
-      working-directory: vcpkg
-      shell: bash
-      run: |
-        vcpkg install --dry-run ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
-    - name: cache-vcpkg-archives
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-vcpkg-archives
-      uses: actions/cache@v2
-      with:
-        path: /home/runner/.cache/vcpkg/archives
-        key: ${{ runner.os }}-matlab-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-main
-    - name: vcpkg
-      working-directory: vcpkg
-      run: >
-        vcpkg install ${{ env.VCPKG_PKGS }}
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: x64-linux
+        extra-args: --clean-after-build
+        cache-key: ubuntu-build-matlab
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -507,30 +473,13 @@ jobs:
       with:
         python-version: '${{ matrix.config.python_version }}'
         architecture: ${{ matrix.config.arch }}
-    - name: checkout vcpkg
-      uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v3
       with:
-        path: vcpkg
-        repository: microsoft/vcpkg
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: bootstrap-vcpkg.bat
-    - name: vcpkg dry run
-      working-directory: vcpkg
-      shell: cmd
-      run: |
-        vcpkg install --dry-run --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
-    - name: cache-vcpkg-archives
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-vcpkg-archives
-      uses: actions/cache@v2
-      with:
-        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-${{ matrix.config.arch }}-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-vcpkg-build-python-version
-    - name: vcpkg
-      working-directory: vcpkg
-      run: >
-        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }}
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: ${{ matrix.config.vcpkg_triplet }}
+        extra-args: --clean-after-build
+        cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
@@ -902,37 +851,13 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
-    - name: checkout vcpkg
-      uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v3
       with:
-        path: vcpkg
-        repository: microsoft/vcpkg
-        fetch-depth: 1
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: ./bootstrap-vcpkg.sh
-    - name: vcpkg dry run
-      working-directory: vcpkg
-      run: |
-        ./vcpkg install --dry-run --triplet arm64-ios openssl ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
-    - name: cache-vcpkg-archives
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-vcpkg-archives
-      uses: actions/cache@v2
-      with:
-        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-arm64-ios-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-iphone
-    - name: vcpkg
-      working-directory: vcpkg
-      run: >
-        ./vcpkg install --triplet arm64-ios openssl ${{ env.VCPKG_PKGS }}
-    - name: configure
-      run: >
-        cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
-        -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 
-        -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_SYSTEM_PROCESSOR=aarch64
-        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -DVCPKG_TARGET_TRIPLET=arm64-ios
+        pkgs: openssl ${{ env.VCPKG_PKGS }}
+        triplet: arm64-ios
+        extra-args: --clean-after-build
+        cache-key: ${{ runner.os }}-arm64-ios-vcpkg
     - name: build
       working-directory: build2
       run: |
