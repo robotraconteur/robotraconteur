@@ -797,8 +797,6 @@ jobs:
         -DANDROID_ABI=${{ matrix.config.android_abi }} 
         -DOPENSSL_ROOT_DIR=$GITHUB_WORKSPACE/openssl_install_${{ matrix.config.android_abi }} 
         -DOPENSSL_USE_STATIC_LIBS=ON
-        -DSWIG_EXECUTABLE=/usr/local/bin/swig 
-        -DSWIG_DIR=/usr/local/share/swig/4.0.2 
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
         -DRobotRaconteurGen_EXECUTABLE=$GITHUB_WORKSPACE/build2_host/out/bin/RobotRaconteurGen 
         -DSWIG_JAVA_EXTRA_ARGS_OVERRIDE=${{ matrix.config.swig_args }} 
