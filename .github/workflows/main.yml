@@ -33,12 +33,18 @@ jobs:
         - os: ubuntu-20.04
           runs_on: ubuntu-20.04
           container: ""
+        - os: ubuntu-22.04
+          runs_on: ubuntu-22.04
+          container: ""
         - os: ubuntu-16.04
           runs_on: ubuntu-latest
           container: ubuntu:xenial
         - os: debian-10
           runs_on: ubuntu-latest
           container: debian:buster-slim
+        - os: debian-11
+          runs_on: ubuntu-latest
+          container: debian:bullseye-slim
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -74,7 +80,11 @@ jobs:
         cmake --build .
         sudo cmake --build . --target install
     - name: build-swig
+      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
       uses: johnwason/swig-build-action@v1
+    - name: apt-swig
+      if: ${{ matrix.config.os == 'ubuntu-22.04' || matrix.config.os == 'debian-11' }}
+      run: sudo apt-get install swig -qq -y
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
