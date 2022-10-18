@@ -858,6 +858,13 @@ jobs:
         triplet: arm64-ios
         extra-args: --clean-after-build
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
+    - name: configure
+      run: >
+        cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
+        -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 
+        -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_SYSTEM_PROCESSOR=aarch64
+        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DVCPKG_TARGET_TRIPLET=arm64-ios
     - name: build
       working-directory: build2
       run: |
