@@ -1048,7 +1048,7 @@ class ServiceTestClient:
                 TestAsync_err(e)
 
         def TestAsync5(r, ret, err):
-            if(err is not None):
+            if (err is not None):
                 TestAsync_err(err)
                 return
             try:
@@ -1108,7 +1108,7 @@ class ServiceTestClient:
                 return
 
         def TestAsync11(r, w1, err):
-            if(err is not None):
+            if (err is not None):
                 TestAsync_err(err)
                 return
             try:

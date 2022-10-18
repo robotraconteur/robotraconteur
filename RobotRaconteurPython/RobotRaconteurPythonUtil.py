@@ -275,7 +275,7 @@ def InitStub(stub):
 
         if (isinstance(m, RobotRaconteurPython.ObjRefDefinition)):
             def inner_objref(m1):
-                if(m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
+                if (m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
                     def f(self, index): return stub_objref(
                         stub, m1.Name, index)
                 else:
@@ -285,7 +285,7 @@ def InitStub(stub):
             mdict['get_%s' % m.Name] = f1
 
             def inner_async_objref(m1):
-                if(m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
+                if (m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
                     def f(self, index, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_objref(
                         stub, m1.Name, index, handler, timeout)
                 else:
@@ -4967,7 +4967,7 @@ def ReadServiceDefinitionFile(servicedef_name):
     f_name = None
     if (os.path.isfile(servicedef_name)):
         f_name = servicedef_name
-    elif(os.path.isfile(servicedef_name + '.robdef')):
+    elif (os.path.isfile(servicedef_name + '.robdef')):
         f_name = servicedef_name + '.robdef'
     elif not os.path.isabs(servicedef_name):
         p = os.getenv("ROBOTRACONTEUR_ROBDEF_PATH", None)
