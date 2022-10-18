@@ -74,7 +74,7 @@ jobs:
         cmake --build .
         sudo cmake --build . --target install
     - name: build-swig
-      uses: johnwason/swig-build-action@master
+      uses: johnwason/swig-build-action@v1
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
