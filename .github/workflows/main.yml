@@ -274,7 +274,7 @@ jobs:
     - name: python 3.10
       uses: ./robotraconteur/tools/actions/build_python_ver/win
       with:
-        python_version: 3.10
+        python_version: "3.10"
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: move out
