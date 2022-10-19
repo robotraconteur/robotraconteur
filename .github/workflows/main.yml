@@ -144,13 +144,13 @@ jobs:
       with:
         python_version: 3.7
         arch: x64
-    - name: python 3.7
+    - name: python 3.8
       if: ${{ matrix.config.os == 'ubuntu-18.04' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.8
         arch: x64
-    - name: python 3.8
+    - name: python 3.9
       if: ${{ matrix.config.os == 'ubuntu-18.04' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
