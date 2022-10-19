@@ -139,7 +139,7 @@ jobs:
       run: |
         ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
     - name: python 3.7
-      if: ${{ ${{ matrix.config.os == 'ubuntu-18.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-18.04' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.7
