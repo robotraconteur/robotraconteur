@@ -33,12 +33,18 @@ jobs:
         - os: ubuntu-20.04
           runs_on: ubuntu-20.04
           container: ""
+        - os: ubuntu-22.04
+          runs_on: ubuntu-22.04
+          container: ""
         - os: ubuntu-16.04
           runs_on: ubuntu-latest
           container: ubuntu:xenial
         - os: debian-10
           runs_on: ubuntu-latest
           container: debian:buster-slim
+        - os: debian-11
+          runs_on: ubuntu-latest
+          container: debian:bullseye-slim
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -59,11 +65,15 @@ jobs:
     - name: apt
       run: >
         sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless 
-        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python-dev python-numpy python-setuptools python-pytest
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
         git cmake g++ make libboost-all-dev autoconf 
         automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel 
         python3-pytest mono-devel curl libgtest-dev -qq
+    - name: apt python2.7
+      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
+      run: >
+        sudo apt-get install python-dev python-numpy python-setuptools python-pytest -qq
     - name: install gtest
       if: ${{ matrix.config.os == 'ubuntu-16.04' || matrix.config.os == 'ubuntu-18.04' }}
       run: |
@@ -73,33 +83,12 @@ jobs:
         cmake -DCMAKE_CXX_FLAGS="-fPIC" .
         cmake --build .
         sudo cmake --build . --target install
-    - name: cache-swig
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-swig
-      uses: actions/cache@v2
-      with:
-        path: swig_build_dir
-        key: ${{ runner.os }}-${{ matrix.config.os }}-swig-4.0.2-main
     - name: build-swig
-      if: steps.cache-swig.outputs.cache-hit != 'true'
-      run: |
-        sudo apt remove '^swig.*' -qq || true
-        rm -rf swig_build_dir
-        mkdir -p swig_build_dir
-        cd swig_build_dir
-        curl -s -L https://github.com/swig/swig/archive/refs/tags/v4.0.2.tar.gz --output swig-4.0.2.tar.gz
-        tar xf swig-4.0.2.tar.gz
-        cd swig-4.0.2
-        ./autogen.sh
-        ./configure
-        make
-        sudo make install
-    - name: install-swig
-      if: steps.cache-swig.outputs.cache-hit == 'true'
-      working-directory: swig_build_dir/swig-4.0.2
-      run: |
-        sudo apt remove '^swig.*' -qq || true
-        sudo make install
+      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
+      uses: johnwason/swig-build-action@v1
+    - name: apt-swig
+      if: ${{ matrix.config.os == 'ubuntu-22.04' || matrix.config.os == 'debian-11' }}
+      run: sudo apt-get install swig -qq -y
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -120,10 +109,14 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
-        -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=OFF
+        -DBUILD_PYTHON_WHEEL=OFF
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
         ../robotraconteur
+    - name: configure python2.7
+      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
+      working-directory: build2
+      run: cmake . -DBUILD_PYTHON=ON
     - name: build
       working-directory: build2
       run: |
@@ -180,53 +173,34 @@ jobs:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - name: checkout vcpkg
-      uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v3
       with:
-        path: vcpkg
-        repository: microsoft/vcpkg
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: bootstrap-vcpkg.bat
-    - name: vcpkg dry run
-      working-directory: vcpkg
-      shell: cmd
-      run: |
-        vcpkg install --dry-run --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
-    - name: cache-vcpkg-archives
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-vcpkg-archives
-      uses: actions/cache@v2
-      with:
-        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-${{matrix.config.arch}}-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-main
-    - name: vcpkg
-      working-directory: vcpkg
-      run: >
-        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }}
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: ${{ matrix.config.vcpkg_triplet }}
+        extra-args: --clean-after-build
+        cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
     - uses: actions/setup-java@v1
       with:
         java-version: 8
         java-package: jdk
         architecture: ${{ matrix.config.arch }}
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python2
       with:
         python-version: '2.7'
         architecture: ${{ matrix.config.arch }}
     - name: pip
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python2
-      run: echo  ("PYTHON2_EXE=" + (Get-Command Python.exe).Path) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python3
       with:
         python-version: '3.8'
         architecture: ${{ matrix.config.arch }}
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python3
-      run: echo  ("PYTHON3_EXE=" + (Get-Command Python.exe).Path) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: choco
       run: |
         choco install swig -r
@@ -251,8 +225,8 @@ jobs:
         cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON 
         -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
-        -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" 
+        -DPYTHON_EXECUTABLE="${{ steps.python2.outputs.python-path }}"
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}" 
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
@@ -314,15 +288,14 @@ jobs:
         /usr/bin/python -m pip install setuptools wheel pytest
     - name: env python2
       run: echo "PYTHON2_EXE=/usr/bin/python" >> $GITHUB_ENV
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python3
       with:
         python-version: '3.8'
         architecture: x64
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python3
-      run: echo "PYTHON3_EXE=${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -342,7 +315,7 @@ jobs:
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON 
         -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
@@ -374,7 +347,7 @@ jobs:
     
   build-matlab:
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -393,31 +366,14 @@ jobs:
     - name: Set up MATLAB
       uses: matlab-actions/setup-matlab@v1
       with:
-        release: R2020a
-    - name: checkout vcpkg
-      uses: actions/checkout@v2
+        release: R2021b
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v3
       with:
-        path: vcpkg
-        repository: microsoft/vcpkg
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: ./bootstrap-vcpkg.sh
-    - name: vcpkg dry run
-      working-directory: vcpkg
-      shell: bash
-      run: |
-        vcpkg install --dry-run ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
-    - name: cache-vcpkg-archives
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-vcpkg-archives
-      uses: actions/cache@v2
-      with:
-        path: /home/runner/.cache/vcpkg/archives
-        key: ${{ runner.os }}-matlab-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-main
-    - name: vcpkg
-      working-directory: vcpkg
-      run: >
-        vcpkg install ${{ env.VCPKG_PKGS }}
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: x64-linux
+        extra-args: --clean-after-build
+        cache-key: ubuntu-build-matlab
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -503,39 +459,21 @@ jobs:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python3
       with:
         python-version: '${{ matrix.config.python_version }}'
         architecture: ${{ matrix.config.arch }}
-    - name: checkout vcpkg
-      uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v3
       with:
-        path: vcpkg
-        repository: microsoft/vcpkg
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: bootstrap-vcpkg.bat
-    - name: vcpkg dry run
-      working-directory: vcpkg
-      shell: cmd
-      run: |
-        vcpkg install --dry-run --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
-    - name: cache-vcpkg-archives
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-vcpkg-archives
-      uses: actions/cache@v2
-      with:
-        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-${{ matrix.config.arch }}-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-vcpkg-build-python-version
-    - name: vcpkg
-      working-directory: vcpkg
-      run: >
-        vcpkg install --triplet ${{ matrix.config.vcpkg_triplet }} ${{ env.VCPKG_PKGS }}
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: ${{ matrix.config.vcpkg_triplet }}
+        extra-args: --clean-after-build
+        cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python3
-      run: echo  ("PYTHON3_EXE=" + (Get-Command Python.exe).Path) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: choco
       run: |
         choco install swig -r
@@ -561,7 +499,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=ON
         -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
         -DBUILD_TESTING=OFF    
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
@@ -610,15 +548,14 @@ jobs:
     - name: brew
       run: |
         brew install swig boost openssl googletest
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python3
       with:
         python-version: '${{ matrix.python_version }}'
         architecture: x64
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python3
-      run: echo "PYTHON3_EXE=${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -637,7 +574,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release        
         -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
@@ -765,7 +702,7 @@ jobs:
         ctest . -C Release --output-on-failure
   build-android:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -797,27 +734,7 @@ jobs:
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
         git cmake g++ make libboost-all-dev autoconf 
         automake libtool bison libpcre3-dev default-jdk default-jdk-headless default-jre 
-        default-jre-headless libgtest-dev -qq
-    - name: build-swig
-      if: steps.cache-swig.outputs.cache-hit != 'true'
-      run: |
-        sudo apt remove '^swig.*' -qq || true
-        rm -rf swig_build_dir
-        mkdir -p swig_build_dir
-        cd swig_build_dir
-        curl -s -L https://github.com/swig/swig/archive/refs/tags/v4.0.2.tar.gz --output swig-4.0.2.tar.gz
-        tar xf swig-4.0.2.tar.gz
-        cd swig-4.0.2
-        ./autogen.sh
-        ./configure
-        make
-        sudo make install
-    - name: install-swig
-      if: steps.cache-swig.outputs.cache-hit == 'true'
-      working-directory: swig_build_dir/swig-4.0.2
-      run: |
-        sudo apt remove '^swig.*' -qq || true
-        sudo make install
+        default-jre-headless libgtest-dev swig -qq
     - name: mkdir build2_host
       run: mkdir -p build2_host
     - name: configure_host
@@ -835,9 +752,9 @@ jobs:
         cmake --build . --config Release -- -j 4    
     - name: build_boost
       run: |
-        git clone --depth=1 --branch=ndk-23.2 https://github.com/johnwason/Boost-for-Android.git boost_android
+        git clone --depth=1 https://github.com/moritz-wundke/Boost-for-Android.git boost_android
         cd boost_android
-        ./build-android.sh $ANDROID_NDK_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.74.0 
+        ./build-android.sh $ANDROID_NDK_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.80.0 
     - name: build_openssl
       run: |
         git clone --branch OpenSSL_1_1_1n https://github.com/openssl/openssl.git
@@ -868,8 +785,6 @@ jobs:
         -DANDROID_ABI=${{ matrix.config.android_abi }} 
         -DOPENSSL_ROOT_DIR=$GITHUB_WORKSPACE/openssl_install_${{ matrix.config.android_abi }} 
         -DOPENSSL_USE_STATIC_LIBS=ON
-        -DSWIG_EXECUTABLE=/usr/local/bin/swig 
-        -DSWIG_DIR=/usr/local/share/swig/4.0.2 
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
         -DRobotRaconteurGen_EXECUTABLE=$GITHUB_WORKSPACE/build2_host/out/bin/RobotRaconteurGen 
         -DSWIG_JAVA_EXTRA_ARGS_OVERRIDE=${{ matrix.config.swig_args }} 
@@ -902,30 +817,13 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: robotraconteur
-    - name: checkout vcpkg
-      uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v3
       with:
-        path: vcpkg
-        repository: microsoft/vcpkg
-        fetch-depth: 1
-    - name: bootstrap vcpkg
-      working-directory: vcpkg
-      run: ./bootstrap-vcpkg.sh
-    - name: vcpkg dry run
-      working-directory: vcpkg
-      run: |
-        ./vcpkg install --dry-run --triplet arm64-ios openssl ${{ env.VCPKG_PKGS }} > vcpkg_dry_run.txt
-    - name: cache-vcpkg-archives
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-vcpkg-archives
-      uses: actions/cache@v2
-      with:
-        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: ${{ runner.os }}-arm64-ios-vcpkg-${{ hashFiles('vcpkg/vcpkg_dry_run.txt') }}-iphone
-    - name: vcpkg
-      working-directory: vcpkg
-      run: >
-        ./vcpkg install --triplet arm64-ios openssl ${{ env.VCPKG_PKGS }}
+        pkgs: openssl ${{ env.VCPKG_PKGS }}
+        triplet: arm64-ios
+        extra-args: --clean-after-build
+        cache-key: ${{ runner.os }}-arm64-ios-vcpkg
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
