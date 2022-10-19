@@ -248,31 +248,31 @@ jobs:
       run: |
         ctest . -C Release --output-on-failure -E java
     - name: python 3.6
-      uses: ./tools/actions/build_python_ver/win
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
       with:
         python_version: 3.6
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: python 3.7
-      uses: ./tools/actions/build_python_ver/win
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
       with:
         python_version: 3.7
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: python 3.8
-      uses: ./tools/actions/build_python_ver/win
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
       with:
         python_version: 3.8
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: python 3.9
-      uses: ./tools/actions/build_python_ver/win
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
       with:
         python_version: 3.9
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: python 3.10
-      uses: ./tools/actions/build_python_ver/win
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
       with:
         python_version: 3.10
         arch: ${{ matrix.config.arch }}
