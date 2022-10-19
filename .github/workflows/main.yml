@@ -361,32 +361,27 @@ jobs:
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.6
-        arch: ${{ matrix.config.arch }}
-        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+        arch: x64
     - name: python 3.7
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.7
-        arch: ${{ matrix.config.arch }}
-        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+        arch: x64
     - name: python 3.8
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.8
-        arch: ${{ matrix.config.arch }}
-        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+        arch: x64
     - name: python 3.9
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.9
-        arch: ${{ matrix.config.arch }}
-        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+        arch: x64
     - name: python 3.10
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.10"
-        arch: ${{ matrix.config.arch }}
-        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
