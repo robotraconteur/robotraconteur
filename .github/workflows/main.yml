@@ -138,6 +138,30 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
+    - name: python 3.7
+      if: ${{ ${{ matrix.config.os == 'ubuntu-18.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: 3.7
+        arch: x64
+    - name: python 3.7
+      if: ${{ ${{ matrix.config.os == 'ubuntu-18.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: 3.8
+        arch: x64
+    - name: python 3.8
+      if: ${{ ${{ matrix.config.os == 'ubuntu-18.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: 3.9
+        arch: x64
+    - name: python 3.10
+      if: ${{ ${{ matrix.config.os == 'ubuntu-18.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: 3.10
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -357,11 +381,6 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release --output-on-failure
-    - name: python 3.6
-      uses: ./robotraconteur/tools/actions/build_python_ver/osx
-      with:
-        python_version: 3.6
-        arch: x64
     - name: python 3.7
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
