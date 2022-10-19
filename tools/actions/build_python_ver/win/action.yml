@@ -30,7 +30,7 @@ runs:
       -DBUILD_CORE=OFF -DBUILD_GEN=OFF
       -DRobotRaconteur_DIR=${{ github.workspace }}/build2
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
-      -DBUILD_TESTING=OFF
+      -DBUILD_TESTING=ON
       -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
       -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
       -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
