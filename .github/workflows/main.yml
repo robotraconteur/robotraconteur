@@ -757,8 +757,6 @@ jobs:
     - build-win
     - build-osx
     - build-matlab
-    - build-win-python
-    - build-osx-python
     - build-android
     runs-on: ubuntu-20.04
     steps:
