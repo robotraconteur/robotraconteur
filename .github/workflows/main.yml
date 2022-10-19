@@ -185,24 +185,22 @@ jobs:
         java-version: 8
         java-package: jdk
         architecture: ${{ matrix.config.arch }}
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python2
       with:
         python-version: '2.7'
         architecture: ${{ matrix.config.arch }}
     - name: pip
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python2
-      run: echo  ("PYTHON2_EXE=" + (Get-Command Python.exe).Path) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python3
       with:
         python-version: '3.8'
         architecture: ${{ matrix.config.arch }}
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python3
-      run: echo  ("PYTHON3_EXE=" + (Get-Command Python.exe).Path) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: choco
       run: |
         choco install swig -r
@@ -227,8 +225,8 @@ jobs:
         cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON 
         -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
-        -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}" 
+        -DPYTHON_EXECUTABLE="${{ steps.python2.outputs.python-path }}"
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}" 
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
@@ -290,15 +288,14 @@ jobs:
         /usr/bin/python -m pip install setuptools wheel pytest
     - name: env python2
       run: echo "PYTHON2_EXE=/usr/bin/python" >> $GITHUB_ENV
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python3
       with:
         python-version: '3.8'
         architecture: x64
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python3
-      run: echo "PYTHON3_EXE=${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -318,7 +315,7 @@ jobs:
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON 
         -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
@@ -462,7 +459,8 @@ jobs:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python3
       with:
         python-version: '${{ matrix.config.python_version }}'
         architecture: ${{ matrix.config.arch }}
@@ -476,8 +474,6 @@ jobs:
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python3
-      run: echo  ("PYTHON3_EXE=" + (Get-Command Python.exe).Path) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: choco
       run: |
         choco install swig -r
@@ -503,7 +499,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=ON
         -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
         -DBUILD_TESTING=OFF    
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
@@ -552,15 +548,14 @@ jobs:
     - name: brew
       run: |
         brew install swig boost openssl googletest
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
+      id: python3
       with:
         python-version: '${{ matrix.python_version }}'
         architecture: x64
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
-    - name: env python3
-      run: echo "PYTHON3_EXE=${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -579,7 +574,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release        
         -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON
-        -DPYTHON3_EXECUTABLE="${{ env.PYTHON3_EXE }}"
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
