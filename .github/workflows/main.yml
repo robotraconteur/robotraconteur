@@ -6,6 +6,10 @@ on:
   release:
     types:
       - created
+  schedule:
+    - cron: '0 5 * * *'
+
+  workflow_dispatch:
 
 env:
   VCPKG_PKGS: >-
@@ -138,6 +142,30 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
+    - name: python 3.7
+      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: 3.7
+        arch: x64
+    - name: python 3.8
+      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: 3.8
+        arch: x64
+    - name: python 3.9
+      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: 3.9
+        arch: x64
+    - name: python 3.10
+      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: "3.10"
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -247,6 +275,36 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release --output-on-failure -E java
+    - name: python 3.6
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: 3.6
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.7
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: 3.7
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.8
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: 3.8
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.9
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: 3.9
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.10
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: "3.10"
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: move out
       run: |
         copy build2/rrversion.txt build2/out/
@@ -327,6 +385,26 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release --output-on-failure
+    - name: python 3.7
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: 3.7
+        arch: x64
+    - name: python 3.8
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: 3.8
+        arch: x64
+    - name: python 3.9
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: 3.9
+        arch: x64
+    - name: python 3.10
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: "3.10"
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -425,183 +503,8 @@ jobs:
       with:
         name: 'build-artifacts-matlab'
         path: build2/*
-        retention-days: 2  
-    
-  build-win-python:
-    runs-on: windows-2019
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - arch: x64
-            vcpkg_triplet: x64-windows-static-md
-            cmake_arch: x64
-            python_version: "3.7"
-          - arch: x86
-            vcpkg_triplet: x86-windows-static-md
-            cmake_arch: Win32
-            python_version: "3.7"
-          - arch: x64
-            vcpkg_triplet: x64-windows-static-md
-            cmake_arch: x64
-            python_version: "3.9"
-          - arch: x86
-            vcpkg_triplet: x86-windows-static-md
-            cmake_arch: Win32
-            python_version: "3.9"
-          - arch: x64
-            vcpkg_triplet: x64-windows-static-md
-            cmake_arch: x64
-            python_version: "3.10"
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        path: robotraconteur
-    - name: semver
-      run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: actions/setup-python@v4
-      id: python3
-      with:
-        python-version: '${{ matrix.config.python_version }}'
-        architecture: ${{ matrix.config.arch }}
-    - name: vcpkg build
-      uses: johnwason/vcpkg-action@v3
-      with:
-        pkgs: ${{ env.VCPKG_PKGS }}
-        triplet: ${{ matrix.config.vcpkg_triplet }}
-        extra-args: --clean-after-build
-        cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version
-    - name: pip3
-      run: |
-        python -m pip install numpy setuptools wheel pytest
-    - name: choco
-      run: |
-        choco install swig -r
-    - name: cache-build
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-build
-      uses: mikehardy/buildcache-action@v1
-      with:
-        cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-python-version-${{ matrix.config.python_version }}-buildcache
-    - name: cmake cache args
-      id: cmake-cache-args
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      run: >
-        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" | Out-File -FilePath $env:GITHUB_ENV 
-        -Encoding utf8 -Append
-    - uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: ${{ matrix.config.arch }}
-    - name: configure
-      run: >
-        cmake -G "Ninja"
-        -DBoost_USE_STATIC_LIBS=ON
-        -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
-        -DBUILD_TESTING=OFF    
-        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
-        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
-        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
-        ${{ env.CMAKE_CACHE_ARGS }}
-        -DCMAKE_BUILD_TYPE=Release
-        -S robotraconteur -B build2
-    - name: build
-      working-directory: build2
-      run: |
-        cmake --build . --config Release -j 4
-    - name: test
-      working-directory: build2
-      run: |
-        ctest . -C Release --output-on-failure
-    - name: move out
-      run: |
-        mv build2/out .
-    - name: archive out
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'out-win-${{ matrix.config.arch }}-python-${{ matrix.config.python_version }}'
-        path: out/*
-    - name: build artifacts
-      if: failure()
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'build-artifacts-win-${{ matrix.config.arch }}-python-${{ matrix.config.python_version }}'
-        path: build2/*
-        retention-days: 2 
-
-  build-osx-python:
-
-    runs-on: macos-11
-    env:
-      LIBRARY_PATH: /usr/local/opt/icu4c/lib
-    strategy:
-      fail-fast: false
-      matrix:
-        python_version: ["3.7","3.9","3.10"]
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        path: robotraconteur
-    - name: semver
-      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - name: brew
-      run: |
-        brew install swig boost openssl googletest
-    - uses: actions/setup-python@v4
-      id: python3
-      with:
-        python-version: '${{ matrix.python_version }}'
-        architecture: x64
-    - name: pip3
-      run: |
-        python -m pip install numpy setuptools wheel pytest
-    - name: cache-build
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-build
-      uses: hendrikmuhs/ccache-action@v1
-      with:
-        key: ${{ runner.os }}-build-python-version-${{ matrix.python_version }}-ccache
-    - name: cmake cache args
-      id: cmake-cache-args
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      run: >
-        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
-    - name: configure
-      run: >
-        cmake -G "Xcode" -DBUILD_GEN=ON  -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
-        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release        
-        -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
-        -DOPENSSL_USE_STATIC_LIBS=ON
-        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
-        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
-        ${{ env.CMAKE_CACHE_ARGS }}
-        -S robotraconteur -B build2
-    - name: build
-      working-directory: build2
-      run: |        
-        cmake --build . --config Release -j 4
-    - name: test
-      working-directory: build2
-      run: |
-        ctest . -C Release --output-on-failure
-    - name: move out
-      run: |
-        mv build2/out .
-    - name: archive out
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'out-osx-python-${{ matrix.python_version }}'
-        path: out/*
-    - name: build artifacts
-      if: failure()
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'build-artifacts-osx-python-${{ matrix.python_version }}'
-        path: build2/*
         retention-days: 2
-  
+
   build-conda-win:
     runs-on: windows-2019
     steps:
@@ -858,8 +761,6 @@ jobs:
     - build-win
     - build-osx
     - build-matlab
-    - build-win-python
-    - build-osx-python
     - build-android
     runs-on: ubuntu-20.04
     steps:
