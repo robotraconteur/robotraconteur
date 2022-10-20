@@ -41,7 +41,7 @@ runs:
   - name: auditwheel
     working-directory: build2_python_${{ inputs.python_version }}/out/Python3
     run: |
-      ${{ steps.python3.outputs.python-path }} -m auditwheel repair --plat manylinux_2_27_x86_64 dist/*.whl
+      ${{ steps.python3.outputs.python-path }} -m auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
     shell: bash
   - name: test
     working-directory: build2_python_${{ inputs.python_version }}
