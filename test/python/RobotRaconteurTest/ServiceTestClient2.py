@@ -174,7 +174,7 @@ class ServiceTestClient2:
         f2 = ServiceTest2_fill_testpod1(RRN, 29546592, self._r)
         self._r.testpod1_func1(f2)
 
-        #ServiceTest2_verify_teststruct3(self._r.teststruct3_prop, 16483675);
+        # ServiceTest2_verify_teststruct3(self._r.teststruct3_prop, 16483675);
         self._r.teststruct3_prop = (
             ServiceTest2_fill_teststruct3(RRN, 858362, self._r))
 
