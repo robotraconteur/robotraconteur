@@ -448,6 +448,7 @@ jobs:
         release: R2021b
     - name: vcpkg build
       uses: johnwason/vcpkg-action@f8d0aec3a24c7546ee76fc94ed6afcb6f3fcb470
+      id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
         triplet: x64-linux
@@ -724,6 +725,7 @@ jobs:
         path: robotraconteur
     - name: vcpkg build
       uses: johnwason/vcpkg-action@f8d0aec3a24c7546ee76fc94ed6afcb6f3fcb470
+      id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
         triplet: arm64-ios
