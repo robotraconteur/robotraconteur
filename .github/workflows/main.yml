@@ -52,7 +52,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: install sudo and tzdata
@@ -166,19 +166,25 @@ jobs:
       with:
         python_version: "3.10"
         arch: x64
+    - name: python 3.11
+      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: "3.11"
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-${{ matrix.config.os }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
@@ -196,18 +202,20 @@ jobs:
             vcpkg_triplet: x86-windows-static-md
             cmake_arch: Win32
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v3
+      uses: johnwason/vcpkg-action@v4
+      id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
         triplet: ${{ matrix.config.vcpkg_triplet }}
         extra-args: --clean-after-build
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
+        token: ${{ github.token }}
     - uses: actions/setup-java@v1
       with:
         java-version: 8
@@ -256,8 +264,7 @@ jobs:
         -DPYTHON_EXECUTABLE="${{ steps.python2.outputs.python-path }}"
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}" 
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
-        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -DVCPKG_TARGET_TRIPLET=${{ matrix.config.vcpkg_triplet }}
+        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
         ${{ env.CMAKE_CACHE_ARGS }}
         -DCMAKE_BUILD_TYPE=Release
         -S robotraconteur -B build2
@@ -305,19 +312,25 @@ jobs:
         python_version: "3.10"
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.11
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: "3.11"
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: move out
       run: |
         copy build2/rrversion.txt build2/out/
         copy robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-win-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-win-${{ matrix.config.arch }}'
         path: build2/*
@@ -329,7 +342,7 @@ jobs:
     env:
       LIBRARY_PATH: /usr/local/opt/icu4c/lib
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -405,19 +418,24 @@ jobs:
       with:
         python_version: "3.10"
         arch: x64
+    - name: python 3.11
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: "3.11"
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-osx'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-osx'
         path: build2/*
@@ -429,7 +447,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -446,12 +464,14 @@ jobs:
       with:
         release: R2021b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v3
+      uses: johnwason/vcpkg-action@v4
+      id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
         triplet: x64-linux
         extra-args: --clean-after-build
         cache-key: ubuntu-build-matlab
+        token: ${{ github.token }}
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -469,7 +489,7 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
-        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
@@ -493,13 +513,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-matlab'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-matlab'
         path: build2/*
@@ -508,7 +528,7 @@ jobs:
   build-conda-win:
     runs-on: windows-2019
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -542,7 +562,7 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -579,7 +599,7 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -623,7 +643,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -703,13 +723,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-android-${{ matrix.config.android_abi }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-android-${{ matrix.config.android_abi }}'
         path: build2/*
@@ -717,23 +737,24 @@ jobs:
   build-ios:
     runs-on: macos-11
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v3
+      uses: johnwason/vcpkg-action@v4
+      id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
         triplet: arm64-ios
         extra-args: --clean-after-build
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
+        token: ${{ github.token }}
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
         -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 
         -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_SYSTEM_PROCESSOR=aarch64
-        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -DVCPKG_TARGET_TRIPLET=arm64-ios
+        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
     - name: build
       working-directory: build2
       run: |
@@ -744,13 +765,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-ios-arm64'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-ios-arm64'
         path: build2/*
@@ -764,7 +785,7 @@ jobs:
     - build-android
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - uses: nuget/setup-nuget@v1
@@ -785,7 +806,7 @@ jobs:
     - name: build android package
       run: python robotraconteur/packaging/scripts/build_android_package.py
     - name: archive distfiles
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'distfiles'
         path: distfiles/*
@@ -800,7 +821,7 @@ jobs:
   check-formatting:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: pip
@@ -819,7 +840,7 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: apt update
