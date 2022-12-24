@@ -209,6 +209,7 @@ jobs:
         triplet: ${{ matrix.config.vcpkg_triplet }}
         extra-args: --clean-after-build
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
+        token: ${{ github.token }}
     - uses: actions/setup-java@v1
       with:
         java-version: 8
@@ -452,6 +453,7 @@ jobs:
         triplet: x64-linux
         extra-args: --clean-after-build
         cache-key: ubuntu-build-matlab
+        token: ${{ github.token }}
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -727,6 +729,7 @@ jobs:
         triplet: arm64-ios
         extra-args: --clean-after-build
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
+        token: ${{ github.token }}
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
