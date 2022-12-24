@@ -52,7 +52,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: install sudo and tzdata
@@ -172,13 +172,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-${{ matrix.config.os }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
@@ -196,7 +196,7 @@ jobs:
             vcpkg_triplet: x86-windows-static-md
             cmake_arch: Win32
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -312,13 +312,13 @@ jobs:
         copy robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-win-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-win-${{ matrix.config.arch }}'
         path: build2/*
@@ -330,7 +330,7 @@ jobs:
     env:
       LIBRARY_PATH: /usr/local/opt/icu4c/lib
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -412,13 +412,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-osx'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-osx'
         path: build2/*
@@ -430,7 +430,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -496,13 +496,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-matlab'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-matlab'
         path: build2/*
@@ -511,7 +511,7 @@ jobs:
   build-conda-win:
     runs-on: windows-2019
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -545,7 +545,7 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -582,7 +582,7 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -626,7 +626,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: semver
@@ -706,13 +706,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-android-${{ matrix.config.android_abi }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-android-${{ matrix.config.android_abi }}'
         path: build2/*
@@ -720,7 +720,7 @@ jobs:
   build-ios:
     runs-on: macos-11
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -748,13 +748,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'out-ios-arm64'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'build-artifacts-ios-arm64'
         path: build2/*
@@ -768,7 +768,7 @@ jobs:
     - build-android
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - uses: nuget/setup-nuget@v1
@@ -789,7 +789,7 @@ jobs:
     - name: build android package
       run: python robotraconteur/packaging/scripts/build_android_package.py
     - name: archive distfiles
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: 'distfiles'
         path: distfiles/*
@@ -804,7 +804,7 @@ jobs:
   check-formatting:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: pip
@@ -823,7 +823,7 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
     - name: apt update
