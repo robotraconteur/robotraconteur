@@ -18,7 +18,7 @@ runs:
       architecture: ${{ inputs.arch }}
   - name: pip3
     run: |
-      python -m pip install numpy setuptools wheel pytest auditwheel
+      python -m pip install --upgrade numpy setuptools wheel pytest auditwheel patchelf
     shell: bash
   - name: configure
     run: >
