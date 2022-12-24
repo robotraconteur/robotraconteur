@@ -166,6 +166,12 @@ jobs:
       with:
         python_version: "3.10"
         arch: x64
+    - name: python 3.11
+      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: "3.11"
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -306,6 +312,12 @@ jobs:
         python_version: "3.10"
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.11
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: "3.11"
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: move out
       run: |
         copy build2/rrversion.txt build2/out/
@@ -405,6 +417,11 @@ jobs:
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.10"
+        arch: x64
+    - name: python 3.11
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: "3.11"
         arch: x64
     - name: move out
       run: |
