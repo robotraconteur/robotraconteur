@@ -2903,12 +2903,12 @@ void RobotRaconteurNode::DownCastAndThrowException(RobotRaconteurException& exp)
     std::string type = exp.Error;
     if (!boost::contains(type, "."))
     {
-        throw exp;
+        RobotRaconteurExceptionUtil::DownCastAndThrowException(exp);
     }
     boost::tuple<boost::string_ref, boost::string_ref> stype = SplitQualifiedName(type);
     if (!IsServiceTypeRegistered(stype.get<0>()))
     {
-        throw exp;
+        RobotRaconteurExceptionUtil::DownCastAndThrowException(exp);
     }
 
     GetServiceType(stype.get<0>())->DownCastAndThrowException(exp);
