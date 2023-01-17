@@ -231,7 +231,7 @@
     <member name="P:RobotRaconteur.RobotRaconteurNET.MessageElementFlags_Version2Compat">
       <summary>MessageElement flags for compatibility with Message Format Version 2</summary>
     </member>
-    
+
     <member name="F:RobotRaconteur.RobotRaconteurNET.RR_VALUE_LIFESPAN_INFINITE">
       <summary>Set wire values to have infinite lifespan and will not expire</summary>
     </member>
@@ -932,17 +932,17 @@
     <member name="M:RobotRaconteur.RobotRaconteurNode.CloseService">
       <summary>
         Closes a previously registered service
-     
-      Services are automatically closed by Shutdown, so this function
-      is rarely used.
+
+        Services are automatically closed by Shutdown, so this function
+        is rarely used.
       </summary>
       <param name="sname">The name of the service to close</param>
     </member>
-        
+
     <member name="M:RobotRaconteur.RobotRaconteurNode.CheckConnection">
       <summary>
         Check that the TransportConnection associated with an endpoint
-      is connected
+        is connected
       </summary>
       <param name="endpoint">The LocalEndpoint identifier to check</param>
     </member>
@@ -960,10 +960,10 @@
     <member name="M:RobotRaconteur.RobotRaconteurNode.CreateRate">
       <summary>
         Create a Rate object
-     
-      Rate is used to stabilize periodic loops to a specified frequency
-     
-      This function will normally return a WallRate instance
+
+        Rate is used to stabilize periodic loops to a specified frequency
+
+        This function will normally return a WallRate instance
       </summary>
       <param name="frequency">Frequency of loop in Hz</param>
       <returns>The new Rate object</returns>
@@ -972,9 +972,9 @@
     <member name="M:RobotRaconteur.RobotRaconteurNode.CreateAutoResetEvent">
       <summary>
         Create an AutoResetEvent object
-     
-      Normally the AutoResetEvent will use the system clock for timeouts,
-      but in certain circumstances will use simulation time
+
+        Normally the AutoResetEvent will use the system clock for timeouts,
+        but in certain circumstances will use simulation time
       </summary>
       <returns>The new AutoResetEvent object</returns>
     </member>
@@ -990,12 +990,12 @@
     <member name="M:RobotRaconteur.RobotRaconteurNode.LogMessage">
       <summary>
         Log a simple message using the current node
-     
-      The record will be sent to the configured log handler,
-      or sent to std::cerr if none is configured
-     
-      If the level of the message is below the current log level
-      for the node, the record will be ignored
+
+        The record will be sent to the configured log handler,
+        or sent to std::cerr if none is configured
+
+        If the level of the message is below the current log level
+        for the node, the record will be ignored
       </summary>
       <param name="level">The level for the log message</param>
       <param name="message">The log message</param>
@@ -1003,22 +1003,22 @@
 
     <member name="M:RobotRaconteur.RobotRaconteurNode.LogRecord">
       <summary>
-        Log a record to the node. 
-     
-      The record will be sent to the configured log handler,
-      or sent to stderr if none is configured
-     
-      If the level of the message is below the current log level
-      for the node, it will be ignored
+        Log a record to the node.
+
+        The record will be sent to the configured log handler,
+        or sent to stderr if none is configured
+
+        If the level of the message is below the current log level
+        for the node, it will be ignored
       </summary>
       <param name="record">The record to log</param>
     </member>
-    
+
     <member name="M:RobotRaconteur.RobotRaconteurNode.GetLogLevel">
       <summary>
         Get the current log level for the node
-     
-      Default level is "info"
+
+        Default level is "info"
       </summary>
     </member>
 
@@ -1036,7 +1036,6 @@
         Set the log level for the node from a string
 
         Must be one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
-
         Defaults to WARNING
       </summary>
       <param name="level">The desired log level</param>
@@ -1049,17 +1048,17 @@
         Retrieves the specified environmental variable and sets the log level based
         on one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
 
-        If an invalid value or the variable does not exist, the log level is left unchanged. 
+        If an invalid value or the variable does not exist, the log level is left unchanged.
       </summary>
-      <param name="env_variable_name">The environmental variable to use. Defaults to 
+      <param name="env_variable_name">The environmental variable to use. Defaults to
         `ROBOTRACONTEUR_LOG_LEVEL`</param>
     </member>
 
     <member name="M:RobotRaconteur.RobotRaconteurNode.GetLogRecordHandler">
       <summary>
         Get the currently configured log record handler
-     
-      If null, records are sent to stderr
+
+        If null, records are sent to stderr
       </summary>
     </member>
 
@@ -1082,13 +1081,14 @@
     <member name="T:RobotRaconteur.ConnectionException">
       <summary>
         Exception thrown when connection to remote node fails
-        
+
         This exception is thrown if a connection cannot be created,
         the connection fails, or the connection has been closed.
         Error code MessageErrorType_ConnectionError (1)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.ConnectionException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.ConnectionException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a ConnectionException
       </summary>
@@ -1105,7 +1105,8 @@
         Error code MessageErrorType_ProtocolError (2)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.ProtocolException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.ProtocolException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a ProtocolException
       </summary>
@@ -1118,11 +1119,12 @@
       <summary>
         Exception thrown when a service cannot be found
         on a remote node
-       
-        Error code MessageErrorType_ServiceNotFound (3)       
+
+        Error code MessageErrorType_ServiceNotFound (3)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.ServiceNotFoundException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.ServiceNotFoundException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a ServiceNotFoundException
       </summary>
@@ -1135,16 +1137,17 @@
       <summary>
         Exception thrown when a service object cannot
         be found
-       
+
         This error is thrown when a specified service path
         does not have an assosciate object. The object may
         have been released by the service, or the service
         path is invalid
-       
+
         Error code MessageErrorType_ObjectNotFound (4)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.ObjectNotFoundException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.ObjectNotFoundException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a ObjectNotFoundException
       </summary>
@@ -1152,22 +1155,23 @@
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
     </member>
-    
+
     <member name="T:RobotRaconteur.InvalidEndpointException">
       <summary>
         Exception thrown when an attempt is made
         to send a message to an invalid endpoint
-       
+
         Transports between two nodes terminate with a pair
         of endpoints, one in each node. If the client, service,
         service endpoint, or transport is destroyed, the endpoint
         will be deleted. This exception is thrown if the
         target endpoint is no longer available.
-       
+
         Error code MessageErrorType_InvalidEndpoint (5)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.InvalidEndpointException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.InvalidEndpointException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a InvalidEndpointException
       </summary>
@@ -1180,17 +1184,18 @@
       <summary>
         Exception thrown when an attempt to send a
         message to an endpoint fails
-       
+
         Transports between two nodes terminate with a pair
         of endpoints, one in each node. Messages are sent
         between endpoint pairs. If for some reason the endpoint
         cannot send (or receive) the message, this exception
         is thrown.
-       
+
         Error code MessageErrorType_EndpointCommunicationFatalError (6)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.EndpointCommunicationFatalException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.EndpointCommunicationFatalException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a EndpointCommunicationFatalException
       </summary>
@@ -1202,15 +1207,16 @@
     <member name="T:RobotRaconteur.NodeNotFoundException">
       <summary>
         Exception thrown if the specified node cannot be found
-       
+
         When connecting to a service or sending a message, the NodeID
         and/or NodeName are specified. If the specified node
         cannot be found, this exception is thrown.
-       
+
         Error code MessageErrorType_NodeNotFound (7)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.NodeNotFoundException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.NodeNotFoundException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a NodeNotFoundException
       </summary>
@@ -1223,14 +1229,15 @@
       <summary>
         Exception thrown when an exception occurs during
         an operation on a service
-       
+
         ServiceException is a catch-all error for exceptions on services.
         See the message field for an explanation of the error that occured.
-       
+
         Error code MessageErrorType_ServiceError (8)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.ServiceException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.ServiceException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a ServiceException
       </summary>
@@ -1243,15 +1250,16 @@
       <summary>
         Exception thrown when the specified object member is
         not found
-       
+
         Service objects have member that are declared in a service definition.
         If an attempt is made to call a member that does not exist, this exception
         is thrown.
-       
+
         Error code MessageErrorType_MemberNotFound (9)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.MemberNotFoundException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.MemberNotFoundException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a MemberNotFoundException
       </summary>
@@ -1264,11 +1272,12 @@
       <summary>
         Exception thrown when a request to a member has an
         invalid MessageEntryType or the wrong message elements
-       
+
         Error code MessageErrorType_MemberFormatMismatch (10)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.MemberFormatMismatchException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.MemberFormatMismatchException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a MemberFormatMismatchException
       </summary>
@@ -1281,13 +1290,14 @@
       <summary>
         Exception thrown when incorrect data is received
         by a member
-       
+
         Make sure the provided data matches the expected data types
-       
+
         Error code MessageErrorType_DataTypeMismatch (11)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.DataTypeMismatchException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.DataTypeMismatchException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a DataTypeMismatchException
       </summary>
@@ -1300,16 +1310,17 @@
       <summary>
         Exception thrown when unexpected or incompatible
         data is provided
-       
+
         DataTypeException is sometimes thrown when there is a
         type mismatch instead of DataTypeMismatchException
-       
+
         Make sure the provided data matches the expected data types
-       
+
         Error code MessageErrorType_DataTypeError (12)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.DataTypeException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.DataTypeException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a DataTypeException
       </summary>
@@ -1321,17 +1332,18 @@
     <member name="T:RobotRaconteur.DataSerializationException">
       <summary>
         Exception thrown when data cannot be serialized
-       
+
         This exeception is thrown when the provide data cannot be serialized.
         This typically occurs inside a transport.
-       
+
         Check that the provided data matches the types supported by
         the Robot Raconteur C++ library
-       
+
         Error code MessageErrorType_DataSerializationError (13)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.DataSerializationException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.DataSerializationException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a DataSerializationException
       </summary>
@@ -1344,11 +1356,12 @@
       <summary>
         Exception thrown when an expected MessageEntry
         is not found
-       
+
         Error code MessageErrorType_MessageEntryNotfound (14)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.MessageEntryNotFoundException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.MessageEntryNotFoundException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a MessageEntryNotFoundException
       </summary>
@@ -1361,14 +1374,15 @@
       <summary>
         Exception thrown wen an expected MessageElement
         is not found
-       
+
         This exception is thrown when an expected field or parameter
         is not found.
-       
+
         Error code MessageErrorType_MessageElementNotfound (15)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.MessageElementNotFoundException.#ctor(System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.MessageElementNotFoundException.#ctor(System.String,System.String,System.Object)">
       <summary>
         Construct a MessageElementNotFoundException
       </summary>
@@ -1380,15 +1394,16 @@
     <member name="T:RobotRaconteur.UnknownException">
       <summary>
         Exception representing an unknown exception type
-       
+
         This exception is used to transmit exceptions that do not have a
         MessageErrorType code. Check the Error field for the name
         of the exception.
-       
+
         Error code MessageErrorType_UnknownError (16)
       </summary>
     </member>
-    <member name="M:RobotRaconteur.UnknownException.#ctor(System.String,System.String,System.String,System.Object)">
+    <member
+      name="M:RobotRaconteur.UnknownException.#ctor(System.String,System.String,System.String,System.Object)">
       <summary>
         Construct a UnknownException
       </summary>
@@ -1397,16 +1412,17 @@
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
     </member>
-  </members>
+  
 
   <member name="T:RobotRaconteur.InvalidOperationException">
     <summary>
       Exception thrown when an invalid operation is attempted
-       
-        Error code MessageErrorType_InvalidOperation (17)
+
+      Error code MessageErrorType_InvalidOperation (17)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.InvalidOperationException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.InvalidOperationException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a InvalidOperationException
     </summary>
@@ -1418,11 +1434,12 @@
   <member name="T:RobotRaconteur.InvalidArgumentException">
     <summary>
       Exception thrown for an invalid argument
-       
-        Error code MessageErrorType_InvalidArgument (18)
+
+      Error code MessageErrorType_InvalidArgument (18)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.InvalidArgumentException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.InvalidArgumentException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a InvalidArgumentException
     </summary>
@@ -1434,11 +1451,12 @@
   <member name="T:RobotRaconteur.OperationFailedException">
     <summary>
       Exception thrown when an operation fails
-       
-        Error code MessageErrorType_OperationFailed (19)
+
+      Error code MessageErrorType_OperationFailed (19)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.OperationFailedException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.OperationFailedException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a OperationFailedException
     </summary>
@@ -1450,11 +1468,12 @@
   <member name="T:RobotRaconteur.NullValueException">
     <summary>
       Exception thrown for an unexpected null value
-       
-        Error code MessageErrorType_NullValue (20)
+
+      Error code MessageErrorType_NullValue (20)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.NullValueException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.NullValueException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a NullValueException
     </summary>
@@ -1466,11 +1485,12 @@
   <member name="T:RobotRaconteur.InternalErrorException">
     <summary>
       Exception thrown when an internal error has occurred
-       
-        Error code MessageErrorType_InternalError (21)
+
+      Error code MessageErrorType_InternalError (21)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.InternalErrorException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.InternalErrorException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a InternalErrorException
     </summary>
@@ -1482,11 +1502,12 @@
   <member name="T:RobotRaconteur.PermissionDeniedException">
     <summary>
       Exception thrown when permission is denied to a service member
-       
-        Error code MessageErrorType_PermissionDenied (152)
+
+      Error code MessageErrorType_PermissionDenied (152)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.PermissionDeniedException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.PermissionDeniedException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a PermissionDeniedException
     </summary>
@@ -1498,11 +1519,12 @@
   <member name="T:RobotRaconteur.SystemResourcePermissionDeniedException">
     <summary>
       Exception thrown when permission to a system resource is denied
-       
-        Error code MessageErrorType_SystemResourcePermissionDenied (22)
+
+      Error code MessageErrorType_SystemResourcePermissionDenied (22)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.SystemResourcePermissionDeniedException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.SystemResourcePermissionDeniedException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a SystemResourcePermissionDeniedException
     </summary>
@@ -1514,11 +1536,12 @@
   <member name="T:RobotRaconteur.OutOfSystemResourceException">
     <summary>
       Exception thrown when a system resource has been exhausted
-       
-        Error code MessageErrorType_OutOfsystemResource (23)
+
+      Error code MessageErrorType_OutOfsystemResource (23)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.OutOfSystemResourceException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.OutOfSystemResourceException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a OutOfSystemResourceException
     </summary>
@@ -1530,11 +1553,12 @@
   <member name="T:RobotRaconteur.SystemResourceException">
     <summary>
       Exception thrown when a system resource error occurs
-       
-        Error code MessageErrorType_SystemResourceException (24)
+
+      Error code MessageErrorType_SystemResourceException (24)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.SystemResourceException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.SystemResourceException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a SystemResourceException
     </summary>
@@ -1546,11 +1570,12 @@
   <member name="T:RobotRaconteur.ResourceNotFoundException">
     <summary>
       Exception thrown when a system resource is not found
-       
-        Error code MessageErrorType_ResourceNotFound (25)
+
+      Error code MessageErrorType_ResourceNotFound (25)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.ResourceNotFoundException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.ResourceNotFoundException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a ResourceNotFoundException
     </summary>
@@ -1562,8 +1587,8 @@
   <member name="T:RobotRaconteur.IOException">
     <summary>
       Exception thrown when an input/output error occurs
-       
-        Error code MessageErrorType_IOError (26)
+
+      Error code MessageErrorType_IOError (26)
     </summary>
   </member>
   <member name="M:RobotRaconteur.IOException.#ctor(System.String,System.String,System.Object)">
@@ -1578,15 +1603,16 @@
   <member name="T:RobotRaconteur.BufferLimitViolationException">
     <summary>
       Exception thrown when a transport buffer limit is violated
-       
-        This exception typically occurs if there is a bug in
-        serialization/deserialization, or the data stream
-        has been corrupted
-       
-        Error code MessageErrorType_BufferLimitViolation (27)
+
+      This exception typically occurs if there is a bug in
+      serialization/deserialization, or the data stream
+      has been corrupted
+
+      Error code MessageErrorType_BufferLimitViolation (27)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.BufferLimitViolationException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.BufferLimitViolationException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a BufferLimitViolationException
     </summary>
@@ -1598,12 +1624,13 @@
   <member name="T:RobotRaconteur.ServiceDefinitionException">
     <summary>
       Exception thrown when a service definition cannot be
-        parsed or fails verification
-       
-        Error code MessageErrorType_ServiceDefinitionError (28)
+      parsed or fails verification
+
+      Error code MessageErrorType_ServiceDefinitionError (28)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.ServiceDefinitionException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.ServiceDefinitionException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a ServiceDefinitionException
     </summary>
@@ -1616,11 +1643,12 @@
     <summary>
       Exception thrown when an attempt to acces an array or container
       index is out of range
-       
+
       Error code MessageErrorType_OutOfRange (29)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.OutOfRangeException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.OutOfRangeException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a OutOfRangeException
     </summary>
@@ -1632,11 +1660,12 @@
   <member name="T:RobotRaconteur.KeyNotFoundException">
     <summary>
       Exception thrown when a key is not found in a map
-       
+
       Error code MessageErrorType_KeyNotFound (30)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.KeyNotFoundException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.KeyNotFoundException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a KeyNotFoundException
     </summary>
@@ -1648,11 +1677,12 @@
   <member name="T:RobotRaconteur.InvalidConfigurationException">
     <summary>
       Exception thrown when an invalid configuration is specified or encountered
-       
+
       Error code MessageErrorType_InvalidConfiguration (31)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.InvalidConfigurationException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.InvalidConfigurationException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a InvalidConfigurationException
     </summary>
@@ -1664,11 +1694,12 @@
   <member name="T:RobotRaconteur.InvalidStateException">
     <summary>
       Exception thrown when an invalid state is specified or encountered
-     
+
       Error code MessageErrorType_InvalidState (32)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.InvalidStateException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.InvalidStateException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a InvalidStateException
     </summary>
@@ -1681,14 +1712,15 @@
     <summary>
       Exception thrown when an error occurs on a remote
       member request
-     
+
       User defined exceptions declared in service definitions extend
       RobotRaconteurRemoteException
-     
+
       Error code MessageErrorType_RemoteError (100)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.RobotRaconteurRemoteException.#ctor(System.String,System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.RobotRaconteurRemoteException.#ctor(System.String,System.String,System.String,System.Object)">
     <summary>
       Construct a RobotRaconteurRemoteException
 
@@ -1704,15 +1736,16 @@
   <member name="T:RobotRaconteur.RequestTimeoutException">
     <summary>
       The request timed out
-     
+
       See RobotRaconteurNode::SetRequestTimeout(),
       or the timeout passed to an asynchronous request
-     
+
       Error code MessageErrorType_RequestTimeout (101)
-     
+
     </summary>
   </member>
-  <member name="M:RobotRaconteur.RequestTimeoutException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.RequestTimeoutException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a RequestTimeoutException
     </summary>
@@ -1724,11 +1757,12 @@
   <member name="T:RobotRaconteur.ReadOnlyMemberException">
     <summary>
       An attempt was made to write/set a read only member
-     
+
       Error code MessageErrorType_ReadOnlyMember (102)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.ReadOnlyMemberException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.ReadOnlyMemberException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a ReadOnlyMemberException
     </summary>
@@ -1740,11 +1774,12 @@
   <member name="T:RobotRaconteur.WriteOnlyMemberException">
     <summary>
       An attempt was mode to read/get a write only member
-     
+
       Error code MessageErrorType_WriteOnlyMember (103)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.WriteOnlyMemberException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.WriteOnlyMemberException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a WriteOnlyMemberException
     </summary>
@@ -1756,11 +1791,12 @@
   <member name="T:RobotRaconteur.NotImplementedException">
     <summary>
       Exception thrown if a member is not implemented
-     
+
       Error code MessageErrorType_NotImplementedError (104)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.NotImplementedException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.NotImplementedException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a NotImplementedException
     </summary>
@@ -1772,11 +1808,12 @@
   <member name="T:RobotRaconteur.MemberBusyException">
     <summary>
       Thrown is a member is busy. Retry later
-     
+
       Error code MessageErrorType_MemberBusy (105)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.MemberBusyException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.MemberBusyException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a MemberBusyException
     </summary>
@@ -1788,15 +1825,16 @@
   <member name="T:RobotRaconteur.ValueNotSetException">
     <summary>
       Exception thrown if a value has not been set
-     
+
       This exception is most often used by WireConnection.GetInValue()
       and WireConnection.GetOutValue() if InValue or OutValue
       have not been received or set
-     
+
       Error code MessageErrorType_ValueNotSet (106)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.ValueNotSetException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.ValueNotSetException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a ValueNotSetException
     </summary>
@@ -1809,11 +1847,12 @@
     <summary>
       Exception thrown when authentication is required or attempt
       to authenticate fails
-     
+
       Error code MessageErrorType_AuthenticationError (150)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.AuthenticationException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.AuthenticationException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a AuthenticationException
     </summary>
@@ -1826,15 +1865,16 @@
     <summary>
       Exception thrown when attempting to access a locked
       service object
-     
+
       Service objects can be locked using RobotRaconteurNode::RequestObjectLock().
       This exception is thrown if an attempt is made to access a service object
       (or sub-object) that has been locked by another user or session.
-     
+
       Error code MessageErrorType_ObjectLockedError (151)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.ObjectLockedException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.ObjectLockedException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a ObjectLockedException
     </summary>
@@ -1846,13 +1886,14 @@
   <member name="T:RobotRaconteur.AbortOperationException">
     <summary>
       Exception passed to generators to trigger an abort
-     
+
       This is typically not thrown or received by the user
-     
+
       Error code MessageErrorType_AbortOperation (107)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.AbortOperationException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.AbortOperationException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a AbortOperationException
     </summary>
@@ -1864,19 +1905,20 @@
   <member name="T:RobotRaconteur.OperationAbortedException">
     <summary>
       Exception thrown when an operation is aborted
-     
+
       This is thrown be generator functions when Abort()
       is called
-     
+
       Generators are destroyed after throwing
       OperationAbortedException during Next()
-     
+
       This error is passed to generators to trigger an abort
-     
+
       Error code MessageErrorType_OperationAborted (108)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.OperationAbortedException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.OperationAbortedException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a OperationAbortedException
     </summary>
@@ -1888,16 +1930,17 @@
   <member name="T:RobotRaconteur.StopIterationException">
     <summary>
       Exception thrown when a generator has finished sending results
-     
+
       StopIterationException is not an error condition. It signals
       that a generator is finished sending results.
-     
+
       This error is passed to generators to trigger a close
-     
+
       Error code MessageErrorType_StopIteration (109)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.StopIterationException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.StopIterationException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a StopIterationException
     </summary>
@@ -1909,11 +1952,12 @@
   <member name="T:RobotRaconteur.OperationTimeoutException">
     <summary>
       Exception thrown when an operation does not complete in the expected time
-          
+
       Error code MessageErrorType_OperationTimeout (110)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.OperationTimeoutException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.OperationTimeoutException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a OperationTimeoutException
     </summary>
@@ -1925,11 +1969,12 @@
   <member name="T:RobotRaconteur.OperationCancelledException">
     <summary>
       Exception thrown when an operation is cancelled before it is started
-          
+
       Error code MessageErrorType_OperationCancelled (111)
     </summary>
   </member>
-  <member name="M:RobotRaconteur.OperationCancelledException.#ctor(System.String,System.String,System.Object)">
+  <member
+    name="M:RobotRaconteur.OperationCancelledException.#ctor(System.String,System.String,System.Object)">
     <summary>
       Construct a OperationCancelledException
     </summary>
@@ -1937,5 +1982,271 @@
     <param name="sub_name">Optional error sub_name</param>
     <param name="param_">Optional error param</param>
   </member>
+
+  <member name="T:RobotRaconteur.RobotRaconteurNodeSetupFlags">
+    <summary>
+      Setup option flags
+
+      Setup option flags passed to node setup classes to select options to enable
+      and disable. Flags are used to configure the following types of options:
+
+      1. Enable and disable transport types
+      2. Modify transport options including discovery, security requirements, and connection
+      listening
+      3. Configure TLS behavior
+      4. Enable local tap for logging
+
+      Node setup classes also allow options and flags to be "overridden" using
+      command line options. Use the `*_ALLOW_OVERRIDE` options to configure
+      when these overrides are allowed.
+
+      The ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup
+      are convenience classes for the most commonly used options.
+    </summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NONE">
+    <summary>No options enabled</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_NODE_DISCOVERY_LISTENING">
+    <summary>Enable node discovery listening on all transports</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_NODE_ANNOUNCE">
+    <summary>Enable node announce on all transports</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_LOCAL_TRANSPORT">
+    <summary>Enable LocalTransport</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT">
+    <summary>Enable TcpTransport</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_HARDWARE_TRANSPORT">
+    <summary>Enable HardwareTransport</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_START_SERVER">
+    <summary>Start the LocalTransport server to listen for incoming clients</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_START_CLIENT">
+    <summary>Start the LocalTransport client with specified node name</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER">
+    <summary>Start the TcpTransport server to listen for incoming clients on the specified port</summary>
+  </member>
+  <member
+    name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER_PORT_SHARER">
+    <summary>Start the TcpTransport server to incoming for incoming clients using the port sharer</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_MESSAGE4">
+    <summary>Disable Message Format Version 4 on all transports</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_STRINGTABLE">
+    <summary>Disable Message Format Version 4 string table on all transports</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_TIMEOUTS">
+    <summary>Disable all timeouts (useful for debugging)</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOAD_TLS_CERT">
+    <summary>Load the TLS certificate for TcpTransport</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.REQUIRE_TLS">
+    <summary>Require TLS for all clients on TcpTransport</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_SERVER_PUBLIC">
+    <summary>Make LocalTransport server listen for incoming clients from all users</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NODENAME_OVERRIDE">
+    <summary>Allow NodeName to be configured using command line options</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NODEID_OVERRIDE">
+    <summary>Allow NodeID to be configured using command line options</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_PORT_OVERRIDE">
+    <summary>Allow TCP port to be configured using command line options</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_WEBSOCKET_ORIGIN_OVERRIDE">
+    <summary>Allow TCP WebSocket origin control to be configured using command line options</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_INTRA_TRANSPORT">
+    <summary>Enable IntraTransport</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.INTRA_TRANSPORT_START_SERVER">
+    <summary>Start the IntraTransport server to listen for incoming clients</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TAP_ENABLE">
+    <summary>Enable the LocalTap debug logging system</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TAP_NAME">
+    <summary>Allow the user to set the LocalTap name</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_ALL_TRANSPORTS">
+    <summary>Convenience flag to enable all transports</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT">
+    <summary>Default configuration for client nodes (See ClientNodeSetup)</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT_ALLOWED_OVERRIDE">
+    <summary>Default allowed overrides for client nodes (See ClientNodeSetup)</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SERVER_DEFAULT">
+    <summary>Default configuration for server nodes</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SERVER_DEFAULT_ALLOWED_OVERRIDE">
+    <summary>Default allowed overrides for server nodes</summary>
+  </member>
+  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT">
+    <summary>Default configuration for server nodes requiring TLS network transports</summary>
+  </member>
+  <member
+    name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE">
+    <summary>Default allowed overrides for server nodes requiring TLS network transports</summary>
+  </member>
+
+  <member name="T:RobotRaconteur.CommandLineConfigParser">
+    <summary>
+      Command line parser for node setup classes
+
+      The CommandLineConfigParser is used to parse command line options specified
+      when a program is launched. These options allow for the node configuration to be
+      changed without recompiling the software. See command_line_options for
+      a table of the standard command line options.
+
+      ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup use this class to parse
+      the `sys.argv` parameters. The RobotRaconteurNodeSetup constructors will accept
+      either `sys.argv`, or will accept an initialize CommandLineConfigParser.
+
+      The CommandLineConfig() constructor takes the "allowed override" flags, and the option prefix.
+      The "allowed override" specifies which options can be overridden using the command line. The
+      prefix option allows the command line flag prefix to be changed. By default it expects
+      all options to begin with `--robotraconteur-` followed by the name of the option. If there are
+      multiple nodes, it is necessary to change the prefix to be unique for each node. For instance,
+      "robotraconteur1-" for the first node and "robotraconteur2-" for the second node.
+
+      Users may add additional options to the parser. Use AddStringOption(),
+      AddBoolOption(), or AddIntOption() to add additional options.
+    </summary>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.SetDefaults(System.String,System.UInt16,System.UInt32)">
+    <summary>
+      Set the default NodeName, TCP port, and flags
+
+      The command line options will be allowed to override the options
+      specified in allowed_overrides passed to CommandLineConfigParser().
+    </summary>
+    <param name="node_name">The default NodeName</param>
+    <param name="tcp_port">The default TCP port</param>
+    <param name="default_flags">The default flags</param>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.AddStringOption(System.String,System.String)">
+    <summary>
+      Add a new string option
+    </summary>
+    <param name="name">The name of the option</param>
+    <param name="descr">Description of the option</param>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.AddBoolOption(System.String,System.String)">
+    <summary>
+      Add a new bool option
+    </summary>
+    <param name="name">The name of the option</param>
+    <param name="descr">Description of the option</param>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.AddIntOption(System.String,System.String)">
+    <summary>
+      Add a new int option
+    </summary>
+    <param name="name">The name of the option</param>
+    <param name="descr">Description of the option</param>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.ParseCommandLine(System.String[])">
+    <summary>
+      Parse a specified string vector containing the options
+
+      Results are stored in the instance
+    </summary>
+    <param name="args">The options as a string list</param>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsString(System.String)">
+    <summary>
+      Get the option value as a string
+
+      Returns empty string if option not specified on command line
+    </summary>
+    <param name="option">The name of the option</param>
+    <returns>The option value, or an empty string</returns>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsString(System.String,System.String)">
+    <summary>
+      Get the option value as a string
+
+      Returns default_value if option not specified on command line
+    </summary>
+    <param name="option">The name of the option</param>
+    <param name="default_value">The default option value</param>
+    <returns>The option value, or default_value if not specified on command line</returns>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsBool(System.String)">
+    <summary>
+      Get the option value as a bool
+
+      Returns false if option not specified on command line
+    </summary>
+    <param name="option">The name of the option</param>
+    <returns>The option value, or false</returns>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsBool(System.String,System.Boolean)">
+    <summary>
+      Get the option value as a bool
+
+      Returns default_value if option not specified on command line
+    </summary>
+    <param name="option">The name of the option</param>
+    <param name="default_value">The default option value</param>
+    <returns>The option value, or default_value if not specified on command line</returns>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsInt(System.String)">
+    <summary>
+      Get the option value as an int
+
+      Returns -1 if option not specified on command line
+    </summary>
+    <param name="option">The name of the option</param>
+    <returns>The option value, or -1</returns>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsInt(System.String,System.Int32)">
+    <summary>
+      Get the option value as an int
+
+      Returns default_value if option not specified on command line
+    </summary>
+    <param name="option">The name of the option</param>
+    <param name="default_value">The default option value</param>
+    <returns>The option value, or default_value if not specified on command line</returns>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.#ctor(System.UInt32)">
+    <summary>
+      Construct a new CommandLineConfigParser
+    </summary>
+    <param name="allowed_overrides">The allowed overrides flags</param>
+  </member>
+
+  <member name="M:RobotRaconteur.CommandLineConfigParser.#ctor(System.UInt32,System.String)">
+    <summary>
+      Construct a new CommandLineConfigParser
+    </summary>
+    <param name="allowed_overrides">The allowed overrides flags</param>
+    <param name="prefix">The prefix to use for the options</param>
+  </member>
+</members>
 
 </doc>
