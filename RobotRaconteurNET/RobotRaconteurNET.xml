@@ -1079,8 +1079,863 @@
       <returns>The registered service types</returns>
     </member>
 
-    
-    
+    <member name="T:RobotRaconteur.ConnectionException">
+      <summary>
+        Exception thrown when connection to remote node fails
+        
+        This exception is thrown if a connection cannot be created,
+        the connection fails, or the connection has been closed.
+        Error code MessageErrorType_ConnectionError (1)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.ConnectionException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ConnectionException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
 
+    <member name="T:RobotRaconteur.ProtocolException">
+      <summary>
+        Exception thrown when a protocol failure occurs on
+        a tranport connection
+
+        Error code MessageErrorType_ProtocolError (2)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.ProtocolException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ProtocolException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ServiceNotFoundException">
+      <summary>
+        Exception thrown when a service cannot be found
+        on a remote node
+       
+        Error code MessageErrorType_ServiceNotFound (3)       
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.ServiceNotFoundException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ServiceNotFoundException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ObjectNotFoundException">
+      <summary>
+        Exception thrown when a service object cannot
+        be found
+       
+        This error is thrown when a specified service path
+        does not have an assosciate object. The object may
+        have been released by the service, or the service
+        path is invalid
+       
+        Error code MessageErrorType_ObjectNotFound (4)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.ObjectNotFoundException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ObjectNotFoundException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+    
+    <member name="T:RobotRaconteur.InvalidEndpointException">
+      <summary>
+        Exception thrown when an attempt is made
+        to send a message to an invalid endpoint
+       
+        Transports between two nodes terminate with a pair
+        of endpoints, one in each node. If the client, service,
+        service endpoint, or transport is destroyed, the endpoint
+        will be deleted. This exception is thrown if the
+        target endpoint is no longer available.
+       
+        Error code MessageErrorType_InvalidEndpoint (5)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.InvalidEndpointException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a InvalidEndpointException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.EndpointCommunicationFatalException">
+      <summary>
+        Exception thrown when an attempt to send a
+        message to an endpoint fails
+       
+        Transports between two nodes terminate with a pair
+        of endpoints, one in each node. Messages are sent
+        between endpoint pairs. If for some reason the endpoint
+        cannot send (or receive) the message, this exception
+        is thrown.
+       
+        Error code MessageErrorType_EndpointCommunicationFatalError (6)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.EndpointCommunicationFatalException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a EndpointCommunicationFatalException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.NodeNotFoundException">
+      <summary>
+        Exception thrown if the specified node cannot be found
+       
+        When connecting to a service or sending a message, the NodeID
+        and/or NodeName are specified. If the specified node
+        cannot be found, this exception is thrown.
+       
+        Error code MessageErrorType_NodeNotFound (7)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.NodeNotFoundException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a NodeNotFoundException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ServiceException">
+      <summary>
+        Exception thrown when an exception occurs during
+        an operation on a service
+       
+        ServiceException is a catch-all error for exceptions on services.
+        See the message field for an explanation of the error that occured.
+       
+        Error code MessageErrorType_ServiceError (8)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.ServiceException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ServiceException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.MemberNotFoundException">
+      <summary>
+        Exception thrown when the specified object member is
+        not found
+       
+        Service objects have member that are declared in a service definition.
+        If an attempt is made to call a member that does not exist, this exception
+        is thrown.
+       
+        Error code MessageErrorType_MemberNotFound (9)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.MemberNotFoundException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a MemberNotFoundException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.MemberFormatMismatchException">
+      <summary>
+        Exception thrown when a request to a member has an
+        invalid MessageEntryType or the wrong message elements
+       
+        Error code MessageErrorType_MemberFormatMismatch (10)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.MemberFormatMismatchException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a MemberFormatMismatchException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.DataTypeMismatchException">
+      <summary>
+        Exception thrown when incorrect data is received
+        by a member
+       
+        Make sure the provided data matches the expected data types
+       
+        Error code MessageErrorType_DataTypeMismatch (11)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.DataTypeMismatchException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a DataTypeMismatchException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.DataTypeException">
+      <summary>
+        Exception thrown when unexpected or incompatible
+        data is provided
+       
+        DataTypeException is sometimes thrown when there is a
+        type mismatch instead of DataTypeMismatchException
+       
+        Make sure the provided data matches the expected data types
+       
+        Error code MessageErrorType_DataTypeError (12)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.DataTypeException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a DataTypeException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.DataSerializationException">
+      <summary>
+        Exception thrown when data cannot be serialized
+       
+        This exeception is thrown when the provide data cannot be serialized.
+        This typically occurs inside a transport.
+       
+        Check that the provided data matches the types supported by
+        the Robot Raconteur C++ library
+       
+        Error code MessageErrorType_DataSerializationError (13)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.DataSerializationException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a DataSerializationException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.MessageEntryNotFoundException">
+      <summary>
+        Exception thrown when an expected MessageEntry
+        is not found
+       
+        Error code MessageErrorType_MessageEntryNotfound (14)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.MessageEntryNotFoundException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a MessageEntryNotFoundException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.MessageElementNotFoundException">
+      <summary>
+        Exception thrown wen an expected MessageElement
+        is not found
+       
+        This exception is thrown when an expected field or parameter
+        is not found.
+       
+        Error code MessageErrorType_MessageElementNotfound (15)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.MessageElementNotFoundException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a MessageElementNotFoundException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.UnknownException">
+      <summary>
+        Exception representing an unknown exception type
+       
+        This exception is used to transmit exceptions that do not have a
+        MessageErrorType code. Check the Error field for the name
+        of the exception.
+       
+        Error code MessageErrorType_UnknownError (16)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.UnknownException.#ctor(System.String,System.String,System.String,System.Object)">
+      <summary>
+        Construct a UnknownException
+      </summary>
+      <param name="error">The name of the exception</param>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
   </members>
+
+  <member name="T:RobotRaconteur.InvalidOperationException">
+    <summary>
+      Exception thrown when an invalid operation is attempted
+       
+        Error code MessageErrorType_InvalidOperation (17)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.InvalidOperationException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a InvalidOperationException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.InvalidArgumentException">
+    <summary>
+      Exception thrown for an invalid argument
+       
+        Error code MessageErrorType_InvalidArgument (18)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.InvalidArgumentException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a InvalidArgumentException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.OperationFailedException">
+    <summary>
+      Exception thrown when an operation fails
+       
+        Error code MessageErrorType_OperationFailed (19)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.OperationFailedException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a OperationFailedException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.NullValueException">
+    <summary>
+      Exception thrown for an unexpected null value
+       
+        Error code MessageErrorType_NullValue (20)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.NullValueException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a NullValueException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.InternalErrorException">
+    <summary>
+      Exception thrown when an internal error has occurred
+       
+        Error code MessageErrorType_InternalError (21)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.InternalErrorException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a InternalErrorException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.PermissionDeniedException">
+    <summary>
+      Exception thrown when permission is denied to a service member
+       
+        Error code MessageErrorType_PermissionDenied (152)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.PermissionDeniedException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a PermissionDeniedException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.SystemResourcePermissionDeniedException">
+    <summary>
+      Exception thrown when permission to a system resource is denied
+       
+        Error code MessageErrorType_SystemResourcePermissionDenied (22)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.SystemResourcePermissionDeniedException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a SystemResourcePermissionDeniedException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.OutOfSystemResourceException">
+    <summary>
+      Exception thrown when a system resource has been exhausted
+       
+        Error code MessageErrorType_OutOfsystemResource (23)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.OutOfSystemResourceException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a OutOfSystemResourceException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.SystemResourceException">
+    <summary>
+      Exception thrown when a system resource error occurs
+       
+        Error code MessageErrorType_SystemResourceException (24)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.SystemResourceException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a SystemResourceException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.ResourceNotFoundException">
+    <summary>
+      Exception thrown when a system resource is not found
+       
+        Error code MessageErrorType_ResourceNotFound (25)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.ResourceNotFoundException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a ResourceNotFoundException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.IOException">
+    <summary>
+      Exception thrown when an input/output error occurs
+       
+        Error code MessageErrorType_IOError (26)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.IOException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a IOException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.BufferLimitViolationException">
+    <summary>
+      Exception thrown when a transport buffer limit is violated
+       
+        This exception typically occurs if there is a bug in
+        serialization/deserialization, or the data stream
+        has been corrupted
+       
+        Error code MessageErrorType_BufferLimitViolation (27)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.BufferLimitViolationException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a BufferLimitViolationException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.ServiceDefinitionException">
+    <summary>
+      Exception thrown when a service definition cannot be
+        parsed or fails verification
+       
+        Error code MessageErrorType_ServiceDefinitionError (28)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.ServiceDefinitionException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a ServiceDefinitionException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.OutOfRangeException">
+    <summary>
+      Exception thrown when an attempt to acces an array or container
+      index is out of range
+       
+      Error code MessageErrorType_OutOfRange (29)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.OutOfRangeException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a OutOfRangeException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.KeyNotFoundException">
+    <summary>
+      Exception thrown when a key is not found in a map
+       
+      Error code MessageErrorType_KeyNotFound (30)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.KeyNotFoundException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a KeyNotFoundException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.InvalidConfigurationException">
+    <summary>
+      Exception thrown when an invalid configuration is specified or encountered
+       
+      Error code MessageErrorType_InvalidConfiguration (31)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.InvalidConfigurationException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a InvalidConfigurationException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.InvalidStateException">
+    <summary>
+      Exception thrown when an invalid state is specified or encountered
+     
+      Error code MessageErrorType_InvalidState (32)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.InvalidStateException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a InvalidStateException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.RobotRaconteurRemoteException">
+    <summary>
+      Exception thrown when an error occurs on a remote
+      member request
+     
+      User defined exceptions declared in service definitions extend
+      RobotRaconteurRemoteException
+     
+      Error code MessageErrorType_RemoteError (100)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.RobotRaconteurRemoteException.#ctor(System.String,System.String,System.String,System.Object)">
+    <summary>
+      Construct a RobotRaconteurRemoteException
+
+      error should be the fully qualified type of the exception
+      for user defined exceptions
+    </summary>
+    <param name="error">The name of the exception</param>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.RequestTimeoutException">
+    <summary>
+      The request timed out
+     
+      See RobotRaconteurNode::SetRequestTimeout(),
+      or the timeout passed to an asynchronous request
+     
+      Error code MessageErrorType_RequestTimeout (101)
+     
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.RequestTimeoutException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a RequestTimeoutException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.ReadOnlyMemberException">
+    <summary>
+      An attempt was made to write/set a read only member
+     
+      Error code MessageErrorType_ReadOnlyMember (102)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.ReadOnlyMemberException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a ReadOnlyMemberException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.WriteOnlyMemberException">
+    <summary>
+      An attempt was mode to read/get a write only member
+     
+      Error code MessageErrorType_WriteOnlyMember (103)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.WriteOnlyMemberException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a WriteOnlyMemberException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.NotImplementedException">
+    <summary>
+      Exception thrown if a member is not implemented
+     
+      Error code MessageErrorType_NotImplementedError (104)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.NotImplementedException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a NotImplementedException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.MemberBusyException">
+    <summary>
+      Thrown is a member is busy. Retry later
+     
+      Error code MessageErrorType_MemberBusy (105)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.MemberBusyException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a MemberBusyException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.ValueNotSetException">
+    <summary>
+      Exception thrown if a value has not been set
+     
+      This exception is most often used by WireConnection.GetInValue()
+      and WireConnection.GetOutValue() if InValue or OutValue
+      have not been received or set
+     
+      Error code MessageErrorType_ValueNotSet (106)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.ValueNotSetException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a ValueNotSetException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.AuthenticationException">
+    <summary>
+      Exception thrown when authentication is required or attempt
+      to authenticate fails
+     
+      Error code MessageErrorType_AuthenticationError (150)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.AuthenticationException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a AuthenticationException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.ObjectLockedException">
+    <summary>
+      Exception thrown when attempting to access a locked
+      service object
+     
+      Service objects can be locked using RobotRaconteurNode::RequestObjectLock().
+      This exception is thrown if an attempt is made to access a service object
+      (or sub-object) that has been locked by another user or session.
+     
+      Error code MessageErrorType_ObjectLockedError (151)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.ObjectLockedException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a ObjectLockedException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.AbortOperationException">
+    <summary>
+      Exception passed to generators to trigger an abort
+     
+      This is typically not thrown or received by the user
+     
+      Error code MessageErrorType_AbortOperation (107)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.AbortOperationException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a AbortOperationException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.OperationAbortedException">
+    <summary>
+      Exception thrown when an operation is aborted
+     
+      This is thrown be generator functions when Abort()
+      is called
+     
+      Generators are destroyed after throwing
+      OperationAbortedException during Next()
+     
+      This error is passed to generators to trigger an abort
+     
+      Error code MessageErrorType_OperationAborted (108)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.OperationAbortedException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a OperationAbortedException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.StopIterationException">
+    <summary>
+      Exception thrown when a generator has finished sending results
+     
+      StopIterationException is not an error condition. It signals
+      that a generator is finished sending results.
+     
+      This error is passed to generators to trigger a close
+     
+      Error code MessageErrorType_StopIteration (109)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.StopIterationException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a StopIterationException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.OperationTimeoutException">
+    <summary>
+      Exception thrown when an operation does not complete in the expected time
+          
+      Error code MessageErrorType_OperationTimeout (110)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.OperationTimeoutException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a OperationTimeoutException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
+  <member name="T:RobotRaconteur.OperationCancelledException">
+    <summary>
+      Exception thrown when an operation is cancelled before it is started
+          
+      Error code MessageErrorType_OperationCancelled (111)
+    </summary>
+  </member>
+  <member name="M:RobotRaconteur.OperationCancelledException.#ctor(System.String,System.String,System.Object)">
+    <summary>
+      Construct a OperationCancelledException
+    </summary>
+    <param name="message">Message for the user</param>
+    <param name="sub_name">Optional error sub_name</param>
+    <param name="param_">Optional error param</param>
+  </member>
+
 </doc>
