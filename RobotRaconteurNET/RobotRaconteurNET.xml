@@ -231,9 +231,7 @@
     <member name="P:RobotRaconteur.RobotRaconteurNET.MessageElementFlags_Version2Compat">
       <summary>MessageElement flags for compatibility with Message Format Version 2</summary>
     </member>
-    <member name="F:RobotRaconteur.RobotRaconteurNET.RR_TIMEOUT_INFINITE">
-      <summary>Disable timeout for asynchronous operations</summary>
-    </member>
+    
     <member name="F:RobotRaconteur.RobotRaconteurNET.RR_VALUE_LIFESPAN_INFINITE">
       <summary>Set wire values to have infinite lifespan and will not expire</summary>
     </member>
@@ -879,179 +877,12 @@
       </summary>
     </member>
 
-    <member name="T:RobotRaconteur.RobotRaconteurNode">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.RegisterTransport">
       <summary>
-        The central node implementation
-
-        RobotRaconteurNode implements the current Robot Raconteur instance
-        and acts as the central switchpoint for the instance. The user
-        registers types, connects clients, registers services, and
-        registers transports through this class.
-
-        If the current program only needs one instance of RobotRaconteurNode,
-        the singleton can be used. The singleton is accessed using:
-
-        `RobotRaconteurNode.s`
-
-        The node must be shut down before existing the program,
-        or a memory leak/hard crash will occur. This can either be
-        accomplished manually using the `Shutdown()` function,
-        or automatically by using the ClientNodeSetup or
-        ServerNodeSetup classes.
+        Register a transport for use by the node
       </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.s">
-      <summary>
-        Singleton accessor
-
-        The RobotRaconteurNode singleton can be used when only
-        one instance of Robot Raconteur is required in a program.
-        The singleton must be shut down when the program exits.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.ThreadPoolCount">
-      <summary>
-        Get or set the number of threads for the node ThreadPool
-
-        The ThreadPool will use a maximum of count threads. If
-        this number is lower than the current ThreadPool count,
-        the ThreadPool will attempt to release threads beyond count
-        as they return to idle
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.NowUTC">
-      <summary>
-        The current time in UTC time zone
-
-        Uses the internal node clock to get the current time in UTC.
-        While this will normally use the system clock, this may
-        use simulation time in certain circumstances
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.NowNodeTime">
-      <summary>
-        The current node time
-
-        UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
-        of the system clock being updated by the user. For a real-time systems,
-        this is unaccetpable and can lead to system instability. The "node time" used by Robot
-        Raconteur
-        is synchronized to UTC at startup, and is then steadily increasing from that initial time.
-        It will ignore changes to the system clock, and will also ignore corrections like leap
-        seconds.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.NodeSyncTimeUTC">
-      <summary>
-        The sync time of the node
-
-        The node synchronizes it's clock with the system time in UTC
-        when the node is initialized. After this time, a steady
-        clock is used. This prevents the clock from jumping
-        forward and back in time. It will no longer be updated
-        by changes in the system time.
-
-        If an external high precision clock source like PTP is available,
-        that clock will be used in place of the system and steady clock.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.NowTimeSpec">
-      <summary>
-        The current node time as a TimeSpec
-
-        The current node time as a TimeSpec. See NowNodeTime
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.NodeSyncTimeSpec">
-      <summary>
-        The sync time of the node as a TimeSpec
-
-        See NodeSyncTimeUTC
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.RequestTimeout">
-      <summary>
-        Get or set the timeout for requests in milliseconds
-
-        Requests are calls to a remote node that expect a response. `function`,
-        `property`, `callback`, `memory`, and setup calls in `pipe` and `wire`
-        are all requests. All other Robot Raconteur functions that call the remote
-        node and expect a response are requests. Default timeout is 15 seconds.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.TransportInactivityTimeout">
-      <summary>
-        Get or set the timeout for transport activity in milliseconds
-
-        Sets a timeout for transport inactivity. If no message
-        is sent or received on the transport for the specified time,
-        the transport is closed. Default timeout is 10 minutes.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.EndpointInactivityTimeout">
-      <summary>
-        Get or set the timeout for endpoint activity in milliseconds
-
-        Sets a timeout for endpoint inactivity. If no message
-        is sent or received by the endpoint for the specified time,
-        the endpoint is closed. Default timeout is 10 minutes.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.MemoryMaxTransferSize">
-      <summary>
-        Get or set the maximum chunk size for memory transfers in bytes
-
-        `memory` members break up large transfers into chunks to avoid
-        sending messages larger than the transport maximum, which is normally
-        approximately 10 MB. The memory max transfer size is the largest
-        data chunk the memory will send, in bytes. Default is 100 kB.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.NodeID">
-      <summary>
-        Get or set the current NodeID
-
-        Gets or setthe current NodeID. If one has not been set,
-        one will be automatically generated. Cannot be set if a NodeID has been assigned.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.NodeName">
-      <summary>
-        Get or set the current NodeName
-
-        Gets or set the current NodeName. If one has not been set using,
-        it will be an empty string. Cannot be set if a NodeName has been assigned.
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.RobotRaconteurVersion">
-      <summary>
-        Get the current RobotRaconteurVersion as a string
-
-        Version is three numbers separated by dots, ie "0.9.2"
-      </summary>
-    </member>
-
-    <member name="P:RobotRaconteur.RobotRaconteurNode.NodeDiscoveryMaxCacheCount">
-      <summary>
-        Get or set the maximum number of detected nodes that will be cached
-
-        The node keeps a cache of detected nodes. The NodeDiscoveryMaxCacheCount
-        sets an upper limit to how many detected nodes are cached. By default set to 4096
-      </summary>
+      <param name="transport">The transport to register</param>
+      <returns>The transport internal id</returns>
     </member>
 
     <member name="M:RobotRaconteur.RobotRaconteurNode.SelectRemoteNodeURL">
@@ -1080,145 +911,22 @@
       <param name="urls">The candidate URLs</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.SplitQualifiedName">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.UnregisterServiceType">
       <summary>
-        Split a qualified name into its service definition name and unqualified name parts
+        Unregister a previously registered service type
+
+        This function is not recommended as the results can be
+        unpredicatle
       </summary>
-      <returns>Tulpe containing service definition name and unqualified name</returns>
+      <param name="type">The type to unregister</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncConnectService">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.IsServiceTypeRegistered">
       <summary>
-        Asynchronously create a client connection to a remote service using a URL
-
-        Same as ConnectService but async. See ConnectService() for more details
-        on client connections.
+        Check if a service type has been registered
       </summary>
-      <param name="url">The URL of the service to connect</param>
-      <param name="username">An optional username for authentication</param>
-      <param name="credentials">Optional credentials for authentication</param>
-      <param name="listener">An optional listener callback function</param>
-      <param name="objecttype">The desired root object proxy type. Optional but highly recommended.</param>
-      <param name="timeout">Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
-      <returns>Task that returns the client object upon completion</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncDisconnectService">
-      <summary>
-        Asynchronously disconnects a client connection to a service
-
-        Same as DisconnectService() but async.
-      </summary>
-      <param name="obj">The root object of the client to disconnect</param>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByID">
-      <summary>
-        Asynchronously finds nodes on the network with the specified NodeID
-
-        Same as FindNodeByID() but async
-      </summary>
-      <param name="id">The NodeID to find</param>
-      <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`,
-        `rrs+tcp`, etc</param>
-      <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not
-        recommended.</param>
-      <returns>Task that returns array of detected nodes upon completion</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncFindNodeByName">
-      <summary>
-        Asynchronously finds nodes on the network with the specified NodeName
-
-        Same as FindNodeByName() but async
-      </summary>
-      <param name="name">The NodeName to find</param>
-      <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`,
-        `rrs+tcp`, etc</param>
-      <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not
-        recommended.</param>
-      <returns>Task that returns array of detected nodes upon completion</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncFindObjectType">
-      <summary>
-        Asynchronously returns the type of a service object
-
-        Same as FindObjectType() but async
-      </summary>
-      <param name="obj">The object with the desired `objref`</param>
-      <param name="objref">The name of the `objref` member</param>
-      <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
-      <param name="timeout">Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout</param>
-      <returns>Task that returns fully qualified object type upon completion</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncFindObjRefTyped">
-      <summary>
-        Asynchronously returns an objref as a specific type
-
-        Same as FindObjectType() but async
-      </summary>
-
-      <param name="obj">The object with the desired `objref`</param>
-      <param name="objref">The name of the `objref` member</param>
-      <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
-      <param name="objecttype">The desired service object type</param>
-      <param name="timeout">Timeout is milliseconds, or RR_TIMEOUT_INFINITE for no timeout</param>
-      <returns>Task that returns the object reference</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncFindServiceByType">
-      <summary>
-        Asynchronously use discovery to find availabe services by service type
-     
-      Same as FindServiceByType() but async
-      </summary>
-      <param name="servicetype">The service type to find, ie `com.robotraconteur.robotics.robot.Robot`</param>
-      <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
-      <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.</param>
-      <returns>A task that returns array of detected services upon completion</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncReleaseObjectLock">
-      <summary>
-        Asynchronously release an excluse access lock previously locked
-      with RequestObjectLock() or AsyncRequestObjectLock()
-     
-      Same as ReleaseObjectLock() but async
-      </summary>
-      <param name="obj">The object previously locked</param>
-      <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE</param>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncRequestObjectLock">
-      <summary>
-        Asynchronously request an exclusive access lock to a service object
-     
-      Same as RequestObjectLock() but async
-      </summary>
-      <param name="obj">The object to lock. Must be returned by ConnectService or returned by an `objref`</param>
-      <param name="flags">Select either a "User" or "Session" lock</param>
-      <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE</param>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.AsyncUpdateDetectedNodes">
-      <summary>
-        Asynchronously update the detected nodes cache
-     
-      Same as UpdateDetectedNodes() but async
-      </summary>
-      <param name="schemes">A vector of transport schemes, ie "rr+tcp", "rr+local", etc. to update.</param>
-      <param name="timeout">The timeout for the operation in milliseconds. This function will often run
-         for the full timeout, so values less than 5 seconds are recommended.</param>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.CheckConnection">
-      <summary>
-        Check that the TransportConnection associated with an endpoint
-      is connected
-      </summary>
-      <param name="endpoint">The LocalEndpoint identifier to check</param>
+      <param name="type">The name of the service type to check</param>
+      <returns>true if registered, otherwise false</returns>
     </member>
 
     <member name="M:RobotRaconteur.RobotRaconteurNode.CloseService">
@@ -1230,53 +938,23 @@
       </summary>
       <param name="sname">The name of the service to close</param>
     </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.CompareLogLevel">
+        
+    <member name="M:RobotRaconteur.RobotRaconteurNode.CheckConnection">
       <summary>
-        Test if the specified log level would be accepted
+        Check that the TransportConnection associated with an endpoint
+      is connected
       </summary>
-      <param name="log_level">Log level to test</param>
-      <returns>true if the log would be accepted</returns>
+      <param name="endpoint">The LocalEndpoint identifier to check</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.ConnectService">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.Sleep">
       <summary>
-        Create a client connection to a remote service using a URL
-     
-      Synchronously creates a connection to a remote service using a URL. URLs are either provided by
-      the service, or are determined using discovery functions such as FindServiceByType().
-      This function is the primary way to create client connections.
-     
-      username and credentials can be used to specify authentication information. Credentials will
-      often contain a "password" or token entry.
-     
-      The listener is a function that is called during various events. See ClientServiceListenerEventType
-      for a description of the possible events.
-     
-      ConnectService will attempt to instantiate a client object reference (proxy) based on the type
-      information provided by the service. The type information will contain the type of the object,
-      and all the implemented types. The client will normally want a specific one of the implement types.
-      Specify this desired type in objecttype to avoid future compatibility issues.
-     
-      Requires multithreading
+        Sleeps for a specified duration
 
+        Normally will sleep based on the system clock, but in certain
+        circumstances will use simulation time
       </summary>
-      <param name="url">The URL of the service to connect</param>
-      <param name="username">An optional username for authentication</param>
-      <param name="credentials">Optional credentials for authentication</param>
-      <param name="listener">An optional listener callback function</param>
-      <param name="objecttype">The desired root object proxy type. Optional but highly recommended.</param>
-      <returns>The root object reference of the connected service</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.CreateAutoResetEvent">
-      <summary>
-        Create an AutoResetEvent object
-     
-      Normally the AutoResetEvent will use the system clock for timeouts,
-      but in certain circumstances will use simulation time
-      </summary>
-      <returns>The new AutoResetEvent object</returns>
+      <param name="duration">Duration to sleep in milliseconds</param>
     </member>
 
     <member name="M:RobotRaconteur.RobotRaconteurNode.CreateRate">
@@ -1291,239 +969,22 @@
       <returns>The new Rate object</returns>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.CreateTimer">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.CreateAutoResetEvent">
       <summary>
-        Create a Timer object
+        Create an AutoResetEvent object
      
-      This function will normally return a WallTimer instance
-     
-      Start() must be called after timer creation
+      Normally the AutoResetEvent will use the system clock for timeouts,
+      but in certain circumstances will use simulation time
       </summary>
-      <param name="period">The period of the timer</param>
-      <param name="handler">The handler function to call when timer times out</param>
-      <param name="oneshot">True if timer is a one-shot timer, false for repeated timer</param>
-      <returns>The new Timer object. Must call Start()</returns>
+      <returns>The new AutoResetEvent object</returns>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.DisconnectService">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.CompareLogLevel">
       <summary>
-        Disconnects a client connection to a service
-     
-      Synchronously disconnects a client connection. Client connections
-      are automatically closed by Shutdown(), so this function
-      is optional.
-     
-      Requires multithreading
+        Test if the specified log level would be accepted
       </summary>
-      <param name="obj">The root object of the service to disconnect</param>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.DownCastException">
-      <summary>
-        Downcasts a RobotRaconteurException
-     
-      Serialized RobotRaconteurException may not be correctly downcast when
-      deserialized. DownCastException will find the correct type,
-      downcast the exception, and return the correctly typed exception
-      </summary>
-      <param name="exp">The RobotRaconteurException to downcast</param>
-      <returns>The downcasted exception</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.FindNodeByID">
-      <summary>
-        Finds nodes on the network with a specified NodeID
-     
-      Updates the discovery cache and find nodes with the specified NodeID.
-      This function returns unverified cache information.
-     
-      Requires multithreading
-      </summary>
-      <param name="id">The NodeID to find</param>
-      <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`,
-        `rrs+tcp`, etc</param>
-      <returns>Array of detected nodes</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.FindNodeByName">
-      <summary>
-        Finds nodes on the network with a specified NodeName
-     
-      Updates the discovery cache and find nodes with the specified NodeName.
-      This function returns unverified cache information.
-     
-      Requires multithreading
-      </summary>
-      <param name="name">The NodeName to find</param>
-      <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`,
-        `rrs+tcp`, etc</param>
-      <returns>Array of detected nodes</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.FindObjectType">
-      <summary>
-        Returns the type of a service object
-     
-      Returns the fully qualified object type that would be returned by an `objref` member
-     
-      Requires multithreading
-      </summary>
-      <param name="obj">The object with the desired `objref`</param>
-      <param name="objref">The name of the `objref` member</param>
-      <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
-      <returns>The fully qualified object type</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.FindObjRefTyped">
-      <summary>
-        Returns an objref as a specific type
-     
-      Robot Raconteur service object types are polymorphic using inheritence,
-      meaning that an object may be represented using multiple object types.
-      `objref` will attempt to return the relevant type, but it is sometimes
-      necessary to request a specific type for an objref.
-     
-      This function will return the object from an `objref` as the specified type,
-      or throw an error if the type is invalid.
-     
-      Requires multithreading
-      </summary>
-
-      <param name="obj">The object with the desired `objref`</param>
-      <param name="objref">The name of the `objref` member</param>
-      <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
-      <param name="objecttype">The desired service object type</param>
-      <returns>The object reference</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.FindServiceByType">
-      <summary>
-        Use discovery to find available services by service type
-        
-         Uses discovery to find available services based on a service type. This
-         service type is the type of the root object, ie
-         `com.robotraconteur.robotics.robot.Robot`. This process will update the detected
-         node cache.
-        
-         Requires multithreading
-      </summary>
-      <param name="servicetype">The service type to find, ie `com.robotraconteur.robotics.robot.Robot`</param>
-      <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
-      <returns>Array of detected services</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetDetectedNodeCacheInfo">
-      <summary>
-        Get cached node discovery information
-     
-      Return current node information from the discovery cache. This
-      information is unverified and is used for the first step in the
-      discovery process.
-      </summary>
-      <param name="nodeid">The NodeID of the requested node</param>
-      <returns>The current detected node info</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetLogLevel">
-      <summary>
-        Get the current log level for the node
-     
-      Default level is "info"
-      </summary>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetLogRecordHandler">
-      <summary>
-        Get the currently configured log record handler
-     
-      If null, records are sent to stderr
-      </summary>
-
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetObjectServicePath">
-      <summary>
-        Get the service path of a client object
-      </summary>
-      <param name="obj">The object to get the service path for</param>
-      <returns>The object's service path</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetObjectType">
-      <summary>
-        Get the Robot Raconteur type of a connected service object
-      obj must be returned by ConnectService(), AsyncConnectService(),
-      or an `objref`
-      </summary>
-      <param name="obj">The object to query</param>
-      <returns>The Robot Raconteur type of the object</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetServiceAttributes">
-      <summary>
-        Get the service attributes of a client connection
-     
-      Returns the service attributes of a client connected using
-      ConnectService()
-      </summary>
-      <param name="obj">The root object of the client to use to retrieve service attributes</param>
-      <returns>Dictionary of the service attributes</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetServiceFactory">
-      <summary>
-        Returns a previously registered service factory
-      </summary>
-      <param name="servicename">The type of the factory</param>
-      <returns>The factory</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetServiceName">
-      <summary>
-        Get the name of a service from a client connection
-     
-      Returns the service name of the remote service that a client is connected
-      </summary>
-      <param name="obj">The root object of the client to use to retrieve service attributes</param>
-      <returns>The service name</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetServiceNodeID">
-      <summary>
-        Get the service NodeID of the remote node from a client connection
-     
-      Returns the NodeID of the remote node that a client is connected
-      </summary>
-      <param name="obj">The root object of the client to use to retrieve service attributes</param>
-      <returns>The NodeID</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetServiceNodeName">
-      <summary>
-        Get the service NodeName of the remote node from a client connection
-     
-      Returns the NodeName of the remote node that a client is connected
-      </summary>
-      <param name="obj">The root object of the client to use to retrieve service attributes</param>
-      <returns>The NodeName</returns>
-    </member>
-
-
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.GetServiceType">
-      <summary>
-        Returns a previously registered service type
-      </summary>
-      <param name="type">The name of the service type to retrieve</param>
-      <returns>The service factory</returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.IsServiceTypeRegistered">
-      <summary>
-        Check if a service type has been registered
-      </summary>
-      <param name="type">The name of the service type to check</param>
-      <returns>true if registered, otherwise false</returns>
+      <param name="log_level">Log level to test</param>
+      <returns>true if the log would be accepted</returns>
     </member>
 
     <member name="M:RobotRaconteur.RobotRaconteurNode.LogMessage">
@@ -1552,49 +1013,63 @@
       </summary>
       <param name="record">The record to log</param>
     </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.MonitorEnter">
-      <summary>
-        Creates a monitor lock on a specified object
-     
-      Monitor locks are intendended for short operations that require
-      guarding to prevent races, corruption, or other concurrency problems.
-      Monitors emulate a single thread locking the service object.
-     
-      Use of ScopedMonitorLock instead of this function is highly recommended
-     
-      Monitor locks do not lock any sub-objects (objref)
-     
-      Requires multithreading
-      </summary>
-      <param name="obj">The object to lock</param>
-      <param name="timeout"> The timeout in milliseconds to acquire the monitor lock, or RR_TIMEOUT_INFINITE</param>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.MonitorExit">
-      <summary>
-        Release a monitor lock
-      </summary>
-      <param name="obj">The object previously locked by MonitorEnter()</param>
-    </member>
-
     
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.RegisterServiceType">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.GetLogLevel">
       <summary>
-        Register a service type
+        Get the current log level for the node
+     
+      Default level is "info"
       </summary>
-      <param name="factory">The service factory implementing the type to register</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.UnregisterServiceType">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevel">
       <summary>
-        Unregister a previously registered service type
+        Set the log level for the node
 
-        This function is not recommended as the results can be
-        unpredicatle
+        Set RobotRaconteur.RobotRaconteur_LogLevel_Disable to disable logging
       </summary>
-      <param name="type">The type to unregister</param>
+      <param name="level">The desired log level</param>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevelFromString">
+      <summary>
+        Set the log level for the node from a string
+
+        Must be one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
+
+        Defaults to WARNING
+      </summary>
+      <param name="level">The desired log level</param>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevelFromEnvVariable">
+      <summary>
+        Set the log level for the node from specified environmental variable
+
+        Retrieves the specified environmental variable and sets the log level based
+        on one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
+
+        If an invalid value or the variable does not exist, the log level is left unchanged. 
+      </summary>
+      <param name="env_variable_name">The environmental variable to use. Defaults to 
+        `ROBOTRACONTEUR_LOG_LEVEL`</param>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNode.GetLogRecordHandler">
+      <summary>
+        Get the currently configured log record handler
+     
+      If null, records are sent to stderr
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogRecordHandler">
+      <summary>
+        Set the handler for log records
+
+        If handler is NULL, records are sent to stderr
+      </summary>
+      <param name="handler">The log record handler function</param>
     </member>
 
     <member name="M:RobotRaconteur.RobotRaconteurNode.GetRegisteredServiceTypes">
@@ -1604,36 +1079,8 @@
       <returns>The registered service types</returns>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.PackStructure">
-      <summary>
-        Packs a structure for use in a MessageElement
-
-        Finds the correct ServiceFactory to pack the structure, then
-        uses the ServiceFactory to pack the structure to a
-        MessageElementNestedElementList for use in a MessageElement.
-
-        Throws ServiceException if the correct ServiceFactory cannot
-        be found.
-      </summary>
-      <param name="s"></param>
-      <returns></returns>
-    </member>
-
-    <member name="M:RobotRaconteur.RobotRaconteurNode.UnpackStructure">
-      <summary>
-        Unpacks a structure from a MessageElementNestedElementList
-
-        structure must have type code DataTypes_structure_t. Finds the correct
-        ServiceFactory to unpack the structure, then uses the ServiceFactory
-        to unpack the structure.
-
-        Throws ServiceException if the correct ServiceFactory cannot
-        be found.
-      </summary>
-      <param name="l"></param>
-      <returns></returns>
-    </member>
-
+    
+    
 
   </members>
 </doc>
