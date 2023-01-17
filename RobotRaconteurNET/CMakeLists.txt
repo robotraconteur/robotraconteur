@@ -110,6 +110,18 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/netstandard/RobotRaconteurNET.csproj.in"
                    "${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib/RobotRaconteurNET.csproj" @ONLY)
 
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET.xml"
+                    "${CMAKE_BINARY_DIR}/out/NET/RobotRaconteurNET.xml" @ONLY)
+
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET.xml"
+                    "${CMAKE_BINARY_DIR}/out_debug/NET/RobotRaconteurNET.xml" @ONLY)
+
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET.xml"
+                    "${CMAKE_BINARY_DIR}/out/NET/netstandard/RobotRaconteurNET.xml" @ONLY)
+
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET.xml"
+                    "${CMAKE_BINARY_DIR}/out_debug/NET/netstandard/RobotRaconteurNET.xml" @ONLY)
+
     if(WIN32 AND (MSVC_VERSION GREATER 1900))
         add_custom_target(
             RobotRaconteurNET_standard ALL
