@@ -10,11 +10,12 @@
     <member name="T:RobotRaconteur.DataTypes">
       <summary>
         Type codes for types supported by Robot Raconteur
-
+      </summary>
+      <remarks>
         Data type codes are used in messages and service definition parsers.
 
         Data is always stored as little-endian, except for UUID which are big endian
-      </summary>
+      </remarks>
     </member>
     <member name="F:RobotRaconteur.DataTypes.void_t">
       <summary>void or null type</summary>
@@ -281,7 +282,8 @@
     <member name="T:RobotRaconteur.MessageEntryType">
       <summary>
         Message entry type codes
-
+      </summary>
+      <remarks>
         Message entries are sent between nodes stored in messages, and represent
         requests, responses, or packets. The type of the entry is specified through
         the message entry type code. These type codes are similar to op-codes. This
@@ -292,7 +294,7 @@
 
         Entry types less than 500 are considered "special requests" that can be used
         before a session is established.
-      </summary>
+      </remarks>
     </member>
     <member name="F:RobotRaconteur.MessageEntryType.Null">
       <summary>no-op</summary>
@@ -1412,841 +1414,2272 @@
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
     </member>
-  
-
-  <member name="T:RobotRaconteur.InvalidOperationException">
-    <summary>
-      Exception thrown when an invalid operation is attempted
-
-      Error code MessageErrorType_InvalidOperation (17)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.InvalidOperationException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a InvalidOperationException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.InvalidArgumentException">
-    <summary>
-      Exception thrown for an invalid argument
-
-      Error code MessageErrorType_InvalidArgument (18)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.InvalidArgumentException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a InvalidArgumentException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.OperationFailedException">
-    <summary>
-      Exception thrown when an operation fails
-
-      Error code MessageErrorType_OperationFailed (19)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.OperationFailedException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a OperationFailedException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.NullValueException">
-    <summary>
-      Exception thrown for an unexpected null value
-
-      Error code MessageErrorType_NullValue (20)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.NullValueException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a NullValueException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.InternalErrorException">
-    <summary>
-      Exception thrown when an internal error has occurred
-
-      Error code MessageErrorType_InternalError (21)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.InternalErrorException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a InternalErrorException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.PermissionDeniedException">
-    <summary>
-      Exception thrown when permission is denied to a service member
-
-      Error code MessageErrorType_PermissionDenied (152)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.PermissionDeniedException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a PermissionDeniedException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.SystemResourcePermissionDeniedException">
-    <summary>
-      Exception thrown when permission to a system resource is denied
-
-      Error code MessageErrorType_SystemResourcePermissionDenied (22)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.SystemResourcePermissionDeniedException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a SystemResourcePermissionDeniedException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.OutOfSystemResourceException">
-    <summary>
-      Exception thrown when a system resource has been exhausted
-
-      Error code MessageErrorType_OutOfsystemResource (23)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.OutOfSystemResourceException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a OutOfSystemResourceException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.SystemResourceException">
-    <summary>
-      Exception thrown when a system resource error occurs
-
-      Error code MessageErrorType_SystemResourceException (24)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.SystemResourceException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a SystemResourceException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.ResourceNotFoundException">
-    <summary>
-      Exception thrown when a system resource is not found
-
-      Error code MessageErrorType_ResourceNotFound (25)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.ResourceNotFoundException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a ResourceNotFoundException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.IOException">
-    <summary>
-      Exception thrown when an input/output error occurs
-
-      Error code MessageErrorType_IOError (26)
-    </summary>
-  </member>
-  <member name="M:RobotRaconteur.IOException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a IOException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.BufferLimitViolationException">
-    <summary>
-      Exception thrown when a transport buffer limit is violated
-
-      This exception typically occurs if there is a bug in
-      serialization/deserialization, or the data stream
-      has been corrupted
-
-      Error code MessageErrorType_BufferLimitViolation (27)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.BufferLimitViolationException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a BufferLimitViolationException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.ServiceDefinitionException">
-    <summary>
-      Exception thrown when a service definition cannot be
-      parsed or fails verification
-
-      Error code MessageErrorType_ServiceDefinitionError (28)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.ServiceDefinitionException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a ServiceDefinitionException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.OutOfRangeException">
-    <summary>
-      Exception thrown when an attempt to acces an array or container
-      index is out of range
-
-      Error code MessageErrorType_OutOfRange (29)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.OutOfRangeException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a OutOfRangeException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.KeyNotFoundException">
-    <summary>
-      Exception thrown when a key is not found in a map
-
-      Error code MessageErrorType_KeyNotFound (30)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.KeyNotFoundException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a KeyNotFoundException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.InvalidConfigurationException">
-    <summary>
-      Exception thrown when an invalid configuration is specified or encountered
-
-      Error code MessageErrorType_InvalidConfiguration (31)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.InvalidConfigurationException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a InvalidConfigurationException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.InvalidStateException">
-    <summary>
-      Exception thrown when an invalid state is specified or encountered
-
-      Error code MessageErrorType_InvalidState (32)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.InvalidStateException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a InvalidStateException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.RobotRaconteurRemoteException">
-    <summary>
-      Exception thrown when an error occurs on a remote
-      member request
-
-      User defined exceptions declared in service definitions extend
-      RobotRaconteurRemoteException
-
-      Error code MessageErrorType_RemoteError (100)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.RobotRaconteurRemoteException.#ctor(System.String,System.String,System.String,System.Object)">
-    <summary>
-      Construct a RobotRaconteurRemoteException
-
-      error should be the fully qualified type of the exception
-      for user defined exceptions
-    </summary>
-    <param name="error">The name of the exception</param>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.RequestTimeoutException">
-    <summary>
-      The request timed out
-
-      See RobotRaconteurNode::SetRequestTimeout(),
-      or the timeout passed to an asynchronous request
-
-      Error code MessageErrorType_RequestTimeout (101)
-
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.RequestTimeoutException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a RequestTimeoutException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.ReadOnlyMemberException">
-    <summary>
-      An attempt was made to write/set a read only member
-
-      Error code MessageErrorType_ReadOnlyMember (102)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.ReadOnlyMemberException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a ReadOnlyMemberException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.WriteOnlyMemberException">
-    <summary>
-      An attempt was mode to read/get a write only member
-
-      Error code MessageErrorType_WriteOnlyMember (103)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.WriteOnlyMemberException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a WriteOnlyMemberException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.NotImplementedException">
-    <summary>
-      Exception thrown if a member is not implemented
-
-      Error code MessageErrorType_NotImplementedError (104)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.NotImplementedException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a NotImplementedException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.MemberBusyException">
-    <summary>
-      Thrown is a member is busy. Retry later
-
-      Error code MessageErrorType_MemberBusy (105)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.MemberBusyException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a MemberBusyException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.ValueNotSetException">
-    <summary>
-      Exception thrown if a value has not been set
-
-      This exception is most often used by WireConnection.GetInValue()
-      and WireConnection.GetOutValue() if InValue or OutValue
-      have not been received or set
-
-      Error code MessageErrorType_ValueNotSet (106)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.ValueNotSetException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a ValueNotSetException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.AuthenticationException">
-    <summary>
-      Exception thrown when authentication is required or attempt
-      to authenticate fails
-
-      Error code MessageErrorType_AuthenticationError (150)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.AuthenticationException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a AuthenticationException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.ObjectLockedException">
-    <summary>
-      Exception thrown when attempting to access a locked
-      service object
-
-      Service objects can be locked using RobotRaconteurNode::RequestObjectLock().
-      This exception is thrown if an attempt is made to access a service object
-      (or sub-object) that has been locked by another user or session.
-
-      Error code MessageErrorType_ObjectLockedError (151)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.ObjectLockedException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a ObjectLockedException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.AbortOperationException">
-    <summary>
-      Exception passed to generators to trigger an abort
-
-      This is typically not thrown or received by the user
-
-      Error code MessageErrorType_AbortOperation (107)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.AbortOperationException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a AbortOperationException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.OperationAbortedException">
-    <summary>
-      Exception thrown when an operation is aborted
-
-      This is thrown be generator functions when Abort()
-      is called
-
-      Generators are destroyed after throwing
-      OperationAbortedException during Next()
-
-      This error is passed to generators to trigger an abort
-
-      Error code MessageErrorType_OperationAborted (108)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.OperationAbortedException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a OperationAbortedException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.StopIterationException">
-    <summary>
-      Exception thrown when a generator has finished sending results
-
-      StopIterationException is not an error condition. It signals
-      that a generator is finished sending results.
-
-      This error is passed to generators to trigger a close
-
-      Error code MessageErrorType_StopIteration (109)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.StopIterationException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a StopIterationException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.OperationTimeoutException">
-    <summary>
-      Exception thrown when an operation does not complete in the expected time
-
-      Error code MessageErrorType_OperationTimeout (110)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.OperationTimeoutException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a OperationTimeoutException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.OperationCancelledException">
-    <summary>
-      Exception thrown when an operation is cancelled before it is started
-
-      Error code MessageErrorType_OperationCancelled (111)
-    </summary>
-  </member>
-  <member
-    name="M:RobotRaconteur.OperationCancelledException.#ctor(System.String,System.String,System.Object)">
-    <summary>
-      Construct a OperationCancelledException
-    </summary>
-    <param name="message">Message for the user</param>
-    <param name="sub_name">Optional error sub_name</param>
-    <param name="param_">Optional error param</param>
-  </member>
-
-  <member name="T:RobotRaconteur.RobotRaconteurNodeSetupFlags">
-    <summary>
-      Setup option flags
-
-      Setup option flags passed to node setup classes to select options to enable
-      and disable. Flags are used to configure the following types of options:
-
-      1. Enable and disable transport types
-      2. Modify transport options including discovery, security requirements, and connection
-      listening
-      3. Configure TLS behavior
-      4. Enable local tap for logging
-
-      Node setup classes also allow options and flags to be "overridden" using
-      command line options. Use the `*_ALLOW_OVERRIDE` options to configure
-      when these overrides are allowed.
-
-      The ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup
-      are convenience classes for the most commonly used options.
-    </summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NONE">
-    <summary>No options enabled</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_NODE_DISCOVERY_LISTENING">
-    <summary>Enable node discovery listening on all transports</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_NODE_ANNOUNCE">
-    <summary>Enable node announce on all transports</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_LOCAL_TRANSPORT">
-    <summary>Enable LocalTransport</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT">
-    <summary>Enable TcpTransport</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_HARDWARE_TRANSPORT">
-    <summary>Enable HardwareTransport</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_START_SERVER">
-    <summary>Start the LocalTransport server to listen for incoming clients</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_START_CLIENT">
-    <summary>Start the LocalTransport client with specified node name</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER">
-    <summary>Start the TcpTransport server to listen for incoming clients on the specified port</summary>
-  </member>
-  <member
-    name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER_PORT_SHARER">
-    <summary>Start the TcpTransport server to incoming for incoming clients using the port sharer</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_MESSAGE4">
-    <summary>Disable Message Format Version 4 on all transports</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_STRINGTABLE">
-    <summary>Disable Message Format Version 4 string table on all transports</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_TIMEOUTS">
-    <summary>Disable all timeouts (useful for debugging)</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOAD_TLS_CERT">
-    <summary>Load the TLS certificate for TcpTransport</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.REQUIRE_TLS">
-    <summary>Require TLS for all clients on TcpTransport</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_SERVER_PUBLIC">
-    <summary>Make LocalTransport server listen for incoming clients from all users</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NODENAME_OVERRIDE">
-    <summary>Allow NodeName to be configured using command line options</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NODEID_OVERRIDE">
-    <summary>Allow NodeID to be configured using command line options</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_PORT_OVERRIDE">
-    <summary>Allow TCP port to be configured using command line options</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_WEBSOCKET_ORIGIN_OVERRIDE">
-    <summary>Allow TCP WebSocket origin control to be configured using command line options</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_INTRA_TRANSPORT">
-    <summary>Enable IntraTransport</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.INTRA_TRANSPORT_START_SERVER">
-    <summary>Start the IntraTransport server to listen for incoming clients</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TAP_ENABLE">
-    <summary>Enable the LocalTap debug logging system</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TAP_NAME">
-    <summary>Allow the user to set the LocalTap name</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_ALL_TRANSPORTS">
-    <summary>Convenience flag to enable all transports</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT">
-    <summary>Default configuration for client nodes (See ClientNodeSetup)</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT_ALLOWED_OVERRIDE">
-    <summary>Default allowed overrides for client nodes (See ClientNodeSetup)</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SERVER_DEFAULT">
-    <summary>Default configuration for server nodes</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SERVER_DEFAULT_ALLOWED_OVERRIDE">
-    <summary>Default allowed overrides for server nodes</summary>
-  </member>
-  <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT">
-    <summary>Default configuration for server nodes requiring TLS network transports</summary>
-  </member>
-  <member
-    name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE">
-    <summary>Default allowed overrides for server nodes requiring TLS network transports</summary>
-  </member>
-
-  <member name="T:RobotRaconteur.CommandLineConfigParser">
-    <summary>
-      Command line parser for node setup classes
-
-      The CommandLineConfigParser is used to parse command line options specified
-      when a program is launched. These options allow for the node configuration to be
-      changed without recompiling the software. See command_line_options for
-      a table of the standard command line options.
-
-      ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup use this class to parse
-      the `sys.argv` parameters. The RobotRaconteurNodeSetup constructors will accept
-      either `sys.argv`, or will accept an initialize CommandLineConfigParser.
-
-      The CommandLineConfig() constructor takes the "allowed override" flags, and the option prefix.
-      The "allowed override" specifies which options can be overridden using the command line. The
-      prefix option allows the command line flag prefix to be changed. By default it expects
-      all options to begin with `--robotraconteur-` followed by the name of the option. If there are
-      multiple nodes, it is necessary to change the prefix to be unique for each node. For instance,
-      "robotraconteur1-" for the first node and "robotraconteur2-" for the second node.
-
-      Users may add additional options to the parser. Use AddStringOption(),
-      AddBoolOption(), or AddIntOption() to add additional options.
-    </summary>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.SetDefaults(System.String,System.UInt16,System.UInt32)">
-    <summary>
-      Set the default NodeName, TCP port, and flags
-
-      The command line options will be allowed to override the options
-      specified in allowed_overrides passed to CommandLineConfigParser().
-    </summary>
-    <param name="node_name">The default NodeName</param>
-    <param name="tcp_port">The default TCP port</param>
-    <param name="default_flags">The default flags</param>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.AddStringOption(System.String,System.String)">
-    <summary>
-      Add a new string option
-    </summary>
-    <param name="name">The name of the option</param>
-    <param name="descr">Description of the option</param>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.AddBoolOption(System.String,System.String)">
-    <summary>
-      Add a new bool option
-    </summary>
-    <param name="name">The name of the option</param>
-    <param name="descr">Description of the option</param>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.AddIntOption(System.String,System.String)">
-    <summary>
-      Add a new int option
-    </summary>
-    <param name="name">The name of the option</param>
-    <param name="descr">Description of the option</param>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.ParseCommandLine(System.String[])">
-    <summary>
-      Parse a specified string vector containing the options
-
-      Results are stored in the instance
-    </summary>
-    <param name="args">The options as a string list</param>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsString(System.String)">
-    <summary>
-      Get the option value as a string
-
-      Returns empty string if option not specified on command line
-    </summary>
-    <param name="option">The name of the option</param>
-    <returns>The option value, or an empty string</returns>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsString(System.String,System.String)">
-    <summary>
-      Get the option value as a string
-
-      Returns default_value if option not specified on command line
-    </summary>
-    <param name="option">The name of the option</param>
-    <param name="default_value">The default option value</param>
-    <returns>The option value, or default_value if not specified on command line</returns>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsBool(System.String)">
-    <summary>
-      Get the option value as a bool
-
-      Returns false if option not specified on command line
-    </summary>
-    <param name="option">The name of the option</param>
-    <returns>The option value, or false</returns>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsBool(System.String,System.Boolean)">
-    <summary>
-      Get the option value as a bool
-
-      Returns default_value if option not specified on command line
-    </summary>
-    <param name="option">The name of the option</param>
-    <param name="default_value">The default option value</param>
-    <returns>The option value, or default_value if not specified on command line</returns>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsInt(System.String)">
-    <summary>
-      Get the option value as an int
-
-      Returns -1 if option not specified on command line
-    </summary>
-    <param name="option">The name of the option</param>
-    <returns>The option value, or -1</returns>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsInt(System.String,System.Int32)">
-    <summary>
-      Get the option value as an int
-
-      Returns default_value if option not specified on command line
-    </summary>
-    <param name="option">The name of the option</param>
-    <param name="default_value">The default option value</param>
-    <returns>The option value, or default_value if not specified on command line</returns>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.#ctor(System.UInt32)">
-    <summary>
-      Construct a new CommandLineConfigParser
-    </summary>
-    <param name="allowed_overrides">The allowed overrides flags</param>
-  </member>
-
-  <member name="M:RobotRaconteur.CommandLineConfigParser.#ctor(System.UInt32,System.String)">
-    <summary>
-      Construct a new CommandLineConfigParser
-    </summary>
-    <param name="allowed_overrides">The allowed overrides flags</param>
-    <param name="prefix">The prefix to use for the options</param>
-  </member>
-</members>
+
+
+    <member name="T:RobotRaconteur.InvalidOperationException">
+      <summary>
+        Exception thrown when an invalid operation is attempted
+
+        Error code MessageErrorType_InvalidOperation (17)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.InvalidOperationException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a InvalidOperationException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.InvalidArgumentException">
+      <summary>
+        Exception thrown for an invalid argument
+
+        Error code MessageErrorType_InvalidArgument (18)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.InvalidArgumentException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a InvalidArgumentException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.OperationFailedException">
+      <summary>
+        Exception thrown when an operation fails
+
+        Error code MessageErrorType_OperationFailed (19)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.OperationFailedException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a OperationFailedException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.NullValueException">
+      <summary>
+        Exception thrown for an unexpected null value
+
+        Error code MessageErrorType_NullValue (20)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.NullValueException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a NullValueException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.InternalErrorException">
+      <summary>
+        Exception thrown when an internal error has occurred
+
+        Error code MessageErrorType_InternalError (21)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.InternalErrorException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a InternalErrorException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.PermissionDeniedException">
+      <summary>
+        Exception thrown when permission is denied to a service member
+
+        Error code MessageErrorType_PermissionDenied (152)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.PermissionDeniedException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a PermissionDeniedException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.SystemResourcePermissionDeniedException">
+      <summary>
+        Exception thrown when permission to a system resource is denied
+
+        Error code MessageErrorType_SystemResourcePermissionDenied (22)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.SystemResourcePermissionDeniedException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a SystemResourcePermissionDeniedException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.OutOfSystemResourceException">
+      <summary>
+        Exception thrown when a system resource has been exhausted
+
+        Error code MessageErrorType_OutOfsystemResource (23)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.OutOfSystemResourceException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a OutOfSystemResourceException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.SystemResourceException">
+      <summary>
+        Exception thrown when a system resource error occurs
+
+        Error code MessageErrorType_SystemResourceException (24)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.SystemResourceException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a SystemResourceException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ResourceNotFoundException">
+      <summary>
+        Exception thrown when a system resource is not found
+
+        Error code MessageErrorType_ResourceNotFound (25)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.ResourceNotFoundException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ResourceNotFoundException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.IOException">
+      <summary>
+        Exception thrown when an input/output error occurs
+
+        Error code MessageErrorType_IOError (26)
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.IOException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a IOException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.BufferLimitViolationException">
+      <summary>
+        Exception thrown when a transport buffer limit is violated
+
+        This exception typically occurs if there is a bug in
+        serialization/deserialization, or the data stream
+        has been corrupted
+
+        Error code MessageErrorType_BufferLimitViolation (27)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.BufferLimitViolationException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a BufferLimitViolationException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ServiceDefinitionException">
+      <summary>
+        Exception thrown when a service definition cannot be
+        parsed or fails verification
+
+        Error code MessageErrorType_ServiceDefinitionError (28)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.ServiceDefinitionException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ServiceDefinitionException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.OutOfRangeException">
+      <summary>
+        Exception thrown when an attempt to acces an array or container
+        index is out of range
+
+        Error code MessageErrorType_OutOfRange (29)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.OutOfRangeException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a OutOfRangeException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.KeyNotFoundException">
+      <summary>
+        Exception thrown when a key is not found in a map
+
+        Error code MessageErrorType_KeyNotFound (30)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.KeyNotFoundException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a KeyNotFoundException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.InvalidConfigurationException">
+      <summary>
+        Exception thrown when an invalid configuration is specified or encountered
+
+        Error code MessageErrorType_InvalidConfiguration (31)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.InvalidConfigurationException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a InvalidConfigurationException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.InvalidStateException">
+      <summary>
+        Exception thrown when an invalid state is specified or encountered
+
+        Error code MessageErrorType_InvalidState (32)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.InvalidStateException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a InvalidStateException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.RobotRaconteurRemoteException">
+      <summary>
+        Exception thrown when an error occurs on a remote
+        member request
+
+        User defined exceptions declared in service definitions extend
+        RobotRaconteurRemoteException
+
+        Error code MessageErrorType_RemoteError (100)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.RobotRaconteurRemoteException.#ctor(System.String,System.String,System.String,System.Object)">
+      <summary>
+        Construct a RobotRaconteurRemoteException
+
+        error should be the fully qualified type of the exception
+        for user defined exceptions
+      </summary>
+      <param name="error">The name of the exception</param>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.RequestTimeoutException">
+      <summary>
+        The request timed out
+
+        See RobotRaconteurNode::SetRequestTimeout(),
+        or the timeout passed to an asynchronous request
+
+        Error code MessageErrorType_RequestTimeout (101)
+
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.RequestTimeoutException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a RequestTimeoutException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ReadOnlyMemberException">
+      <summary>
+        An attempt was made to write/set a read only member
+
+        Error code MessageErrorType_ReadOnlyMember (102)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.ReadOnlyMemberException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ReadOnlyMemberException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.WriteOnlyMemberException">
+      <summary>
+        An attempt was mode to read/get a write only member
+
+        Error code MessageErrorType_WriteOnlyMember (103)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.WriteOnlyMemberException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a WriteOnlyMemberException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.NotImplementedException">
+      <summary>
+        Exception thrown if a member is not implemented
+
+        Error code MessageErrorType_NotImplementedError (104)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.NotImplementedException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a NotImplementedException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.MemberBusyException">
+      <summary>
+        Thrown is a member is busy. Retry later
+
+        Error code MessageErrorType_MemberBusy (105)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.MemberBusyException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a MemberBusyException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ValueNotSetException">
+      <summary>
+        Exception thrown if a value has not been set
+
+        This exception is most often used by WireConnection.GetInValue()
+        and WireConnection.GetOutValue() if InValue or OutValue
+        have not been received or set
+
+        Error code MessageErrorType_ValueNotSet (106)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.ValueNotSetException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ValueNotSetException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.AuthenticationException">
+      <summary>
+        Exception thrown when authentication is required or attempt
+        to authenticate fails
+
+        Error code MessageErrorType_AuthenticationError (150)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.AuthenticationException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a AuthenticationException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ObjectLockedException">
+      <summary>
+        Exception thrown when attempting to access a locked
+        service object
+
+        Service objects can be locked using RobotRaconteurNode::RequestObjectLock().
+        This exception is thrown if an attempt is made to access a service object
+        (or sub-object) that has been locked by another user or session.
+
+        Error code MessageErrorType_ObjectLockedError (151)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.ObjectLockedException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a ObjectLockedException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.AbortOperationException">
+      <summary>
+        Exception passed to generators to trigger an abort
+
+        This is typically not thrown or received by the user
+
+        Error code MessageErrorType_AbortOperation (107)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.AbortOperationException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a AbortOperationException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.OperationAbortedException">
+      <summary>
+        Exception thrown when an operation is aborted
+
+        This is thrown be generator functions when Abort()
+        is called
+
+        Generators are destroyed after throwing
+        OperationAbortedException during Next()
+
+        This error is passed to generators to trigger an abort
+
+        Error code MessageErrorType_OperationAborted (108)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.OperationAbortedException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a OperationAbortedException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.StopIterationException">
+      <summary>
+        Exception thrown when a generator has finished sending results
+
+        StopIterationException is not an error condition. It signals
+        that a generator is finished sending results.
+
+        This error is passed to generators to trigger a close
+
+        Error code MessageErrorType_StopIteration (109)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.StopIterationException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a StopIterationException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.OperationTimeoutException">
+      <summary>
+        Exception thrown when an operation does not complete in the expected time
+
+        Error code MessageErrorType_OperationTimeout (110)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.OperationTimeoutException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a OperationTimeoutException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.OperationCancelledException">
+      <summary>
+        Exception thrown when an operation is cancelled before it is started
+
+        Error code MessageErrorType_OperationCancelled (111)
+      </summary>
+    </member>
+    <member
+      name="M:RobotRaconteur.OperationCancelledException.#ctor(System.String,System.String,System.Object)">
+      <summary>
+        Construct a OperationCancelledException
+      </summary>
+      <param name="message">Message for the user</param>
+      <param name="sub_name">Optional error sub_name</param>
+      <param name="param_">Optional error param</param>
+    </member>
+
+    <member name="T:RobotRaconteur.RobotRaconteurNodeSetupFlags">
+      <summary>
+        Setup option flags
+
+        Setup option flags passed to node setup classes to select options to enable
+        and disable. Flags are used to configure the following types of options:
+
+        1. Enable and disable transport types
+        2. Modify transport options including discovery, security requirements, and connection
+        listening
+        3. Configure TLS behavior
+        4. Enable local tap for logging
+
+        Node setup classes also allow options and flags to be "overridden" using
+        command line options. Use the `*_ALLOW_OVERRIDE` options to configure
+        when these overrides are allowed.
+
+        The ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup
+        are convenience classes for the most commonly used options.
+      </summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NONE">
+      <summary>No options enabled</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_NODE_DISCOVERY_LISTENING">
+      <summary>Enable node discovery listening on all transports</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_NODE_ANNOUNCE">
+      <summary>Enable node announce on all transports</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_LOCAL_TRANSPORT">
+      <summary>Enable LocalTransport</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT">
+      <summary>Enable TcpTransport</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_HARDWARE_TRANSPORT">
+      <summary>Enable HardwareTransport</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_START_SERVER">
+      <summary>Start the LocalTransport server to listen for incoming clients</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_START_CLIENT">
+      <summary>Start the LocalTransport client with specified node name</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER">
+      <summary>Start the TcpTransport server to listen for incoming clients on the specified port</summary>
+    </member>
+    <member
+      name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER_PORT_SHARER">
+      <summary>Start the TcpTransport server to incoming for incoming clients using the port sharer</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_MESSAGE4">
+      <summary>Disable Message Format Version 4 on all transports</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_STRINGTABLE">
+      <summary>Disable Message Format Version 4 string table on all transports</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.DISABLE_TIMEOUTS">
+      <summary>Disable all timeouts (useful for debugging)</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOAD_TLS_CERT">
+      <summary>Load the TLS certificate for TcpTransport</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.REQUIRE_TLS">
+      <summary>Require TLS for all clients on TcpTransport</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_SERVER_PUBLIC">
+      <summary>Make LocalTransport server listen for incoming clients from all users</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NODENAME_OVERRIDE">
+      <summary>Allow NodeName to be configured using command line options</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.NODEID_OVERRIDE">
+      <summary>Allow NodeID to be configured using command line options</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_PORT_OVERRIDE">
+      <summary>Allow TCP port to be configured using command line options</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.TCP_WEBSOCKET_ORIGIN_OVERRIDE">
+      <summary>Allow TCP WebSocket origin control to be configured using command line options</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_INTRA_TRANSPORT">
+      <summary>Enable IntraTransport</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.INTRA_TRANSPORT_START_SERVER">
+      <summary>Start the IntraTransport server to listen for incoming clients</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TAP_ENABLE">
+      <summary>Enable the LocalTap debug logging system</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.LOCAL_TAP_NAME">
+      <summary>Allow the user to set the LocalTap name</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.ENABLE_ALL_TRANSPORTS">
+      <summary>Convenience flag to enable all transports</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT">
+      <summary>Default configuration for client nodes (See ClientNodeSetup)</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT_ALLOWED_OVERRIDE">
+      <summary>Default allowed overrides for client nodes (See ClientNodeSetup)</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SERVER_DEFAULT">
+      <summary>Default configuration for server nodes</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SERVER_DEFAULT_ALLOWED_OVERRIDE">
+      <summary>Default allowed overrides for server nodes</summary>
+    </member>
+    <member name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT">
+      <summary>Default configuration for server nodes requiring TLS network transports</summary>
+    </member>
+    <member
+      name="F:RobotRaconteur.RobotRaconteurNodeSetupFlags.SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE">
+      <summary>Default allowed overrides for server nodes requiring TLS network transports</summary>
+    </member>
+
+    <member name="T:RobotRaconteur.CommandLineConfigParser">
+      <summary>
+        Command line parser for node setup classes
+
+        The CommandLineConfigParser is used to parse command line options specified
+        when a program is launched. These options allow for the node configuration to be
+        changed without recompiling the software. See command_line_options for
+        a table of the standard command line options.
+
+        ClientNodeSetup, ServerNodeSetup, and SecureServerNodeSetup use this class to parse
+        the `sys.argv` parameters. The RobotRaconteurNodeSetup constructors will accept
+        either `sys.argv`, or will accept an initialize CommandLineConfigParser.
+
+        The CommandLineConfig() constructor takes the "allowed override" flags, and the option
+        prefix.
+        The "allowed override" specifies which options can be overridden using the command line. The
+        prefix option allows the command line flag prefix to be changed. By default it expects
+        all options to begin with `--robotraconteur-` followed by the name of the option. If there
+        are
+        multiple nodes, it is necessary to change the prefix to be unique for each node. For
+        instance,
+        "robotraconteur1-" for the first node and "RobotRaconteur-" for the second node.
+
+        Users may add additional options to the parser. Use AddStringOption(),
+        AddBoolOption(), or AddIntOption() to add additional options.
+      </summary>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.CommandLineConfigParser.SetDefaults(System.String,System.UInt16,System.UInt32)">
+      <summary>
+        Set the default NodeName, TCP port, and flags
+
+        The command line options will be allowed to override the options
+        specified in allowed_overrides passed to CommandLineConfigParser().
+      </summary>
+      <param name="node_name">The default NodeName</param>
+      <param name="tcp_port">The default TCP port</param>
+      <param name="default_flags">The default flags</param>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.CommandLineConfigParser.AddStringOption(System.String,System.String)">
+      <summary>
+        Add a new string option
+      </summary>
+      <param name="name">The name of the option</param>
+      <param name="descr">Description of the option</param>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.CommandLineConfigParser.AddBoolOption(System.String,System.String)">
+      <summary>
+        Add a new bool option
+      </summary>
+      <param name="name">The name of the option</param>
+      <param name="descr">Description of the option</param>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.CommandLineConfigParser.AddIntOption(System.String,System.String)">
+      <summary>
+        Add a new int option
+      </summary>
+      <param name="name">The name of the option</param>
+      <param name="descr">Description of the option</param>
+    </member>
+
+    <member name="M:RobotRaconteur.CommandLineConfigParser.ParseCommandLine(System.String[])">
+      <summary>
+        Parse a specified string vector containing the options
+
+        Results are stored in the instance
+      </summary>
+      <param name="args">The options as a string list</param>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsString(System.String)">
+      <summary>
+        Get the option value as a string
+
+        Returns empty string if option not specified on command line
+      </summary>
+      <param name="option">The name of the option</param>
+      <returns>The option value, or an empty string</returns>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsString(System.String,System.String)">
+      <summary>
+        Get the option value as a string
+
+        Returns default_value if option not specified on command line
+      </summary>
+      <param name="option">The name of the option</param>
+      <param name="default_value">The default option value</param>
+      <returns>The option value, or default_value if not specified on command line</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsBool(System.String)">
+      <summary>
+        Get the option value as a bool
+
+        Returns false if option not specified on command line
+      </summary>
+      <param name="option">The name of the option</param>
+      <returns>The option value, or false</returns>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsBool(System.String,System.Boolean)">
+      <summary>
+        Get the option value as a bool
+
+        Returns default_value if option not specified on command line
+      </summary>
+      <param name="option">The name of the option</param>
+      <param name="default_value">The default option value</param>
+      <returns>The option value, or default_value if not specified on command line</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsInt(System.String)">
+      <summary>
+        Get the option value as an int
+
+        Returns -1 if option not specified on command line
+      </summary>
+      <param name="option">The name of the option</param>
+      <returns>The option value, or -1</returns>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.CommandLineConfigParser.GetOptionOrDefaultAsInt(System.String,System.Int32)">
+      <summary>
+        Get the option value as an int
+
+        Returns default_value if option not specified on command line
+      </summary>
+      <param name="option">The name of the option</param>
+      <param name="default_value">The default option value</param>
+      <returns>The option value, or default_value if not specified on command line</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.CommandLineConfigParser.#ctor(System.UInt32)">
+      <summary>
+        Construct a new CommandLineConfigParser
+      </summary>
+      <param name="allowed_overrides">The allowed overrides flags</param>
+    </member>
+
+    <member name="M:RobotRaconteur.CommandLineConfigParser.#ctor(System.UInt32,System.String)">
+      <summary>
+        Construct a new CommandLineConfigParser
+      </summary>
+      <param name="allowed_overrides">The allowed overrides flags</param>
+      <param name="prefix">The prefix to use for the options</param>
+    </member>
+
+    <member name="T:RobotRaconteur.TimeSpec">
+      <summary>
+        Represents. a point in time. Used by `wire` members to
+        timestamp packets
+
+        Time is always in UTC
+
+        Time is relative to the UNIX epoch "1970-01-01T00:00:00Z"
+      </summary>
+    </member>
+    <member name="P:RobotRaconteur.TimeSpec.seconds">
+      <summary>
+        Seconds since epoch
+      </summary>
+    </member>
+    <member name="P:RobotRaconteur.TimeSpec.nanoseconds">
+      <summary>
+        Nanoseconds from epoch. Normalized to be between 0 and 1e9-1
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.TimeSpec.#ctor">
+      <summary>
+        Construct empty timespec
+      </summary>
+    </member>
+    <member name="M:RobotRaconteur.TimeSpec.#ctor(System.Int64,System.Int32)">
+      <summary>
+        Construct timespec with specified time
+      </summary>
+      <param name="seconds">Seconds since epoch</param>
+      <param name="nanoseconds">Nanoseconds since epoch</param>
+    </member>
+    <member
+      name="M:RobotRaconteur.TimeSpec.op_Equality(RobotRaconteur.TimeSpec,RobotRaconteur.TimeSpec)">
+      <summary>
+        equality comparison
+      </summary>
+      <param name="a"></param>
+      <param name="b"></param>
+      <returns></returns>
+    </member>
+    <member name="M:RobotRaconteur.TimeSpec.Equals(System.Object)">
+      <summary>
+        Object equality operator
+      </summary>
+      <param name="o"></param>
+      <returns></returns>
+    </member>
+    <member name="M:RobotRaconteur.TimeSpec.GetHashCode">
+      <summary>
+        Hash code
+      </summary>
+      <returns></returns>
+    </member>
+    <member
+      name="M:RobotRaconteur.TimeSpec.op_Inequality(RobotRaconteur.TimeSpec,RobotRaconteur.TimeSpec)">
+      <summary>
+        inequality comparison
+      </summary>
+      <param name="a"></param>
+      <param name="b"></param>
+      <returns></returns>
+    </member>
+    <member
+      name="M:RobotRaconteur.TimeSpec.op_Addition(RobotRaconteur.TimeSpec,RobotRaconteur.TimeSpec)">
+      <summary>
+        addition operator
+      </summary>
+      <param name="a"></param>
+      <param name="b"></param>
+      <returns></returns>
+    </member>
+    <member
+      name="M:RobotRaconteur.TimeSpec.op_Subtraction(RobotRaconteur.TimeSpec,RobotRaconteur.TimeSpec)">
+      <summary>
+        subtraction operator
+      </summary>
+      <param name="a"></param>
+      <param name="b"></param>
+      <returns></returns>
+    </member>
+    <member
+      name="M:RobotRaconteur.TimeSpec.op_GreaterThan(RobotRaconteur.TimeSpec,RobotRaconteur.TimeSpec)">
+      <summary>
+        greater-than comparison
+      </summary>
+      <param name="a"></param>
+      <param name="b"></param>
+      <returns></returns>
+    </member>
+    <member
+      name="M:RobotRaconteur.TimeSpec.op_LessThan(RobotRaconteur.TimeSpec,RobotRaconteur.TimeSpec)">
+      <summary>
+        less-then comparison
+      </summary>
+      <param name="a"></param>
+      <param name="b"></param>
+      <returns></returns>
+    </member>
+    <member
+      name="M:RobotRaconteur.TimeSpec.op_GreaterThanOrEqual(RobotRaconteur.TimeSpec,RobotRaconteur.TimeSpec)">
+      <summary>
+        greater-than-or-equal comparison
+      </summary>
+      <param name="a"></param>
+      <param name="b"></param>
+      <returns></returns>
+    </member>
+    <member
+      name="M:RobotRaconteur.TimeSpec.op_LessThanOrEqual(RobotRaconteur.TimeSpec,RobotRaconteur.TimeSpec)">
+      <summary>
+        less-than-or-equal comparison
+      </summary>
+      <param name="a"></param>
+      <param name="b"></param>
+      <returns></returns>
+    </member>
+    <member name="M:RobotRaconteur.TimeSpec.cleanup_nanosecs">
+      <summary>
+        normalize nanoseconds to be within 0 and 1e9-1
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.HardwareTransport">
+      <summary>
+        Transport for USB, Bluetooth, and PCIe hardware devices
+
+        **WARNING: THE HARDWARE TRANSPORT IS EXPERIMENTAL!**
+
+        The HardwareTransport is disabled by default by the node setup classes.
+        Use `--robotraconteur-hardware-enable=true` option to enable.
+
+        It is recommended that ClientNodeSetup, ServerNodeSetup, or SecureServerNodeSetup
+        be used to construct this class.
+
+        See robotraconteur_url for more information on URLs.
+
+        Contact Wason Technology, LLC for more information on the hardware
+        transport.
+
+        The use of RobotRaconteurNodeSetup and subclasses is recommended to construct
+        transports.
+
+        The transport must be registered with the node using
+        RobotRaconteurNode.RegisterTransport() after construction if node
+        setup is not used.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.HardwareTransport.#ctor">
+      <summary>
+        Construct a new HardwareTransport for use with default node. Must be registered with node
+        using
+        RobotRaconteurNode.s.RegisterTransport()
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.HardwareTransport.#ctor(RobotRaconteur.RobotRaconteurNode)">
+      <summary>
+        Construct a new HardwareTransport for a non-default node. Must be registered with node using
+        node.RegisterTransport()
+      </summary>
+      <param name="node">The node to use with the transport</param>
+    </member>
+
+    <member name="M:RobotRaconteur.HardwareTransport.Close">
+      <summary>
+        Close the transport. Done automatically by node shutdown.
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.IntraTransport">
+      <summary>
+        Transport for intra-process communication
+
+        It is recommended that ClientNodeSetup, ServerNodeSetup, or SecureServerNodeSetup
+        be used to construct this class.
+
+        See robotraconteur_url for more information on URLs.
+
+        The IntraTransport implements transport connections between nodes running
+        within the same process. This is often true for simulation environments, where
+        there may be multiple simulated devices running within the simulation. The
+        IntraTransport uses a singleton to keep track of the different nodes running
+        in the same process, and to form connections. The singleton also implements
+        discovery updates.
+
+        The use of RobotRaconteurNodeSetup and subclasses is recommended to construct
+        transports.
+
+        The transport must be registered with the node using
+        RobotRaconteurNode.RegisterTransport() after construction if node
+        setup is not used.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.IntraTransport.#ctor">
+      <summary>
+        Construct a new HardwareTransport for use with default node. Must be registered with node
+        using RobotRaconteurNode.s.RegisterTransport()
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.IntraTransport.#ctor(RobotRaconteur.RobotRaconteurNode)">
+      <summary>
+        Construct a new IntraTransport for a non-default node. Must be registered with node using
+        node.RegisterTransport()
+      </summary>
+      <param name="node">The node to use with the transport</param>
+    </member>
+
+    <member name="M:RobotRaconteur.IntraTransport.Close">
+      <summary>
+        Close the transport. Done automatically by node shutdown.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.IntraTransport.StartServer">
+      <summary>
+        Start the server to listen for incoming client connections
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.LocalTransport">
+      <summary>
+        Transport for communication between processes using UNIX domain sockets
+
+        It is recommended that ClientNodeSetup, ServerNodeSetup, or SecureServerNodeSetup
+        be used to construct this class.
+
+        See robotraconteur_url for more information on URLs.
+
+        The LocalTransport implements transport connections between processes running on the
+        same host operating system using UNIX domain sockets. UNIX domain sockets are similar
+        to standard networking sockets, but are used when both peers are on the same machine
+        instead of connected through a network. This provides faster operation and greater
+        security, since the kernel simply passes data between the processes. UNIX domain
+        sockets work using Information Node (inode) files, which are special files on
+        the standard filesystem. Servers "listen" on a specified inode, and clients
+        use the inode as the address to connect. The LocalTransport uses UNIX sockets
+        in `SOCK_STREAM` mode. This provides a reliable stream transport connection similar
+        to TCP, but with significantly improved performance due the lower overhead.
+
+        UNIX domain sockets were added to Windows 10 with the 1803 update. Robot Raconteur
+        switch to UNIX domain sockets for the LocalTransport on Windows in version 0.9.2.
+        Previous versions used Named Pipes, but these were inferior to UNIX sockets. The
+        LocalTransport will not function on versions of Windows prior to Windows 10 1803 update
+        due to the lack of support for UNIX sockets. A warning will be issued to the log if
+        the transport is not available, and all connection attempts will fail. All other
+        transports will continue to operate normally.
+
+        The LocalTransport stores inode and node information files in the filesystem at various
+        operator system dependent locations. See the Robot Raconteur Standards documents
+        for details on where these files are stored.
+
+        Discovery is implemented using file watchers. The file watchens must be activated
+        using the node setup flags, or by calling EnableNodeDiscoveryListening().
+        After being initialized the file watchers operate automatically.
+
+        The LocalTransport can be used to dynamically assign NodeIDs to nodes based on a NodeName.
+        StartServerAsNodeName() and StartClientAsNodeName() take a NodeName that will identify the
+        node to clients, and manage a system-local NodeID corresponding to that NodeName. The
+        generated NodeIDs are stored on the local filesystem. If LocalTransport finds a
+        corresponding
+        NodeID on the filesystem, it will load and use that NodeID. If it does not, a new random
+        NodeID
+        is automatically generated.
+
+        The server can be started in "public" or "private" mode. Private servers store their
+        inode and
+        information in a location only the account owner can access, while "public" servers are
+        placed in a location that all users with the appropriate permissions can access. By default,
+        public LocalTransport servers are assigned to the "robotraconteur" group. Clients that
+        belong to the
+        "robotraconteur" group will be able to connect to these public servers.
+
+        The use of RobotRaconteurNodeSetup and subclasses is recommended to construct
+        transports.
+
+        The transport must be registered with the node using
+        RobotRaconteurNode.RegisterTransport() after construction if node
+        setup is not used.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.LocalTransport.#ctor">
+      <summary>
+        Construct a new LocalTransport for use with default node. Must be registered with node
+        using
+        RobotRaconteurNode.s.RegisterTransport()
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.LocalTransport.#ctor(RobotRaconteur.RobotRaconteurNode)">
+      <summary>
+        Construct a new LocalTransport for a non-default node. Must be registered with node using
+        node.RegisterTransport()
+      </summary>
+      <param name="node">The node to use with the transport</param>
+    </member>
+
+    <member name="M:RobotRaconteur.LocalTransport.Close">
+      <summary>
+        Close the transport. Done automatically by node shutdown.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.LocalTransport.StartClientAsNodeName(System.String)">
+      <summary>
+        Initialize the LocalTransport by assigning a NodeID based on NodeName
+
+        Assigns the specified name to be the NodeName of the node, and manages
+        a corresponding NodeID. See LocalTransport for more information.
+
+        Throws NodeNameAlreadyInUse if another node is using name
+      </summary>
+      <param name="name">The node name</param>
+    </member>
+
+    <member name="M:RobotRaconteur.LocalTransport.StartServerAsNodeName(System.String)">
+      <summary>
+        Start the server using the specified NodeName and assigns a NodeID
+
+        The LocalTransport will listen on a UNIX domain socket for incoming clients,
+        using information files and inodes on the local filesystem. Clients
+        can locate the node using the NodeID and/or NodeName. The NodeName is assigned
+        to the node, and the transport manages a corresponding NodeID. See
+        LocalTransport for more information.
+
+        Throws NodeNameAlreadyInUse if another node is using name.
+
+        Throws NodeIDAlreadyInUse if another node is using the managed NodeID.
+      </summary>
+      <param name="name">The NodeName</param>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.LocalTransport.StartServerAsNodeName(System.String,System.Boolean)">
+      <summary>
+        Start the server using the specified NodeName and assigns a NodeID
+
+        The LocalTransport will listen on a UNIX domain socket for incoming clients,
+        using information files and inodes on the local filesystem. Clients
+        can locate the node using the NodeID and/or NodeName. The NodeName is assigned
+        to the node, and the transport manages a corresponding NodeID. See
+        LocalTransport for more information.
+
+        Throws NodeNameAlreadyInUse if another node is using name.
+
+        Throws NodeIDAlreadyInUse if another node is using the managed NodeID.
+      </summary>
+      <param name="name">The NodeName</param>
+      <param name="public_">If True, other users can access the server. If False, only
+        the account owner can access the server.</param>
+    </member>
+
+    <member name="M:RobotRaconteur.LocalTransport.StartServerAsNodeID(RobotRaconteur.NodeID)">
+      <summary>
+        The LocalTransport will listen on a UNIX domain socket for incoming clients,
+        using information files and inodes on the local filesystem. This function
+        leaves the NodeName blank, so clients must use NodeID to identify the node.
+
+        Throws NodeIDAlreadyInUse if another node is using nodeid.
+      </summary>
+      <param name="name">The NodeName</param>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.LocalTransport.StartServerAsNodeID(RobotRaconteur.NodeID,System.Boolean)">
+      <summary>
+        The LocalTransport will listen on a UNIX domain socket for incoming clients,
+        using information files and inodes on the local filesystem. This function
+        leaves the NodeName blank, so clients must use NodeID to identify the node.
+
+        Throws NodeIDAlreadyInUse if another node is using nodeid
+      </summary>
+      <param name="name">The NodeName</param>
+      <param name="public_">If True, other users can access the server. If False, only
+        the account owner can access the server.</param>
+    </member>
+
+    <member name="T:RobotRaconteur.TcpTransport">
+      <summary>
+        Transport for Transport Control Protocol Internet Protocol (TCP/IP) networks
+
+        It is recommended that ClientNodeSetup, ServerNodeSetup, or SecureServerNodeSetup
+        be used to construct this class.
+
+        See robotraconteur_url for more information on URLs.
+
+        The TcpTransport implements transport connections over TCP/IP networks. TCP/IP is the
+        most common protocol used for Internet and Local Area Network (LAN) communication, including
+        Ethernet and WiFi connections. The Transport Control Protocol (TCP) is a reliable stream
+        protocol that establishes connections between devices using IP address and port pairs.
+        Each adapter has an assigned address, and applications create connections on different
+        ports.
+        TcpTransport listens to the port specified in StartServer(), and the client uses
+        a URL containing the IP address and port of the listening transport. The TcpTransport
+        uses the established connection to pass messages between nodes.
+
+        The IP protocol is available in two major versions, IPv4 and IPv6. The most common
+        is IPv4, and its 32 bit address is typically written as four numbers,
+        ie 172.17.12.174. IPv4 has a number of critical limitations, the greatest being
+        its 2^32 address limit (approximately 4 billion). This is a problem when there are
+        tens of billions of internet connected devices already present. IPv6 introduces a 128
+        bit address space, which allows for approximately 3.4x10^38 possible addresses. The major
+        advantage for Robot Raconteur is the introduction of "link-local" addresses. These
+        addresses
+        begin with "FE80::" and finish with an "EUI-64" address, which is tied to the MAC
+        address
+        of the adaptor. IPv4 addresses need to be assigned to devices locally, and have a tendency
+        to change. IPv6 addresses are permanently assigned to the adapter itself, meaning that
+        network configuration for LAN communication is essentially automatic. Robot Raconteur
+        will prefer IPv6 connections when possible for this reason.
+
+        The TcpTransport is capable of using "raw" streams that implement the Robot Raconteur
+        message protocols, or to use HTTP WebSockets. HTTP WebSockets allow Robot Raconteur
+        to communicate seamlessly with browsers and HTTP servers without requiring
+        additional plugins. WebSockets provide additional security using "origins". See
+        AddWebSocketAllowedOrigin() for more information.
+
+        The TcpTransport supports TLS encryption using certificates. See \\ref tls_security for
+        more information on TLS. The TcpTransport supports four modes of TLS encryption:
+
+        <list type="table">
+          <listheader>
+          <term>Scheme</term>
+          <term>Description</term>
+          <term>Direction</term>
+          </listheader>
+          <item>
+          <term>rrs+tcp</term>
+          <term>"Raw" protocol with TLS</term>
+          <term>Both</term>
+          </item>
+          <item>
+          <term>rr+wss</term>
+          <term>Websocket over HTTPS</term>
+          <term>Client Only</term>
+          </item>
+          <item>
+          <term>rrs+ws</term>
+          <term>Websocket with RobotRaconteur TLS over HTTP</term>
+          <term>Both</term>
+          </item>
+          <item>
+          <term>rrs+wss</term>
+          <term>Websocket with RobotRaconteur TLS over HTTPS</term>
+          <term>Client Only</term>
+          </item>
+          </list>
+
+        The different combinations of TLS and HTTPS for websockets are used for different scenarios.
+        Robot Raconteur Core can initiate HTTPS connections, but cannot accept them. Accepting
+        HTTPS connections requires a certificate issued by an authority like GoDaddy or Digicert,
+        and is typically used with an HTTP server running RobotRaconteurWeb.
+
+        TLS certificates for Robot Raconteur nodes are issued by Wason Technology, LLC using
+        a root certificate that is "burned in" to Robot Raconteur Core. All devices running
+        Robot Raconteur will support this certificate chain.
+
+        Discovery for the TcpTransport is accomplished using User Defined Protocol (UDP) multicast
+        and/or broadcast packets. Broadcast packets are sent to all connected devices, while
+        multicast is sent to devices that have registered to receive them. Unlike TCP, the packets
+        sent to broadcast or multicast are sent to the entire network. This allows for devices
+        to find each other on the network.
+
+        For IPv4, the broadcast address 255.255.255.255 on port 48653
+        is used for discovery. By default, IPv4 is disabled in favor of IPv6. IPv6 uses the
+        multicast
+        following multicast addresses:
+
+        <list type="table">
+          <listheader>
+          <term>Address</term>
+          <term>Scope</term>
+          <term>Port</term>
+          <term>Default?</term>
+          </listheader>
+          <item>
+          <term>FF01::BA86</term>
+          <term>Node-Local</term>
+          <term>48653</term>
+          <term>Disabled</term>
+          </item>
+          <item>
+          <term>FF02::BA86</term>
+          <term>Link-Local</term>
+          <term>48653</term>
+          <term>Enabled</term>
+          </item>
+          <item>
+          <term>FF05::BA86</term>
+          <term>Site-Local</term>
+          <term>48653</term>
+          <term>Disabled</term>
+          </item>
+          </list>
+
+        By default, discovery will only occur on the link-local IPv6 scope. This will
+        find nodes on the local subnet, but will not attempt to pass through any routers.
+
+        The use of RobotRaconteurNodeSetup and subclasses is recommended to construct
+        transports.
+
+        The transport must be registered with the node using
+        RobotRaconteurNode.RegisterTransport() after construction if node
+        setup is not used.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.TcpTransport.#ctor">
+      <summary>
+        Construct a new TcpTransport for use with default node. Must be registered with node
+        using
+        RobotRaconteurNode.s.RegisterTransport()
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.TcpTransport.#ctor(RobotRaconteur.RobotRaconteurNode)">
+      <summary>
+        Construct a new LocalTransport for a non-default node. Must be registered with node using
+        node.RegisterTransport()
+      </summary>
+      <param name="node">The node to use with the transport</param>
+    </member>
+
+    <member name="M:RobotRaconteur.TcpTransport.Close">
+      <summary>
+        Close the transport. Done automatically by node shutdown.
+      </summary>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.TcpTransport.EnableNodeDiscoveryListening(RobotRaconteur.IPNodeDiscoveryFlags)">
+      <summary>
+        Enable node discovery listening
+
+        By default enables listining on IPv6 link-local scope
+
+        See IPNodeDiscoveryFlags constants
+      </summary>
+      <param name="flags">The flags specifying the scope</param>
+    </member>
+
+    <member name="M:RobotRaconteur.TcpTransport.EnableNodeDiscoveryListening">
+      <summary>
+        Enable node discovery listening
+
+        By default enables listining on IPv6 link-local scope
+
+        See IPNodeDiscoveryFlags constants
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.TcpTransport.DisableNodeDiscoveryListening">
+      <summary>
+        Disable node discovery listening
+      </summary>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.TcpTransport.EnableNodeAnnounce(RobotRaconteur.IPNodeDiscoveryFlags)">
+      <summary>
+        Enable node discovery announce
+
+        By default enables announce on IPv6 link-local scope
+
+        See IPNodeDiscoveryFlags constants
+      </summary>
+      <param name="flags">The flags specifying the scope</param>
+    </member>
+
+    <member name="M:RobotRaconteur.TcpTransport.EnableNodeAnnounce">
+      <summary>
+        Enable node discovery announce
+
+        By default enables announce on IPv6 link-local scope
+
+        See IPNodeDiscoveryFlags constants
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.TcpTransport.DisableNodeAnnounce">
+      <summary>
+        Disable node discovery announce
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.TimerEvent">
+      <summary>
+        Timer event structure
+
+        Contains information about the state of the timer. Passed to the
+        callback on invocation.
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.TimerEvent.stopped">
+      <summary>
+        True if timer has been stopped
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.TimerEvent.last_expected">
+      <summary>
+        The last expected callback invocation time
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.TimerEvent.last_real">
+      <summary>
+        The last real callback invocation time
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.TimerEvent.current_expected">
+      <summary>
+        The current expected callback invocation time
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.TimerEvent.current_real">
+      <summary>
+        The current real callback invocation time
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.Timer">
+      <summary>
+        A timer to invoke a callback
+
+        Timers invoke a callback at a specified rate. The timer
+        can either be one-short, or repeating.
+
+        Use RobotRaconteurNode.CreateTimer() to create timers.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.Timer.Start">
+      <summary>
+        Start the timer
+
+        Must be called after RobotRaconteurNode.CreateTimer()
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.Timer.Stop">
+      <summary>
+        Stop the timer
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.Timer.GetPeriod">
+      <summary>
+        Get the period of the timer in milliseconds
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.Timer.SetPeriod(System.Int32)">
+      <summary>
+        Set the period of the timer in milliseconds
+      </summary>
+      <param name="period">Period in milliseconds</param>
+    </member>
+
+    <member name="M:RobotRaconteur.Timer.IsRunning">
+      <summary>
+        Get if the timer is running
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.Rate">
+      <summary>
+        Rate to stabilize a loop
+
+        Rate is used to stabilize the period of a loop. Use
+        RobotRaconteur.CreateRate() to create rates.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.Rate.Sleep">
+      <summary>
+        Sleep the calling thread until the current loop period expires
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.AutoResetEvent">
+      <summary>
+        Synchronization event for thread synchronization. Resets automatically after
+        being triggered
+
+        Construct using RobotRaconteurNode.CreateAutoResetEvent()
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.AutoResetEvent.Set">
+      <summary>
+        Set the event, releasing waiting threads
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.AutoResetEvent.Reset">
+      <summary>
+        Reset the event
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.AutoResetEvent.WaitOne">
+      <summary>
+        Block the current thread until Set() is called
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.AutoResetEvent.WaitOne(System.Int32)">
+      <summary>
+        Block the current thread until Set() is called, or timeout
+        expires
+
+        Timeout is based on the RobotRaconteurNode time provider
+      </summary>
+      <param name="timeout">The timeout in milliseconds</param>
+      <returns>true if event was set, otherwise false</returns>
+    </member>
+
+    <member name="T:RobotRaconteur.NodeID">
+      <summary>
+        NodeID UUID storage and generation
+
+        Robot Raconteur uses NodeID and NodeName to uniquely identify a node.
+        NodeID is a UUID (Universally Unique ID), while NodeName is a string. The
+        NodeID is expected to be unique, while the NodeName is set by the user
+        and may not be unique. The NodeID class represents the UUID NodeID.
+
+        A UUID is a 128-bit randomly generated number that is statistically guaranteed
+        to be unique to a very high probability. NodeID uses the Boost.UUID library
+        to generate, manage, and store the UUID.
+
+        The UUID can be loaded from a string, bytes, or generated randomly at runtime.
+        It can be converted to a string.
+
+        The LocalTransport and ServerNodeSetup classes will automatically assign
+        a NodeID to a node when the local transport is started with a specified node name.
+        The generated NodeID is stored on the local system, and is associated with the node name.
+        It will be loaded when a node is started with the same NodeName.
+
+        NodeID with all zeros is considered "any" node.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.NodeID.#ctor">
+      <summary>
+        Construct a new NodeID with "any" node UUID
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.NodeID.#ctor(System.Byte[])">
+      <summary>
+        Construct a new NodeID with the specified UUID bytes
+      </summary>
+      <param name="id">The UUID bytes</param>
+    </member>
+    <member name="M:RobotRaconteur.NodeID.#ctor(System.String)">
+      <summary>
+        Construct a new NodeID parsing a string UUID
+      </summary>
+      <param name="id">The UUID as a string</param>
+    </member>
+
+    <member name="M:RobotRaconteur.NodeID.ToString">
+      <summary> Convert the NodeID UUID to string with "B" format<br /> Convert the UUID string to
+        8-4-4-4-12 "B" format (with brackets)<br /> {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx} </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.NodeID.IsAnyNode">
+      <summary>
+        Is the NodeID UUID all zeros
+
+        The all zero UUID respresents "any" node, or an unset NodeID
+      </summary>
+      <returns>true The NodeID UUID is all zeros, representing any node, false The NodeID UUID is
+        not all zeros</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.NodeID.GetAny">
+      <summary>
+        Get the "any" NodeId
+      </summary>
+      <returns>The "any" NodeID</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.NodeID.ToByteArray">
+      <summary>
+        Convert the NodeID UUID to bytes
+      </summary>
+      <returns>The UUID as bytes</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.NodeID.NewUniqueID">
+      <summary>
+        Generate a new random NodeID UUID
+
+        Returned UUID is statistically guaranteed to be unique
+      </summary>
+      <returns>The newly generated UUID</returns>
+    </member>
+
+    <member name="T:RobotRaconteur.ServerContext">
+      <summary>
+        Context for services registered in a node for use by clients
+
+        Services are registered using the RobotRaconteurNode.RegisterService() family of functions.
+        The ServerContext manages the services, and dispatches requests and packets to the
+        appropriate
+        service object members. Services may expose more than one object. The root object is
+        specified
+        when the service is registered. Other objects are specified through ObjRef members. A name
+        for the service is also specified when the service is registered. This name forms the root
+        of the service path namespace. Other objects in the service have a unique service path
+        based on the ObjRef used to access the object.
+
+        Services may handle multiple connected clients concurrently. Each client is assigned
+        a ServerEndpoint. The ServerEndpoint is unique to the client connection,
+        and interacts with ServerContext to complete requests and dispatch packets. When
+        the service needs to address a specific client, the ServerEndpoint or the
+        ServerEndpoint.GetCurrentEndpoint() is used. (ServerEndpoint.GetCurrentEndpoint() returns
+        the
+        int local client ID.)
+
+        Service attributes are a varvalue{string} types dictionary that is made available to
+        clients during service discovery. These attributes are used to help clients determine
+        which service should be selected for use. Because the attributes are passed to the clients
+        as part of the discovery process, they should be as concise as possible, and should
+        not use user defined types. Use ServerContext.SetAttributes() to set the service attributes
+        after registering the service.
+
+        Security for the service is specified using a ServiceSecurityPolicy instance. This policy
+        is specified by passing as a parameter to RobotRaconteurNode.RegisterService(), or passing
+        the policy to the constructor.
+
+        ServerContext implements authentication and object locking.
+        Server side functions are exposed by ServerContext for authentication, object locking,
+        and client management.
+
+        Clients using dynamic typing such as Python and MATLAB will only pull service types
+        explicitly imported by the root object and objref objects that have been requested. Clients
+        will not pull service types of user-defined named types if that service type is not
+        explicitly
+        imported. This can be problematic if new `struct`, `pod`, and/or `namedarray` types are
+        introduced
+        that do not have corresponding objects. Extra imports is used to specify extra service
+        definitions
+        the client should pull. Use ServerContext.AddExtraImport(),
+        ServerContext.RemoveExtraImport(),
+        and ServerContext.GetExtraImports() to manage the extra imports passed to the client.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.GetCurrentServicePath">
+      <summary>
+        Get the current object service path
+
+        Returns the service path of the current object during a request or
+        packet event.
+        This is a thread-specific value and only
+        valid during the initial request or packet event invocation.
+      </summary>
+      <returns>The current object service path</returns>
+    </member>
+
+    <member name="P:RobotRaconteur.ServerContext.CurrentServicePath">
+      <summary>
+        Get the current object service path
+
+        Returns the service path of the current object during a request or
+        packet event.
+        This is a thread-specific value and only
+        valid during the initial request or packet event invocation.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.GetCurrentServerContext">
+      <summary>
+        Get the current ServerContext
+
+        Returns the current server context during a request or packet event.
+        This is a thread-specific value and only
+        valid during the initial request or packet event invocation.
+      </summary>
+      <return>The current server context</return>
+    </member>
+
+    <member name="P:RobotRaconteur.ServerContext.CurrentServerContext">
+      <summary>
+        Get the current ServerContext
+
+        Returns the current server context during a request or packet event.
+        This is a thread-specific value and only
+        valid during the initial request or packet event invocation.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.KickUser(System.String)">
+      <summary>
+        Kicks a user with the specified username
+
+        User must be authenticated.
+      </summary>
+      <param name="username">The username to kick</param>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.RequestObjectLock(System.String,System.String)">
+      <summary>
+        Request an object lock on servicepath for user username
+
+        This function handles incoming client requests, but may also be used
+        by the service directly
+      </summary>
+      <param name="servicepath">The service path to lock</param>
+      <param name="username">The name of the user owning the lock</param>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.RequestClientObjectLock(System.String,System.String,System.UInt32)">
+      <summary>
+        Request a client lock on servicepath for a specific client connection
+
+        This function handles incoming client requests, but may also be used
+        by the service directly. Client object locks lock for a specific client connection,
+        while client locks lock for a specific user. The specific client connection is
+        specified using endpoint.
+      </summary>
+      <param name="servicepath">The service path to lock</param>
+      <param name="username">The name of the user owning the lock</param>
+      <param name="endpoint">The client endpoint ID of the client owning the lock</param>
+    </member>
+
+    <member
+      name="M:RobotRaconteur.ServerContext.ReleaseObjectLock(System.String,System.String,System.Boolean)">
+      <summary>
+        Release a client lock on servicepath
+
+        This function handles incoming client requests, but may also be used
+        by the service directly. Client locks can be released by the user that
+        created them if override_ is false, or by any user if override_ is true.
+
+        The override_ parameter is set to true for client requests if the client has
+        the \"objectlockoverride\" permission.
+      </summary>
+      <param name="servicepath">The service path to release lock</param>
+      <param name="username">The username requsting the lock release</param>
+      <param name="override_">If False, only the creating username can release the lock. If True,
+        any username can release the lock</param>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.GetObjectLockUsername(System.String)">
+      <summary>
+        Get the name of the user that has locked the specified service path
+      </summary>
+      <param name="servicepath">The service path</param>
+      <returns>The user owning the lock, or empty servicepath is not locked</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.GetExtraImports">
+      <summary>
+        Get the current list of extra service definition imports
+      </summary>
+      <returns>The list of extra imports</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.AddExtraImport(System.String)">
+      <summary>
+        Add an extra service definition import
+
+        Clients using dynamic typing will not automatically pull service definitions unless
+        imported by the root object or an objref. If new \"struct\", \"po\", or \"namedarray\" types
+        are introduced in a new service definition type without a corresponding object, an error
+        will
+        occur. Use AddExtraImport() to add the name of the new service definition to add it to the
+        list of service definitions the client will pull.
+
+        Service definition must have been registered using RobotRaconteurNode.RegisterServiceType()
+      </summary>
+      <param name="import_">The name of the service definition</param>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerContext.RemoveExtraImport(System.String)">
+      <summary>
+        Removes an extra import service definition registered with AddExtraImport()
+
+        See AddExtraImport()
+      </summary>
+      <param name="import_">The name of the service definition</param>
+      <returns>true The service definition was removed, false The service definition was not found
+        in the extra imports vector</returns>
+    </member>
+
+
+    <member name="M:RobotRaconteur.ServerContext.SetServiceAttributes(System.Collections.Generic.Dictionary{System.String,System.Object})">
+      <summary>
+        Set the service attributes
+
+        Sets the service attributes. Attributes are made available to clients during
+        service discovery. Attributes should be concise and not use any user defined
+        types.
+      </summary>
+      <param name="attributes">The service attributes</param>
+    </member>
+    <member name="M:RobotRaconteur.ServerContext.AddServerServiceListener(RobotRaconteur.ServerContext.ServerServiceListenerDelegate)">
+      <summary>
+        Add a service listener
+      </summary>
+      <param name="listener">Callable listener function</param>
+    </member>
+    <member name="M:RobotRaconteur.ServerContext.ReleaseServicePath(System.String)">
+      <summary> Release the specified service path and all sub objects Services take ownership of
+        objects returned by objrefs, and will only request the object once. Subsequent requests will
+        return the cached object. If the objref has changed, the service must call
+        ReleaseServicePath() to tell the service to request the object again. Release service path
+        will release the object specified by the service path and all sub objects. This overload
+        will notify all clients that the objref has been released. If the service path contains a
+        session key, use ReleaseServicePath(string, uint[]) to only
+        notify the client that owns the session.
+      </summary>
+      <param name="path">The service path to release</param>
+    </member>
+    <member name="M:RobotRaconteur.ServerContext.ReleaseServicePath(System.String,System.UInt32[])">
+      <summary>
+        Release the specified service path and all sub objects
+
+        Services take ownership of objects returned by objrefs, and will only request the object
+        once. Subsequent requests will return the cached object. If the objref has changed,
+        the service must call ReleaseServicePath() to tell the service to request the object again.
+        Release service path will release the object specified by the service path
+        and all sub objects.
+
+        This overload will notify the specified that the objref has been released. If the service
+        path contains a session key, this overload should be used so the session key is not leaked.
+      </summary>
+      <param name="path">The service path to release</param>
+      <param name="endpoints">The client endpoint IDs to notify of the released service path</param>
+    </member>
+
+    <member name="T:RobotRaconteur.ServerEndpoint">
+      <summary>
+        Server endpoint representing a client connection
+
+Robot Raconteur creates endpoint pairs between a client and service. For clients, this endpoint
+is a ClientContext. For services, the endpoint becomes a ServerEndpoint. ServerEndpoints are used
+to address a specific client connected to a service, since services may have multiple clients
+connected concurrently. ServerEndpoints also provide client authentication information.
+
+Use ServerEndpoint.GetCurrentEndpoint() to retrieve the int32
+current endpoint ID. Use ServerEndpoint.GetCurrentAuthenticatedUser() to retrieve
+the current user authentication information.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerEndpoint.GetCurrentEndpoint">
+      <summary>
+        Returns the current server endpoint
+
+Returns the current server endpoint during a request or packet event.
+This is a thread-specific value and only valid during the initial
+request or packet event invocation.
+
+Throws InvalidOperationException if not during a request or packet event
+      </summary>
+      <returns>The current server endpoint id</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.ServerEndpoint.GetCurrentAuthenticatedUser">
+      <summary>
+        Returns the current authenticated user
+
+Users that have been authenticated have a corresponding
+AuthenticatedUser object associated with the ServerEndpoint.
+GetCurrentAuthenticatedUser() returns the AuthenticatedUser
+associated with the current ServerEndpoint during a request
+or packet event. This is a thread-specific value and only valid during 
+the initial request or packet event invocation.
+
+Throws PermissionDeniedException or AuthenticationException
+if there is no AuthenticatedUser set in the current thread. 
+      </summary>
+
+    </member>
+
+    <member name="T:RobotRaconteur.AuthenticatedUser">
+      <summary>
+        Class representing an authenticated user
+
+Use ServerEndpoint.GetCurrentAuthenticatedUser() to retrieve the
+authenticated user making a request
+
+See \\ref security for more information.
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.ServiceSecurityPolicy">
+      <summary>
+        Security policy for Robot Raconteur service
+      </summary>
+      <remarks>
+        The security policy sets an authenticator, and a set of policies. PasswordFileUserAuthenticator is
+an example of an authenticator. The valid options for Policies are as follows:
+
+<list type="table">
+  <listheader>
+  <term>Policy name</term>
+  <term>Possible Values</term>
+  <term>Default</term>
+  <term>Description</term>
+  </listheader>
+  <item>
+  <term>requirevaliduser</term>
+  <term>true,false</term>
+  <term>false</term>
+  <term>Set to "true" to require a user be authenticated before accessing
+  service</term>
+  </item>
+  <item>
+  <term>allowobjectlock</term>
+  <term>true,false</term>
+  <term>false</term>
+  <term>If "true" allow users to request object locks. requirevaliduser must
+  also be "true"</term>
+  </item>
+  </list>
+
+The security policy is passed as a parameter to RobotRaconteurNode.RegisterService().
+
+See security for more information.
+      </remarks>
+    </member>
+
+    <member name="M:RobotRaconteur.ServiceSecurityPolicy.#ctor(RobotRaconteur.IUserAuthenticator,System.Collections.Generic.Dictionary{System.String,System.String})">
+      <summary>Construct a new security policy</summary>
+      <param name="authenticator">The user authenticator</param>
+      <param name="policies">The security policies</param>
+    </member>
+
+    <member name="T:RobotRaconteur.NativeUserAuthenticator">
+      <summary>
+        Base class for user authenticators
+
+        Used with ServiceSecurityPolicy to secure services
+
+        Override AuthenticateUser to implement different types
+        of user authenticators.
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.PasswordFileUserAuthenticator">
+      <summary>
+        Simple authenticator using a list of username, password hash, and privileges stored in a
+        file or string
+
+        The password user authenticator expects a string containing a list of users,
+        one per line. Each line contains the username, password as md5 hash, and privileges,
+        separated by white spaces.
+        An example of authentication string contents:
+
+        <code>
+        user1 79e262a81dd19d40ae008f74eb59edce objectlock
+        user2 309825a0951b3cf1f25e27b61cee8243 objectlock
+        superuser1 11e5dfc68422e697563a4253ba360615 objectlock,objectlockoverride
+        </code>
+
+
+        The password is md5 hashed. This hash can be generated using the ``--md5passwordhash``
+        command in the \"RobotRaconteurGen\" utility.
+        The privileges are comma separated. Valid privileges are as follows:
+
+        <list type="table">
+          <listheader>
+          <term>Policy name</term>
+          <term>Possible Values</term>
+          <term>Default</term>
+          <term>Description</term>
+          </listheader>
+          <item>
+          <term>requirevaliduser</term>
+          <term>true,false</term>
+          <term>false</term>
+          <term>Set to "true" to require a user be authenticated before accessing
+          service</term>
+          </item>
+          <item>
+          <term>allowobjectlock</term>
+          <term>true,false</term>
+          <term>false</term>
+          <term>If "true" allow users to request object locks. requirevaliduser must
+          also be "true"</term>
+          </item>
+          </list>
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.PasswordFileUserAuthenticator.#ctor(System.String)">
+      <summary>
+        Construct a new PasswordFileUserAuthenticator
+      </summary>
+      <summary name="data">The file text</summary>
+    </member>
+
+    <member name="M:RobotRaconteur.PasswordFileUserAuthenticator.#ctor(System.String,System.Boolean)">
+      <summary>
+        Construct a new PasswordFileUserAuthenticator
+      </summary>
+      <summary name="data">The file text</summary>
+      <summary name="require_verified_client">Require clients to be verified</summary>
+    </member>
+
+    <member name="T:RobotRaconteur.RRLogRecord">
+      <summary>
+        Robot Raconteur log record
+
+        Records information about a logging event
+
+        See \\ref logging for more information.
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.Level">
+      <summary>
+        The log level
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.Component">
+      <summary>
+        The source component
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.ComponentName">
+      <summary>
+        The source component name
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.ComponentObjectID">
+      <summary>
+        The source component object ID
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.Endpoint">
+      <summary>
+        The source endpoint
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.ServicePath">
+      <summary>
+        The service path of the source object
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.Member">
+      <summary>
+        The source member
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.Message">
+      <summary>
+        Human readable log message
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.Time">
+      <summary>
+        Time of logging event
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.SourceFile">
+      <summary>
+        The sourcecode filename
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.SourceLine">
+      <summary>
+        The line within the sourcecode file
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.ThreadID">
+      <summary>
+        The source thread
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.FiberID">
+      <summary>
+        The source coroutine fiber
+      </summary>
+    </member>
+
+    <member name="P:RobotRaconteur.RRLogRecord.Node">
+      <summary>
+        The source node
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.LogRecordHandler">
+      <summary>
+        Base class of log record handler
+
+By default, RobotRaconteurNode will print log records to ``stderr``. Use
+RobotRaconteur.RobotRaconteurNode.SetLogRecordHandler() to specify a LogRecordHandler
+to accept log records instead of printing them to the terminal.
+
+See \\ref logging for more information.
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.FileLogRecordHandler">
+      <summary>
+        Log record handler that saves to a file
+
+See \\ref logging for more information.
+      </summary>
+    </member>
+
+    <member name="T:RobotRaconteur.FileLogRecordHandler.#ctor">
+      <summary>
+        Construct a FileLogRecordHandler. Use OpenFile() to open a file.
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.FileLogRecordHandler.OpenFile(System.String)">
+      <summary>
+        Open a file to store log records
+      </summary>
+      <param name="filename">The filename</param>
+    </member>
+
+    <member name="M:RobotRaconteur.FileLogRecordHandler.OpenFile(System.String,System.Boolean)">
+      <summary>
+        Open a file to store log records
+      </summary>
+      <param name="filename">The filename</param>
+      <param name="append">If true, log messages are appended. If false, the file is truncated when opened</param>
+    </member>
+
+    <member name="T:RobotRaconteur.BroadcastDownsampler">
+      <summary>
+      Downsampler to manage rate of packets sent to client
+
+PipeBroadcaster and WireBroadcaster by default sends packets to all clients when
+a pipe packet is sent or the wire value is changed. The updates typically happen
+within a sensor or control loop, with the rate set by the specific device producing
+the updates. Some clients may require less frequent data, and may run in to bandwidth
+or processing issues if the data is sent at the full update rate. The BroadcastDownsampler
+is used to implement broadcaster predicates that will drop packets. 
+Clients specify how many packets they want dropped between each packet sent. For instance,
+a downsample of 0 means that no packets are dropped. A downsample of 1 will drop every other
+packet. A downsample of two will drop 2 packets between sending 1 packet, etc. The 
+downsample level for each client is set using SetClientDownsample(). This should be
+made available to the client using a property member.
+
+PipeBroadcaster and WireBroadcaster must be added to the downsampler
+using AddPipeBroadcaster() and AddWireBroadcaster(), respectively.
+It is recommended that these functions be called within
+the RRServiceObjectInit(context,servicepath) function thit is called
+by the node when a service object is initialized.
+
+BeginStep() and EndStep() must be called for each iteration of the
+broadcasting loop. Use BroadcastDownsamplerStep for automatic
+management in the loop.
+
+See com.robotraconteur.isoch.IsochDevice for the standard use 
+of downsampling. 
+</summary>
+    </member>
+
+    <member name="M:RobotRaconteur.BroadcastDownsampler.#ctor(RobotRaconteur.ServerContext,System.UInt32)">
+      <summary>
+        Construct a new BroadcastDownsampler
+      </summary>
+      <param name="context">The service context</param>
+      <param name="default_downsample">The default downsample. Usually set to 0</param>
+    </member>
+
+    <member name="M:RobotRaconteur.BroadcastDownsampler.GetClientDownsample(System.UInt32)">
+      <summary>
+        Get the downsample for the specified client
+      </summary>
+      <param name="ep">The endpoint ID of the client</param>
+      <returns>The downsample</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.BroadcastDownsampler.SetClientDownsample(System.UInt32,System.UInt32)">
+      <summary>
+        Set the downsample for the specified client
+      </summary>
+      <param name="ep">The endpoint ID of the client</param>
+      <param name="downsample">The desired downsample</param>
+    </member>
+
+    <member name="M:RobotRaconteur.BroadcastDownsampler.BeginStep">
+      <summary>
+        Begin the update loop step
+
+Use BroadcastDownsamplerStep for automatic stepping
+      </summary>
+    </member>
+
+    <member name="M:RobotRaconteur.BroadcastDownsampler.EndStep">
+      <summary>
+        End the update loop step
+
+Use BroadcastDownsamplerStep for automatic stepping
+      </summary>
+    </member>
+
+  </members>
 
 </doc>
