@@ -39,7 +39,7 @@ namespace RobotRaconteur
 /// `ulong`, `bool`, `CDouble`, and `CSingle`.
 /// </para>
 /// <para>
-/// ArrayMemory instances are attached to an RRArrayPtr<T>, either when
+/// ArrayMemory instances are attached to an RRArray, either when
 /// constructed or later using Attach().
 /// </para>
 /// <para>

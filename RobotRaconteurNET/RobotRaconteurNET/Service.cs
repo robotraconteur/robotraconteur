@@ -61,7 +61,7 @@ public interface IRRServiceObject
 /// <para>
 ///  On the client side,
 /// the client specifies a function for the callback using the SetFunction() function.
-/// On the service side, the function GetFunction(const RR_SHARED_PTR<Endpoint>& endpoint) is used to retrieve
+/// On the service side, the function GetFunction(uint e) is used to retrieve
 /// the proxy function to call a client callback.
 /// </para>
 /// <para>
@@ -190,7 +190,7 @@ public class CallbackServer<T> : Callback<T>
 ///  Pipes may be *unreliable*, meaning that packets may arrive out of order or be dropped. Use IsUnreliable() to check
 /// for unreliable pipes. The member modifier `unreliable` is used to specify that a pipe should be unreliable.
 /// </para>
-/// <para
+/// <para>
 /// Pipes may be declared *readonly* or *writeonly*. If neither is specified, the pipe is assumed to be full duplex.
 /// *readonly* pipes may only send packets from service to client. *writeonly* pipes may only send packets from client to
 /// service. Use Direction() to determine the direction of the pipe.
@@ -1690,7 +1690,7 @@ public class Wire<T>
     /// The specified callback function should have the following signature:
     /// </para>
     /// <para>
-    /// T peek_invalue_callback(uint32 client_endpoint);
+    /// T peek_invalue_callback(uint client_endpoint);
     /// </para>
     /// <para> 
     /// The function receives the client endpoint ID, and returns the current InValue.
@@ -1732,7 +1732,7 @@ public class Wire<T>
     /// The specified callback function should have the following signature:
     /// </para>
     /// <para>
-    ///     T peek_outvalue_callback(uint32 client_endpoint);
+    ///     T peek_outvalue_callback(uint client_endpoint);
     /// </para>
     /// <para>
     /// The function receives the client endpoint ID, and returns the current OutValue.
@@ -1774,7 +1774,7 @@ public class Wire<T>
     /// The specified callback function should have the following signature:
     /// </para>
     /// <para>
-    ///     void poke_outvalue_callback(const T& value, const TimeSpec& timestamp, uint32 client_endpoint);
+    ///     void poke_outvalue_callback( T, TimeSpec timestamp, uint client_endpoint);
     /// </para>
     /// <para>
     /// The function receives the new out value, the new out value timestamp in the client's clock,
@@ -2070,7 +2070,7 @@ public class Wire<T>
         /// Sets a function to invoke when the wire connection has been closed.
         /// </para>
         /// <para>
-        /// Callback function must accept one argument, receiving the WireConnectionPtr<T> that
+        /// Callback function must accept one argument, receiving the WireConnection that
         /// was closed.
         /// </para>
         /// </remarks>

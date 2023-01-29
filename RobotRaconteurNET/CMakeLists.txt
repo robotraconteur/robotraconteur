@@ -96,6 +96,13 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
     endif()
     add_dependencies(RobotRaconteurNET RobotRaconteurNETNative)
 
+    add_custom_command(TARGET RobotRaconteurNET POST_BUILD COMMAND ${CMAKE_COMMAND} 
+        -P ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/merge_doc_xml.cmake 
+        $<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release>)
+
+    set(RR_NET_BUILT_DOC_XML "${CMAKE_CURRENT_BINARY_DIR}/xml_doc/RobotRaconteurNET_built_doc.xml ")
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/merge_doc_xml.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/merge_doc_xml.cmake @ONLY)
+
     if(WIN32)
         if(CMAKE_SIZEOF_VOID_P EQUAL 8)
             set(RR_PREFER_32BIT "<Prefer32Bit>false</Prefer32Bit>")
@@ -109,18 +116,6 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
 
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/netstandard/RobotRaconteurNET.csproj.in"
                    "${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib/RobotRaconteurNET.csproj" @ONLY)
-
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET.xml"
-                    "${CMAKE_BINARY_DIR}/out/NET/RobotRaconteurNET.xml" @ONLY)
-
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET.xml"
-                    "${CMAKE_BINARY_DIR}/out_debug/NET/RobotRaconteurNET.xml" @ONLY)
-
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET.xml"
-                    "${CMAKE_BINARY_DIR}/out/NET/netstandard/RobotRaconteurNET.xml" @ONLY)
-
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET.xml"
-                    "${CMAKE_BINARY_DIR}/out_debug/NET/netstandard/RobotRaconteurNET.xml" @ONLY)
 
     if(WIN32 AND (MSVC_VERSION GREATER 1900))
         add_custom_target(
@@ -140,7 +135,14 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
                 ${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib/bin/$<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release>/RobotRaconteurNET.dll
                 ${CMAKE_BINARY_DIR}/$<$<CONFIG:debug>:out_debug>$<$<CONFIG:release>:out>/NET/netstandard/.)
         add_dependencies(RobotRaconteurNET_standard RobotRaconteurNETNative)
-    endif()
+
+        add_custom_command(TARGET RobotRaconteurNET_standard POST_BUILD COMMAND ${CMAKE_COMMAND} 
+        -P ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/netstandard/merge_doc_xml.cmake 
+        $<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release> netstandard)
+
+        set(RR_NET_BUILT_DOC_XML "${CMAKE_CURRENT_BINARY_DIR}/xml_doc/netstandard/RobotRaconteurNET_built_doc.xml ")
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/merge_doc_xml.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/netstandard/merge_doc_xml.cmake @ONLY)
+        endif()
 
     string(TIMESTAMP CurrentYear "%Y")
 

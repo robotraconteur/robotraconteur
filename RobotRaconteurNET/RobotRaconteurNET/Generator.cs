@@ -213,6 +213,7 @@ public interface Generator2<ReturnType>
 /// <summary>
 /// Generator type for use with generator functions, with parameter
 /// </summary>
+/// <remarks>
 /// <para>
 /// Generators are used with generator functions to implement simple coroutines. They are
 /// returned by function members with a parameter and/or return marked with the
