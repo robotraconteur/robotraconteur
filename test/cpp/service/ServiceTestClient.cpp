@@ -74,7 +74,7 @@ void ServiceTestClient::RunFullTest(string url, string authurl)
 void ServiceTestClient::RunMinimalTest(string url)
 {
 
-    EXPECT_NO_THROW(ConnectService(url););
+    ASSERT_NO_THROW(ConnectService(url););
 
     // TestProperties();
 

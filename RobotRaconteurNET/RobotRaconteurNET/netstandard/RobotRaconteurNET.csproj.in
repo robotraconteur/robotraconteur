@@ -36,6 +36,7 @@
     <Compile Include="$(RRSourceDir)\MultiDimArray.cs" Link="MultiDimArray.cs" />
     <Compile Include="$(RRSourceDir)\Util.cs" Link="Util.cs" />
     <Compile Include="$(RRSourceDir)\Service.cs" Link="Service.cs" />
+    <Compile Include="$(RRSourceDir)\ServiceFactory.cs" Link="ServiceFactory.cs" />
     <Compile Include="$(RRSourceDir)\AsyncUtil.cs" Link="AsyncUtil.cs" />
     <Compile Include="$(RRSourceDir)\DataTypes.cs" Link="DataTypes.cs" />
     <Compile Include="$(RRSourceDir)\Discovery.cs" Link="Discovery.cs" />
@@ -45,5 +46,9 @@
     <Compile Include="$(RRSourceDir)\Subscription.cs" Link="Subscription.cs" />
     <Compile Include="$(RRSourceDir)\Timer.cs" Link="Timer.cs" />
   </ItemGroup>
+
+  <PropertyGroup>
+  <DocumentationFile>C:\Users\wasonj\Documents\RobotRaconteur2\scratch\test_doc_xml_output\RobotRaconteurNET.xml</DocumentationFile>
+  </PropertyGroup>
 
 </Project>

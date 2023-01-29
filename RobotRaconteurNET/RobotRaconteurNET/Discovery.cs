@@ -24,14 +24,48 @@ using System.Threading.Tasks;
 namespace RobotRaconteur
 {
 
+/// <summary>
+/// Contains information about a service found using discovery
+/// </summary>
+/// <remarks>
+/// <para>
+/// ServiceInfo2 contains information about a service required to
+/// connect to the service, metadata, and the service attributes
+/// </para>
+/// <para>
+/// ServiceInfo2 structures are returned by RobotRaconteurNode::FindServiceByType()
+/// and ServiceInfo2Subscription
+/// </para>
+/// </remarks>
 public class ServiceInfo2
 {
+    /// <summary>
+    /// The name of the service
+    /// </summary>
     public string Name;
+    /// <summary>
+    /// The fully qualified type of the root object in the service
+    /// </summary>
     public string RootObjectType;
+    /// <summary>
+    /// The fully qualified types the root object implements
+    /// </summary>
     public string[] RootObjectImplements;
+    /// <summary>
+    /// Candidate URLs to connect to the service
+    /// </summary>
     public string[] ConnectionURL;
+    /// <summary>
+    /// Service attributes
+    /// </summary>
     public Dictionary<string, object> Attributes;
+    /// <summary>
+    /// The NodeID of the node that owns the service
+    /// </summary>
     public NodeID NodeID;
+    /// <summary>
+    /// The NodeName of the node that owns the service
+    /// </summary>
     public string NodeName;
 
     public ServiceInfo2()
@@ -57,10 +91,37 @@ public class ServiceInfo2
     }
 }
 
+/// <summary>
+/// Contains information about a node detected using discovery
+/// </summary>
+/// <remarks>
+/// <para>
+/// NodeInfo2 contains information about a node detected using discovery.
+/// Node information is typically not verified, and is used as a first
+/// step to detect available services.
+/// </para>
+/// <para>
+/// NodeInfo2 structures are returned by RobotRaconteurNode.FindNodeByName()
+/// and RobotRaconteurNode.FindNodeByID()
+/// </para>
+/// </remarks>
 public class NodeInfo2
 {
+    /// <summary>
+    /// The NodeID of the detected node
+    /// </summary>
     public NodeID NodeID;
+    /// <summary>
+    /// The NodeName of the detected node
+    /// </summary>
     public string NodeName;
+    /// <summary>
+    /// Candidate URLs to connect to the node
+    ///
+    /// The URLs for the node typically contain the node transport endpoint
+    /// and the nodeid. A URL service parameter must be appended
+    /// to connect to a service.
+    /// </summary>
     public string[] ConnectionURL;
 
     public NodeInfo2()

@@ -24,11 +24,27 @@ using System.Threading.Tasks;
 namespace RobotRaconteur
 {
 
+/// <summary>
+/// Complex double precision floating point number
+/// </summary>
+/// <remarks>
+/// 128-bit complex float
+/// </remarks>
 public struct CDouble
 {
+    /// <summary>
+    /// real component
+    /// </summary>
     public double Real;
+    /// <summary>
+    /// imaginary component
+    /// </summary>
     public double Imag;
-
+    /// <summary>
+    /// Construct a new cdouble
+    /// </summary>
+    /// <param name="real">real component</param>
+    /// <param name="imag">imaginary component</param>
     public CDouble(double real, double imag)
     {
         Real = real;
@@ -60,11 +76,28 @@ public struct CDouble
     }
 }
 
+/// <summary>
+/// Complex single precision floating point number
+/// </summary>
+/// <remarks>
+/// 64-bit complex float
+/// </remarks>
 public struct CSingle
 {
+    /// <summary>
+    /// real component
+    /// </summary>
     public float Real;
+    /// <summary>
+    /// imaginary component
+    /// </summary>
     public float Imag;
 
+    /// <summary>
+    /// Construct a new cfloat
+    /// </summary>
+    /// <param name="real">real component</param>
+    /// <param name="imag">imaginary component</param>
     public CSingle(float real, float imag)
     {
         Real = real;

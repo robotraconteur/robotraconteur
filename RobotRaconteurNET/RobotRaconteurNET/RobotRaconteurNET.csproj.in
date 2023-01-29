@@ -118,7 +118,10 @@
 	</Compile>
     <Compile Include="$(RRSourceDir)\Service.cs" >
 		<Link>Service.cs</Link>
-	</Compile>	
+	</Compile>
+  <Compile Include="$(RRSourceDir)\ServiceFactory.cs" >
+    <Link>ServiceFactory.cs</Link>
+  </Compile>	
 	<Compile Include="$(RRSourceDir)\Generator.cs" >
 		<Link>Generator.cs</Link>
 	</Compile>

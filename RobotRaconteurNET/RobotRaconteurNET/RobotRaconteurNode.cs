@@ -26,23 +26,29 @@ namespace RobotRaconteur
 
 /// <summary>
 /// The central node implementation
-///
+/// </summary>
+/// <remarks>
+/// <para>
 ///     RobotRaconteurNode implements the current Robot Raconteur instance
 ///    and acts as the central switchpoint for the instance. The user
 ///    registers types, connects clients, registers services, and
 ///    registers transports through this class.
-///
+/// </para>
+/// <para>
 ///    If the current program only needs one instance of RobotRaconteurNode,
 ///    the singleton can be used. The singleton is accessed using:
-///
-///    `RobotRaconteurNode.s`
-///
+///</para>
+/// <code>
+///    RobotRaconteurNode.s
+/// </code>
+/// <para>
 ///    The node must be shut down before existing the program,
 ///    or a memory leak/hard crash will occur. This can either be
 ///    accomplished manually using the `Shutdown()` function,
 ///    or automatically by using the ClientNodeSetup or
 ///    ServerNodeSetup classes.
-/// </summary>
+/// </para>
+/// </remarks>
 public partial class RobotRaconteurNode
 {
     private static RobotRaconteurNode csharp_s = null;
@@ -50,11 +56,12 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     ///    Singleton accessor
-    /// 
+    /// </summary>
+    /// <remarks>
     ///    The RobotRaconteurNode singleton can be used when only
     ///    one instance of Robot Raconteur is required in a program.
     ///    The singleton must be shut down when the program exits.
-    /// </summary>
+    /// </remarks>
     public static RobotRaconteurNode s
     {
         get {
@@ -71,10 +78,11 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get or set the current NodeID
-    ///
+    /// </summary>
+    /// <remarks>
     ///    Gets or setthe current NodeID. If one has not been set,
     ///    one will be automatically generated. Cannot be set if a NodeID has been assigned.
-    /// </summary>
+    /// </remarks>
     /// <value></value>
     public NodeID NodeID
     {
@@ -88,10 +96,11 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get or set the current NodeName
-    ///
+    /// </summary>
+    /// <remarks>
     /// Gets or set the current NodeName. If one has not been set using,
     /// it will be an empty string. Cannot be set if a NodeName has been assigned.
-    /// </summary>
+    /// </remarks>
     public string NodeName
     {
         get {
@@ -104,12 +113,13 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get or set the number of threads for the node ThreadPool
-    ///
+    /// </summary>
+    /// <remarks>
     ///  The ThreadPool will use a maximum of count threads. If
     ///  this number is lower than the current ThreadPool count,
     ///  the ThreadPool will attempt to release threads beyond count
     ///  as they return to idle
-    /// </summary>
+    /// </remarks>
     public int ThreadPoolCount
     {
         get {
@@ -183,24 +193,31 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Create a client connection to a remote service using a URL
-    /// 
+    /// </summary>
+    /// <remarks>
+    /// <para>
     ///  Synchronously creates a connection to a remote service using a URL. URLs are either provided by
     ///  the service, or are determined using discovery functions such as FindServiceByType().
     ///  This function is the primary way to create client connections.
-    /// 
+    /// </para>
+    /// <para>
     ///  username and credentials can be used to specify authentication information. Credentials will
     ///  often contain a "password" or token entry.
-    ///
+    /// </para>
+    /// <para>
     ///  The listener is a function that is called during various events. See ClientServiceListenerEventType
     ///  for a description of the possible events.
-    /// 
+    /// </para>
+    /// <para>
     ///  ConnectService will attempt to instantiate a client object reference (proxy) based on the type
     ///  information provided by the service. The type information will contain the type of the object,
     ///  and all the implemented types. The client will normally want a specific one of the implement types.
     ///  Specify this desired type in objecttype to avoid future compatibility issues.
-    /// 
+    /// </para>
+    /// <para>
     ///  Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="url">The URL of the service to connect</param>
     /// <param name="username">An optional username for authentication</param>
     /// <param name="credentials">Optional credentials for authentication</param>
@@ -247,24 +264,31 @@ public partial class RobotRaconteurNode
     }
     /// <summary>
     /// Create a client connection to a remote service using a URL
-    /// 
+    /// </summary>
+    /// <remarks>
+    /// <para>
     ///  Synchronously creates a connection to a remote service using a URL. URLs are either provided by
     ///  the service, or are determined using discovery functions such as FindServiceByType().
     ///  This function is the primary way to create client connections.
-    /// 
+    /// </para>
+    /// <para>
     ///  username and credentials can be used to specify authentication information. Credentials will
     ///  often contain a "password" or token entry.
-    ///
+    /// </para>
+    /// <para>
     ///  The listener is a function that is called during various events. See ClientServiceListenerEventType
     ///  for a description of the possible events.
-    /// 
+    /// </para>
+    /// <para>
     ///  ConnectService will attempt to instantiate a client object reference (proxy) based on the type
     ///  information provided by the service. The type information will contain the type of the object,
     ///  and all the implemented types. The client will normally want a specific one of the implement types.
     ///  Specify this desired type in objecttype to avoid future compatibility issues.
-    /// 
+    /// </para>
+    /// <para>
     ///  Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="url">The candidate URLs of the service to connect</param>
     /// <param name="username">An optional username for authentication</param>
     /// <param name="credentials">Optional credentials for authentication</param>
@@ -316,13 +340,17 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Disconnects a client connection to a service
-    /// 
+    /// </summary>
+    /// <remarks>
+    /// <para>
     ///  Synchronously disconnects a client connection. Client connections
     ///  are automatically closed by Shutdown(), so this function
     ///  is optional.
-    /// 
+    /// </para>
+    /// <para>
     ///  Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The root object of the service to disconnect</param>
     public void DisconnectService(object obj)
     {
@@ -332,10 +360,11 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously create a client connection to a remote service using a URL
-    ///
+    /// </summary>
+    /// <remarks>
     /// Same as ConnectService but async. See ConnectService() for more details
     /// on client connections.
-    /// </summary>
+    /// </remarks>
     /// <param name="url">The URL of the service to connect</param>
     /// <param name="username">An optional username for authentication</param>
     /// <param name="credentials">Optional credentials for authentication</param>
@@ -382,10 +411,11 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously create a client connection to a remote service using a URL
-    ///
+    /// </summary>
+    /// <remarks>
     /// Same as ConnectService but async. See ConnectService() for more details
     /// on client connections.
-    /// </summary>
+    /// </remarks>
     /// <param name="url">The candidate URLs of the service to connect</param>
     /// <param name="username">An optional username for authentication</param>
     /// <param name="credentials">Optional credentials for authentication</param>
@@ -436,9 +466,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously disconnects a client connection to a service
-    ///
-    ///    Same as DisconnectService() but async.
     /// </summary>
+    /// <remarks>
+    ///    Same as DisconnectService() but async.
+    /// </remarks>
     /// <param name="obj">The root object of the client to disconnect</param>
     public async Task AsyncDisconnectService(object obj)
     {
@@ -451,10 +482,11 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get the service attributes of a client connection
-    ///
+    /// </summary>
+    /// <remarks>
     ///  Returns the service attributes of a client connected using
     ///  ConnectService()
-    /// </summary>
+    /// </remarks>
     /// <param name="obj">The root object of the client to use to retrieve service attributes</param>
     /// <returns>Dictionary of the service attributes</returns>
     public Dictionary<string, object> GetServiceAttributes(object obj)
@@ -468,9 +500,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get the service NodeID of the remote node from a client connection
-    /// 
-    ///  Returns the NodeID of the remote node that a client is connected
     /// </summary>
+    /// <remarks>
+    ///  Returns the NodeID of the remote node that a client is connected
+    /// </remarks>
     /// <param name="obj">The root object of the client to use to retrieve service attributes</param>
     /// <returns>The NodeID</returns>
     public NodeID GetServiceNodeID(object obj)
@@ -481,9 +514,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get the service NodeName of the remote node from a client connection
-    /// 
-    ///  Returns the NodeName of the remote node that a client is connected
     /// </summary>
+    /// <remarks>
+    ///  Returns the NodeName of the remote node that a client is connected
+    /// </remarks>
     /// <param name="obj">The root object of the client to use to retrieve service attributes</param>
     /// <returns>The NodeName</returns>
     public string GetServiceNodeName(object obj)
@@ -494,9 +528,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get the name of a service from a client connection
-    /// 
-    ///  Returns the service name of the remote service that a client is connected
     /// </summary>
+    /// <remarks>
+    ///  Returns the service name of the remote service that a client is connected
+    /// </remarks>
     /// <param name="obj">The root object of the client to use to retrieve service attributes</param>
     /// <returns>The service name</returns>
     public string GetServiceName(object obj)
@@ -507,9 +542,11 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get the Robot Raconteur type of a connected service object
+    /// </summary>
+    /// <remarks>
     ///  obj must be returned by ConnectService(), AsyncConnectService(),
     ///  or an `objref`
-    /// </summary>
+    /// </remarks>
     /// <param name="obj">The object to query</param>
     /// <returns>The Robot Raconteur type of the object</returns>
     public string GetObjectType(object obj)
@@ -1399,14 +1436,18 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Request an exclusive access lock to a service object
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Called by clients to request an exclusive lock on a service object and
     /// all subobjects (`objrefs`) in the service. The exclusive access lock will
     /// prevent other users ("User" lock) or client connections  ("Session" lock)
     /// from interacting with the objects.
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The object to lock. Must be returned by ConnectService or returned by an `objref`</param>
     /// <param name="flags">Select either a "User" or "Session" lock</param>
     /// <returns>"OK" on success</returns>
@@ -1422,12 +1463,16 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Release an excluse access lock previously locked with RequestObjectLock()
     /// or AsyncRequestObjectLock()
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Object must have previously been locked using RequestObjectLock() or
     /// AsyncRequestObjectLock()
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The object previously locked</param>
     /// <returns>"OK" on success</returns>
     public string ReleaseObjectLock(object obj)
@@ -1441,9 +1486,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously request an exclusive access lock to a service object
-    ///
-    /// Same as RequestObjectLock() but async
     /// </summary>
+    /// <remarks>
+    /// Same as RequestObjectLock() but async
+    /// </remarks>
     /// <param name="obj">The object to lock. Must be returned by ConnectService or returned by an `objref`</param>
     /// <param name="flags">Select either a "User" or "Session" lock</param>
     /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE</param>
@@ -1464,9 +1510,10 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Asynchronously release an excluse access lock previously locked
     /// with RequestObjectLock() or AsyncRequestObjectLock()
-    ///
-    /// Same as ReleaseObjectLock() but async
     /// </summary>
+    /// <remarks>
+    /// Same as ReleaseObjectLock() but async
+    /// </remarks>
     /// <param name="obj">The object previously locked</param>
     /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE</param>
     public async Task AsyncReleaseObjectLock(object obj, int timeout = RR_TIMEOUT_INFINITE)
@@ -1483,18 +1530,24 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Creates a monitor lock on a specified object
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Monitor locks are intendended for short operations that require
     /// guarding to prevent races, corruption, or other concurrency problems.
     /// Monitors emulate a single thread locking the service object.
-    ///
+    /// </para>
+    /// <para>
     /// Use of ScopedMonitorLock instead of this function is highly recommended
     /// to take advantage of RAII scoping
-    ///
+    /// </para>
+    /// <para>
     /// Monitor locks do not lock any sub-objects (objref)
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The object to lock</param>
     /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or RR_TIMEOUT_INFINITE</param>
     public void MonitorEnter(object obj, int timeout = -1)
@@ -1508,12 +1561,16 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Releases a monitor lock
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Use of ScopedMonitorLock instead of this function is highly recommended
     /// to take advantage of RAII scoping
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The object previously locked by MonitorEnter()</param>
     public void MonitorExit(object obj)
     {
@@ -1535,10 +1592,11 @@ public partial class RobotRaconteurNode
 
         /// <summary>
         /// Create a monitor lock for the specified object
-        ///
+        /// </summary>
+        /// <remarks>
         /// Creates a monitor lock by calling RobotRaconteur.MonitorEnter().
         /// Object will be locked once the object is created.
-        /// </summary>
+        /// </remarks>
         /// <param name="obj">The object to monitor lock</param>
         /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or RR_TIMEOUT_INFINITE</param>
         public ScopedMonitorLock(object obj, int timeout = -1)
@@ -1563,11 +1621,12 @@ public partial class RobotRaconteurNode
 
         /// <summary>
         /// Releases the monitor lock
-        ///
+        /// </summary>
+        /// <remarks>
         /// The ScopedMonitorLock destructor will release
         /// the lock automatically, so in most cases it is
         /// not necessary to call this function
-        /// </summary>
+        /// </remarks>
         /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or RR_TIMEOUT_INFINITE</param>
         public void unlock(Int32 timeout = -1)
         {
@@ -1581,11 +1640,12 @@ public partial class RobotRaconteurNode
 
         /// <summary>
         /// Release the monitor lock from the class
-        ///
+        /// </summary>
+        /// <remarks>
         /// The monitor lock is released from the ScopedMonitorLock
         /// instance. The monitor lock will not be released
         /// by the ScopedMonitorLock destructor.
-        /// </summary>
+        /// </remarks>
         public void release()
         {
             obj = null;
@@ -1609,14 +1669,18 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Use discovery to find available services by service type
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Uses discovery to find available services based on a service type. This
     /// service type is the type of the root object, ie
     /// `com.robotraconteur.robotics.robot.Robot`. This process will update the detected
     /// node cache.
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="servicetype">The service type to find, ie `com.robotraconteur.robotics.robot.Robot`</param>
     /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
     /// <returns>The detected services</returns>
@@ -1639,12 +1703,16 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Finds nodes on the network with a specified NodeID
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Updates the discovery cache and find nodes with the specified NodeID.
     /// This function returns unverified cache information.
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="id">The NodeID to find</param>
     /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
     /// <returns>The detected nodes</returns>
@@ -1666,12 +1734,16 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Finds nodes on the network with a specified NodeName
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Updates the discovery cache and find nodes with the specified NodeName.
     /// This function returns unverified cache information.
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="name">The NodeName to find</param>
     /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
     /// <returns>The detected nodes</returns>
@@ -1801,9 +1873,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously use discovery to find availabe services by service type
-    /// 
-    ///  Same as FindServiceByType() but async
     /// </summary>
+    /// <remarks>
+    ///  Same as FindServiceByType() but async
+    /// </remarks>
     /// <param name="servicetype">The service type to find, ie `com.robotraconteur.robotics.robot.Robot`</param>
     /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
     /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.</param>
@@ -1824,9 +1897,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously finds nodes on the network with the specified NodeID
-    ///
-    ///    Same as FindNodeByID() but async
     /// </summary>
+    /// <remarks>
+    ///    Same as FindNodeByID() but async
+    /// </remarks>
     /// <param name="id">The NodeID to find</param>
     /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
     /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.</param>
@@ -1846,9 +1920,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously finds nodes on the network with the specified NodeName
-    ///
-    ///    Same as FindNodeByName() but async
     /// </summary>
+    /// <remarks>
+    ///    Same as FindNodeByName() but async
+    /// </remarks>
     /// <param name="name">The NodeName to find</param>
     /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
     /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.</param>
@@ -1868,13 +1943,17 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Update the detected nodes cache
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// The node keeps a cache of detected nodes, but this may become stale
     /// if nodes are rapidly added and removed from the network. Call this
     /// function to update the detected nodes.
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="schemes">A vector of transport schemes, ie "rr+tcp", "rr+local", etc. to update.</param>
     public void UpdateDetectedNodes(string[] schemes)
     {
@@ -1886,9 +1965,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously update the detected nodes cache
-    ///
-    /// Same as UpdateDetectedNodes() but async
     /// </summary>
+    /// <remarks>
+    /// Same as UpdateDetectedNodes() but async
+    /// </remarks>
     /// <param name="schemes">A vector of transport schemes, ie "rr+tcp", "rr+local", etc. to update.</param>
     /// <param name="timeout">The timeout for the operation in milliseconds. This function will often run
     ///   for the full timeout, so values less than 5 seconds are recommended.</param>
@@ -1905,15 +1985,19 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get the nodes currently detected by Transports
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Transports configured to listen for node discovery send detected node
     /// information to the parent node, where it is stored. Normally this information
     /// will expire after one minute, and needs to be constantly refreshed.
-    ///
+    /// </para>
+    /// <para>
     /// This node information is not verified. It is the raw discovery
     /// information received by the transports. Verification is done
     /// when the node is interrogated for service information.
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <returns>Array of detected nodes</returns>
     public NodeID[] GetDetectedNodes()
     {
@@ -1928,11 +2012,12 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get cached node discovery information
-    ///
+    /// </summary>
+    /// <remarks>
     /// Return current node information from the discovery cache. This
     /// information is unverified and is used for the first step in the
     /// discovery process.
-    /// </summary>
+    /// </remarks>
     /// <param name="nodeid">The NodeID of the requested node</param>
     /// <returns>The detected node info</returns>
     public NodeInfo2 GetDetectedNodeCacheInfo(NodeID nodeid)
@@ -1942,10 +2027,11 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Try get cached node discovery information
-    ///
+    /// </summary>
+    /// <remarks>
     /// Same as GetDetectedNodeCacheInfo, but returns bool
     /// for success or failure instead of throwing an exception
-    /// </summary>
+    /// </remarks>
     /// <param name="nodeid">The NodeID of the requested node</param>
     /// <param name="nodeinfo2">Out parameter for the node info</param>
     /// <returns>true on success, false on failure</returns>
@@ -1964,15 +2050,19 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Registers a service for clients to connect
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// The supplied object becomes the root object in the service. Other objects may
     /// be accessed by clients using `objref` members. The name of the service must conform
     /// to the naming rules of Robot Raconteur member names. A service is closed using
     /// either CloseService() or when Shutdown() is called.
-    ///
+    /// </para>
+    /// <para>
     /// Multiple services can be registered within the same node. Service names
     /// within a single node must be unique.
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="name">The name of the service, must follow member naming rules</param>
     /// <param name="servicetype">The name of the service definition containing the object type.
     ///     Do not include the object type.</param>
@@ -1995,11 +2085,12 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// The current time in UTC time zone
-    ///
+    /// </summary>
+    /// <remarks>
     /// Uses the internal node clock to get the current time in UTC.
     ///    While this will normally use the system clock, this may
     ///    use simulation time in certain circumstances
-    /// </summary>
+    /// </remarks>
     public DateTime NowUTC
     {
         get {
@@ -2009,14 +2100,15 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// The current node time
-    ///
+    /// </summary>
+    /// <remarks>
     /// UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
     /// of the system clock being updated by the user. For a real-time systems,
     /// this is unaccetpable and can lead to system instability. The "node time" used by Robot Raconteur
     /// is synchronized to UTC at startup, and is then steadily increasing from that initial time.
     /// It will ignore changes to the system clock, and will also ignore corrections like leap
     /// seconds.
-    /// </summary>
+    /// </remarks>
     public DateTime NowNodeTime
     {
         get {
@@ -2026,7 +2118,8 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// The sync time of the node
-    ///
+    /// </summary>
+    /// <remarks>
     /// The node synchronizes it's clock with the system time in UTC
     /// when the node is initialized. After this time, a steady
     /// clock is used. This prevents the clock from jumping
@@ -2035,7 +2128,7 @@ public partial class RobotRaconteurNode
     ///
     /// If an external high precision clock source like PTP is available,
     /// that clock will be used in place of the system and steady clock
-    /// </summary>
+    /// </remarks>
     public DateTime NodeSyncTimeUTC
     {
         get {
@@ -2045,9 +2138,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// The current node time as a TimeSpec
-    ///
-    /// The current node time as a TimeSpec. See NowNodeTime()
     /// </summary>
+    /// <remarks>
+    /// The current node time as a TimeSpec. See NowNodeTime()
+    /// </remarks>
     public TimeSpec NowTimeSpec
     {
         get {
@@ -2057,9 +2151,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// The sync time of the node as a TimeSpec
-    ///
-    /// See NodeSyncTimeUTC()
     /// </summary>
+    /// <remarks>
+    /// See NodeSyncTimeUTC()
+    /// </remarks>
     public TimeSpec NodeSyncTimeSpec
     {
         get {
@@ -2069,17 +2164,22 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Returns an objref as a specific type
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Robot Raconteur service object types are polymorphic using inheritence,
     /// meaning that an object may be represented using multiple object types.
     /// `objref` will attempt to return the relevant type, but it is sometimes
     /// necessary to request a specific type for an objref.
-    ///
+    /// </para>
+    /// <para>
     /// This function will return the object from an `objref` as the specified type,
     /// or throw an error if the type is invalid.
-    ///
+    /// </para>
+    /// <para>
     /// Requires multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="objecttype">The desired service object type</param>
@@ -2095,11 +2195,15 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Returns an indexed objref as a specified type
-    ///
-    /// Same as FindObjectTyped() but includes an `objref` index
-    ///
-    /// Requires multithreading
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Same as FindObjectTyped() but includes an `objref` index
+    /// </para>
+    /// <para>
+    /// Requires multithreading
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
@@ -2116,9 +2220,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously returns an objref as a specific type
-    ///
-    /// Same as FindObjectTyped() but returns asynchronously
     /// </summary>
+    /// <remarks>
+    /// Same as FindObjectTyped() but returns asynchronously
+    /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="objecttype">The desired service object type</param>
@@ -2137,9 +2242,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously returns an objref as a specific type
-    ///
-    /// Same as FindObjectTyped() but returns asynchronously
     /// </summary>
+    /// <remarks>
+    /// Same as FindObjectTyped() but returns asynchronously
+    /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
@@ -2159,11 +2265,15 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Returns the type of a service object
-    ///
-    /// Returns the fully qualified object type that would be returned by an `objref` member
-    ///
-    /// Requires multithreading
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Returns the fully qualified object type that would be returned by an `objref` member
+    /// </para>
+    /// <para>
+    /// Requires multithreading
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <returns>The fully qaulified object type</returns>
@@ -2178,11 +2288,15 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Returns the type of a service object
-    ///
-    /// Returns the fully qualified object type that would be returned by an indexed `objref` member
-    ///
-    /// Requires multithreading
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Returns the fully qualified object type that would be returned by an indexed `objref` member
+    /// </para>
+    /// <para>
+    /// Requires multithreading
+    /// </para>
+    /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
@@ -2198,9 +2312,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously returns the type of a service object
-    ///
-    /// Same as FindObjectType() but async
     /// </summary>
+    /// <remarks>
+    /// Same as FindObjectType() but async
+    /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout</param>
@@ -2219,9 +2334,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Asynchronously returns the type of a service object
-    ///
-    /// Same as FindObjectType() but async
     /// </summary>
+    /// <remarks>
+    /// Same as FindObjectType() but async
+    /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
@@ -2242,12 +2358,13 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get or set the timeout for requests in milliseconds
-    ///
+    /// </summary>
+    /// <remarks>
     /// Requests are calls to a remote node that expect a response. `function`,
     /// `property`, `callback`, `memory`, and setup calls in `pipe` and `wire`
     /// are all requests. All other Robot Raconteur functions that call the remote
     /// node and expect a response are requests. Default timeout is 15 seconds.
-    /// </summary>
+    /// </remarks>
     public uint RequestTimeout
     {
         get {
@@ -2260,11 +2377,12 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get or set the timeout for transport activity in milliseconds
-    ///
+    /// </summary>
+    /// <remarks>
     /// Sets a timeout for transport inactivity. If no message
     /// is sent or received on the transport for the specified time,
     /// the transport is closed. Default timeout is 10 minutes.
-    /// </summary>
+    /// </remarks>
     public uint TransportInactivityTimeout
     {
         get {
@@ -2277,11 +2395,12 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get or set the timeout for endpoint activity in milliseconds
-    ///
+    /// </summary>
+    /// <remarks>
     /// Sets a timeout for endpoint inactivity. If no message
     /// is sent or received by the endpoint for the specified time,
     /// the endpoint is closed. Default timeout is 10 minutes.
-    /// </summary>
+    /// </remarks>
     public uint EndpointInactivityTimeout
     {
         get {
@@ -2294,12 +2413,13 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get or set the maximum chunk size for memory transfers in bytes
-    ///
+    /// </summary>
+    /// <remarks>
     /// `memory` members break up large transfers into chunks to avoid
     /// sending messages larger than the transport maximum, which is normally
     /// approximately 10 MB. The memory max transfer size is the largest
     /// data chunk the memory will send, in bytes. Default is 100 kB.
-    /// </summary>
+    /// </remarks>
     public uint MemoryMaxTransferSize
     {
         get {
@@ -2312,10 +2432,11 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get or set the maximum number of detected nodes that will be cached
-    ///
+    /// </summary>
+    /// <remarks>
     /// The node keeps a cache of detected nodes. The NodeDiscoveryMaxCacheCount
     /// sets an upper limit to how many detected nodes are cached. By default set to 4096
-    /// </summary>
+    /// </remarks>
     public uint NodeDiscoveryMaxCacheCount
     {
         get {
@@ -2328,20 +2449,26 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Shuts down the node. Called automatically by ClientNodeSetup and ServerNodeSetup
-    ///
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Shutdown must be called before program exit to avoid segfaults and other undefined
     /// behavior. The use of ClientNodeSetup and ServerNodeSetup is recommended to automate
     /// the node lifecycle. Calling this function does the following:
-    /// 1. Closes all services and releases all service objects
-    /// 2. Closes all client connections
-    /// 3. Shuts down discovery
-    /// 4. Shuts down all transports
-    /// 5. Notifies all shutdown listeners
-    /// 6. Releases all periodic cleanup task listeners
-    /// 7. Shuts down and releases the thread pool
-    ///
+    /// </para>
+    /// <list type="number">
+    /// <item>1. Closes all services and releases all service objects</item>
+    /// <item>2. Closes all client connections</item>
+    /// <item>3. Shuts down discovery</item>
+    /// <item>4. Shuts down all transports</item>
+    /// <item>5. Notifies all shutdown listeners</item>
+    /// <item>6. Releases all periodic cleanup task listeners</item>
+    /// <item>7. Shuts down and releases the thread pool</item>
+    /// </list>
+    /// <para>
     /// Requires Multithreading
-    /// </summary>
+    /// </para>
+    /// </remarks>
     public void Shutdown()
     {
 
@@ -2375,13 +2502,14 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Set an exception handler function
-    ///
+    /// </summary>
+    /// <remarks>
     /// The ThreadPool will catch exceptions that are uncaught
     /// by other logic and pass the exception to the specified
     /// exception handler. User handler functions that throw exceptions
     /// will also be caught and passed to the specified handler
     /// function
-    /// </summary>
+    /// </remarks>
     /// <param name="handler">The handler function for uncaught exceptions</param>
     public void SetExceptionHandler(Action<Exception> handler)
     {
@@ -2397,11 +2525,15 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Create a Timer object
-    ///
-    /// This function will normally return a WallTimer instance
-    ///
-    /// Start() must be called after timer creation
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This function will normally return a WallTimer instance
+    /// </para>
+    /// <para>
+    /// Start() must be called after timer creation
+    /// </para>
+    /// </remarks>
     /// <param name="period">The period of the timer in milliseconds</param>
     /// <param name="handler">The handler function to call when timer times out</param>
     /// <param name="oneshot">True if timer is a one-shot timer, false for repeated timer</param>
@@ -2415,11 +2547,12 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Downcasts a RobotRaconteurException
-    ///
+    /// </summary>
+    /// <remarks>
     /// Serialized RobotRaconteurException may not be correctly downcast when
     /// deserialized. DownCastException will find the correct type,
     /// downcast the exception, and return the correctly typed exception
-    /// </summary>
+    /// </remarks>
     /// <param name="exp">The RobotRaconteurException to downcast</param>
     /// <returns>The downcasted exception</returns>
     public RobotRaconteurException DownCastException(RobotRaconteurException exp)
@@ -2450,9 +2583,10 @@ public partial class RobotRaconteurNode
 
     /// <summary>
     /// Get the current RobotRaconteurVersion as a string
-    ///
-    /// Version is three numbers separated by dots, ie "0.9.2"
     /// </summary>
+    /// <remarks>
+    /// Version is three numbers separated by dots, ie "0.9.2"
+    /// </remarks>
     public string RobotRaconteurVersion
     {
         get {
