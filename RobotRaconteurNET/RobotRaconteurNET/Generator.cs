@@ -157,7 +157,7 @@ public interface Generator2<ReturnType>
     /// </summary>
     /// <remarks>
     /// Next() advances the generator to retrieve the next value. This version of
-    ///  Generator does not include passing a parameter to the generator. 
+    ///  Generator does not include passing a parameter to the generator.
     /// </remarks>
     /// <returns>Return Return value from generator</returns>
     ReturnType Next();

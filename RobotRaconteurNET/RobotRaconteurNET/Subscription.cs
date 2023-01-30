@@ -166,7 +166,7 @@ public class ServiceSubscriptionFilter
     /// <remarks>None</remarks>
     public Func<ServiceInfo2, bool> Predicate;
     /// <summary>
-    /// The maximum number of connections the subscription will create. Zero means unlimited connections. 
+    /// The maximum number of connections the subscription will create. Zero means unlimited connections.
     /// </summary>
     /// <remarks>None</remarks>
     public uint MaxConnections;
@@ -308,8 +308,8 @@ public class ServiceInfo2Subscription
 /// The currently connected clients can be retrieved using the GetConnectedClients() function. A single "default client"
 /// can be retrieved using the GetDefaultClient() function or TryGetDefaultClient() functions. Listeners for client
 /// connect and disconnect events can be added  using the AddClientConnectListener() and AddClientDisconnectListener()
-/// functions. If the user wants to claim a client, the ClaimClient() and ReleaseClient() functions will be used. Claimed
-/// clients will no longer have their lifecycle managed by the subscription.
+/// functions. If the user wants to claim a client, the ClaimClient() and ReleaseClient() functions will be used.
+/// Claimed clients will no longer have their lifecycle managed by the subscription.
 /// </para>
 /// <para>
 /// Subscriptions can be used to create `pipe` and `wire` subscriptions. These member subscriptions aggregate
@@ -574,9 +574,9 @@ public class ServiceSubscription
     /// </para>
     /// </remarks>
     /// <param name="wire_name">The member name of the wire</param>
-    /// <param name="service_path">The service path of the object owning the wire member. 
+    /// <param name="service_path">The service path of the object owning the wire member.
     ///     Leave as empty string for root object</param>
-    /// <typeparam name="T">The type of the wire value. This must be specified since the subscription doesn't 
+    /// <typeparam name="T">The type of the wire value. This must be specified since the subscription doesn't
     /// know the wire value type</typeparam>
     /// <returns>The wire subscription</returns>
     public WireSubscription<T> SubscribeWire<T>(string wire_name, string service_path = "")
@@ -603,7 +603,7 @@ public class ServiceSubscription
     /// <param name="service_path">The service path of the object owning the pipe member.
     ///  Leave as empty string for root object</param>
     /// <param name="max_backlog">The maximum number of packets to store in receive queue</param>
-    /// <typeparam name="T">The type of the pipe packets. This must be specified since the subscription does not 
+    /// <typeparam name="T">The type of the pipe packets. This must be specified since the subscription does not
     /// know the pipe packet type</typeparam>
     /// <returns>The pipe subscription</returns>
     public PipeSubscription<T> SubscribePipe<T>(string pipe_name, string service_path = "", int max_backlog = -1)
@@ -1000,7 +1000,6 @@ public class WireSubscription<T>
         }
     }
 
-
     /// <summary>
     /// Wait for a valid InValue to be received from a client
     /// </summary>
@@ -1090,7 +1089,7 @@ public class WireSubscription<T>
 
     /// <summary>
     /// Closes the wire subscription
-    /// </summary>    
+    /// </summary>
     /// <remarks>
     /// Wire subscriptions are automatically closed when the parent ServiceSubscription is closed
     /// or when the node is shut down.
@@ -1319,7 +1318,7 @@ public partial class PipeSubscription<T>
 
     /// <summary>
     /// Closes the pipe subscription
-    /// </summary>    
+    /// </summary>
     /// <remarks>
     /// Pipe subscriptions are automatically closed when the parent ServiceSubscription is closed
     /// or when the node is shut down.
@@ -1412,7 +1411,7 @@ public partial class RobotRaconteurNode
     /// inform when services become available or are lost. If connections to
     /// available services are also required, ServiceSubscription should be used.
     /// </remarks>
-    /// <param name="service_types">An array of service types to listen for, ie 
+    /// <param name="service_types">An array of service types to listen for, ie
     ///     `com.robotraconteur.robotics.robot.Robot`</param>
     /// <param name="filter">A filter to select individual services based on specified criteria</param>
     /// <returns>The active subscription</returns>
@@ -1436,7 +1435,7 @@ public partial class RobotRaconteurNode
     /// A ServiceSubscription will track the availability of service types and
     /// create connections when available.
     /// </remarks>
-    /// <param name="service_types">An arrayof service types to listen for, ie 
+    /// <param name="service_types">An arrayof service types to listen for, ie
     ///     `com.robotraconteur.robotics.robot.Robot`</param>
     /// <param name="filter">A filter to select individual services based on specified criteria</param>
     /// <returns>The active subscription</returns>

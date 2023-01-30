@@ -129,7 +129,7 @@ public class MultiDimArray
 /// Multidimensional arrays are stored as a uint32_t array of
 /// dimensions, and an array of the flattened elements.
 /// Arrays are stored in column major, or "Fortran" order.
-/// 
+///
 /// Stored type must be a od type that has been generated as part
 /// of the thunk source.
 /// </remarks>

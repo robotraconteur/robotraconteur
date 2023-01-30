@@ -1604,7 +1604,8 @@ public partial class RobotRaconteurNode
         /// Object will be locked once the object is created.
         /// </remarks>
         /// <param name="obj">The object to monitor lock</param>
-        /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or RR_TIMEOUT_INFINITE</param>
+        /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or
+        /// RR_TIMEOUT_INFINITE</param>
         public ScopedMonitorLock(object obj, int timeout = -1)
         {
             RobotRaconteurNode.s.MonitorEnter(obj, timeout);
@@ -1615,7 +1616,8 @@ public partial class RobotRaconteurNode
         /// Relock the object after calling unlock()
         /// </summary>
         /// <remarks>None</remarks>
-        /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or RR_TIMEOUT_INFINITE</param>
+        /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or
+        /// RR_TIMEOUT_INFINITE</param>
         public void lock_(Int32 timeout = -1)
         {
             if (obj == null)
@@ -1634,7 +1636,8 @@ public partial class RobotRaconteurNode
         /// the lock automatically, so in most cases it is
         /// not necessary to call this function
         /// </remarks>
-        /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or RR_TIMEOUT_INFINITE</param>
+        /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or
+        /// RR_TIMEOUT_INFINITE</param>
         public void unlock(Int32 timeout = -1)
         {
             if (obj == null)
@@ -1690,7 +1693,8 @@ public partial class RobotRaconteurNode
     /// </para>
     /// </remarks>
     /// <param name="servicetype">The service type to find, ie `com.robotraconteur.robotics.robot.Robot`</param>
-    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
+    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`,
+    /// etc</param>
     /// <returns>The detected services</returns>
     public ServiceInfo2[] FindServiceByType(string servicetype, string[] transportschemes)
     {
@@ -1722,8 +1726,8 @@ public partial class RobotRaconteurNode
     /// </para>
     /// </remarks>
     /// <param name="id">The NodeID to find</param>
-    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
-    /// <returns>The detected nodes</returns>
+    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`,
+    /// etc</param> <returns>The detected nodes</returns>
     public NodeInfo2[] FindNodeByID(NodeID id, string[] transportschemes)
     {
         vectorstring s = new vectorstring();
@@ -1753,8 +1757,8 @@ public partial class RobotRaconteurNode
     /// </para>
     /// </remarks>
     /// <param name="name">The NodeName to find</param>
-    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
-    /// <returns>The detected nodes</returns>
+    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`,
+    /// etc</param> <returns>The detected nodes</returns>
     public NodeInfo2[] FindNodeByName(string name, string[] transportschemes)
     {
         vectorstring s = new vectorstring();
@@ -1887,8 +1891,10 @@ public partial class RobotRaconteurNode
     ///  Same as FindServiceByType() but async
     /// </remarks>
     /// <param name="servicetype">The service type to find, ie `com.robotraconteur.robotics.robot.Robot`</param>
-    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
-    /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.</param>
+    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`,
+    /// etc</param>
+    /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not
+    /// recommended.</param>
     /// <returns>A task that returns array of detected services upon completion</returns>
     public async Task<ServiceInfo2[]> AsyncFindServiceByType(string servicetype, string[] transportschemes,
                                                              int timeout = 5000)
@@ -1911,8 +1917,10 @@ public partial class RobotRaconteurNode
     ///    Same as FindNodeByID() but async
     /// </remarks>
     /// <param name="id">The NodeID to find</param>
-    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
-    /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.</param>
+    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`,
+    /// etc</param>
+    /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not
+    /// recommended.</param>
     /// <returns>Task that returns array of detected nodes upon completion</returns>
     public async Task<NodeInfo2[]> AsyncFindNodeByID(NodeID id, string[] transportschemes, int timeout = 5000)
     {
@@ -1934,8 +1942,10 @@ public partial class RobotRaconteurNode
     ///    Same as FindNodeByName() but async
     /// </remarks>
     /// <param name="name">The NodeName to find</param>
-    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`, etc</param>
-    /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not recommended.</param>
+    /// <param name="transportschemes">A list of transport types to search, ie `rr+tcp`, `rr+local`, `rrs+tcp`,
+    /// etc</param>
+    /// <param name="timeout">Timeout in milliseconds. Using a timeout greater than 5 seconds is not
+    /// recommended.</param>
     /// <returns>Task that returns array of detected nodes upon completion</returns>
     public async Task<NodeInfo2[]> AsyncFindNodeByName(string name, string[] transportschemes, int timeout = 5000)
     {
@@ -2237,7 +2247,7 @@ public partial class RobotRaconteurNode
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="objecttype">The desired service object type</param>
     /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout</param>
-    /// <returns>A task that upon completion returns the object with the specified interface type. 
+    /// <returns>A task that upon completion returns the object with the specified interface type.
     ///   Must be cast to the desired type</returns>
     public Task<object> AsyncFindObjRefTyped(object obj, string objref, string objecttype,
                                              int timeout = RR_TIMEOUT_INFINITE)
@@ -2260,7 +2270,7 @@ public partial class RobotRaconteurNode
     /// <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
     /// <param name="objecttype">The desired service object type</param>
     /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout</param>
-    /// <returns>A task that upon completion returns the object with the specified interface type. 
+    /// <returns>A task that upon completion returns the object with the specified interface type.
     ///   Must be cast to the desired type</returns>
     public Task<object> AsyncFindObjRefTyped(object obj, string objref, string index, string objecttype,
                                              int timeout = RR_TIMEOUT_INFINITE)

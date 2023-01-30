@@ -46,7 +46,6 @@ public interface IRRServiceObject
     void RRServiceObjectInit(ServerContext context, string service_path);
 }
 
-
 /// <summary>
 /// "callback" member type interface
 /// </summary>
@@ -161,7 +160,6 @@ public class CallbackServer<T> : Callback<T>
     }
 }
 
-
 /// <summary>
 /// `pipe` member type interface
 /// </summary>
@@ -177,10 +175,10 @@ public class CallbackServer<T> : Callback<T>
 /// <para>
 /// Pipe endpoints are created by the client using the Connect() or AsyncConnect() functions. Services receive
 /// incoming connection requests through a callback function. This callback is configured using the
-/// SetPipeConnectCallback() function. Services may also use the PipeBroadcaster class to automate managing pipe endpoint
-/// lifecycles and sending packets to all connected client endpoints. If the SetPipeConnectCallback() function is used,
-/// the service is responsible for keeping track of endpoints as the connect and disconnect. See PipeEndpoint for details
-/// on sending and receiving packets.
+/// SetPipeConnectCallback() function. Services may also use the PipeBroadcaster class to automate managing pipe
+/// endpoint lifecycles and sending packets to all connected client endpoints. If the SetPipeConnectCallback() function
+/// is used, the service is responsible for keeping track of endpoints as the connect and disconnect. See PipeEndpoint
+/// for details on sending and receiving packets.
 /// </para>
 /// <para>
 /// Pipe endpoints are *indexed*, meaning that more than one endpoint pair can be created between the client and the
@@ -192,8 +190,8 @@ public class CallbackServer<T> : Callback<T>
 /// </para>
 /// <para>
 /// Pipes may be declared *readonly* or *writeonly*. If neither is specified, the pipe is assumed to be full duplex.
-/// *readonly* pipes may only send packets from service to client. *writeonly* pipes may only send packets from client to
-/// service. Use Direction() to determine the direction of the pipe.
+/// *readonly* pipes may only send packets from service to client. *writeonly* pipes may only send packets from client
+/// to service. Use Direction() to determine the direction of the pipe.
 /// </para>
 /// <para>
 /// The PipeBroadcaster is often used to simplify the use of Pipes. See PipeBroadcaster for more information.
@@ -267,7 +265,7 @@ public class Pipe<T>
     /// Connect to any pipe index
     /// </summary>
     /// <remarks>None</remarks>
-    public const int ANY_INDEX=-1;
+    public const int ANY_INDEX = -1;
 
     /// <summary>
     /// Connect a pipe endpoint
@@ -614,7 +612,7 @@ public class Pipe<T>
         /// Callback function must accept one argument, receiving the PipeEndpoint that
         /// was closed.
         /// </para>
-        /// </remarks>        
+        /// </remarks>
         public Action<PipeEndpoint> PipeCloseCallback
         {
             get {
@@ -714,7 +712,8 @@ public class Pipe<T>
         /// <remarks>
         /// Same as PeekPacket(), but blocks if queue is empty
         /// </remarks>
-        /// <param name="timeout">Timeout in milliseconds to wait for a packet, or RR_TIMEOUT_INFINITE for no timeout</param>
+        /// <param name="timeout">Timeout in milliseconds to wait for a packet, or RR_TIMEOUT_INFINITE for no
+        /// timeout</param>
         /// <returns>The received packet</returns>
         public T PeekNextPacketWait(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
@@ -741,7 +740,8 @@ public class Pipe<T>
         /// <remarks>
         /// Same as ReceivePacket(), but blocks if queue is empty
         /// </remarks>
-        /// <param name="timeout">Timeout in milliseconds to wait for a packet, or RR_TIMEOUT_INFINITE for no timeout</param>
+        /// <param name="timeout">Timeout in milliseconds to wait for a packet, or RR_TIMEOUT_INFINITE for no
+        /// timeout</param>
         /// <returns>The received packet</returns>
         public T ReceivePacketWait(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
         {
@@ -774,7 +774,8 @@ public class Pipe<T>
         /// </para>
         /// </remarks>
         /// <param name="packet">[out] The received packet</param>
-        /// <param name="timeout">The timeout in milliseconds. Set to zero for non-blocking operation, an arbitrary value
+        /// <param name="timeout">The timeout in milliseconds. Set to zero for non-blocking operation, an arbitrary
+        /// value
         ///     in milliseconds for a finite duration timeout, or RR_TIMEOUT_INFINITE for no timeout</param>
         /// <param name="peek">If true, the packet is not removed from the receive queue</param>
         /// <returns>true if packet was received, otherwise false</returns>
@@ -1089,7 +1090,6 @@ public class PipeBroadcaster<T>
         }
     }
 
-
     /// <summary>
     /// Set the predicate callback function
     /// </summary>
@@ -1116,7 +1116,6 @@ public class PipeBroadcaster<T>
             innerpipe.SetPredicateDirector(p, id);
         }
     }
-
 
     /// <summary>
     /// Get or set the maximum backlog
@@ -1346,7 +1345,6 @@ public class Wire<T>
         c.AsyncConnect(timeout, h, id);
         return await h.Task;
     }
-
 
     /// <summary>
     /// Set wire connected callback function
@@ -1699,7 +1697,7 @@ public class Wire<T>
     /// <para>
     /// T peek_invalue_callback(uint client_endpoint);
     /// </para>
-    /// <para> 
+    /// <para>
     /// The function receives the client endpoint ID, and returns the current InValue.
     /// </para>
     /// <para>
@@ -1925,7 +1923,7 @@ public class Wire<T>
         /// ValueNotSetException if no value has been received, or the most
         /// recent value lifespan has expired.
         /// </para>
-        /// <para> 
+        /// <para>
         /// Setting the OutValue for the wire connection. The specified value will be
         /// transmitted to the peer, and will become the peers InValue. The transmission
         /// is unreliable, meaning that values may be dropped if newer values arrive.
@@ -2068,7 +2066,6 @@ public class Wire<T>
 
         private Action<WireConnection> close_callback;
 
-
         /// <summary>
         /// Get or set the connection closed callback function
         /// </summary>
@@ -2124,8 +2121,8 @@ public class Wire<T>
         /// </summary>
         /// <remarks>
         /// Wire connections may optionally desire to ignore incoming values. This is useful if the connection
-        /// is only being used to send out values, and received values may create a potential memory . If ignore is true,
-        /// incoming values will be discarded.
+        /// is only being used to send out values, and received values may create a potential memory . If ignore is
+        /// true, incoming values will be discarded.
         /// </remarks>
         public bool IgnoreInValue
         {
@@ -2151,7 +2148,7 @@ public class Wire<T>
         /// the lifespan is not set, the wire will continue to return the last received value, even
         /// if the value is old.
         /// </para>
-        /// <para> 
+        /// <para>
         /// The lifespan in millisecond, or RR_VALUE_LIFESPAN_INFINITE for infinite lifespan
         /// </para>
         /// </remarks>
@@ -2179,7 +2176,7 @@ public class Wire<T>
         /// the lifespan is not set, the wire will continue to return the last sent value, even
         /// if the value is old.
         /// </para>
-        /// <para> 
+        /// <para>
         /// The lifespan in millisecond, or RR_VALUE_LIFESPAN_INFINITE for infinite lifespan
         /// </para>
         /// </remarks>
@@ -2469,7 +2466,7 @@ public class WireBroadcaster<T>
     /// the lifespan is not set, the wire will continue to return the last sent value, even
     /// if the value is old.
     /// </para>
-    /// <para> 
+    /// <para>
     /// The lifespan in millisecond, or RR_VALUE_LIFESPAN_INFINITE for infinite lifespan
     /// </para>
     /// </remarks>
@@ -2482,7 +2479,6 @@ public class WireBroadcaster<T>
             innerwire.SetOutValueLifespan(value);
         }
     }
-
 
     public Func<uint, T> PeekInValueCallback
     {
@@ -2567,7 +2563,6 @@ public class WireUnicastReceiver<T>
         }
     }
 
-
     /// <summary>
     /// Get the current InValue
     /// </summary>
@@ -2578,7 +2573,7 @@ public class WireUnicastReceiver<T>
     /// </remarks>
     /// <param name="ts">[out] The current InValue timestamp</param>
     /// <param name="ep">[out] The client endpoint ID of the InValue</param>
-    /// <returns>The current InValue</returns>    
+    /// <returns>The current InValue</returns>
     public T GetInValue(out TimeSpec ts, out uint ep)
     {
         ts = new TimeSpec();
@@ -2675,7 +2670,7 @@ public class WireUnicastReceiver<T>
     /// the lifespan is not set, the wire will continue to return the last received value, even
     /// if the value is old.
     /// </para>
-    /// <para> 
+    /// <para>
     /// The lifespan in millisecond, or RR_VALUE_LIFESPAN_INFINITE for infinite lifespan
     /// </para>
     /// </remarks>
@@ -2709,7 +2704,7 @@ public interface IRobotRaconteurMonitorObject
     void RobotRaconteurMonitorEnter();
 
     /// <summary>
-    /// Request a thread-exclusive lock with timeout. May block until lock can be established, 
+    /// Request a thread-exclusive lock with timeout. May block until lock can be established,
     /// up to the specified timeout.
     /// </summary>
     /// <remarks>None</remarks>

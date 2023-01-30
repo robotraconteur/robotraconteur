@@ -96,19 +96,22 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
     endif()
     add_dependencies(RobotRaconteurNET RobotRaconteurNETNative)
 
-    add_custom_command(TARGET RobotRaconteurNET POST_BUILD COMMAND ${CMAKE_COMMAND} 
-        -P ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/merge_doc_xml.cmake 
-        $<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release>)
+    add_custom_command(
+        TARGET RobotRaconteurNET POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/merge_doc_xml.cmake
+                $<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release>)
 
     set(RR_NET_BUILT_DOC_XML "${CMAKE_CURRENT_BINARY_DIR}/xml_doc/RobotRaconteurNET_built_doc.xml ")
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/merge_doc_xml.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/merge_doc_xml.cmake @ONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/merge_doc_xml.cmake.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/merge_doc_xml.cmake @ONLY)
     set(RR_NET_DLL_DIR "${CMAKE_BINARY_DIR}/out/NET")
     configure_file(${CMAKE_SOURCE_DIR}/docs/net/docfx.json.in ${CMAKE_BINARY_DIR}/out/NET/docs/docfx.json @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/docs/net/generate_docfx_filter_config.cmake.in ${CMAKE_BINARY_DIR}/out/NET/docs/generate_docfx_filter_config.cmake @ONLY)
+    configure_file(${CMAKE_SOURCE_DIR}/docs/net/generate_docfx_filter_config.cmake.in
+                   ${CMAKE_BINARY_DIR}/out/NET/docs/generate_docfx_filter_config.cmake @ONLY)
     set(RR_NET_DLL_DIR "${CMAKE_BINARY_DIR}/out_debug/NET")
     configure_file(${CMAKE_SOURCE_DIR}/docs/net/docfx.json.in ${CMAKE_BINARY_DIR}/out_debug/NET/docs/docfx.json @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/docs/net/generate_docfx_filter_config.cmake.in ${CMAKE_BINARY_DIR}/out_debug/NET/docs/generate_docfx_filter_config.cmake @ONLY)
-        
+    configure_file(${CMAKE_SOURCE_DIR}/docs/net/generate_docfx_filter_config.cmake.in
+                   ${CMAKE_BINARY_DIR}/out_debug/NET/docs/generate_docfx_filter_config.cmake @ONLY)
 
     if(BUILD_DOCUMENTATION)
         find_program(DOCFX_EXECUTABLE NAMES docfx)
@@ -119,23 +122,24 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
 
         file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/docs/net)
 
-        add_custom_target(RobotRaconteurNET_doc
-        COMMAND ${CMAKE_COMMAND} -P generate_docfx_filter_config.cmake
-        COMMAND ${CMAKE_COMMAND} -E copy 
-        ${CMAKE_SOURCE_DIR}/docs/net/source/index.md
-        ${CMAKE_SOURCE_DIR}/docs/net/source/toc.yml
-        $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/docs/net/source/articles
-        $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs/articles
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/docs/net/source/images
-        $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs/images
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/docs/net/source/api
-        $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs/api
-        COMMAND ${DOCFX_EXECUTABLE} metadata
-        COMMAND ${DOCFX_EXECUTABLE} build --output ${CMAKE_BINARY_DIR}/docs
-        WORKING_DIRECTORY $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs
-        COMMENT "Generating csharp documentation yaml"
-        DEPENDS RobotRaconteurNET)
+        add_custom_target(
+            RobotRaconteurNET_doc
+            COMMAND ${CMAKE_COMMAND} -P generate_docfx_filter_config.cmake
+            COMMAND
+                ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/docs/net/source/index.md
+                ${CMAKE_SOURCE_DIR}/docs/net/source/toc.yml
+                $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/docs/net/source/articles
+                    $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs/articles
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/docs/net/source/images
+                    $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs/images
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/docs/net/source/api
+                    $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs/api
+            COMMAND ${DOCFX_EXECUTABLE} metadata
+            COMMAND ${DOCFX_EXECUTABLE} build --output ${CMAKE_BINARY_DIR}/docs
+            WORKING_DIRECTORY $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs
+            COMMENT "Generating csharp documentation yaml"
+            DEPENDS RobotRaconteurNET)
 
     endif()
 
@@ -172,13 +176,15 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
                 ${CMAKE_BINARY_DIR}/$<$<CONFIG:debug>:out_debug>$<$<CONFIG:release>:out>/NET/netstandard/.)
         add_dependencies(RobotRaconteurNET_standard RobotRaconteurNETNative)
 
-        add_custom_command(TARGET RobotRaconteurNET_standard POST_BUILD COMMAND ${CMAKE_COMMAND} 
-        -P ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/netstandard/merge_doc_xml.cmake 
-        $<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release> netstandard)
+        add_custom_command(
+            TARGET RobotRaconteurNET_standard POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/netstandard/merge_doc_xml.cmake
+                    $<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release> netstandard)
 
         set(RR_NET_BUILT_DOC_XML "${CMAKE_CURRENT_BINARY_DIR}/xml_doc/netstandard/RobotRaconteurNET_built_doc.xml ")
-        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/merge_doc_xml.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/netstandard/merge_doc_xml.cmake @ONLY)
-        endif()
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/merge_doc_xml.cmake.in
+                       ${CMAKE_CURRENT_BINARY_DIR}/xml_doc/netstandard/merge_doc_xml.cmake @ONLY)
+    endif()
 
     string(TIMESTAMP CurrentYear "%Y")
 

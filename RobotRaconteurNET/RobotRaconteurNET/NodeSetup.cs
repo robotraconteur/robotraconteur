@@ -320,7 +320,8 @@ public class ClientNodeSetup : RobotRaconteurNodeSetup
     /// <remarks>
     /// This constructor will use assembly scanning to register all available service factories.
     /// </remarks>
-    /// <param name="node_name">Node name to use if `RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_START_CLIENT` flag is set</param>
+    /// <param name="node_name">Node name to use if `RobotRaconteurNodeSetupFlags.LOCAL_TRANSPORT_START_CLIENT` flag is
+    /// set</param>
     /// <param name="flags">The node configuration flags</param>
     public ClientNodeSetup(string node_name = null,
                            RobotRaconteurNodeSetupFlags flags = RobotRaconteurNodeSetupFlags.CLIENT_DEFAULT)
@@ -412,10 +413,10 @@ public class ClientNodeSetup : RobotRaconteurNodeSetup
 /// <para>
 /// 8. Disable timeouts if specified in flags or command line (default timeouts normal)
 /// </para>
-/// <para> 
+/// <para>
 /// Most users will not need to be concerned with these details, and can simply
 /// use the default configuration.
-/// </para> 
+/// </para>
 /// </remarks>
 public class ServerNodeSetup : RobotRaconteurNodeSetup
 {
@@ -443,7 +444,7 @@ public class ServerNodeSetup : RobotRaconteurNodeSetup
     /// <para>
     /// See command_line_options for more information on available command line options.
     /// </para>
-    /// </remarks> 
+    /// </remarks>
     /// <param name="node_name">The node name for LocalTransport and RobotRaconteurNode</param>
     /// <param name="tcp_port">The port to listen on for TcpTransport</param>
     /// <param name="args">The command line arguments</param>
@@ -553,7 +554,7 @@ public class SecureServerNodeSetup : RobotRaconteurNodeSetup
     /// <para>
     /// See command_line_options for more information on available command line options.
     /// </para>
-    /// </remarks> 
+    /// </remarks>
     /// <param name="node_name">The node name for LocalTransport and RobotRaconteurNode</param>
     /// <param name="tcp_port">The port to listen on for TcpTransport</param>
     /// <param name="args">The command line arguments</param>
