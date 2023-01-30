@@ -539,7 +539,7 @@ jobs:
         channels: conda-forge,robotraconteur
     - name: conda install
       run: >
-        conda install git cmake boost-cpp python swig numpy pytest ninja pip vs2017_win-64 vs2015_runtime gtest gmock
+        conda install git cmake boost-cpp python swig numpy pytest ninja pip vs2019_win-64 vs2015_runtime gtest gmock
     - name: configure
       run: >
         cmake -GNinja -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE:STRING=Release
