@@ -1863,7 +1863,7 @@
       </summary>
       <remarks>
         <para>
-          See RobotRaconteurNode::SetRequestTimeout(),
+          See RobotRaconteurNode.SetRequestTimeout(),
           or the timeout passed to an asynchronous request
         </para>
         <para>
@@ -2909,7 +2909,7 @@
           AddWebSocketAllowedOrigin() for more information.
         </para>
         <para>
-          The TcpTransport supports TLS encryption using certificates. See \\ref tls_security for
+          The TcpTransport supports TLS encryption using certificates. See tls_security for
           more information on TLS. The TcpTransport supports four modes of TLS encryption:
         </para>
         <list type="table">
@@ -3510,7 +3510,7 @@
           created them if override_ is false, or by any user if override_ is true.
         </para>
         <para> The override_ parameter is set to true for client requests if the client has
-          the \"objectlockoverride\" permission.
+          the "objectlockoverride" permission.
         </para>
       </remarks>
       <param name="servicepath">The service path to release lock</param>
@@ -3542,7 +3542,7 @@
       <remarks>
         <para>
           Clients using dynamic typing will not automatically pull service definitions unless
-          imported by the root object or an objref. If new \"struct\", \"po\", or \"namedarray\"
+          imported by the root object or an objref. If new "struct", "pod", or "namedarray"
           types
           are introduced in a new service definition type without a corresponding object, an error
           will
@@ -3689,7 +3689,7 @@
           Use ServerEndpoint.GetCurrentAuthenticatedUser() to retrieve the
           authenticated user making a request
         </para>
-        <para>See \\ref security for more information.
+        <para>See security for more information.
         </para>
       </remarks>
     </member>
@@ -3778,7 +3778,7 @@
 
         <para>
           The password is md5 hashed. This hash can be generated using the ``--md5passwordhash``
-          command in the \"RobotRaconteurGen\" utility.
+          command in the "RobotRaconteurGen" utility.
           The privileges are comma separated. Valid privileges are as follows:
         </para>
         <list type="table">
@@ -3831,7 +3831,7 @@
         <para>
           Records information about a logging event
         </para>
-        <para> See \\ref logging for more information.
+        <para> See logging for more information.
         </para>
       </remarks>
     </member>
@@ -3944,7 +3944,7 @@
           RobotRaconteur.RobotRaconteurNode.SetLogRecordHandler() to specify a LogRecordHandler
           to accept log records instead of printing them to the terminal.
         </para>
-        <para>See \\ref logging for more information.
+        <para>See logging for more information.
         </para>
       </remarks>
     </member>
@@ -3954,7 +3954,7 @@
         Log record handler that saves to a file
       </summary>
       <remarks>
-        See \\ref logging for more information.
+        See logging for more information.
       </remarks>
     </member>
 

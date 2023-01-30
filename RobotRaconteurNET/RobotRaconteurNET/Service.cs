@@ -2848,7 +2848,7 @@ public interface IUserAuthenticator
     /// On successful authentication, return a populated AuthenticatedUser object. On
     /// failure, throw an exception.
     ///
-    /// See \ref security for more information.
+    /// See security for more information.
     /// </remarks>
     /// <param name="username">The username provided by the client</param>
     /// <param name="credentials">The credentials provided by the client</param>

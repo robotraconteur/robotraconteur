@@ -51,19 +51,19 @@ namespace RobotRaconteur
 /// 4. Configure timeouts
 /// </para>
 /// <para>
-/// See \ref command_line_options for more information on available command line options.
+/// See command_line_options for more information on available command line options.
 /// </para>
 /// <para>
 /// Logging level is configured using the environmental variable `ROBOTRACONTEUR_LOG_LEVEL`
-/// or the command line option `--robotraconteur-log-level`. See \ref logging.md for more information.
+/// or the command line option `--robotraconteur-log-level`. See logging for more information.
 /// </para>
 /// <para>
-/// See \ref taps.md for more information on using taps.
+/// See taps for more information on using taps.
 /// </para>
 /// <para>
 /// The node setup classes optionally initialize LocalTransport,
 /// TcpTransport, HardwareTransport, and/or IntraTransport.
-/// \ref transports.md for more information.
+/// transports for more information.
 /// </para>
 /// <para>
 /// The LocalTransport.StartServerAsNodeName() or
@@ -259,7 +259,7 @@ public class RobotRaconteurNodeSetup : IDisposable
 /// RobotRaconteurNode instance that is used only to create outgoing client connections.
 /// </para>
 /// <para>
-/// See \ref command_line_options for more information on available command line options.
+/// See command_line_options for more information on available command line options.
 /// </para>
 /// <para>
 /// Note: String table and HardwareTransport are disabled by default. They can be enabled
@@ -335,7 +335,7 @@ public class ClientNodeSetup : RobotRaconteurNodeSetup
     /// This constructor will use assembly scanning to register all available service factories.
     /// </para>
     /// <para>
-    /// See \ref command_line_options for more information on available command line options.
+    /// See command_line_options for more information on available command line options.
     /// </para>
     /// </remarks>
     /// <param name="args">The command line options</param>
@@ -359,7 +359,7 @@ public class ClientNodeSetup : RobotRaconteurNodeSetup
 /// are enabled (default behavior).
 /// </para>
 /// <para>
-/// See \ref command_line_options for more information on available command line options.
+/// See command_line_options for more information on available command line options.
 /// </para>
 /// <para>
 /// Note: String table and HardwareTransport are disabled by default. They can be enabled
@@ -441,7 +441,7 @@ public class ServerNodeSetup : RobotRaconteurNodeSetup
     /// This constructor will use assembly scanning to register all available service factories.
     /// </para>
     /// <para>
-    /// See \ref command_line_options for more information on available command line options.
+    /// See command_line_options for more information on available command line options.
     /// </para>
     /// </remarks> 
     /// <param name="node_name">The node name for LocalTransport and RobotRaconteurNode</param>
@@ -468,7 +468,7 @@ public class ServerNodeSetup : RobotRaconteurNodeSetup
 /// are enabled (default behavior).
 /// </para>
 /// <para>
-/// See \ref command_line_options for more information on available command line options.
+/// See command_line_options for more information on available command line options.
 /// </para>
 /// <para>
 /// Note: String table and HardwareTransport are disabled by default. They can be enabled
@@ -551,7 +551,7 @@ public class SecureServerNodeSetup : RobotRaconteurNodeSetup
     /// This constructor will use assembly scanning to register all available service factories.
     /// </para>
     /// <para>
-    /// See \ref command_line_options for more information on available command line options.
+    /// See command_line_options for more information on available command line options.
     /// </para>
     /// </remarks> 
     /// <param name="node_name">The node name for LocalTransport and RobotRaconteurNode</param>
