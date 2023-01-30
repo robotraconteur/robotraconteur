@@ -1,0 +1,78 @@
+name: Documentation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless 
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
+        git cmake g++ make libboost-all-dev autoconf 
+        automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel 
+        python3-pytest mono-devel curl libgtest-dev swig doxygen python3-sphinx -qq
+    - name: pip sphinx
+      run: sudo python3 -m pip install sphinx_rtd_theme
+    - name: docfx
+      run: dotnet tool update -g docfx
+    - name: configure
+      run: >
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF 
+        -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 
+        -DBUILD_JAVA=OFF -DBUILD_NET=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
+        -DBUILD_PYTHON_WHEEL=OFF -DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -O0" -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
+        -DBUILD_DOCUMENTATION=ON -DDOCFX_EXECUTABLE=$HOME/.dotnet/tools/docfx -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -- -j 4
+    - name: build docs
+      working-directory: build2
+      run: |
+        cmake --build . --config Release --target RobotRaconteurCore_doc
+        cmake --build . --config Release --target RobotRaconteurNET_doc
+        cmake --build . --config Release --target RobotRaconteurPython3_doc
+    - name: move docs
+      run: |
+        mkdir -p doc/doc/core/latest/
+        mv build2/docs/python3 doc/doc/core/latest/python
+        mv build2/docs/net doc/doc/core/latest/net
+        mv build2/docs/cpp/html doc/doc/core/latest/cpp
+    - name: archive docs
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: doc
+  # Deploy job
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+
+
+
+    
