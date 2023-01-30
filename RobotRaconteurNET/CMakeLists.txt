@@ -132,7 +132,7 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/docs/net/source/api
         $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs/api
         COMMAND ${DOCFX_EXECUTABLE} metadata
-        COMMAND ${DOCFX_EXECUTABLE} build --output ${CMAKE_BINARY_DIR}/docs/net
+        COMMAND ${DOCFX_EXECUTABLE} build --output ${CMAKE_BINARY_DIR}/docs
         WORKING_DIRECTORY $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME}>/../docs
         COMMENT "Generating csharp documentation yaml"
         DEPENDS RobotRaconteurNET)
