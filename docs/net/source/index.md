@@ -70,6 +70,6 @@ your project for the managed library.
 
 ## Single RobotRaconteurNode support
 
-The C\# library only supports one node per process.
+The `RobotRaconteurNET` library only supports one Robot Raconteur node per process.
 
 Copyright (C) 2023 Wason Technology, LLC
