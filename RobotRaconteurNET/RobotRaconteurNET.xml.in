@@ -882,10 +882,11 @@
       </remarks>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.RegisterTransport">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.RegisterTransport(RobotRaconteur.Transport)">
       <summary>
         Register a transport for use by the node
       </summary>
+      <remarks>None</remarks>
       <param name="transport">The transport to register</param>
       <returns>The transport internal id</returns>
     </member>
@@ -920,7 +921,7 @@
       <param name="urls">The candidate URLs</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.UnregisterServiceType">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.UnregisterServiceType(System.String)">
       <summary>
         Unregister a previously registered service type
       </summary>
@@ -931,7 +932,7 @@
       <param name="type">The type to unregister</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.IsServiceTypeRegistered">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.IsServiceTypeRegistered(System.String)">
       <summary>
         Check if a service type has been registered
       </summary>
@@ -939,7 +940,7 @@
       <returns>true if registered, otherwise false</returns>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.CloseService">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.CloseService(System.String)">
       <summary>
         Closes a previously registered service
       </summary>
@@ -950,7 +951,7 @@
       <param name="sname">The name of the service to close</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.CheckConnection">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.CheckConnection(System.UInt32)">
       <summary>
         Check that the TransportConnection associated with an endpoint
         is connected
@@ -958,7 +959,7 @@
       <param name="endpoint">The LocalEndpoint identifier to check</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.Sleep">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.Sleep(System.Int32)">
       <summary>
         Sleeps for a specified duration
       </summary>
@@ -969,7 +970,7 @@
       <param name="duration">Duration to sleep in milliseconds</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.CreateRate">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.CreateRate(System.Double)">
       <summary>
         Create a Rate object
       </summary>
@@ -995,7 +996,7 @@
       <returns>The new AutoResetEvent object</returns>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.CompareLogLevel">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.CompareLogLevel(RobotRaconteur.LogLevel)">
       <summary>
         Test if the specified log level would be accepted
       </summary>
@@ -1003,7 +1004,7 @@
       <returns>true if the log would be accepted</returns>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.LogMessage">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.LogMessage(RobotRaconteur.LogLevel,System.String)">
       <summary>
         Log a simple message using the current node
       </summary>
@@ -1020,7 +1021,7 @@
       <param name="message">The log message</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.LogRecord">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.LogRecord(RobotRaconteur.RRLogRecord)">
       <summary>
         Log a record to the node.
       </summary>
@@ -1045,7 +1046,7 @@
       </remarks>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevel">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevel(RobotRaconteur.LogLevel)">
       <summary>
         Set the log level for the node
       </summary>
@@ -1055,7 +1056,7 @@
       <param name="level">The desired log level</param>
     </member>
 
-    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevelFromString">
+    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevelFromString(System.String)">
       <summary>
         Set the log level for the node from a string
       </summary>
@@ -1067,6 +1068,20 @@
     </member>
 
     <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevelFromEnvVariable">
+      <summary>
+        Set the log level for the node from environmental variable `ROBOTRACONTEUR_LOG_LEVEL`
+      </summary>
+      <remarks>
+        <para>
+          Retrieves the specified environmental variable and sets the log level based
+          on one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
+        </para>
+        <para> If an invalid value or the variable does not exist, the log level is left unchanged.
+        </para>
+      </remarks>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNode.SetLogLevelFromEnvVariable(System.String)">
       <summary>
         Set the log level for the node from specified environmental variable
       </summary>
