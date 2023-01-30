@@ -1,0 +1,31 @@
+file(READ @RR_NET_BUILT_DOC_XML@ DOC_GEN_XML)
+
+string(REGEX MATCH "<members>.*</members>" DOC_GEN_XML_MEMBERS_1 ${DOC_GEN_XML})
+string(REGEX REPLACE "<members>(.*)</members>" "\\1" DOC_GEN_XML_MEMBERS ${DOC_GEN_XML_MEMBERS_1})
+
+# message(STATUS ${DOC_GEN_XML_MEMBERS})
+
+file(READ @CMAKE_CURRENT_SOURCE_DIR@/RobotRaconteurNET.xml.in DOC_XML)
+
+string(REPLACE "<!-- GENERATED_MEMBERS -->" ${DOC_GEN_XML_MEMBERS} DOC_MERGED_XML ${DOC_XML})
+
+if("${CMAKE_ARGV4}" STREQUAL "netstandard")
+
+if(${CMAKE_ARGV3} STREQUAL "Debug")
+file(WRITE "@CMAKE_BINARY_DIR@/out_debug/NET/netstandard/RobotRaconteurNET.xml" ${DOC_MERGED_XML})
+endif()
+
+if(${CMAKE_ARGV3} STREQUAL "Release")
+file(WRITE "@CMAKE_BINARY_DIR@/out/NET/netstandard/RobotRaconteurNET.xml" ${DOC_MERGED_XML})
+endif()
+
+else()
+
+if(${CMAKE_ARGV3} STREQUAL "Debug")
+file(WRITE "@CMAKE_BINARY_DIR@/out_debug/NET/RobotRaconteurNET.xml" ${DOC_MERGED_XML})
+endif()
+
+if(${CMAKE_ARGV3} STREQUAL "Release")
+file(WRITE "@CMAKE_BINARY_DIR@/out/NET/RobotRaconteurNET.xml" ${DOC_MERGED_XML})
+endif()
+endif()
