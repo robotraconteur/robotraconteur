@@ -38,15 +38,18 @@ public partial class ServiceSubscriptionClientID
     /// <summary>
     /// The NodeID of the connected service
     /// </summary>
+    /// <remarks>None</remarks>
     public NodeID NodeID;
     /// <summary>
     /// The ServiceName of the connected service
     /// </summary>
+    /// <remarks>None</remarks>
     public string ServiceName;
 
     /// <summary>
     /// Construct a ServiceSubscriptionClientID
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="node_id">The NodeID</param>
     /// <param name="service_name">The Service Name</param>
     public ServiceSubscriptionClientID(NodeID node_id, string service_name)
@@ -64,6 +67,7 @@ public partial class ServiceSubscriptionClientID
     /// <summary>
     /// Equality operator
     /// </summary>
+    /// <remarks>None</remarks>
     public static bool operator ==(ServiceSubscriptionClientID a, ServiceSubscriptionClientID b)
     {
         if (Object.Equals(a, null) && Object.Equals(b, null))
@@ -76,6 +80,7 @@ public partial class ServiceSubscriptionClientID
     /// <summary>
     /// Inequality operator
     /// </summary>
+    /// <remarks>None</remarks>
     public static bool operator !=(ServiceSubscriptionClientID a, ServiceSubscriptionClientID b)
     {
         return !(a == b);
@@ -110,18 +115,22 @@ public class ServiceSubscriptionFilterNode
     /// <summary>
     /// The NodeID to match. All zero NodeID will match any NodeID.
     /// </summary>
+    /// <remarks>None</remarks>
     public NodeID NodeID = RobotRaconteur.NodeID.GetAny();
     /// <summary>
     /// The NodeName to match. Empty or null NodeName will match any NodeName.
     /// </summary>
+    /// <remarks>None</remarks>
     public string NodeName;
     /// <summary>
     /// The username to use for authentication. Should only be used with secure transports and verified NodeID
     /// </summary>
+    /// <remarks>None</remarks>
     public string Username;
     /// <summary>
     /// The credentials to use for authentication. Should only be used with secure transports and verified NodeID
     /// </summary>
+    /// <remarks>None</remarks>
     public Dictionary<string, object> Credentials;
 }
 
@@ -139,22 +148,27 @@ public class ServiceSubscriptionFilter
     /// <summary>
     /// Vector of nodes that should be connected. Empty means match any node.
     /// </summary>
+    /// <remarks>None</remarks>
     public ServiceSubscriptionFilterNode[] Nodes;
     /// <summary>
     /// Vector service names that should be connected. Empty means match any service name.
     /// </summary>
+    /// <remarks>None</remarks>
     public string[] ServiceNames;
     /// <summary>
     /// Vector of transport schemes. Empty means match any transport scheme.
     /// </summary>
+    /// <remarks>None</remarks>
     public string[] TransportSchemes;
     /// <summary>
     /// A user specified predicate function. If nullptr, the predicate is not checked.
     /// </summary>
+    /// <remarks>None</remarks>
     public Func<ServiceInfo2, bool> Predicate;
     /// <summary>
     /// The maximum number of connections the subscription will create. Zero means unlimited connections. 
     /// </summary>
+    /// <remarks>None</remarks>
     public uint MaxConnections;
 }
 
@@ -268,10 +282,12 @@ public class ServiceInfo2Subscription
     /// <summary>
     /// Listener event that is invoked when a service is detected
     /// </summary>
+    /// <remarks>None</remarks>
     public event Action<ServiceInfo2Subscription, ServiceSubscriptionClientID, ServiceInfo2> ServiceDetected;
     /// <summary>
     /// Listener event that is invoked when a service is lost
     /// </summary>
+    /// <remarks>None</remarks>
     public event Action<ServiceInfo2Subscription, ServiceSubscriptionClientID, ServiceInfo2> ServiceLost;
 }
 
@@ -529,15 +545,18 @@ public class ServiceSubscription
     /// <summary>
     /// Event listener for when a client connects
     /// </summary>
+    /// <remarks>None</remarks>
     public event Action<ServiceSubscription, ServiceSubscriptionClientID, object> ClientConnected;
     /// <summary>
     /// Event listener for when a client disconnects
     /// </summary>
+    /// <remarks>None</remarks>
     public event Action<ServiceSubscription, ServiceSubscriptionClientID, object> ClientDisconnected;
 
     /// <summary>
     /// Event listener for when a client connection attempt fails. Use to diagnose connection problems
     /// </summary>
+    /// <remarks>None</remarks>
     public event Action<ServiceSubscription, ServiceSubscriptionClientID, string[], Exception> ClientConnectFailed;
 
     /// <summary>
@@ -1061,6 +1080,7 @@ public class WireSubscription<T>
     /// <summary>
     /// Get the number of wire connections currently connected
     /// </summary>
+    /// <remarks>None</remarks>
     public uint ActiveWireConnectionCount
     {
         get {
@@ -1200,6 +1220,7 @@ public partial class PipeSubscription<T>
     /// <summary>
     /// Try dequeuing a packet from the receive queue, optionally waiting or peeking the packet
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="packet">[out] the dequeued packet</param>
     /// <param name="timeout">The time to wait for a packet to be received in milliseconds if the queue is empty, or
     /// RR_TIMEOUT_INFINITE to wait forever</param>
@@ -1243,6 +1264,7 @@ public partial class PipeSubscription<T>
     /// <summary>
     /// Get or set if incoming packets are ignored
     /// </summary>
+    /// <remarks>None</remarks>
     public bool IgnoreReceived
     {
         get {
@@ -1287,6 +1309,7 @@ public partial class PipeSubscription<T>
     /// <summary>
     /// Get the number of pipe endpoints currently connected
     /// </summary>
+    /// <remarks>None</remarks>
     public uint ActivePipeEndpointCount
     {
         get {
@@ -1307,7 +1330,8 @@ public partial class PipeSubscription<T>
     }
     /// <summary>
     /// Listener event for when a pipe packet is received
-    /// </summary>        
+    /// </summary>
+    /// <remarks>None</remarks>
     public event Action<PipeSubscription<T>> PipePacketReceived;
 }
 

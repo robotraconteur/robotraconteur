@@ -76,6 +76,7 @@ public class ArrayMemory<T>
     /// <summary>
     /// Attach ArrayMemory instance to an array
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="memory">The array to attach</param>
     public virtual void Attach(T[] memory)
     {
@@ -253,6 +254,7 @@ public class MultiDimArrayMemory<T>
     /// <summary>
     /// Attach MultiDimArrayMemory instance to a MultiDimArray
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="memory">The array to attach</param>
     public virtual void Attach(MultiDimArray memory)
     {
@@ -404,6 +406,7 @@ public class PodMultiDimArrayMemory<T>
     /// <summary>
     /// Attach PodMultiDimArrayMemory instance to a PodMultiDimArray
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="memory">The array to attach</param>
     public virtual void Attach(PodMultiDimArray memory)
     {
@@ -1355,6 +1358,7 @@ public class NamedMultiDimArrayMemory<T>
     /// <summary>
     /// Attach PodMultiDimArrayMemory instance to a PodMultiDimArray
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="memory">The array to attach</param>
     public virtual void Attach(NamedMultiDimArray memory)
     {

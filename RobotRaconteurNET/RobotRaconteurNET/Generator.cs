@@ -316,14 +316,17 @@ public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnT
     /// <summary>
     /// Abstract function to receive abort requests
     /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Abort();
     /// <summary>
     /// Abstract function to receive close requests
     /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Close();
     /// <summary>
     /// Abstract function te receive next requests
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="param">Next param</param>
     /// <returns>Next return</returns>
     public abstract ReturnType Next(ParamType param);
@@ -360,14 +363,17 @@ public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
     /// <summary>
     /// Abstract function to receive abort requests
     /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Abort();
     /// <summary>
     /// Abstract function to receive close requests
     /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Close();
     /// <summary>
     /// Abstract function te receive next requests
     /// </summary>
+    /// <remarks>None</remarks>
     /// <returns>Next return</returns>
     public abstract ReturnType Next();
 
@@ -418,14 +424,17 @@ public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
     /// <summary>
     /// Abstract function to receive abort requests
     /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Abort();
     /// <summary>
     /// Abstract function to receive close requests
     /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Close();
     /// <summary>
     /// Abstract function te receive next requests
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="param">Next param</param>
     public abstract void Next(ParamType param);
 
@@ -464,6 +473,7 @@ public class EnumeratorGenerator<T> : SyncGenerator2<T>
     /// <summary>
     /// Construct a generator from an IEnumerable
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="enumerable"></param>
     /// <returns></returns>
     public EnumeratorGenerator(IEnumerable<T> enumerable) : this(enumerable.GetEnumerator())
@@ -472,6 +482,7 @@ public class EnumeratorGenerator<T> : SyncGenerator2<T>
     /// <summary>
     /// Construct a generator from an IEnumerator
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="enumerator"></param>
     public EnumeratorGenerator(IEnumerator<T> enumerator)
     {

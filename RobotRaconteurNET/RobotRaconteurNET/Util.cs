@@ -63,6 +63,7 @@ public class UserLogRecordHandler : UserLogRecordHandlerBase
     /// Construct a UserLogRecordHandler with a specified callback. Use RobotRaconteurNode.SetRecordLogRecordHandler()
     /// to set the record handler.
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="handler">The callback to receive log records</param>
     public UserLogRecordHandler(Action<RRLogRecord> handler)
     {

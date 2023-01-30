@@ -111,6 +111,7 @@ public class RobotRaconteurNodeSetup : IDisposable
     /// <summary>
     /// Get the command line config parser object used to configure node
     /// </summary>
+    /// <remarks>None</remarks>
     public CommandLineConfigParser CommandLineConfig { get; }
 
     protected WrappedRobotRaconteurNodeSetup setup;

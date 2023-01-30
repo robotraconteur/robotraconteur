@@ -215,6 +215,7 @@ public class Pipe<T>
     /// <summary>
     /// The pipe member name
     /// </summary>
+    /// <remarks>None</remarks>
     public string MemberName
     {
         get {
@@ -265,6 +266,7 @@ public class Pipe<T>
     /// <summary>
     /// Connect to any pipe index
     /// </summary>
+    /// <remarks>None</remarks>
     public const int ANY_INDEX=-1;
 
     /// <summary>
@@ -525,6 +527,7 @@ public class Pipe<T>
         /// <summary>
         /// Get the pipe endpoint index used when endpoint connected
         /// </summary>
+        /// <remarks>None</remarks>
         public int Index
         {
             get {
@@ -1006,6 +1009,7 @@ public class PipeBroadcaster<T>
     /// <summary>
     /// Construct a new PipeBroadcaster
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="pipe">The pipe to use for broadcasting. Must be a pipe from a service object.
     /// Specifying a client pipe will result in an exception.</param>
     /// <param name="maximum_backlog">The maximum number of packets in flight, or -1 for unlimited</param>
@@ -1020,6 +1024,7 @@ public class PipeBroadcaster<T>
     /// <summary>
     /// Get the associated pipe
     /// </summary>
+    /// <remarks>None</remarks>
     public Pipe<T> Pipe
     {
         get {
@@ -1076,6 +1081,7 @@ public class PipeBroadcaster<T>
     /// <summary>
     /// Get the number of active client endpoints
     /// </summary>
+    /// <remarks>None</remarks>
     public uint ActivePipeEndpointCount
     {
         get {
@@ -1203,6 +1209,7 @@ public class Wire<T>
     /// <summary>
     /// Get the member name of the wire
     /// </summary>
+    /// <remarks>None</remarks>
     public string MemberName
     {
         get {
@@ -2356,6 +2363,7 @@ public class WireBroadcaster<T>
     /// <summary>
     /// Construct a new WireBroadcaster
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="wire">The wire to use for broadcasting. Must be a wire from a service object.
     /// Specifying a client wire will result in an exception.</param>
     public WireBroadcaster(Wire<T> wire)
@@ -2369,6 +2377,7 @@ public class WireBroadcaster<T>
     /// <summary>
     /// Get the assosciated wire
     /// </summary>
+    /// <remarks>None</remarks>
     public Wire<T> Wire
     {
         get {
@@ -2408,6 +2417,7 @@ public class WireBroadcaster<T>
     /// <summary>
     /// Get the current number of active wire connections
     /// </summary>
+    /// <remarks>None</remarks>
     public uint ActiveWireConnectionCount
     {
         get {
@@ -2531,6 +2541,7 @@ public class WireUnicastReceiver<T>
     /// <summary>
     /// Construct a new WireUnicastReceiverBase
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="wire">The wire to use for broadcasting. Must be a wire from a service object.
     /// Specifying a client wire will result in an exception.</param>
     public WireUnicastReceiver(Wire<T> wire)
@@ -2548,6 +2559,7 @@ public class WireUnicastReceiver<T>
     /// <summary>
     /// Get the associated wire
     /// </summary>
+    /// <remarks>None</remarks>
     public Wire<T> Wire
     {
         get {
@@ -2693,18 +2705,21 @@ public interface IRobotRaconteurMonitorObject
     /// <summary>
     /// Request a thread-exclusive lock without timeout. May block until lock can be established
     /// </summary>
+    /// <remarks>None</remarks>
     void RobotRaconteurMonitorEnter();
 
     /// <summary>
     /// Request a thread-exclusive lock with timeout. May block until lock can be established, 
     /// up to the specified timeout.
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="timeout">Lock request timeout in milliseconds</param>
     void RobotRaconteurMonitorEnter(int timeout);
 
     /// <summary>
     /// Release the thread-exclusive monitor lock
     /// </summary>
+    /// <remarks>None</remarks>
     void RobotRaconteurMonitorExit();
 }
 
@@ -2818,6 +2833,7 @@ public partial class ServiceSecurityPolicy
 /// <summary>
 /// Interface for custom user authenticators
 /// </summary>
+/// <remarks>None</remarks>
 public interface IUserAuthenticator
 {
     /// <summary>
@@ -2857,6 +2873,7 @@ public partial class AuthenticatedUser
     /// <summary>
     /// The authenticated username
     /// </summary>
+    /// <remarks>None</remarks>
     public string Username
     {
         get {
@@ -2867,6 +2884,7 @@ public partial class AuthenticatedUser
     /// <summary>
     /// The user privileges
     /// </summary>
+    /// <remarks>None</remarks>
     public string[] Privileges
     {
         get {
@@ -2880,6 +2898,7 @@ public partial class AuthenticatedUser
     /// <summary>
     /// The user properties
     /// </summary>
+    /// <remarks>None</remarks>
     public string[] Properties
     {
         get {
@@ -2893,6 +2912,7 @@ public partial class AuthenticatedUser
     /// <summary>
     /// The user login time
     /// </summary>
+    /// <remarks>None</remarks>
     public DateTime LoginTime
     {
         get {
@@ -2903,6 +2923,7 @@ public partial class AuthenticatedUser
     /// <summary>
     /// The user last access time
     /// </summary>
+    /// <remarks>None</remarks>
     public DateTime LastAccessTime
     {
         get {

@@ -936,6 +936,7 @@
       <summary>
         Check if a service type has been registered
       </summary>
+      <remarks>None</remarks>
       <param name="type">The name of the service type to check</param>
       <returns>true if registered, otherwise false</returns>
     </member>
@@ -956,6 +957,7 @@
         Check that the TransportConnection associated with an endpoint
         is connected
       </summary>
+      <remarks>None</remarks>
       <param name="endpoint">The LocalEndpoint identifier to check</param>
     </member>
 
@@ -1000,6 +1002,7 @@
       <summary>
         Test if the specified log level would be accepted
       </summary>
+      <remarks>None</remarks>
       <param name="log_level">Log level to test</param>
       <returns>true if the log would be accepted</returns>
     </member>
@@ -1120,6 +1123,7 @@
       <summary>
         Return names of registered service types
       </summary>
+      <remarks>None</remarks>
       <returns>The registered service types</returns>
     </member>
 
@@ -1137,6 +1141,7 @@
       <summary>
         Construct a ConnectionException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1154,6 +1159,7 @@
       <summary>
         Construct a ProtocolException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1172,6 +1178,7 @@
       <summary>
         Construct a ServiceNotFoundException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1199,6 +1206,7 @@
       <summary>
         Construct a ObjectNotFoundException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1227,6 +1235,7 @@
       <summary>
         Construct a InvalidEndpointException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1255,6 +1264,7 @@
       <summary>
         Construct a EndpointCommunicationFatalException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1278,6 +1288,7 @@
       <summary>
         Construct a NodeNotFoundException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1303,6 +1314,7 @@
       <summary>
         Construct a ServiceException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1329,6 +1341,7 @@
       <summary>
         Construct a MemberNotFoundException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1347,6 +1360,7 @@
       <summary>
         Construct a MemberFormatMismatchException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1369,6 +1383,7 @@
       <summary>
         Construct a DataTypeMismatchException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1395,6 +1410,7 @@
       <summary>
         Construct a DataTypeException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1421,6 +1437,7 @@
       <summary>
         Construct a DataSerializationException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1439,6 +1456,7 @@
       <summary>
         Construct a MessageEntryNotFoundException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1463,6 +1481,7 @@
       <summary>
         Construct a MessageElementNotFoundException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1486,6 +1505,7 @@
       <summary>
         Construct a UnknownException
       </summary>
+      <remarks>None</remarks>
       <param name="error">The name of the exception</param>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
@@ -1505,6 +1525,7 @@
       <summary>
         Construct a InvalidOperationException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1522,6 +1543,7 @@
       <summary>
         Construct a InvalidArgumentException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1539,6 +1561,7 @@
       <summary>
         Construct a OperationFailedException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1556,6 +1579,7 @@
       <summary>
         Construct a NullValueException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1573,6 +1597,7 @@
       <summary>
         Construct a InternalErrorException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1590,6 +1615,7 @@
       <summary>
         Construct a PermissionDeniedException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1607,6 +1633,7 @@
       <summary>
         Construct a SystemResourcePermissionDeniedException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1624,6 +1651,7 @@
       <summary>
         Construct a OutOfSystemResourceException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1641,6 +1669,7 @@
       <summary>
         Construct a SystemResourceException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1658,6 +1687,7 @@
       <summary>
         Construct a ResourceNotFoundException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1675,6 +1705,7 @@
       <summary>
         Construct a IOException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1698,6 +1729,7 @@
       <summary>
         Construct a BufferLimitViolationException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1717,6 +1749,7 @@
       <summary>
         Construct a ServiceDefinitionException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1735,6 +1768,7 @@
       <summary>
         Construct a OutOfRangeException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1752,6 +1786,7 @@
       <summary>
         Construct a KeyNotFoundException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1769,6 +1804,7 @@
       <summary>
         Construct a InvalidConfigurationException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1786,6 +1822,7 @@
       <summary>
         Construct a InvalidStateException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1838,6 +1875,7 @@
       <summary>
         Construct a RequestTimeoutException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1855,6 +1893,7 @@
       <summary>
         Construct a ReadOnlyMemberException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1872,6 +1911,7 @@
       <summary>
         Construct a WriteOnlyMemberException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1889,6 +1929,7 @@
       <summary>
         Construct a NotImplementedException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1906,6 +1947,7 @@
       <summary>
         Construct a MemberBusyException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1929,6 +1971,7 @@
       <summary>
         Construct a ValueNotSetException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1947,6 +1990,7 @@
       <summary>
         Construct a AuthenticationException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1973,6 +2017,7 @@
       <summary>
         Construct a ObjectLockedException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -1994,6 +2039,7 @@
       <summary>
         Construct a AbortOperationException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -2023,6 +2069,7 @@
       <summary>
         Construct a OperationAbortedException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -2048,6 +2095,7 @@
       <summary>
         Construct a StopIterationException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -2065,6 +2113,7 @@
       <summary>
         Construct a OperationTimeoutException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -2082,6 +2131,7 @@
       <summary>
         Construct a OperationCancelledException
       </summary>
+      <remarks>None</remarks>
       <param name="message">Message for the user</param>
       <param name="sub_name">Optional error sub_name</param>
       <param name="param_">Optional error param</param>
@@ -2259,6 +2309,7 @@
       <summary>
         Add a new string option
       </summary>
+      <remarks>None</remarks>
       <param name="name">The name of the option</param>
       <param name="descr">Description of the option</param>
     </member>
@@ -2267,6 +2318,7 @@
       <summary>
         Add a new bool option
       </summary>
+      <remarks>None</remarks>
       <param name="name">The name of the option</param>
       <param name="descr">Description of the option</param>
     </member>
@@ -2275,6 +2327,7 @@
       <summary>
         Add a new int option
       </summary>
+      <remarks>None</remarks>
       <param name="name">The name of the option</param>
       <param name="descr">Description of the option</param>
     </member>
@@ -2362,6 +2415,7 @@
       <summary>
         Construct a new CommandLineConfigParser
       </summary>
+      <remarks>None</remarks>
       <param name="allowed_overrides">The allowed overrides flags</param>
     </member>
 
@@ -2369,6 +2423,7 @@
       <summary>
         Construct a new CommandLineConfigParser
       </summary>
+      <remarks>None</remarks>
       <param name="allowed_overrides">The allowed overrides flags</param>
       <param name="prefix">The prefix to use for the options</param>
     </member>
@@ -2390,21 +2445,25 @@
       <summary>
         Seconds since epoch
       </summary>
+      <remarks>None</remarks>
     </member>
     <member name="P:RobotRaconteur.TimeSpec.nanoseconds">
       <summary>
         Nanoseconds from epoch. Normalized to be between 0 and 1e9-1
       </summary>
+      <remarks>None</remarks>
     </member>
     <member name="M:RobotRaconteur.TimeSpec.#ctor">
       <summary>
         Construct empty timespec
       </summary>
+      <remarks>None</remarks>
     </member>
     <member name="M:RobotRaconteur.TimeSpec.#ctor(System.Int64,System.Int32)">
       <summary>
         Construct timespec with specified time
       </summary>
+      <remarks>None</remarks>
       <param name="seconds">Seconds since epoch</param>
       <param name="nanoseconds">Nanoseconds since epoch</param>
     </member>
@@ -2412,6 +2471,7 @@
       <summary>
         equality comparison
       </summary>
+      <remarks>None</remarks>
       <param name="a"></param>
       <param name="b"></param>
       <returns></returns>
@@ -2420,6 +2480,7 @@
       <summary>
         Object equality operator
       </summary>
+      <remarks>None</remarks>
       <param name="o"></param>
       <returns></returns>
     </member>
@@ -2433,6 +2494,7 @@
       <summary>
         inequality comparison
       </summary>
+      <remarks>None</remarks>
       <param name="a"></param>
       <param name="b"></param>
       <returns></returns>
@@ -2441,6 +2503,7 @@
       <summary>
         addition operator
       </summary>
+      <remarks>None</remarks>
       <param name="a"></param>
       <param name="b"></param>
       <returns></returns>
@@ -2449,6 +2512,7 @@
       <summary>
         subtraction operator
       </summary>
+      <remarks>None</remarks>
       <param name="a"></param>
       <param name="b"></param>
       <returns></returns>
@@ -2457,6 +2521,7 @@
       <summary>
         greater-than comparison
       </summary>
+      <remarks>None</remarks>
       <param name="a"></param>
       <param name="b"></param>
       <returns></returns>
@@ -2465,6 +2530,7 @@
       <summary>
         less-then comparison
       </summary>
+      <remarks>None</remarks>
       <param name="a"></param>
       <param name="b"></param>
       <returns></returns>
@@ -2473,6 +2539,7 @@
       <summary>
         greater-than-or-equal comparison
       </summary>
+      <remarks>None</remarks>
       <param name="a"></param>
       <param name="b"></param>
       <returns></returns>
@@ -2481,6 +2548,7 @@
       <summary>
         less-than-or-equal comparison
       </summary>
+      <remarks>None</remarks>
       <param name="a"></param>
       <param name="b"></param>
       <returns></returns>
@@ -2489,6 +2557,7 @@
       <summary>
         normalize nanoseconds to be within 0 and 1e9-1
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="T:RobotRaconteur.HardwareTransport">
@@ -2526,6 +2595,7 @@
         using
         RobotRaconteurNode.s.RegisterTransport()
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.HardwareTransport.#ctor(RobotRaconteur.RobotRaconteurNode)">
@@ -2533,6 +2603,7 @@
         Construct a new HardwareTransport for a non-default node. Must be registered with node using
         node.RegisterTransport()
       </summary>
+      <remarks>None</remarks>
       <param name="node">The node to use with the transport</param>
     </member>
 
@@ -2540,6 +2611,7 @@
       <summary>
         Close the transport. Done automatically by node shutdown.
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="T:RobotRaconteur.IntraTransport">
@@ -2578,6 +2650,7 @@
         Construct a new HardwareTransport for use with default node. Must be registered with node
         using RobotRaconteurNode.s.RegisterTransport()
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.IntraTransport.#ctor(RobotRaconteur.RobotRaconteurNode)">
@@ -2585,6 +2658,7 @@
         Construct a new IntraTransport for a non-default node. Must be registered with node using
         node.RegisterTransport()
       </summary>
+      <remarks>None</remarks>
       <param name="node">The node to use with the transport</param>
     </member>
 
@@ -2592,12 +2666,14 @@
       <summary>
         Close the transport. Done automatically by node shutdown.
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.IntraTransport.StartServer">
       <summary>
         Start the server to listen for incoming client connections
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="T:RobotRaconteur.LocalTransport">
@@ -2680,6 +2756,7 @@
         using
         RobotRaconteurNode.s.RegisterTransport()
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.LocalTransport.#ctor(RobotRaconteur.RobotRaconteurNode)">
@@ -2687,6 +2764,7 @@
         Construct a new LocalTransport for a non-default node. Must be registered with node using
         node.RegisterTransport()
       </summary>
+      <remarks>None</remarks>
       <param name="node">The node to use with the transport</param>
     </member>
 
@@ -2694,6 +2772,7 @@
       <summary>
         Close the transport. Done automatically by node shutdown.
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.LocalTransport.StartClientAsNodeName(System.String)">
@@ -2934,6 +3013,7 @@
         using
         RobotRaconteurNode.s.RegisterTransport()
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.TcpTransport.#ctor(RobotRaconteur.RobotRaconteurNode)">
@@ -2941,6 +3021,7 @@
         Construct a new LocalTransport for a non-default node. Must be registered with node using
         node.RegisterTransport()
       </summary>
+      <remarks>None</remarks>
       <param name="node">The node to use with the transport</param>
     </member>
 
@@ -2948,6 +3029,7 @@
       <summary>
         Close the transport. Done automatically by node shutdown.
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.TcpTransport.EnableNodeDiscoveryListening(RobotRaconteur.IPNodeDiscoveryFlags)">
@@ -2981,6 +3063,7 @@
       <summary>
         Disable node discovery listening
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.TcpTransport.EnableNodeAnnounce(RobotRaconteur.IPNodeDiscoveryFlags)">
@@ -3014,6 +3097,7 @@
       <summary>
         Disable node discovery announce
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="T:RobotRaconteur.TimerEvent">
@@ -3030,30 +3114,35 @@
       <summary>
         True if timer has been stopped
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.TimerEvent.last_expected">
       <summary>
         The last expected callback invocation time
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.TimerEvent.last_real">
       <summary>
         The last real callback invocation time
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.TimerEvent.current_expected">
       <summary>
         The current expected callback invocation time
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.TimerEvent.current_real">
       <summary>
         The current real callback invocation time
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="T:RobotRaconteur.Timer">
@@ -3083,18 +3172,21 @@
       <summary>
         Stop the timer
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.Timer.GetPeriod">
       <summary>
         Get the period of the timer in milliseconds
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.Timer.SetPeriod(System.Int32)">
       <summary>
         Set the period of the timer in milliseconds
       </summary>
+      <remarks>None</remarks>
       <param name="period">Period in milliseconds</param>
     </member>
 
@@ -3102,6 +3194,7 @@
       <summary>
         Get if the timer is running
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="T:RobotRaconteur.Rate">
@@ -3118,6 +3211,7 @@
       <summary>
         Sleep the calling thread until the current loop period expires
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="T:RobotRaconteur.AutoResetEvent">
@@ -3135,18 +3229,21 @@
       <summary>
         Set the event, releasing waiting threads
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.AutoResetEvent.Reset">
       <summary>
         Reset the event
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.AutoResetEvent.WaitOne">
       <summary>
         Block the current thread until Set() is called
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.AutoResetEvent.WaitOne(System.Int32)">
@@ -3197,24 +3294,28 @@
       <summary>
         Construct a new NodeID with "any" node UUID
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.NodeID.#ctor(System.Byte[])">
       <summary>
         Construct a new NodeID with the specified UUID bytes
       </summary>
+      <remarks>None</remarks>
       <param name="id">The UUID bytes</param>
     </member>
     <member name="M:RobotRaconteur.NodeID.#ctor(System.String)">
       <summary>
         Construct a new NodeID parsing a string UUID
       </summary>
+      <remarks>None</remarks>
       <param name="id">The UUID as a string</param>
     </member>
 
     <member name="M:RobotRaconteur.NodeID.ToString">
       <summary> Convert the NodeID UUID to string with "B" format<br /> Convert the UUID string to
         8-4-4-4-12 "B" format (with brackets)<br /> {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx} </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.NodeID.IsAnyNode">
@@ -3422,6 +3523,7 @@
       <summary>
         Get the name of the user that has locked the specified service path
       </summary>
+      <remarks>None</remarks>
       <param name="servicepath">The service path</param>
       <returns>The user owning the lock, or empty servicepath is not locked</returns>
     </member>
@@ -3482,6 +3584,7 @@
       <summary>
         Add a service listener
       </summary>
+      <remarks>None</remarks>
       <param name="listener">Callable listener function</param>
     </member>
     <member name="M:RobotRaconteur.ServerContext.ReleaseServicePath(System.String)">
@@ -3494,6 +3597,7 @@
         session key, use ReleaseServicePath(string, uint[]) to only
         notify the client that owns the session.
       </summary>
+      <remarks>None</remarks>
       <param name="path">The service path to release</param>
     </member>
     <member name="M:RobotRaconteur.ServerContext.ReleaseServicePath(System.String,System.UInt32[])">
@@ -3633,6 +3737,7 @@
 
     <member name="M:RobotRaconteur.ServiceSecurityPolicy.#ctor(RobotRaconteur.IUserAuthenticator,System.Collections.Generic.Dictionary{System.String,System.String})">
       <summary>Construct a new security policy</summary>
+      <remarks>None</remarks>
       <param name="authenticator">The user authenticator</param>
       <param name="policies">The security policies</param>
     </member>
@@ -3706,14 +3811,16 @@
         Construct a new PasswordFileUserAuthenticator
       </summary>
       <summary name="data">The file text</summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.PasswordFileUserAuthenticator.#ctor(System.String,System.Boolean)">
       <summary>
         Construct a new PasswordFileUserAuthenticator
       </summary>
-      <summary name="data">The file text</summary>
-      <summary name="require_verified_client">Require clients to be verified</summary>
+      <remarks>None</remarks>
+      <param name="data">The file text</param>
+      <param name="require_verified_client">Require clients to be verified</param>
     </member>
 
     <member name="T:RobotRaconteur.RRLogRecord">
@@ -3733,84 +3840,98 @@
       <summary>
         The log level
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.Component">
       <summary>
         The source component
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.ComponentName">
       <summary>
         The source component name
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.ComponentObjectID">
       <summary>
         The source component object ID
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.Endpoint">
       <summary>
         The source endpoint
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.ServicePath">
       <summary>
         The service path of the source object
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.Member">
       <summary>
         The source member
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.Message">
       <summary>
         Human readable log message
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.Time">
       <summary>
         Time of logging event
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.SourceFile">
       <summary>
         The sourcecode filename
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.SourceLine">
       <summary>
         The line within the sourcecode file
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.ThreadID">
       <summary>
         The source thread
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.FiberID">
       <summary>
         The source coroutine fiber
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="P:RobotRaconteur.RRLogRecord.Node">
       <summary>
         The source node
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="T:RobotRaconteur.LogRecordHandler">
@@ -3841,12 +3962,14 @@
       <summary>
         Construct a FileLogRecordHandler. Use OpenFile() to open a file.
       </summary>
+      <remarks>None</remarks>
     </member>
 
     <member name="M:RobotRaconteur.FileLogRecordHandler.OpenFile(System.String)">
       <summary>
         Open a file to store log records
       </summary>
+      <remarks>None</remarks>
       <param name="filename">The filename</param>
     </member>
 
@@ -3854,6 +3977,7 @@
       <summary>
         Open a file to store log records
       </summary>
+      <remarks>None</remarks>
       <param name="filename">The filename</param>
       <param name="append">If true, log messages are appended. If false, the file is truncated when
         opened</param>
@@ -3900,6 +4024,7 @@
       <summary>
         Construct a new BroadcastDownsampler
       </summary>
+      <remarks>None</remarks>
       <param name="context">The service context</param>
       <param name="default_downsample">The default downsample. Usually set to 0</param>
     </member>
@@ -3908,6 +4033,7 @@
       <summary>
         Get the downsample for the specified client
       </summary>
+      <remarks>None</remarks>
       <param name="ep">The endpoint ID of the client</param>
       <returns>The downsample</returns>
     </member>
@@ -3916,6 +4042,7 @@
       <summary>
         Set the downsample for the specified client
       </summary>
+      <remarks>None</remarks>
       <param name="ep">The endpoint ID of the client</param>
       <param name="downsample">The desired downsample</param>
     </member>

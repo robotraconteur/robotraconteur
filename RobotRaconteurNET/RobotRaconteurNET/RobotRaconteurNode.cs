@@ -135,6 +135,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Register a service type
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="servicetype">The service factory implementing the type to register</param>
     public void RegisterServiceType(ServiceFactory servicetype)
     {
@@ -148,6 +149,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Returns a previously registered service type
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="servicename">The name of the service type to retrieve</param>
     /// <returns>The service factory</returns>
     public ServiceFactory GetServiceType(string servicename)
@@ -558,6 +560,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Get the service path of a client object
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="obj">The object to get the service path for</param>
     /// <returns>The object's service path</returns>
     public string GetObjectServicePath(object obj)
@@ -569,6 +572,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Get a service factory for a C# type
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="type">The C# type name</param>
     /// <returns>The service factory</returns>
     private ServiceFactory GetServiceFactoryForType(string type)
@@ -580,6 +584,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Get a service factory for a C# type
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="type">The C# type</param>
     /// <returns>The service factory</returns>
     private ServiceFactory GetServiceFactoryForType(Type type)
@@ -1585,6 +1590,7 @@ public partial class RobotRaconteurNode
     /// Wrapper for RobotRaconteurNode.MonitorEnter() and
     /// RobotRaconteurNode.MonitorExit() for use with `using` statements
     /// </summary>
+    /// <remarks>None</remarks>
     public class ScopedMonitorLock : IDisposable
     {
         object obj;
@@ -1608,6 +1614,7 @@ public partial class RobotRaconteurNode
         /// <summary>
         /// Relock the object after calling unlock()
         /// </summary>
+        /// <remarks>None</remarks>
         /// <param name="timeout">The timeout in milliseconds to acquire the monitor lock, or RR_TIMEOUT_INFINITE</param>
         public void lock_(Int32 timeout = -1)
         {
@@ -1654,6 +1661,7 @@ public partial class RobotRaconteurNode
         /// <summary>
         /// Unlock if object has not been released
         /// </summary>
+        /// <remarks>None</remarks>
         public void Dispose()
         {
             if (locked)
@@ -1869,6 +1877,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Disable timeout for asynchronous operations
     /// </summary>
+    /// <remarks>None</remarks>
     public const int RR_TIMEOUT_INFINITE = -1;
 
     /// <summary>
@@ -2479,6 +2488,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Split a qualified name into its service definition name and unqualified name parts
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="name">Name to split</param>
     /// <returns>Tulpe containing service definition name and unqualified name</returns>
     public static Tuple<string, string> SplitQualifiedName(string name)
@@ -2493,6 +2503,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Get a service factory for a C# type
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="type">The C# type</param>
     /// <returns>The service factory</returns>
     public static string GetTypeString(Type type)
@@ -2571,6 +2582,7 @@ public partial class RobotRaconteurNode
     /// <summary>
     /// Post an Action to be executed by the thread pool
     /// </summary>
+    /// <remarks>None</remarks>
     /// <param name="target">The Action to execute</param>
     public void PostToThreadPool(Action target)
     {
