@@ -84,6 +84,7 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
         add_custom_target(
             RobotRaconteurNET ALL
             msbuild $<$<CONFIG:debug>:/p:Configuration=Debug>$<$<CONFIG:release>:/p:Configuration=Release> /t:rebuild
+            /nowarn:CS1591
             RobotRaconteurNET.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
     else()
         find_program(XBUILD_EXECUTABLE NAMES xbuild msbuild)
