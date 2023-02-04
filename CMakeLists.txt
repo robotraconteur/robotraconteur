@@ -163,3 +163,12 @@ if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv
             DESTINATION share/robotraconteur/hook)
 endif()
+
+file(STRINGS "${CMAKE_SOURCE_DIR}/package.xml" ROBOTRACONTEUR_ROS_PKG_VERSION_1
+     REGEX "<version>[0-9]+\\.[0-9]+\\.[0-9]+</version>")
+string(REGEX REPLACE "<version>([0-9]+\\.[0-9]+\\.[0-9]+)</version>" "\\1" ROBOTRACONTEUR_ROS_PKG_VERSION
+                     ${ROBOTRACONTEUR_ROS_PKG_VERSION_1})
+if(NOT "${ROBOTRACONTEUR_ROS_PKG_VERSION}" VERSION_EQUAL "{ROBOTRACONTEUR_VERSION}")
+    message(
+        FATAL_ERROR "Found ROS package version ${ROBOTRACONTEUR_ROS_PKG_VERSION} mismatch ${ROBOTRACONTEUR_VERSION}")
+endif()
