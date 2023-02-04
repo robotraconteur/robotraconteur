@@ -31,7 +31,7 @@ class UserAuthenticator
 	%extend
 	{
 	
-	virtual boost::shared_ptr<RobotRaconteur::AuthenticatedUser> AuthenticateUser(const std::string &username, boost::intrusive_ptr<RobotRaconteur::MessageElement> credentials, boost::shared_ptr<RobotRaconteur::ServerContext> context)
+	virtual boost::shared_ptr<RobotRaconteur::AuthenticatedUser> AuthenticateUser(const std::string &username, const boost::intrusive_ptr<RobotRaconteur::MessageElement>& credentials, const boost::shared_ptr<RobotRaconteur::ServerContext>& context)
 	{
 		if (!context) throw InvalidArgumentException("Context cannot be null");
 		if (!credentials) throw InvalidArgumentException("Credentials cannot be null");
@@ -45,7 +45,7 @@ class UserAuthenticator
 class ServiceSecurityPolicy
 {
 public:
-	ServiceSecurityPolicy(boost::shared_ptr<RobotRaconteur::UserAuthenticator> Authenticator, const std::map<std::string, std::string>& Policies);	
+	ServiceSecurityPolicy(const boost::shared_ptr<RobotRaconteur::UserAuthenticator>& Authenticator, const std::map<std::string, std::string>& Policies);	
 };
 
 class PasswordFileUserAuthenticator : public UserAuthenticator
@@ -58,7 +58,7 @@ class WrappedUserAuthenticatorDirector
 {
 public:
 	virtual ~WrappedUserAuthenticatorDirector() {}
-	virtual boost::shared_ptr<AuthenticatedUser> AuthenticateUser(const std::string &username, boost::intrusive_ptr<RobotRaconteur::MessageElement> credentials, boost::shared_ptr<RobotRaconteur::ServerContext> context);
+	virtual boost::shared_ptr<AuthenticatedUser> AuthenticateUser(const std::string &username, boost::intrusive_ptr<RobotRaconteur::MessageElement> credentials, const boost::shared_ptr<RobotRaconteur::ServerContext>& context) = 0;
 	
 };
 

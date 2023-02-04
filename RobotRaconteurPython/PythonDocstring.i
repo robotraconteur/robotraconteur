@@ -320,7 +320,7 @@ calling init.
 :type thread_count: int
 """
 
-%feature("docstring") RobotRaconteur::RobotRaconteurNode::RegisterTransport(boost::shared_ptr<Transport> transport) """
+%feature("docstring") RobotRaconteur::RobotRaconteurNode::RegisterTransport(const boost::shared_ptr<Transport>& transport) """
 
 Register a transport for use by the node
 
@@ -521,7 +521,7 @@ If None, records are sent to ``stdout``
 :rtype: LogRecordHandler
 """
 
-%feature("docstring") RobotRaconteur::RobotRaconteurNode::SetLogRecordHandler(boost::shared_ptr<RobotRaconteur::LogRecordHandler> handler) """
+%feature("docstring") RobotRaconteur::RobotRaconteurNode::SetLogRecordHandler(const boost::shared_ptr<RobotRaconteur::LogRecordHandler>& handler) """
 
 Set the handler for log records
 
@@ -1597,6 +1597,7 @@ See \\ref logging for more information.
 %feature("docstring") RobotRaconteur::RRLogRecord::SourceLine """(int) The line within the sourcecode file"""
 %feature("docstring") RobotRaconteur::RRLogRecord::ThreadID """(str) The source thread"""
 %feature("docstring") RobotRaconteur::RRLogRecord::FiberID """(str) The source coroutine fiber"""
+%feature("docstring") RobotRaconteur::RRLogRecord::Node """(str) The source node"""
 
 %feature("docstring") RobotRaconteur::LogRecordHandler """
 LogRecordHandler()

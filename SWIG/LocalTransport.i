@@ -21,7 +21,7 @@ class LocalTransport : public Transport
 {
 public:
 	LocalTransport();
-	LocalTransport(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
+	LocalTransport(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
 	
 	static bool IsLocalTransportSupported();
 	virtual std::string GetUrlSchemeString() const;

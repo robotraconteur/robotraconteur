@@ -1,18 +1,18 @@
-from setuptools import setup, Distribution
-
-
-# Suggested at https://github.com/google/or-tools/issues/616
-from setuptools.command.install import install
-class InstallPlatlib(install):
-    def finalize_options(self):
-        install.finalize_options(self)
-        if self.distribution.has_ext_modules():
-            self.install_lib = self.install_platlib
+from setuptools import setup, Distribution, Extension
 
 # Suggested at https://stackoverflow.com/questions/24071491/how-can-i-make-a-python-wheel-from-an-existing-native-library
 class BinaryDistribution(Distribution):
+    def is_pure(foo):
+        return False
     def has_ext_modules(foo):
         return True
+
+# Suggested at https://stackoverflow.com/questions/51522248/overriding-python-setuptools-default-include-dirs-and-library-dirs
+from setuptools.command.build_ext import build_ext as build_ext_orig
+class build_ext(build_ext_orig):
+    def run(self):
+      pass
+
 
 setup(name='RobotRaconteur',
       version='@ROBOTRACONTEUR_VERSION_PY@',
@@ -27,5 +27,11 @@ setup(name='RobotRaconteur',
 	  install_requires=['numpy'],
 	  long_description='This package contains Python wrappers for the Robot Raconteur communication framework. ' \
 	  'See http://robotraconteur.com/documentation for more information.',
-      cmdclass={'install': InstallPlatlib}
-     )
+      cmdclass={'build_ext': build_ext},
+      ext_modules=[
+        Extension(
+          name='RobotRaconteur._RobotRaconteurPython',
+          sources=[]
+        )
+      ]
+    )

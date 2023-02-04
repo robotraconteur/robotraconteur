@@ -13,15 +13,16 @@
 # limitations under the License.
 
 import RobotRaconteur as RR
-RRN=RR.RobotRaconteurNode.s
+RRN = RR.RobotRaconteurNode.s
+
 
 def StartClientAsNodeName(name):
-    local_transport=RR.LocalTransport()
+    local_transport = RR.LocalTransport()
     local_transport.StartClientAsNodeName(name)
-    tcp_transport=RR.TcpTransport()
+    tcp_transport = RR.TcpTransport()
     tcp_transport.EnableNodeDiscoveryListening()
-    hardware_transport=RR.HardwareTransport()
+    hardware_transport = RR.HardwareTransport()
 
     RRN.RegisterTransport(local_transport)
-    RRN.RegisterTransport(tcp_transport)    
+    RRN.RegisterTransport(tcp_transport)
     RRN.RegisterTransport(hardware_transport)

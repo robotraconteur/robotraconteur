@@ -2,21 +2,21 @@ package com.robotraconteur;
 
 import java.lang.reflect.Array;
 
-public class PodArrayMemory<T> extends ArrayMemory<T> {
+public class PodArrayMemory<T> extends ArrayMemory<T>
+{
 
-	public PodArrayMemory()
+    public PodArrayMemory()
     {
-		super();
+        super();
     }
 
     public PodArrayMemory(T memory)
     {
-    	 super(memory);
+        super(memory);
     }
-    
-    @Override
-    public long length()
+
+    @Override public long length()
     {
-    	return Array.getLength(memory);
+        return Array.getLength(memory);
     }
 }

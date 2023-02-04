@@ -30,7 +30,7 @@ public:
 		objectheapid=0;
 	}
 	
-	void OuterCallback(boost::shared_ptr<RobotRaconteur::ClientContext> c,ClientServiceListenerEventType code,boost::shared_ptr<void> p)
+	void OuterCallback(const boost::shared_ptr<RobotRaconteur::ClientContext>& c,ClientServiceListenerEventType code,const boost::shared_ptr<void>& p)
 	{
 		if (code == ClientServiceListenerEventType_ServicePathReleased)
 		{
@@ -67,7 +67,7 @@ class RobotRaconteurNode
 {
 public:
 
-	uint32_t RegisterTransport(boost::shared_ptr<Transport> transport);
+	uint32_t RegisterTransport(const boost::shared_ptr<Transport>& transport);
 	
 	RR_PROPERTY(RequestTimeout)
 	uint32_t GetRequestTimeout();
@@ -109,7 +109,7 @@ RR_RELEASE_GIL()
 		boost::shared_ptr<WrappedServiceStub> stub;
 		if (listener==0)
 		{
-			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,NULL,objecttype));
+			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,RR_NULL_FN,objecttype));
 		}
 		else
 		{
@@ -135,7 +135,7 @@ RR_RELEASE_GIL()
 		boost::shared_ptr<WrappedServiceStub> stub;
 		if (listener==0)
 		{
-			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,NULL,objecttype));
+			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,RR_NULL_FN,objecttype));
 		}
 		else
 		{
@@ -152,7 +152,7 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(AsyncConnectService);
 
 %extend {
-	void AsyncConnectService(const std::string& url, const std::string& username, boost::intrusive_ptr<MessageElementData> credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout, AsyncStubReturnDirector* handler, int32_t id)
+	void AsyncConnectService(const std::string& url, const std::string& username, const boost::intrusive_ptr<MessageElementData>& credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout, AsyncStubReturnDirector* handler, int32_t id)
 	{
 		
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
@@ -162,7 +162,7 @@ RR_KEEP_GIL()
 		
 		if (listener==0)
 		{
-			$self->AsyncConnectService(url,username,credentials2,NULL,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
+			$self->AsyncConnectService(url,username,credentials2,RR_NULL_FN,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 		}
 		else
 		{
@@ -171,7 +171,7 @@ RR_KEEP_GIL()
 		}		
 	}
 
-	void AsyncConnectService(const std::vector<std::string>& url, const std::string& username, boost::intrusive_ptr<MessageElementData> credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout,  AsyncStubReturnDirector* handler, int32_t id)
+	void AsyncConnectService(const std::vector<std::string>& url, const std::string& username, const boost::intrusive_ptr<MessageElementData>& credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout,  AsyncStubReturnDirector* handler, int32_t id)
 	{
 	
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
@@ -181,7 +181,7 @@ RR_KEEP_GIL()
 		
 		if (listener==0)
 		{
-			$self->AsyncConnectService(url,username,credentials2,NULL,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
+			$self->AsyncConnectService(url,username,credentials2,RR_NULL_FN,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 		}
 		else
 		{
@@ -196,7 +196,7 @@ RR_RELEASE_GIL()
 	RR_MAKE_METHOD_PRIVATE(DisconnectService)
 
 %extend {
-	void DisconnectService(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	void DisconnectService(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 	{
 		self->DisconnectService(obj);
 	}
@@ -207,7 +207,7 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(AsyncDisconnectService)
 
 %extend {
-	void AsyncDisconnectService(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, AsyncVoidNoErrReturnDirector* handler, int32_t id)
+	void AsyncDisconnectService(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj, AsyncVoidNoErrReturnDirector* handler, int32_t id)
 	{
 		boost::shared_ptr<AsyncVoidNoErrReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncVoidNoErrReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
 		self->AsyncDisconnectService(obj,boost::bind(&AsyncVoidNoErrReturn_handler,sphandler));
@@ -264,7 +264,7 @@ RR_KEEP_GIL()
 
 		VerifyServiceDefinitions(defs2);
 
-		BOOST_FOREACH(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def, defs)
+		BOOST_FOREACH(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def, defs)
 		{
 			$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def));
 		}
@@ -272,7 +272,7 @@ RR_KEEP_GIL()
 
 #endif
 	
-	void RegisterServiceType(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def)
+	void RegisterServiceType(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def)
 	{
 #ifdef SWIGPYTHON
 		std::vector<boost::shared_ptr<ServiceDefinition> > defs;
@@ -297,14 +297,14 @@ RR_KEEP_GIL()
 		{
 			defs2.push_back($self->GetServiceType(*e)->ServiceDef());
 		}
-		BOOST_FOREACH(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def, defs)
+		BOOST_FOREACH(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def, defs)
 		{
 			defs2.push_back(def);
 		}
 
 		VerifyServiceDefinitions(defs2);
 #endif
-		BOOST_FOREACH(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def, defs)
+		BOOST_FOREACH(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def, defs)
 		{
 			$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def));
 		}
@@ -316,7 +316,7 @@ RR_KEEP_GIL()
 		return rr_cast<WrappedServiceFactory>($self->GetServiceType(servicename))->ServiceDef();
 	}
 
-	boost::shared_ptr<RobotRaconteur::ServiceDefinition> GetPulledServiceType(boost::shared_ptr<RRObject> obj,const std::string& servicename)
+	boost::shared_ptr<RobotRaconteur::ServiceDefinition> GetPulledServiceType(const boost::shared_ptr<RRObject>& obj,const std::string& servicename)
 	{
 		return rr_cast<WrappedServiceFactory>($self->GetPulledServiceType(obj,servicename))->ServiceDef();
 	}
@@ -328,7 +328,7 @@ RR_KEEP_GIL()
 	std::vector<std::string> GetRegisteredServiceTypes();
 	
 	RR_MAKE_METHOD_PRIVATE(GetPulledServiceTypes)
-	std::vector<std::string> GetPulledServiceTypes(boost::shared_ptr<RRObject> obj);
+	std::vector<std::string> GetPulledServiceTypes(const boost::shared_ptr<RRObject>& obj);
 	
 	RR_MAKE_METHOD_PRIVATE(sp)
 	%rename sp _get_s;
@@ -350,19 +350,19 @@ RR_RELEASE_GIL()
 
 %extend {
 
-	std::string RequestObjectLock(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, RobotRaconteurObjectLockFlags flags)
+	std::string RequestObjectLock(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj, RobotRaconteurObjectLockFlags flags)
 	{
 		return $self->RequestObjectLock(obj,flags);
 	}
-	std::string ReleaseObjectLock(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	std::string ReleaseObjectLock(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 	{
 		return $self->ReleaseObjectLock(obj);
 	}
-	void MonitorEnter(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, int32_t timeout = -1)
+	void MonitorEnter(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj, int32_t timeout = -1)
 	{
 		$self->MonitorEnter(obj,timeout);
 	}
-	void MonitorExit(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	void MonitorExit(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 	{
 		$self->MonitorExit(obj);
 	}
@@ -392,12 +392,12 @@ RR_KEEP_GIL()
 
 %extend {
 
-	void AsyncRequestObjectLock(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, RobotRaconteurObjectLockFlags flags, int32_t timeout, AsyncStringReturnDirector* handler, int32_t id)
+	void AsyncRequestObjectLock(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj, RobotRaconteurObjectLockFlags flags, int32_t timeout, AsyncStringReturnDirector* handler, int32_t id)
 	{
 		boost::shared_ptr<AsyncStringReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStringReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
 		return $self->AsyncRequestObjectLock(obj,flags,boost::bind(&AsyncStringReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 	}
-	void AsyncReleaseObjectLock(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, int32_t timeout, AsyncStringReturnDirector* handler, int32_t id)
+	void AsyncReleaseObjectLock(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj, int32_t timeout, AsyncStringReturnDirector* handler, int32_t id)
 	{
 		boost::shared_ptr<AsyncStringReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStringReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
 		return $self->AsyncReleaseObjectLock(obj,boost::bind(&AsyncStringReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
@@ -413,7 +413,7 @@ RR_KEEP_GIL()
 	
 %extend
 {
-	boost::intrusive_ptr<MessageElement> GetServiceAttributes(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	boost::intrusive_ptr<MessageElement> GetServiceAttributes(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 		{
 			boost::intrusive_ptr<RRMap<std::string,RRValue> > map=AllocateEmptyRRMap<std::string,RRValue>();
 			map->GetStorageContainer()=$self->GetServiceAttributes(obj);
@@ -421,27 +421,27 @@ RR_KEEP_GIL()
 			return CreateMessageElement("value",mmap);
 		}
 
-	NodeID GetServiceNodeID(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	NodeID GetServiceNodeID(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 	{		
 		return $self->GetServiceNodeID(obj);		
 	}
 
-	std::string GetServiceNodeName(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	std::string GetServiceNodeName(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 	{		
 		return $self->GetServiceNodeName(obj);		
 	}
 
-	std::string GetServiceName(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	std::string GetServiceName(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 	{		
 		return $self->GetServiceName(obj);		
 	}
 
-	std::string GetObjectServicePath(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	std::string GetObjectServicePath(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 	{		
 		return $self->GetObjectServicePath(obj);		
 	}
 
-	std::string GetObjectType(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj)
+	std::string GetObjectType(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
 	{		
 		return $self->GetObjectType(obj);		
 	}
@@ -450,7 +450,7 @@ RR_KEEP_GIL()
 
 	RR_MAKE_METHOD_PRIVATE(RegisterService)
 
-	boost::shared_ptr<RobotRaconteur::ServerContext> RegisterService(const std::string& name, const std::string& servicetype, boost::shared_ptr<RobotRaconteur::RRObject> obj, boost::shared_ptr<RobotRaconteur::ServiceSecurityPolicy> securitypolicy = boost::shared_ptr<RobotRaconteur::ServiceSecurityPolicy>());
+	boost::shared_ptr<RobotRaconteur::ServerContext> RegisterService(const std::string& name, const std::string& servicetype, const boost::shared_ptr<RobotRaconteur::RRObject>& obj, boost::shared_ptr<RobotRaconteur::ServiceSecurityPolicy> securitypolicy = boost::shared_ptr<RobotRaconteur::ServiceSecurityPolicy>());
 
 	void CloseService(const std::string &sname);
 
@@ -464,7 +464,7 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(SetNodeName)
 	
 	const std::string NodeName();
-	void SetNodeName(const std::string name);
+	void SetNodeName(const std::string& name);
 	
 	RR_PROPERTY(ThreadPoolCount)
 	int32_t GetThreadPoolCount();
@@ -474,22 +474,22 @@ RR_RELEASE_GIL()
 
 	RR_MAKE_METHOD_PRIVATE(FindObjectType)
 
-	std::string FindObjectType(boost::shared_ptr<RobotRaconteur::RRObject> obj, const std::string &n);
+	std::string FindObjectType(const boost::shared_ptr<RobotRaconteur::RRObject>& obj, const std::string &n);
 
-	std::string FindObjectType(boost::shared_ptr<RobotRaconteur::RRObject> obj, const std::string &n, const std::string &i);
+	std::string FindObjectType(const boost::shared_ptr<RobotRaconteur::RRObject>& obj, const std::string &n, const std::string &i);
 
 RR_KEEP_GIL()
 
 	RR_MAKE_METHOD_PRIVATE(AsyncFindObjectType)
 
 %extend {
-	void AsyncFindObjectType(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, const std::string& n, int32_t timeout, AsyncStringReturnDirector* handler, int32_t id)
+	void AsyncFindObjectType(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj, const std::string& n, int32_t timeout, AsyncStringReturnDirector* handler, int32_t id)
 	{
 		boost::shared_ptr<AsyncStringReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStringReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
 		return $self->AsyncFindObjectType(obj,n,boost::bind(&AsyncStringReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 	}
 
-	void AsyncFindObjectType(boost::shared_ptr<RobotRaconteur::WrappedServiceStub> obj, const std::string& n, const std::string &i, int32_t timeout, AsyncStringReturnDirector* handler, int32_t id)
+	void AsyncFindObjectType(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj, const std::string& n, const std::string &i, int32_t timeout, AsyncStringReturnDirector* handler, int32_t id)
 	{
 		boost::shared_ptr<AsyncStringReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStringReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
 		return $self->AsyncFindObjectType(obj,n,i,boost::bind(&AsyncStringReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
@@ -509,7 +509,7 @@ RR_KEEP_GIL()
 	
 	void ClearExceptionHandler()
 	{
-		$self->SetExceptionHandler(NULL);
+		$self->SetExceptionHandler(RR_NULL_FN);
 	}
 }
 
@@ -557,7 +557,7 @@ RR_KEEP_GIL()
 	RobotRaconteur_LogLevel SetLogLevelFromString(const std::string& level);
 	RobotRaconteur_LogLevel SetLogLevelFromEnvVariable(const std::string& env_variable_name = "ROBOTRACONTEUR_LOG_LEVEL");
 	boost::shared_ptr<RobotRaconteur::LogRecordHandler> GetLogRecordHandler();
-	void SetLogRecordHandler(boost::shared_ptr<RobotRaconteur::LogRecordHandler> handler);
+	void SetLogRecordHandler(const boost::shared_ptr<RobotRaconteur::LogRecordHandler>& handler);
 
 	void CheckConnection(uint32_t client);
 

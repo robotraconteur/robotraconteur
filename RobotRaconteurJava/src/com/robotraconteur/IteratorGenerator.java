@@ -15,19 +15,22 @@ public class IteratorGenerator<T> extends SyncGenerator2<T>
 
     public synchronized void abort()
     {
-        aborted = true;       
+        aborted = true;
     }
 
     public synchronized void close()
     {
-        closed = true;       
+        closed = true;
     }
-    
+
     public synchronized T next()
-    {        
-        if (aborted) throw new OperationAbortedException("Generator aborted");
-        if (closed) throw new StopIterationException("");
-        if (!enumerator.hasNext()) throw new StopIterationException("");
-        return enumerator.next();        
+    {
+        if (aborted)
+            throw new OperationAbortedException("Generator aborted");
+        if (closed)
+            throw new StopIterationException("");
+        if (!enumerator.hasNext())
+            throw new StopIterationException("");
+        return enumerator.next();
     }
 }

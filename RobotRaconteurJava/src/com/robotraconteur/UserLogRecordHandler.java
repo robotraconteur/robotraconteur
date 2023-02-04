@@ -10,8 +10,7 @@ public class UserLogRecordHandler extends UserLogRecordHandlerBase
         }
 
         Action1<RRLogRecord> handler;
-        @Override
-        public void handleLogRecord(RRLogRecord record)
+        @Override public void handleLogRecord(RRLogRecord record)
         {
             handler.action(record);
         }
@@ -20,6 +19,6 @@ public class UserLogRecordHandler extends UserLogRecordHandlerBase
     {
         UserLogRecordHandlerDirectorJava director = new UserLogRecordHandlerDirectorJava(handler);
         int id = RRObjectHeap.addObject(director);
-        _SetHandler(director,id);
+        _SetHandler(director, id);
     }
 }

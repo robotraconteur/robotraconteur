@@ -8,9 +8,9 @@ package com.robotraconteur;
 //----------------------------------------------------------------------------------------
 public final class RefObject<T>
 {
-	public T argvalue;
-	public RefObject(T refarg)
-	{
-		argvalue = refarg;
-	}
+    public T argvalue;
+    public RefObject(T refarg)
+    {
+        argvalue = refarg;
+    }
 }

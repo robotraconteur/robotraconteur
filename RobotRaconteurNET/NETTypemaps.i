@@ -239,3 +239,24 @@ namespace RobotRaconteur
 
 
 }
+
+%{
+#include <boost/filesystem/path.hpp>
+%}
+
+namespace boost
+{
+namespace filesystem
+{
+
+%rename(FilesystemPath) path;
+class path
+{
+public:
+
+path(const std::string& s);
+std::string string();
+
+};
+}
+}
