@@ -34,37 +34,20 @@
 #include "LocalTransport_darwin_private.h"
 #endif
 
+#include "NodeDirectories_private.h"
+
 namespace RobotRaconteur
 {
 
 namespace detail
 {
-class LocalTransportFD;
-
 namespace LocalTransportUtil
 {
-std::string GetLogonUserName();
+boost::filesystem::path GetTransportPrivateSocketPath(const NodeDirectories& node_dirs);
 
-boost::filesystem::path GetUserDataPath();
+boost::optional<boost::filesystem::path> GetTransportPublicSocketPath(const NodeDirectories& node_dirs);
 
-boost::filesystem::path GetUserRunPath();
-
-boost::filesystem::path GetUserNodeIDPath();
-
-boost::filesystem::path GetTransportPrivateSocketPath();
-
-boost::optional<boost::filesystem::path> GetTransportPublicSocketPath();
-
-boost::optional<boost::filesystem::path> GetTransportPublicSearchPath();
-
-bool ReadInfoFile(const boost::filesystem::path& fname, std::map<std::string, std::string>& data);
-
-boost::tuple<NodeID, RR_SHARED_PTR<LocalTransportFD> > GetNodeIDForNodeNameAndLock(boost::string_ref nodename);
-
-RR_SHARED_PTR<LocalTransportFD> CreatePidFile(const boost::filesystem::path& path, bool for_name = false);
-RR_SHARED_PTR<LocalTransportFD> CreateInfoFile(const boost::filesystem::path& path,
-                                               std::map<std::string, std::string> info, bool for_name = false);
-void RefreshInfoFile(const RR_SHARED_PTR<LocalTransportFD>& h_info, boost::string_ref service_nonce);
+boost::optional<boost::filesystem::path> GetTransportPublicSearchPath(const NodeDirectories& node_dirs);
 
 void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost::filesystem::path& path,
                           boost::string_ref scheme, const boost::posix_time::ptime& now,
@@ -154,40 +137,6 @@ void LocalTransport_connected_callback2(const RR_SHARED_PTR<LocalTransport>& par
 
 namespace detail
 {
-class LocalTransportFD
-{
-  public:
-    boost::mutex this_lock;
-
-    std::map<std::string, std::string> info;
-
-#ifdef ROBOTRACONTEUR_WINDOWS
-    HANDLE fd;
-#else
-    int fd;
-#endif
-
-    LocalTransportFD();
-
-    ~LocalTransportFD();
-
-    void open_read(const boost::filesystem::path& path, boost::system::error_code& err);
-    void open_lock_write(const boost::filesystem::path& path, bool delete_on_close, boost::system::error_code& err);
-    // void reopen_lock_write(bool delete_on_close, boost::system::error_code& err);
-
-    bool read(std::string& data);
-
-    bool read_info();
-
-    bool write(boost::string_ref data);
-
-    bool write_info();
-
-    bool reset();
-
-    size_t file_len();
-};
-
 template <typename T>
 class LocalTransportNodeLock
 {
@@ -236,11 +185,11 @@ typedef LocalTransportNodeLock<std::string> LocalTransportNodeNameLock;
 class LocalTransportFDs
 {
   public:
-    boost::shared_ptr<LocalTransportFD> h_nodename_s;
-    boost::shared_ptr<LocalTransportFD> h_pid_id_s;
-    boost::shared_ptr<LocalTransportFD> h_info_id_s;
-    boost::shared_ptr<LocalTransportFD> h_pid_name_s;
-    boost::shared_ptr<LocalTransportFD> h_info_name_s;
+    boost::shared_ptr<NodeDirectoriesFD> h_nodename_s;
+    boost::shared_ptr<NodeDirectoriesFD> h_pid_id_s;
+    boost::shared_ptr<NodeDirectoriesFD> h_info_id_s;
+    boost::shared_ptr<NodeDirectoriesFD> h_pid_name_s;
+    boost::shared_ptr<NodeDirectoriesFD> h_info_name_s;
     boost::shared_ptr<LocalTransportNodeIDLock> nodeid_lock;
     boost::shared_ptr<LocalTransportNodeNameLock> nodename_lock;
 

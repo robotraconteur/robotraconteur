@@ -1,0 +1,25 @@
+
+# Read in documentation xml file
+file(READ ${CMAKE_CURRENT_LIST_DIR}/../RobotRaconteurNET.xml DOC_XML)
+
+set(FILTER_CONFIG_FILENAME "${CMAKE_CURRENT_LIST_DIR}/filterConfig.yml")
+
+file(WRITE "${FILTER_CONFIG_FILENAME}" "apiRules:\n")
+
+macro(WRITE_MEMBER_INCLUDE _DOC_XML _FILENAME _PREFIX _YAML_INCLUDE_TYPE)
+string(REGEX MATCHALL "<member name=\"${_PREFIX}:(RobotRaconteur.[^\"]+)" _DOC_MEMBER_MATCHES ${_DOC_XML})
+foreach(_DOC_MEMBER_MATCH_1 IN LISTS _DOC_MEMBER_MATCHES)
+string(REGEX REPLACE "<member name=\"${_PREFIX}:(RobotRaconteur.[^\"]+)" "\\1" _DOC_MEMBER_MATCH ${_DOC_MEMBER_MATCH_1})
+string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" _DOC_MEMBER_MATCH_F ${_DOC_MEMBER_MATCH})
+file(APPEND ${_FILENAME} "- include:\n    uidRegex: ^${_DOC_MEMBER_MATCH_F}\$\n    type: ${_YAML_INCLUDE_TYPE}\n")
+message(STATUS "${_DOC_MEMBER_MATCH_F}")
+endforeach()
+endmacro()
+
+WRITE_MEMBER_INCLUDE("${DOC_XML}" "${FILTER_CONFIG_FILENAME}" "T" "Type")
+WRITE_MEMBER_INCLUDE("${DOC_XML}" "${FILTER_CONFIG_FILENAME}" "M" "Member")
+WRITE_MEMBER_INCLUDE("${DOC_XML}" "${FILTER_CONFIG_FILENAME}" "P" "Member")
+WRITE_MEMBER_INCLUDE("${DOC_XML}" "${FILTER_CONFIG_FILENAME}" "F" "Member")
+
+
+file(APPEND "${FILTER_CONFIG_FILENAME}" "- exclude:\n    uidRegex: ^RobotRaconteur\n    type: Type\n- exclude:\n     uidRegex: ^RobotRaconteur\\.\n     type: Member\n- exclude:\n     uidRegex: ^System\\.Object\n     type: Member\n")

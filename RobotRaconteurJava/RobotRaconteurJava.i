@@ -187,6 +187,7 @@ class RRNativeObjectHeapSupport
 	
 }
 
+%include "NodeDirectories.i";
 
 %include "RobotRaconteurJavaNode.i";
 

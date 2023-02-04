@@ -748,7 +748,7 @@ class PackMessageElementImpl
                     npy_intp field_obj_array_dim = 1;
                     PyAutoPtr<PyObject> field_obj_array(PyArray_SimpleNewFromDescr(
                         1, &field_obj_array_dim, (PyArray_Descr*)field_obj_array_desc.get()));
-                    Py_INCREF(field_obj_array.get());
+                    Py_INCREF(field_obj_array_desc.get());
                     PyAutoPtr<PyObject> zero_ind(PyLong_FromLong(0));
                     if (PyObject_SetItem(field_obj_array.get(), zero_ind.get(), field_obj.get()) != 0)
                     {

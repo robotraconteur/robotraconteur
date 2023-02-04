@@ -405,13 +405,15 @@ WinLocalTransportDiscovery::WinLocalTransportDiscovery(const RR_SHARED_PTR<Robot
 
 void WinLocalTransportDiscovery::Init()
 {
+    RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
+    node_dirs = node1->GetNodeDirectories();
     try
     {
-        private_path = LocalTransportUtil::GetTransportPrivateSocketPath();
+        private_path = LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
     }
     catch (std::exception&)
     {}
-    public_path = LocalTransportUtil::GetTransportPublicSearchPath();
+    public_path = LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
 
     shutdown_evt.reset(CreateEvent(NULL, TRUE, FALSE, NULL), &CloseHandle);
     if (shutdown_evt.get() == INVALID_HANDLE_VALUE)
@@ -432,7 +434,7 @@ void WinLocalTransportDiscovery::run()
         {
             try
             {
-                private_path = LocalTransportUtil::GetTransportPrivateSocketPath();
+                private_path = LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
                 private_evt = WinLocalTransportDiscovery_find_first(*private_path);
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
                     node, Transport, -1, "LocalTransport discovery watching private path \"" << *private_path << "\"")
@@ -445,7 +447,7 @@ void WinLocalTransportDiscovery::run()
         {
             try
             {
-                public_path = LocalTransportUtil::GetTransportPublicSearchPath();
+                public_path = LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
                 if (public_path)
                 {
                     RR_SHARED_PTR<void> public_evt1 = WinLocalTransportDiscovery_find_first(*public_path);

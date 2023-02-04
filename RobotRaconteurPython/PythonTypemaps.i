@@ -145,3 +145,28 @@ namespace RobotRaconteur
 
 	%typemaps_asptrfromn(%checkcode(STDSTRING),MessageStringPtr)
 }
+
+%{
+#include <boost/filesystem/path.hpp>
+%}
+
+namespace boost
+{
+namespace filesystem
+{
+
+%rename(FilesystemPath) path;
+class path
+{
+public:
+
+path(const std::string& s);
+std::string string();
+
+%pythoncode %{
+def __str__(self):
+    return self.string()
+%}
+};
+}
+}

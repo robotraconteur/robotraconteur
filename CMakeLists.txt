@@ -61,7 +61,7 @@ if(ROBOTRACONTEUR_ROS)
     endif()
 endif()
 
-set(BUILD_GEN "" CACHE BOOL "Build RobotRaconteurGen")
+set(BUILD_GEN ON CACHE BOOL "Build RobotRaconteurGen")
 if(BUILD_GEN)
     add_subdirectory(RobotRaconteurGen)
 endif()
@@ -152,3 +152,23 @@ endif()
 set(CPACK_SOURCE_ZIP ON CACHE BOOL "" FORCE)
 
 include(CPack)
+
+if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
+    # Allows Colcon to find non-Ament packages when using workspace underlays
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur "")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/robotraconteur
+            DESTINATION share/ament_index/resource_index/packages)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv
+         "prepend-non-duplicate;AMENT_PREFIX_PATH;")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/ament_prefix_path.dsv
+            DESTINATION share/robotraconteur/hook)
+endif()
+
+file(STRINGS "${CMAKE_SOURCE_DIR}/package.xml" ROBOTRACONTEUR_ROS_PKG_VERSION_1
+     REGEX "<version>[0-9]+\\.[0-9]+\\.[0-9]+</version>")
+string(REGEX REPLACE "<version>([0-9]+\\.[0-9]+\\.[0-9]+)</version>" "\\1" ROBOTRACONTEUR_ROS_PKG_VERSION
+                     ${ROBOTRACONTEUR_ROS_PKG_VERSION_1})
+if(NOT "${ROBOTRACONTEUR_ROS_PKG_VERSION}" VERSION_EQUAL "{ROBOTRACONTEUR_VERSION}")
+    message(
+        FATAL_ERROR "Found ROS package version ${ROBOTRACONTEUR_ROS_PKG_VERSION} mismatch ${ROBOTRACONTEUR_VERSION}")
+endif()

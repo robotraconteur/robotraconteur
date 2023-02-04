@@ -405,7 +405,7 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
 
         for (size_t i = 0; i < count.size(); i++)
         {
-            if (count[i] < 0)
+            if (count[i] <= 0)
                 throw InvalidArgumentException("MultiDimArray count invalid");
         }
 
