@@ -69,13 +69,19 @@ namespace RobotRaconteur
         /// The error name
         /// </summary>
         public string Error = "";
-
+        
+        /// <summary>
+        /// An optional error sub-name
+        /// </summary>
         public string ErrorSubName = null;
 
+        /// <summary>
+        /// An optional error parameter
+        /// </summary>
         public object ErrorParam = null;
 
         /// <summary>
-        /// Returns as tring representation of this exception
+        /// Returns a string representation of this exception
         /// </summary>
         /// <returns>The string representation</returns>
         public override string ToString()

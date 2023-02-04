@@ -33,7 +33,7 @@ namespace RobotRaconteur
             {
                 return $self->Node.lock();
             }
-            void SetNode(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node)
+            void SetNode(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
             {
                 $self->Node = node;
             }
@@ -79,7 +79,7 @@ namespace RobotRaconteur
     class UserLogRecordHandlerDirector
 	{
 	public:
-		virtual void HandleLogRecord(const RRLogRecord& record) {};
+		virtual void HandleLogRecord(const RRLogRecord& record) = 0;
         virtual ~UserLogRecordHandlerDirector();
 	};
 

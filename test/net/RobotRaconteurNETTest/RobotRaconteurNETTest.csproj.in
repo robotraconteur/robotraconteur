@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCpu</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{210EEEC9-CC58-40C4-A146-8FE016C4AD70}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RobotRaconteurNETTest</RootNamespace>
+    <AssemblyName>RobotRaconteurNETTest</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\out_debug\NET\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+	@RR_PREFER_32BIT@
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>..\out\NET\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+	@RR_PREFER_32BIT@
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\out_debug\NET\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\out\NET\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\out_debug\NET\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
+    <OutputPath>..\out\NET\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\out_debug\NET\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\out\NET\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="RobotRaconteurNET" Condition="'$(Configuration)' == 'Release'">
+      <HintPath>..\..\out\NET\RobotRaconteurNET.dll</HintPath>
+    </Reference>
+	<Reference Include="RobotRaconteurNET" Condition="'$(Configuration)' == 'Debug'">
+      <HintPath>..\..\out_debug\NET\RobotRaconteurNET.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <PropertyGroup>
+	<RRSourceDir>@CMAKE_CURRENT_SOURCE_DIR@\RobotRaconteurNETTest\</RRSourceDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(RRSourceDir)\MultiDimArrayTest.cs" >
+		<Link>MultiDimArrayTest.cs</Link>
+	</Compile>
+    <Compile Include="$(RRSourceDir)\Program.cs">
+		<Link>Programs.cs</Link>
+	</Compile>
+    <Compile Include="$(RRSourceDir)\Properties\AssemblyInfo.cs">
+		<Link>AssemblyInfo.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\RRAssert.cs">
+		<Link>RRAssert.cs</Link>
+	</Compile>
+	<Compile Include="test\com__robotraconteur__testing__TestService1.cs"/>
+	<Compile Include="test\com__robotraconteur__testing__TestService2.cs"/>	
+	<Compile Include="test\com__robotraconteur__testing__TestService3.cs"/>	
+  <Compile Include="test\com__robotraconteur__testing__TestService4.cs"/>	
+  <Compile Include="test\com__robotraconteur__testing__TestService5.cs"/>	
+	<Compile Include="test\com__robotraconteur__testing__TestService1_stubskel.cs"/>	
+	<Compile Include="test\com__robotraconteur__testing__TestService2_stubskel.cs"/>
+	<Compile Include="test\com__robotraconteur__testing__TestService3_stubskel.cs"/>
+  <Compile Include="test\com__robotraconteur__testing__TestService4_stubskel.cs"/>
+  <Compile Include="test\com__robotraconteur__testing__TestService5_stubskel.cs"/>
+	
+    <Compile Include="$(RRSourceDir)\ServiceTest.cs">
+		<Link>ServiceTest.cs</Link>
+	</Compile>
+    <Compile Include="$(RRSourceDir)\ServiceTestClient.cs">
+		<Link>ServiceTestClient.cs</Link>
+	</Compile>
+	<Compile Include="$(RRSourceDir)\ServiceTest2.cs">
+		<Link>ServiceTest2.cs</Link>
+	</Compile>
+    <Compile Include="$(RRSourceDir)\ServiceTestClient2.cs">
+		<Link>ServiceTestClient2.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\ServiceTest3.cs">
+		<Link>ServiceTest2.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\ServiceTestClient3.cs">
+		<Link>ServiceTestClient2.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\LFSRSeqGen.cs">
+		<Link>LFSRSeqGen.cs</Link>
+	</Compile>
+  <Compile Include="$(RRSourceDir)\LFSRSeqGen.cs">
+		<Link>LFSRSeqGen.cs</Link>
+	</Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(RRSourceDir)\app.config">
+		<Link>app.config</Link>
+	</None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

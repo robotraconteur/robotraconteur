@@ -2,7 +2,7 @@ package com.robotraconteur;
 
 public interface IPodStub
 {
-	MessageElementData packStructure(Object s);
+    MessageElementData packStructure(Object s);
 
-	Object unpackStructure(MessageElementData m);
+    Object unpackStructure(MessageElementData m);
 }

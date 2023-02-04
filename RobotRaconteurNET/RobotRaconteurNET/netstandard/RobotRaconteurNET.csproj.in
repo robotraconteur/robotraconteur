@@ -18,6 +18,7 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin\$(Configuration)</OutputPath>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -34,8 +35,21 @@
     <Compile Include="$(RRSourceDir)\Generator.cs" Link="Generator.cs" />
     <Compile Include="$(RRSourceDir)\Memory.cs" Link="Memory.cs" />
     <Compile Include="$(RRSourceDir)\MultiDimArray.cs" Link="MultiDimArray.cs" />
-    <Compile Include="$(RRSourceDir)\RobotRaconteurNET_support.cs" Link="RobotRaconteurNET_support.cs" />
+    <Compile Include="$(RRSourceDir)\Util.cs" Link="Util.cs" />
     <Compile Include="$(RRSourceDir)\Service.cs" Link="Service.cs" />
+    <Compile Include="$(RRSourceDir)\ServiceFactory.cs" Link="ServiceFactory.cs" />
+    <Compile Include="$(RRSourceDir)\AsyncUtil.cs" Link="AsyncUtil.cs" />
+    <Compile Include="$(RRSourceDir)\DataTypes.cs" Link="DataTypes.cs" />
+    <Compile Include="$(RRSourceDir)\Discovery.cs" Link="Discovery.cs" />
+    <Compile Include="$(RRSourceDir)\Message.cs" Link="Message.cs" />
+    <Compile Include="$(RRSourceDir)\NodeSetup.cs" Link="NodeSetup.cs" />
+    <Compile Include="$(RRSourceDir)\RobotRaconteurNode.cs" Link="RobotRaconteurNode.cs" />
+    <Compile Include="$(RRSourceDir)\Subscription.cs" Link="Subscription.cs" />
+    <Compile Include="$(RRSourceDir)\Timer.cs" Link="Timer.cs" />
   </ItemGroup>
+
+  <PropertyGroup>
+  <DocumentationFile>@CMAKE_CURRENT_BINARY_DIR@\xml_doc\netstandard\RobotRaconteurNET_built_doc.xml</DocumentationFile>
+  </PropertyGroup>
 
 </Project>

@@ -48,7 +48,7 @@ namespace RobotRaconteur
     class RobotRaconteurNodeSetup
 	{
 	public:
-		//RobotRaconteurNodeSetup(RR_SHARED_PTR<RobotRaconteurNode> node, const std::vector<RR_SHARED_PTR<ServiceFactory> > service_types, 
+		//RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types, 
 		//	const std::string& node_name, uint16_t tcp_port, uint32_t flags);
 		
 		boost::shared_ptr<RobotRaconteur::LocalTransport> GetLocalTransport();
@@ -64,7 +64,7 @@ namespace RobotRaconteur
 	
 	%extend RobotRaconteurNodeSetup
 	{
-		RobotRaconteurNodeSetup(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node,
+		RobotRaconteurNodeSetup(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
 			const std::string& node_name, uint16_t tcp_port, uint32_t flags)
 			{
 				std::vector<RR_SHARED_PTR<ServiceFactory> > s;
@@ -72,15 +72,15 @@ namespace RobotRaconteur
 				return n;
 			}	
 
-		RobotRaconteurNodeSetup(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node,
-			boost::shared_ptr<RobotRaconteur::CommandLineConfigParser> config)
+		RobotRaconteurNodeSetup(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
+			const boost::shared_ptr<RobotRaconteur::CommandLineConfigParser>& config)
 			{
 				std::vector<RR_SHARED_PTR<ServiceFactory> > s;
 				RobotRaconteurNodeSetup* n = new RobotRaconteurNodeSetup(node, s, config);
 				return n;
 			}
 
-		RobotRaconteurNodeSetup(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node, 
+		RobotRaconteurNodeSetup(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node, 
 			const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides, 
 			const std::vector<std::string>& args)
 			{

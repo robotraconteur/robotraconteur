@@ -1,0 +1,101 @@
+---
+Checks: >
+    -*,
+    clang-diagnostic-*,
+    clang-analyzer-*,
+    bugprone-*,
+    cppcoreguidelines-*,
+    misc-*,
+    performance-*,
+    readability-*,
+    -clang-diagnostic-unknown-warning-option,
+    -clang-analyzer-cplusplus*,
+    -cppcoreguidelines-macro-usage,
+    -cppcoreguidelines-pro-type-static-cast-downcast,
+    -cppcoreguidelines-pro-type-vararg,
+    -cppcoreguidelines-pro-type-union-access,
+    -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+    -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+    -cppcoreguidelines-pro-bounds-constant-array-index,
+    -cppcoreguidelines-avoid-magic-numbers,
+    -cppcoreguidelines-non-private-member-variables-in-classes,
+    -cppcoreguidelines-explicit-virtual-functions,
+    -cppcoreguidelines-special-member-functions,
+    -misc-non-private-member-variables-in-classes,
+    -misc-no-recursion,
+    -readability-braces-around-statements,
+    -readability-named-parameter,
+    -readability-magic-numbers,
+    -readability-isolate-declaration,
+    -readability-function-cognitive-complexity,
+    -readability-identifier-length,
+    -readability-else-after-return,
+    -readability-const-return-type,
+    -readability-implicit-bool-conversion,
+    -readability-container-data-pointer,
+    -readability-convert-member-functions-to-static,
+    -cppcoreguidelines-special-member-functions,
+    -bugprone-easily-swappable-parameters,
+    -hicpp-*,
+    -cppcoreguidelines-prefer-member-initializer,
+    -cppcoreguidelines-pro-type-reinterpret-cast,
+    -cppcoreguidelines-avoid-non-const-global-variables,
+    modernize-use-override
+WarningsAsErrors: >
+    -*,
+    clang-diagnostic-*,
+    clang-analyzer-*,
+    bugprone-*,
+    cppcoreguidelines-*,
+    misc-*,
+    performance-*,
+    readability-*,
+    -clang-diagnostic-unknown-warning-option,
+    -clang-analyzer-cplusplus*,
+    -cppcoreguidelines-macro-usage,
+    -cppcoreguidelines-pro-type-static-cast-downcast,
+    -cppcoreguidelines-pro-type-vararg,
+    -cppcoreguidelines-pro-type-union-access,
+    -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+    -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+    -cppcoreguidelines-pro-bounds-constant-array-index,
+    -cppcoreguidelines-avoid-magic-numbers,
+    -cppcoreguidelines-non-private-member-variables-in-classes,
+    -cppcoreguidelines-explicit-virtual-functions,
+    -cppcoreguidelines-special-member-functions,
+    -misc-non-private-member-variables-in-classes,
+    -misc-no-recursion,
+    -readability-braces-around-statements,
+    -readability-named-parameter,
+    -readability-magic-numbers,
+    -readability-isolate-declaration,
+    -readability-function-cognitive-complexity,
+    -readability-identifier-length,
+    -readability-else-after-return,
+    -readability-const-return-type,
+    -readability-implicit-bool-conversion,
+    -readability-container-data-pointer,
+    -readability-convert-member-functions-to-static,
+    -cppcoreguidelines-special-member-functions,
+    -bugprone-easily-swappable-parameters,
+    -hicpp-*,
+    -cppcoreguidelines-prefer-member-initializer,
+    -cppcoreguidelines-pro-type-reinterpret-cast,
+    -cppcoreguidelines-avoid-non-const-global-variables,
+    modernize-use-override
+HeaderFilterRegex: '(robotraconteur|RobotRaconteur).*'
+AnalyzeTemporaryDtors: false
+FormatStyle:     none
+CheckOptions:
+  - key:             modernize-use-override.AllowOverrideAndFinal
+    value:           '1'
+  - key:             cppcoreguidelines-explicit-virtual-functions.AllowOverrideAndFinal
+    value:           '1'
+  - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+    value:           '1'
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: MessageStringRef;RR_WEAK_PTR*;boost::weak_ptr*;boost::function*
+  - key: bugprone-signed-char-misuse.CharTypdefsToIgnore
+    value: int8_t
+  - key: modernize-use-override.OverrideSpelling
+    value: RR_OVERRIDE
