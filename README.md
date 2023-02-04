@@ -3,12 +3,50 @@
 # Robot Raconteur Core Library and Wrappers
 
 ![CI Build Status](https://github.com/robotraconteur/robotraconteur/workflows/CI/badge.svg)
+![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)
+![Python](https://img.shields.io/badge/python-2.7+|3.5+-blue.svg)
+![pypi](https://img.shields.io/pypi/v/robotraconteur)
+![C++](https://img.shields.io/badge/C++-98+-blue.svg?style=flat&logo=c%2B%2B)
+![C\#](https://img.shields.io/badge/C%23-4.5|netstandard2.0-blue.svg?style=flat&logo=c-sharp)
+![nuget](https://img.shields.io/nuget/v/robotraconteurnet)
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat&logo=java)
+[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
+![conda](https://img.shields.io/conda/vn/robotraconteur/robotraconteur?label=conda)
+
+![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![Debian](https://img.shields.io/badge/Debian-D70A53?style=for-the-badge&logo=debian&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![IOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)
+![Mac OS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
+![Raspberry Pi](https://img.shields.io/badge/-RaspberryPi-C51A4A?style=for-the-badge&logo=Raspberry-Pi)
+![FreeBSD](https://img.shields.io/badge/-FreeBSD-%23870000?style=for-the-badge&logo=freebsd&logoColor=white)
+![ROS](https://img.shields.io/badge/-ROS-22314E?style=for-the-badge&logo=ros&logoColor=white)
+![Arduino](https://img.shields.io/badge/-Arduino-00979D?style=for-the-badge&logo=arduino&logoColor=white)
 
 A communication framework for robotics, automation, and the Internet of Things
 
 [http://robotraconteur.com](http://robotraconteur.com)
 
 [J. Wason, "Robot Raconteur® version 0.8: An Updated Communication System for Robotics, Automation, Building Control, and the Internet of Things", in Proc. IEEE Conference on Automation Science and Engineering, 2016, pp. 595-602.](https://s3.amazonaws.com/robotraconteurpublicfiles/docs/RobotRaconteur_CASE2016.pdf)
+
+## Contents
+
+- [Robot Raconteur Core Library and Wrappers](#robot-raconteur-core-library-and-wrappers)
+  - [Documentation](#documentation)
+  - [Getting Help](#getting-help)
+  - [Quick Start](#quick-start)
+  - [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Building](#building)
+  - [ROS Support](#ros-support)
+  - [Standard Service Types](#standard-service-types)
+  - [Companion Libraries](#companion-libraries)
+  - [Robot Raconteur Directory](#robot-raconteur-directory)
+  - [License](#license)
+  - [Acknowledgment](#acknowledgment)
+
 
 ## Documentation
 
@@ -90,267 +128,72 @@ In MATLAB, this client is even simpler.
     pause(1);
     o.Drive(int16(0),int16(0));
 
+## Getting Started
+
+Robot Raconteur has a large ecosystem with a number of related projects. Start with the Robot Raconteur tutorial,
+and the Python examples:
+
+https://robotraconteur.github.io/robotraconteur/doc/core/latest/python/
+
+https://github.com/robotraconteur/RobotRaconteur_Python_Examples
+
+The Python examples support using a Gazebo simulated iRobot Create robot. See the training simulator for installation
+instructions:
+
+https://github.com/robotraconteur-contrib/robotraconteur_training_sim
+
+The training simulator also contains a simulation for two Universal Robots UR5e robots, with grippers and cameras. 
+Example scripts to control the robots are included. See the training simulator readme for instructions.
+
+Next, take a look out the examples for other languages:
+
+https://github.com/robotraconteur/RobotRaconteur_CPP_Examples
+
+https://github.com/robotraconteur/RobotRaconteur_CSharp_Examples
+
+https://github.com/robotraconteur/RobotRaconteur_Java_Examples
+
+https://github.com/robotraconteur/RobotRaconteur_MATLAB_Examples
+
+Robot Raconteur provides a large number of standardized types to use with robots and other devices. See the 
+standard robdef repository:
+
+https://github.com/robotraconteur/robotraconteur_standard_robdef
+
+There are numerous other projects, drivers, and resources in the ecosystem. See the directory
+for a full list of available resources:
+
+https://github.com/robotraconteur/robotraconteur-directory
+
+Also checkout the PyRI Open source teach pendant: https://github.com/pyri-project/pyri-core
+
 ## Installation
 
-### Windows
-
-#### C++
-
-`vcpkg` is used to install the Robot Raconteur C++ library. See https://github.com/microsoft/vcpkg for installation instructions.
-
-To build Robot Raconteur, clone the `vcpkg-robotraconteur` overlay repo in the vcpkg directory:
-
-```
-git clone https://github.com/robotraconteur/vcpkg-robotraconteur.git
-```
-
-and build the library:
-
-```
-vcpkg --overlay-ports=vcpkg-robotraconteur\ports install robotraconteur
-```
-
-To build x64, use:
-
-```
-vcpkg --overlay-ports=vcpkg-robotraconteur\ports install robotraconteur:x64-windows
-```
-
-#### Python
-
-The Python wrappers are distributed using PyPi.
-
-```
-pip install robotraconteur
-```
-
-#### C\# 
-
-The C\# library is available on NuGet. Search for "RobotRaconteurNET".
-
-#### Java
-
-The Java library is available on the releases page on github.
-
-#### MATLAB
-
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
-
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
-
-### Ubuntu Xenial, Bionic, and Focal
-
-A PPA is available for Robot Raconteur. [https://launchpad.net/~robotraconteur/+archive/ubuntu/ppa](https://launchpad.net/~robotraconteur/+archive/ubuntu/ppa)
-
-```
-sudo add-apt-repository ppa:robotraconteur/ppa
-sudo apt-get update
-```
-
-#### C++
-
-```
-sudo apt-get install robotraconteur-dev
-```
-
-#### Python
-```
-sudo apt-get install python-robotraconteur
-sudo apt-get install python3-robotraconteur
-
-```
-
-#### C\# 
-
-The C\# library is available on NuGet. Search for "RobotRaconteurNET".
-
-The Linux native library must be installed using apt:
-
-```
-sudo apt-get install librobotraconteur-net-native
-```
-
-#### Java
-
-Java must be built from source
-
-#### MATLAB
-
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
-
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
-
-### Debian 10 (buster)
-
-An apt repository is available for Debian. Packages are available for amd64, armhf, and arm64. See below for raspbian setup. To use, run:
-
-```
-sudo apt install apt-transport-https dirmngr gnupg ca-certificates
-wget -O - https://robotraconteur.github.io/robotraconteur-apt/wasontech-apt.gpg.key | sudo apt-key add -
-echo "deb https://robotraconteur.github.io/robotraconteur-apt/debian buster main" | sudo tee /etc/apt/sources.list.d/robotraconteur.list
-sudo apt update
-```
-
-#### C++
-
-```
-sudo apt-get install robotraconteur-dev
-```
-
-#### Python
-```
-sudo apt-get install python-robotraconteur
-sudo apt-get install python3-robotraconteur
-
-```
-
-#### C\# 
-
-The C\# library is available on NuGet. Search for "RobotRaconteurNET".
-
-The Linux native library must be installed using apt:
-
-```
-sudo apt-get install librobotraconteur-net-native
-```
-
-#### Java
-
-Java must be built from source
-
-### Raspbian 10 (buster)
-
-The Raspberry Pi OS (raspbian) for amhf 32-bit processors is slightly different than the main debian armhf distributions. It uses ARMv6 instructions, instead of the ARMv7 instructions used by the main debian installation. Use the following to set up the raspbian repository, and see the debian section for the rest of the instructions.
-
-**Raspberry Pi OS (raspbian) for 64-bit uses the standard debian repository. This is only for 32-bit ARMv6 installation.**
-
-```
-sudo apt install apt-transport-https dirmngr gnupg ca-certificates
-wget -O - https://robotraconteur.github.io/robotraconteur-apt/wasontech-apt.gpg.key | sudo apt-key add -
-echo "deb https://robotraconteur.github.io/robotraconteur-apt/raspbian buster main" | sudo tee /etc/apt/sources.list.d/robotraconteur.list
-sudo apt update
-```
-
-### Mac OSX
-
-#### C++
-
-Use `brew` to install the Robot Raconteur C++ library.
-
-```
-brew install robotraconteur/robotraconteur/robotraconteur
-```
-
-#### Python
-
-The Python wrappers are distributed using PyPi.
-
-```
-pip install robotraconteur
-```
-
-#### C\# 
-
-The C\# library must be built from source.
-
-#### Java
-
-The Java library is available to download from the github release.
-
-#### MATLAB
-
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
-
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
+See [docs/common/installation.md](docs/common/installation.md) for installation instructions. 
+
+The following platforms are supported:
+
+* **Windows** (x86, amd64, arm64): C++, Python, C\#, Java, MATLAB, LabView
+* **Linux** (x86, x64, armhf, arm64): C++, Python, C\#, Java, MATLAB, LabView
+* **MacOS** (x64, arm64): C++, Python, C\#, Java, MATLAB
+* **Android** (x86, x64, armhf, arm64): C++, Java
+* **iOS** (arm-v7, arm64): C++
+* **Browser** (Chrome, Firefox, Edge, Safari): C++, Python, JavaScript
+* **FreeBSD** (x64)
 
 ## Building
 
-The software is tested using GitHub Actions continuous integration. See .github/workflows/main.yml for more information.
-
-### Windows
-
-Building the core library requires Visual Studio 2012 through 2019, Boost 1.72.0, and CMake. Follow the instructions on the Boost website to build Boost. Alternatively, Boost can be built using the [vcpkg](https://github.com/Microsoft/vcpkg) utility.
-
-### Ubuntu Focal
-Install the dependencies:
-
-```
-apt-get install default-jdk default-jdk-headless default-jre default-jre-headless zlib1g zlib1g-dev libssl-dev libusb-1.0-0 libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev git cmake g++ make libboost-all-dev autoconf automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel mono-devel
-```
-
-To build:
-
-```
-mkdir build && cd build
-cmake -DBUILD_GEN=ON -DBUILD_TEST=ON -DBoost_USE_STATIC_LIBS=OFF ..
-make
-```
-
-### Ubuntu Bionic
-Install the dependencies:
-
-```
-apt-get install default-jdk default-jdk-headless default-jre default-jre-headless python2.7-dev libpython2.7-dev zlib1g zlib1g-dev libssl-dev libusb-1.0-0 libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev python-numpy python-setuptools python-wheel git cmake g++ make libboost-all-dev autoconf automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel mono-devel
-```
-
-To build:
-
-```
-mkdir build && cd build
-cmake -DBUILD_GEN=ON -DBUILD_TEST=ON -DBoost_USE_STATIC_LIBS=OFF ..
-make
-```
-    
-### Mac OSX
-
-Robot Raconteur requires XCode, CMake, Boost Libraries, and OpenSSL.
- 
-Use homebrew to install boost and openssl:
-
-```
-brew install boost
-brew install openssl
-```
-
-Note that homebrew does not create symlinks, so the CMake OPENSSL_ROOT_DIR must be set to the cellar folder. 
-
-Configure build for XCode using CMake GUI. Open resulting project file and build.
-
-### Swig
-Python, Java, and C# use SWIG to generate language bindings. Robot Raconteur currently requires SWIG version 4.0.2 or higher. Windows
-can download from http://swig.org, or install from chocolatey using
-
-    choco install swig
-
-Mac OSX can install using
-
-    brew install swig
-
-Ubuntu must build SWIG from source. See 
-https://github.com/swig/swig/wiki/Getting-Started for instructions.
-
-### MATLAB Mex
-
-MATLAB install required for build. CMake FindMatlab module is used to locate the MATLAB build dependencies. Be sure to build the MEX file against static boost libraries. Linux will require Boost to be built from source with "-fPIC" C++ gcc option. The apt repository static libraries cannot be used because they were not built with "-fPIC".  
+See [docs/common/building.md](docs/common/building.md) for build instructions. 
 
 ## ROS Support
 
-Robot Raconteur can be built and utilized from within ROS. To use, clone the robotraconteur repository into catkin_ws/src, run rosdep to install dependencies, and use catkin_make_isolated or catkin_tools to build. By default, the resulting build will not have ROS support and will only build the core static library. To build with ROS support, RobotRaconteurGen, and Python, the CMake option `ROBOTRACONTEUR_ROS` must be set.
+Robot Raconteur is available in ROS Noetic and ROS Humble using the `robotraconteur` package. These packages are built
+using the `ros-noetic` and `ros2-humble` branches. The `ros2-humble` branch should work with other versions of 
+ROS 2, but swig version 4.0.2 or greater must be installed first.
 
-Before building, run `rosdep`:
+A Robot Raconteur to ROS 2 bridge is available, allowing access to ROS 2 topics and services from Robot Raconteur:
 
-    rosdep install --from-paths src --ignore-src -r -y
-
-To build with `catkin_make_isolated`:
-
-    catkin_make_isolated --cmake-args -DROBOTRACONTEUR_ROS=1
-
-To build with `catkin_tools`:
-
-    catkin config --cmake-args -DROBOTRACONTEUR_ROS=1
-    catkin build
-
-Note that SWIG version 4.0.2 MUST be installed before attempting to build the Python bindings. Ubuntu includes older versions of SWIG in the apt repository. Robot Raconteur will not build using theese older versions installed from apt! Install to /usr/local so catkin can find the swig executable. See [here](https://github.com/swig/swig/wiki/Getting-Started) for SWIG installation instructions.
+https://github.com/robotraconteur-contrib/robotraconteur_ros2_bridge
 
 ## Standard Service Types
 

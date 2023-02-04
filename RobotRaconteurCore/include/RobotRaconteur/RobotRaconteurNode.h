@@ -37,6 +37,7 @@
 #include "RobotRaconteur/DataTypesPacking.h"
 #include "RobotRaconteur/Logging.h"
 #include "RobotRaconteur/Tap.h"
+#include "RobotRaconteur/NodeDirectories.h"
 
 #include <queue>
 #include <boost/bind/placeholders.hpp>
@@ -2560,6 +2561,29 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param message_tap The message tap to use
      */
     void SetMessageTap(const RR_SHARED_PTR<MessageTap>& message_tap);
+
+  protected:
+    boost::shared_mutex node_directories_lock;
+    RR_SHARED_PTR<NodeDirectories> node_directories;
+
+  public:
+    /**
+     * @brief Get the current node directories
+     *
+     * Node directories are set to default if not configured
+     *
+     * @return NodeDirectories
+     */
+    NodeDirectories GetNodeDirectories();
+
+    /**
+     * @brief Set the node directories
+     *
+     * Sets the node directories. Cannot be set after GetNodeDirectories() is called
+     *
+     * @param dir The new node directories
+     */
+    void SetNodeDirectories(const NodeDirectories& dir);
 
   protected:
     /**

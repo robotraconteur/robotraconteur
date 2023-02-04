@@ -128,3 +128,24 @@ namespace RobotRaconteur
 	%typemap(out) const MessageStringPtr&  %{ std::string temp_ret1 = $1->str().to_string(); $result = jenv->NewStringUTF(temp_ret1.c_str()); %}	
 
 }
+
+%{
+#include <boost/filesystem/path.hpp>
+%}
+
+namespace boost
+{
+namespace filesystem
+{
+
+%rename(FilesystemPath) path;
+class path
+{
+public:
+
+path(const std::string& s);
+std::string string();
+
+};
+}
+}

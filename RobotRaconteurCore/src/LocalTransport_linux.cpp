@@ -151,6 +151,9 @@ LinuxLocalTransportDiscovery::LinuxLocalTransportDiscovery(const RR_SHARED_PTR<R
 
 void LinuxLocalTransportDiscovery::Init()
 {
+    RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
+    node_dirs = node1->GetNodeDirectories();
+
     shutdown_evt = RR_MAKE_SHARED<LocalTransportUtil::FD>(eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK));
     if (shutdown_evt->fd() < 0)
         throw InternalErrorException("Internal error");
@@ -158,7 +161,6 @@ void LinuxLocalTransportDiscovery::Init()
     public_evt = RR_MAKE_SHARED<LocalTransportUtil::FD>(inotify_init1(IN_NONBLOCK | IN_CLOEXEC));
     if (public_evt->fd() < 0)
         throw InternalErrorException("Internal error");
-
     poll_thread = boost::thread(boost::bind(&LinuxLocalTransportDiscovery::run, shared_from_this()));
 }
 
@@ -185,7 +187,7 @@ void LinuxLocalTransportDiscovery::run()
         {
             try
             {
-                private_path = LocalTransportUtil::GetTransportPrivateSocketPath();
+                private_path = LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
                 if (private_path)
                 {
                     RR_SHARED_PTR<LinuxLocalTransportDiscovery_dir> private_dir1 =
@@ -307,7 +309,7 @@ bool LinuxLocalTransportDiscovery::update_public()
     {
         try
         {
-            public_path = LocalTransportUtil::GetTransportPublicSearchPath();
+            public_path = LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
             if (public_path)
             {
                 public_wd = LinuxLocalTransportDiscovery_add_watch(public_evt->fd(), *public_path);

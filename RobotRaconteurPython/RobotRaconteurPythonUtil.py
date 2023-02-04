@@ -275,7 +275,7 @@ def InitStub(stub):
 
         if (isinstance(m, RobotRaconteurPython.ObjRefDefinition)):
             def inner_objref(m1):
-                if(m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
+                if (m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
                     def f(self, index): return stub_objref(
                         stub, m1.Name, index)
                 else:
@@ -285,7 +285,7 @@ def InitStub(stub):
             mdict['get_%s' % m.Name] = f1
 
             def inner_async_objref(m1):
-                if(m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
+                if (m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
                     def f(self, index, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_objref(
                         stub, m1.Name, index, handler, timeout)
                 else:
@@ -597,7 +597,7 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
         try:
             type1 = FindMemberByName(
                 self.innerstub.RR_objecttype.Members, name)
-            #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
+            # type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
             args = []
             type2 = RobotRaconteurPython.MemberDefinitionUtil.ToEvent(type1)
             for p in type2.Parameters:
@@ -613,7 +613,7 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
         try:
             type1 = FindMemberByName(
                 self.innerstub.RR_objecttype.Members, name)
-            #type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
+            # type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
             args = []
 
             type2 = RobotRaconteurPython.MemberDefinitionUtil.ToCallback(type1)
@@ -2418,7 +2418,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _CallGetProperty(self, name, async_adapter):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        #type1=[e for e in self.skel.Type.Members if e.Name == name][0]
+        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToProperty(type1)
         try:
             async_getter = getattr(self.obj, "async_get_" + name)
@@ -2455,7 +2455,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _CallSetProperty(self, name, value, async_adapter):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        #type1=[e for e in self.skel.Type.Members if e.Name == name][0]
+        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToProperty(type1)
         a = UnpackMessageElement(value, type2.Type, node=self.skel.RRGetNode())
 
@@ -2550,7 +2550,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _GetSubObj(self, name, index):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        #type1=[e for e in self.skel.Type.Members if e.Name == name][0]
+        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToObjRef(type1)
         if (type2.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array or (type2.ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_map_int32)):
             obj, objecttype = getattr(self.obj, 'get_' + name)(str(index))
@@ -4967,7 +4967,7 @@ def ReadServiceDefinitionFile(servicedef_name):
     f_name = None
     if (os.path.isfile(servicedef_name)):
         f_name = servicedef_name
-    elif(os.path.isfile(servicedef_name + '.robdef')):
+    elif (os.path.isfile(servicedef_name + '.robdef')):
         f_name = servicedef_name + '.robdef'
     elif not os.path.isabs(servicedef_name):
         p = os.getenv("ROBOTRACONTEUR_ROBDEF_PATH", None)

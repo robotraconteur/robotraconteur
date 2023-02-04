@@ -19,41 +19,316 @@ using System.Threading.Tasks;
 
 namespace RobotRaconteur
 {
+/// <summary>
+/// Generator type for use with generator functions, with parameter and return
+/// </summary>
+/// <remarks>
+/// <para>
+/// Generators are used with generator functions to implement simple coroutines. They are
+/// returned by function members with a parameter and/or return marked with the
+/// generator container type. Robot Raconteur generators are modeled on Python generators,
+/// and are intended to be used in two scenarios:
+/// 1. Transfering large parameter values or return values that would be over the message
+/// transfer limit (typically around 10 MB).
+/// 2. Long running operations that return updates or require periodic input. Generators
+/// are used to implement functionality similar to "actions" in ROS.
+/// </para>
+/// <para>
+/// Generators are a generalization of iterators, where a value is returned every time
+/// the iterator is advanced until there are no more values. Python and Robot Raconteur iterators
+/// add the option of passing a parameter every advance, allowing for simple coroutines. The
+/// generator is advanced by calling the Next() or AsyncNext() functions. These functions
+/// will either return a value or throw StopIterationException if there are no more values. Next()
+/// and AsyncNext() may also throw any valid Robot Raconteur exception.
+/// </para>
+/// <para>
+/// Generators can be terminated with either the Close() or Abort() functions. Close() should be
+/// used to cleanly close the generator, and is not considered an error condition. Next(), if called
+/// after close, should throw StopIterationException. Abort() is considered an error condition, and
+/// will cause any action assosciated with the generator to be aborted as quickly as possible (ie faulting
+/// a robot). If Next() is called after Abort(), OperationAbortedException should be thrown.
+/// </para>
+/// <para>
+/// Robot Raconteur clients will return a populated stub generator that calls the service. Services
+/// are expected to return a subclass of Generator. The service will call AsyncNext(), AsyncAbort(), and AsyncClose().
+/// Inherit from SyncGenerator to use Next(), Abort(), and Close().
+/// </para>
+/// </remarks>
+/// <typeparam name="ReturnType">The type of value returned by Next() and AsyncNext()</typeparam>
+/// <typeparam name="ParamType">The type of the parameter passed to Next() and AsyncNext()</typeparam>
 public interface Generator1<ReturnType, ParamType>
 {
+    /// <summary>
+    /// Advance the generator
+    /// </summary>
+    /// <remarks>
+    /// Next() advances the generator to retrieve the next value. This version of
+    /// Generator includes passing a parameter v to the generator.
+    /// </remarks>
+    /// <param name="param">Parameter to pass to generator</param>
+    /// <returns>Return value from generator</returns>
     ReturnType Next(ParamType param);
+    /// <summary>
+    /// Asynchronously advance the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Next() but async.
+    /// </remarks>
+    /// <param name="param">Parameter to pass to generator</param>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
+    /// <returns>A task that returns the return value upon completion</returns>
     Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    /// <summary>
+    /// Abort the generator
+    /// </summary>
+    /// <remarks>
+    /// Aborts and destroys the generator. This is assumed to be an error condition. Next() should throw
+    /// OperationAbortedException if called after Abort(). Any ongoing operations should be terminated with an error
+    /// condition, for example a moving robot should be immediately halted.
+    /// </remarks>
     void Abort();
+    /// <summary>
+    /// Asynchronously abort the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Abort() but async.
+    /// </remarks>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    /// <summary>
+    /// Close the generator
+    /// </summary>
+    /// <remarks>
+    /// Closes the generator. Closing the generator terminates iteration and destroys the generator.
+    /// This operation cleanly closes the generator, and is not considered to be an error condition. Next()
+    /// should throw StopIterationException if called after Close().
+    /// </remarks>
     void Close();
+    /// <summary>
+    /// Asynchronously closes the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Close() but returns async.
+    /// </remarks>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
 }
 
+/// <summary>
+/// Generator type for use with generator functions, with return
+/// </summary>
+/// <remarks>
+/// <para>
+/// Generators are used with generator functions to implement simple coroutines. They are
+/// returned by function members with a parameter and/or return marked with the
+/// generator container type. Robot Raconteur generators are modeled on Python generators,
+/// and are intended to be used in two scenarios:
+/// 1. Transfering large parameter values or return values that would be over the message
+/// transfer limit (typically around 10 MB).
+/// 2. Long running operations that return updates or require periodic input. Generators
+/// are used to implement functionality similar to "actions" in ROS.
+/// </para>
+/// <para>
+/// Generators are a generalization of iterators, where a value is returned every time
+/// the iterator is advanced until there are no more values. Python and Robot Raconteur iterators
+/// add the option of passing a parameter every advance, allowing for simple coroutines. The
+/// generator is advanced by calling the Next() or AsyncNext() functions. These functions
+/// will either return a value or throw StopIterationException if there are no more values. Next()
+/// and AsyncNext() may also throw any valid Robot Raconteur exception.
+/// </para>
+/// <para>
+/// Generators can be terminated with either the Close() or Abort() functions. Close() should be
+/// used to cleanly close the generator, and is not considered an error condition. Next(), if called
+/// after close, should throw StopIterationException. Abort() is considered an error condition, and
+/// will cause any action assosciated with the generator to be aborted as quickly as possible (ie faulting
+/// a robot). If Next() is called after Abort(), OperationAbortedException should be thrown.
+/// </para>
+/// <para>
+/// Robot Raconteur clients will return a populated stub generator that calls the service. Services
+/// are expected to return a subclass of Generator. The service will call AsyncNext(), AsyncAbort(), and AsyncClose().
+/// Inherit from SyncGenerator to use Next(), Abort(), and Close().
+/// </para>
+/// </remarks>
+/// <typeparam name="ReturnType">Return The type of value returned by Next() and AsyncNext()</typeparam>
 public interface Generator2<ReturnType>
 {
+    /// <summary>
+    /// Advance the generator
+    /// </summary>
+    /// <remarks>
+    /// Next() advances the generator to retrieve the next value. This version of
+    ///  Generator does not include passing a parameter to the generator.
+    /// </remarks>
+    /// <returns>Return Return value from generator</returns>
     ReturnType Next();
+    /// <summary>
+    /// Asynchronously advance the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Next() but async.
+    /// </remarks>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    /// <summary>
+    /// Abort the generator
+    /// </summary>
+    /// <remarks>
+    /// Aborts and destroys the generator. This is assumed to be an error condition. Next() should throw
+    /// OperationAbortedException if called after Abort(). Any ongoing operations should be terminated with an error
+    /// condition, for example a moving robot should be immediately halted.
+    /// </remarks>
     void Abort();
+    /// <summary>
+    /// Asynchronously abort the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Abort() but async.
+    /// </remarks>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    /// <summary>
+    /// Close the generator
+    /// </summary>
+    /// <remarks>
+    /// Closes the generator. Closing the generator terminates iteration and destroys the generator.
+    /// This operation cleanly closes the generator, and is not considered to be an error condition. Next()
+    /// should throw StopIterationException if called after Close().
+    /// </remarks>
     void Close();
+    /// <summary>
+    /// Asynchronously closes the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Close() but async.
+    /// </remarks>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    /// <summary>
+    /// Automatically call Next() repeatedly and return array of results
+    /// </summary>
+    /// <returns>All values returned by generator Next()</returns>
     ReturnType[] NextAll();
 }
 
+/// <summary>
+/// Generator type for use with generator functions, with parameter
+/// </summary>
+/// <remarks>
+/// <para>
+/// Generators are used with generator functions to implement simple coroutines. They are
+/// returned by function members with a parameter and/or return marked with the
+/// generator container type. Robot Raconteur generators are modeled on Python generators,
+/// and are intended to be used in two scenarios:
+/// 1. Transfering large parameter values or return values that would be over the message
+/// transfer limit (typically around 10 MB).
+/// 2. Long running operations that return updates or require periodic input. Generators
+/// are used to implement functionality similar to "actions" in ROS.
+/// </para>
+/// <para>
+/// Generators are a generalization of iterators, where a value is returned every time
+/// the iterator is advanced until there are no more values. Python and Robot Raconteur iterators
+/// add the option of passing a parameter every advance, allowing for simple coroutines. The
+/// generator is advanced by calling the Next() or AsyncNext() functions. These functions
+/// will either return a value or throw StopIterationException if there are no more values. Next()
+/// and AsyncNext() may also throw any valid Robot Raconteur exception.
+/// </para>
+/// <para>
+/// Generators can be terminated with either the Close() or Abort() functions. Close() should be
+/// used to cleanly close the generator, and is not considered an error condition. Next(), if called
+/// after close, should throw StopIterationException. Abort() is considered an error condition, and
+/// will cause any action assosciated with the generator to be aborted as quickly as possible (ie faulting
+/// a robot). If Next() is called after Abort(), OperationAbortedException should be thrown.
+/// </para>
+/// <para>
+/// Robot Raconteur clients will return a populated stub generator that calls the service. Services
+/// are expected to return a subclass of Generator. The service will call AsyncNext(), AsyncAbort(), and AsyncClose().
+/// Inherit from SyncGenerator to use Next(), Abort(), and Close().
+/// </para>
+/// </remarks>
+/// <typeparam name="ParamType">The type of the parameter passed to Next() and AsyncNext()</typeparam>
 public interface Generator3<ParamType>
 {
+    /// <summary>
+    /// Advance the generator
+    /// </summary>
+    /// <remarks>
+    /// Next() advances the generator to retrieve the next value. This version of
+    /// Generator includes passing a parameter to the generator but no return.
+    /// </remarks>
+    /// <param name="param">Parameter to pass to generator</param>
     void Next(ParamType param);
+    /// <summary>
+    /// Asynchronously advance the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Next() but async.
+    /// </remarks>
+    /// <param name="param">Parameter to pass to generator</param>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    /// <summary>
+    /// Abort the generator
+    /// </summary>
+    /// <remarks>
+    /// Aborts and destroys the generator. This is assumed to be an error condition. Next() should throw
+    /// OperationAbortedException if called after Abort(). Any ongoing operations should be terminated with an error
+    /// condition, for example a moving robot should be immediately halted.
+    /// </remarks>
     void Abort();
+    /// <summary>
+    /// Asynchronously abort the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Abort() but async.
+    /// </remarks>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task AsyncAbort(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
+    /// <summary>
+    /// Close the generator
+    /// </summary>
+    /// <remarks>
+    /// Closes the generator. Closing the generator terminates iteration and destroys the generator.
+    /// This operation cleanly closes the generator, and is not considered to be an error condition. Next()
+    /// should throw StopIterationException if called after Close().
+    /// </remarks>
     void Close();
+    /// <summary>
+    /// Asynchronously closes the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Close() but returns asynchronously.
+    /// </remarks>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task AsyncClose(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
 }
 
+/// <summary>
+/// Adapter base class for synchronous return generators.
+/// </summary>
+/// <remarks>
+/// By default, the service will call AsyncNext, AsyncAbort, and AsyncClose. Use the
+/// SyncGenerator abstract base classes for synchronous generators.
+/// </remarks>
+/// <typeparam name="ReturnType">Return The type of value returned by Next()</typeparam>
+/// <typeparam name="ParamType">The type of the parameter passed to Next()</typeparam>
 public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnType, ParamType>
 {
+    /// <summary>
+    /// Abstract function to receive abort requests
+    /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Abort();
+    /// <summary>
+    /// Abstract function to receive close requests
+    /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Close();
+    /// <summary>
+    /// Abstract function te receive next requests
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="param">Next param</param>
+    /// <returns>Next return</returns>
     public abstract ReturnType Next(ParamType param);
 
     public Task AsyncAbort(int timeout = -1)
@@ -75,10 +350,31 @@ public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnT
     }
 }
 
+/// <summary>
+/// Adapter base class for synchronous return generators.
+/// </summary>
+/// <remarks>
+/// By default, the service will call AsyncNext, AsyncAbort, and AsyncClose. Use the
+/// SyncGenerator abstract base classes for synchronous generators.
+/// </remarks>
+/// <typeparam name="ReturnType">Return The type of value returned by Next()</typeparam>
 public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
 {
+    /// <summary>
+    /// Abstract function to receive abort requests
+    /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Abort();
+    /// <summary>
+    /// Abstract function to receive close requests
+    /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Close();
+    /// <summary>
+    /// Abstract function te receive next requests
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <returns>Next return</returns>
     public abstract ReturnType Next();
 
     public Task AsyncAbort(int timeout = -1)
@@ -115,10 +411,31 @@ public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
     }
 }
 
+/// <summary>
+/// Adapter base class for synchronous return generators.
+/// </summary>
+/// <remarks>
+/// By default, the service will call AsyncNext, AsyncAbort, and AsyncClose. Use the
+/// SyncGenerator abstract base classes for synchronous generators.
+/// </remarks>
+/// <typeparam name="ParamType">The type of the parameter passed to Next()</typeparam>
 public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
 {
+    /// <summary>
+    /// Abstract function to receive abort requests
+    /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Abort();
+    /// <summary>
+    /// Abstract function to receive close requests
+    /// </summary>
+    /// <remarks>None</remarks>
     public abstract void Close();
+    /// <summary>
+    /// Abstract function te receive next requests
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="param">Next param</param>
     public abstract void Next(ParamType param);
 
     public Task AsyncAbort(int timeout = -1)
@@ -140,15 +457,33 @@ public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
     }
 }
 
+/// <summary>
+/// Adapter class to create a generator from an enumerator
+/// </summary>
+/// <remarks>
+/// Next calls will be mapped to the supplied enumerator
+/// </remarks>
+/// <typeparam name="T">The enumerator value type</typeparam>
 public class EnumeratorGenerator<T> : SyncGenerator2<T>
 {
     bool aborted = false;
     bool closed = false;
     IEnumerator<T> enumerator;
 
+    /// <summary>
+    /// Construct a generator from an IEnumerable
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="enumerable"></param>
+    /// <returns></returns>
     public EnumeratorGenerator(IEnumerable<T> enumerable) : this(enumerable.GetEnumerator())
     {}
 
+    /// <summary>
+    /// Construct a generator from an IEnumerator
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="enumerator"></param>
     public EnumeratorGenerator(IEnumerator<T> enumerator)
     {
         this.enumerator = enumerator;

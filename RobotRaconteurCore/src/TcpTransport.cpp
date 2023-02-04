@@ -2938,51 +2938,28 @@ void TcpTransport::LoadTlsNodeCertificate()
         c->LoadCertificateFromMyStore();
 #endif
 #ifdef ROBOTRACONTEUR_USE_OPENSSL
-        boost::scoped_array<char> sysdata_path1(new char[MAX_PATH]);
-        if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
-        {
-            throw SystemResourceException("Could not get system information");
-        }
+        NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
+        boost::filesystem::path certstore = node_dirs.user_config_dir / "certificates";
 
-        std::string sysdata_path(sysdata_path1.get());
+        boost::filesystem::path certpath = certstore / (GetNode()->NodeID().ToString() + ".p12");
 
-        std::string certpath = sysdata_path + ROBOTRACONTEUR_PATHSEP + "RobotRaconteur" + ROBOTRACONTEUR_PATHSEP +
-                               "certificates" + ROBOTRACONTEUR_PATHSEP + GetNode()->NodeID().ToString() + ".p12";
-
-        DWORD dwAttrib = GetFileAttributes(certpath.c_str());
-        if (dwAttrib == INVALID_FILE_ATTRIBUTES)
+        if (!(boost::filesystem::is_regular(certpath) || boost::filesystem::is_symlink(certpath)))
         {
             throw SystemResourceException("Could not load node certificate");
         }
         RR_SHARED_PTR<detail::OpenSSLAuthContext> c =
             RR_STATIC_POINTER_CAST<detail::OpenSSLAuthContext>(GetTlsContext());
-        c->LoadPKCS12FromFile(certpath);
+        c->LoadPKCS12FromFile(certpath.string());
 #endif
 
 #else
+        NodeDirectories node_dirs = GetNode()->GetNodeDirectories();
+        boost::filesystem::path certstore = node_dirs.user_config_dir / "certificates";
 
-        std::string certstore;
-
-        char* certstoreenv = std::getenv("ROBOTRACONTEUR_USER_HOME");
-        if (certstoreenv != NULL)
-        {
-            std::string sysdata_path = std::string(certstoreenv);
-
-            certstore = sysdata_path + ROBOTRACONTEUR_PATHSEP + ".config" + ROBOTRACONTEUR_PATHSEP + "RobotRaconteur" +
-                        ROBOTRACONTEUR_PATHSEP + "certificates";
-        }
-        else
-        {
-            std::string sysdata_path = std::getenv("HOME");
-
-            certstore = sysdata_path + ROBOTRACONTEUR_PATHSEP + ".config" + ROBOTRACONTEUR_PATHSEP + "RobotRaconteur" +
-                        ROBOTRACONTEUR_PATHSEP + "certificates";
-        }
-        std::string certpath = certstore + ROBOTRACONTEUR_PATHSEP + GetNode()->NodeID().ToString() + ".p12";
+        boost::filesystem::path certpath = certstore / (GetNode()->NodeID().ToString() + ".p12");
         RR_SHARED_PTR<detail::OpenSSLAuthContext> c =
             RR_STATIC_POINTER_CAST<detail::OpenSSLAuthContext>(GetTlsContext());
-        c->LoadPKCS12FromFile(certpath);
-
+        c->LoadPKCS12FromFile(certpath.string());
 #endif
         ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1,
                                           "Loaded TLS certificate for NodeID: " << GetNode()->NodeID().ToString());
@@ -6477,6 +6454,9 @@ RR_SHARED_PTR<TcpTransport> TcpTransportPortSharerClient::GetParent()
 void TcpTransportPortSharerClient::client_thread()
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "TcpTransport port sharer client started");
+
+    NodeDirectories node_dirs;
+    bool node_dirs_init = false;
     while (true)
     {
         {
@@ -6502,24 +6482,19 @@ void TcpTransportPortSharerClient::client_thread()
             std::string outdata = nodeid.ToString() + " " + nodename;
             boost::trim(outdata);
 
+            if (!node_dirs_init)
+            {
+                node_dirs = GetParent()->GetNode()->GetNodeDirectories();
+            }
+
 #ifdef ROBOTRACONTEUR_WINDOWS
 
             std::string fname;
 
-            boost::scoped_array<wchar_t> sysdata_path1(new wchar_t[MAX_PATH]);
-            if (FAILED(SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, sysdata_path1.get())))
-            {
-                return;
-            }
-
-            boost::filesystem::path sysdata_path(sysdata_path1.get());
-            sysdata_path /= "RobotRaconteur";
-
-            boost::optional<boost::filesystem::path> p1_1 = sysdata_path;
+            boost::optional<boost::filesystem::path> p1_1 = node_dirs.system_run_dir;
             if (p1_1)
             {
                 boost::filesystem::path p1 = *p1_1;
-                p1 /= "run";
                 p1 /= "transport";
                 p1 /= "tcp";
                 p1 /= "portsharer";
@@ -6527,7 +6502,7 @@ void TcpTransportPortSharerClient::client_thread()
                 p1.normalize();
 
                 std::map<std::string, std::string> info;
-                if (detail::LocalTransportUtil::ReadInfoFile(p1, info))
+                if (NodeDirectoriesUtil::ReadInfoFile(p1, info))
                 {
 
                     std::map<std::string, std::string>::iterator fname1 = info.find("socket");
@@ -6540,7 +6515,7 @@ void TcpTransportPortSharerClient::client_thread()
 
             if (fname.empty())
             {
-                boost::filesystem::path p1 = detail::LocalTransportUtil::GetTransportPrivateSocketPath();
+                boost::filesystem::path p1 = detail::LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
                 p1 /= "..";
                 p1 /= "tcp";
                 p1 /= "portsharer";
@@ -6548,7 +6523,7 @@ void TcpTransportPortSharerClient::client_thread()
                 p1.normalize();
 
                 std::map<std::string, std::string> info;
-                if (detail::LocalTransportUtil::ReadInfoFile(p1, info))
+                if (NodeDirectoriesUtil::ReadInfoFile(p1, info))
                 {
 
                     std::map<std::string, std::string>::iterator fname1 = info.find("socket");

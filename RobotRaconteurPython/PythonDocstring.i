@@ -1597,6 +1597,7 @@ See \\ref logging for more information.
 %feature("docstring") RobotRaconteur::RRLogRecord::SourceLine """(int) The line within the sourcecode file"""
 %feature("docstring") RobotRaconteur::RRLogRecord::ThreadID """(str) The source thread"""
 %feature("docstring") RobotRaconteur::RRLogRecord::FiberID """(str) The source coroutine fiber"""
+%feature("docstring") RobotRaconteur::RRLogRecord::Node """(str) The source node"""
 
 %feature("docstring") RobotRaconteur::LogRecordHandler """
 LogRecordHandler()

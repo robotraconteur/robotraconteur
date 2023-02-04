@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <RobotRaconteur.h>
+#include <RobotRaconteur/NodeDirectories.h>
 
 using namespace RobotRaconteur;
 
@@ -46,6 +47,21 @@ TEST(RobotRaconteurMisc, LogMacros)
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, UserClient, -1, "user_client component")
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, UserService, -1, "user_service component")
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, ThirdParty, -1, "third_party component")
+}
+
+TEST(RobotRaconteurMisc, NodeDirectories)
+{
+    NodeDirectories dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories();
+    std::cout << "system_data_dir: " << dirs.system_data_dir << std::endl;
+    std::cout << "system_config_dir: " << dirs.system_config_dir << std::endl;
+    std::cout << "system_state_dir: " << dirs.system_state_dir << std::endl;
+    std::cout << "system_cache_dir: " << dirs.system_cache_dir << std::endl;
+    std::cout << "system_run_dir: " << dirs.system_run_dir << std::endl;
+    std::cout << "user_data_dir: " << dirs.user_data_dir << std::endl;
+    std::cout << "user_config_dir: " << dirs.user_config_dir << std::endl;
+    std::cout << "user_state_dir: " << dirs.user_state_dir << std::endl;
+    std::cout << "user_cache_dir: " << dirs.user_cache_dir << std::endl;
+    std::cout << "user_run_dir: " << dirs.user_run_dir << std::endl;
 }
 
 int main(int argc, char* argv[])
