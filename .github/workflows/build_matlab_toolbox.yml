@@ -19,7 +19,7 @@ jobs:
       with:
         release: R2020a
     - name: pip
-      run: python3 -m pip install pygithub
+      run: python3 -m pip install pygithub setuptools
     - name: build matlab toolbox
       env:
         BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
