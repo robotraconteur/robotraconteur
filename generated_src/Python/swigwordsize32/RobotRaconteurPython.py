@@ -131,6 +131,24 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _RobotRaconteurPython:
 _RobotRaconteurPython.SwigPyIterator_swigregister(SwigPyIterator)
 
+class FilesystemPath(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, s):
+        _RobotRaconteurPython.FilesystemPath_swiginit(self, _RobotRaconteurPython.new_FilesystemPath(s))
+
+    def string(self):
+        return _RobotRaconteurPython.FilesystemPath_string(self)
+
+    def __str__(self):
+        return self.string()
+
+    __swig_destroy__ = _RobotRaconteurPython.delete_FilesystemPath
+
+# Register FilesystemPath in _RobotRaconteurPython:
+_RobotRaconteurPython.FilesystemPath_swigregister(FilesystemPath)
+
 DataTypes_void_t = _RobotRaconteurPython.DataTypes_void_t
 r"""void or null type"""
 DataTypes_double_t = _RobotRaconteurPython.DataTypes_double_t
@@ -5332,14 +5350,14 @@ class WrappedPipeEndpoint(object):
     def PeekNextPacket(self):
         return _RobotRaconteurPython.WrappedPipeEndpoint_PeekNextPacket(self)
 
-    def ReceivePacketWait(self, timeout=-1):
-        return _RobotRaconteurPython.WrappedPipeEndpoint_ReceivePacketWait(self, timeout)
+    def ReceivePacketWait(self, *args):
+        return _RobotRaconteurPython.WrappedPipeEndpoint_ReceivePacketWait(self, *args)
 
-    def PeekNextPacketWait(self, timeout=-1):
-        return _RobotRaconteurPython.WrappedPipeEndpoint_PeekNextPacketWait(self, timeout)
+    def PeekNextPacketWait(self, *args):
+        return _RobotRaconteurPython.WrappedPipeEndpoint_PeekNextPacketWait(self, *args)
 
-    def TryReceivePacketWait(self, timeout=-1, peek=False):
-        return _RobotRaconteurPython.WrappedPipeEndpoint_TryReceivePacketWait(self, timeout, peek)
+    def TryReceivePacketWait(self, *args):
+        return _RobotRaconteurPython.WrappedPipeEndpoint_TryReceivePacketWait(self, *args)
 
     def Close(self):
         return _RobotRaconteurPython.WrappedPipeEndpoint_Close(self)
@@ -5666,11 +5684,11 @@ class WrappedWireConnection(object):
     def SetOutValueLifespan(self, millis):
         return _RobotRaconteurPython.WrappedWireConnection_SetOutValueLifespan(self, millis)
 
-    def WaitInValueValid(self, timeout=-1):
-        return _RobotRaconteurPython.WrappedWireConnection_WaitInValueValid(self, timeout)
+    def WaitInValueValid(self, *args):
+        return _RobotRaconteurPython.WrappedWireConnection_WaitInValueValid(self, *args)
 
-    def WaitOutValueValid(self, timeout=-1):
-        return _RobotRaconteurPython.WrappedWireConnection_WaitOutValueValid(self, timeout)
+    def WaitOutValueValid(self, *args):
+        return _RobotRaconteurPython.WrappedWireConnection_WaitOutValueValid(self, *args)
 
     def Direction(self):
         return _RobotRaconteurPython.WrappedWireConnection_Direction(self)
@@ -8346,11 +8364,11 @@ class WrappedServiceSubscriptionDirector(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def ClientConnected(self, subscription, id, client):
-        return _RobotRaconteurPython.WrappedServiceSubscriptionDirector_ClientConnected(self, subscription, id, client)
+    def ClientConnected(self, subscription, id, slient):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionDirector_ClientConnected(self, subscription, id, slient)
 
-    def ClientDisconnected(self, subscription, id, client):
-        return _RobotRaconteurPython.WrappedServiceSubscriptionDirector_ClientDisconnected(self, subscription, id, client)
+    def ClientDisconnected(self, subscription, id, slient):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionDirector_ClientDisconnected(self, subscription, id, slient)
 
     def ClientConnectFailed(self, subscription, id, url, error):
         return _RobotRaconteurPython.WrappedServiceSubscriptionDirector_ClientConnectFailed(self, subscription, id, url, error)
@@ -8480,8 +8498,8 @@ class WrappedWireSubscription(object):
     def TryGetInValue(self, val, time=None):
         return _RobotRaconteurPython.WrappedWireSubscription_TryGetInValue(self, val, time)
 
-    def WaitInValueValid(self, timeout=-1):
-        return _RobotRaconteurPython.WrappedWireSubscription_WaitInValueValid(self, timeout)
+    def WaitInValueValid(self, *args):
+        return _RobotRaconteurPython.WrappedWireSubscription_WaitInValueValid(self, *args)
 
     def GetIgnoreInValue(self):
         return _RobotRaconteurPython.WrappedWireSubscription_GetIgnoreInValue(self)
@@ -8569,8 +8587,8 @@ class WrappedPipeSubscription(object):
     def TryReceivePacket(self, packet):
         return _RobotRaconteurPython.WrappedPipeSubscription_TryReceivePacket(self, packet)
 
-    def TryReceivePacketWait(self, packet, timeout=-1, peek=False):
-        return _RobotRaconteurPython.WrappedPipeSubscription_TryReceivePacketWait(self, packet, timeout, peek)
+    def TryReceivePacketWait(self, *args):
+        return _RobotRaconteurPython.WrappedPipeSubscription_TryReceivePacketWait(self, *args)
 
     def Available(self):
         return _RobotRaconteurPython.WrappedPipeSubscription_Available(self)
@@ -8777,6 +8795,127 @@ class UserLogRecordHandlerBase(LogRecordHandler):
 
 # Register UserLogRecordHandlerBase in _RobotRaconteurPython:
 _RobotRaconteurPython.UserLogRecordHandlerBase_swigregister(UserLogRecordHandlerBase)
+
+class NodeDirectories(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    system_data_dir = property(_RobotRaconteurPython.NodeDirectories_system_data_dir_get, _RobotRaconteurPython.NodeDirectories_system_data_dir_set)
+    system_config_dir = property(_RobotRaconteurPython.NodeDirectories_system_config_dir_get, _RobotRaconteurPython.NodeDirectories_system_config_dir_set)
+    system_state_dir = property(_RobotRaconteurPython.NodeDirectories_system_state_dir_get, _RobotRaconteurPython.NodeDirectories_system_state_dir_set)
+    system_cache_dir = property(_RobotRaconteurPython.NodeDirectories_system_cache_dir_get, _RobotRaconteurPython.NodeDirectories_system_cache_dir_set)
+    system_run_dir = property(_RobotRaconteurPython.NodeDirectories_system_run_dir_get, _RobotRaconteurPython.NodeDirectories_system_run_dir_set)
+    user_data_dir = property(_RobotRaconteurPython.NodeDirectories_user_data_dir_get, _RobotRaconteurPython.NodeDirectories_user_data_dir_set)
+    user_config_dir = property(_RobotRaconteurPython.NodeDirectories_user_config_dir_get, _RobotRaconteurPython.NodeDirectories_user_config_dir_set)
+    user_state_dir = property(_RobotRaconteurPython.NodeDirectories_user_state_dir_get, _RobotRaconteurPython.NodeDirectories_user_state_dir_set)
+    user_cache_dir = property(_RobotRaconteurPython.NodeDirectories_user_cache_dir_get, _RobotRaconteurPython.NodeDirectories_user_cache_dir_set)
+    user_run_dir = property(_RobotRaconteurPython.NodeDirectories_user_run_dir_get, _RobotRaconteurPython.NodeDirectories_user_run_dir_set)
+
+    def __init__(self):
+        _RobotRaconteurPython.NodeDirectories_swiginit(self, _RobotRaconteurPython.new_NodeDirectories())
+    __swig_destroy__ = _RobotRaconteurPython.delete_NodeDirectories
+
+# Register NodeDirectories in _RobotRaconteurPython:
+_RobotRaconteurPython.NodeDirectories_swigregister(NodeDirectories)
+
+class NodeDirectoriesFD(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _RobotRaconteurPython.delete_NodeDirectoriesFD
+
+# Register NodeDirectoriesFD in _RobotRaconteurPython:
+_RobotRaconteurPython.NodeDirectoriesFD_swigregister(NodeDirectoriesFD)
+
+class NodeDirectoriesUtil(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    @staticmethod
+    def GetDefaultNodeDirectories(*args):
+        return _RobotRaconteurPython.NodeDirectoriesUtil_GetDefaultNodeDirectories(*args)
+
+    @staticmethod
+    def GetLogonUserName():
+        return _RobotRaconteurPython.NodeDirectoriesUtil_GetLogonUserName()
+
+    @staticmethod
+    def IsLogonUserRoot():
+        return _RobotRaconteurPython.NodeDirectoriesUtil_IsLogonUserRoot()
+
+    @staticmethod
+    def ReadInfoFile(fname, data):
+        return _RobotRaconteurPython.NodeDirectoriesUtil_ReadInfoFile(fname, data)
+
+    @staticmethod
+    def CreatePidFile(path):
+        return _RobotRaconteurPython.NodeDirectoriesUtil_CreatePidFile(path)
+
+    @staticmethod
+    def CreateInfoFile(path, info):
+        return _RobotRaconteurPython.NodeDirectoriesUtil_CreateInfoFile(path, info)
+
+    @staticmethod
+    def RefreshInfoFile(h_info, updated_info):
+        return _RobotRaconteurPython.NodeDirectoriesUtil_RefreshInfoFile(h_info, updated_info)
+
+    def __init__(self):
+        _RobotRaconteurPython.NodeDirectoriesUtil_swiginit(self, _RobotRaconteurPython.new_NodeDirectoriesUtil())
+    __swig_destroy__ = _RobotRaconteurPython.delete_NodeDirectoriesUtil
+
+# Register NodeDirectoriesUtil in _RobotRaconteurPython:
+_RobotRaconteurPython.NodeDirectoriesUtil_swigregister(NodeDirectoriesUtil)
+
+def NodeDirectoriesUtil_GetDefaultNodeDirectories(*args):
+    return _RobotRaconteurPython.NodeDirectoriesUtil_GetDefaultNodeDirectories(*args)
+
+def NodeDirectoriesUtil_GetLogonUserName():
+    return _RobotRaconteurPython.NodeDirectoriesUtil_GetLogonUserName()
+
+def NodeDirectoriesUtil_IsLogonUserRoot():
+    return _RobotRaconteurPython.NodeDirectoriesUtil_IsLogonUserRoot()
+
+def NodeDirectoriesUtil_ReadInfoFile(fname, data):
+    return _RobotRaconteurPython.NodeDirectoriesUtil_ReadInfoFile(fname, data)
+
+def NodeDirectoriesUtil_CreatePidFile(path):
+    return _RobotRaconteurPython.NodeDirectoriesUtil_CreatePidFile(path)
+
+def NodeDirectoriesUtil_CreateInfoFile(path, info):
+    return _RobotRaconteurPython.NodeDirectoriesUtil_CreateInfoFile(path, info)
+
+def NodeDirectoriesUtil_RefreshInfoFile(h_info, updated_info):
+    return _RobotRaconteurPython.NodeDirectoriesUtil_RefreshInfoFile(h_info, updated_info)
+
+class GetUuidForNameAndLockResult(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    uuid = property(_RobotRaconteurPython.GetUuidForNameAndLockResult_uuid_get, _RobotRaconteurPython.GetUuidForNameAndLockResult_uuid_set)
+    name = property(_RobotRaconteurPython.GetUuidForNameAndLockResult_name_get, _RobotRaconteurPython.GetUuidForNameAndLockResult_name_set)
+    scope = property(_RobotRaconteurPython.GetUuidForNameAndLockResult_scope_get, _RobotRaconteurPython.GetUuidForNameAndLockResult_scope_set)
+    fd = property(_RobotRaconteurPython.GetUuidForNameAndLockResult_fd_get, _RobotRaconteurPython.GetUuidForNameAndLockResult_fd_set)
+
+    def __init__(self):
+        _RobotRaconteurPython.GetUuidForNameAndLockResult_swiginit(self, _RobotRaconteurPython.new_GetUuidForNameAndLockResult())
+    __swig_destroy__ = _RobotRaconteurPython.delete_GetUuidForNameAndLockResult
+
+# Register GetUuidForNameAndLockResult in _RobotRaconteurPython:
+_RobotRaconteurPython.GetUuidForNameAndLockResult_swigregister(GetUuidForNameAndLockResult)
+
+
+def GetUuidForNameAndLock(node_dirs, name, scope):
+    return _RobotRaconteurPython.GetUuidForNameAndLock(node_dirs, name, scope)
+class NodeDirectoriesResourceAlreadyInUse(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        _RobotRaconteurPython.NodeDirectoriesResourceAlreadyInUse_swiginit(self, _RobotRaconteurPython.new_NodeDirectoriesResourceAlreadyInUse())
+    __swig_destroy__ = _RobotRaconteurPython.delete_NodeDirectoriesResourceAlreadyInUse
+
+# Register NodeDirectoriesResourceAlreadyInUse in _RobotRaconteurPython:
+_RobotRaconteurPython.NodeDirectoriesResourceAlreadyInUse_swigregister(NodeDirectoriesResourceAlreadyInUse)
 
 class ClientServiceListenerDirector(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
