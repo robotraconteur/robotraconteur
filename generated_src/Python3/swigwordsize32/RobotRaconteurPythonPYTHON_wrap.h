@@ -316,7 +316,7 @@ class SwigDirector_AsyncPipeEndpointReturnDirector : public RobotRaconteur::Asyn
 public:
     SwigDirector_AsyncPipeEndpointReturnDirector(PyObject *self);
     virtual ~SwigDirector_AsyncPipeEndpointReturnDirector();
-    virtual void handler(boost::shared_ptr< RobotRaconteur::WrappedPipeEndpoint > ep, RobotRaconteur::HandlerErrorInfo &error);
+    virtual void handler(boost::shared_ptr< RobotRaconteur::WrappedPipeEndpoint > const &ep, RobotRaconteur::HandlerErrorInfo &error);
 
 /* Internal director utilities */
 public:
@@ -358,7 +358,7 @@ class SwigDirector_WrappedPipeServerConnectDirector : public RobotRaconteur::Wra
 public:
     SwigDirector_WrappedPipeServerConnectDirector(PyObject *self);
     virtual ~SwigDirector_WrappedPipeServerConnectDirector();
-    virtual void PipeConnectCallback(boost::shared_ptr< RobotRaconteur::WrappedPipeEndpoint > pipeendpoint);
+    virtual void PipeConnectCallback(boost::shared_ptr< RobotRaconteur::WrappedPipeEndpoint > const &pipeendpoint);
 
 /* Internal director utilities */
 public:
@@ -485,7 +485,7 @@ class SwigDirector_AsyncWireConnectionReturnDirector : public RobotRaconteur::As
 public:
     SwigDirector_AsyncWireConnectionReturnDirector(PyObject *self);
     virtual ~SwigDirector_AsyncWireConnectionReturnDirector();
-    virtual void handler(boost::shared_ptr< RobotRaconteur::WrappedWireConnection > ep, RobotRaconteur::HandlerErrorInfo &error);
+    virtual void handler(boost::shared_ptr< RobotRaconteur::WrappedWireConnection > const &ep, RobotRaconteur::HandlerErrorInfo &error);
 
 /* Internal director utilities */
 public:
@@ -569,7 +569,7 @@ class SwigDirector_WrappedWireServerConnectDirector : public RobotRaconteur::Wra
 public:
     SwigDirector_WrappedWireServerConnectDirector(PyObject *self);
     virtual ~SwigDirector_WrappedWireServerConnectDirector();
-    virtual void WireConnectCallback(boost::shared_ptr< RobotRaconteur::WrappedWireConnection > c);
+    virtual void WireConnectCallback(boost::shared_ptr< RobotRaconteur::WrappedWireConnection > const &c);
 
 /* Internal director utilities */
 public:
@@ -1178,7 +1178,7 @@ class SwigDirector_AsyncGeneratorClientReturnDirector : public RobotRaconteur::A
 public:
     SwigDirector_AsyncGeneratorClientReturnDirector(PyObject *self);
     virtual ~SwigDirector_AsyncGeneratorClientReturnDirector();
-    virtual void handler(boost::shared_ptr< RobotRaconteur::WrappedGeneratorClient > ret, RobotRaconteur::HandlerErrorInfo &error);
+    virtual void handler(boost::shared_ptr< RobotRaconteur::WrappedGeneratorClient > const &ret, RobotRaconteur::HandlerErrorInfo &error);
 
 /* Internal director utilities */
 public:
@@ -1220,9 +1220,9 @@ class SwigDirector_WrappedGeneratorServerDirector : public RobotRaconteur::Wrapp
 public:
     SwigDirector_WrappedGeneratorServerDirector(PyObject *self);
     virtual ~SwigDirector_WrappedGeneratorServerDirector();
-    virtual boost::intrusive_ptr< RobotRaconteur::MessageElement > Next(boost::intrusive_ptr< RobotRaconteur::MessageElement > m, boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > async_adaptor);
-    virtual void Abort(boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > async_adapter);
-    virtual void Close(boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > async_adapter);
+    virtual boost::intrusive_ptr< RobotRaconteur::MessageElement > Next(boost::intrusive_ptr< RobotRaconteur::MessageElement > m, boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > const &async_adaptor);
+    virtual void Abort(boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > const &async_adapter);
+    virtual void Close(boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > const &async_adapter);
 
 /* Internal director utilities */
 public:
@@ -1307,7 +1307,7 @@ class SwigDirector_AsyncStubReturnDirector : public RobotRaconteur::AsyncStubRet
 public:
     SwigDirector_AsyncStubReturnDirector(PyObject *self);
     virtual ~SwigDirector_AsyncStubReturnDirector();
-    virtual void handler(boost::shared_ptr< RobotRaconteur::WrappedServiceStub > stub, RobotRaconteur::HandlerErrorInfo &error);
+    virtual void handler(boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &stub, RobotRaconteur::HandlerErrorInfo &error);
 
 /* Internal director utilities */
 public:
@@ -1349,10 +1349,10 @@ class SwigDirector_WrappedServiceSkelDirector : public RobotRaconteur::WrappedSe
 public:
     SwigDirector_WrappedServiceSkelDirector(PyObject *self);
     virtual ~SwigDirector_WrappedServiceSkelDirector();
-    virtual void Init(boost::shared_ptr< RobotRaconteur::WrappedServiceSkel > skel);
-    virtual boost::intrusive_ptr< RobotRaconteur::MessageElement > CallGetProperty(std::string const &name, boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > async_adaptor);
-    virtual void CallSetProperty(std::string const &name, boost::intrusive_ptr< RobotRaconteur::MessageElement > m, boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > async_adaptor);
-    virtual boost::intrusive_ptr< RobotRaconteur::MessageElement > CallFunction(std::string const &name, std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement >, std::allocator< boost::intrusive_ptr< RobotRaconteur::MessageElement > > > const &m, boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > async_adaptor);
+    virtual void Init(boost::shared_ptr< RobotRaconteur::WrappedServiceSkel > const &skel);
+    virtual boost::intrusive_ptr< RobotRaconteur::MessageElement > CallGetProperty(std::string const &name, boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > const &async_adaptor);
+    virtual void CallSetProperty(std::string const &name, boost::intrusive_ptr< RobotRaconteur::MessageElement > m, boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > const &async_adaptor);
+    virtual boost::intrusive_ptr< RobotRaconteur::MessageElement > CallFunction(std::string const &name, std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement >, std::allocator< boost::intrusive_ptr< RobotRaconteur::MessageElement > > > const &m, boost::shared_ptr< RobotRaconteur::WrappedServiceSkelAsyncAdapter > const &async_adaptor);
     virtual boost::shared_ptr< RobotRaconteur::WrappedRRObject > GetSubObj(std::string const &name, std::string const &index);
     virtual RobotRaconteur::WrappedArrayMemoryDirector *GetArrayMemory(std::string const &name);
     virtual RobotRaconteur::WrappedMultiDimArrayMemoryDirector *GetMultiDimArrayMemory(std::string const &name);
@@ -1446,7 +1446,7 @@ class SwigDirector_WrappedUserAuthenticatorDirector : public RobotRaconteur::Wra
 public:
     SwigDirector_WrappedUserAuthenticatorDirector(PyObject *self);
     virtual ~SwigDirector_WrappedUserAuthenticatorDirector();
-    virtual boost::shared_ptr< RobotRaconteur::AuthenticatedUser > AuthenticateUser(std::string const &username, boost::intrusive_ptr< RobotRaconteur::MessageElement > credentials, boost::shared_ptr< RobotRaconteur::ServerContext > context);
+    virtual boost::shared_ptr< RobotRaconteur::AuthenticatedUser > AuthenticateUser(std::string const &username, boost::intrusive_ptr< RobotRaconteur::MessageElement > credentials, boost::shared_ptr< RobotRaconteur::ServerContext > const &context);
 
 /* Internal director utilities */
 public:
@@ -1613,8 +1613,8 @@ class SwigDirector_WrappedServiceInfo2SubscriptionDirector : public RobotRaconte
 
 public:
     SwigDirector_WrappedServiceInfo2SubscriptionDirector(PyObject *self);
-    virtual void ServiceDetected(boost::shared_ptr< RobotRaconteur::WrappedServiceInfo2Subscription > subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, RobotRaconteur::ServiceInfo2Wrapped const &service);
-    virtual void ServiceLost(boost::shared_ptr< RobotRaconteur::WrappedServiceInfo2Subscription > subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, RobotRaconteur::ServiceInfo2Wrapped const &service);
+    virtual void ServiceDetected(boost::shared_ptr< RobotRaconteur::WrappedServiceInfo2Subscription > const &subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, RobotRaconteur::ServiceInfo2Wrapped const &service);
+    virtual void ServiceLost(boost::shared_ptr< RobotRaconteur::WrappedServiceInfo2Subscription > const &subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, RobotRaconteur::ServiceInfo2Wrapped const &service);
     virtual ~SwigDirector_WrappedServiceInfo2SubscriptionDirector();
 
 /* Internal director utilities */
@@ -1656,9 +1656,9 @@ class SwigDirector_WrappedServiceSubscriptionDirector : public RobotRaconteur::W
 
 public:
     SwigDirector_WrappedServiceSubscriptionDirector(PyObject *self);
-    virtual void ClientConnected(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, boost::shared_ptr< RobotRaconteur::WrappedServiceStub > client);
-    virtual void ClientDisconnected(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, boost::shared_ptr< RobotRaconteur::WrappedServiceStub > client);
-    virtual void ClientConnectFailed(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, std::vector< std::string, std::allocator< std::string > > const &url, RobotRaconteur::HandlerErrorInfo &error);
+    virtual void ClientConnected(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > const &subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &slient);
+    virtual void ClientDisconnected(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > const &subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &slient);
+    virtual void ClientConnectFailed(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > const &subscription, RobotRaconteur::ServiceSubscriptionClientID const &id, std::vector< std::string, std::allocator< std::string > > const &url, RobotRaconteur::HandlerErrorInfo &error);
     virtual ~SwigDirector_WrappedServiceSubscriptionDirector();
 
 /* Internal director utilities */
@@ -1700,7 +1700,7 @@ class SwigDirector_WrappedWireSubscriptionDirector : public RobotRaconteur::Wrap
 
 public:
     SwigDirector_WrappedWireSubscriptionDirector(PyObject *self);
-    virtual void WireValueChanged(boost::shared_ptr< RobotRaconteur::WrappedWireSubscription > wire_subscription, RobotRaconteur::WrappedService_typed_packet &value, RobotRaconteur::TimeSpec const &time);
+    virtual void WireValueChanged(boost::shared_ptr< RobotRaconteur::WrappedWireSubscription > const &wire_subscription, RobotRaconteur::WrappedService_typed_packet &value, RobotRaconteur::TimeSpec const &time);
     virtual ~SwigDirector_WrappedWireSubscriptionDirector();
 
 /* Internal director utilities */
@@ -1742,7 +1742,7 @@ class SwigDirector_WrappedPipeSubscriptionDirector : public RobotRaconteur::Wrap
 
 public:
     SwigDirector_WrappedPipeSubscriptionDirector(PyObject *self);
-    virtual void PipePacketReceived(boost::shared_ptr< RobotRaconteur::WrappedPipeSubscription > pipe_subscription);
+    virtual void PipePacketReceived(boost::shared_ptr< RobotRaconteur::WrappedPipeSubscription > const &pipe_subscription);
     virtual ~SwigDirector_WrappedPipeSubscriptionDirector();
 
 /* Internal director utilities */
