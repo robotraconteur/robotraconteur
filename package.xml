@@ -12,6 +12,7 @@
 
   <author email="wason@wasontech.com">John Wason</author>
 
+  <buildtool_depend>cmake</buildtool_depend>
   <buildtool_depend>swig</buildtool_depend>
   <depend>boost</depend>
   <depend>openssl</depend>
