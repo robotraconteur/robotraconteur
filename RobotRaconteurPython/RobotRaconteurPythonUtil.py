@@ -874,7 +874,7 @@ class PipeEndpoint(object):
         :type timeout: float
         :return: The received packet
         """
-        m = self.__innerpipe.ReceivePacketWait(timeout)
+        m = self.__innerpipe.ReceivePacketWait(adjust_timeout(timeout))
         return UnpackMessageElement(m, self.__type, self.__obj, self.__innerpipe.GetNode())
 
     def PeekNextPacketWait(self, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE):
@@ -886,7 +886,7 @@ class PipeEndpoint(object):
         :param timeout: Timeout in seconds to wait for a packet, or -1 for infinite
         :return: The received packet
         """
-        m = self.__innerpipe.PeekNextPacketWait(timeout)
+        m = self.__innerpipe.PeekNextPacketWait(adjust_timeout(timeout))
         return UnpackMessageElement(m, self.__type, self.__obj, self.__innerpipe.GetNode())
 
     def TryReceivePacketWait(self, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE, peek=False):
@@ -907,7 +907,7 @@ class PipeEndpoint(object):
         :rtype: Tuple[bool,T]
         """
         m = RobotRaconteurPython.MessageElement()
-        r = self.__innerpipe.TryReceivePacketWait(m, timeout, peek)
+        r = self.__innerpipe.TryReceivePacketWait(m, adjust_timeout(timeout), peek)
         return (r, UnpackMessageElement(m, self.__type, self.__obj, self.__innerpipe.GetNode()))
 
     @property
@@ -1400,7 +1400,7 @@ class WireConnection(object):
         :return: Value is valid
         :rtype: bool
         """
-        return self.__innerwire.WaitInValueValid(timeout)
+        return self.__innerwire.WaitInValueValid(adjust_timeout(timeout))
 
     def WaitOutValueValid(self, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE):
         """
@@ -1414,7 +1414,7 @@ class WireConnection(object):
         :return: Value is valid
         :rtype: bool
         """
-        return self.__innerwire.WaitOutValueValid(timeout)
+        return self.__innerwire.WaitOutValueValid(adjust_timeout(timeout))
 
     @property
     def WireValueChanged(self):
