@@ -23,6 +23,7 @@
   <depend>zlib</depend>
   <depend>python3-dev</depend>
   <depend>python3-numpy</depend>
+  <depend>python3-setuptools</depend>
   <test_depend>gtest</test_depend>
   <!-- <depend>roslib</depend> -->
     
