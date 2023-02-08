@@ -334,7 +334,56 @@ jobs:
       with:
         name: 'build-artifacts-win-${{ matrix.config.arch }}'
         path: build2/*
-        retention-days: 2    
+        retention-days: 2  
+  
+  build-win-shared:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v4
+      id: vcpkg
+      with:
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: x64-windows
+        extra-args: --clean-after-build
+        cache-key: win-shared-build-main
+        token: ${{ github.token }}
+    - name: cache-build
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      id: cache-build
+      uses: mikehardy/buildcache-action@v1
+      with:
+        cache_key: win64-shared-build-main-buildcache
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+    - name: configure
+      run: >
+        cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+        -DBUILD_NET=OFF -DBoost_USE_STATIC_LIBS=OFF -DBUILD_PYTHON=OFF
+        -DBUILD_PYTHON3=OFF  -DBUILD_JAVA=OFF 
+        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+        ${{ env.CMAKE_CACHE_ARGS }}
+        -DCMAKE_BUILD_TYPE=Release
+        -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -j 4
+    - name: test
+      working-directory: build2
+      run: |
+        ctest . -C Release --output-on-failure
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: 'build-artifacts-win-shared'
+        path: build2/*
+        retention-days: 2 
 
   build-osx:
 
