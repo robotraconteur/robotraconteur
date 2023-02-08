@@ -45,6 +45,7 @@ function(RR_TEST_ADD_EXECUTABLE TARGET_NAME)
         gtest_discover_tests(${TARGET_NAME} EXTRA_ARGS ${RR_ARG_TEST_EXTRA_ARGS})
     else()
         add_test(NAME "${TARGET_NAME}" COMMAND ${TARGET_NAME})
-        set_tests_properties("${TARGET_NAME}" PROPERTIES ENVIRONMENT "PATH=$<TARGET_FILE_DIR:RobotRaconteurCore>;$ENV{PATH}")
+        set_tests_properties("${TARGET_NAME}" PROPERTIES ENVIRONMENT
+                                                         "PATH=$<TARGET_FILE_DIR:RobotRaconteurCore>;$ENV{PATH}")
     endif()
 endfunction()
