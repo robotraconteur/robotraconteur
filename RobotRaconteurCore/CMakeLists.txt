@@ -339,7 +339,12 @@ rrsettargetdirs(RobotRaconteurCore "bin" "lib")
 set_target_properties(RobotRaconteurCore PROPERTIES LINKER_LANGUAGE CXX)
 
 export(TARGETS RobotRaconteurCore FILE ${CMAKE_BINARY_DIR}/RobotRaconteurCoreTargets.cmake)
-install(TARGETS RobotRaconteurCore EXPORT RobotRaconteurCoreTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(
+    TARGETS RobotRaconteurCore
+    EXPORT RobotRaconteurCoreTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

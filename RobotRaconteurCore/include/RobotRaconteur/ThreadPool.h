@@ -230,7 +230,7 @@ class ROBOTRACONTEUR_CORE_API IOContextThreadPool : public ThreadPool
 
 namespace detail
 {
-bool ThreadPool_IsNodeMultithreaded(RR_WEAK_PTR<RobotRaconteurNode> node);
+ROBOTRACONTEUR_CORE_API bool ThreadPool_IsNodeMultithreaded(RR_WEAK_PTR<RobotRaconteurNode> node);
 }
 
 namespace detail

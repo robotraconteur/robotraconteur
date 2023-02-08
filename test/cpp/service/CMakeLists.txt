@@ -31,7 +31,9 @@ rr_service_test_add_lib(
 
 rr_service_test_add_test(service SRC service_test.cpp ${RR_THUNK_SRCS})
 
-rr_service_test_add_test(single_thread_service SRC single_thread_test.cpp ${RR_THUNK_SRCS})
+if(NOT (WIN32 AND BUILD_SHARED_LIBS))
+    rr_service_test_add_test(single_thread_service SRC single_thread_test.cpp ${RR_THUNK_SRCS})
+endif()
 
 rr_service_test_add_test(service2 SRC service_test2.cpp ${RR_THUNK_SRCS})
 
