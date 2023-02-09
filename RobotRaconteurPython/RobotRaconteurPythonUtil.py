@@ -907,7 +907,8 @@ class PipeEndpoint(object):
         :rtype: Tuple[bool,T]
         """
         m = RobotRaconteurPython.MessageElement()
-        r = self.__innerpipe.TryReceivePacketWait(m, adjust_timeout(timeout), peek)
+        r = self.__innerpipe.TryReceivePacketWait(
+            m, adjust_timeout(timeout), peek)
         return (r, UnpackMessageElement(m, self.__type, self.__obj, self.__innerpipe.GetNode()))
 
     @property
