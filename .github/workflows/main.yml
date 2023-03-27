@@ -723,13 +723,22 @@ jobs:
     - name: build_host
       working-directory: build2_host
       run: |
-        cmake --build . --config Release -- -j 4    
+        cmake --build . --config Release -- -j 4
+    - uses: nttld/setup-ndk@v1
+      id: setup-ndk
+      with:
+        ndk-version: r25b
+        add-to-path: false    
     - name: build_boost
+      env:
+        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       run: |
         git clone --depth=1 https://github.com/moritz-wundke/Boost-for-Android.git boost_android
         cd boost_android
         ./build-android.sh $ANDROID_NDK_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.80.0 
     - name: build_openssl
+      env:
+        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       run: |
         git clone --branch OpenSSL_1_1_1n https://github.com/openssl/openssl.git
         cd openssl
@@ -741,6 +750,8 @@ jobs:
       run: mkdir -p build2
     - name: configure
       working-directory: build2
+      env:
+        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=OFF  -DBUILD_TESTING=OFF
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release 
@@ -765,6 +776,8 @@ jobs:
         -DANDROID_JAR=$ANDROID_HOME/platforms/android-24/Android.jar 
         ../robotraconteur
     - name: build
+      env:
+        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       working-directory: build2
       run: |
         cmake --build . --config Release -- -j 4
