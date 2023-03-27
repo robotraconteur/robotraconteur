@@ -2146,10 +2146,13 @@ class PackMxArrayToMessageElementImpl
             size_t ndims = mxGetNumberOfDimensions(pm);
             std::vector<mwSize> dims1(ndims);
             memcpy(&dims1[0], mxGetDimensions(pm), sizeof(mwSize) * ndims);
-            for (size_t i = 1; i < ndims; i++)
+            if (mxGetNumberOfElements(pm) > 0)
             {
-                if (dims1[i] != 1)
-                    throw DataTypeException("List types must be single dimensional column vector");
+                for (size_t i = 1; i < ndims; i++)
+                {
+                    if (dims1[i] != 1)
+                        throw DataTypeException("List types must be single dimensional column vector");
+                }
             }
 
             mwSize elementcount = dims1[0];
@@ -2185,10 +2188,13 @@ class PackMxArrayToMessageElementImpl
             size_t ndims = mxGetNumberOfDimensions(pm);
             std::vector<mwSize> dims(ndims);
             memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
-            for (size_t i = 1; i < ndims; i++)
+            if (mxGetNumberOfElements(pm) > 0)
             {
-                if (dims[i] != 1)
-                    throw DataTypeException("Column vector expected");
+                for (size_t i = 1; i < ndims; i++)
+                {
+                    if (dims[i] != 1)
+                        throw DataTypeException("Column vector expected");
+                }
             }
 
             if (tdef->ArrayType == DataTypes_ArrayTypes_none && dims[0] != 1)
@@ -2203,7 +2209,7 @@ class PackMxArrayToMessageElementImpl
 
             RR_INTRUSIVE_PTR<RRBaseArray> o1 = GetRRArrayFromMxArray(pm);
             if (o1->GetTypeID() != tdef->Type)
-                throw DataTypeException("Column vector expected");
+                throw DataTypeException("Numeric array type mismatch");
             if ((tdef->ArrayType != DataTypes_ArrayTypes_none) && tdef->ArrayLength.at(0) != 0)
             {
                 if (tdef->ArrayVarLength)
@@ -2264,8 +2270,11 @@ class PackMxArrayToMessageElementImpl
             if (mxGetNumberOfDimensions(pm) != 2)
                 throw DataTypeException("1xN string expected ");
             const mwSize* pm_dims = mxGetDimensions(pm);
-            if (pm_dims[0] != 1)
-                throw DataTypeException("1xN string expected");
+            if (mxGetNumberOfElements(pm) > 0)
+            {
+                if (pm_dims[0] != 1)
+                    throw DataTypeException("1xN string expected");
+            }
 
             const uint16_t* str_utf16 = (const uint16_t*)mxGetData(pm);
             std::string str_utf8 = boost::locale::conv::utf_to_utf<char>(str_utf16, str_utf16 + pm_dims[1]);
@@ -2382,8 +2391,11 @@ class PackMxArrayToMessageElementImpl
                     throw DataTypeException("Invalid namedarray data type");
                 std::vector<mwSize> dims(ndims);
                 memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
-                if (dims.at(0) != namedarray_info.get<1>())
-                    throw DataTypeException("Invalid namedarray data size");
+                if(mxGetNumberOfElements(pm) > 0)
+                {
+                    if (dims.at(0) != namedarray_info.get<1>())
+                        throw DataTypeException("Invalid namedarray data size");
+                }
 
                 switch (tdef->ArrayType)
                 {
@@ -2413,10 +2425,13 @@ class PackMxArrayToMessageElementImpl
                         }
                     }
 
-                    for (size_t i = 2; i < dims.size(); i++)
+                    if (mxGetNumberOfElements(pm) > 0)
                     {
-                        if (dims.at(i) != 1)
-                            throw DataTypeException("Invalid namedarray data size");
+                        for (size_t i = 2; i < dims.size(); i++)
+                        {
+                            if (dims.at(i) != 1)
+                                throw DataTypeException("Invalid namedarray data size");
+                        }
                     }
 
                     std::vector<RR_INTRUSIVE_PTR<MessageElement> > o1;

@@ -2231,7 +2231,7 @@ void RobotRaconteurTest_testroot::set_list_d1(
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    EXPECT_NO_THROW(EXPECT_EQ(value->size(), 3));
+    EXPECT_NO_THROW(ASSERT_EQ(value->size(), 3));
     EXPECT_NO_THROW(EXPECT_EQ(RRArrayToScalar(value->front()), 4.074501e-07));
     EXPECT_NO_THROW(EXPECT_EQ(RRArrayToScalar(*(++value->begin())), -4.535303e+05));
     EXPECT_NO_THROW(EXPECT_EQ(RRArrayToScalar(*(++(++value->begin()))), -2.956241e-20));
