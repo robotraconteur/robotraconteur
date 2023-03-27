@@ -2391,7 +2391,7 @@ class PackMxArrayToMessageElementImpl
                     throw DataTypeException("Invalid namedarray data type");
                 std::vector<mwSize> dims(ndims);
                 memcpy(&dims[0], mxGetDimensions(pm), ndims * sizeof(mwSize));
-                if(mxGetNumberOfElements(pm) > 0)
+                if (mxGetNumberOfElements(pm) > 0)
                 {
                     if (dims.at(0) != namedarray_info.get<1>())
                         throw DataTypeException("Invalid namedarray data size");
