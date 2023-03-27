@@ -90,6 +90,8 @@ jobs:
     - name: build-swig
       if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
       uses: johnwason/swig-build-action@v1
+      with:
+        cache-key: ${{ matrix.config.os }}
     - name: apt-swig
       if: ${{ matrix.config.os == 'ubuntu-22.04' || matrix.config.os == 'debian-11' }}
       run: sudo apt-get install swig -qq -y
