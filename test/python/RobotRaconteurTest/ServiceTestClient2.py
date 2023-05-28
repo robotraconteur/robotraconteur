@@ -202,6 +202,23 @@ class ServiceTestClient2:
             pass
         assert cmp(list(self._r.gen_func2("gen_func2_a_param").NextAll()), [
                    bytearray([i]) for i in xrange(16)]) == 0
+        
+        g3 = self._r.gen_func4()
+        for _ in xrange(3):
+            assert g3.TryNext([])[0]
+        res, b = g3.TryNext([2, 3, 4])
+        assert res
+        print(list(b))
+        g3.Abort()
+        try:
+            g3.TryNext([])
+        except RR.OperationAbortedException:
+            pass
+
+        g4 = self._r.gen_func4()
+        assert g4.TryNext([2, 3, 4])[0]
+        g4.Close()
+        assert not g4.TryNext([])[0]
 
     def TestMemories(self):
 

@@ -3637,6 +3637,17 @@ class GeneratorClient(object):
             param1 = None
         ret1 = self._inner_gen.Next(param1)
         return self._unpack_return(ret1)
+    
+    def TryNext(self, param=None):
+        if (self._param_type is not None and self._param_type.ContainerType == DataTypes_ContainerTypes_generator):
+            param1 = self._pack_param(param)
+        else:
+            assert param is None
+            param1 = None
+        gen_res = self._inner_gen.TryNext(param1)
+        if not gen_res.res:
+            return False, None
+        return True, self._unpack_return(gen_res.value)
 
     def AsyncNext(self, param, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE):
         if (self._param_type is not None and self._param_type.ContainerType == DataTypes_ContainerTypes_generator):

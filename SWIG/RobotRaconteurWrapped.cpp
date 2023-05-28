@@ -1975,6 +1975,22 @@ RR_INTRUSIVE_PTR<MessageElement> WrappedGeneratorClient::Next(const RR_INTRUSIVE
 {
     return NextBase(v);
 }
+
+WrappedGeneratorClient_TryGetNextResult WrappedGeneratorClient::TryNext(const RR_INTRUSIVE_PTR<MessageElement>& v)
+{
+    WrappedGeneratorClient_TryGetNextResult res;
+    try
+    {
+        res.res = true;
+        res.value = NextBase(v);
+    }
+    catch (StopIterationException&)
+    {
+        res.res = false;
+    }
+    return res;
+}
+
 void WrappedGeneratorClient::AsyncNext(const RR_INTRUSIVE_PTR<MessageElement>& v, int32_t timeout,
                                        AsyncRequestDirector* handler, int32_t id)
 {
