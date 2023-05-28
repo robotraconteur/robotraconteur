@@ -679,9 +679,7 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
         p /= s;
     }
 
-#ifdef ROBOTRACONTEUR_WINDOWS
     boost::filesystem::create_directories(p);
-#endif
     p /= name.to_string();
 
 #ifdef ROBOTRACONTEUR_WINDOWS
