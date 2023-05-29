@@ -13,11 +13,22 @@ try
 
     RobotRaconteurMatlabTest(url1)
     RobotRaconteurMatlabTest2(url2)
+    try
+    lib.Shutdown()
+    catch
+    end
+    sleep(2)
 
     clear lib
     quit(0)
 catch e
     disp(e)
+
+    try
+    lib.Shutdown()
+    catch
+    end
+    sleep(2)
     clear lib
     quit(1)    
 end
