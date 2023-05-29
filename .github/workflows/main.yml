@@ -18,7 +18,7 @@ env:
     boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
     boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
     boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
-    boost-utility boost-uuid boost-program-options gtest
+    boost-utility boost-uuid boost-program-options gtest openssl
     
 
 
@@ -551,7 +551,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ctest . -C Release --output-on-failure
+        ctest . -C Release --output-on-failure
     - name: matlab out tar
       run: >
          export RR_VER=`cat build2/rrversion.txt` 
