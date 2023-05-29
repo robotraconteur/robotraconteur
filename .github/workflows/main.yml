@@ -517,7 +517,7 @@ jobs:
     - name: Set up MATLAB
       uses: matlab-actions/setup-matlab@v1
       with:
-        release: R2021b
+        release: R2020b
     - name: vcpkg build
       uses: johnwason/vcpkg-action@2441730b6c83a5a57bebd9d1ed2ee4bfe4ce02b1
       id: vcpkg
