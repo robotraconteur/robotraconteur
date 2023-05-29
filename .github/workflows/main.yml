@@ -551,7 +551,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure
+        LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ctest . -C Release --output-on-failure
     - name: matlab out tar
       run: >
          export RR_VER=`cat build2/rrversion.txt` 
@@ -609,7 +609,7 @@ jobs:
       shell: cmd /C call {0}
   
   build-conda-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash -l {0}
