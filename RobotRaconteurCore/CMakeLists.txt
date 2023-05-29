@@ -296,15 +296,15 @@ endif()
 if(UNIX AND NOT APPLE AND NOT ANDROID)
     if(BUILD_SHARED_LIBS)
 
-    target_include_directories(RobotRaconteurCore PRIVATE ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR}
-                                                          ${LIBUSB_INCLUDE_DIR})
-    target_link_libraries(RobotRaconteurCore PRIVATE OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
-    target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+        target_include_directories(RobotRaconteurCore PRIVATE ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR}
+                                                              ${LIBUSB_INCLUDE_DIR})
+        target_link_libraries(RobotRaconteurCore PRIVATE OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
+        target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
     else()
-    target_include_directories(RobotRaconteurCore PUBLIC ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR}
-                                                          ${LIBUSB_INCLUDE_DIR})
-    target_link_libraries(RobotRaconteurCore PUBLIC OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
-    target_compile_definitions(RobotRaconteurCore PUBLIC ROBOTRACONTEUR_USE_OPENSSL)
+        target_include_directories(RobotRaconteurCore PUBLIC ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR}
+                                                             ${LIBUSB_INCLUDE_DIR})
+        target_link_libraries(RobotRaconteurCore PUBLIC OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
+        target_compile_definitions(RobotRaconteurCore PUBLIC ROBOTRACONTEUR_USE_OPENSSL)
     endif()
 
 endif()
