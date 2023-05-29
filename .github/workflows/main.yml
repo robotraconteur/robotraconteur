@@ -627,7 +627,7 @@ jobs:
         channels: conda-forge,robotraconteur
     - name: conda install
       run: >
-        conda install git cmake boost-cpp python swig numpy pytest pip dbus make zlib openssl libusb libbluetooth-headers gcc_linux-64 gcc_impl_linux-64 gtest gmock
+        conda install git cmake boost-cpp python swig numpy pytest pip dbus make zlib openssl libusb libbluetooth-headers compilers gcc_impl_linux-64 gtest gmock
     - name: printenv
       run: printenv    
     - name: configure
