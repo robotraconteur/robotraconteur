@@ -32,8 +32,8 @@ jobs:
       matrix:
         config:
         - os: ubuntu-18.04
-          runs_on: ubuntu-18.04
-          container: ""
+          runs_on: ubuntu-latest
+          container: ubuntu:bionic
         - os: ubuntu-20.04
           runs_on: ubuntu-20.04
           container: ""
