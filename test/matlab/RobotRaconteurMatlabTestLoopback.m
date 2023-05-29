@@ -15,9 +15,9 @@ try
     RobotRaconteurMatlabTest2(url2)
 
     clear lib
-    quit(0)
+    % quit(0)
 catch e
     disp(e)
     clear lib
-    quit(1)    
+    % quit(1)    
 end
