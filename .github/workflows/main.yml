@@ -509,13 +509,17 @@ jobs:
       run: >
         sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0 
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev 
-        git cmake g++ make mono-devel libgtest-dev -qq
+        git cmake g++ make mono-devel libgtest-dev gcc-8 g++-8 -qq
+    - name: Configure default compilers
+      run: |
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100
     - name: Set up MATLAB
       uses: matlab-actions/setup-matlab@v1
       with:
         release: R2021b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v4
+      uses: johnwason/vcpkg-action@master
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -524,14 +528,14 @@ jobs:
         cache-key: ubuntu-build-matlab
         token: ${{ github.token }}
     - name: cache-build
-      if: false #startsWith(github.ref, 'refs/tags/v') != true
+      if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
       uses: hendrikmuhs/ccache-action@v1
       with:
-        key: ${{ runner.os }}-matlab-build-main-ccache
+        key: ${{ runner.os }}-matlab-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}
     - name: cmake cache args
       id: cmake-cache-args
-      if: false #startsWith(github.ref, 'refs/tags/v') != true
+      if: startsWith(github.ref, 'refs/tags/v') != true
       run: >
         echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
@@ -551,7 +555,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ctest . -C Release --output-on-failure
+        ctest . -C Release --output-on-failure
     - name: matlab out tar
       run: >
          export RR_VER=`cat build2/rrversion.txt` 
@@ -609,7 +613,7 @@ jobs:
       shell: cmd /C call {0}
   
   build-conda-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     defaults:
       run:
         shell: bash -l {0}
