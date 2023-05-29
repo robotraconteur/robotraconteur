@@ -5,7 +5,7 @@ classdef RobotRaconteurTestServerLib < handle
         
     methods
         function obj = RobotRaconteurTestServerLib(libname,hfile)
-            loadlibrary(libname,hfile);
+            loadlibrary(libname,hfile,'alias','robotraconteur_test_server_lib');
         end
         
         function StartServer(obj,nodename)
