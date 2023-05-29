@@ -507,7 +507,7 @@ jobs:
       run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
+        sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0 
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev 
         git cmake g++ make mono-devel libgtest-dev -qq
     - name: Set up MATLAB
