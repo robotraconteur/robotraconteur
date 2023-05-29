@@ -519,12 +519,12 @@ jobs:
       with:
         release: R2021b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@master
+      uses: johnwason/vcpkg-action@2441730b6c83a5a57bebd9d1ed2ee4bfe4ce02b1
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
-        triplet: x64-linux
-        extra-args: --clean-after-build
+        triplet: x64-linux-matlab
+        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build/triplets
         cache-key: ubuntu-build-matlab
         token: ${{ github.token }}
     - name: cache-build
