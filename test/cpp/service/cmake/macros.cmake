@@ -30,7 +30,7 @@ function(RR_SERVICE_TEST_ADD_LIB TARGET_NAME)
     endif()
     target_link_libraries(
         robotraconteur_test_${TARGET_NAME} PUBLIC ${RR_TEST_LIB} RobotRaconteurCore robotraconteur_test_cpp_common
-                                                  robotraconteur_test_lfsr GTest::Main)
+                                                  robotraconteur_test_lfsr_static GTest::Main)
     target_include_directories(robotraconteur_test_${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
     if(DEFINED RR_ARG_DEFINE)
         target_compile_definitions(robotraconteur_test_${TARGET_NAME} PRIVATE ${RR_ARG_DEFINE})
