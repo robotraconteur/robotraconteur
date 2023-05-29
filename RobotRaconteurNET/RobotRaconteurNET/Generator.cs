@@ -68,7 +68,7 @@ public interface Generator1<ReturnType, ParamType>
     /// <param name="param">Parameter to pass to generator</param>
     /// <returns>Return value from generator</returns>
     ReturnType Next(ParamType param);
-     /// <summary>
+    /// <summary>
     /// Try to advance the generator. Returns false if there are no more values.
     /// </summary>
     /// <remarks>
@@ -625,7 +625,7 @@ public class Generator1Client<ReturnType, ParamType> : Generator1<ReturnType, Pa
                 }
                 using (MessageElement m2 = res1.value)
                 {
-                    ret= RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
+                    ret = RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
                     return true;
                 }
             }

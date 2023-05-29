@@ -3637,7 +3637,7 @@ class GeneratorClient(object):
             param1 = None
         ret1 = self._inner_gen.Next(param1)
         return self._unpack_return(ret1)
-    
+
     def TryNext(self, param=None):
         if (self._param_type is not None and self._param_type.ContainerType == DataTypes_ContainerTypes_generator):
             param1 = self._pack_param(param)

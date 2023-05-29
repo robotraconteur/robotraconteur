@@ -211,7 +211,6 @@ public class ServiceTestClient2
         gen4.Close();
         gen4_res = gen4.TryNext(new byte[] { 2, 3, 4 }, out gen4_res2);
         RRAssert.AreEqual(gen4_res, false);
-
     }
 
     public void TestMemories()
