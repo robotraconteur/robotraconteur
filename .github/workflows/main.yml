@@ -524,7 +524,7 @@ jobs:
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
         triplet: x64-linux-matlab
-        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build/triplets
+        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ubuntu-build-matlab
         token: ${{ github.token }}
     - name: cache-build
