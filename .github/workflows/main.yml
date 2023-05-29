@@ -537,7 +537,7 @@ jobs:
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: configure
       run: >
-        export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 cmake -G "Unix Makefiles" 
+        cmake -G "Unix Makefiles" 
         -DBUILD_GEN=ON  -DBUILD_TESTING=ON 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
@@ -551,7 +551,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure
+        LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ctest . -C Release --output-on-failure
     - name: matlab out tar
       run: >
          export RR_VER=`cat build2/rrversion.txt` 
