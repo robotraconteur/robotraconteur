@@ -17,7 +17,7 @@ try
     lib.Shutdown()
     catch
     end
-    sleep(2)
+    pause(2)
 
     clear lib
     quit(0)
@@ -28,7 +28,7 @@ catch e
     lib.Shutdown()
     catch
     end
-    sleep(2)
+    pause(2)
     clear lib
     quit(1)    
 end
