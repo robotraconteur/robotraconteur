@@ -246,7 +246,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * @param localhost_only true to only listen on localhost
      * @param accept_filter An optional function that returns true if the endpoint should be accepted
      */
-    virtual void StartServer(int32_t porte, bool localhost_only = false, boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = NULL);
+    virtual void StartServer(int32_t porte, bool localhost_only = false, boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = 0);
 
     /**
      * @brief Start the server using the TCP port sharer
@@ -275,7 +275,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * @param accept_filter An optional function that returns true if the endpoint should be accepted
      */
     virtual void StartServer(const std::vector<boost::asio::ip::tcp::endpoint>& listen_endpoints, 
-      boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = NULL);
+      boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = 0);
 
     /**
      * @brief Get the TCP endpoints the server is listening on

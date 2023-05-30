@@ -2417,7 +2417,8 @@ void TcpTransport::StartServer(const std::vector<boost::asio::ip::tcp::endpoint>
             RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> a;
             if (e.address().is_v4())
             {
-                a = RR_MAKE_SHARED<boost::asio::ip::tcp::acceptor>(GetNode()->GetThreadPool()->get_io_context(), boost::asio::ip::tcp::v4());
+                a = RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>(new boost::asio::ip::tcp::acceptor(
+                    GetNode()->GetThreadPool()->get_io_context(), boost::asio::ip::tcp::v4()));
             }
             else if (e.address().is_v6())
             {
@@ -6045,18 +6046,25 @@ void IPNodeDiscovery::handle_broadcast_timer(const boost::system::error_code& er
         uint16_t ipv6_any_port = 0;
 
         // iterate over announce_listen_endpoints and remove listen to ipv4 or ipv6 any address
+        std::set<boost::asio::ip::tcp::endpoint>::iterator it_tmp;
         for(std::set<boost::asio::ip::tcp::endpoint>::iterator it = announce_listen_endpoints.begin(); it != announce_listen_endpoints.end();)
         {
             if (it->address().is_v4() && it->address().to_v4() == boost::asio::ip::address_v4::any())
             {
                 ipv4_any_port = it->port();
-                it = announce_listen_endpoints.erase(it);
+                it_tmp = it;
+                ++it_tmp;
+                announce_listen_endpoints.erase(it);
+                it = it_tmp;
                 ipv4_any = true;
             }
             else if (it->address().is_v6() && it->address().to_v6() == boost::asio::ip::address_v6::any())
             {
                 ipv6_any_port = it->port();
-                it = announce_listen_endpoints.erase(it);
+                it_tmp = it;
+                ++it_tmp;
+                announce_listen_endpoints.erase(it);
+                it = it_tmp;
                 ipv6_any = true;
             }
             else
