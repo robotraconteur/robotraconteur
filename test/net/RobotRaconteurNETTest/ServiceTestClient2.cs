@@ -192,7 +192,8 @@ public class ServiceTestClient2
 
         // Add tests that use TryNext for gen3 and gen4
         var gen3 = r.gen_func1();
-        var gen3_res = gen3.TryNext(out var gen3_res2);
+        double gen3_res2;
+        var gen3_res = gen3.TryNext(out gen3_res2);
         RRAssert.AreEqual(gen3_res, true);
         gen3_res = gen3.TryNext(out gen3_res2);
         gen3.Abort();
@@ -206,7 +207,8 @@ public class ServiceTestClient2
         }
 
         var gen4 = r.gen_func4();
-        var gen4_res = gen4.TryNext(new byte[] { 2, 3, 4 }, out var gen4_res2);
+        byte[] gen4_res2;
+        var gen4_res = gen4.TryNext(new byte[] { 2, 3, 4 }, out gen4_res2);
         RRAssert.AreEqual(gen4_res, true);
         gen4.Close();
         gen4_res = gen4.TryNext(new byte[] { 2, 3, 4 }, out gen4_res2);
