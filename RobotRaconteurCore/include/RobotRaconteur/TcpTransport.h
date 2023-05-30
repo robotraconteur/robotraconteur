@@ -243,6 +243,8 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * for the port sharer
      *
      * @param porte The port to listen on
+     * @param localhost_only true to only listen on localhost
+     * @param accept_filter An optional function that returns true if the endpoint should be accepted
      */
     virtual void StartServer(int32_t porte, bool localhost_only = false, boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = NULL);
 
@@ -264,8 +266,23 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      */
     virtual bool IsPortSharerRunning();
 
+    /**
+     * @brief Start the server on the specified TCP endpoints
+     * 
+     * The official Robot Raconteur port 48653 is reserved for the port sharer
+     * 
+     * @param listen_endpoints The endpoints to listen on. May be IPv4 or IPv6
+     * @param accept_filter An optional function that returns true if the endpoint should be accepted
+     */
     virtual void StartServer(const std::vector<boost::asio::ip::tcp::endpoint>& listen_endpoints, 
       boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = NULL);
+
+    /**
+     * @brief Get the TCP endpoints the server is listening on
+     * 
+     * @return std::vector<boost::asio::ip::tcp::endpoint> 
+     */
+    virtual std::vector<boost::asio::ip::tcp::endpoint> GetListenEndpoints();
 
     RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE;
 
