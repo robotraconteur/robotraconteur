@@ -198,10 +198,10 @@ jobs:
       matrix:
         config:
           - arch: x64
-            vcpkg_triplet: x64-windows-static-md
+            vcpkg_triplet: x64-windows-static-md-release
             cmake_arch: x64
           - arch: x86
-            vcpkg_triplet: x86-windows-static-md
+            vcpkg_triplet: x86-windows-static-md-release
             cmake_arch: Win32
     steps:
     - uses: actions/checkout@v3
@@ -215,7 +215,7 @@ jobs:
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
         triplet: ${{ matrix.config.vcpkg_triplet }}
-        extra-args: --clean-after-build
+        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
     - uses: actions/setup-java@v1
@@ -349,7 +349,7 @@ jobs:
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
-        triplet: x64-windows
+        triplet: x64-windows-release
         extra-args: --clean-after-build
         cache-key: win-shared-build-main
         token: ${{ github.token }}
@@ -814,8 +814,8 @@ jobs:
       id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
-        triplet: arm64-ios
-        extra-args: --clean-after-build
+        triplet: arm64-ios-release
+        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
         token: ${{ github.token }}
     - name: configure
