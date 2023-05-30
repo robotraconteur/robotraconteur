@@ -26,6 +26,7 @@ function c=RobotRaconteurGenerator(objecttype,stubid)
 %    The generator uses "dot" notations for its members. The following synchronous functions are available:
 %
 %    ret = generator.Next(param) - Advance the generator. Optional param and/or ret values.
+%    res_ret = generator.TryNext(param) - Advance the generator. Optional param and/or ret values. Returns a two element cell array with success and return value.
 %    generator.Close()           - Close the generator
 %    generator.Abort()           - Abort the generator
 %

@@ -25,7 +25,18 @@ function RobotRaconteurMatlabTest2(url)
     g.async_Close(@gen_func1_close,15);
     pause(1)
     RobotRaconteur.ProcessRequests()
-    
+
+    g2=c.gen_func1();
+    g2_ret = g2.TryNext();
+    assert(g2_ret{1} == true)
+    assert(g2_ret{2} == 0)
+    g2_ret = g2.TryNext();
+    assert(g2_ret{1} == true)
+    assert(g2_ret{2} == 1)
+    g2.Close()
+    g2_ret = g2.TryNext();
+    assert(g2_ret{1} == false)
+        
     pod_m1_v1=fill_testpod2(59174);
     for j=2:32
         pod_m1_v1(j,1) = fill_testpod2(59174+j-1);

@@ -430,7 +430,18 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                     boost::mutex::scoped_lock lock(generators_lock);
                     std::map<int32_t, RR_SHARED_PTR<MexGeneratorClient> >::iterator e1 = generators.find(stubid);
                     if (e1 == generators.end())
+                    {
+                        // Return "false" if TryNext was called
+                        if (MexGeneratorClient::GetFunctionName(prhs[3]) == "TryNext")
+                        {
+                            mxArray* try_next_ret = mxCreateCellMatrix(1, 2);
+                            mxSetCell(try_next_ret, 0, mxCreateLogicalScalar(false));
+                            mxSetCell(try_next_ret, 1, mxCreateDoubleScalar(0));
+                            plhs[0] = try_next_ret;
+                            return;
+                        }
                         throw InvalidArgumentException("Cannot find generator");
+                    }
                     o = e1->second;
                 }
                 plhs[0] = o->subsref(prhs[3]);
@@ -8935,6 +8946,25 @@ MexGeneratorClient::MexGeneratorClient(const std::string& name, int32_t id, cons
     generatorid = 0;
 }
 
+std::string MexGeneratorClient::GetFunctionName(const mxArray* S)
+{
+    if (!mxIsStruct(S))
+        throw InvalidArgumentException("RobotRaconteurMex error");
+
+    int c1 = (int)mxGetNumberOfElements(S);
+
+    if (c1 == 0)
+        throw InvalidArgumentException("RobotRaconteur object expects 'dot' notation");
+
+    std::string type = mxToString(mxGetField(S, 0, "type"));
+    if (type != ".")
+        throw InvalidArgumentException("RobotRaconteur object expects 'dot' notation");
+
+    std::string membername = mxToString(mxGetField(S, 0, "subs"));
+
+    return membername;
+}
+
 mxArray* MexGeneratorClient::subsref(const mxArray* S)
 {
     if (!mxIsStruct(S))
@@ -8979,7 +9009,7 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
         }
         else
         {
-            throw InvalidArgumentException("ReceivePacketWait expects zero or one arguments");
+            throw InvalidArgumentException("GeneratorClient Next expects zero or one arguments");
         }
         try
         {
@@ -8992,6 +9022,58 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
             {
                 return mxCreateNumericMatrix(0, 1, mxDOUBLE_CLASS, mxREAL);
             }
+        }
+        catch (std::exception&)
+        {
+            boost::mutex::scoped_lock lock(generators_lock);
+            generators.erase(generatorid);
+            throw;
+        }
+    }
+
+    if (membername == "TryNext")
+    {
+        RR_INTRUSIVE_PTR<MessageElement> param;
+        if (mxGetNumberOfElements(cell_args) == 0)
+        {
+            if (param_type)
+                throw "GeneratorClient TryNext expects a parameter";
+        }
+        else if (mxGetNumberOfElements(cell_args) == 1)
+        {
+            if (!param_type)
+                throw "GeneratorClient TryNext does not expect a parameter";
+            param = PackMxArrayToMessageElement(mxGetCell(cell_args, 0), param_type, GetStub());
+        }
+        else
+        {
+            throw InvalidArgumentException("GeneratorClient TryNext expects zero or one arguments");
+        }
+        try
+        {
+            RR_INTRUSIVE_PTR<MessageElement> res = NextBase(param);
+            mxArray* ret;
+            if (this->return_type)
+            {
+                ret = UnpackMessageElementToMxArray(res, return_type, GetStub());
+            }
+            else
+            {
+                ret = mxCreateNumericMatrix(0, 1, mxDOUBLE_CLASS, mxREAL);
+            }
+
+            // Return cell array with "true" and ret
+            mxArray* ret2 = mxCreateCellMatrix(1, 2);
+            mxSetCell(ret2, 0, mxCreateLogicalScalar(true));
+            mxSetCell(ret2, 1, ret);
+            return ret2;
+        }
+        catch (StopIterationException&)
+        {
+            mxArray* ret2 = mxCreateCellMatrix(1, 2);
+            mxSetCell(ret2, 0, mxCreateLogicalScalar(false));
+            mxSetCell(ret2, 1, mxCreateNumericMatrix(0, 1, mxDOUBLE_CLASS, mxREAL));
+            return ret2;
         }
         catch (std::exception&)
         {

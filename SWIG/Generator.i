@@ -22,6 +22,14 @@
 
 namespace RobotRaconteur
 {
+	%nodefaultctor WrappedGeneratorClient_TryGetNextResult;
+	class WrappedGeneratorClient_TryGetNextResult
+	{
+	public:
+		boost::intrusive_ptr<MessageElement> value;
+		bool res;
+	};
+
 	%nodefaultctor WrappedGeneratorClient;
 	class WrappedGeneratorClient
 	{
@@ -29,6 +37,7 @@ namespace RobotRaconteur
 
 	RR_RELEASE_GIL()
 		virtual boost::intrusive_ptr<MessageElement> Next(const boost::intrusive_ptr<MessageElement>& v);
+		WrappedGeneratorClient_TryGetNextResult TryNext(const boost::intrusive_ptr<MessageElement>& v);
 		virtual void AsyncNext(const boost::intrusive_ptr<MessageElement>& v, int32_t timeout, AsyncRequestDirector* handler, int32_t id);
 
 		virtual void Abort();
