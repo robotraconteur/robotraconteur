@@ -112,7 +112,8 @@ bool IntraTransport::IsClient() const { return true; }
 
 std::string IntraTransport::GetUrlSchemeString() const { return "rr+intra"; }
 
-std::vector<std::string> IntraTransport::GetServerListenUrls() {
+std::vector<std::string> IntraTransport::GetServerListenUrls()
+{
     std::vector<std::string> o;
     if (is_server)
     {

@@ -246,7 +246,8 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * @param localhost_only true to only listen on localhost
      * @param accept_filter An optional function that returns true if the endpoint should be accepted
      */
-    virtual void StartServer(int32_t porte, bool localhost_only = false, boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = 0);
+    virtual void StartServer(int32_t porte, bool localhost_only = false,
+                             boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = 0);
 
     /**
      * @brief Start the server using the TCP port sharer
@@ -268,25 +269,25 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
 
     /**
      * @brief Start the server on the specified TCP endpoints
-     * 
+     *
      * The official Robot Raconteur port 48653 is reserved for the port sharer
-     * 
+     *
      * @param listen_endpoints The endpoints to listen on. May be IPv4 or IPv6
      * @param accept_filter An optional function that returns true if the endpoint should be accepted
      */
-    virtual void StartServer(const std::vector<boost::asio::ip::tcp::endpoint>& listen_endpoints, 
-      boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = 0);
+    virtual void StartServer(const std::vector<boost::asio::ip::tcp::endpoint>& listen_endpoints,
+                             boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = 0);
 
     /**
      * @brief Get the TCP endpoints the server is listening on
-     * 
-     * @return std::vector<boost::asio::ip::tcp::endpoint> 
+     *
+     * @return std::vector<boost::asio::ip::tcp::endpoint>
      */
     virtual std::vector<boost::asio::ip::tcp::endpoint> GetListenEndpoints();
 
     /**
      * @brief Get the TCP endpoints the server is listening on as Robot Raconteur candidate URLs
-     * 
+     *
      * @return std::vector<std::string> Candidate connections urls for the node, without service specified
      */
     RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE;
@@ -680,9 +681,9 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     boost::mutex acceptor_lock;
 
     static void handle_accept(const RR_SHARED_PTR<TcpTransport>& parent,
-                                 const RR_SHARED_PTR<detail::TcpSocketAcceptor>& acceptor,
-                                 const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-                                 const boost::system::error_code& error);
+                              const RR_SHARED_PTR<detail::TcpSocketAcceptor>& acceptor,
+                              const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
+                              const boost::system::error_code& error);
 
     virtual void register_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
     virtual void erase_transport(const RR_SHARED_PTR<ITransportConnection>& connection);

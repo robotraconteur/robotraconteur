@@ -225,7 +225,7 @@ enum RobotRaconteurNodeSetupFlags
     | RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE
     | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER
-    | RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE 
+    | RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_LISTEN_LOCALHOST
     */
 };

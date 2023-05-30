@@ -188,7 +188,8 @@ bool LocalTransport::IsClient() const { return true; }
 
 std::string LocalTransport::GetUrlSchemeString() const { return "rr+local"; }
 
-std::vector<std::string> LocalTransport::GetServerListenUrls() {
+std::vector<std::string> LocalTransport::GetServerListenUrls()
+{
     std::vector<std::string> o;
     if (acceptor)
     {
