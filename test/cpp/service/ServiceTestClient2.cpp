@@ -272,6 +272,28 @@ void ServiceTestClient2::TestGenerators()
     EXPECT_NO_THROW(gen2->Close());
 
     EXPECT_THROW(gen2->Next(AttachRRArrayCopy(a, 3)), StopIterationException);
+
+    RR_SHARED_PTR<Generator<RR_INTRUSIVE_PTR<RRArray<uint8_t> >, RR_INTRUSIVE_PTR<RRArray<uint8_t> > > > gen3;
+    ASSERT_NO_THROW(gen3 = r->gen_func4());
+    for (size_t i = 0; i < 6; i++)
+    {
+        RR_INTRUSIVE_PTR<RRArray<uint8_t> > gen3_ret;
+        EXPECT_NO_THROW(EXPECT_TRUE(gen3->TryNext(AttachRRArrayCopy(a, 3), gen3_ret)));
+    }
+
+    RR_INTRUSIVE_PTR<RRArray<uint8_t> > b3;
+    EXPECT_NO_THROW(ASSERT_TRUE(gen3->TryNext(AttachRRArrayCopy(a, 3), b3)));
+    EXPECT_NO_THROW(gen3->Abort());
+    EXPECT_THROW(gen3->TryNext(AttachRRArrayCopy(a, 3), b3), OperationAbortedException);
+
+    RR_SHARED_PTR<Generator<RR_INTRUSIVE_PTR<RRArray<uint8_t> >, RR_INTRUSIVE_PTR<RRArray<uint8_t> > > > gen4;
+    ASSERT_NO_THROW(gen4 = r->gen_func4());
+
+    RR_INTRUSIVE_PTR<RRArray<uint8_t> > gen4_ret;
+    EXPECT_NO_THROW(ASSERT_TRUE(gen4->TryNext(AttachRRArrayCopy(a, 3), gen4_ret)));
+    EXPECT_NO_THROW(gen4->Close());
+
+    EXPECT_NO_THROW(EXPECT_FALSE(gen4->TryNext(AttachRRArrayCopy(a, 3), gen4_ret)));
 }
 
 void ServiceTestClient2::TestNamedArrays()

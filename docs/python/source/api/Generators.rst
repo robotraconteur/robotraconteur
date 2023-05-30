@@ -20,6 +20,21 @@ Generators
        should be None
       :return: The return value from the “Next” call. If the generator function return type is void, this will
        be None.
+    
+   .. method:: TryNext(param = None)
+      
+      "TryNext" is the same as "Next", except that it will not throw a ``StopIterationException``. Instead, it will
+      return a tuple of ``(bool, T)`` where the first value is True if the generator is not complete, and the second
+      value is the return value from the “Next” call. If the generator function return type is void, the second value
+      will be None.
+
+      :param param: (Optional) The parameter to send to the generator “Next” function. This is only
+       required if the generator has a parameter marked {generator}. Otherwise, this parameter
+       should be None
+      :return: A tuple of ``(bool, T)`` where the first value is True if the generator is not complete, and the second
+        value is the return value from the “Next” call. If the generator function return type is void, the second value
+        will be None.
+
    .. method:: Close()
 
        Closes the generated. Internally, this works by sending the ``StopIterationException`` to the service. Once the 
