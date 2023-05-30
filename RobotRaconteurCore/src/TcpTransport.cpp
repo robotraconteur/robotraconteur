@@ -1811,8 +1811,6 @@ TcpTransport::TcpTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Tran
     this->node = node;
     this->heartbeat_period = 10000;
     this->require_tls = false;
-    ipv4_acceptor_paused = false;
-    ipv6_acceptor_paused = false;
     accept_websockets = true;
 
     allowed_websocket_origins.push_back("null");
@@ -1873,10 +1871,11 @@ void TcpTransport::Close()
     try
     {
         boost::mutex::scoped_lock lock(acceptor_lock);
-        if (ipv4_acceptor)
-            ipv4_acceptor->close();
-        if (ipv6_acceptor)
-            ipv6_acceptor->close();
+        BOOST_FOREACH(RR_SHARED_PTR<detail::TcpSocketAcceptor>& e, acceptors)
+        {
+            boost::system::error_code ec;
+            e->acceptor->close(ec);
+        }
     }
     catch (std::exception&)
     {}
@@ -2290,122 +2289,21 @@ void TcpTransport::AsyncSendMessage(const RR_INTRUSIVE_PTR<Message>& m,
     t->AsyncSendMessage(m, handler);
 }
 
-void TcpTransport::StartServer(int32_t port)
+void TcpTransport::StartServer(int32_t porte, bool localhost_only, boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter)
 {
-
-#ifndef ROBOTRACONTEUR_ALLOW_TCP_LISTEN_PORT_48653
-    if (port == 48653)
+    std::vector<boost::asio::ip::tcp::endpoint> eps;
+    if (localhost_only)
     {
-        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Transport, -1,
-                                           "TCP port 48653 is reserved for Robot Raconteur port sharer");
-        throw InvalidArgumentException("Port 48653 is reserved");
+        eps.push_back(boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::loopback(), porte));
+        eps.push_back(boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v6::loopback(), porte));
     }
-#endif
-
-    ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "TcpTransport starting server on port: " << port);
-
-    try
+    else
     {
-        boost::mutex::scoped_lock lock(acceptor_lock);
-        std::vector<boost::asio::ip::address> local_addresses;
-
-        TcpTransport::GetLocalAdapterIPAddresses(local_addresses);
-
-        bool has_ip6 = false;
-        bool has_ip4 = false;
-
-        BOOST_FOREACH (boost::asio::ip::address& e, local_addresses)
-        {
-            if (e.is_v6())
-                has_ip6 = true;
-            if (e.is_v4())
-                has_ip4 = true;
-        }
-
-        bool reuse_addr = false;
-
-        const char* reuse_addr_env1 = std::getenv("ROBOTRACONTEUR_TCP_SERVER_REUSEADDR");
-        if (reuse_addr_env1)
-        {
-            std::string reuse_addr_env(reuse_addr_env1);
-            boost::to_lower(reuse_addr_env);
-            if (reuse_addr_env == "true" || reuse_addr_env == "on" || reuse_addr_env == "1")
-            {
-                reuse_addr = true;
-            }
-        }
-
-        if (has_ip4)
-        {
-
-            ipv4_acceptor = RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>(
-                new boost::asio::ip::tcp::acceptor(GetNode()->GetThreadPool()->get_io_context(),
-                                                   boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)));
-
-            ipv4_acceptor->set_option(boost::asio::ip::tcp::socket::linger(false, 5));
-            if (reuse_addr)
-            {
-                ipv4_acceptor->set_option(boost::asio::ip::tcp::socket::reuse_address(true));
-            }
-
-            RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket(
-                new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
-
-            ipv4_acceptor->async_accept(*socket, boost::bind(&TcpTransport::handle_v4_accept, shared_from_this(),
-                                                             ipv4_acceptor, socket, boost::asio::placeholders::error));
-
-            if (port == 0)
-            {
-                port = ipv4_acceptor->local_endpoint().port();
-            }
-
-            ipv4_acceptor_paused = false;
-        }
-
-        if (has_ip6)
-        {
-            ipv6_acceptor = RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>(new boost::asio::ip::tcp::acceptor(
-                GetNode()->GetThreadPool()->get_io_context(), boost::asio::ip::tcp::v6()));
-
-            ipv6_acceptor->set_option(boost::asio::ip::tcp::socket::linger(false, 5));
-            if (reuse_addr)
-            {
-                ipv6_acceptor->set_option(boost::asio::ip::tcp::socket::reuse_address(true));
-            }
-
-            int on = 1;
-            setsockopt(ipv6_acceptor->native_handle(), IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<const char*>(&on),
-                       sizeof(on));
-
-            ipv6_acceptor->bind(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), port));
-
-            ipv6_acceptor->listen();
-
-            RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(
-                new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
-
-            ipv6_acceptor->async_accept(*socket2,
-                                        boost::bind(&TcpTransport::handle_v6_accept, shared_from_this(), ipv6_acceptor,
-                                                    socket2, boost::asio::placeholders::error));
-
-            if (port == 0)
-            {
-                port = ipv6_acceptor->local_endpoint().port();
-            }
-
-            ipv6_acceptor_paused = false;
-        }
-
-        m_Port = port;
-
-        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1, "TcpTransport server started on port: " << port);
+        eps.push_back(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), porte));
+        eps.push_back(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), porte));
     }
-    catch (std::exception& exp)
-    {
-        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(
-            node, Transport, -1, "TcpTransport starting server on port : " << port << " failed: " << exp.what());
-        throw;
-    }
+
+    StartServer(eps, accept_filter);
 }
 
 void TcpTransport::StartServerUsingPortSharer()
@@ -2440,6 +2338,107 @@ bool TcpTransport::IsPortSharerRunning()
     if (!c)
         return false;
     return c->IsPortSharerConnected();
+}
+
+void TcpTransport::StartServer(const std::vector<boost::asio::ip::tcp::endpoint>& listen_endpoints, 
+      boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter)
+{
+    boost::mutex::scoped_lock lock(acceptor_lock);
+    if (!acceptors.empty())
+    {
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Transport, -1, "Server already started");
+        throw InvalidOperationException("Server already started");
+    }
+
+    if (listen_endpoints.empty())
+    {
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Transport, -1, "No listen endpoints specified");
+        throw InvalidArgumentException("No listen endpoints specified");
+    }
+
+    #ifndef ROBOTRACONTEUR_ALLOW_TCP_LISTEN_PORT_48653
+    BOOST_FOREACH(const boost::asio::ip::tcp::endpoint& ep, listen_endpoints)
+    {
+        if (ep.port() == 48653)
+        {
+            ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Transport, -1,
+                                               "TCP port 48653 is reserved for Robot Raconteur port sharer");
+            throw InvalidArgumentException("Port 48653 is reserved");
+        }
+    }
+    #endif
+
+    bool reuse_addr = false;
+
+    const char* reuse_addr_env1 = std::getenv("ROBOTRACONTEUR_TCP_SERVER_REUSEADDR");
+    if (reuse_addr_env1)
+    {
+        std::string reuse_addr_env(reuse_addr_env1);
+        boost::to_lower(reuse_addr_env);
+        if (reuse_addr_env == "true" || reuse_addr_env == "on" || reuse_addr_env == "1")
+        {
+            reuse_addr = true;
+        }
+    }
+
+    try
+    {
+        BOOST_FOREACH(const boost::asio::ip::tcp::endpoint& e, listen_endpoints)
+        {
+            
+            ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
+                                               "TcpTransport starting server on endpoint: " << e);
+            RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> a;
+            if (e.address().is_v4())
+            {
+                a = RR_MAKE_SHARED<boost::asio::ip::tcp::acceptor>(GetNode()->GetThreadPool()->get_io_context(), boost::asio::ip::tcp::v4());
+            }
+            else if (e.address().is_v6())
+            {
+                a = RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>(new boost::asio::ip::tcp::acceptor(
+                GetNode()->GetThreadPool()->get_io_context(), boost::asio::ip::tcp::v6()));
+
+                int on = 1;
+                setsockopt(a->native_handle(), IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<const char*>(&on),
+                        sizeof(on));
+            }
+            else
+            {
+                ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Transport, -1,
+                                                   "Invalid IP address for listen endpoint: " << e);
+                throw InvalidArgumentException("Invalid IP address for listen endpoint");
+            }
+
+            a->set_option(boost::asio::ip::tcp::socket::linger(false, 5));
+            if (reuse_addr)
+            {
+                a->set_option(boost::asio::ip::tcp::socket::reuse_address(true));
+            }
+
+            a->bind(e);
+
+            a->listen();
+
+            RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket(
+                new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
+
+            RR_SHARED_PTR<detail::TcpSocketAcceptor> a2 = RR_MAKE_SHARED<detail::TcpSocketAcceptor>(a);
+            a2->accept_filter = accept_filter;
+            a->async_accept(*socket, boost::bind(&TcpTransport::handle_accept, shared_from_this(), a2, socket,
+                                                  boost::asio::placeholders::error));
+            acceptors.push_back(a2);
+
+        }
+
+        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1, "TcpTransport server started");
+    }
+    catch (std::exception& exp)
+    {
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Transport, -1, "TcpTransport starting server failed: " << exp.what());
+        throw;
+    }
+
+    m_Port = acceptors.front()->acceptor->local_endpoint().port();
 }
 
 void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::address>& addresses)
@@ -2603,8 +2602,8 @@ void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::addre
     std::cout << std::endl;*/
 }
 
-void TcpTransport::handle_v4_accept(const RR_SHARED_PTR<TcpTransport>& parent,
-                                    const RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>& acceptor,
+void TcpTransport::handle_accept(const RR_SHARED_PTR<TcpTransport>& parent,
+                                    const RR_SHARED_PTR<detail::TcpSocketAcceptor>& acceptor,
                                     const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                                     const boost::system::error_code& error)
 {
@@ -2614,6 +2613,18 @@ void TcpTransport::handle_v4_accept(const RR_SHARED_PTR<TcpTransport>& parent,
     try
     {
         socket->set_option(boost::asio::ip::tcp::socket::linger(true, 5));
+
+        if (acceptor->accept_filter)
+        {
+            if (!acceptor->accept_filter(socket->remote_endpoint()))
+            {
+                ROBOTRACONTEUR_LOG_INFO_COMPONENT(parent->node, Transport, -1,
+                                                  "Connection from endpoint " << socket->remote_endpoint() << " filtered by user"
+                                                  );
+                socket->close();
+                return;
+            }
+        }
 
         // TcpTransport_attach_transport(parent,socket,"",true,0,boost::bind(&TcpTransport_connected_callback2,parent,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
         RR_SHARED_PTR<detail::TcpAcceptor> a = RR_MAKE_SHARED<detail::TcpAcceptor>(parent, "", 0);
@@ -2643,7 +2654,7 @@ void TcpTransport::handle_v4_accept(const RR_SHARED_PTR<TcpTransport>& parent,
         {
             ROBOTRACONTEUR_LOG_INFO_COMPONENT(parent->node, Transport, -1,
                                               "TcpTransport pausing IPv4 accept due to exceeding MaxConnectionCount");
-            parent->ipv4_acceptor_paused = true;
+            acceptor->paused = true;
             return;
         }
     }
@@ -2651,58 +2662,7 @@ void TcpTransport::handle_v4_accept(const RR_SHARED_PTR<TcpTransport>& parent,
     RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(
         new boost::asio::ip::tcp::socket(parent->GetNode()->GetThreadPool()->get_io_context()));
 
-    acceptor->async_accept(*socket2, boost::bind(&TcpTransport::handle_v4_accept, parent, acceptor, socket2,
-                                                 boost::asio::placeholders::error));
-}
-
-void TcpTransport::handle_v6_accept(const RR_SHARED_PTR<TcpTransport>& parent,
-                                    const RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>& acceptor,
-                                    const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-                                    const boost::system::error_code& error)
-{
-    if (error)
-        return;
-
-    try
-    {
-        socket->set_option(boost::asio::ip::tcp::socket::linger(true, 5));
-        // TcpTransport_attach_transport(parent,socket,"",true,0,boost::bind(&TcpTransport_connected_callback2,parent,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
-        RR_SHARED_PTR<detail::TcpAcceptor> a = RR_MAKE_SHARED<detail::TcpAcceptor>(parent, "", 0);
-        boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
-                             const RR_SHARED_PTR<RobotRaconteurException>&)>
-            h = boost::bind(&TcpTransport_connected_callback2, parent, RR_BOOST_PLACEHOLDERS(_1),
-                            RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3));
-        a->AcceptSocket(socket, h);
-    }
-    catch (std::exception& exp)
-    {
-        RobotRaconteurNode::TryHandleException(parent->node, &exp);
-    }
-
-    int32_t connection_count = 0;
-    {
-        boost::mutex::scoped_lock lock(parent->TransportConnections_lock);
-        connection_count = boost::numeric_cast<int32_t>(parent->TransportConnections.size());
-    }
-
-    int32_t max_connection_count = parent->GetMaxConnectionCount();
-
-    boost::mutex::scoped_lock lock(parent->acceptor_lock);
-    if (max_connection_count > 0)
-    {
-        if (connection_count > max_connection_count)
-        {
-            ROBOTRACONTEUR_LOG_INFO_COMPONENT(parent->node, Transport, -1,
-                                              "TcpTransport pausing IPv6 accept due to exceeding MaxConnectionCount");
-            parent->ipv6_acceptor_paused = true;
-            return;
-        }
-    }
-
-    RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(
-        new boost::asio::ip::tcp::socket(parent->GetNode()->GetThreadPool()->get_io_context()));
-
-    acceptor->async_accept(*socket2, boost::bind(&TcpTransport::handle_v6_accept, parent, acceptor, socket2,
+    acceptor->acceptor->async_accept(*socket2, boost::bind(&TcpTransport::handle_accept, parent, acceptor, socket2,
                                                  boost::asio::placeholders::error));
 }
 
@@ -3105,26 +3065,25 @@ void TcpTransport::erase_transport(const RR_SHARED_PTR<ITransportConnection>& co
     {
         if (connection_count < max_connection_count)
         {
-            if (ipv4_acceptor_paused)
-            {
-                RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(
-                    new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
-                ipv4_acceptor->async_accept(*socket2,
-                                            boost::bind(&TcpTransport::handle_v4_accept, shared_from_this(),
-                                                        ipv4_acceptor, socket2, boost::asio::placeholders::error));
-                ipv4_acceptor_paused = false;
-                ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1, "TcpTransport resuming IPv4 accept");
-            }
+            bool any_resumed = false;
 
-            if (ipv6_acceptor_paused)
+            BOOST_FOREACH(RR_SHARED_PTR<detail::TcpSocketAcceptor>& a, acceptors)
             {
-                RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(
-                    new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
-                ipv6_acceptor->async_accept(*socket2,
-                                            boost::bind(&TcpTransport::handle_v6_accept, shared_from_this(),
-                                                        ipv6_acceptor, socket2, boost::asio::placeholders::error));
-                ipv6_acceptor_paused = false;
-                ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1, "TcpTransport resuming IPv6 accept");
+                if (a->paused)
+                {
+                    RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(
+                        new boost::asio::ip::tcp::socket(GetNode()->GetThreadPool()->get_io_context()));
+                    a->paused = false;
+                    a->acceptor->async_accept(
+                        *socket2,
+                        boost::bind(&TcpTransport::handle_accept, shared_from_this(), a, socket2,
+                                    boost::asio::placeholders::error));
+                    any_resumed = true;
+                }
+            }
+            if (any_resumed)
+            {
+                ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1, "TcpTransport resuming accept");
             }
         }
     }

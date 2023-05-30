@@ -50,6 +50,7 @@ namespace detail
 class TcpConnector;
 class TcpWebSocketConnector;
 class TcpWSSWebSocketConnector;
+class TcpSocketAcceptor;
 } // namespace detail
 
 /**
@@ -243,7 +244,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      *
      * @param porte The port to listen on
      */
-    virtual void StartServer(int32_t porte);
+    virtual void StartServer(int32_t porte, bool localhost_only = false, boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = NULL);
 
     /**
      * @brief Start the server using the TCP port sharer
@@ -262,6 +263,9 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * @return false The port sharer is not running or is not connected
      */
     virtual bool IsPortSharerRunning();
+
+    virtual void StartServer(const std::vector<boost::asio::ip::tcp::endpoint>& listen_endpoints, 
+      boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter = NULL);
 
     RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE;
 
@@ -648,19 +652,11 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     boost::mutex node_discovery_lock;
     RR_SHARED_PTR<void> node_discovery;
 
-    RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> ipv4_acceptor;
-    RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> ipv6_acceptor;
+    std::vector<RR_SHARED_PTR<detail::TcpSocketAcceptor> > acceptors;
     boost::mutex acceptor_lock;
-    bool ipv4_acceptor_paused;
-    bool ipv6_acceptor_paused;
 
-    static void handle_v4_accept(const RR_SHARED_PTR<TcpTransport>& parent,
-                                 const RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>& acceptor,
-                                 const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
-                                 const boost::system::error_code& error);
-
-    static void handle_v6_accept(const RR_SHARED_PTR<TcpTransport>& parent,
-                                 const RR_SHARED_PTR<boost::asio::ip::tcp::acceptor>& acceptor,
+    static void handle_accept(const RR_SHARED_PTR<TcpTransport>& parent,
+                                 const RR_SHARED_PTR<detail::TcpSocketAcceptor>& acceptor,
                                  const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                                  const boost::system::error_code& error);
 
