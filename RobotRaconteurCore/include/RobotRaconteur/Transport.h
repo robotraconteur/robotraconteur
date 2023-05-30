@@ -173,7 +173,7 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
-    RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m,
+    virtual RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m,
                                              const RR_SHARED_PTR<ITransportConnection>& tc);
 
     virtual void Close();

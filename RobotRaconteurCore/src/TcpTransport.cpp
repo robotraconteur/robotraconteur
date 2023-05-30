@@ -1997,7 +1997,7 @@ int32_t TcpTransport::GetListenPort()
 
 std::vector<std::string> TcpTransport::GetServerListenUrls()
 {
-    std::vector<boost::asio::ip::tcp::endpoint> eps = GetListenEndpoints();
+    std::vector<boost::asio::ip::tcp::endpoint> eps = GetResolvedListenEndpoints();
     NodeID nodeid = GetNode()->NodeID();
 
     std::vector<std::string> schemes;
@@ -2013,7 +2013,17 @@ std::vector<std::string> TcpTransport::GetServerListenUrls()
     {
         BOOST_FOREACH (std::string& s, schemes)
         {
-            std::string o1 = s + "://" + boost::lexical_cast<std::string>(e) + "?nodeid=" + nodeid.ToString();
+            std::string o1;
+            if (e.address().is_v4())
+            {
+                o1 = s + "://" + boost::lexical_cast<std::string>(e) + "?nodeid=" + nodeid.ToString("D");
+            }
+            else
+            {
+                boost::asio::ip::address_v6 addr2 = e.address().to_v6();
+                addr2.scope_id(0);
+                o1 = s + "://[" + addr2.to_string() + "]:" + boost::lexical_cast<std::string>(e.port()) + "?nodeid=" + nodeid.ToString("D");
+            }
             o.push_back(o1);
         }
     }
@@ -2483,6 +2493,81 @@ std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetListenEndpoints()
     }
 
     return o;
+}
+
+std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetResolvedListenEndpoints()
+{
+    std::vector<boost::asio::ip::tcp::endpoint> listen_endpoints = GetListenEndpoints();
+
+    if (listen_endpoints.empty())
+    {
+        return std::vector<boost::asio::ip::tcp::endpoint>();
+    }
+    std::set<boost::asio::ip::tcp::endpoint> announce_listen_endpoints(listen_endpoints.begin(),
+                                                                        listen_endpoints.end());
+
+    bool ipv4_any = false;
+    bool ipv6_any = false;
+    uint16_t ipv4_any_port = 0;
+    uint16_t ipv6_any_port = 0;
+
+    // iterate over announce_listen_endpoints and remove listen to ipv4 or ipv6 any address
+    std::set<boost::asio::ip::tcp::endpoint>::iterator it_tmp;
+    for (std::set<boost::asio::ip::tcp::endpoint>::iterator it = announce_listen_endpoints.begin();
+            it != announce_listen_endpoints.end();)
+    {
+        if (it->address().is_v4() && it->address().to_v4() == boost::asio::ip::address_v4::any())
+        {
+            ipv4_any_port = it->port();
+            it_tmp = it;
+            ++it_tmp;
+            announce_listen_endpoints.erase(it);
+            it = it_tmp;
+            ipv4_any = true;
+        }
+        else if (it->address().is_v6() && it->address().to_v6() == boost::asio::ip::address_v6::any())
+        {
+            ipv6_any_port = it->port();
+            it_tmp = it;
+            ++it_tmp;
+            announce_listen_endpoints.erase(it);
+            it = it_tmp;
+            ipv6_any = true;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    if (ipv4_any || ipv6_any)
+    {
+        std::vector<boost::asio::ip::address> local_addresses1;
+        TcpTransport::GetLocalAdapterIPAddresses(local_addresses1);
+
+        BOOST_FOREACH (boost::asio::ip::address& e, local_addresses1)
+        {
+            if (e.is_v4())
+            {
+                if (ipv4_any)
+                {
+                    boost::asio::ip::tcp::endpoint ep(e, ipv4_any_port);
+                    announce_listen_endpoints.insert(ep);
+                }
+            }
+            else
+            {
+                if (ipv6_any)
+                {
+                    boost::asio::ip::tcp::endpoint ep(e, ipv6_any_port);
+                    announce_listen_endpoints.insert(ep);
+                }
+            }
+        }
+    }
+
+    return std::vector<boost::asio::ip::tcp::endpoint>(announce_listen_endpoints.begin(),
+                                                       announce_listen_endpoints.end());
 }
 
 void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::address>& addresses)
@@ -6031,73 +6116,11 @@ void IPNodeDiscovery::handle_broadcast_timer(const boost::system::error_code& er
     RR_SHARED_PTR<TcpTransport> p = parent.lock();
     if (!p)
         return;
-    std::vector<boost::asio::ip::tcp::endpoint> listen_endpoints = p->GetListenEndpoints();
+    std::vector<boost::asio::ip::tcp::endpoint> announce_listen_endpoints = p->GetResolvedListenEndpoints();
 
-    if (!listen_endpoints.empty())
+    if (!announce_listen_endpoints.empty())
     {
-        std::set<boost::asio::ip::tcp::endpoint> announce_listen_endpoints(listen_endpoints.begin(),
-                                                                           listen_endpoints.end());
-
-        bool ipv4_any = false;
-        bool ipv6_any = false;
-        uint16_t ipv4_any_port = 0;
-        uint16_t ipv6_any_port = 0;
-
-        // iterate over announce_listen_endpoints and remove listen to ipv4 or ipv6 any address
-        std::set<boost::asio::ip::tcp::endpoint>::iterator it_tmp;
-        for (std::set<boost::asio::ip::tcp::endpoint>::iterator it = announce_listen_endpoints.begin();
-             it != announce_listen_endpoints.end();)
-        {
-            if (it->address().is_v4() && it->address().to_v4() == boost::asio::ip::address_v4::any())
-            {
-                ipv4_any_port = it->port();
-                it_tmp = it;
-                ++it_tmp;
-                announce_listen_endpoints.erase(it);
-                it = it_tmp;
-                ipv4_any = true;
-            }
-            else if (it->address().is_v6() && it->address().to_v6() == boost::asio::ip::address_v6::any())
-            {
-                ipv6_any_port = it->port();
-                it_tmp = it;
-                ++it_tmp;
-                announce_listen_endpoints.erase(it);
-                it = it_tmp;
-                ipv6_any = true;
-            }
-            else
-            {
-                ++it;
-            }
-        }
-
-        if (ipv4_any || ipv6_any)
-        {
-            std::vector<boost::asio::ip::address> local_addresses1;
-            TcpTransport::GetLocalAdapterIPAddresses(local_addresses1);
-
-            BOOST_FOREACH (boost::asio::ip::address& e, local_addresses1)
-            {
-                if (e.is_v4())
-                {
-                    if (ipv4_any)
-                    {
-                        boost::asio::ip::tcp::endpoint ep(e, ipv4_any_port);
-                        announce_listen_endpoints.insert(ep);
-                    }
-                }
-                else
-                {
-                    if (ipv6_any)
-                    {
-                        boost::asio::ip::tcp::endpoint ep(e, ipv6_any_port);
-                        announce_listen_endpoints.insert(ep);
-                    }
-                }
-            }
-        }
-
+        
         /*Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string("tcp://localhost:0/"));
         RR_SHARED_PTR<ServiceIndexer> indexer=RR_MAKE_SHARED<ServiceIndexer>();
         RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> >

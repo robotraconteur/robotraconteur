@@ -194,7 +194,7 @@ std::vector<std::string> LocalTransport::GetServerListenUrls()
     if (acceptor)
     {
         NodeID nodeid = GetNode()->NodeID();
-        o.push_back("rr+local://?nodeid=" + nodeid.ToString());
+        o.push_back("rr+local://?nodeid=" + nodeid.ToString("D"));
     }
     return o;
 }
