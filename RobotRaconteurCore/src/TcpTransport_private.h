@@ -635,7 +635,7 @@ class TcpSocketAcceptor
 
     TcpSocketAcceptor(RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> acceptor)
     {
-        this->acceptor = acceptor;
+        this->acceptor = RR_MOVE(acceptor);
         paused = false;
     }
 };

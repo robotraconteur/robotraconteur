@@ -6073,7 +6073,7 @@ void IPNodeDiscovery::handle_broadcast_timer(const boost::system::error_code& er
             }
         }
 
-        if (ipv4_any || ipv4_any)
+        if (ipv4_any || ipv6_any)
         {
             std::vector<boost::asio::ip::address> local_addresses1;
             TcpTransport::GetLocalAdapterIPAddresses(local_addresses1);
