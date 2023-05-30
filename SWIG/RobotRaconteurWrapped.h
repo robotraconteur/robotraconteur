@@ -1000,12 +1000,21 @@ class AsyncGeneratorClientReturnDirector
     virtual void handler(const boost::shared_ptr<WrappedGeneratorClient>& ret, HandlerErrorInfo& error) = 0;
 };
 
+class WrappedGeneratorClient_TryGetNextResult
+{
+  public:
+    RR_INTRUSIVE_PTR<MessageElement> value;
+    bool res;
+    WrappedGeneratorClient_TryGetNextResult() : res(false) {}
+};
+
 class WrappedGeneratorClient : public GeneratorClientBase
 {
   public:
     WrappedGeneratorClient(const std::string& name, int32_t id, const RR_SHARED_PTR<ServiceStub>& stub);
 
     RR_INTRUSIVE_PTR<MessageElement> Next(const RR_INTRUSIVE_PTR<MessageElement>& v);
+    WrappedGeneratorClient_TryGetNextResult TryNext(const RR_INTRUSIVE_PTR<MessageElement>& v);
     void AsyncNext(const RR_INTRUSIVE_PTR<MessageElement>& v, int32_t timeout, AsyncRequestDirector* handler,
                    int32_t id);
 

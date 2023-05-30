@@ -69,6 +69,17 @@ public interface Generator1<ReturnType, ParamType>
     /// <returns>Return value from generator</returns>
     ReturnType Next(ParamType param);
     /// <summary>
+    /// Try to advance the generator. Returns false if there are no more values.
+    /// </summary>
+    /// <remarks>
+    /// Same as Next() but returns false if there are no more values.
+    /// </remarks>
+    /// <param name="param">Parameter to pass to generator</param>
+    /// <param name="value">Return value from generator</param>
+    /// <returns>True if more values are available, otherwise false</returns>
+    bool TryNext(ParamType param, out ReturnType value);
+
+    /// <summary>
     /// Asynchronously advance the generator
     /// </summary>
     /// <remarks>
@@ -161,6 +172,15 @@ public interface Generator2<ReturnType>
     /// </remarks>
     /// <returns>Return Return value from generator</returns>
     ReturnType Next();
+    /// <summary>
+    /// Try to advance the generator. Returns false if there are no more values.
+    /// </summary>
+    /// <remarks>
+    /// Same as Next() but returns false if there are no more values.
+    /// </remarks>
+    /// <param name="value">Return value from generator</param>
+    /// <returns>True if more values are available, otherwise false</returns>
+    bool TryNext(out ReturnType value);
     /// <summary>
     /// Asynchronously advance the generator
     /// </summary>
@@ -265,6 +285,16 @@ public interface Generator3<ParamType>
     /// </remarks>
     /// <param name="param">Parameter to pass to generator</param>
     /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
+
+    /// <summary>
+    /// Try to advance the generator. Returns false if there are no more values.
+    /// </summary>
+    /// <remarks>
+    /// Same as Next() but returns false if there are no more values.
+    /// </remarks>
+    /// <param name="param">Parameter to pass to generator</param>
+    /// <returns>True if more values are available, otherwise false</returns>
+    bool TryNext(ParamType param);
     Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     /// <summary>
     /// Abort the generator
@@ -331,6 +361,20 @@ public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnT
     /// <returns>Next return</returns>
     public abstract ReturnType Next(ParamType param);
 
+    public bool TryNext(ParamType param, out ReturnType ret)
+    {
+        try
+        {
+            ret = Next(param);
+            return true;
+        }
+        catch (StopIterationException)
+        {
+            ret = default(ReturnType);
+            return false;
+        }
+    }
+
     public Task AsyncAbort(int timeout = -1)
     {
         Abort();
@@ -376,6 +420,20 @@ public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
     /// <remarks>None</remarks>
     /// <returns>Next return</returns>
     public abstract ReturnType Next();
+
+    public bool TryNext(out ReturnType ret)
+    {
+        try
+        {
+            ret = Next();
+            return true;
+        }
+        catch (StopIterationException)
+        {
+            ret = default(ReturnType);
+            return false;
+        }
+    }
 
     public Task AsyncAbort(int timeout = -1)
     {
@@ -437,6 +495,19 @@ public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
     /// <remarks>None</remarks>
     /// <param name="param">Next param</param>
     public abstract void Next(ParamType param);
+
+    public bool TryNext(ParamType param)
+    {
+        try
+        {
+            Next(param);
+            return true;
+        }
+        catch (StopIterationException)
+        {
+            return false;
+        }
+    }
 
     public Task AsyncAbort(int timeout = -1)
     {
@@ -540,6 +611,26 @@ public class Generator1Client<ReturnType, ParamType> : Generator1<ReturnType, Pa
             }
         }
     }
+
+    public bool TryNext(ParamType param, out ReturnType ret)
+    {
+        using (MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
+        {
+            using (WrappedGeneratorClient_TryGetNextResult res1 = inner_gen.TryNext(m))
+            {
+                if (!res1.res)
+                {
+                    ret = default(ReturnType);
+                    return false;
+                }
+                using (MessageElement m2 = res1.value)
+                {
+                    ret = RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
+                    return true;
+                }
+            }
+        }
+    }
     public async Task<ReturnType> AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
     {
         using (MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
@@ -592,6 +683,23 @@ public class Generator2Client<ReturnType> : Generator2<ReturnType>
         using (MessageElement m2 = inner_gen.Next(null))
         {
             return RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
+        }
+    }
+
+    public bool TryNext(out ReturnType ret)
+    {
+        using (WrappedGeneratorClient_TryGetNextResult res1 = inner_gen.TryNext(null))
+        {
+            if (!res1.res)
+            {
+                ret = default(ReturnType);
+                return false;
+            }
+            using (MessageElement m2 = res1.value)
+            {
+                ret = RobotRaconteurNode.s.UnpackAnyType<ReturnType>(m2);
+                return true;
+            }
         }
     }
     public async Task<ReturnType> AsyncNext(int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)
@@ -657,6 +765,17 @@ public class Generator3Client<ParamType> : Generator3<ParamType>
         using (MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
         {
             inner_gen.Next(m);
+        }
+    }
+
+    public bool TryNext(ParamType param)
+    {
+        using (MessageElement m = RobotRaconteurNode.s.PackAnyType<ParamType>("parameter", ref param))
+        {
+            using (WrappedGeneratorClient_TryGetNextResult res1 = inner_gen.TryNext(m))
+            {
+                return res1.res;
+            }
         }
     }
     public async Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE)

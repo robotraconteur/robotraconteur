@@ -79,6 +79,30 @@ class Generator : private boost::noncopyable
      */
     virtual Return Next(const Param& v) = 0;
     /**
+     * @brief Try to advance the generator. Return false if no more values are available.
+     *
+     * TryNext() is similar to Next() but returns false if no more values are available.
+     * This is useful for generators that may not have a fixed number of values.
+     *
+     * @param v Parameter to pass to generator
+     * @param ret Return value from generator
+     * @return true ret is valid
+     * @return false ret is not valid. No more values are available.
+     */
+    virtual bool TryNext(const Param& v, Return& ret)
+    {
+        // TODO: This is not the most efficient implementation
+        try
+        {
+            ret = Next(v);
+            return true;
+        }
+        catch (StopIterationException&)
+        {
+            return false;
+        }
+    }
+    /**
      * @brief Asynchronously advance the generator
      *
      * Same as Next() but returns asynchronously.
@@ -149,6 +173,29 @@ class Generator<Return, void> : private boost::noncopyable
      * @return Return Return value from generator
      */
     virtual Return Next() = 0;
+
+    /**
+     * @copybrief Generator::TryNext()
+     *
+     * TryNext() is similar to Next() but returns false if no more values are available. This version
+     * of TryNext() does not include passing a parameter to the generator.
+     *
+     * @param ret Return value from generator
+     * @return true ret is valid
+     * @return false ret is not valid. No more values are available.
+     */
+    virtual bool TryNext(Return& ret)
+    {
+        try
+        {
+            ret = Next();
+            return true;
+        }
+        catch (StopIterationException&)
+        {
+            return false;
+        }
+    }
     /**
      * @copybrief Generator::AsyncNext()
      *
@@ -206,11 +253,34 @@ class Generator<void, Param> : private boost::noncopyable
      * @copybrief Generator::Next()
      *
      *  Next() advances the generator to retrieve the next value. This version of
-     *  Generator does not include passing a parameter to the generator.
+     *  Generator includes passing a parameter to the generator.
      *
      * @param v Parameter to pass to generator
      */
     virtual void Next(const Param& v) = 0;
+
+    /**
+     * @copybrief Generator::TryNext()
+     *
+     * TryNext() is similar to Next() but returns false if no more values are available. This version
+     * of TryNext() includes passing a parameter to the generator.
+     *
+     * @param v The parameter to pass to the generator
+     * @return true Valid return
+     * @return false No more values are available
+     */
+    virtual bool TryNext(const Param& v)
+    {
+        try
+        {
+            Next(v);
+        }
+        catch (StopIterationException&)
+        {
+            return false;
+        }
+        return true;
+    }
     /**
      * @copybrief Generator::AsyncNext()
      *
