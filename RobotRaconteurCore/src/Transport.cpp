@@ -34,7 +34,7 @@ Transport::Transport(const RR_SHARED_PTR<RobotRaconteurNode>& node)
     TransportID = 0;
 }
 
-RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode()
+RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode() const
 {
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
     if (!n)

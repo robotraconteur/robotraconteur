@@ -1995,6 +1995,32 @@ int32_t TcpTransport::GetListenPort()
     return m_Port;
 }
 
+std::vector<std::string> TcpTransport::GetServerListenUrls()
+{
+    std::vector<boost::asio::ip::tcp::endpoint> eps = GetListenEndpoints();
+    NodeID nodeid = GetNode()->NodeID();
+
+    std::vector<std::string> schemes;
+    schemes.push_back("rr+tcp");
+    if (IsTlsNodeCertificateLoaded())
+    {
+        schemes.push_back("rrs+tcp");
+    }
+
+    std::vector<std::string> o;
+
+    BOOST_FOREACH (boost::asio::ip::tcp::endpoint& e, eps)
+    {
+        BOOST_FOREACH (std::string& s, schemes)
+        {
+            std::string o1 = s + "://" + boost::lexical_cast<std::string>(e) + "?nodeid=" + nodeid.ToString();
+            o.push_back(o1);
+        }
+    }
+
+    return o;
+}
+
 bool TcpTransport::CanConnectService(boost::string_ref url)
 {
 
@@ -2451,7 +2477,7 @@ std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetListenEndpoints()
     }
 
     std::vector<boost::asio::ip::tcp::endpoint> o;
-    BOOST_FOREACH(RR_SHARED_PTR<detail::TcpSocketAcceptor>& e, acceptors)
+    BOOST_FOREACH(const RR_SHARED_PTR<detail::TcpSocketAcceptor>& e, acceptors)
     {
         o.push_back(e->acceptor->local_endpoint());
     }

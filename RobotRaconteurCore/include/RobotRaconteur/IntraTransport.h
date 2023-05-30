@@ -90,6 +90,8 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
 
     RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE;
 
+    RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE;
+
     RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
     RR_OVIRTUAL void AsyncSendMessage(

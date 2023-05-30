@@ -284,6 +284,13 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      */
     virtual std::vector<boost::asio::ip::tcp::endpoint> GetListenEndpoints();
 
+    /**
+     * @brief Get the TCP endpoints the server is listening on as Robot Raconteur candidate URLs
+     * 
+     * @return std::vector<std::string> Candidate connections urls for the node, without service specified
+     */
+    RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE;
+
     RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE;
 
     RR_OVIRTUAL void Close() RR_OVERRIDE;
