@@ -210,7 +210,7 @@ jobs:
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v4
+      uses: johnwason/vcpkg-action@v5
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -345,7 +345,7 @@ jobs:
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v4
+      uses: johnwason/vcpkg-action@v5
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -519,7 +519,7 @@ jobs:
       with:
         release: R2020b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@2441730b6c83a5a57bebd9d1ed2ee4bfe4ce02b1
+      uses: johnwason/vcpkg-action@v5
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -810,7 +810,7 @@ jobs:
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v4
+      uses: johnwason/vcpkg-action@v5
       id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
