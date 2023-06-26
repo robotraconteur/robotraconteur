@@ -2479,13 +2479,26 @@ void TcpTransport::StartServer(const std::vector<boost::asio::ip::tcp::endpoint>
 
 std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetListenEndpoints()
 {
-    boost::mutex::scoped_lock lock(acceptor_lock);
-    if (acceptors.empty())
+
+    if (port_sharer_client)
     {
-        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Transport, -1, "Server not started");
-        throw InvalidOperationException("Server not started");
+        RR_SHARED_PTR<detail::TcpTransportPortSharerClient> c =
+            RR_STATIC_POINTER_CAST<detail::TcpTransportPortSharerClient>(port_sharer_client);
+        if (c)
+        {
+            int32_t port = c->GetListenPort();
+            if (port != 0)
+            {
+                std::vector<boost::asio::ip::tcp::endpoint> o1;
+                o1.push_back(boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::any(), port));
+                o1.push_back(boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v6::any(), port));
+                return o1;
+            }
+        }
     }
 
+    boost::mutex::scoped_lock lock(acceptor_lock);
+    
     std::vector<boost::asio::ip::tcp::endpoint> o;
     BOOST_FOREACH (const RR_SHARED_PTR<detail::TcpSocketAcceptor>& e, acceptors)
     {
@@ -6581,8 +6594,11 @@ void TcpTransportPortSharerClient::client_thread()
                 p1 /= "portsharer.info";
                 p1.normalize();
 
+                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "Looking for portsharer.info in " << p1);
+
                 std::map<std::string, std::string> info;
-                if (NodeDirectoriesUtil::ReadInfoFile(p1, info))
+                bool info_file_found = NodeDirectoriesUtil::ReadInfoFile(p1, info);
+                if (info_file_found)
                 {
 
                     std::map<std::string, std::string>::iterator fname1 = info.find("socket");
@@ -6601,6 +6617,8 @@ void TcpTransportPortSharerClient::client_thread()
                 p1 /= "portsharer";
                 p1 /= "portsharer.info";
                 p1.normalize();
+
+                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "Looking for portsharer.info in " << p1);
 
                 std::map<std::string, std::string> info;
                 if (NodeDirectoriesUtil::ReadInfoFile(p1, info))
