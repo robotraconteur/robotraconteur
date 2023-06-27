@@ -2022,7 +2022,8 @@ std::vector<std::string> TcpTransport::GetServerListenUrls()
             {
                 boost::asio::ip::address_v6 addr2 = e.address().to_v6();
                 addr2.scope_id(0);
-                o1 = s + "://[" + addr2.to_string() + "]:" + boost::lexical_cast<std::string>(e.port()) + "?nodeid=" + nodeid.ToString("D");
+                o1 = s + "://[" + addr2.to_string() + "]:" + boost::lexical_cast<std::string>(e.port()) +
+                     "?nodeid=" + nodeid.ToString("D");
             }
             o.push_back(o1);
         }
@@ -2498,7 +2499,7 @@ std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetListenEndpoints()
     }
 
     boost::mutex::scoped_lock lock(acceptor_lock);
-    
+
     std::vector<boost::asio::ip::tcp::endpoint> o;
     BOOST_FOREACH (const RR_SHARED_PTR<detail::TcpSocketAcceptor>& e, acceptors)
     {
@@ -2517,7 +2518,7 @@ std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetResolvedListenEndpo
         return std::vector<boost::asio::ip::tcp::endpoint>();
     }
     std::set<boost::asio::ip::tcp::endpoint> announce_listen_endpoints(listen_endpoints.begin(),
-                                                                        listen_endpoints.end());
+                                                                       listen_endpoints.end());
 
     bool ipv4_any = false;
     bool ipv6_any = false;
@@ -2527,7 +2528,7 @@ std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetResolvedListenEndpo
     // iterate over announce_listen_endpoints and remove listen to ipv4 or ipv6 any address
     std::set<boost::asio::ip::tcp::endpoint>::iterator it_tmp;
     for (std::set<boost::asio::ip::tcp::endpoint>::iterator it = announce_listen_endpoints.begin();
-            it != announce_listen_endpoints.end();)
+         it != announce_listen_endpoints.end();)
     {
         if (it->address().is_v4() && it->address().to_v4() == boost::asio::ip::address_v4::any())
         {
@@ -6133,7 +6134,7 @@ void IPNodeDiscovery::handle_broadcast_timer(const boost::system::error_code& er
 
     if (!announce_listen_endpoints.empty())
     {
-        
+
         /*Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string("tcp://localhost:0/"));
         RR_SHARED_PTR<ServiceIndexer> indexer=RR_MAKE_SHARED<ServiceIndexer>();
         RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> >

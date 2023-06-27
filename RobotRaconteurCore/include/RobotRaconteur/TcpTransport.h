@@ -287,8 +287,8 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
 
     /**
      * @brief Get the TCP endpoints the server is listening with "all" addresses resolved to specific addresses
-     * 
-     * @return std::vector<boost::asio::ip::tcp::endpoint> 
+     *
+     * @return std::vector<boost::asio::ip::tcp::endpoint>
      */
     virtual std::vector<boost::asio::ip::tcp::endpoint> GetResolvedListenEndpoints();
 
