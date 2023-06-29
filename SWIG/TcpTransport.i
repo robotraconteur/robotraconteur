@@ -46,8 +46,9 @@ public:
 	void SetDefaultHeartbeatPeriod(int32_t milliseconds);
 	
 	virtual std::string GetUrlSchemeString() const;
+	virtual std::vector<std::string> GetServerListenUrls();
 	virtual int32_t GetListenPort();
-	virtual void StartServer(int32_t porte);
+	virtual void StartServer(int32_t porte, bool localhost_only = false);
 	void Close();
 	void EnableNodeDiscoveryListening(uint32_t flags=(IPNodeDiscoveryFlags_LINK_LOCAL));
 	void DisableNodeDiscoveryListening();
@@ -110,6 +111,20 @@ public:
 	RR_PROPERTY(DisableAsyncMessageIO)
 	virtual bool GetDisableAsyncMessageIO();
 	virtual void SetDisableAsyncMessageIO(bool d);
+
+%extend {
+	static std::vector<std::string> GetLocalAdapterIPAddresses()
+	{
+		std::vector<std::string> o;
+		std::vector<boost::asio::ip::address> addr;
+		RobotRaconteur::TcpTransport::GetLocalAdapterIPAddresses(addr);
+		for (size_t i=0; i<addr.size(); i++)
+		{
+			o.push_back(boost::lexical_cast<std::string>(addr[i]));
+		}
+		return o;
+	}
+}
 	
 };
 }

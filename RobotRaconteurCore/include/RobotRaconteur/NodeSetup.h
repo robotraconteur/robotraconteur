@@ -91,6 +91,8 @@ enum RobotRaconteurNodeSetupFlags
     RobotRaconteurNodeSetupFlags_REQUIRE_TLS = 0x2000,
     /** @brief Make LocalTransport server listen for incoming clients from all users */
     RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC = 0x4000,
+    /** @brief Only listen on localhost connections for TcpTransport */
+    RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_LISTEN_LOCALHOST = 0x8000,
 
     /** @brief Allow NodeName to be configured using command line options */
     RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE = 0x10000,
@@ -164,7 +166,7 @@ enum RobotRaconteurNodeSetupFlags
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY */
 
     /** @brief Default allowed overrides for server nodes */
-    RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x7FF7FFF,
+    RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x7FFFFFF,
     /*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV4_DISCOVERY
@@ -185,7 +187,8 @@ enum RobotRaconteurNodeSetupFlags
     | RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE
     | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER
-    | RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE */
+    | RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE
+    | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_LISTEN_LOCALHOST */
 
     /** @brief Default configuration for server nodes requiring TLS network transports */
     RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT = 0xB034AF,
@@ -203,7 +206,7 @@ enum RobotRaconteurNodeSetupFlags
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY */
 
     /** @brief Default allowed overrides for server nodes requiring TLS network transports */
-    RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x73F4FFF
+    RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE = 0x73FCFFF
     /*RobotRaconteurNodeSetupFlags_ENABLE_ALL_TRANSPORTS
     | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
@@ -222,7 +225,9 @@ enum RobotRaconteurNodeSetupFlags
     | RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE
     | RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC
     | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER
-    | RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE */
+    | RobotRaconteurNodeSetupFlags_JUMBO_MESSAGE
+    | RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_LISTEN_LOCALHOST
+    */
 };
 
 #ifndef SWIG

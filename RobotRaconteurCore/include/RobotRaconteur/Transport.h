@@ -149,6 +149,8 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual std::string GetUrlSchemeString() const = 0;
 
+    virtual std::vector<std::string> GetServerListenUrls() = 0;
+
     // public abstract string Scheme { get; }
 
     virtual bool CanConnectService(boost::string_ref url) = 0;
@@ -171,8 +173,8 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     virtual void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) = 0;
 
-    RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m,
-                                             const RR_SHARED_PTR<ITransportConnection>& tc);
+    virtual RR_INTRUSIVE_PTR<Message> SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m,
+                                                     const RR_SHARED_PTR<ITransportConnection>& tc);
 
     virtual void Close();
 
@@ -187,7 +189,7 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
                                  const RR_SHARED_PTR<void>& parameter)>
         TransportListeners;
 
-    virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+    virtual RR_SHARED_PTR<RobotRaconteurNode> GetNode() const;
 
     virtual std::vector<NodeDiscoveryInfo> GetDetectedNodes(const std::vector<std::string>& schemes);
 

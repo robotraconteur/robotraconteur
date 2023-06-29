@@ -112,6 +112,17 @@ bool IntraTransport::IsClient() const { return true; }
 
 std::string IntraTransport::GetUrlSchemeString() const { return "rr+intra"; }
 
+std::vector<std::string> IntraTransport::GetServerListenUrls()
+{
+    std::vector<std::string> o;
+    if (is_server)
+    {
+        NodeID nodeid = GetNode()->NodeID();
+        o.push_back("rr+intra://?nodeid=" + nodeid.ToString("D"));
+    }
+    return o;
+}
+
 bool IntraTransport::CanConnectService(boost::string_ref url) { return (boost::starts_with(url, "rr+intra://")); }
 
 void IntraTransport::AsyncCreateTransportConnection(

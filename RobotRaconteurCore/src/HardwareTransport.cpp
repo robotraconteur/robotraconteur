@@ -128,6 +128,12 @@ bool HardwareTransport::IsClient() const { return true; }
 
 std::string HardwareTransport::GetUrlSchemeString() const { return "rr+usb"; }
 
+std::vector<std::string> HardwareTransport::GetServerListenUrls()
+{
+    std::vector<std::string> o;
+    return o;
+}
+
 bool HardwareTransport::CanConnectService(boost::string_ref url)
 {
 

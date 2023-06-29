@@ -25,6 +25,7 @@ public:
 	
 	static bool IsLocalTransportSupported();
 	virtual std::string GetUrlSchemeString() const;
+	virtual std::vector<std::string> GetServerListenUrls();
 	virtual void StartClientAsNodeName(const std::string& name);
 	virtual void StartServerAsNodeName(const std::string& name, bool public_ = false);
 	virtual void StartServerAsNodeID(const NodeID& nodeid, bool public_ = false);

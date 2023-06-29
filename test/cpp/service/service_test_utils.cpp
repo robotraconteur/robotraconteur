@@ -118,7 +118,7 @@ std::string TestServerNodeConfig::GetServiceURL(const std::string& service_name)
 {
     if (!server)
     {
-        if (boost::contains(service_name, "?"))
+        if (boost::contains(node_endpoint_url, "?"))
         {
             return node_endpoint_url + "&service=" + service_name;
         }

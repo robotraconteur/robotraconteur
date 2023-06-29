@@ -188,6 +188,17 @@ bool LocalTransport::IsClient() const { return true; }
 
 std::string LocalTransport::GetUrlSchemeString() const { return "rr+local"; }
 
+std::vector<std::string> LocalTransport::GetServerListenUrls()
+{
+    std::vector<std::string> o;
+    if (acceptor)
+    {
+        NodeID nodeid = GetNode()->NodeID();
+        o.push_back("rr+local://?nodeid=" + nodeid.ToString("D"));
+    }
+    return o;
+}
+
 bool LocalTransport::CanConnectService(boost::string_ref url) { return (boost::starts_with(url, "rr+local://")); }
 
 void LocalTransport::AsyncCreateTransportConnection(

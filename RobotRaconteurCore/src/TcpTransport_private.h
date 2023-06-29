@@ -626,6 +626,20 @@ ssize_t read_fd(int fd, void* ptr, size_t nbytes, int* recvfd);
 
 #endif
 
+class TcpSocketAcceptor
+{
+  public:
+    RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> acceptor;
+    bool paused;
+    boost::function<bool(const boost::asio::ip::tcp::endpoint&)> accept_filter;
+
+    TcpSocketAcceptor(RR_SHARED_PTR<boost::asio::ip::tcp::acceptor> acceptor)
+    {
+        this->acceptor = RR_MOVE(acceptor);
+        paused = false;
+    }
+};
+
 } // namespace detail
 
 } // namespace RobotRaconteur

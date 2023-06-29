@@ -165,7 +165,8 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
         }
         else if (config->GetOptionOrDefaultAsBool("tcp-start-server"))
         {
-            tcp_transport->StartServer(tcp_port);
+            bool localhost_only = config->GetOptionOrDefaultAsBool("tcp-listen-localhost");
+            tcp_transport->StartServer(tcp_port, localhost_only);
         }
 
         if (config->GetOptionOrDefaultAsBool("disable-message4"))
@@ -593,6 +594,8 @@ void CommandLineConfigParser::FillOptionsDescription(boost::program_options::opt
                 RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_SERVER_PUBLIC);
     h.add<bool>("tcp-start-server", "start TCP server listening",
                 RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER);
+    h.add<bool>("tcp-listen-localhost", "TCP server listen on localhost only",
+                RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_LISTEN_LOCALHOST);
     h.add<std::string>("tcp-ws-add-origins", "add websocket origins (comma separated)",
                        RobotRaconteurNodeSetupFlags_TCP_WEBSOCKET_ORIGIN_OVERRIDE);
     h.add<std::string>("tcp-ws-remove-origins", "remove websocket origins (comma separated)",
@@ -780,6 +783,11 @@ bool CommandLineConfigParser::GetOptionOrDefaultAsBool(const std::string& option
     if (option == "tcp-start-server-sharer")
     {
         return (this->default_flags & RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER_PORT_SHARER) != 0;
+    }
+
+    if (option == "tcp-listen-localhost")
+    {
+        return (this->default_flags & RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_LISTEN_LOCALHOST) != 0;
     }
 
     if (option == "tcp-ipv4-discovery")
