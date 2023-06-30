@@ -7,6 +7,7 @@
     - [Raspbian 10 (buster)](#raspbian-10-buster)
     - [Mac OSX](#mac-osx)
     - [iOS](#ios)
+    - [Android](#android)
 
 ### Windows
 
@@ -182,3 +183,7 @@ The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www
 ### iOS
 
 See https://github.com/robotraconteur/robotraconteur/wiki/iOS
+
+### Android
+
+See https://github.com/robotraconteur/robotraconteur/wiki/Android
