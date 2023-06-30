@@ -81,3 +81,7 @@ MATLAB install required for build. CMake FindMatlab module is used to locate the
 ### iOS
 
 See https://github.com/robotraconteur/robotraconteur/wiki/iOS
+
+### Android
+
+See https://github.com/robotraconteur/robotraconteur/wiki/Android
