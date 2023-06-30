@@ -7,6 +7,7 @@
     - [Mac OSX](#mac-osx)
     - [Swig](#swig)
     - [MATLAB Mex](#matlab-mex)
+    - [iOS](#ios)
 
 
 The software is tested using GitHub Actions continuous integration. See .github/workflows/main.yml for more information.
@@ -76,3 +77,7 @@ https://github.com/swig/swig/wiki/Getting-Started for instructions.
 ### MATLAB Mex
 
 MATLAB install required for build. CMake FindMatlab module is used to locate the MATLAB build dependencies. Be sure to build the MEX file against static boost libraries. Linux will require Boost to be built from source with "-fPIC" C++ gcc option. The apt repository static libraries cannot be used because they were not built with "-fPIC".
+
+### iOS
+
+See https://github.com/robotraconteur/robotraconteur/wiki/iOS
