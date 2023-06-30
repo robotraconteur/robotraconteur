@@ -223,14 +223,13 @@ jobs:
         java-version: 8
         java-package: jdk
         architecture: ${{ matrix.config.arch }}
-    - uses: actions/setup-python@v4
-      id: python2
-      with:
-        python-version: '2.7'
-        architecture: ${{ matrix.config.arch }}
+    - name: choco python2.7
+      run: |
+        choco install python2 ${{ matrix.config.arch == 'x86' && '-x86' || '' }} -r
     - name: pip
       run: |
-        python -m pip install numpy setuptools wheel pytest
+        C:\python27\python -m pip install --upgrade pip
+        C:\python27\python -m pip install numpy setuptools wheel pytest
     - uses: actions/setup-python@v4
       id: python3
       with:
@@ -263,7 +262,7 @@ jobs:
         cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON 
         -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
-        -DPYTHON_EXECUTABLE="${{ steps.python2.outputs.python-path }}"
+        -DPYTHON_EXECUTABLE="C:/python27/python.exe"
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}" 
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
