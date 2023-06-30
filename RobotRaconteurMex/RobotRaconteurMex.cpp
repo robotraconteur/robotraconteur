@@ -1583,7 +1583,8 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
         else if (command == "CreateStructure")
         {
             if (nlhs != 1 || nrhs != 4)
-                throw InvalidArgumentException("RobotRaconteurMex CreateStructure requires 3 input and 1 output arguments");
+                throw InvalidArgumentException(
+                    "RobotRaconteurMex CreateStructure requires 3 input and 1 output arguments");
             int32_t stubtype = GetInt32Scalar(prhs[1]);
             int32_t stubid = GetInt32Scalar(prhs[2]);
             std::string type_str = mxToString(prhs[3]);
@@ -9789,39 +9790,36 @@ std::vector<mwSize> CreateEmptyValue_default_array_dims(const boost::shared_ptr<
     std::vector<mwSize> dims;
     switch (type1->ArrayType)
     {
-        case DataTypes_ArrayTypes_none:
+    case DataTypes_ArrayTypes_none: {
+        dims.push_back(1);
+        return dims;
+    }
+    case DataTypes_ArrayTypes_array: {
+
+        if (!type1->ArrayLength.empty() && !type1->ArrayVarLength)
         {
-            dims.push_back(1);
-            return dims;
+            dims.push_back(type1->ArrayLength[0]);
         }
-        case DataTypes_ArrayTypes_array:
+        else
         {
-            
-            if (!type1->ArrayLength.empty() && !type1->ArrayVarLength)
-            {
-                dims.push_back(type1->ArrayLength[0]);
-            }
-            else
-            {
-                dims.push_back(0);
-            }
-            return dims;
+            dims.push_back(0);
         }
-        case DataTypes_ArrayTypes_multidimarray:
+        return dims;
+    }
+    case DataTypes_ArrayTypes_multidimarray: {
+        std::vector<mwSize> dims;
+        if (!type1->ArrayVarLength)
         {
-            std::vector<mwSize> dims;
-            if (!type1->ArrayVarLength)
-            {
-                dims = detail::ConvertVectorType<mwSize>(type1->ArrayLength);
-            }
-            else
-            {
-                dims.push_back(0);
-            }
-            return dims;
+            dims = detail::ConvertVectorType<mwSize>(type1->ArrayLength);
         }
-        default:
-            throw InvalidArgumentException("Invalid array type");
+        else
+        {
+            dims.push_back(0);
+        }
+        return dims;
+    }
+    default:
+        throw InvalidArgumentException("Invalid array type");
     }
 }
 
@@ -9830,9 +9828,8 @@ mxArray* CreateEmptyValue(const boost::shared_ptr<TypeDefinition>& type1, const 
 mxArray* CreateEmptyValue_pod(const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServiceStub>& obj)
 {
     std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-    RR_SHARED_PTR<NamedTypeDefinition> nt =
-        type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
-    
+    RR_SHARED_PTR<NamedTypeDefinition> nt = type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
+
     if (nt->RRDataType() != DataTypes_pod_t)
     {
         throw DataTypeException("Invalid pod type");
@@ -9875,24 +9872,23 @@ mxArray* CreateEmptyValue(const boost::shared_ptr<TypeDefinition>& type1, const 
         mxClassID matlab_type;
         mxComplexity matlab_complexity = mxREAL;
         switch (type1->Type)
-        {                
-            case DataTypes_csingle_t:
-                matlab_complexity = mxCOMPLEX;
-                matlab_type = mxSINGLE_CLASS;
-                break;
-            case DataTypes_cdouble_t:
-                matlab_complexity = mxCOMPLEX;
-                matlab_type = mxDOUBLE_CLASS;
-                break;
-            default:
-                matlab_type = rrDataTypeToMxClassID(type1->Type);
-                break;
+        {
+        case DataTypes_csingle_t:
+            matlab_complexity = mxCOMPLEX;
+            matlab_type = mxSINGLE_CLASS;
+            break;
+        case DataTypes_cdouble_t:
+            matlab_complexity = mxCOMPLEX;
+            matlab_type = mxDOUBLE_CLASS;
+            break;
+        default:
+            matlab_type = rrDataTypeToMxClassID(type1->Type);
+            break;
         }
 
-        std::vector<mwSize> dims = CreateEmptyValue_default_array_dims(type1);        
+        std::vector<mwSize> dims = CreateEmptyValue_default_array_dims(type1);
         mxArray* o = mxCreateNumericArray(dims.size(), &dims[0], matlab_type, matlab_complexity);
         return o;
-           
     }
 
     if (type1->Type == DataTypes_string_t)
@@ -9910,48 +9906,43 @@ mxArray* CreateEmptyValue(const boost::shared_ptr<TypeDefinition>& type1, const 
     if (type1->Type == DataTypes_namedtype_t)
     {
         std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-        RR_SHARED_PTR<NamedTypeDefinition> nt =
-            type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
+        RR_SHARED_PTR<NamedTypeDefinition> nt = type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
         switch (nt->RRDataType())
         {
-            case DataTypes_structure_t:
-            {
-                mxArray* o = NULL;
-                mexCallMATLAB(1, &o, 0, NULL, "missing");
-                return o;
-            }
+        case DataTypes_structure_t: {
+            mxArray* o = NULL;
+            mexCallMATLAB(1, &o, 0, NULL, "missing");
+            return o;
+        }
 
-            case DataTypes_namedarray_t:
-            {
-                RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
-                boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(
-                    namedarray_def, empty_defs, RobotRaconteurNode::sp(), obj);
+        case DataTypes_namedarray_t: {
+            RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
+            boost::tuple<DataTypes, size_t> namedarray_info =
+                GetNamedArrayElementTypeAndCount(namedarray_def, empty_defs, RobotRaconteurNode::sp(), obj);
 
-                std::vector<mwSize> dims = CreateEmptyValue_default_array_dims(type1);
-                dims.insert(dims.begin(), (int)namedarray_info.get<1>());
-                mxArray* o = mxCreateNumericArray(dims.size(), &dims[0], mxDOUBLE_CLASS, mxREAL);
-                return o;
-            }
+            std::vector<mwSize> dims = CreateEmptyValue_default_array_dims(type1);
+            dims.insert(dims.begin(), (int)namedarray_info.get<1>());
+            mxArray* o = mxCreateNumericArray(dims.size(), &dims[0], mxDOUBLE_CLASS, mxREAL);
+            return o;
+        }
 
-            case DataTypes_pod_t:
-            {
-                return CreateEmptyValue_pod(type1, obj);
-            }
+        case DataTypes_pod_t: {
+            return CreateEmptyValue_pod(type1, obj);
+        }
 
-            default:
-                throw DataTypeException("Invalid type");
+        default:
+            throw DataTypeException("Invalid type");
         }
     }
 
-    throw DataTypeException("Invalid type");    
+    throw DataTypeException("Invalid type");
 }
 
 mxArray* CreateEmptyStructure(const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServiceStub>& obj)
 {
     std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
-    RR_SHARED_PTR<NamedTypeDefinition> nt =
-        type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
-    
+    RR_SHARED_PTR<NamedTypeDefinition> nt = type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
+
     if (nt->RRDataType() != DataTypes_structure_t)
     {
         throw DataTypeException("Invalid structure type");
