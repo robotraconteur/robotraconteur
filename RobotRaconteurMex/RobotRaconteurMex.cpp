@@ -1580,6 +1580,31 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
             RobotRaconteurNode::s()->SetLogRecordHandler(RR_SHARED_PTR<FileLogRecordHandler>());
             return;
         }
+        else if (command == "CreateStructure")
+        {
+            if (nlhs != 1 || nrhs != 4)
+                throw InvalidArgumentException("RobotRaconteurMex CreateStructure requires 3 input and 1 output arguments");
+            int32_t stubtype = GetInt32Scalar(prhs[1]);
+            int32_t stubid = GetInt32Scalar(prhs[2]);
+            std::string type_str = mxToString(prhs[3]);
+            if (stubtype == RR_MEX_STUB)
+            {
+                boost::shared_ptr<MexServiceStub> o;
+                {
+                    boost::recursive_mutex::scoped_lock lock(stubs_lock);
+                    std::map<int32_t, RR_SHARED_PTR<MexServiceStub> >::iterator e1 = stubs.find(stubid);
+                    if (e1 == stubs.end())
+                        throw InvalidArgumentException("Cannot find stub");
+                    o = e1->second;
+                }
+
+                plhs[0] = CreateEmptyStructure(type_str, o);
+                return;
+            }
+            else
+                throw InvalidArgumentException("Unknown RobotRaconteur structure type");
+            return;
+        }
         else
         {
             throw InvalidArgumentException("Unknown command for RobotRaconteurMex");
@@ -1654,6 +1679,8 @@ mxClassID rrDataTypeToMxClassID(DataTypes type)
         return mxINT64_CLASS;
     case DataTypes_uint64_t:
         return mxUINT64_CLASS;
+    case DataTypes_bool_t:
+        return mxLOGICAL_CLASS;
     default:
         throw DataTypeException("Not a numeric data type");
     }
@@ -2008,11 +2035,11 @@ class PackMxArrayToMessageElementImpl
                 std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
                 if (IsTypeNumeric(tdef->Type))
                 {
-                    throw DataTypeException("Scalars and arrays must not be None");
+                    throw DataTypeException("Scalars and arrays must not be null");
                 }
                 if (tdef->Type == DataTypes_string_t)
                 {
-                    throw DataTypeException("Strings must not be None");
+                    throw DataTypeException("Strings must not be null");
                 }
 
                 if (tdef->Type == DataTypes_namedtype_t)
@@ -2021,15 +2048,15 @@ class PackMxArrayToMessageElementImpl
                         tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
                     if (tdef_namedtype == DataTypes_pod_t)
                     {
-                        throw DataTypeException("Pods must not be None");
+                        throw DataTypeException("Pods must not be null");
                     }
                     if (tdef_namedtype == DataTypes_namedarray_t)
                     {
-                        throw DataTypeException("NamedArrays must not be None");
+                        throw DataTypeException("NamedArrays must not be null");
                     }
                     if (tdef_namedtype == DataTypes_enum_t)
                     {
-                        throw DataTypeException("Enums must not be None");
+                        throw DataTypeException("Enums must not be null");
                     }
                 }
             }
@@ -2783,11 +2810,11 @@ class UnpackMessageElementToMxArrayImpl
                 std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
                 if (IsTypeNumeric(tdef->Type))
                 {
-                    throw DataTypeException("Scalars and arrays must not be None");
+                    throw DataTypeException("Scalars and arrays must not be null");
                 }
                 if (tdef->Type == DataTypes_string_t)
                 {
-                    throw DataTypeException("Strings must not be None");
+                    throw DataTypeException("Strings must not be null");
                 }
 
                 if (tdef->Type == DataTypes_namedtype_t)
@@ -2796,15 +2823,15 @@ class UnpackMessageElementToMxArrayImpl
                         tdef->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), stub)->RRDataType();
                     if (tdef_namedtype == DataTypes_pod_t)
                     {
-                        throw DataTypeException("Pods must not be None");
+                        throw DataTypeException("Pods must not be null");
                     }
                     if (tdef_namedtype == DataTypes_namedarray_t)
                     {
-                        throw DataTypeException("NamedArrays must not be None");
+                        throw DataTypeException("NamedArrays must not be null");
                     }
                     if (tdef_namedtype == DataTypes_enum_t)
                     {
-                        throw DataTypeException("Enums must not be None");
+                        throw DataTypeException("Enums must not be null");
                     }
                 }
             }
@@ -9755,6 +9782,212 @@ RR_INTRUSIVE_PTR<MessageElementData> MexNamedMultiDimArrayMemoryClient::PackWrit
     buffer6.push_back(CreateMessageElement("dims", VectorToRRArray<uint32_t>(count)));
     buffer6.push_back(CreateMessageElement("array", buffer5));
     return CreateMessageElementNestedElementList(DataTypes_namedarray_multidimarray_t, type_string, buffer6);
+}
+
+std::vector<mwSize> CreateEmptyValue_default_array_dims(const boost::shared_ptr<TypeDefinition>& type1)
+{
+    std::vector<mwSize> dims;
+    switch (type1->ArrayType)
+    {
+        case DataTypes_ArrayTypes_none:
+        {
+            dims.push_back(1);
+            return dims;
+        }
+        case DataTypes_ArrayTypes_array:
+        {
+            
+            if (!type1->ArrayLength.empty() && !type1->ArrayVarLength)
+            {
+                dims.push_back(type1->ArrayLength[0]);
+            }
+            else
+            {
+                dims.push_back(0);
+            }
+            return dims;
+        }
+        case DataTypes_ArrayTypes_multidimarray:
+        {
+            std::vector<mwSize> dims;
+            if (!type1->ArrayVarLength)
+            {
+                dims = detail::ConvertVectorType<mwSize>(type1->ArrayLength);
+            }
+            else
+            {
+                dims.push_back(0);
+            }
+            return dims;
+        }
+        default:
+            throw InvalidArgumentException("Invalid array type");
+    }
+}
+
+mxArray* CreateEmptyValue(const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServiceStub>& obj);
+
+mxArray* CreateEmptyValue_pod(const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServiceStub>& obj)
+{
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+    RR_SHARED_PTR<NamedTypeDefinition> nt =
+        type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
+    
+    if (nt->RRDataType() != DataTypes_pod_t)
+    {
+        throw DataTypeException("Invalid pod type");
+    }
+
+    boost::shared_ptr<ServiceEntryDefinition> d = rr_cast<ServiceEntryDefinition>(nt);
+    boost::shared_array<const char*> fieldnames(new const char*[d->Members.size()]);
+    for (size_t i = 0; i < d->Members.size(); i++)
+    {
+        fieldnames[i] = d->Members[i]->Name.c_str(); // NOLINT
+    }
+
+    std::vector<mwSize> dims = CreateEmptyValue_default_array_dims(type1);
+    mxArray* o = mxCreateStructArray(dims.size(), &dims[0], (int)d->Members.size(), fieldnames.get());
+
+    size_t num_elements = mxGetNumberOfElements(o);
+    for (size_t j = 0; j < num_elements; j++)
+    {
+        for (size_t i = 0; i < d->Members.size(); i++)
+        {
+            boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(d->Members[i]);
+            mxSetFieldByNumber(o, j, (int)i, CreateEmptyValue(p->Type, obj));
+        }
+    }
+
+    return o;
+}
+
+mxArray* CreateEmptyValue(const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServiceStub>& obj)
+{
+    if (type1->ContainerType != DataTypes_ContainerTypes_none || type1->Type == DataTypes_varvalue_t)
+    {
+        mxArray* o = NULL;
+        mexCallMATLAB(1, &o, 0, NULL, "missing");
+        return o;
+    }
+
+    if (IsTypeNumeric(type1->Type))
+    {
+        mxClassID matlab_type;
+        mxComplexity matlab_complexity = mxREAL;
+        switch (type1->Type)
+        {                
+            case DataTypes_csingle_t:
+                matlab_complexity = mxCOMPLEX;
+                matlab_type = mxSINGLE_CLASS;
+                break;
+            case DataTypes_cdouble_t:
+                matlab_complexity = mxCOMPLEX;
+                matlab_type = mxDOUBLE_CLASS;
+                break;
+            default:
+                matlab_type = rrDataTypeToMxClassID(type1->Type);
+                break;
+        }
+
+        std::vector<mwSize> dims = CreateEmptyValue_default_array_dims(type1);        
+        mxArray* o = mxCreateNumericArray(dims.size(), &dims[0], matlab_type, matlab_complexity);
+        return o;
+           
+    }
+
+    if (type1->Type == DataTypes_string_t)
+    {
+        mxArray* o = mxCreateString("");
+        return o;
+    }
+
+    if (type1->Type == DataTypes_enum_t)
+    {
+        mxArray* o = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+        return o;
+    }
+
+    if (type1->Type == DataTypes_namedtype_t)
+    {
+        std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+        RR_SHARED_PTR<NamedTypeDefinition> nt =
+            type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
+        switch (nt->RRDataType())
+        {
+            case DataTypes_structure_t:
+            {
+                mxArray* o = NULL;
+                mexCallMATLAB(1, &o, 0, NULL, "missing");
+                return o;
+            }
+
+            case DataTypes_namedarray_t:
+            {
+                RR_SHARED_PTR<ServiceEntryDefinition> namedarray_def = rr_cast<ServiceEntryDefinition>(nt);
+                boost::tuple<DataTypes, size_t> namedarray_info = GetNamedArrayElementTypeAndCount(
+                    namedarray_def, empty_defs, RobotRaconteurNode::sp(), obj);
+
+                std::vector<mwSize> dims = CreateEmptyValue_default_array_dims(type1);
+                dims.insert(dims.begin(), (int)namedarray_info.get<1>());
+                mxArray* o = mxCreateNumericArray(dims.size(), &dims[0], mxDOUBLE_CLASS, mxREAL);
+                return o;
+            }
+
+            case DataTypes_pod_t:
+            {
+                return CreateEmptyValue_pod(type1, obj);
+            }
+
+            default:
+                throw DataTypeException("Invalid type");
+        }
+    }
+
+    throw DataTypeException("Invalid type");    
+}
+
+mxArray* CreateEmptyStructure(const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServiceStub>& obj)
+{
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+    RR_SHARED_PTR<NamedTypeDefinition> nt =
+        type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
+    
+    if (nt->RRDataType() != DataTypes_structure_t)
+    {
+        throw DataTypeException("Invalid structure type");
+    }
+
+    boost::shared_ptr<ServiceEntryDefinition> d = rr_cast<ServiceEntryDefinition>(nt);
+    boost::shared_array<const char*> fieldnames(new const char*[d->Members.size()]);
+    for (size_t i = 0; i < d->Members.size(); i++)
+    {
+        fieldnames[i] = d->Members[i]->Name.c_str(); // NOLINT
+    }
+
+    mwSize dims = 1;
+    mxArray* o = mxCreateStructArray(1, &dims, (int)d->Members.size(), fieldnames.get());
+
+    for (size_t i = 0; i < d->Members.size(); i++)
+    {
+        boost::shared_ptr<PropertyDefinition> p = rr_cast<PropertyDefinition>(d->Members[i]);
+        mxSetFieldByNumber(o, 0, (int)i, CreateEmptyValue(p->Type, obj));
+    }
+
+    return o;
+}
+
+mxArray* CreateEmptyStructure(const std::string& type_str, const boost::shared_ptr<ServiceStub>& obj)
+{
+    boost::shared_ptr<TypeDefinition> type1 = boost::make_shared<TypeDefinition>();
+    type1->FromString(type_str);
+    // resolve named type
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
+    boost::shared_ptr<NamedTypeDefinition> nt = type1->ResolveNamedType(empty_defs, RobotRaconteurNode::sp(), obj);
+    if (nt->RRDataType() != DataTypes_structure_t)
+    {
+        throw DataTypeException("Invalid structure type");
+    }
+    return CreateEmptyStructure(type1, obj);
 }
 
 std::map<int32_t, boost::shared_ptr<MexServiceStub> > stubs;

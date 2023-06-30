@@ -608,6 +608,22 @@ classdef RobotRaconteur
         
            robdef_text=getpulledservicetype(obj,name);
         end
+
+        function empty_structure=CreateStructure(obj,structure_type)
+        % types=RobotRaconteur.CreateStructure(obj) Create a structure
+        %    with fields set to default values
+        %
+        %    Create a new structure with fields set to default values.
+        %    This is not required to be used, but is helpful to avoid
+        %    errors when using structures with Robot Raconteur.
+        %
+        %    Example:
+        %
+        %    my_struct = RobotRaconteur.CreateStructure('experimental.my_definition.MyStructure'); 
+            
+            
+               empty_structure=createstructure(obj,structure_type);
+            end
         
 		function t=nowUTC()
         % RobotRaconteur.nowUTC The current time in UTC time zone.

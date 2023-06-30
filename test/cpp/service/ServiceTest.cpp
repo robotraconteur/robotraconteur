@@ -1732,6 +1732,7 @@ void RobotRaconteurTest_testroot::set_struct1(const RR_INTRUSIVE_PTR<teststruct1
         -4.784915e+16, 1.490340e-18,  -4.343678e+08, -1.955643e+14};
     EXPECT_RRARRAY_EQ(s2->dat1, AttachRRArray(dat1a, 67, false));
     EXPECT_EQ(s2->str2, "Hello world 2!");
+    ASSERT_TRUE(s2->vec3);
     EXPECT_EQ(s2->vec3->size(), 4);
     thrower.Throw();
     EXPECT_EQ(RRArrayToString(s2->vec3->at(10)), "Hello Server!");
@@ -1739,11 +1740,13 @@ void RobotRaconteurTest_testroot::set_struct1(const RR_INTRUSIVE_PTR<teststruct1
     EXPECT_EQ(RRArrayToString(s2->vec3->at(46372)), "Test string!");
     EXPECT_EQ(RRArrayToString(s2->vec3->at(46373)), "Test string again");
 
+    ASSERT_TRUE(s2->dict4);
     EXPECT_EQ(s2->dict4->size(), 2);
     thrower.Throw();
     EXPECT_EQ(RRArrayToString(s2->dict4->at("cteststring1")), "Hello Server!");
     EXPECT_EQ(RRArrayToString(s2->dict4->at("cteststring2")), "Hello Server, again");
 
+    ASSERT_TRUE(s2->list5);
     EXPECT_EQ(s2->list5->size(), 2);
     thrower.Throw();
     EXPECT_EQ(RRArrayToString(s2->list5->front()), "Hello Server!");
