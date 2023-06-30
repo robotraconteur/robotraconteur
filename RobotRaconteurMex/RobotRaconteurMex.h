@@ -647,6 +647,8 @@ class MexNamedMultiDimArrayMemoryClient : public virtual MultiDimArrayMemoryClie
     std::string type_string;
 };
 
+mxArray* CreateEmptyStructure(const std::string& type_str, const boost::shared_ptr<ServiceStub>& obj);
+
 extern boost::recursive_mutex servicesubscriptions_lock;
 extern int32_t serviceinfo2subscriptions_count;
 extern std::map<int32_t, boost::shared_ptr<MexServiceInfo2Subscription> > serviceinfo2subscriptions;
