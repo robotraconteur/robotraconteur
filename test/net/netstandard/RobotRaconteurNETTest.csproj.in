@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+	<RRSourceDir>@CMAKE_CURRENT_SOURCE_DIR@\RobotRaconteurNETTest\</RRSourceDir>
+	<RRThunkDir>@CMAKE_CURRENT_BINARY_DIR@\test</RRThunkDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(RRThunkDir)\com__robotraconteur__testing__TestService1.cs" Link="com__robotraconteur__testing__TestService1.cs" />
+    <Compile Include="$(RRThunkDir)\com__robotraconteur__testing__TestService1_stubskel.cs" Link="com__robotraconteur__testing__TestService1_stubskel.cs" />
+    <Compile Include="$(RRThunkDir)\com__robotraconteur__testing__TestService2.cs" Link="com__robotraconteur__testing__TestService2.cs" />
+    <Compile Include="$(RRThunkDir)\com__robotraconteur__testing__TestService2_stubskel.cs" Link="com__robotraconteur__testing__TestService2_stubskel.cs" />
+    <Compile Include="$(RRThunkDir)\com__robotraconteur__testing__TestService3.cs" Link="com__robotraconteur__testing__TestService3.cs" />
+    <Compile Include="$(RRThunkDir)\com__robotraconteur__testing__TestService3_stubskel.cs" Link="com__robotraconteur__testing__TestService3_stubskel.cs" />
+    <Compile Include="$(RRThunkDir)\com__robotraconteur__testing__TestService5.cs" Link="com__robotraconteur__testing__TestService5.cs" />
+    <Compile Include="$(RRThunkDir)\com__robotraconteur__testing__TestService5_stubskel.cs" Link="com__robotraconteur__testing__TestService5_stubskel.cs" />
+    <Compile Include="$(RRSourceDir)\MultiDimArrayTest.cs" Link="MultiDimArrayTest.cs" />
+    <Compile Include="$(RRSourceDir)\Program.cs" Link="Program.cs" />
+    <Compile Include="$(RRSourceDir)\ServiceTest.cs" Link="ServiceTest.cs" />
+    <Compile Include="$(RRSourceDir)\ServiceTest2.cs" Link="ServiceTest2.cs" />
+    <Compile Include="$(RRSourceDir)\ServiceTest3.cs" Link="ServiceTest3.cs" />
+    <Compile Include="$(RRSourceDir)\ServiceTestClient.cs" Link="ServiceTestClient.cs" />
+    <Compile Include="$(RRSourceDir)\ServiceTestClient2.cs" Link="ServiceTestClient2.cs" />
+    <Compile Include="$(RRSourceDir)\ServiceTestClient3.cs" Link="ServiceTestClient3.cs" />
+    <Compile Include="$(RRSourceDir)\RRAssert.cs" Link="RRAssert.cs" />
+    <Compile Include="$(RRSourceDir)\LFSRSeqGen.cs" Link="LFSRSeqGen.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\RobotRaconteurNet\netstandard\Lib\RobotRaconteurNET.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -19,6 +19,7 @@ class NodeID
 public:
 	NodeID();
 	virtual std::string ToString() const;
+	virtual std::string ToString(const std::string& format) const;
 	static NodeID NewUniqueID();
 	bool operator == (const NodeID &id2) const;
 	bool operator != (const NodeID &id2) const;

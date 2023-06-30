@@ -21,7 +21,7 @@ namespace RobotRaconteur
     public:
         BroadcastDownsampler();
 
-        void Init(boost::shared_ptr<RobotRaconteur::ServerContext> context, uint32_t default_downsample = 0);
+        void Init(const boost::shared_ptr<RobotRaconteur::ServerContext>& context, uint32_t default_downsample = 0);
 
         uint32_t GetClientDownsample(uint32_t ep);
         void SetClientDownsample(uint32_t ep, uint32_t downsample);
@@ -30,8 +30,8 @@ namespace RobotRaconteur
         void EndStep();
 
         RR_MAKE_METHOD_PRIVATE(AddPipeBroadcaster)
-        void AddPipeBroadcaster(boost::shared_ptr<RobotRaconteur::WrappedPipeBroadcaster> broadcaster);
+        void AddPipeBroadcaster(const boost::shared_ptr<RobotRaconteur::WrappedPipeBroadcaster>& broadcaster);
         RR_MAKE_METHOD_PRIVATE(AddWireBroadcaster)
-        void AddWireBroadcaster(boost::shared_ptr<RobotRaconteur::WrappedWireBroadcaster> broadcaster);
+        void AddWireBroadcaster(const boost::shared_ptr<RobotRaconteur::WrappedWireBroadcaster>& broadcaster);
     };
 }

@@ -41,7 +41,7 @@ class AsyncTimerEventReturnDirector
 {
 public:
 	virtual ~AsyncTimerEventReturnDirector() {}
-	virtual void handler(const RobotRaconteur::TimerEvent& ret, HandlerErrorInfo& error);
+	virtual void handler(const RobotRaconteur::TimerEvent& ret, HandlerErrorInfo& error) = 0;
 };
 
 class Timer

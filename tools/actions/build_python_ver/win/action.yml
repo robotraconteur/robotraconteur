@@ -1,0 +1,58 @@
+name: rr_build_python_ver_win
+description: rr_build_python_ver_win
+inputs:
+  python_version:
+    description: python_version
+    required: true
+  arch:
+    description: arch
+    required: true
+  vcpkg_triplet:
+    description: vcpkg_triplet
+    required: true  
+  
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/setup-python@v4
+    id: python3
+    with:
+      python-version: '${{ inputs.python_version }}'
+      architecture: ${{ inputs.arch }}
+  - name: pip3
+    run: |
+      python -m pip install numpy setuptools wheel pytest
+    shell: cmd
+  - name: configure
+    run: >
+      cmake -G "Ninja"
+      -DBoost_USE_STATIC_LIBS=ON
+      -DBUILD_CORE=OFF -DBUILD_GEN=OFF
+      -DRobotRaconteur_DIR=${{ github.workspace }}/build2
+      -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+      -DBUILD_TESTING=ON
+      -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
+      -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+      -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+      -DVCPKG_TARGET_TRIPLET=${{ inputs.vcpkg_triplet }}
+      ${{ env.CMAKE_CACHE_ARGS }}
+      -DCMAKE_BUILD_TYPE=Release
+      -S robotraconteur -B build2_python_${{ inputs.python_version }}
+    shell: cmd
+  - name: build
+    working-directory: build2_python_${{ inputs.python_version }}
+    run: |
+      cmake --build . --config Release -j 4
+    shell: cmd
+  - name: test
+    working-directory: build2_python_${{ inputs.python_version }}
+    run: |
+      ctest . -C Release --output-on-failure
+    shell: cmd
+  - name: copy wheels
+    shell: bash
+    run: |
+      mkdir -p build2/out/wheels/
+      cp build2_python_${{ inputs.python_version }}/out/Python3/dist/*.whl build2/out/wheels/
+  
+  

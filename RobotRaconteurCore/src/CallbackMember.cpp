@@ -22,12 +22,13 @@
 
 namespace RobotRaconteur
 {
-	RR_SHARED_PTR<void> CallbackServerBase::GetClientFunction_internal(uint32_t e)
-	{
-		
-		RR_SHARED_PTR<ServiceSkel> s=skel.lock();
-		if (!s) throw InvalidOperationException("Callback server closed");
-		return (s->GetCallbackFunction(e, GetMemberName()));
-	}
+RR_SHARED_PTR<void> CallbackServerBase::GetClientFunction_internal(uint32_t e)
+{
 
+    RR_SHARED_PTR<ServiceSkel> s = skel.lock();
+    if (!s)
+        throw InvalidOperationException("Callback server closed");
+    return (s->GetCallbackFunction(e, GetMemberName()));
 }
+
+} // namespace RobotRaconteur

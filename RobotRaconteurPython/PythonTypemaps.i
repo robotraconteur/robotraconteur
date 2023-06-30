@@ -29,9 +29,16 @@
 } 
 
 %typemap(out) boost::posix_time::ptime {
+	try {
     $result = PyDateTime_FromDateAndTime((int)$1.date().year(), (int)$1.date().month(), (int)$1.date().day(),
 		(int)$1.time_of_day().hours(), (int)$1.time_of_day().minutes(), (int)$1.time_of_day().seconds(),
 		boost::numeric_cast<int32_t>(($1.time_of_day().fractional_seconds() * boost::numeric_cast<int32_t>(pow(10.0,(9-$1.time_of_day().num_fractional_digits())))))/1000);
+	}
+	catch (std::exception&)
+	{
+
+		$result = SWIG_Py_Void();
+	}
 }
 
 %typemap(in) boost::posix_time::ptime {
@@ -137,4 +144,29 @@ namespace RobotRaconteur
 
 
 	%typemaps_asptrfromn(%checkcode(STDSTRING),MessageStringPtr)
+}
+
+%{
+#include <boost/filesystem/path.hpp>
+%}
+
+namespace boost
+{
+namespace filesystem
+{
+
+%rename(FilesystemPath) path;
+class path
+{
+public:
+
+path(const std::string& s);
+std::string string();
+
+%pythoncode %{
+def __str__(self):
+    return self.string()
+%}
+};
+}
 }

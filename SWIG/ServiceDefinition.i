@@ -128,7 +128,7 @@ public:
 	std::vector<boost::shared_ptr<RobotRaconteur::ConstantDefinition> > Constants;
 	ServiceDefinitionParseInfo ParseInfo;
 	std::string DocString;
-	ServiceEntryDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> def);
+	ServiceEntryDefinition(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
 	
@@ -142,7 +142,7 @@ public:
 		return $self->ServiceDefinition_.lock();
 	}
 	
-	void SetServiceDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> value)
+	void SetServiceDefinition(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& value)
 	{
 		$self->ServiceDefinition_=value;
 	}
@@ -163,7 +163,7 @@ public:
 	std::string Name;
 	std::string DocString;
 	
-	MemberDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	MemberDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
 
 	virtual MemberDefinition_NoLock NoLock();
 
@@ -176,7 +176,7 @@ public:
 		return $self->ServiceEntry.lock();
 	}
 	
-	void SetServiceEntry(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> value)
+	void SetServiceEntry(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& value)
 	{
 		$self->ServiceEntry=value;
 	}
@@ -197,7 +197,7 @@ class PropertyDefinition : public MemberDefinition
 {
 public:
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
-	PropertyDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	PropertyDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
     RR_PUBLIC_VIRTUAL_METHOD(ToString)
@@ -210,7 +210,7 @@ class FunctionDefinition : public MemberDefinition
 public:
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> ReturnType;
 	std::vector<boost::shared_ptr<RobotRaconteur::TypeDefinition> > Parameters;
-	FunctionDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	FunctionDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
 	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
@@ -221,7 +221,7 @@ class EventDefinition : public MemberDefinition
 {
 public:
 	std::vector<boost::shared_ptr<RobotRaconteur::TypeDefinition> > Parameters;
-	EventDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	EventDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
 	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
@@ -235,7 +235,7 @@ public:
 	DataTypes_ArrayTypes ArrayType;
 	DataTypes_ContainerTypes ContainerType;
 	
-	ObjRefDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	ObjRefDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
 	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
@@ -245,7 +245,7 @@ class PipeDefinition : public MemberDefinition
 {
 public:
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
-	PipeDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	PipeDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
 	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
@@ -256,7 +256,7 @@ class CallbackDefinition : public MemberDefinition
 public:
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> ReturnType;
 	std::vector<boost::shared_ptr<RobotRaconteur::TypeDefinition> > Parameters;
-	CallbackDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	CallbackDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
 	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
@@ -266,7 +266,7 @@ class WireDefinition : public MemberDefinition
 {
 public:
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
-	WireDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	WireDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
 	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
@@ -276,7 +276,7 @@ class MemoryDefinition : public MemberDefinition
 {
 public:
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
-	MemoryDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> ServiceEntry);
+	MemoryDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& ServiceEntry);
     RR_PUBLIC_OVERRIDE_METHOD(ToString)
 	virtual std::string ToString();
 	void FromString(const std::string &s, const ServiceDefinitionParseInfo* parse_info = NULL);
@@ -308,7 +308,7 @@ public:
 		return $self->member.lock();
 	}
 	
-	void SetMember(boost::shared_ptr<RobotRaconteur::MemberDefinition> value)
+	void SetMember(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& value)
 	{
 		$self->member=value;
 	}	
@@ -344,14 +344,14 @@ class  UsingDefinition
 			return $self->service.lock();
 		}
 	
-		void SetService(boost::shared_ptr<RobotRaconteur::ServiceDefinition> value)
+		void SetService(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& value)
 		{
 			$self->service=value;
 		}	
 		}
 
 		RR_PUBLIC_OVERRIDE_METHOD(ToString)
-		UsingDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> service);
+		UsingDefinition(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& service);
 
 		std::string ToString();
 		void FromString(const std::string& s, const ServiceDefinitionParseInfo* parse_info = NULL);
@@ -384,7 +384,7 @@ class  UsingDefinition
 			return $self->service.lock();
 		}
 	
-		void SetService(boost::shared_ptr<RobotRaconteur::ServiceDefinition> value)
+		void SetService(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& value)
 		{
 			$self->service=value;
 		}	
@@ -397,14 +397,14 @@ class  UsingDefinition
 			return $self->service_entry.lock();
 		}
 	
-		void SetServiceEntry(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> value)
+		void SetServiceEntry(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& value)
 		{
 			$self->service_entry=value;
 		}	
 		}
 
-		ConstantDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> service);		
-		ConstantDefinition(boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> service_entry);
+		ConstantDefinition(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& service);		
+		ConstantDefinition(const boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition>& service_entry);
 		
 		RR_PUBLIC_OVERRIDE_METHOD(ToString)
 		std::string ToString();
@@ -441,13 +441,13 @@ class  UsingDefinition
 			return $self->service.lock();
 		}
 	
-		void SetService(boost::shared_ptr<RobotRaconteur::ServiceDefinition> value)
+		void SetService(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& value)
 		{
 			$self->service=value;
 		}	
 		}		
 
-		EnumDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> service);		
+		EnumDefinition(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& service);		
 
 		RR_PUBLIC_OVERRIDE_METHOD(ToString)
 		std::string ToString();		
@@ -487,13 +487,13 @@ class  UsingDefinition
 			return $self->service.lock();
 		}
 	
-		void SetService(boost::shared_ptr<RobotRaconteur::ServiceDefinition> value)
+		void SetService(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& value)
 		{
 			$self->service=value;
 		}	
 		}		
 
-		ExceptionDefinition(boost::shared_ptr<RobotRaconteur::ServiceDefinition> service);		
+		ExceptionDefinition(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& service);		
 
 		RR_PUBLIC_OVERRIDE_METHOD(ToString)
 		std::string ToString();		
@@ -508,42 +508,42 @@ class  UsingDefinition
 class MemberDefinitionUtil
 {
 public:
-static boost::shared_ptr<RobotRaconteur::PropertyDefinition> ToProperty(boost::shared_ptr<RobotRaconteur::MemberDefinition> t) 
+static boost::shared_ptr<RobotRaconteur::PropertyDefinition> ToProperty(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
 { 
 return boost::dynamic_pointer_cast<RobotRaconteur::PropertyDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::FunctionDefinition> ToFunction(boost::shared_ptr<RobotRaconteur::MemberDefinition> t) 
+static boost::shared_ptr<RobotRaconteur::FunctionDefinition> ToFunction(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
 { 
 return boost::dynamic_pointer_cast<RobotRaconteur::FunctionDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::ObjRefDefinition> ToObjRef(boost::shared_ptr<RobotRaconteur::MemberDefinition> t) 
+static boost::shared_ptr<RobotRaconteur::ObjRefDefinition> ToObjRef(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
 { 
 return boost::dynamic_pointer_cast<RobotRaconteur::ObjRefDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::EventDefinition> ToEvent(boost::shared_ptr<RobotRaconteur::MemberDefinition> t) 
+static boost::shared_ptr<RobotRaconteur::EventDefinition> ToEvent(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
 { 
 return boost::dynamic_pointer_cast<RobotRaconteur::EventDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::PipeDefinition> ToPipe(boost::shared_ptr<RobotRaconteur::MemberDefinition> t) 
+static boost::shared_ptr<RobotRaconteur::PipeDefinition> ToPipe(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
 { 
 return boost::dynamic_pointer_cast<RobotRaconteur::PipeDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::CallbackDefinition> ToCallback(boost::shared_ptr<RobotRaconteur::MemberDefinition> t) 
+static boost::shared_ptr<RobotRaconteur::CallbackDefinition> ToCallback(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
 { 
 return boost::dynamic_pointer_cast<RobotRaconteur::CallbackDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::WireDefinition> ToWire(boost::shared_ptr<RobotRaconteur::MemberDefinition> t) 
+static boost::shared_ptr<RobotRaconteur::WireDefinition> ToWire(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
 { 
 return boost::dynamic_pointer_cast<RobotRaconteur::WireDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::MemoryDefinition> ToMemory(boost::shared_ptr<RobotRaconteur::MemberDefinition> t) 
+static boost::shared_ptr<RobotRaconteur::MemoryDefinition> ToMemory(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
 { 
 return boost::dynamic_pointer_cast<RobotRaconteur::MemoryDefinition>(t);
 }

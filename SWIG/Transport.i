@@ -24,5 +24,6 @@ class Transport
 public:
 	virtual std::string GetUrlSchemeString() const = 0;
 	static std::string GetCurrentTransportConnectionURL();
+	virtual std::vector<std::string> GetServerListenUrls() = 0;
 };
 }

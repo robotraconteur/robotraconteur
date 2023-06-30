@@ -11,9 +11,13 @@ jobs:
   build-matlab-toolbox:
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: robotraconteur
+    - name: apt
+      run: >
+        sudo apt-get install python3-numpy python3-setuptools python3-wheel 
+        python3-pytest mono-devel curl libgtest-dev -qq
     - name: Set up MATLAB
       uses: matlab-actions/setup-matlab@v1
       with:

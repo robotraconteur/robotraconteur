@@ -26,6 +26,7 @@ The following options are available:
 | `--robotraconteur-local-start-client=` | boolean | false | false| Start Local transport named client. Ignored if `start-server` is `true` |
 | `--robotraconteur-local-server-public=` | boolean | false | true | Start Local transport server as public on local machine |
 | `--robotraconteur-tcp-start-server=` | boolean | false | true | Start TCP transport server |
+| `--robotraconteur-tcp-listen-localhost=` | boolean | false | false | TCP transport server listen on localhost only |
 | `--robotraconteur-tcp-start-server-sharer=` | boolean | false | true | Start TCP transport server using port sharer |
 | `--robotraconteur-tcp-ws-add-origin=` | string |  |  | Comma separated list of WebSocket origins to add to TCP transport access control |
 | `--robotraconteur-tcp-ws-remove-origin=` | string |  |  | Comma separated list of WebSocket origins to remove from TCP transport access control |

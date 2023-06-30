@@ -31,7 +31,7 @@ public:
 
 	TcpTransport();
 	
-	TcpTransport(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
+	TcpTransport(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
 	
 	RR_PROPERTY(DefaultReceiveTimeout)
 	int32_t GetDefaultReceiveTimeout();	
@@ -46,8 +46,9 @@ public:
 	void SetDefaultHeartbeatPeriod(int32_t milliseconds);
 	
 	virtual std::string GetUrlSchemeString() const;
+	virtual std::vector<std::string> GetServerListenUrls();
 	virtual int32_t GetListenPort();
-	virtual void StartServer(int32_t porte);
+	virtual void StartServer(int32_t porte, bool localhost_only = false);
 	void Close();
 	void EnableNodeDiscoveryListening(uint32_t flags=(IPNodeDiscoveryFlags_LINK_LOCAL));
 	void DisableNodeDiscoveryListening();
@@ -77,15 +78,15 @@ public:
 	
 	virtual bool IsTransportConnectionSecure(uint32_t endpoint);
 	RR_MAKE_METHOD_PRIVATE(IsTransportConnectionSecure)	
-	virtual bool IsTransportConnectionSecure(boost::shared_ptr<RobotRaconteur::RRObject> obj);
+	virtual bool IsTransportConnectionSecure(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
 		
 	virtual bool IsSecurePeerIdentityVerified(uint32_t endpoint);
 	RR_MAKE_METHOD_PRIVATE(IsSecurePeerIdentityVerified)	
-	virtual bool IsSecurePeerIdentityVerified(boost::shared_ptr<RobotRaconteur::RRObject> obj);
+	virtual bool IsSecurePeerIdentityVerified(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
 	
 	virtual std::string GetSecurePeerIdentity(uint32_t endpoint);
 	RR_MAKE_METHOD_PRIVATE(GetSecurePeerIdentity)	
-	virtual std::string GetSecurePeerIdentity(boost::shared_ptr<RobotRaconteur::RRObject> obj);
+	virtual std::string GetSecurePeerIdentity(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
 	
 	virtual void StartServerUsingPortSharer();
 	RR_MAKE_METHOD_PRIVATE(IsPortSharerRunning)	
@@ -110,6 +111,20 @@ public:
 	RR_PROPERTY(DisableAsyncMessageIO)
 	virtual bool GetDisableAsyncMessageIO();
 	virtual void SetDisableAsyncMessageIO(bool d);
+
+%extend {
+	static std::vector<std::string> GetLocalAdapterIPAddresses()
+	{
+		std::vector<std::string> o;
+		std::vector<boost::asio::ip::address> addr;
+		RobotRaconteur::TcpTransport::GetLocalAdapterIPAddresses(addr);
+		for (size_t i=0; i<addr.size(); i++)
+		{
+			o.push_back(boost::lexical_cast<std::string>(addr[i]));
+		}
+		return o;
+	}
+}
 	
 };
 }
