@@ -28,7 +28,7 @@
 %    | N[*]            | N                    | Normal MATLAB array of type N for multidimarrays
 %    | pod             | struct               | Standard matlab structure with optional array shape
 %    | namedarray      | N[]                  | Namedarrays map to base numeric type with ndims+1 dimensions
-%    | varvalue        | *                    | Mapped directly to appropriate type
+%    | varvalue        | *                    | RobotRaconteurVarValue
 %    | varobject       | RobotRaconteurObject |
 %
 %    In MATLAB, the default is for numbers to be type double. When passing
@@ -55,9 +55,7 @@
 %      s.ID=uint8(19)
 %      s.Data=uint8([1; 2; 3])
 %
-%    s can now be passed where SensorPacket is expected. If a varvalue is
-%    expected, an extra field RobotRaconteurStructureType that contains the
-%    fully qualified structure type is expected as a string.
+%    s can now be passed where SensorPacket is expected.
 %
 %    Pods behave exactly like structures, except they may also be indexed, 
 %    if the pod type is either an array or a multi-dimensional array.
@@ -65,3 +63,12 @@
 %    Namedarrays are mapped to their base numeric type and passed as an
 %    array with one additional dimension. This additional dimension 
 %    represents the named portion of the array, but in a flattened form.
+%
+%    null values are represented using `missing` in MATLAB.
+%
+%    varvalue uses the RobotRaconteurVarValue type to represent a
+%    dynamically typed value. The type can be determined using the
+%    `datatype` property. The value can be accessed using the `data` 
+%    property. The datatypes will be in the same format used
+%    for Robot Raconteur service definition types. RobotRaconteurVarValue
+%    can be constructed passing data and datatype as arguments.
