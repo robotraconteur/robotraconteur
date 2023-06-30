@@ -7,14 +7,9 @@ import platform
 ios_triplets = [
     "arm-ios",
     "arm64-ios",
-
-    
+    "x64-ios"   
 ]
 
-if platform.processor() == "arm":
-    ios_triplets.append("arm64-iphonesimulator")
-else:
-    ios_triplets.append("x64-ios")
 
 archs = {
     "arm-ios": "armv7",
@@ -45,8 +40,8 @@ if not vcpkg_dir.is_dir():
 if not (vcpkg_dir / "vcpkg").is_file():
     subprocess.check_call("./bootstrap-vcpkg.sh",cwd=vcpkg_dir)
 
-shutil.copy(src_root / "packaging/ios/CMakeLists-openssl-unix.txt", 
-    build_dir / "vcpkg/ports/openssl/unix/CMakeLists.txt")
+# shutil.copy(src_root / "packaging/ios/CMakeLists-openssl-unix.txt", 
+#     build_dir / "vcpkg/ports/openssl/unix/CMakeLists.txt")
 
 triplets_dir = src_root / "packaging/ios/triplets"
 ports_in_dir = src_root / "packaging/ios/ports"
@@ -69,8 +64,8 @@ combined_lib_dir.mkdir(exist_ok=True,parents=True)
 combined_lib_dir_tmp.mkdir(exist_ok=True,parents=True)
 
 for triplet in ios_triplets:
-    # subprocess.check_call(["./vcpkg","install",f"--triplet={triplet}",
-    #     f"--overlay-ports={ports_dir}", f"--overlay-triplets={triplets_dir}", "robotraconteur"],cwd=vcpkg_dir)
+    subprocess.check_call(["./vcpkg","install",f"--triplet={triplet}",
+        f"--overlay-ports={ports_dir}", f"--overlay-triplets={triplets_dir}", "robotraconteur"],cwd=vcpkg_dir)
 
     combined_lib_arch = archs[triplet]
     combined_lib_path = (combined_lib_dir_tmp / f"robotraconteur_and_deps-{triplet}.a").absolute()
@@ -78,10 +73,8 @@ for triplet in ios_triplets:
 
 combined_lipo_ios = ("arm64-ios","arm-ios")
 
-if 'x64-ios' in triplet:
-    combined_lipo_sim=("x64-ios",)
-else:
-    combined_lipo_sim=("arm64-iphonesimulator",)
+
+combined_lipo_sim=("x64-ios",)
 
 
 lib_args = " ".join([f"robotraconteur_and_deps-{c1}.a" for c1 in combined_lipo_ios])

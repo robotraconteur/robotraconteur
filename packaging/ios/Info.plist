@@ -21,7 +21,7 @@
 		</dict>
 		<dict>
 			<key>HeadersPath</key>
-			<string>../../vcpkg/installed/arm64-iphonesimulator/include</string>
+			<string>../../vcpkg/installed/x64-ios/include</string>
 			<key>LibraryIdentifier</key>
 			<string>ios-simulator</string>
 			<key>LibraryPath</key>

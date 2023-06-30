@@ -33,6 +33,7 @@
         "boost-utility",
         "boost-uuid",
         "boost-program-options",
-        "openssl"
+        "openssl",
+        "gtest"
     ]
 }
