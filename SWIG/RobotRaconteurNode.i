@@ -62,6 +62,8 @@ enum RobotRaconteurObjectLockFlags
 	RobotRaconteurObjectLockFlags_CLIENT_LOCK
 };
 
+class NodeDirectories;
+
 //%nodefaultctor RobotRaconteurNode;
 class RobotRaconteurNode
 {
@@ -561,6 +563,9 @@ RR_KEEP_GIL()
 
 	void CheckConnection(uint32_t client);
 
+	NodeDirectories GetNodeDirectories();
+
+	void SetNodeDirectories(const NodeDirectories& dir);
 
 };
 	
