@@ -83,6 +83,222 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterNode
 };
 
 /**
+ * @brief Subscription filter attribute for use with ServiceSubscriptionFilter
+ * 
+ */
+class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute
+{
+    public:
+        /** @brief The attribute name. Empty for no name */
+        std::string Name;
+        /** @brief The string value of the attribute */
+        std::string Value;
+        /** @brief The regex value of the attribute */
+        boost::regex ValueRegex;
+        /** @brief True if ValueRegex is used, otherwise Value is matched */
+        bool UseRegex;
+
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute object
+         * 
+         */
+        ServiceSubscriptionFilterAttribute();
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute object
+         * 
+         * This is a nameless attribute for use with attribute lists
+         * 
+         * @param value The attribute value
+         */
+        ServiceSubscriptionFilterAttribute(boost::string_ref value);
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute object
+         * 
+         * This is a nameless attribute for use with attribute lists. The value is compared using a regex
+         * 
+         * @param value_regex The attribute value regex
+         */
+        ServiceSubscriptionFilterAttribute(boost::regex value_regex);
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute object
+         * 
+         * This is a named attribute for use with attribute maps
+         * 
+         * @param name The attribute name
+         * @param value The attribute value
+         */
+        ServiceSubscriptionFilterAttribute(boost::string_ref name, boost::string_ref value);
+
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute object
+         * 
+         * This is a named attribute for use with attribute maps. The value is compared using a regex
+         * 
+         * @param name The attribute name
+         * @param value_regex The attribute value regex
+         */
+        ServiceSubscriptionFilterAttribute(boost::string_ref name, boost::regex value_regex);
+
+        /**
+         * @brief Compare the attribute to a value
+         * 
+         * @param value The value to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(boost::string_ref value) const;
+        /**
+         * @brief Compare the attribute to a named value
+         * 
+         * @param name The name to compare
+         * @param value The value to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(boost::string_ref name, boost::string_ref value) const;
+        /**
+         * @brief Compare the attribute to a value list using OR logic
+         * 
+         * @param values The values to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(const std::vector<std::string>& values) const;
+        /**
+         * @brief Compare the attribute to a value list using OR logic
+         * 
+         * @param values The values to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(const RR_INTRUSIVE_PTR<RRList<RRValue> >& values) const;
+        /**
+         * @brief Compare the attribute to a value map using OR logic
+         * 
+         * @param values The value map to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& values) const;
+        /**
+         * @brief Compare the attribute to a value map using OR logic
+         * 
+         * @param values The value map to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(const std::map<std::string, std::string>& values) const;
+};
+
+/**
+ * @brief Create a ServiceSubscriptionFilterAttribute from a regex string
+ * 
+ * @param regex_value The regex string to compile
+ * @return ServiceSubscriptionFilterAttribute The created attribute
+ */ 
+ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref regex_value);
+/**
+ * @brief Create a ServiceSubscriptionFilterAttribute from a regex string
+ * 
+ * @param name The attribute name
+ * @param regex_value The regex string to compile
+ * @return ROBOTRACONTEUR_CORE_API 
+ */
+ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref name, boost::string_ref regex_value);
+
+/**
+ * @brief Comparison operations for ServiceSubscriptionFilterAttributeGroup
+ * 
+ */
+enum ServiceSubscriptionFilterAttributeGroupOperation
+{
+    /** @brief OR operation */
+    ServiceSubscriptionFilterAttributeGroupOperation_OR,
+    /** @brief AND operation */
+    ServiceSubscriptionFilterAttributeGroupOperation_AND,
+    /** @brief NOR operation. Also used for NOT */
+    ServiceSubscriptionFilterAttributeGroupOperation_NOR,
+    /** @brief NAND operation */
+    ServiceSubscriptionFilterAttributeGroupOperation_NAND
+};
+
+/**
+ * @brief Subscription filter attribute group for use with ServiceSubscriptionFilter
+ * 
+ * Used to combine multiple ServiceSubscriptionFilterAttribute objects for comparison using
+ * AND, OR, NOR, or NAND logic. Other groups can be nested, to allow for complex comparisons.
+ */
+class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttributeGroup
+{
+    public:
+        /** @brief The attributes in the group */
+        std::vector<ServiceSubscriptionFilterAttribute> Attributes;
+        /** @brief The nested groups in the group */
+        std::vector<ServiceSubscriptionFilterAttributeGroup> Groups;
+        /** @brief The operation to use for matching the attributes and groups */
+        ServiceSubscriptionFilterAttributeGroupOperation Operation;
+
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute Group object
+         * 
+         */
+        ServiceSubscriptionFilterAttributeGroup();
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute Group object
+         * 
+         * @param operation The operation to use for matching the attributes and groups
+         */
+        ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation);
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute Group object
+         * 
+         * @param operation The operation to use for matching the attributes and groups
+         * @param attributes The attributes in the group
+         */
+        ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttribute> attributes);
+        /**
+         * @brief Construct a new Service Subscription Filter Attribute Group object
+         * 
+         * @param operation The operation to use for matching the attributes and groups
+         * @param groups The nested groups in the group
+         */
+        ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttributeGroup> groups);
+
+        /**
+         * @brief Compare the group to a list of values
+         * 
+         * @param values The values to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(const std::vector<std::string>& values) const;
+        /**
+         * @brief Compare the group to a list of values
+         * 
+         * @param values The values to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(const RR_INTRUSIVE_PTR<RRList<RRValue> >& values) const;
+        /**
+         * @brief Compare the group to a map of values
+         * 
+         * @param values The values to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& values) const;
+        /**
+         * @brief Compare the group to a map of values
+         * 
+         * @param values The values to compare
+         * @return true 
+         * @return false 
+         */
+        bool IsMatch(const std::map<std::string, std::string>& values) const;
+};
+
+/**
  * @brief Subscription filter
  *
  * The subscription filter is used with RobotRaconteurNode::SubscribeServiceByType() and
@@ -100,6 +316,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilter
     std::vector<std::string> ServiceNames;
     /** Vector of transport schemes. Empty means match any transport scheme. **/
     std::vector<std::string> TransportSchemes;
+    /** Attributes to match */
+    std::map<std::string,ServiceSubscriptionFilterAttributeGroup> Attributes;
     /** A user specified predicate function. If nullptr, the predicate is not checked. **/
     boost::function<bool(const ServiceInfo2&)> Predicate;
     /** The maximum number of connections the subscription will create. Zero means unlimited connections. **/

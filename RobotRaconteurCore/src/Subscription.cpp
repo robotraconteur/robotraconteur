@@ -255,6 +255,61 @@ static bool ServiceSubscription_FilterService(const std::vector<std::string>& se
             }
         }
 
+        if(!filter->Attributes.empty())
+        {
+            typedef std::map<std::string,ServiceSubscriptionFilterAttributeGroup>::value_type attributes_map_type;
+            BOOST_FOREACH(const attributes_map_type& e, filter->Attributes)
+            {
+                std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >::const_iterator e2 = info.Attributes.find(e.first);
+                if (e2 == info.Attributes.end())
+                {
+                    if (e.second.Operation == ServiceSubscriptionFilterAttributeGroupOperation_OR 
+                    || e.second.Operation == ServiceSubscriptionFilterAttributeGroupOperation_AND)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        continue;
+                    }                    
+                }
+
+                RR_INTRUSIVE_PTR<RRArray<char> > a0 = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(e2->second);
+                if (a0)
+                {
+                    std::vector<std::string> a0_v;
+                    a0_v.push_back(RRArrayToString(a0));
+                    if (!e.second.IsMatch(a0_v))
+                    {
+                        return false;
+                    }
+                }
+
+                RR_INTRUSIVE_PTR<RRList<RRValue> > a1 = RR_DYNAMIC_POINTER_CAST<RRList<RRValue> >(e2->second);
+                if (a1)
+                {
+                    if (!e.second.IsMatch(a1))
+                    {
+                        return false;
+                    }
+                }
+
+                RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > a2 = RR_DYNAMIC_POINTER_CAST<RRMap<std::string,RRValue> >(e2->second);
+                if (a2)
+                {
+                    if (!e.second.IsMatch(a2))
+                    {
+                        return false;
+                    }
+                }
+
+                if (!a0 && !a1 && !a2)
+                {
+                    return false;
+                }
+            }
+        }
+
         if (filter->Predicate)
         {
             if (!(filter->Predicate(info)))
@@ -2946,5 +3001,262 @@ void ServiceSubscription_custom_member_subscribers::SubscribePipe(const RR_SHARE
 }
 
 } // namespace detail
+
+// ServiceSubscriptionFilterAttribute
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute()
+{
+}
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref value)
+{
+    this->Name = "";
+    this->Value = value.to_string();
+    this->UseRegex = false;
+}
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::regex value)
+{
+    this->Name = "";
+    this->Value = "";
+    this->UseRegex = true;
+    this->ValueRegex = value;
+}
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref name, boost::string_ref value)
+{
+    this->Name = name.to_string();
+    this->Value = value.to_string();
+    this->UseRegex = false;
+}
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref name, boost::regex value)
+{
+    this->Name = name.to_string();
+    this->Value = "";
+    this->ValueRegex = value;
+    this->UseRegex = true;
+}
+
+bool ServiceSubscriptionFilterAttribute::IsMatch(boost::string_ref value) const
+{
+    if (!Name.empty())
+    {
+        return false;
+    }
+    if (UseRegex)
+    {
+        return boost::regex_match(value.begin(), value.end(), ValueRegex);
+    }
+    else
+    {
+        return value == Value;
+    }
+}
+bool ServiceSubscriptionFilterAttribute::IsMatch(boost::string_ref name, boost::string_ref value) const
+{
+    if (!Name.empty() && Name != name)
+    {
+        return false;
+    }
+    if (UseRegex)
+    {
+        return boost::regex_match(value.begin(), value.end(), ValueRegex);
+    }
+    else
+    {
+        return value == Value;
+    }
+}
+bool ServiceSubscriptionFilterAttribute::IsMatch(const std::vector<std::string>& values) const
+{
+    BOOST_FOREACH (const std::string& e, values)
+    {
+        if (IsMatch(e))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ServiceSubscriptionFilterAttribute::IsMatch(const RR_INTRUSIVE_PTR<RRList<RRValue> >& values) const
+{
+    RR_NULL_CHECK(values);
+    BOOST_FOREACH (RR_INTRUSIVE_PTR<RRValue>& e, values->GetStorageContainer())
+    {
+        if (!e)
+        {
+            continue;
+        }
+
+        RR_INTRUSIVE_PTR<RRArray<char> > s = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(e);
+        if (!s)
+        {
+            continue;
+        }
+
+        std::string s2 = RRArrayToString(s);
+
+        if (IsMatch(s2))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ServiceSubscriptionFilterAttribute::IsMatch(const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& values) const
+{
+    RR_NULL_CHECK(values);
+    typedef std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >::value_type value_type;
+    BOOST_FOREACH (const value_type& e, values->GetStorageContainer())
+    {
+        if (!e.second)
+        {
+            continue;
+        }
+
+        RR_INTRUSIVE_PTR<RRArray<char> > s = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(e.second);
+        if (!s)
+        {
+            continue;
+        }
+
+        std::string s2 = RRArrayToString(s);
+
+        if (IsMatch(e.first, s2))
+        {
+            return true;
+        }
+    }
+}
+
+bool ServiceSubscriptionFilterAttribute::IsMatch(const std::map<std::string, std::string>& values) const
+{
+    typedef std::map<std::string, std::string>::value_type value_type;
+    BOOST_FOREACH (const value_type& e, values)
+    {
+        if (IsMatch(e.first, e.second))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup()
+{
+    this->Operation = ServiceSubscriptionFilterAttributeGroupOperation_OR;
+}
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation)
+{
+    this->Operation = operation;
+}
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttribute> attributes)
+{
+    this->Operation = operation;
+    this->Attributes = attributes;
+}
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttributeGroup> groups)
+{
+    this->Operation = operation;
+    this->Groups = groups;
+}
+
+template<typename T>
+static bool ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation operation, 
+const std::vector<ServiceSubscriptionFilterAttribute>&
+attributes, const std::vector<ServiceSubscriptionFilterAttributeGroup>& groups, const T& values)
+{
+    switch (operation)
+    {
+    case ServiceSubscriptionFilterAttributeGroupOperation_OR:
+    {
+        if (attributes.empty() && groups.empty())
+        {
+            return true;
+        }
+        BOOST_FOREACH (const ServiceSubscriptionFilterAttributeGroup& e, groups)
+        {
+            if (e.IsMatch(values))
+            {
+                return true;
+            }
+        }
+        BOOST_FOREACH (const ServiceSubscriptionFilterAttribute& e, attributes)
+        {
+            if (e.IsMatch(values))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    case ServiceSubscriptionFilterAttributeGroupOperation_AND:
+    {
+        if (attributes.empty() && groups.empty())
+        {
+            return true;
+        }
+        BOOST_FOREACH (const ServiceSubscriptionFilterAttributeGroup& e, groups)
+        {
+            if (!e.IsMatch(values))
+            {
+                return false;
+            }
+        }
+        BOOST_FOREACH (const ServiceSubscriptionFilterAttribute& e, attributes)
+        {
+            if (!e.IsMatch(values))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    case ServiceSubscriptionFilterAttributeGroupOperation_NOR:
+    {
+        return !ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation_OR, attributes, groups, values);
+    }
+    case ServiceSubscriptionFilterAttributeGroupOperation_NAND:
+    {
+        return !ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation_AND, attributes, groups, values);
+    }
+    default:
+    {
+        throw InvalidArgumentException("Invalid attribute filter operation");
+    }
+    }
+}
+
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const std::vector<std::string>& values) const
+{
+    return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
+}
+
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const RR_INTRUSIVE_PTR<RRList<RRValue> >& values) const
+{
+    return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
+}
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const std::map<std::string, std::string>& values) const
+{
+    return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
+}
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& values) const
+{
+    return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
+}
+
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref regex_value)
+{
+    boost::regex r(regex_value.begin(), regex_value.end());
+    return ServiceSubscriptionFilterAttribute(r);
+}
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref name, boost::string_ref regex_value)
+{
+    boost::regex r(regex_value.begin(), regex_value.end());
+    return ServiceSubscriptionFilterAttribute(name, r);
+}
 
 } // namespace RobotRaconteur
