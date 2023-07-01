@@ -3,18 +3,18 @@ cmake_minimum_required(VERSION 3.3)
 # Read version
 
 file(STRINGS "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h"
-ROBOTRACONTEUR_CONFIG_VERSION REGEX "#define +ROBOTRACONTEUR_VERSION_TEXT +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+     ROBOTRACONTEUR_CONFIG_VERSION REGEX "#define +ROBOTRACONTEUR_VERSION_TEXT +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
 if("${ROBOTRACONTEUR_CONFIG_VERSION}" STREQUAL "")
-message(FATAL_ERROR "Could not read Robot Raconteur version.")
+    message(FATAL_ERROR "Could not read Robot Raconteur version.")
 endif()
 string(REGEX REPLACE "#define ROBOTRACONTEUR_VERSION_TEXT \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" ROBOTRACONTEUR_VERSION
-${ROBOTRACONTEUR_CONFIG_VERSION})
+                     ${ROBOTRACONTEUR_CONFIG_VERSION})
 
 project(RobotRaconteur VERSION ${ROBOTRACONTEUR_VERSION})
 
 message(STATUS "Robot Raconteur version: ${ROBOTRACONTEUR_VERSION}")
 
-if (EXISTS ${CMAKE_CURRENT_LIST_DIR}/cmake_config_options.cmake)
+if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/cmake_config_options.cmake)
     include(${CMAKE_CURRENT_LIST_DIR}/cmake_config_options.cmake)
 endif()
 
@@ -26,7 +26,6 @@ check_type_size("long int" SIZEOF_LONG_INT BUILTIN_TYPES_ONLY)
 
 configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h"
                "${CMAKE_BINARY_DIR}/RobotRaconteurConfig.h" COPYONLY)
-
 
 if(NOT ROBOTRACONTEUR_VERSION_SEMVER)
     set(ROBOTRACONTEUR_VERSION_SEMVER ${ROBOTRACONTEUR_VERSION})
@@ -66,7 +65,10 @@ if(ROBOTRACONTEUR_ROS)
     set(BUILD_PYTHON3 ON CACHE BOOL "Build Python 3 wrappers")
 endif()
 
-if(BUILD_PYTHON OR BUILD_PYTHON3 OR BUILD_NET OR BUILD_JAVA)
+if(BUILD_PYTHON
+   OR BUILD_PYTHON3
+   OR BUILD_NET
+   OR BUILD_JAVA)
     if(USE_PREGENERATED_SOURCE)
         set(PREGENERATED_SOURCE_DIR ${CMAKE_SOURCE_DIR}/generated_src CACHE PATH "generated_src directory location")
         if(NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
