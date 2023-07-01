@@ -227,7 +227,7 @@ static bool ServiceSubscription_FilterService(const std::vector<std::string>& se
                 }
             }
 
-            if (urls.empty())
+            if (urls.empty() && storage)
             {
                 // We didn't find a match with the ServiceInfo2 urls, attempt to use NodeDiscoveryInfo
                 // TODO: test this....
@@ -1142,6 +1142,13 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
         return;
     RR_SHARED_PTR<detail::ServiceSubscription_client> c2_1 = c2.lock();
     RR_SHARED_PTR<RobotRaconteurNode> n = this1->node.lock();
+
+    if (c2_1->erase)
+    {
+        boost::mutex::scoped_lock lock(this1->this_lock);
+        this1->clients.erase(ServiceSubscriptionClientID(c2_1->nodeid, c2_1->service_name));
+    }
+
     try
     {
         if (!this1 || !c2_1)
@@ -1164,7 +1171,10 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
                 if (rr_cast<ServiceStub>(client)->GetContext() == ctx)
                 {
                     c2_1->client.reset();
-                    this1->ConnectRetry(c2_1);
+                    if (!c2_1->erase)
+                    {
+                        this1->ConnectRetry(c2_1);
+                    }
 
                     if (c2_1->claimed.data())
                     {
@@ -1589,6 +1599,95 @@ void ServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, 
         catch (std::exception&)
         {}
     }
+}
+
+void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& service_types,
+        const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter)
+{
+    if (!active)
+    {
+        return;
+    }
+
+    if (use_service_url)
+    {
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "Subscription not using service b type");
+        throw InvalidOperationException("Subscription not using service by type");
+    }
+
+    if (service_types.empty())
+    {
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "service_types most not be empty");
+        throw InvalidArgumentException("service_types must not be empty");
+    }
+
+    boost::mutex::scoped_lock lock(this_lock);
+
+    this->service_types = service_types;
+    this->filter = filter;
+
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+    {
+        return;
+    }
+
+    BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client>& c, clients | boost::adaptors::map_values)
+    {        
+        if (c->claimed.data())
+        {
+            continue;
+        }
+
+        RR_SHARED_PTR<RRObject> c2 = c->client.lock();
+        if (!c2)
+            continue;
+
+        try
+        {
+            ServiceInfo2 info;
+            info.NodeID = c->nodeid;
+            info.NodeName = c->nodename;
+            info.Name = c->service_name;
+            info.RootObjectType = c->service_type;
+            info.ConnectionURL = c->urls;
+            info.Attributes = n->GetServiceAttributes(c2);
+            info.ConnectionURL = c->urls;
+
+            c->erase.data() = true;
+
+            std::vector<std::string> filter_res_urls;
+            std::string filter_res;
+            RR_SHARED_PTR<ServiceSubscriptionFilterNode> filter_node;
+            
+            bool connect = ServiceSubscription_FilterService(service_types, this->filter,  RR_SHARED_PTR<detail::Discovery_nodestorage>(),
+                info, filter_res_urls, filter_res, filter_node);
+            
+            if (!connect)
+            {
+                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "Service filtered by UpdateServiceByType: " << c.NodeID.ToString() << "," << c.Name);
+                try
+                {                    
+                    n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
+                }
+                catch (std::exception) {}
+            }            
+        }
+        catch (std::exception& exp)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "Error updating service by type: " << exp.what());
+        }
+
+    }
+
+    RR_SHARED_PTR<detail::Discovery> d = parent.lock();
+    if (!d)
+    {
+        return;
+    }
+    RR_SHARED_PTR<Timer> t = n->CreateTimer(boost::posix_time::milliseconds(250), 
+        boost::bind(&detail::Discovery::DoUpdateAllDetectedServices, d, shared_from_this()));
+    t->Start();
 }
 
 // class WireSubscriptionBase

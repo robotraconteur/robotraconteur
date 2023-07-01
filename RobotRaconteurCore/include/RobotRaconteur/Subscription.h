@@ -668,6 +668,18 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
                               (RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >()),
                           boost::string_ref object_type = "", bool close_connected = false);
 
+    /**
+     * @brief Update the service type and filter for subscription
+     *
+     * Updates the existing target service types and filter for a running subscription
+     *
+     * @param service_types A std::vector of service types to listen for, ie `com.robotraconteur.robotics.robot.Robot`
+     * @param filter A filter to select individual services based on specified criteria
+     */
+
+    void UpdateServiceByType(const std::vector<std::string>& service_types,
+        const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
+
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
   protected:

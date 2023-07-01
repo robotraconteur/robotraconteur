@@ -167,7 +167,7 @@ namespace RobotRaconteur
 
 		void UpdateServiceURL(const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "", bool close_connected = false);
 		void UpdateServiceURL(const std::string& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "", bool close_connected = false);
-		
+		void UpdateServiceByType(const std::vector<std::string>& service_types, const boost::shared_ptr<WrappedServiceSubscriptionFilter>& filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
 			
 	};
 

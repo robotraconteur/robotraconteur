@@ -4463,7 +4463,35 @@ class ServiceSubscription(object):
                 credentials, "varvalue{string}", None, self._subscription.GetNode()).GetData()
         self._subscription.UpdateServiceURL(
             url, username, credentials, "", close_connected)
+    
+    def UpdateServiceByType(self, service_types, filter_=None):
+        """
+        Update the service types and filter
 
+        :param service_types: The new service types to use to connect to service
+        :type service_types: Union[str,List[str]]
+        :param filter_: Optional filter to use to connect to service
+        :type filter_: Union[str,RobotRaconteurPython.ServiceSubscriptionFilter]
+        """
+
+        node = self._subscription.GetNode()
+        filter2 = _SubscribeService_LoadFilter(node, filter_)
+
+        service_types2 = RobotRaconteurPython.vectorstring()
+        if (sys.version_info > (3, 0)):
+            if (isinstance(service_types, str)):
+                service_types2.append(service_types)
+            else:
+                for s in service_types:
+                    service_types2.append(s)
+        else:
+            if (isinstance(service_types, (str, unicode))):
+                service_types2.append(service_types)
+            else:
+                for s in service_types:
+                    service_types2.append(s)
+
+        self._subscription.UpdateServiceByType(service_types2, filter2)
 
 class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubscriptionDirector):
     def __init__(self, subscription):
@@ -4946,7 +4974,6 @@ def SubscribeServiceByType(node, service_types, filter_=None):
     sub1 = RobotRaconteurPython.WrappedSubscribeServiceByType(
         node, service_types2, filter2)
     return ServiceSubscription(sub1)
-
 
 def SubscribeService(node, *args):
     args2 = list(args)

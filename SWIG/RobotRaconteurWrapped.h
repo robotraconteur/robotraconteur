@@ -1982,6 +1982,9 @@ class WrappedServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<WrappedServ
         const boost::intrusive_ptr<MessageElementData>& credentials = boost::intrusive_ptr<MessageElementData>(),
         const std::string& objecttype = "", bool close_connected = false);
 
+    void UpdateServiceByType(const std::vector<std::string>& service_types,
+        const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter = RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
+
   protected:
     RR_SHARED_PTR<ServiceSubscription> subscription;
     RR_SHARED_PTR<WrappedServiceSubscriptionDirector> RR_Director;
@@ -2124,6 +2127,9 @@ RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::string& url, const std::string& username = "",
     const boost::intrusive_ptr<MessageElementData>& credentials = boost::intrusive_ptr<MessageElementData>(),
     const std::string& objecttype = "");
+
+static RR_SHARED_PTR<ServiceSubscriptionFilter> WrappedSubscribeService_LoadFilter(
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter);
 
 class UserLogRecordHandlerDirector
 {
