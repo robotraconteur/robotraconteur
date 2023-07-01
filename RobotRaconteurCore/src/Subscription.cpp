@@ -1666,12 +1666,12 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
             
             if (!connect)
             {
-                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "Service filtered by UpdateServiceByType: " << c.NodeID.ToString() << "," << c.Name);
+                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "Service filtered by UpdateServiceByType: " << c->nodeid.ToString() << "," << c->nodename);
                 try
                 {                    
                     n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
                 }
-                catch (std::exception) {}
+                catch (std::exception&) {}
             }            
         }
         catch (std::exception& exp)
