@@ -3030,7 +3030,7 @@ ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::st
     this->UseRegex = false;
 }
 
-ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref name, boost::regex value)
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref name, const boost::regex& value)
 {
     this->Name = name.to_string();
     this->Value = "";
