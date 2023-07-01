@@ -1659,8 +1659,9 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
             std::vector<std::string> filter_res_urls;
             std::string filter_res;
             RR_SHARED_PTR<ServiceSubscriptionFilterNode> filter_node;
+            RR_SHARED_PTR<detail::Discovery_nodestorage> node_storage;
             
-            bool connect = ServiceSubscription_FilterService(service_types, this->filter,  RR_SHARED_PTR<detail::Discovery_nodestorage>(),
+            bool connect = ServiceSubscription_FilterService(service_types, this->filter,  node_storage,
                 info, filter_res_urls, filter_res, filter_node);
             
             if (!connect)
