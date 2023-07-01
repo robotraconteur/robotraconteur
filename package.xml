@@ -11,20 +11,19 @@
   <url type="website">http://robotraconteur.com</url>
 
   <author email="wason@wasontech.com">John Wason</author>
-
-  <buildtool_depend>catkin</buildtool_depend>
+  
+  <buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>swig</buildtool_depend>
   <depend>boost</depend>
-  <depend>openssl</depend>
+  <depend>libssl-dev</depend>
   <depend>libusb-1.0-dev</depend>
   <depend>libdbus-dev</depend>
   <depend>libbluetooth-dev</depend>
   <depend>zlib</depend>
-  <depend>python</depend>
-  <depend>python-numpy</depend>
-  <depend>python3</depend>
+  <depend>python3-dev</depend>
   <depend>python3-numpy</depend>
-  <depend>roslib</depend>
-  <depend>swig</depend>
+  <depend>python3-setuptools</depend>
+  <test_depend>gtest</test_depend>
     
   <export>    
     <build_type>cmake</build_type>
