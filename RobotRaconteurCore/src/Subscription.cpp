@@ -3015,7 +3015,7 @@ ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::st
     this->UseRegex = false;
 }
 
-ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::regex value)
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(const boost::regex& value)
 {
     this->Name = "";
     this->Value = "";

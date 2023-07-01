@@ -118,7 +118,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute
          * 
          * @param value_regex The attribute value regex
          */
-        ServiceSubscriptionFilterAttribute(boost::regex value_regex);
+        ServiceSubscriptionFilterAttribute(const boost::regex& value_regex);
         /**
          * @brief Construct a new Service Subscription Filter Attribute object
          * 
@@ -137,7 +137,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute
          * @param name The attribute name
          * @param value_regex The attribute value regex
          */
-        ServiceSubscriptionFilterAttribute(boost::string_ref name, boost::regex value_regex);
+        ServiceSubscriptionFilterAttribute(boost::string_ref name, const boost::regex& value_regex);
 
         /**
          * @brief Compare the attribute to a value
