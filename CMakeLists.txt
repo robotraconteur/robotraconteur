@@ -65,6 +65,12 @@ if(ROBOTRACONTEUR_ROS)
     set(BUILD_PYTHON3 ON CACHE BOOL "Build Python 3 wrappers")
 endif()
 
+if(EXISTS ${CMAKE_SOURCE_DIR}/generated_src)
+    set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
+else()
+    set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
+endif()
+
 if(BUILD_PYTHON
    OR BUILD_PYTHON3
    OR BUILD_NET
@@ -78,8 +84,6 @@ if(BUILD_PYTHON
            OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/NET/swigwordsize32/RobotRaconteurNETCSHARP_wrap.cxx)
             message(FATAL_ERROR "Invalid PREGENERATED_SOURCE_DIR")
         endif()
-    else()
-        include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
     endif()
 endif()
 
@@ -113,14 +117,17 @@ if(BUILD_MATLAB_MEX)
     add_subdirectory(RobotRaconteurMex)
 endif()
 
-if(EXISTS ${CMAKE_SOURCE_DIR}/generated_src)
-    set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
-else()
-    set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
-endif()
-
 if(BUILD_TESTING)
     add_subdirectory(test)
+endif()
+
+if(BUILD_PYTHON
+   OR BUILD_PYTHON3
+   OR BUILD_NET
+   OR BUILD_JAVA
+   AND NOT USE_PREGENERATED_SOURCE)
+
+    include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
 endif()
 
 include(CMakePackageConfigHelpers)
