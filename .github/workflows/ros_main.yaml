@@ -26,7 +26,6 @@ jobs:
         ROS_DISTRO: ${{ env.ROS_DISTRO }}
         ROS_REPO: main
         CLANG_TIDY: true
-        CLANG_FORMAT_CHECK: false
 
   build-ros-prerelease:
     runs-on: ubuntu-latest
