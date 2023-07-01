@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - ros-**
-      - ros2 - **
+      - ros2-**
   pull_request:
     branches:
       - ros-**
-      - ros2 - **
+      - ros2-**
   
   workflow_dispatch:
 
