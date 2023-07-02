@@ -3003,6 +3003,7 @@ void ServiceSubscription_custom_member_subscribers::SubscribePipe(const RR_SHARE
 
 ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute()
 {
+    UseRegex = false;
 }
 
 ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref value)
@@ -3122,10 +3123,7 @@ bool ServiceSubscriptionFilterAttribute::IsMatch(const RR_INTRUSIVE_PTR<RRMap<st
 
         std::string s2 = RRArrayToString(s);
 
-        if (IsMatch(e.first, s2))
-        {
-            return true;
-        }
+        return IsMatch(e.first, s2);
     }
 }
 
@@ -3157,14 +3155,14 @@ ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup
 ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttribute> attributes)
 {
     this->Operation = operation;
-    this->Attributes = attributes;
+    this->Attributes = RR_MOVE(attributes);
     this->SplitStringAttribute = true;
     this->SplitStringDelimiter = ',';
 }
 ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttributeGroup> groups)
 {
     this->Operation = operation;
-    this->Groups = groups;
+    this->Groups = RR_MOVE(groups);
     this->SplitStringAttribute = true;
     this->SplitStringDelimiter = ',';
 }
