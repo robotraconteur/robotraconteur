@@ -54,13 +54,13 @@ public partial class ServiceSubscriptionClientID
     /// <param name="service_name">The Service Name</param>
     public ServiceSubscriptionClientID(NodeID node_id, string service_name)
     {
-        this.NodeID = node_id;
+        this.NodeID = new NodeID(node_id);
         this.ServiceName = service_name;
     }
 
     internal ServiceSubscriptionClientID(WrappedServiceSubscriptionClientID id1)
     {
-        this.NodeID = id1.NodeID;
+        this.NodeID = new NodeID(id1.NodeID);
         this.ServiceName = id1.ServiceName;
     }
 
