@@ -4065,6 +4065,71 @@
       </remarks>
     </member>
 
+    <MemberName name="T:RobotRaconteur.ServiceSubscriptionFilterAttribute">
+      <summary>Subscription filter attribute for use with ServiceSubscriptionFilter</summary>
+    </MemberName>
+
+    <MemberName name="M:RobotRaconteur.ServiceSubscriptionFilterAttribute.#ctor">
+      <summary>Construct a new ServiceSubscriptionFilterAttribute</summary>
+    </MemberName>
+
+    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttribute.Name">
+      <summary>The attribute name. Empty for no name</summary>
+    </MemberName>
+
+    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttribute.Value">
+      <summary>The string value of the attribute</summary>
+    </MemberName>
+
+    <MemberName name="T:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation">
+      <summary>Subscription filter attribute group for use with ServiceSubscriptionFilter</summary>
+    </MemberName>
+
+    <MemberName name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.OR">
+      <summary>OR Operation</summary>
+    </MemberName>
+  
+    <MemberName name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.AND">
+      <summary>AND Operation</summary>
+    </MemberName>
+
+    <MemberName name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.NOR">
+      <summary>NOR Operation</summary>
+    </MemberName>
+
+    <MemberName name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.NAND">
+      <summary>NAND Operation</summary>
+    </MemberName>
+
+    <MemberName name="T:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup">
+      <summary>Subscription filter for use with ServiceSubscription</summary>
+    </MemberName>
+
+    <MemberName name="M:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.#ctor">
+      <summary>Construct a new ServiceSubscriptionFilterAttributeGroup</summary>
+    </MemberName>
+
+    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Attributes">
+      <summary>The attributes in the group</summary>
+    </MemberName>
+
+    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Groups">
+      <summary>The nested groups in the group</summary>
+    </MemberName>
+
+    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Operation">
+      <summary>The operation to use for matching the attributes and groups</summary>
+    </MemberName>
+
+    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.SplitStringAttribute">
+      <summary>True if string attributes will be split into a list with delimiter (default ",")</summary>
+    </MemberName>
+
+    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.SplitStringDelimiter">
+      <summary>Delimiter to use to split string attributes (default ",")</summary>
+    </MemberName>
+    
+
     <!-- BEGIN GENERATED_MEMBERS -->
     <!-- GENERATED_MEMBERS -->
     <!-- END GENERATED_MEMBERS -->
