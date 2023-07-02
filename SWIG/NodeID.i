@@ -31,6 +31,7 @@ public:
 	
 	NodeID(boost::array<uint8_t,16> id);
 	NodeID(const std::string& id);
+	NodeID(const NodeID& id);
 
 	boost::array<uint8_t,16> ToByteArray();
 };

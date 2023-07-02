@@ -3888,7 +3888,7 @@ class ServiceSubscriptionClientID(object):
         """(str) The ServiceName of the connected service"""
 
         if (len(args) == 1):
-            self.NodeID = args[0].NodeID
+            self.NodeID = RobotRaconteurPython.NodeID(args[0].NodeID)
             self.ServiceName = args[0].ServiceName
         elif (len(args) == 2):
             self.NodeID = args[0]
@@ -3904,6 +3904,9 @@ class ServiceSubscriptionClientID(object):
 
     def __hash__(self):
         return hash((str(self.NodeID), self.ServiceName))
+    
+    def __str__(self):
+        return str(self.NodeID) + "," + self.ServiceName
 
 
 class ServiceSubscriptionFilterNode(object):
