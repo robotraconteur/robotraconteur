@@ -238,7 +238,9 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttributeGroup
         /** @brief The operation to use for matching the attributes and groups */
         ServiceSubscriptionFilterAttributeGroupOperation Operation;
 
+        /** @brief True if string attributes will be split into a list with delimiter (default ",") */
         bool SplitStringAttribute;
+        /** @brief Delimiter to use to split string attributes (default ",")*/
         char SplitStringDelimiter;
 
         /**
@@ -267,7 +269,22 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttributeGroup
          */
         ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttributeGroup> groups);
 
+        /**
+         * @brief Compare the group to a value
+         * 
+         * @param value The value to compare
+         * @return true 
+         * @return false 
+         */
         bool IsMatch(boost::string_ref value) const;
+
+        /**
+         * @brief Compare the group to a value
+         * 
+         * @param value The value to compare
+         * @return true 
+         * @return false 
+         */
         bool IsMatch(RR_INTRUSIVE_PTR<RRArray<char> >& value) const;
 
         /**
