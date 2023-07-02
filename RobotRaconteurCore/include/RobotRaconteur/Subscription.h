@@ -238,6 +238,9 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttributeGroup
         /** @brief The operation to use for matching the attributes and groups */
         ServiceSubscriptionFilterAttributeGroupOperation Operation;
 
+        bool SplitStringAttribute;
+        char SplitStringDelimiter;
+
         /**
          * @brief Construct a new Service Subscription Filter Attribute Group object
          * 
@@ -263,6 +266,9 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttributeGroup
          * @param groups The nested groups in the group
          */
         ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttributeGroup> groups);
+
+        bool IsMatch(boost::string_ref value) const;
+        bool IsMatch(RR_INTRUSIVE_PTR<RRArray<char> >& value) const;
 
         /**
          * @brief Compare the group to a list of values
@@ -296,6 +302,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttributeGroup
          * @return false 
          */
         bool IsMatch(const std::map<std::string, std::string>& values) const;
+
+        bool IsMatch(const RR_INTRUSIVE_PTR<RRValue>& value) const;
 };
 
 /**
@@ -318,6 +326,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilter
     std::vector<std::string> TransportSchemes;
     /** Attributes to match */
     std::map<std::string,ServiceSubscriptionFilterAttributeGroup> Attributes;
+    /** Operation to use to match attributes. Defaults to AND */
+    ServiceSubscriptionFilterAttributeGroupOperation AttributesMatchOperation;
     /** A user specified predicate function. If nullptr, the predicate is not checked. **/
     boost::function<bool(const ServiceInfo2&)> Predicate;
     /** The maximum number of connections the subscription will create. Zero means unlimited connections. **/

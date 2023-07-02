@@ -4332,6 +4332,8 @@ static RR_SHARED_PTR<ServiceSubscriptionFilter> WrappedSubscribeService_LoadFilt
         filter2 = RR_MAKE_SHARED<ServiceSubscriptionFilter>();
         filter2->ServiceNames = filter->ServiceNames;
         filter2->TransportSchemes = filter->TransportSchemes;
+        filter2->Attributes = filter->Attributes;
+        filter2->AttributesMatchOperation = filter->AttributesMatchOperation;
         filter2->MaxConnections = filter->MaxConnections;
         BOOST_FOREACH (RR_SHARED_PTR<WrappedServiceSubscriptionFilterNode>& n, filter->Nodes)
         {

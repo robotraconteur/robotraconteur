@@ -3940,7 +3940,7 @@ class ServiceSubscriptionFilter(object):
     the filter before connecting.
     """
     __slots__ = ["Nodes", "ServiceNames",
-                 "TransportSchemes", "Predicate", "MaxConnections"]
+                 "TransportSchemes", "Predicate", "Attributes", "AttributesMatchOperation", "MaxConnections"]
 
     def __init__(self):
         self.Nodes = []
@@ -3949,6 +3949,11 @@ class ServiceSubscriptionFilter(object):
         """(List[str])  List of service names that should be connected. Empty means match any service name."""
         self.TransportSchemes = []
         """(List[str]) List of transport schemes. Empty means match any transport scheme."""
+        self.Attributes = dict()
+        """(Dict[str,RobotRaconteur.ServiceSubscriptionFilterAttributeGroup] Attributes to match)"""
+        self.AttributesMatchOperation = RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroupOperation_AND
+        """(RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation) The operation to use when matching attributes. 
+        Default is AND. Can be OR, AND, NOR, and NAND."""
         self.Predicate = None
         """(Callable[[RobotRaconteur.ServiceInfo2],bool]) A user specified predicate function. If nullptr, the predicate is not checked."""
         self.MaxConnections = 1000000
@@ -4902,7 +4907,10 @@ def _SubscribeService_LoadFilter(node, filter_):
             for s in filter_.TransportSchemes:
                 filter2.TransportSchemes.append(s)
         filter2.MaxConnections = filter_.MaxConnections
-
+        if (filter_.Attributes is not None):
+            for n,v in filter_.Attributes.items():
+                filter2.Attributes[n] = v
+        filter_.AttributesMatchOperation = filter_.AttributesMatchOperation
         if (filter_.Nodes is not None):
             nodes2 = RobotRaconteurPython.vectorptr_wrappedservicesubscriptionnode()
             for n1 in filter_.Nodes:

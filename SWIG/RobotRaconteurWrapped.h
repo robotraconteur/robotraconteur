@@ -1843,6 +1843,8 @@ class WrappedServiceSubscriptionFilter
     std::vector<RR_SHARED_PTR<WrappedServiceSubscriptionFilterNode> > Nodes;
     std::vector<std::string> ServiceNames;
     std::vector<std::string> TransportSchemes;
+    std::map<std::string,ServiceSubscriptionFilterAttributeGroup> Attributes;
+    ServiceSubscriptionFilterAttributeGroupOperation AttributesMatchOperation;
     RR_SHARED_PTR<WrappedServiceSubscriptionFilterPredicateDirector> Predicate;
     void SetRRPredicateDirector(WrappedServiceSubscriptionFilterPredicateDirector* director, int32_t id);
     uint32_t MaxConnections;
