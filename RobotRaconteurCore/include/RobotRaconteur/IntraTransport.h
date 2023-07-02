@@ -114,6 +114,12 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
      */
     virtual void StartServer();
 
+    /**
+     * @brief Start the transport as a client
+     * 
+     */
+    virtual void StartClient();
+
   protected:
     virtual void CloseTransportConnection_timed(const boost::system::error_code& err, const RR_SHARED_PTR<Endpoint>& e,
                                                 const RR_SHARED_PTR<void>& timer);
@@ -155,6 +161,8 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
     RR_OVIRTUAL void LocalNodeServicesChanged() RR_OVERRIDE;
 
     void SendNodeDiscovery();
+
+    void DiscoverAllNodes();
 
   protected:
     virtual void register_transport(const RR_SHARED_PTR<ITransportConnection>& connection);
