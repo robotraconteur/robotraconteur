@@ -8755,6 +8755,138 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
                              "Invalid filter.TransportSchemes specified for SubscribeServiceByType");
         }
 
+        if (mxArray* attributes1 = ::mxGetField(filter, 0, "Attributes"))
+        {
+            if (std::string(mxGetClassName(attributes1)) != "containers.Map")
+                throw DataTypeException("Expected filter attributes to be containers.Map");
+            
+            mxArray* keys = NULL;
+            mxArray* values = NULL;
+            mxArray* pm2 = (mxArray*)attributes1;
+            mexCallMATLAB(1, &keys, 1, &pm2, "keys");
+            if (!keys)
+                throw DataTypeException("Could not read keys in map");
+            mxArray* pm3[2];
+            pm3[0] = pm2;
+            pm3[1] = keys;
+            mexCallMATLAB(1, &values, 1, pm3, "values");
+            if (!values)
+                throw DataTypeException("Could not read values in map");
+
+            mwSize elementcount = mxGetNumberOfElements(keys);
+            if (elementcount != mxGetNumberOfElements(values))
+                throw InternalErrorException("Internal map error");
+
+            for (mwSize i = 0; i < elementcount; i++)
+            {
+                ServiceSubscriptionFilterAttributeGroup attribute_group;
+
+                mxArray* key = mxGetCell(keys, i);
+                mxArray* data = mxGetCell(values, i);
+
+                std::string attribute_name = mxToString(key);
+                if (mxIsChar(data))
+                {
+                    attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(mxToString(data)));
+                }
+                else if (mxIsCell(data))
+                {
+                    std::vector<std::string> attrib_values;
+                    mxToVectorString(data, attrib_values, "Invalid filter.Attributes specified for SubscribeServiceByType");
+                    BOOST_FOREACH(std::string& s, attrib_values)
+                    {
+                        attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(s));
+                    }
+                }
+                else if (mxIsStruct(data))
+                {
+                    if (mxGetNumberOfElements(data) != 1)
+                        throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
+                    mxArray* group_attr = mxGetField(data, 0, "Attributes");
+                    if (!group_attr)
+                        throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
+                    if (mxIsChar(group_attr))
+                    {
+                        attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(mxToString(group_attr)));
+                    }
+                    else if (mxIsCell(group_attr))
+                    {
+                        std::vector<std::string> attrib_values;
+                        mxToVectorString(group_attr, attrib_values, "Invalid filter.Attributes specified for SubscribeServiceByType");
+                        BOOST_FOREACH(std::string& s, attrib_values)
+                        {
+                            attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(s));
+                        }
+                    }
+                    else
+                    {
+                        throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
+                    }
+                    mxArray* group_op1 = mxGetField(data, 0, "Operation");
+                    if (group_op1)
+                    {
+                        std::string group_op = mxToString(group_op1);
+                        boost::to_lower(group_op);
+                        if (group_op == "and")
+                        {
+                            attribute_group.Operation = ServiceSubscriptionFilterAttributeGroupOperation_AND;
+                        }
+                        else if (group_op == "or")
+                        {
+                            attribute_group.Operation = ServiceSubscriptionFilterAttributeGroupOperation_OR;
+                        }
+                        else if (group_op == "nand")
+                        {
+                            attribute_group.Operation = ServiceSubscriptionFilterAttributeGroupOperation_NAND;
+                        }
+                        else if (group_op == "nor")
+                        {
+                            attribute_group.Operation = ServiceSubscriptionFilterAttributeGroupOperation_NOR;
+                        }
+                        else
+                        {
+                            throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
+                        }
+                    }
+                }
+                else
+                {
+                    throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
+                }
+
+                filter2->Attributes.insert(std::make_pair(attribute_name,attribute_group));
+
+            }
+
+            
+        }
+
+        if (mxArray* attributes_op1 = ::mxGetField(filter, 0, "AttributesMatchOperator"))
+        {
+            std::string attributes_op = mxToString(attributes_op1);
+            boost::to_lower(attributes_op);
+            if (attributes_op == "and")
+            {
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_OR;
+            }
+            else if (attributes_op == "or")
+            {
+                filter2->AttributesMatchOperation= ServiceSubscriptionFilterAttributeGroupOperation_AND;
+            }
+            else if (attributes_op == "nand")
+            {
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NOR;
+            }
+            else if (attributes_op == "nor")
+            {
+                filter2->AttributesMatchOperation= ServiceSubscriptionFilterAttributeGroupOperation_NAND;
+            }
+            else
+            {
+                throw InvalidArgumentException("Invalid filter.AttributesOperator specified for SubscribeServiceByType");
+            }
+        }
+
         if (mxArray* filter_maxconnections1 = ::mxGetField(filter, 0, "MaxConnections"))
         {
             filter2->MaxConnections = boost::lexical_cast<uint32_t>(GetDoubleScalar(filter_maxconnections1));
