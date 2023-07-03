@@ -11,6 +11,7 @@
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
       $EXTRA_CMAKE_ARGS $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
       ..
+    - cat CMakeCache.txt
     - ${RUNCMD} cmake --build . --config Release --target RobotRaconteurCore -- -j8
     - ${RUNCMD} cmake --build . --config Release --target RobotRaconteurGen -- -j8
     - ${RUNCMD} cmake --build . --config Release -- -j4
