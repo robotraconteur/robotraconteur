@@ -44,7 +44,7 @@
   stage: build
   script:
     - Import-Module "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
-    - Enter-VsDevShell -VsInstanceID d217b962 -DevCmdArguments '-arch=${ARCH}'
+    - Enter-VsDevShell -VsInstanceID d217b962 -DevCmdArguments '-arch=$Env:ARCH'
     - cd $Env:CI_PROJECT_DIR
     - mkdir build
     - cd build
@@ -54,8 +54,8 @@
       -DVCPKG_TARGET_TRIPLET=x64-windows-static-md 
       ${BUILD_FEATURES}
       -DPYTHON3_EXECUTABLE=C:\Python310\python.exe
-      ${EXTRA_CMAKE_ARGS} ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS}
-      ${EXTRA_CMAKE_MATLAB_ARGS}
+      $Env:EXTRA_CMAKE_ARGS $Env:CONFIG_CMAKE_ARGS $Env:EXTRA_CMAKE_PYTHON_ARGS
+      $Env:EXTRA_CMAKE_MATLAB_ARGS
       ..
     - nuget restore RobotRaconteurNET\netstandard\Lib\RobotRaconteurNET.csproj
     - nuget restore test\net\netstandard\Test\RobotRaconteurNETTest.csproj
