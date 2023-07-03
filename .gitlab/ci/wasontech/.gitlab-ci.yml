@@ -82,6 +82,12 @@
       -DCMAKE_CXX_FLAGS_RELEASE="/MD /O0 /Ob0 /DNDEBUG"
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
+.windows_build_release:
+  extends: .windows_build
+  variables:
+    CONFIG_CMAKE_ARGS: ""
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF  
+
 build_windows_amd64:
   stage: build
   tags:
@@ -93,6 +99,29 @@ build_windows_amd64:
     RUNCMD: echo
     OUTNAME: "out-windows_10_amd64"
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
+
+build_windows_10_amd64_matlab_release:
+  when: manual
+  stage: build
+  tags:
+    - wasontech
+    - windows
+    - amd64
+  extends: .windows_build_release
+  variables:
+    RUNCMD: echo
+    OUTNAME: "out-windows_10_amd64_matlab_release"
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
+    BUILD_FEATURES: -DBUILD_GEN=ON -DBUILD_TESTING=ON
+  script:
+    - cp out/LICENSE.txt out/Matlab
+    - cd out
+    - $Env:RR_VER = Get-Content .\rrversion.txt
+    - Copy-Item -Path Matlab -Destination RobotRaconteur-$Env:RR_VER-MATLAB-win64 -Recurse
+    - Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.pdb
+    - Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.lib
+    - Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.exp
+    - Compress-Archive -Path RobotRaconteur-$Env:RR_VER-MATLAB-win64 -DestinationPath RobotRaconteur-$Env:RR_VER-MATLAB-win64.zip
 
 build_ubuntu_focal_amd64:
   stage: build
@@ -153,3 +182,175 @@ build_ubuntu_focal_amd64_matlab:
   extends: 
    - .linux_build_dev
    - .linux_build_matlab
+  variables:
+    OUTNAME: out-ubuntu_focal_amd64_matlab
+
+build_freebsd_amd64:
+  stage: build
+  tags:
+    - wasontech
+    - freebsd
+    - amd64
+  script:
+    - mkdir build
+    - cd build
+    - > 
+      cmake
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=OFF      
+      -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+      -DBUILD_NET=OFF -DBUILD_JAVA=OFF
+      -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+      -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+      -DSWIG_PYTHON_EXTRA_ARGS=-DSWIGWORDSIZE64
+      ..
+    - cmake --build . --config Release --target RobotRaconteurCore -- -j6
+    - cmake --build . --config Release --target RobotRaconteurGen -- -j6
+    - cmake --build . --config Release -- -j4
+    - ctest . -C Release --output-on-failure
+    - cp ../LICENSE.txt out/
+    - cp rrversion.txt out/
+  artifacts:
+    when: always
+    name: "out-freebsd_amd64"
+    paths:
+      - build/out/*
+
+.osx_build_amd64:
+  stage: build
+
+  script:
+    - export LIBRARY_PATH=/usr/local/opt/icu4c/lib
+    - mkdir build
+    - cd build
+    - > 
+      $RUNCMD cmake -G Ninja
+      -DCMAKE_OSX_ARCHITECTURES=x86_64 
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
+      -DOPENSSL_USE_STATIC_LIBS=ON    
+      $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_MATLAB_ARGS $EXTRA_CMAKE_PYTHON_ARGS $EXTRA_CMAKE_ARGS
+      -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl\@3 
+      -DCMAKE_IGNORE_PREFIX_PATH=/opt 
+      -DMatlab_ROOT_DIR=/Applications/MATLAB_R2020a.app 
+      -DMatlab_MEX_EXTENSION=mexmaci64 
+      -DRR_MATLAB_TEST_EXTRA_ARGS=-maci64 
+      -DBOOST_ROOT=/usr/local/Cellar/boost/1.81.0_1 
+      -DCMAKE_SYSTEM_IGNORE_PREFIX_PATH=/opt 
+      -DGTest_DIR=/usr/local/Cellar/googletest/1.12.1/lib/cmake/GTest 
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBoost_ADDITIONAL_VERSIONS=$BOOST_VERSION
+      -DBoost_NO_BOOST_CMAKE=ON 
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DCMAKE_FIND_ROOT_PATH="/usr/local;/Library;/System/Library;/Applications"
+      ..
+    - $RUNCMD cmake --build . --config Release
+    - $RUNCMD ctest . -C Release --output-on-failure
+    - cp ../LICENSE.txt out/
+    - cp rrversion.txt out/
+  artifacts:
+    when: always
+    name: "$OUTNAME"
+    paths:
+      - build/out/*
+  variables:
+    RUNCMD: echo
+    BOOST_VERSION: 1.81.0
+    CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
+
+.osx_build_amd64_dev:
+  extends: .osx_build_amd64
+  variables:
+    CONFIG_CMAKE_ARGS: ""
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+
+.osx_build_amd64_release:
+  extends: .osx_build_amd64
+  variables:
+    CONFIG_CMAKE_ARGS: ""
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+
+
+build_osx_amd64:
+  extends: .osx_build_amd64_dev
+  tags:
+    - wasontech
+    - osx
+    - amd64
+  variables:
+    OUTNAME: "out-osx_amd64"
+
+build_osx_amd64_matlab_release:
+  when: manual
+  extends: .osx_build_amd64_release
+  tags:
+    - wasontech
+    - osx
+    - amd64
+  variables:
+    OUTNAME: "out-osx_amd64_matlab_release"
+  script:
+    - cp out/LICENSE.txt out/Matlab
+    - cd out
+    - >
+      export RR_VER=`cat rrversion.txt`
+      && cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-maci64
+      && tar -cf RobotRaconteur-$RR_VER-MATLAB-maci64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maci64
+
+
+code_formatting_ubuntu_focal_amd64:
+  stage: build
+  tags:
+    - wasontech
+    - ubuntu-focal
+    - amd64
+  script:    
+    - ./tools/formatting/run-all-formatting
+    - git diff --name-only --exit-code
+clang_tidy_ubuntu_focal_amd64:
+  stage: build
+  tags:
+    - wasontech
+    - ubuntu-focal
+    - amd64
+  script:
+    - mkdir build
+    - cd build
+    - > 
+      cmake -G Ninja
+      -DCMAKE_BUILD_TYPE=Debug -DBoost_USE_STATIC_LIBS=OFF      
+      -DBUILD_GEN=ON -DBUILD_TESTING=OFF
+      -DCMAKE_CXX_CLANG_TIDY=clang-tidy-14
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+      ..
+    - cmake --build . --config Debug -- -j4
+
+run_code_formatting:
+  stage: build
+  when: manual
+  tags:
+    - wasontech
+    - ubuntu-focal
+    - amd64
+  script:
+    - export GIT_SSL_CAINFO="$CI_SERVER_TLS_CA_FILE"
+    - ./tools/formatting/run-all-formatting
+    - git -c "user.name=John Wason" -c "user.email=wason@wasontech.com" commit -a -m "Code formatting"
+    - git push "https://code_formatting:$CODE_FORMATTING_TOKEN@$CI_SERVER_HOST:$CI_SERVER_PORT/$CI_PROJECT_PATH.git" HEAD:$CI_COMMIT_BRANCH
+
+build_raspbian_buster_armhf:
+  tags:
+    - wasontech
+    - debian-bullseye
+    - arm64
+    - raspi
+  stage: build
+  when: manual
+  extends: .linux_build_dev
+  variables:
+    RUNCMD: echo schroot -c raspi_buster_armhf
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON
+    OUTNAME: out-raspbian_bullseye_armhf
+
