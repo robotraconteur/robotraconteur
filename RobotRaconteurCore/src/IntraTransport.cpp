@@ -892,7 +892,8 @@ RR_SHARED_PTR<Transport> IntraTransportConnection::GetTransport()
 void IntraTransport::DiscoverAllNodes()
 {
     RR_SHARED_PTR<RobotRaconteurNode> node = this->node.lock();
-    if (!node) return;
+    if (!node)
+        return;
 
     std::vector<NodeDiscoveryInfo> discovered_info;
     {
@@ -926,7 +927,7 @@ void IntraTransport::DiscoverAllNodes()
         }
     }
 
-    BOOST_FOREACH(NodeDiscoveryInfo n, discovered_info)
+    BOOST_FOREACH (NodeDiscoveryInfo n, discovered_info)
     {
         try
         {
@@ -934,7 +935,8 @@ void IntraTransport::DiscoverAllNodes()
         }
         catch (std::exception& e)
         {
-            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, 0, "Error in IntraTransport NodeDetected: " << e.what());
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, 0,
+                                               "Error in IntraTransport NodeDetected: " << e.what());
         }
     }
 }

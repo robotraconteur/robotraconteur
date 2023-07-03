@@ -3904,7 +3904,7 @@ class ServiceSubscriptionClientID(object):
 
     def __hash__(self):
         return hash((str(self.NodeID), self.ServiceName))
-    
+
     def __str__(self):
         return str(self.NodeID) + "," + self.ServiceName
 
@@ -4471,7 +4471,7 @@ class ServiceSubscription(object):
                 credentials, "varvalue{string}", None, self._subscription.GetNode()).GetData()
         self._subscription.UpdateServiceURL(
             url, username, credentials, "", close_connected)
-    
+
     def UpdateServiceByType(self, service_types, filter_=None):
         """
         Update the service types and filter
@@ -4500,6 +4500,7 @@ class ServiceSubscription(object):
                     service_types2.append(s)
 
         self._subscription.UpdateServiceByType(service_types2, filter2)
+
 
 class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubscriptionDirector):
     def __init__(self, subscription):
@@ -4911,7 +4912,7 @@ def _SubscribeService_LoadFilter(node, filter_):
                 filter2.TransportSchemes.append(s)
         filter2.MaxConnections = filter_.MaxConnections
         if (filter_.Attributes is not None):
-            for n,v in filter_.Attributes.items():
+            for n, v in filter_.Attributes.items():
                 filter2.Attributes[n] = v
         filter_.AttributesMatchOperation = filter_.AttributesMatchOperation
         if (filter_.Nodes is not None):
@@ -4985,6 +4986,7 @@ def SubscribeServiceByType(node, service_types, filter_=None):
     sub1 = RobotRaconteurPython.WrappedSubscribeServiceByType(
         node, service_types2, filter2)
     return ServiceSubscription(sub1)
+
 
 def SubscribeService(node, *args):
     args2 = list(args)

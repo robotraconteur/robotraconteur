@@ -164,9 +164,9 @@ public class ServiceSubscriptionFilter
     /// Attributes to match
     /// </summary>
     /// <remarks>None</remarks>
-    public Dictionary<string,ServiceSubscriptionFilterAttributeGroup> Attributes;
+    public Dictionary<string, ServiceSubscriptionFilterAttributeGroup> Attributes;
     /// <summary>
-    /// Operation to use to match attributes. Defaults to AND 
+    /// Operation to use to match attributes. Defaults to AND
     /// </summary>
     public ServiceSubscriptionFilterAttributeGroupOperation AttributesMatchOperation;
 
@@ -788,7 +788,7 @@ public class ServiceSubscription
         }
     }
 
-     public void UpdateServiceByType(string[] service_types, ServiceSubscriptionFilter filter = null)
+    public void UpdateServiceByType(string[] service_types, ServiceSubscriptionFilter filter = null)
     {
         var filter2 = RobotRaconteurNode.s.SubscribeService_LoadFilter(filter);
 

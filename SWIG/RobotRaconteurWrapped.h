@@ -1843,7 +1843,7 @@ class WrappedServiceSubscriptionFilter
     std::vector<RR_SHARED_PTR<WrappedServiceSubscriptionFilterNode> > Nodes;
     std::vector<std::string> ServiceNames;
     std::vector<std::string> TransportSchemes;
-    std::map<std::string,ServiceSubscriptionFilterAttributeGroup> Attributes;
+    std::map<std::string, ServiceSubscriptionFilterAttributeGroup> Attributes;
     ServiceSubscriptionFilterAttributeGroupOperation AttributesMatchOperation;
     RR_SHARED_PTR<WrappedServiceSubscriptionFilterPredicateDirector> Predicate;
     void SetRRPredicateDirector(WrappedServiceSubscriptionFilterPredicateDirector* director, int32_t id);
@@ -1985,7 +1985,8 @@ class WrappedServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<WrappedServ
         const std::string& objecttype = "", bool close_connected = false);
 
     void UpdateServiceByType(const std::vector<std::string>& service_types,
-        const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter = RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
+                             const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter =
+                                 RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
 
   protected:
     RR_SHARED_PTR<ServiceSubscription> subscription;

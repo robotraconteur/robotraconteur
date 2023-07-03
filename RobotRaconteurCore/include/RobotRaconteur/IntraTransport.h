@@ -116,7 +116,7 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
 
     /**
      * @brief Start the transport as a client
-     * 
+     *
      */
     virtual void StartClient();
 

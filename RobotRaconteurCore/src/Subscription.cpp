@@ -106,10 +106,10 @@ void ServiceSubscription_retrytimer::timer_handler(RR_WEAK_PTR<ServiceSubscripti
 } // namespace detail
 static void ServiceSubscription_close_handler() {}
 
-ServiceSubscriptionFilter::ServiceSubscriptionFilter() { 
-    MaxConnections = 0; 
+ServiceSubscriptionFilter::ServiceSubscriptionFilter()
+{
+    MaxConnections = 0;
     AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_AND;
-    
 }
 
 ServiceSubscriptionClientID::ServiceSubscriptionClientID(const ::RobotRaconteur::NodeID& nodeid,
@@ -259,11 +259,11 @@ static bool ServiceSubscription_FilterService(const std::vector<std::string>& se
             }
         }
 
-        if(!filter->Attributes.empty())
+        if (!filter->Attributes.empty())
         {
-            typedef std::map<std::string,ServiceSubscriptionFilterAttributeGroup>::value_type attributes_map_type;
+            typedef std::map<std::string, ServiceSubscriptionFilterAttributeGroup>::value_type attributes_map_type;
             std::vector<bool> attr_matches;
-            BOOST_FOREACH(const attributes_map_type& e, filter->Attributes)
+            BOOST_FOREACH (const attributes_map_type& e, filter->Attributes)
             {
                 std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >::const_iterator e2 = info.Attributes.find(e.first);
                 if (e2 == info.Attributes.end())
@@ -284,7 +284,7 @@ static bool ServiceSubscription_FilterService(const std::vector<std::string>& se
                 {
                     return false;
                 }
-                break;            
+                break;
             case ServiceSubscriptionFilterAttributeGroupOperation_NOR:
                 if (boost::range::find(attr_matches, true) != attr_matches.end())
                 {
@@ -1654,7 +1654,7 @@ void ServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, 
 }
 
 void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& service_types,
-        const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter)
+                                              const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter)
 {
     if (!active)
     {
@@ -1685,7 +1685,7 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
     }
 
     BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client>& c, clients | boost::adaptors::map_values)
-    {        
+    {
         if (c->claimed.data())
         {
             continue;
@@ -1712,25 +1712,28 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
             std::string filter_res;
             RR_SHARED_PTR<ServiceSubscriptionFilterNode> filter_node;
             RR_SHARED_PTR<detail::Discovery_nodestorage> node_storage;
-            
-            bool connect = ServiceSubscription_FilterService(service_types, this->filter,  node_storage,
-                info, filter_res_urls, filter_res, filter_node);
-            
+
+            bool connect = ServiceSubscription_FilterService(service_types, this->filter, node_storage, info,
+                                                             filter_res_urls, filter_res, filter_node);
+
             if (!connect)
             {
-                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "Service filtered by UpdateServiceByType: " << c->nodeid.ToString() << "," << c->nodename);
+                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1,
+                                                   "Service filtered by UpdateServiceByType: " << c->nodeid.ToString()
+                                                                                               << "," << c->nodename);
                 try
-                {                    
+                {
                     n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
                 }
-                catch (std::exception&) {}
-            }            
+                catch (std::exception&)
+                {}
+            }
         }
         catch (std::exception& exp)
         {
-            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "Error updating service by type: " << exp.what());
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                               "Error updating service by type: " << exp.what());
         }
-
     }
 
     RR_SHARED_PTR<detail::Discovery> d = parent.lock();
@@ -1738,8 +1741,9 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
     {
         return;
     }
-    RR_SHARED_PTR<Timer> t = n->CreateTimer(boost::posix_time::milliseconds(250), 
-        boost::bind(&detail::Discovery::DoUpdateAllDetectedServices, d, shared_from_this()));
+    RR_SHARED_PTR<Timer> t =
+        n->CreateTimer(boost::posix_time::milliseconds(250),
+                       boost::bind(&detail::Discovery::DoUpdateAllDetectedServices, d, shared_from_this()));
     t->Start();
 }
 
@@ -3001,10 +3005,7 @@ void ServiceSubscription_custom_member_subscribers::SubscribePipe(const RR_SHARE
 
 // ServiceSubscriptionFilterAttribute
 
-ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute()
-{
-    UseRegex = false;
-}
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute() { UseRegex = false; }
 
 ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref value)
 {
@@ -3028,7 +3029,8 @@ ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::st
     this->UseRegex = false;
 }
 
-ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref name, const boost::regex& value)
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref name,
+                                                                       const boost::regex& value)
 {
     this->Name = name.to_string();
     this->Value = "";
@@ -3123,7 +3125,7 @@ bool ServiceSubscriptionFilterAttribute::IsMatch(const RR_INTRUSIVE_PTR<RRMap<st
 
         std::string s2 = RRArrayToString(s);
 
-        if(IsMatch(e.first, s2))
+        if (IsMatch(e.first, s2))
         {
             return true;
         }
@@ -3150,20 +3152,25 @@ ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup
     this->SplitStringAttribute = true;
     this->SplitStringDelimiter = ',';
 }
-ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation)
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(
+    ServiceSubscriptionFilterAttributeGroupOperation operation)
 {
     this->Operation = operation;
     this->SplitStringAttribute = true;
     this->SplitStringDelimiter = ',';
 }
-ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttribute> attributes)
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(
+    ServiceSubscriptionFilterAttributeGroupOperation operation,
+    std::vector<ServiceSubscriptionFilterAttribute> attributes)
 {
     this->Operation = operation;
     this->Attributes = RR_MOVE(attributes);
     this->SplitStringAttribute = true;
     this->SplitStringDelimiter = ',';
 }
-ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttributeGroup> groups)
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(
+    ServiceSubscriptionFilterAttributeGroupOperation operation,
+    std::vector<ServiceSubscriptionFilterAttributeGroup> groups)
 {
     this->Operation = operation;
     this->Groups = RR_MOVE(groups);
@@ -3171,15 +3178,15 @@ ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup
     this->SplitStringDelimiter = ',';
 }
 
-template<typename T>
-static bool ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation operation, 
-const std::vector<ServiceSubscriptionFilterAttribute>&
-attributes, const std::vector<ServiceSubscriptionFilterAttributeGroup>& groups, const T& values)
+template <typename T>
+static bool ServiceSubscriptionFilterAttributeGroup_do_filter(
+    ServiceSubscriptionFilterAttributeGroupOperation operation,
+    const std::vector<ServiceSubscriptionFilterAttribute>& attributes,
+    const std::vector<ServiceSubscriptionFilterAttributeGroup>& groups, const T& values)
 {
     switch (operation)
     {
-    case ServiceSubscriptionFilterAttributeGroupOperation_OR:
-    {
+    case ServiceSubscriptionFilterAttributeGroupOperation_OR: {
         if (attributes.empty() && groups.empty())
         {
             return true;
@@ -3200,8 +3207,7 @@ attributes, const std::vector<ServiceSubscriptionFilterAttributeGroup>& groups, 
         }
         return false;
     }
-    case ServiceSubscriptionFilterAttributeGroupOperation_AND:
-    {
+    case ServiceSubscriptionFilterAttributeGroupOperation_AND: {
         if (attributes.empty() && groups.empty())
         {
             return true;
@@ -3222,16 +3228,15 @@ attributes, const std::vector<ServiceSubscriptionFilterAttributeGroup>& groups, 
         }
         return true;
     }
-    case ServiceSubscriptionFilterAttributeGroupOperation_NOR:
-    {
-        return !ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation_OR, attributes, groups, values);
+    case ServiceSubscriptionFilterAttributeGroupOperation_NOR: {
+        return !ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation_OR,
+                                                                  attributes, groups, values);
     }
-    case ServiceSubscriptionFilterAttributeGroupOperation_NAND:
-    {
-        return !ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation_AND, attributes, groups, values);
+    case ServiceSubscriptionFilterAttributeGroupOperation_NAND: {
+        return !ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation_AND,
+                                                                  attributes, groups, values);
     }
-    default:
-    {
+    default: {
         throw InvalidArgumentException("Invalid attribute filter operation");
     }
     }
@@ -3246,7 +3251,7 @@ bool ServiceSubscriptionFilterAttributeGroup::IsMatch(boost::string_ref value) c
         return IsMatch(value_v);
     }
     else
-    {   
+    {
         std::vector<std::string> value_v;
         boost::split(value_v, value, boost::is_any_of(","));
         return IsMatch(value_v);
@@ -3277,7 +3282,8 @@ bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const std::map<std::string
 {
     return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
 }
-bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& values) const
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(
+    const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& values) const
 {
     return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
 }
@@ -3298,10 +3304,10 @@ bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const RR_INTRUSIVE_PTR<RRV
     RR_INTRUSIVE_PTR<RRList<RRValue> > a1 = RR_DYNAMIC_POINTER_CAST<RRList<RRValue> >(values);
     if (a1)
     {
-       return IsMatch(a1);
+        return IsMatch(a1);
     }
 
-    RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> > a2 = RR_DYNAMIC_POINTER_CAST<RRMap<std::string,RRValue> >(values);
+    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > a2 = RR_DYNAMIC_POINTER_CAST<RRMap<std::string, RRValue> >(values);
     if (a2)
     {
         return IsMatch(a2);
@@ -3315,7 +3321,8 @@ ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex
     boost::regex r(regex_value.begin(), regex_value.end());
     return ServiceSubscriptionFilterAttribute(r);
 }
-ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref name, boost::string_ref regex_value)
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref name,
+                                                                                 boost::string_ref regex_value)
 {
     boost::regex r(regex_value.begin(), regex_value.end());
     return ServiceSubscriptionFilterAttribute(name, r);

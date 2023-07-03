@@ -4077,7 +4077,7 @@ void WrappedServiceSubscription::UpdateServiceURL(const std::string& url, const 
 }
 
 void WrappedServiceSubscription::UpdateServiceByType(const std::vector<std::string>& service_types,
-        const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter)
+                                                     const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter)
 {
     RR_SHARED_PTR<RobotRaconteurNode> node = GetNode();
     RR_SHARED_PTR<ServiceSubscriptionFilter> filter2 = WrappedSubscribeService_LoadFilter(node, filter);

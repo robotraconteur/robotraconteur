@@ -8759,7 +8759,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
         {
             if (std::string(mxGetClassName(attributes1)) != "containers.Map")
                 throw DataTypeException("Expected filter attributes to be containers.Map");
-            
+
             mxArray* keys = NULL;
             mxArray* values = NULL;
             mxArray* pm2 = (mxArray*)attributes1;
@@ -8792,8 +8792,9 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
                 else if (mxIsCell(data))
                 {
                     std::vector<std::string> attrib_values;
-                    mxToVectorString(data, attrib_values, "Invalid filter.Attributes specified for SubscribeServiceByType");
-                    BOOST_FOREACH(std::string& s, attrib_values)
+                    mxToVectorString(data, attrib_values,
+                                     "Invalid filter.Attributes specified for SubscribeServiceByType");
+                    BOOST_FOREACH (std::string& s, attrib_values)
                     {
                         attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(s));
                     }
@@ -8807,13 +8808,15 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
                         throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
                     if (mxIsChar(group_attr))
                     {
-                        attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(mxToString(group_attr)));
+                        attribute_group.Attributes.push_back(
+                            ServiceSubscriptionFilterAttribute(mxToString(group_attr)));
                     }
                     else if (mxIsCell(group_attr))
                     {
                         std::vector<std::string> attrib_values;
-                        mxToVectorString(group_attr, attrib_values, "Invalid filter.Attributes specified for SubscribeServiceByType");
-                        BOOST_FOREACH(std::string& s, attrib_values)
+                        mxToVectorString(group_attr, attrib_values,
+                                         "Invalid filter.Attributes specified for SubscribeServiceByType");
+                        BOOST_FOREACH (std::string& s, attrib_values)
                         {
                             attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(s));
                         }
@@ -8854,11 +8857,8 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
                     throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
                 }
 
-                filter2->Attributes.insert(std::make_pair(attribute_name,attribute_group));
-
+                filter2->Attributes.insert(std::make_pair(attribute_name, attribute_group));
             }
-
-            
         }
 
         if (mxArray* attributes_op1 = ::mxGetField(filter, 0, "AttributesMatchOperator"))
@@ -8871,7 +8871,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
             }
             else if (attributes_op == "or")
             {
-                filter2->AttributesMatchOperation= ServiceSubscriptionFilterAttributeGroupOperation_AND;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_AND;
             }
             else if (attributes_op == "nand")
             {
@@ -8879,11 +8879,12 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
             }
             else if (attributes_op == "nor")
             {
-                filter2->AttributesMatchOperation= ServiceSubscriptionFilterAttributeGroupOperation_NAND;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NAND;
             }
             else
             {
-                throw InvalidArgumentException("Invalid filter.AttributesOperator specified for SubscribeServiceByType");
+                throw InvalidArgumentException(
+                    "Invalid filter.AttributesOperator specified for SubscribeServiceByType");
             }
         }
 
