@@ -4,21 +4,21 @@
     - mkdir build
     - cd build
     - > 
-      $RUNCMD $CMAKE -G Ninja
-      -DCMAKE_BUILD_TYPE=Release $STATIC_ARGS   
-      $BUILD_FEATURES
+      ${RUNCMD} ${CMAKE}
+      -DCMAKE_BUILD_TYPE=Release ${STATIC_ARGS}
+      ${BUILD_FEATURES}
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-      $EXTRA_CMAKE_ARGS $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
+      ${EXTRA_CMAKE_ARGS} ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS}
       ..
-    - $RUNCMD cmake --build . --config Release --target RobotRaconteurCore -- -j8
-    - $RUNCMD cmake --build . --config Release --target RobotRaconteurGen -- -j8
-    - $RUNCMD cmake --build . --config Release -- -j4
-    - $RUNCMD ctest . -C Release --output-on-failure
+    - ${RUNCMD} cmake --build . --config Release --target RobotRaconteurCore -- -j8
+    - ${RUNCMD} cmake --build . --config Release --target RobotRaconteurGen -- -j8
+    - ${RUNCMD} cmake --build . --config Release -- -j4
+    - ${RUNCMD} ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
   artifacts:
     when: always
-    name: $OUTNAME
+    name: ${OUTNAME}
     paths:
       - build/out/*
   variables:
@@ -43,7 +43,7 @@
   stage: build
   script:
     - Import-Module "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
-    - Enter-VsDevShell -VsInstanceID d217b962 -DevCmdArguments '-arch=$ARCH'
+    - Enter-VsDevShell -VsInstanceID d217b962 -DevCmdArguments '-arch=${ARCH}'
     - cd $Env:CI_PROJECT_DIR
     - mkdir build
     - cd build
@@ -51,10 +51,10 @@
       cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
       -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
       -DVCPKG_TARGET_TRIPLET=x64-windows-static-md 
-      $BUILD_FEATURES
+      ${BUILD_FEATURES}
       -DPYTHON3_EXECUTABLE=C:\Python310\python.exe
-      $EXTRA_CMAKE_ARGS $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
-      $EXTRA_CMAKE_MATLAB_ARGS
+      ${EXTRA_CMAKE_ARGS} ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS}
+      ${EXTRA_CMAKE_MATLAB_ARGS}
       ..
     - nuget restore RobotRaconteurNET\netstandard\Lib\RobotRaconteurNET.csproj
     - nuget restore test\net\netstandard\Test\RobotRaconteurNETTest.csproj
@@ -64,7 +64,7 @@
     - cp rrversion.txt out/
   artifacts:
     when: always
-    name: $OUTNAME
+    name: ${OUTNAME}
     paths:
       - build/out/*
   variables:
@@ -98,6 +98,7 @@ build_windows_amd64:
   variables:
     OUTNAME: "out-windows_10_amd64"
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
+    ARCH: x64
 
 build_windows_10_amd64_matlab_release:
   when: manual
@@ -219,11 +220,11 @@ build_freebsd_amd64:
     - mkdir build
     - cd build
     - > 
-      $RUNCMD cmake -G Ninja
+      ${RUNCMD} cmake -G Ninja
       -DCMAKE_OSX_ARCHITECTURES=x86_64 
       -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
       -DOPENSSL_USE_STATIC_LIBS=ON    
-      $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_MATLAB_ARGS $EXTRA_CMAKE_PYTHON_ARGS $EXTRA_CMAKE_ARGS
+      ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_MATLAB_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS} ${EXTRA_CMAKE_ARGS}
       -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl\@3 
       -DCMAKE_IGNORE_PREFIX_PATH=/opt 
       -DMatlab_ROOT_DIR=/Applications/MATLAB_R2020a.app 
@@ -233,20 +234,20 @@ build_freebsd_amd64:
       -DCMAKE_SYSTEM_IGNORE_PREFIX_PATH=/opt 
       -DGTest_DIR=/usr/local/Cellar/googletest/1.12.1/lib/cmake/GTest 
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
-      -DBoost_ADDITIONAL_VERSIONS=$BOOST_VERSION
+      -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
       -DBoost_NO_BOOST_CMAKE=ON 
       -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
       -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
       -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
       -DCMAKE_FIND_ROOT_PATH="/usr/local;/Library;/System/Library;/Applications"
       ..
-    - $RUNCMD cmake --build . --config Release
-    - $RUNCMD ctest . -C Release --output-on-failure
+    - ${RUNCMD} cmake --build . --config Release
+    - ${RUNCMD} ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
   artifacts:
     when: always
-    name: "$OUTNAME"
+    name: "${OUTNAME}"
     paths:
       - build/out/*
   variables:
