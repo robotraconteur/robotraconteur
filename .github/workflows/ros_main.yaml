@@ -25,7 +25,6 @@ jobs:
       env:
         ROS_DISTRO: ${{ env.ROS_DISTRO }}
         ROS_REPO: main
-        CLANG_TIDY: true
 
   build-ros-prerelease:
     runs-on: ubuntu-latest
