@@ -129,13 +129,11 @@ build_debian_bullseye_arm64:
     RUNCMD: echo
     OUTNAME: "out-debian_bullseye_arm64"
 
-build_ubuntu_focal_amd64_matlab:
-  stage: build
+.linux_build_matlab:
   tags:
     - wasontech
     - ubuntu-focal
     - amd64
-  extends: .linux_build_dev
   before_script:
     - export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
   variables:
@@ -149,3 +147,9 @@ build_ubuntu_focal_amd64_matlab:
       -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
       -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/opt/toolchains/gcc-8.cmake
       -DVCPKG_TARGET_TRIPLET=x64-linux-matlab
+
+build_ubuntu_focal_amd64_matlab:
+  stage: build
+  extends: 
+   - .linux_build_dev
+   - .linux_build_matlab
