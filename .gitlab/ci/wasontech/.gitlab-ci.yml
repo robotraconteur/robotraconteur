@@ -1,0 +1,57 @@
+.linux_build:
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - > 
+      $RUNCMD cmake -G Ninja
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=OFF      
+      -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+      -DBUILD_NET=ON -DBUILD_JAVA=ON
+      -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+      $EXTRA_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
+      ..
+    - $RUNCMD cmake --build . --config Release --target RobotRaconteurCore -- -j8
+    - $RUNCMD cmake --build . --config Release --target RobotRaconteurGen -- -j8
+    - $RUNCMD cmake --build . --config Release -- -j4
+    - $RUNCMD ctest . -C Release --output-on-failure
+    - cp ../LICENSE.txt out/
+    - cp rrversion.txt out/
+  artifacts:
+    when: always
+    name: $OUTNAME
+    paths:
+      - build/out/*
+
+.linux_build_dev:
+  extends: .linux_build
+  variables:
+    EXTRA_CMAKE_ARGS: >
+      $EXTRA_CMAKE_ARGS -DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -O0"
+      -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
+      -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+
+build_ubuntu_focal_amd64:
+  stage: build
+  tags:
+    - wasontech
+    - ubuntu-focal
+    - amd64
+  extends: .linux_build_dev
+  variables:
+    RUNCMD: echo
+    OUTNAME: "out-ubuntu_focal_amd64"
+
+build_ubuntu_xenial_amd64:
+  stage: build
+  tags:
+    - wasontech
+    - ubuntu-focal
+    - amd64
+  extends: .linux_build_dev
+  variables:
+    RUNCMD: echo schroot -c xenial --
+    OUTNAME: "out-ubuntu_xenial_amd64"
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON
