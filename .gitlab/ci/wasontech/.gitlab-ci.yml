@@ -38,7 +38,7 @@
   variables:
     CONFIG_CMAKE_ARGS: >-
       -DCMAKE_C_FLAGS_RELEASE='-DNDEBUG -O0'
-      "-DCMAKE_CXX_FLAGS_RELEASE='-DNDEBUG -O0'
+      -DCMAKE_CXX_FLAGS_RELEASE='-DNDEBUG -O0'
       -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
@@ -52,14 +52,15 @@
     - mkdir build
     - cd build
     - >
-      cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
+      $Env:RR_CMAKE_COMMAND="cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
       -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
       -DVCPKG_TARGET_TRIPLET=x64-windows-static-md 
       $Env:BUILD_FEATURES
       -DPYTHON3_EXECUTABLE=C:\Python310\python.exe
       $Env:EXTRA_CMAKE_ARGS $Env:CONFIG_CMAKE_ARGS $Env:EXTRA_CMAKE_PYTHON_ARGS
       $Env:EXTRA_CMAKE_MATLAB_ARGS
-      ..
+      .."
+    - Invoke-Expression $Env:RR_CMAKE_COMMAND
     - nuget restore RobotRaconteurNET\netstandard\Lib\RobotRaconteurNET.csproj
     - nuget restore test\net\netstandard\Test\RobotRaconteurNETTest.csproj
     - cmake --build . --config Release -- -j8
@@ -82,8 +83,8 @@
   extends: .windows_build
   variables:
     CONFIG_CMAKE_ARGS: >-
-      "-DCMAKE_C_FLAGS_RELEASE=/MD /O0 /Ob0 /DNDEBUG"
-      "-DCMAKE_CXX_FLAGS_RELEASE=/MD /O0 /Ob0 /DNDEBUG"
+      -DCMAKE_C_FLAGS_RELEASE='/MD /O0 /Ob0 /DNDEBUG'
+      -DCMAKE_CXX_FLAGS_RELEASE='/MD /O0 /Ob0 /DNDEBUG'
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
 .windows_build_release:
