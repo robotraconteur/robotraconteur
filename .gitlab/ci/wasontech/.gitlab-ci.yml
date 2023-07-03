@@ -43,9 +43,9 @@
 .windows_build:
   stage: build
   script:
-    - set
+    - dir env:
     - Import-Module "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
-    - Enter-VsDevShell -VsInstanceID d217b962 -DevCmdArguments '-arch=$Env:ARCH'
+    - Enter-VsDevShell -VsInstanceID d217b962 -DevCmdArguments "-arch=$Env:ARCH"
     - cd $Env:CI_PROJECT_DIR
     - mkdir build
     - cd build
@@ -53,7 +53,7 @@
       cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
       -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
       -DVCPKG_TARGET_TRIPLET=x64-windows-static-md 
-      ${BUILD_FEATURES}
+      $Env:BUILD_FEATURES
       -DPYTHON3_EXECUTABLE=C:\Python310\python.exe
       $Env:EXTRA_CMAKE_ARGS $Env:CONFIG_CMAKE_ARGS $Env:EXTRA_CMAKE_PYTHON_ARGS
       $Env:EXTRA_CMAKE_MATLAB_ARGS
