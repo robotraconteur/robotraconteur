@@ -5,12 +5,13 @@
     - mkdir build
     - cd build
     - > 
-      $RUNCMD $CMAKE
+      export RR_CMAKE_COMMAND="$RUNCMD $CMAKE
       -DCMAKE_BUILD_TYPE=Release ${STATIC_ARGS}
       $BUILD_FEATURES
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
       $EXTRA_CMAKE_ARGS $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
-      ..
+      .."
+    - eval $RR_CMAKE_COMMAND
     - cat CMakeCache.txt
     - ${RUNCMD} cmake --build . --config Release --target RobotRaconteurCore -- -j8
     - ${RUNCMD} cmake --build . --config Release --target RobotRaconteurGen -- -j8
@@ -36,8 +37,8 @@
   extends: .linux_build
   variables:
     CONFIG_CMAKE_ARGS: >-
-      "-DCMAKE_C_FLAGS_RELEASE=-DNDEBUG -O0"
-      "-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
+      -DCMAKE_C_FLAGS_RELEASE='-DNDEBUG -O0'
+      "-DCMAKE_CXX_FLAGS_RELEASE='-DNDEBUG -O0'
       -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
