@@ -8,7 +8,7 @@
       -DCMAKE_BUILD_TYPE=Release $STATIC_ARGS   
       $BUILD_FEATURES
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-      $EXTRA_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
+      $EXTRA_CMAKE_ARGS $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
       ..
     - $RUNCMD cmake --build . --config Release --target RobotRaconteurCore -- -j8
     - $RUNCMD cmake --build . --config Release --target RobotRaconteurGen -- -j8
@@ -33,8 +33,8 @@
 .linux_build_dev:
   extends: .linux_build
   variables:
-    EXTRA_CMAKE_ARGS: >
-      ${EXTRA_CMAKE_ARGS} -DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -O0"
+    CONFIG_CMAKE_ARGS: >
+      -DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -O0"
       -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
       -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
@@ -53,7 +53,7 @@
       -DVCPKG_TARGET_TRIPLET=x64-windows-static-md 
       $BUILD_FEATURES
       -DPYTHON3_EXECUTABLE=C:\Python310\python.exe
-      $EXTRA_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
+      $EXTRA_CMAKE_ARGS $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
       $EXTRA_CMAKE_MATLAB_ARGS
       ..
     - nuget restore RobotRaconteurNET\netstandard\Lib\RobotRaconteurNET.csproj
@@ -73,14 +73,12 @@
       -DBUILD_GEN=ON -DBUILD_TESTING=ON 
       -DBUILD_NET=ON -DBUILD_JAVA=ON
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
-    EXTRA_CMAKE_ARGS: ""
-    EXTRA_CMAKE_MATLAB_ARGS: ""
-
+    
 .windows_build_dev:
   extends: .windows_build
   variables:
-    EXTRA_CMAKE_ARGS: >
-      ${EXTRA_CMAKE_ARGS} -DCMAKE_C_FLAGS_RELEASE="/MD /O0 /Ob0 /DNDEBUG"
+    CONFIG_CMAKE_ARGS: >
+      -DCMAKE_C_FLAGS_RELEASE="/MD /O0 /Ob0 /DNDEBUG"
       -DCMAKE_CXX_FLAGS_RELEASE="/MD /O0 /Ob0 /DNDEBUG"
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
@@ -145,7 +143,7 @@ build_debian_bullseye_arm64:
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
     OUTNAME: "out-ubuntu_focal_amd64_matlab"
     EXTRA_CMAKE_ARGS: >
-      ${EXTRA_CMAKE_ARGS} -DCMAKE_IGNORE_PATH=/usr 
+      -DCMAKE_IGNORE_PATH=/usr 
       -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
       -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/opt/toolchains/gcc-8.cmake
       -DVCPKG_TARGET_TRIPLET=x64-linux-matlab
