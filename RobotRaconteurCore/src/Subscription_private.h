@@ -45,6 +45,8 @@ class ServiceSubscription_client : private boost::noncopyable
 
     boost::initialized<bool> claimed;
 
+    boost::initialized<bool> erase;
+
     ServiceSubscription_client();
 };
 

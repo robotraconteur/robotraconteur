@@ -54,13 +54,13 @@ public partial class ServiceSubscriptionClientID
     /// <param name="service_name">The Service Name</param>
     public ServiceSubscriptionClientID(NodeID node_id, string service_name)
     {
-        this.NodeID = node_id;
+        this.NodeID = new NodeID(node_id);
         this.ServiceName = service_name;
     }
 
     internal ServiceSubscriptionClientID(WrappedServiceSubscriptionClientID id1)
     {
-        this.NodeID = id1.NodeID;
+        this.NodeID = new NodeID(id1.NodeID);
         this.ServiceName = id1.ServiceName;
     }
 
@@ -160,6 +160,16 @@ public class ServiceSubscriptionFilter
     /// </summary>
     /// <remarks>None</remarks>
     public string[] TransportSchemes;
+    /// <summary>
+    /// Attributes to match
+    /// </summary>
+    /// <remarks>None</remarks>
+    public Dictionary<string, ServiceSubscriptionFilterAttributeGroup> Attributes;
+    /// <summary>
+    /// Operation to use to match attributes. Defaults to AND
+    /// </summary>
+    public ServiceSubscriptionFilterAttributeGroupOperation AttributesMatchOperation;
+
     /// <summary>
     /// A user specified predicate function. If nullptr, the predicate is not checked.
     /// </summary>
@@ -778,6 +788,17 @@ public class ServiceSubscription
         }
     }
 
+    public void UpdateServiceByType(string[] service_types, ServiceSubscriptionFilter filter = null)
+    {
+        var filter2 = RobotRaconteurNode.s.SubscribeService_LoadFilter(filter);
+
+        var service_types2 = new vectorstring();
+        foreach (string s in service_types)
+            service_types2.Add(s);
+
+        this._subscription.UpdateServiceByType(service_types2, filter2);
+    }
+
     /// <summary>
     /// Update the service connection URL
     /// </summary>
@@ -1356,7 +1377,7 @@ public partial class RobotRaconteurNode
         }
     }
 
-    private WrappedServiceSubscriptionFilter SubscribeService_LoadFilter(ServiceSubscriptionFilter filter)
+    internal WrappedServiceSubscriptionFilter SubscribeService_LoadFilter(ServiceSubscriptionFilter filter)
     {
         WrappedServiceSubscriptionFilter filter2 = null;
         if (filter != null)
@@ -1368,6 +1389,16 @@ public partial class RobotRaconteurNode
             if (filter.TransportSchemes != null)
                 foreach (string s in filter.TransportSchemes)
                     filter2.TransportSchemes.Add(s);
+            if (filter.Attributes != null)
+            {
+                foreach (var a in filter.Attributes)
+                {
+                    if (a.Value == null)
+                        continue;
+                    filter2.Attributes[a.Key] = a.Value;
+                }
+            }
+            filter2.AttributesMatchOperation = filter.AttributesMatchOperation;
             filter2.MaxConnections = filter.MaxConnections;
             if (filter.Nodes != null)
             {

@@ -1989,10 +1989,19 @@ void Discovery::DoSubscribe(const std::vector<std::string>& service_types,
     boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
     subscriptions.push_back(s);
     s->Init(service_types, filter);
+    lock.unlock();
+    DoUpdateAllDetectedServices(s);
+}
 
+void Discovery::DoUpdateAllDetectedServices(const RR_SHARED_PTR<IServiceSubscription>& s)
+{
+    boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
+    if (this->is_shutdown)
+    {
+        return;
+    }
     std::vector<RR_SHARED_PTR<Discovery_nodestorage> > storage;
     boost::range::copy(m_DiscoveredNodes | boost::adaptors::map_values, std::back_inserter(storage));
-
     lock.unlock();
 
     BOOST_FOREACH (RR_SHARED_PTR<Discovery_nodestorage>& n, storage)

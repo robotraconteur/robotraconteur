@@ -42,6 +42,68 @@ namespace RobotRaconteur
 	class TimeSpec;
 	class ServiceInfo2;
 
+	class ServiceSubscriptionFilterAttribute
+	{
+		public:
+
+			std::string Name;
+			std::string Value;
+			// boost::regex ValueRegex;
+			bool UseRegex;
+			
+			ServiceSubscriptionFilterAttribute(const std::string& value);
+			ServiceSubscriptionFilterAttribute(const std::string& name, const std::string& value);
+
+			bool IsMatch(const std::string& value) const;
+			bool IsMatch(const std::string& name, const std::string& value) const;
+			bool IsMatch(const std::vector<std::string>& values) const;
+			bool IsMatch(const std::map<std::string, std::string>& values) const;
+	};
+
+	ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(const std::string& regex_value);
+	ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(const std::string& name, const std::string& regex_value);
+}
+
+%template(vector_subscriptionattribute)  std::vector<RobotRaconteur::ServiceSubscriptionFilterAttribute>;
+%template(map_subscriptionattribute)  std::map<std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute>;
+
+namespace RobotRaconteur 
+{
+
+	enum ServiceSubscriptionFilterAttributeGroupOperation
+	{
+		ServiceSubscriptionFilterAttributeGroupOperation_OR,
+		ServiceSubscriptionFilterAttributeGroupOperation_AND,
+		ServiceSubscriptionFilterAttributeGroupOperation_NOR,
+		ServiceSubscriptionFilterAttributeGroupOperation_NAND
+	};
+
+	
+	class ServiceSubscriptionFilterAttributeGroup
+	{
+		public:
+			std::vector<ServiceSubscriptionFilterAttribute> Attributes;
+			std::vector<ServiceSubscriptionFilterAttributeGroup> Groups;
+			ServiceSubscriptionFilterAttributeGroupOperation Operation;
+			bool SplitStringAttribute;
+        	char SplitStringDelimiter;
+
+			ServiceSubscriptionFilterAttributeGroup();
+			ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation);
+			ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttribute> attributes);
+			ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, std::vector<ServiceSubscriptionFilterAttributeGroup> groups);
+
+			bool IsMatch(const std::string& value) const;
+			bool IsMatch(const std::vector<std::string>& values) const;
+			bool IsMatch(const std::map<std::string, std::string>& values) const;
+	};
+}
+
+%template(map_subscriptionattributegroup)  std::map<std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup>;
+
+namespace RobotRaconteur
+{
+
 	class WrappedServiceSubscriptionFilterPredicateDirector
 	{
 	public:
@@ -66,6 +128,8 @@ namespace RobotRaconteur
 		std::vector<std::string> ServiceNames;
 		std::vector<std::string> TransportSchemes;
 		//boost::shared_ptr<WrappedServiceSubscriptionFilterPredicateDirector> Predicate;
+		std::map<std::string,ServiceSubscriptionFilterAttributeGroup> Attributes;
+		ServiceSubscriptionFilterAttributeGroupOperation AttributesMatchOperation;
 		void SetRRPredicateDirector(WrappedServiceSubscriptionFilterPredicateDirector* director, int32_t id);
 		uint32_t MaxConnections;
 	};
@@ -167,7 +231,7 @@ namespace RobotRaconteur
 
 		void UpdateServiceURL(const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "", bool close_connected = false);
 		void UpdateServiceURL(const std::string& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "", bool close_connected = false);
-		
+		void UpdateServiceByType(const std::vector<std::string>& service_types, const boost::shared_ptr<WrappedServiceSubscriptionFilter>& filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
 			
 	};
 

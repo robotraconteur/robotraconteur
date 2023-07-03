@@ -3888,7 +3888,7 @@ class ServiceSubscriptionClientID(object):
         """(str) The ServiceName of the connected service"""
 
         if (len(args) == 1):
-            self.NodeID = args[0].NodeID
+            self.NodeID = RobotRaconteurPython.NodeID(args[0].NodeID)
             self.ServiceName = args[0].ServiceName
         elif (len(args) == 2):
             self.NodeID = args[0]
@@ -3904,6 +3904,9 @@ class ServiceSubscriptionClientID(object):
 
     def __hash__(self):
         return hash((str(self.NodeID), self.ServiceName))
+
+    def __str__(self):
+        return str(self.NodeID) + "," + self.ServiceName
 
 
 class ServiceSubscriptionFilterNode(object):
@@ -3940,7 +3943,7 @@ class ServiceSubscriptionFilter(object):
     the filter before connecting.
     """
     __slots__ = ["Nodes", "ServiceNames",
-                 "TransportSchemes", "Predicate", "MaxConnections"]
+                 "TransportSchemes", "Predicate", "Attributes", "AttributesMatchOperation", "MaxConnections"]
 
     def __init__(self):
         self.Nodes = []
@@ -3949,6 +3952,11 @@ class ServiceSubscriptionFilter(object):
         """(List[str])  List of service names that should be connected. Empty means match any service name."""
         self.TransportSchemes = []
         """(List[str]) List of transport schemes. Empty means match any transport scheme."""
+        self.Attributes = dict()
+        """(Dict[str,RobotRaconteur.ServiceSubscriptionFilterAttributeGroup] Attributes to match)"""
+        self.AttributesMatchOperation = RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroupOperation_AND
+        """(RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation) The operation to use when matching attributes. 
+        Default is AND. Can be OR, AND, NOR, and NAND."""
         self.Predicate = None
         """(Callable[[RobotRaconteur.ServiceInfo2],bool]) A user specified predicate function. If nullptr, the predicate is not checked."""
         self.MaxConnections = 1000000
@@ -4464,6 +4472,35 @@ class ServiceSubscription(object):
         self._subscription.UpdateServiceURL(
             url, username, credentials, "", close_connected)
 
+    def UpdateServiceByType(self, service_types, filter_=None):
+        """
+        Update the service types and filter
+
+        :param service_types: The new service types to use to connect to service
+        :type service_types: Union[str,List[str]]
+        :param filter_: Optional filter to use to connect to service
+        :type filter_: Union[str,RobotRaconteurPython.ServiceSubscriptionFilter]
+        """
+
+        node = self._subscription.GetNode()
+        filter2 = _SubscribeService_LoadFilter(node, filter_)
+
+        service_types2 = RobotRaconteurPython.vectorstring()
+        if (sys.version_info > (3, 0)):
+            if (isinstance(service_types, str)):
+                service_types2.append(service_types)
+            else:
+                for s in service_types:
+                    service_types2.append(s)
+        else:
+            if (isinstance(service_types, (str, unicode))):
+                service_types2.append(service_types)
+            else:
+                for s in service_types:
+                    service_types2.append(s)
+
+        self._subscription.UpdateServiceByType(service_types2, filter2)
+
 
 class WrappedWireSubscriptionDirectorPython(RobotRaconteurPython.WrappedWireSubscriptionDirector):
     def __init__(self, subscription):
@@ -4874,7 +4911,10 @@ def _SubscribeService_LoadFilter(node, filter_):
             for s in filter_.TransportSchemes:
                 filter2.TransportSchemes.append(s)
         filter2.MaxConnections = filter_.MaxConnections
-
+        if (filter_.Attributes is not None):
+            for n, v in filter_.Attributes.items():
+                filter2.Attributes[n] = v
+        filter_.AttributesMatchOperation = filter_.AttributesMatchOperation
         if (filter_.Nodes is not None):
             nodes2 = RobotRaconteurPython.vectorptr_wrappedservicesubscriptionnode()
             for n1 in filter_.Nodes:

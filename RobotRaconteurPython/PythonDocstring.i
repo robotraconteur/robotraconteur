@@ -818,6 +818,7 @@ Close the transport. Done automatically by node shutdown.
 """
 
 %feature("docstring") RobotRaconteur::IntraTransport::StartServer() """Start the server to listen for incoming client connections"""
+%feature("docstring") RobotRaconteur::IntraTransport::StartClient() """Start the transport as a client"""
 
 
 %feature("docstring") RobotRaconteur::LocalTransport """
@@ -1684,3 +1685,42 @@ End the update loop step
 
 Use BroadcastDownsamplerStep for automatic stepping
 """
+%feature("docstring") ServiceSubscriptionFilterAttributeGroupOperation_OR "OR operation"
+%feature("docstring") ServiceSubscriptionFilterAttributeGroupOperation_AND "AND operation"
+%feature("docstring") ServiceSubscriptionFilterAttributeGroupOperation_NOR "NOR operation. Also used for NOT"
+%feature("docstring") ServiceSubscriptionFilterAttributeGroupOperation_NAND "NAND operation"
+
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttribute """
+ServiceSubscriptionFilterAttribute()
+
+Subscription filter attribute for use with ServiceSubscriptionFilter
+"""
+
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttribute::Name """(str) The attribute name. Empty for no name"""
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttribute::Value """(str) The string value for the attribute"""
+
+%feature("docstring") RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex(const std::string& regex_value) """
+
+Create a ServiceSubscriptionFilterAttribute from a regex string
+
+:param regex_value: The regex string
+:type regex_value: str
+:return: The ServiceSubscriptionFilterAttribute
+:rtype: RobotRaconteur.ServiceSubscriptionFilterAttribute
+"""
+
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttributeGroup """
+ServiceSubscriptionFilterAttributeGroup()
+
+Subscription filter attribute group for use with ServiceSubscriptionFilter
+
+Used to combine multiple ServiceSubscriptionFilterAttribute objects for comparison using
+AND, OR, NOR, or NAND logic. Other groups can be nested, to allow for complex comparisons.
+"""
+
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttributeGroup::Operation """(RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation) The operation to use to combine the attributes"""
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttributeGroup::Attributes """(list) The list of attributes in the group"""
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttributeGroup::Groups """(list) The nested groups in the group"""
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttributeGroup::SplitStringAttribute """(bool) True if string attributes will be split into a list with delimiter (default ',')"""
+%feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttributeGroup::SplitStringDelimiter """(str) The delimiter to use for splitting string attributes (default ',')"""
+
