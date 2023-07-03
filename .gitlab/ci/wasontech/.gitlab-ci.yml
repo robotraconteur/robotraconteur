@@ -278,7 +278,7 @@ build_osx_amd64:
   tags:
     - wasontech
     - osx
-    - amd64
+    - m1
   variables:
     OUTNAME: "out-osx_amd64"
 
@@ -288,7 +288,7 @@ build_osx_amd64_matlab_release:
   tags:
     - wasontech
     - osx
-    - amd64
+    - m1
   variables:
     OUTNAME: "out-osx_amd64_matlab_release"
   script:
