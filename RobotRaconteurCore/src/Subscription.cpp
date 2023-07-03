@@ -3123,8 +3123,12 @@ bool ServiceSubscriptionFilterAttribute::IsMatch(const RR_INTRUSIVE_PTR<RRMap<st
 
         std::string s2 = RRArrayToString(s);
 
-        return IsMatch(e.first, s2);
+        if(IsMatch(e.first, s2))
+        {
+            return true;
+        }
     }
+    return false;
 }
 
 bool ServiceSubscriptionFilterAttribute::IsMatch(const std::map<std::string, std::string>& values) const
