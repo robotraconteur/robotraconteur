@@ -4,11 +4,9 @@
     - mkdir build
     - cd build
     - > 
-      $RUNCMD cmake -G Ninja
-      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=OFF      
-      -DBUILD_GEN=ON -DBUILD_TESTING=ON 
-      -DBUILD_NET=ON -DBUILD_JAVA=ON
-      -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+      $RUNCMD $CMAKE -G Ninja
+      -DCMAKE_BUILD_TYPE=Release $STATIC_ARGS   
+      $BUILD_FEATURES
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
       $EXTRA_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
       ..
@@ -23,6 +21,14 @@
     name: $OUTNAME
     paths:
       - build/out/*
+  variables:
+    CMAKE: cmake
+    BUILD_FEATURES: >
+      -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+      -DBUILD_NET=ON -DBUILD_JAVA=ON
+      -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+    STATIC_ARGS: >
+      -DBoost_USE_STATIC_LIBS=OFF
 
 .linux_build_dev:
   extends: .linux_build
@@ -32,6 +38,61 @@
       -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
       -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+
+.windows_build:
+  stage: build
+  script:
+    - Import-Module "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
+    - Enter-VsDevShell -VsInstanceID d217b962 -DevCmdArguments '-arch=$ARCH'
+    - cd $Env:CI_PROJECT_DIR
+    - mkdir build
+    - cd build
+    - >
+      cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
+      -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
+      -DVCPKG_TARGET_TRIPLET=x64-windows-static-md 
+      $BUILD_FEATURES
+      -DPYTHON3_EXECUTABLE=C:\Python310\python.exe
+      $EXTRA_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
+      $EXTRA_CMAKE_MATLAB_ARGS
+      ..
+    - nuget restore RobotRaconteurNET\netstandard\Lib\RobotRaconteurNET.csproj
+    - nuget restore test\net\netstandard\Test\RobotRaconteurNETTest.csproj
+    - cmake --build . --config Release -- -j8
+    - ctest . -C Release --output-on-failure
+    - cp ../LICENSE.txt out/
+    - cp rrversion.txt out/
+  artifacts:
+    when: always
+    name: $OUTNAME
+    paths:
+      - build/out/*
+  variables:
+    ARCH: amd64
+    BUILD_FEATURES: >
+      -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+      -DBUILD_NET=ON -DBUILD_JAVA=ON
+      -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+
+.windows_build_dev:
+  extends: .windows_build
+  variables:
+    EXTRA_CMAKE_ARGS: >
+      $EXTRA_CMAKE_ARGS -DCMAKE_C_FLAGS_RELEASE="/MD /O0 /Ob0 /DNDEBUG"
+      -DCMAKE_CXX_FLAGS_RELEASE="/MD /O0 /Ob0 /DNDEBUG"
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+
+build_windows_amd64:
+  stage: build
+  tags:
+    - wasontech
+    - windows
+    - amd64
+  extends: .windows_build_dev
+  variables:
+    RUNCMD: echo
+    OUTNAME: "out-windows_10_amd64"
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
 
 build_ubuntu_focal_amd64:
   stage: build
@@ -55,3 +116,34 @@ build_ubuntu_xenial_amd64:
     RUNCMD: echo schroot -c xenial --
     OUTNAME: "out-ubuntu_xenial_amd64"
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON
+
+build_debian_bullseye_arm64:
+  stage: build
+  tags:
+    - wasontech
+    - debian-bullseye
+    - arm64
+    - m1
+  extends: .linux_build_dev
+  variables:
+    RUNCMD: echo
+    OUTNAME: "out-debian_bullseye_arm64"
+
+build_ubuntu_focal_amd64_matlab:
+  stage: build
+  tags:
+    - wasontech
+    - ubuntu-focal
+    - amd64
+  extends: .linux_build_dev
+  variables:
+    RUNCMD: LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 echo
+    CMAKE: /opt/cmake/cmake-3.22.1-linux-x86_64/bin/cmake
+    BUILD_FEATURES: -DBUILD_GEN=ON -DBUILD_TESTING=ON
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
+    OUTNAME: "out-ubuntu_focal_amd64_matlab"
+    EXTRA_CMAKE_ARGS: >
+      $EXTRA_CMAKE_ARGS -DCMAKE_IGNORE_PATH=/usr 
+      -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
+      -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/opt/toolchains/gcc-8.cmake
+      -DVCPKG_TARGET_TRIPLET=x64-linux-matlab
