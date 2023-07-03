@@ -1,6 +1,7 @@
 .linux_build:
   stage: build
   script:
+    - printenv
     - mkdir build
     - cd build
     - > 
@@ -43,6 +44,7 @@
 .windows_build:
   stage: build
   script:
+    - set
     - Import-Module "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
     - Enter-VsDevShell -VsInstanceID d217b962 -DevCmdArguments '-arch=$Env:ARCH'
     - cd $Env:CI_PROJECT_DIR
