@@ -36,8 +36,8 @@
   extends: .linux_build
   variables:
     CONFIG_CMAKE_ARGS: >-
-      '-DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -O0"'
-      '-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"'
+      "-DCMAKE_C_FLAGS_RELEASE=-DNDEBUG -O0"
+      "-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
       -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
@@ -100,7 +100,7 @@ build_windows_amd64:
   extends: .windows_build_dev
   variables:
     OUTNAME: "out-windows_10_amd64"
-    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
     ARCH: x64
 
 build_windows_10_amd64_matlab_release:
@@ -113,7 +113,7 @@ build_windows_10_amd64_matlab_release:
   extends: .windows_build_release
   variables:
     OUTNAME: "out-windows_10_amd64_matlab_release"
-    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
     BUILD_FEATURES: -DBUILD_GEN=ON -DBUILD_TESTING=ON
   script:
     - cp out/LICENSE.txt out/Matlab
@@ -168,7 +168,7 @@ build_debian_bullseye_arm64:
   variables:
     CMAKE: /opt/cmake/cmake-3.22.1-linux-x86_64/bin/cmake
     BUILD_FEATURES: -DBUILD_GEN=ON -DBUILD_TESTING=ON
-    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB=ON
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
     OUTNAME: "out-ubuntu_focal_amd64_matlab"
     EXTRA_CMAKE_ARGS: >-
       -DCMAKE_IGNORE_PATH=/usr 
