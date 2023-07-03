@@ -5,11 +5,11 @@
     - mkdir build
     - cd build
     - > 
-      ${RUNCMD} ${CMAKE}
+      $RUNCMD $CMAKE
       -DCMAKE_BUILD_TYPE=Release ${STATIC_ARGS}
-      ${BUILD_FEATURES}
+      $BUILD_FEATURES
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-      ${EXTRA_CMAKE_ARGS} ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS}
+      $EXTRA_CMAKE_ARGS $CONFIG_CMAKE_ARGS $EXTRA_CMAKE_PYTHON_ARGS
       ..
     - ${RUNCMD} cmake --build . --config Release --target RobotRaconteurCore -- -j8
     - ${RUNCMD} cmake --build . --config Release --target RobotRaconteurGen -- -j8
