@@ -232,7 +232,8 @@ build_ubuntu_xenial_amd64:
     - wasontech
     - ubuntu-focal
     - amd64
-  extends: .linux_build_dev
+  extends: .linux_build_dev_no_rules
+  when: manual
   variables:
     RUNCMD: schroot -c xenial --
     OUTNAME: "out-ubuntu_xenial_amd64"
