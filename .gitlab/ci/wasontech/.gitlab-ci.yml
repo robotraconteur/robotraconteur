@@ -8,7 +8,7 @@
       when: always
     - if: '$CI_COMMIT_BRANCH =~ /^format\/.*$/'
       when: never
-    - when: manual
+    - when: never
 
 .dev_build:
   rules:
@@ -25,7 +25,7 @@
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^format\/.*$/'
       when: always
-    - when: manual
+    - when: never
 .all_build:
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^format\/.*$/'
@@ -385,6 +385,7 @@ build_freebsd_amd64:
 
 
 build_osx_amd64:
+  stage: build
   extends: .osx_build_amd64_dev
   tags:
     - wasontech
@@ -394,6 +395,7 @@ build_osx_amd64:
     OUTNAME: "out-osx_amd64"
 
 build_osx_amd64_release:
+  stage: build
   extends: .osx_build_amd64_release
   tags:
     - wasontech
@@ -403,7 +405,7 @@ build_osx_amd64_release:
     OUTNAME: "out-osx_amd64"
 
 build_osx_amd64_matlab_release:
-  when: manual
+  stage: build
   extends: .osx_build_amd64_release
   tags:
     - wasontech
@@ -473,7 +475,7 @@ build_raspbian_buster_armhf:
   stage: build
   extends: 
     - .linux_build_dev_no_rules
-    - .manual_build
+  when: manual
   variables:
     RUNCMD: schroot -c raspi_buster_armhf
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON
