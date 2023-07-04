@@ -26,19 +26,17 @@ static RR_BOOST_ASIO_IO_CONTEXT asio_io_context;
 
 class ServiceTest : public testing::Test
 {
-protected:
+  protected:
     RR_OVIRTUAL void SetUp() RR_OVERRIDE
     {
         if (!test_server_node_config)
         {
             test_server_node_config = RR_MAKE_SHARED<TestServerNodeConfig>("unit_service_test_st");
-            service_url = test_server_node_config->GetServiceURL("RobotRaconteurTestService");            
+            service_url = test_server_node_config->GetServiceURL("RobotRaconteurTestService");
         }
     }
 
-    RR_OVIRTUAL void TearDown() RR_OVERRIDE
-    {
-    }
+    RR_OVIRTUAL void TearDown() RR_OVERRIDE {}
 };
 
 TEST_F(ServiceTest, SingleThreadTest)
@@ -61,8 +59,8 @@ TEST_F(ServiceTest, SingleThreadTest)
 
 int main(int argc, char* argv[])
 {
-    
-    testing::InitGoogleTest(&argc, argv);    
+
+    testing::InitGoogleTest(&argc, argv);
     my_argc = argc;
     my_argv = argv;
 

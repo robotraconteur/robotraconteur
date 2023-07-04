@@ -25,7 +25,7 @@ RR_SHARED_PTR<ClientNodeSetup> client_node_setup;
 
 class ServiceTest : public testing::Test
 {
-protected:
+  protected:
     RR_OVIRTUAL void SetUp() RR_OVERRIDE
     {
         if (!test_server_node_config)
@@ -40,9 +40,7 @@ protected:
         }
     }
 
-    RR_OVIRTUAL void TearDown() RR_OVERRIDE
-    {
-    }
+    RR_OVIRTUAL void TearDown() RR_OVERRIDE {}
 };
 
 TEST_F(ServiceTest, MinimalTest)
