@@ -126,7 +126,7 @@
     - cp rrversion.txt out/
   after_script:
     - mkdir $Env:OUTNAME
-    - mv out ..\$Env:OUTNAME\
+    - mv build\out $Env:OUTNAME\
   artifacts:
     when: always
     name: ${OUTNAME}
