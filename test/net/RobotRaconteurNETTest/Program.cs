@@ -87,7 +87,8 @@ class Program
 
             try
             {
-                object o = RobotRaconteurNode.s.ConnectService("rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService");
+                object o = RobotRaconteurNode.s.ConnectService("rr+tcp://localhost:" + port.ToString() +
+                                                               "/?service=RobotRaconteurTestService");
             }
             catch
             {}

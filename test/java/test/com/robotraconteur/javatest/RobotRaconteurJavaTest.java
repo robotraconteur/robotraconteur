@@ -62,8 +62,9 @@ public class RobotRaconteurJavaTest
                 for (int i = 0; i < count; i++)
                 {
                     ServiceTestClient stest = new ServiceTestClient();
-                    stest.RunFullTest("rr+tcp://localhost:" + String.valueOf(port) + "/?service=RobotRaconteurTestService",
-                                      "rr+tcp://localhost:" + String.valueOf(port) + "/?service=RobotRaconteurTestService_auth");
+                    stest.RunFullTest(
+                        "rr+tcp://localhost:" + String.valueOf(port) + "/?service=RobotRaconteurTestService",
+                        "rr+tcp://localhost:" + String.valueOf(port) + "/?service=RobotRaconteurTestService_auth");
                 }
                 RobotRaconteurNode.s().shutdown();
                 System.out.println("Finished shutdown");
@@ -92,7 +93,8 @@ public class RobotRaconteurJavaTest
                     s.RegisterServices(node_setup.getTcpTransport());
 
                     ServiceTestClient2 stest = new ServiceTestClient2();
-                    stest.RunFullTest("rr+tcp://localhost:" + String.valueOf(port) + "/?service=RobotRaconteurTestService2");
+                    stest.RunFullTest("rr+tcp://localhost:" + String.valueOf(port) +
+                                      "/?service=RobotRaconteurTestService2");
 
                     RobotRaconteurNode.s().shutdown();
                     System.out.println("Finished shutdown");
