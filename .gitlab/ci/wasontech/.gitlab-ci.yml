@@ -60,7 +60,7 @@
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
     - mkdir $OUTNAME
-    - mv build/out $OUTNAME/
+    - mv out ../$OUTNAME/
   artifacts:
     when: always
     name: ${OUTNAME}
@@ -124,7 +124,7 @@
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
     - mkdir $Env:OUTNAME
-    - mv build/out $Env:OUTNAME/
+    - mv out ..\$Env:OUTNAME\
   artifacts:
     when: always
     name: ${OUTNAME}
@@ -308,7 +308,7 @@ build_freebsd_amd64:
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
     - mkdir $OUTNAME
-    - mv build/out $OUTNAME/
+    - mv out ../$OUTNAME/
   artifacts:
     when: always
     name: ${OUTNAME}
@@ -351,7 +351,7 @@ build_freebsd_amd64:
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
     - mkdir $OUTNAME
-    - mv build/out $OUTNAME/
+    - mv out ../$OUTNAME/
   artifacts:
     when: always
     name: "${OUTNAME}"
