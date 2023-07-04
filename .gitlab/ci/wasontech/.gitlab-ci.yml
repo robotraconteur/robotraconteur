@@ -187,6 +187,7 @@ build_windows_10_amd64_matlab_release:
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
     BUILD_FEATURES: -DBUILD_GEN=ON -DBUILD_TESTING=ON
   script:
+    - !reference [.windows_build_release, script]
     - cp out/LICENSE.txt out/Matlab
     - cd out
     - $Env:RR_VER = Get-Content .\rrversion.txt
@@ -396,6 +397,7 @@ build_osx_amd64_matlab_release:
   variables:
     OUTNAME: "out-osx_amd64_matlab_release"
   script:
+    - !reference [.osx_build_amd64_release, script]
     - cp out/LICENSE.txt out/Matlab
     - cd out
     - >
