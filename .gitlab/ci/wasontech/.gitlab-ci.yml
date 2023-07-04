@@ -194,6 +194,8 @@ build_windows_10_amd64_matlab_release:
     BUILD_FEATURES: -DBUILD_GEN=ON -DBUILD_TESTING=ON
   script:
     - !reference [.windows_build_release, script]
+    - mkdir ..\$Env:OUTNAME
+    - mv build/out $Env:OUTNAME\
     - cd ../$Env:OUTNAME
     - cp out/LICENSE.txt out/Matlab
     - cd out
@@ -415,6 +417,8 @@ build_osx_amd64_matlab_release:
     OUTNAME: "out-osx_amd64_matlab_release"
   script:
     - !reference [.osx_build_amd64_release, script]
+    - mkdir ../$OUTNAME
+    - mv out ../$OUTNAME/
     - cd ../$OUTNAME
     - cp out/LICENSE.txt out/Matlab
     - cd out
