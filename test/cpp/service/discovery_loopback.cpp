@@ -61,7 +61,7 @@ TEST(RobotRaconteurService, DiscoveryLoopback)
         BOOST_FOREACH (ServiceInfo2 s, discovered_services)
         {
             EXPECT_LE(expected_service_names.erase(s.Name), 1);
-            if(s.NodeName!= "discovery_test_server_node")
+            if (s.NodeName != "discovery_test_server_node")
                 continue;
             EXPECT_EQ(s.RootObjectType, "com.robotraconteur.testing.TestService1.testroot");
             EXPECT_EQ(s.RootObjectImplements.size(), 1);
