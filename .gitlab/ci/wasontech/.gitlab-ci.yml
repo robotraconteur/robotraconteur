@@ -1,3 +1,32 @@
+.release_build:
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH =~ /^release\/.*$/'
+      when: always
+    - if: '$CI_COMMIT_BRANCH =~ /^format\/.*$/'
+      when: never
+    - when: manual
+
+.dev_build:
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^release\/.*$/'
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^format\/.*$/'
+      when: never
+    - when: always
+.format_build:
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^format\/.*$/'
+      when: always
+    - when: manual
+
 .linux_build:
   stage: build
   script:
@@ -34,12 +63,20 @@
       -DBoost_USE_STATIC_LIBS=OFF
 
 .linux_build_dev:
-  extends: .linux_build
+  extends: 
+  - .linux_build
+  - .dev_build
   variables:
     CONFIG_CMAKE_ARGS: >-
       -DCMAKE_C_FLAGS_RELEASE='-DNDEBUG -O0'
       -DCMAKE_CXX_FLAGS_RELEASE='-DNDEBUG -O0'
       -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+
+.linux_build_release:
+  extends: .linux_build
+  variables:
+    CONFIG_CMAKE_ARGS: ""
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
 .windows_build:
@@ -80,7 +117,9 @@
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
     
 .windows_build_dev:
-  extends: .windows_build
+  extends: 
+    - .windows_build
+    - .dev_build
   variables:
     CONFIG_CMAKE_ARGS: >-
       -DCMAKE_C_FLAGS_RELEASE='/MD /O0 /Ob0 /DNDEBUG'
@@ -88,7 +127,9 @@
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
 .windows_build_release:
-  extends: .windows_build
+  extends: 
+    - .windows_build
+    - .release_build
   variables:
     CONFIG_CMAKE_ARGS: ""
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF  
@@ -105,8 +146,19 @@ build_windows_amd64:
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
     ARCH: x64
 
+build_windows_amd64_release:
+  stage: build
+  tags:
+    - wasontech
+    - windows
+    - amd64
+  extends: .windows_build_release
+  variables:
+    OUTNAME: "out-windows_10_amd64"
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
+    ARCH: x64
+
 build_windows_10_amd64_matlab_release:
-  when: manual
   stage: build
   tags:
     - wasontech
@@ -137,6 +189,16 @@ build_ubuntu_focal_amd64:
   variables:
     OUTNAME: "out-ubuntu_focal_amd64"
 
+build_ubuntu_focal_amd64_release:
+  stage: build
+  tags:
+    - wasontech
+    - ubuntu-focal
+    - amd64
+  extends: .linux_build_release
+  variables:
+    OUTNAME: "out-ubuntu_focal_amd64"
+
 build_ubuntu_xenial_amd64:
   stage: build
   tags:
@@ -157,6 +219,17 @@ build_debian_bullseye_arm64:
     - arm64
     - m1
   extends: .linux_build_dev
+  variables:
+    OUTNAME: "out-debian_bullseye_arm64"
+
+build_debian_bullseye_arm64_release:
+  stage: build
+  tags:
+    - wasontech
+    - debian-bullseye
+    - arm64
+    - m1
+  extends: .linux_build_release
   variables:
     OUTNAME: "out-debian_bullseye_arm64"
 
@@ -261,13 +334,17 @@ build_freebsd_amd64:
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
 
 .osx_build_amd64_dev:
-  extends: .osx_build_amd64
+  extends: 
+  - .osx_build_amd64
+  - .dev_build
   variables:
     CONFIG_CMAKE_ARGS: ""
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
 .osx_build_amd64_release:
-  extends: .osx_build_amd64
+  extends: 
+  - .osx_build_amd64
+  - .release_build
   variables:
     CONFIG_CMAKE_ARGS: ""
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
@@ -275,6 +352,15 @@ build_freebsd_amd64:
 
 build_osx_amd64:
   extends: .osx_build_amd64_dev
+  tags:
+    - wasontech
+    - macos
+    - m1
+  variables:
+    OUTNAME: "out-osx_amd64"
+
+build_osx_amd64_release:
+  extends: .osx_build_amd64_release
   tags:
     - wasontech
     - macos
@@ -329,7 +415,7 @@ clang_tidy_ubuntu_focal_amd64:
 
 run_code_formatting:
   stage: build
-  when: manual
+  extends: .format_build
   tags:
     - wasontech
     - ubuntu-focal
