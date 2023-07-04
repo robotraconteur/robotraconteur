@@ -59,11 +59,13 @@
     - ${RUNCMD} ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
+    - mkdir $OUTNAME
+    - mv build/out $OUTNAME/
   artifacts:
     when: always
     name: ${OUTNAME}
     paths:
-      - build/out/*
+      - ${OUTNAME}/out/*
   variables:
     CMAKE: cmake
     BUILD_FEATURES: >-
@@ -121,11 +123,13 @@
     - ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
+    - mkdir $Env:OUTNAME
+    - mv build/out $Env:OUTNAME/
   artifacts:
     when: always
     name: ${OUTNAME}
     paths:
-      - build/out/*
+      - ${OUTNAME}/out/*
   variables:
     ARCH: amd64
     BUILD_FEATURES: >-
@@ -303,11 +307,15 @@ build_freebsd_amd64:
     - ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
+    - mkdir $OUTNAME
+    - mv build/out $OUTNAME/
   artifacts:
     when: always
-    name: "out-freebsd_amd64"
+    name: ${OUTNAME}
     paths:
-      - build/out/*
+      - ${OUTNAME}/out/*
+  variables:
+    OUTNAME: "out-freebsd_amd64"
 
 .osx_build_amd64:
   stage: build
@@ -342,11 +350,13 @@ build_freebsd_amd64:
     - ${RUNCMD} ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
+    - mkdir $OUTNAME
+    - mv build/out $OUTNAME/
   artifacts:
     when: always
     name: "${OUTNAME}"
     paths:
-      - build/out/*
+      - ${OUTNAME}/out/*
   variables:
     BOOST_VERSION: 1.81.0
     CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON 
