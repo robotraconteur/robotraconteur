@@ -62,10 +62,9 @@
     STATIC_ARGS: >-
       -DBoost_USE_STATIC_LIBS=OFF
 
-.linux_build_dev:
+.linux_build_dev_no_rules:
   extends: 
   - .linux_build
-  - .dev_build
   variables:
     CONFIG_CMAKE_ARGS: >-
       -DCMAKE_C_FLAGS_RELEASE='-DNDEBUG -O0'
@@ -73,8 +72,15 @@
       -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
+.linux_build_dev:
+  extends: 
+  - .linux_build_dev_no_rules
+  - .dev_build
+
 .linux_build_release:
-  extends: .linux_build
+  extends: 
+  - .linux_build
+  - .release_build
   variables:
     CONFIG_CMAKE_ARGS: ""
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
@@ -434,7 +440,7 @@ build_raspbian_buster_armhf:
     - raspi
   stage: build
   when: manual
-  extends: .linux_build_dev
+  extends: .linux_build_dev_no_rules
   variables:
     RUNCMD: schroot -c raspi_buster_armhf
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON
