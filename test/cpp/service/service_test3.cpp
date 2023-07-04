@@ -12,9 +12,33 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
+int my_argc;
+char** my_argv;
 static std::string service3_url;
 
-TEST(RobotRaconteurService, Properties3Test)
+RR_SHARED_PTR<TestServerNodeConfig> test_server_node_config;
+RR_SHARED_PTR<ClientNodeSetup> client_node_setup;
+
+class ServiceTest : public testing::Test
+{
+  protected:
+    RR_OVIRTUAL void SetUp() RR_OVERRIDE
+    {
+        if (!test_server_node_config)
+        {
+            test_server_node_config = RR_MAKE_SHARED<TestServerNodeConfig>("unit_service_test");
+            service3_url = test_server_node_config->GetServiceURL("RobotRaconteurTestService3");
+        }
+        if (!client_node_setup)
+        {
+            client_node_setup = RR_MAKE_SHARED<ClientNodeSetup>(ROBOTRACONTEUR_SERVICE_TYPES, my_argc, my_argv);
+        }
+    }
+
+    RR_OVIRTUAL void TearDown() RR_OVERRIDE {}
+};
+
+TEST_F(ServiceTest, Properties3Test)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -24,7 +48,7 @@ TEST(RobotRaconteurService, Properties3Test)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, Functions3Test)
+TEST_F(ServiceTest, Functions3Test)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -37,12 +61,13 @@ TEST(RobotRaconteurService, Functions3Test)
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
-    TestServerNodeConfig server("unit_service_test3");
-    service3_url = server.GetServiceURL("RobotRaconteurTestService3");
-
-    ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES, argc, argv);
+    my_argc = argc;
+    my_argv = argv;
 
     int ret = RUN_ALL_TESTS();
+
+    test_server_node_config.reset();
+    client_node_setup.reset();
 
     return ret;
 }
