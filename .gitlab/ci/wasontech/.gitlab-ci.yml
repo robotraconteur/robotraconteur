@@ -61,7 +61,7 @@
     - cp rrversion.txt out/
   after_script:
     - mkdir $OUTNAME
-    - mv out ../$OUTNAME/
+    - mv build/out $OUTNAME/
   artifacts:
     when: always
     name: ${OUTNAME}
@@ -118,8 +118,8 @@
       $Env:EXTRA_CMAKE_MATLAB_ARGS
       .."
     - Invoke-Expression $Env:RR_CMAKE_COMMAND
-    - nuget restore RobotRaconteurNET\netstandard\Lib\RobotRaconteurNET.csproj
-    - nuget restore test\net\netstandard\Test\RobotRaconteurNETTest.csproj
+    - "& { Try { nuget restore RobotRaconteurNET\\netstandard\\Lib\\RobotRaconteurNET.csproj } Catch { } }"
+    - "& { Try { nuget restore test\\net\\netstandard\\Test\\RobotRaconteurNETTest.csproj } Catch { } }"
     - cmake --build . --config Release -- -j8
     - ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
@@ -194,7 +194,7 @@ build_windows_10_amd64_matlab_release:
     BUILD_FEATURES: -DBUILD_GEN=ON -DBUILD_TESTING=ON
   script:
     - !reference [.windows_build_release, script]
-    - cd ../$OUTNAME
+    - cd ../$Env:OUTNAME
     - cp out/LICENSE.txt out/Matlab
     - cd out
     - $Env:RR_VER = Get-Content .\rrversion.txt
@@ -203,7 +203,7 @@ build_windows_10_amd64_matlab_release:
     - Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.lib
     - Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.exp
     - Compress-Archive -Path RobotRaconteur-$Env:RR_VER-MATLAB-win64 -DestinationPath RobotRaconteur-$Env:RR_VER-MATLAB-win64.zip
-
+  after_script: []
 build_ubuntu_focal_amd64:
   stage: build
   tags:
@@ -422,7 +422,7 @@ build_osx_amd64_matlab_release:
       export RR_VER=`cat rrversion.txt`
       && cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-maci64
       && tar -cf RobotRaconteur-$RR_VER-MATLAB-maci64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maci64
-
+  after_script: []
 
 code_formatting_ubuntu_focal_amd64:
   stage: build
