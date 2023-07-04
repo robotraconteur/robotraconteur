@@ -29,9 +29,9 @@ if(NOT ANDROID)
         -encoding
         UTF8
         -target
-        7
+        8
         -source
-        7
+        8
         -Xlint:none
         com/robotraconteur/javatest/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService1/*.java

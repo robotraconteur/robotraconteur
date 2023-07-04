@@ -74,9 +74,9 @@ if(NOT ANDROID)
         UTF8
         -g:none
         -target
-        7
+        8
         -source
-        7
+        8
         -Xlint:none
         com/robotraconteur/*.java
         ${CMAKE_SWIG_OUTDIR}/*.java
