@@ -26,6 +26,17 @@
     - if: '$CI_COMMIT_BRANCH =~ /^format\/.*$/'
       when: always
     - when: manual
+.all_build:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == /^format\/.*$/'
+      when: never
+    - when: always
+
+.manual_build:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == /^format\/.*$/'
+      when: never
+    - when: manual
 
 .linux_build:
   stage: build
@@ -267,6 +278,7 @@ build_ubuntu_focal_amd64_matlab:
 
 build_freebsd_amd64:
   stage: build
+  extends: .all_build
   tags:
     - wasontech
     - freebsd
@@ -394,6 +406,7 @@ build_osx_amd64_matlab_release:
 
 code_formatting_ubuntu_focal_amd64:
   stage: build
+  extends: .all_build
   tags:
     - wasontech
     - ubuntu-focal
@@ -403,6 +416,7 @@ code_formatting_ubuntu_focal_amd64:
     - git diff --name-only --exit-code
 clang_tidy_ubuntu_focal_amd64:
   stage: build
+  extends: .all_build
   tags:
     - wasontech
     - ubuntu-focal
@@ -439,8 +453,9 @@ build_raspbian_buster_armhf:
     - arm64
     - raspi
   stage: build
-  when: manual
-  extends: .linux_build_dev_no_rules
+  extends: 
+    - .linux_build_dev_no_rules
+    - .manual_build
   variables:
     RUNCMD: schroot -c raspi_buster_armhf
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON
