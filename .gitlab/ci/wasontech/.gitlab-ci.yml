@@ -59,6 +59,7 @@
     - ${RUNCMD} ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
+  after_script:
     - mkdir $OUTNAME
     - mv out ../$OUTNAME/
   artifacts:
@@ -123,6 +124,7 @@
     - ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
+  after_script:
     - mkdir $Env:OUTNAME
     - mv out ..\$Env:OUTNAME\
   artifacts:
@@ -308,8 +310,9 @@ build_freebsd_amd64:
     - ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
+  after_script:
     - mkdir $OUTNAME
-    - mv out ../$OUTNAME/
+    - mv build/out $OUTNAME/
   artifacts:
     when: always
     name: ${OUTNAME}
@@ -351,8 +354,9 @@ build_freebsd_amd64:
     - ${RUNCMD} ctest . -C Release --output-on-failure
     - cp ../LICENSE.txt out/
     - cp rrversion.txt out/
+  after_script:
     - mkdir $OUTNAME
-    - mv out ../$OUTNAME/
+    - mv build/out $OUTNAME/
   artifacts:
     when: always
     name: "${OUTNAME}"
