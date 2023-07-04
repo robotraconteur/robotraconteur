@@ -195,7 +195,7 @@ build_windows_10_amd64_matlab_release:
   script:
     - !reference [.windows_build_release, script]
     - mkdir ..\$Env:OUTNAME
-    - mv build/out $Env:OUTNAME\
+    - mv out ..\$Env:OUTNAME\
     - cd ../$Env:OUTNAME
     - cp out/LICENSE.txt out/Matlab
     - cd out
