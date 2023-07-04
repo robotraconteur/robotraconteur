@@ -1119,6 +1119,11 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
             }
         }
 
+        // NOLINTBEGIN(cppcoreguidelines-owning-memory)
+        m_CurrentServicePath.reset(new std::string(m->ServicePath.str().to_string()));
+        m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
+        // NOLINTEND(cppcoreguidelines-owning-memory)
+
         if (m->EntryType == MessageEntryType_PipePacket || m->EntryType == MessageEntryType_PipePacketRet)
         {
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName,
@@ -1136,11 +1141,6 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
             ret.reset();
             noreturn = true;
         }
-
-        // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-        m_CurrentServicePath.reset(new std::string(m->ServicePath.str().to_string()));
-        m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
-        // NOLINTEND(cppcoreguidelines-owning-memory)
 
         if (m->EntryType == MessageEntryType_ObjectTypeName)
         {
