@@ -2493,31 +2493,29 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
     public void func1()
     {
 
-            Thread t = new Thread(delegate()
+            var t = RobotRaconteurNode.s.CreateTimer(1000, delegate(TimerEvent evt)
             {
                 try
-                {
-                    Thread.Sleep(1000);
-            ev1();
-    }
-    catch (Exception)
-    {}
-}
-            );
+                {                        
+                    ev1();
+                }
+                catch (Exception)
+                {}
+            }
+            ,false);
             t.Start();
 
             }
 
             public void func2(double d1, double d2)
             {
-            Thread t = new Thread(delegate()
+            var t = RobotRaconteurNode.s.CreateTimer(1000, delegate(TimerEvent evt)
             {
-                Thread.Sleep(1000);
             teststruct2 s = new teststruct2();
             s.mydat = new double[] { d2 };
             ev2(d1, s);
             }
-           );
+           , false);
            t.Start();
            }
 
@@ -2712,7 +2710,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
            object p1_lock = new object();
            void p1_packet_received(Pipe<double[]>.PipeEndpoint p)
            {
-            Thread t = new Thread(delegate()
+            RobotRaconteurNode.s.PostToThreadPool(delegate()
             {
                 try
                 {
@@ -2732,7 +2730,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
            catch (Exception)
            {}
            });
-           t.Start();
+           
            }
 
            void p1_packet_ack_received(Pipe<double[]>.PipeEndpoint p, uint packetnum)
@@ -2760,7 +2758,7 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
            object p2_lock = new object();
            void p2_packet_received(Pipe<teststruct2>.PipeEndpoint p)
            {
-            Thread t = new Thread(delegate()
+            RobotRaconteurNode.s.PostToThreadPool(delegate()
             {
                 Thread.Sleep(500);
             lock (p2_lock)
@@ -2772,7 +2770,6 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
                 }
             }
            });
-           t.Start();
            }
 
            public void pipe_check_error()
