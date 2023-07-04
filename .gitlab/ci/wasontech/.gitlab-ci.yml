@@ -28,13 +28,13 @@
     - when: manual
 .all_build:
   rules:
-    - if: '$CI_COMMIT_BRANCH == /^format\/.*$/'
+    - if: '$CI_COMMIT_BRANCH ~= /^format\/.*$/'
       when: never
     - when: always
 
 .manual_build:
   rules:
-    - if: '$CI_COMMIT_BRANCH == /^format\/.*$/'
+    - if: '$CI_COMMIT_BRANCH ~= /^format\/.*$/'
       when: never
     - when: manual
 
