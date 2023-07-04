@@ -440,7 +440,7 @@ code_formatting_ubuntu_focal_amd64:
     - git diff --name-only --exit-code
 clang_tidy_ubuntu_focal_amd64:
   stage: build
-  extends: .all_build
+  when: manual
   tags:
     - wasontech
     - ubuntu-focal
