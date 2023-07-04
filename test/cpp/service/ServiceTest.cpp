@@ -2600,18 +2600,19 @@ void RobotRaconteurTest_testroot::set_nulltest(const RR_INTRUSIVE_PTR<teststruct
 
 void RobotRaconteurTest_testroot::func1()
 {
-    RR_SHARED_PTR<Timer> t = ServerContext::GetCurrentServerContext()->GetNode()->CreateTimer(boost::posix_time::milliseconds(100), boost::bind(&RobotRaconteurTest_testroot::func1_thread, shared_from_this()), true);
+    RR_SHARED_PTR<Timer> t = ServerContext::GetCurrentServerContext()->GetNode()->CreateTimer(
+        boost::posix_time::milliseconds(100),
+        boost::bind(&RobotRaconteurTest_testroot::func1_thread, shared_from_this()), true);
     t->Start();
 }
 
-void RobotRaconteurTest_testroot::func1_thread()
-{
-    get_ev1()();
-}
+void RobotRaconteurTest_testroot::func1_thread() { get_ev1()(); }
 
 void RobotRaconteurTest_testroot::func2(double d1, double d2)
 {
-    RR_SHARED_PTR<Timer> t = ServerContext::GetCurrentServerContext()->GetNode()->CreateTimer(boost::posix_time::milliseconds(100), boost::bind(&RobotRaconteurTest_testroot::func2_thread, shared_from_this(), d1, d2), true);
+    RR_SHARED_PTR<Timer> t = ServerContext::GetCurrentServerContext()->GetNode()->CreateTimer(
+        boost::posix_time::milliseconds(100),
+        boost::bind(&RobotRaconteurTest_testroot::func2_thread, shared_from_this(), d1, d2), true);
     t->Start();
 }
 
@@ -2766,13 +2767,14 @@ void RobotRaconteurTest_testroot::p1_packet_received(
     RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
 {
     RR_SHARED_PTR<RobotRaconteurNode> node = ServerContext::GetCurrentServerContext()->GetNode();
-    RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&RobotRaconteurTest_testroot::p1_packet_received_threadfunc, shared_from_this(), p));
+    RobotRaconteurNode::TryPostToThreadPool(
+        node, boost::bind(&RobotRaconteurTest_testroot::p1_packet_received_threadfunc, shared_from_this(), p));
 }
 
 void RobotRaconteurTest_testroot::p1_packet_received_threadfunc(
     RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
 {
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));    
+    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     boost::recursive_mutex::scoped_lock lock(p1_lock);
     try
     {
@@ -2823,7 +2825,8 @@ void RobotRaconteurTest_testroot::p2_connect_callback(RR_SHARED_PTR<PipeEndpoint
 void RobotRaconteurTest_testroot::p2_packet_received(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p)
 {
     RR_SHARED_PTR<RobotRaconteurNode> node = ServerContext::GetCurrentServerContext()->GetNode();
-    RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&RobotRaconteurTest_testroot::p2_packet_received_threadfunc, shared_from_this(), p));
+    RobotRaconteurNode::TryPostToThreadPool(
+        node, boost::bind(&RobotRaconteurTest_testroot::p2_packet_received_threadfunc, shared_from_this(), p));
 }
 
 void RobotRaconteurTest_testroot::p2_packet_received_threadfunc(

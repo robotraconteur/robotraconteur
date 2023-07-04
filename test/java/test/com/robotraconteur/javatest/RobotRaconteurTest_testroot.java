@@ -2266,7 +2266,7 @@ public class RobotRaconteurTest_testroot implements testroot
     {
         public void action(TimerEvent evt)
         {
-           fireev1();
+            fireev1();
         }
     }
 
@@ -2595,7 +2595,6 @@ public class RobotRaconteurTest_testroot implements testroot
         {
             this.p = p;
             RobotRaconteurNode.s().postToThreadPool(this);
-           
         }
         public void action()
         {
