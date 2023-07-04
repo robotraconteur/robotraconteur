@@ -2262,16 +2262,10 @@ public class RobotRaconteurTest_testroot implements testroot
         RRAssert.areEqual(value, null);
     }
 
-    class func1_run implements Runnable
+    class func1_run implements Action1<TimerEvent>
     {
-        public void run()
+        public void action(TimerEvent evt)
         {
-            try
-            {
-                Thread.sleep(1000);
-            }
-            catch (Exception e)
-            {};
             fireev1();
         }
     }
@@ -2279,22 +2273,16 @@ public class RobotRaconteurTest_testroot implements testroot
     public final void func1()
     {
 
-        Thread t = new Thread(new func1_run());
+        com.robotraconteur.Timer t = RobotRaconteurNode.s().createTimer(1000, new func1_run(), true);
         t.start();
     }
 
-    class func2_run implements Runnable
+    class func2_run implements Action1<TimerEvent>
     {
         public double d1;
         public double d2;
-        public void run()
+        public void action(TimerEvent evt)
         {
-            try
-            {
-                Thread.sleep(1000);
-            }
-            catch (Exception e)
-            {};
             teststruct2 s = new teststruct2();
             s.mydat = new double[] {d2};
             fireev2(d1, s);
@@ -2306,7 +2294,7 @@ public class RobotRaconteurTest_testroot implements testroot
         func2_run run = new func2_run();
         run.d1 = d1;
         run.d2 = d2;
-        Thread t = new Thread(run);
+        com.robotraconteur.Timer t = RobotRaconteurNode.s().createTimer(1000, run, true);
         t.start();
     }
 
@@ -2530,10 +2518,10 @@ public class RobotRaconteurTest_testroot implements testroot
 
     private Object p1_lock = new Object();
 
-    class p1_packet_received implements Action1<Pipe<double[]>.PipeEndpoint>, Runnable
+    class p1_packet_received implements Action1<Pipe<double[]>.PipeEndpoint>, Action
     {
 
-        public void run()
+        public void action()
         {
             try
             {
@@ -2565,8 +2553,7 @@ public class RobotRaconteurTest_testroot implements testroot
         public void action(Pipe<double[]>.PipeEndpoint p)
         {
             this.p = p;
-            Thread t = new Thread(this);
-            t.start();
+            RobotRaconteurNode.s().postToThreadPool(this);
         }
     }
 
@@ -2600,17 +2587,16 @@ public class RobotRaconteurTest_testroot implements testroot
         }
     }
 
-    class p2_packet_received implements Action1<Pipe<teststruct2>.PipeEndpoint>, Runnable
+    class p2_packet_received implements Action1<Pipe<teststruct2>.PipeEndpoint>, Action
     {
         Pipe<teststruct2>.PipeEndpoint p;
         private Object p2_lock = new Object();
         public void action(Pipe<teststruct2>.PipeEndpoint p)
         {
             this.p = p;
-            Thread t = new Thread(this);
-            t.start();
+            RobotRaconteurNode.s().postToThreadPool(this);
         }
-        public void run()
+        public void action()
         {
             try
             {
