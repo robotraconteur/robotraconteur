@@ -38,7 +38,7 @@ def _init_node(nodename, servicename, attributes, servicetype_suffix=""):
     return node1
 
 
-def _register_service_auth(node, servicename,servicetype_suffix=""):
+def _register_service_auth(node, servicename, servicetype_suffix=""):
     authdata = "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\ntestuser2 841c4221c2e7e0cefbc0392a35222512 objectlock\ntestsuperuser 503ed776c50169f681ad7bbc14198b68 objectlock,objectlockoverride"
     p = RR.PasswordFileUserAuthenticator(authdata)
     policies = {"requirevaliduser": "true", "allowobjectlock": "true"}
@@ -162,8 +162,8 @@ def test_subscriber_attribute_filter():
 
 def test_subscriber_filter():
 
-    node1 = _init_node("test_node3", "service1", {},"2")
-    node2 = _init_node("test_node4", "service1", {},"2")
+    node1 = _init_node("test_node3", "service1", {}, "2")
+    node2 = _init_node("test_node4", "service1", {}, "2")
     node3 = _init_node("test_node5", "service3", {}, "2")
     node4 = _init_node("test_node6", "service2", {}, "2")
 
