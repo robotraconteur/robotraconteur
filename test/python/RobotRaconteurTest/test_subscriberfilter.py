@@ -33,7 +33,7 @@ def _init_node(nodename, servicename, attributes, servicetype_suffix=""):
 
     c1 = _sub_testroot_impl()
     c1_context = node1.RegisterService(
-        servicename, f"com.robotraconteur.testing.subtestfilter.sub_testroot{servicetype_suffix}", c1)
+        servicename, "com.robotraconteur.testing.subtestfilter.sub_testroot" + servicetype_suffix, c1)
     c1_context.SetServiceAttributes(attributes)
     return node1
 
@@ -45,7 +45,7 @@ def _register_service_auth(node, servicename, servicetype_suffix=""):
     s = RR.ServiceSecurityPolicy(p, policies)
     c1 = _sub_testroot_impl()
     c1_context = node.RegisterService(
-        servicename, f"com.robotraconteur.testing.subtestfilter.sub_testroot{servicetype_suffix}", c1, s)
+        servicename, "com.robotraconteur.testing.subtestfilter.sub_testroot" + servicetype_suffix, c1, s)
 
 
 def _init_client_node():
