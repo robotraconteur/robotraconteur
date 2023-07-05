@@ -8,6 +8,11 @@ service com.robotraconteur.testing.subtestfilter
 object sub_testroot
     property double d1
 end
+
+object sub_testroot2
+    property double d1
+end
+
 """
 
 
@@ -16,7 +21,7 @@ class _sub_testroot_impl(object):
         self.d1 = random.random()
 
 
-def _init_node(nodename, servicename, attributes):
+def _init_node(nodename, servicename, attributes, servicetype_suffix=""):
     node1 = RR.RobotRaconteurNode()
     node1.Init()
     node1.SetNodeName(nodename)
@@ -28,19 +33,19 @@ def _init_node(nodename, servicename, attributes):
 
     c1 = _sub_testroot_impl()
     c1_context = node1.RegisterService(
-        servicename, "com.robotraconteur.testing.subtestfilter.sub_testroot", c1)
+        servicename, f"com.robotraconteur.testing.subtestfilter.sub_testroot{servicetype_suffix}", c1)
     c1_context.SetServiceAttributes(attributes)
     return node1
 
 
-def _register_service_auth(node, servicename):
+def _register_service_auth(node, servicename,servicetype_suffix=""):
     authdata = "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\ntestuser2 841c4221c2e7e0cefbc0392a35222512 objectlock\ntestsuperuser 503ed776c50169f681ad7bbc14198b68 objectlock,objectlockoverride"
     p = RR.PasswordFileUserAuthenticator(authdata)
     policies = {"requirevaliduser": "true", "allowobjectlock": "true"}
     s = RR.ServiceSecurityPolicy(p, policies)
     c1 = _sub_testroot_impl()
     c1_context = node.RegisterService(
-        servicename, "com.robotraconteur.testing.subtestfilter.sub_testroot", c1, s)
+        servicename, f"com.robotraconteur.testing.subtestfilter.sub_testroot{servicetype_suffix}", c1, s)
 
 
 def _init_client_node():
@@ -83,10 +88,10 @@ def _run_attributes_filter_test(client_node, attributes_groups, expected_count):
     sub2.Close()
 
 
-def _run_filter_test(client_node, filter_, expected_count):
+def _run_filter_test(client_node, filter_, expected_count, servicetype_suffix=""):
 
     sub2 = client_node.SubscribeServiceByType(
-        ["com.robotraconteur.testing.subtestfilter.sub_testroot"], filter_)
+        [f"com.robotraconteur.testing.subtestfilter.sub_testroot{servicetype_suffix}"], filter_)
     _assert_connected_clients(sub2, expected_count)
     sub2.Close()
 
@@ -157,12 +162,12 @@ def test_subscriber_attribute_filter():
 
 def test_subscriber_filter():
 
-    node1 = _init_node("test_node3", "service1", {})
-    node2 = _init_node("test_node4", "service1", {})
-    node3 = _init_node("test_node5", "service3", {})
-    node4 = _init_node("test_node6", "service2", {})
+    node1 = _init_node("test_node3", "service1", {},"2")
+    node2 = _init_node("test_node4", "service1", {},"2")
+    node3 = _init_node("test_node5", "service3", {}, "2")
+    node4 = _init_node("test_node6", "service2", {}, "2")
 
-    _register_service_auth(node3, "service1")
+    _register_service_auth(node3, "service1", "2")
 
     # Create client node
     client_node = _init_client_node()
@@ -184,18 +189,18 @@ def test_subscriber_filter():
     client_node.DisconnectService(c4)
 
     sub1 = client_node.SubscribeServiceByType(
-        ["com.robotraconteur.testing.subtestfilter.sub_testroot"])
+        ["com.robotraconteur.testing.subtestfilter.sub_testroot2"])
     _assert_connected_clients(sub1, 5)
     sub1.Close()
 
     filter1 = RR.ServiceSubscriptionFilter()
     filter1.ServiceNames.append("service1")
-    _run_filter_test(client_node, filter1, 3)
+    _run_filter_test(client_node, filter1, 3, "2")
 
     filter1_node = RR.ServiceSubscriptionFilterNode()
     filter1_node.NodeName = "test_node3"
     filter1.Nodes.append(filter1_node)
-    _run_filter_test(client_node, filter1, 1)
+    _run_filter_test(client_node, filter1, 1, "2")
 
     filter2 = RR.ServiceSubscriptionFilter()
     filter2_node = RR.ServiceSubscriptionFilterNode()
@@ -204,7 +209,7 @@ def test_subscriber_filter():
     filter2_node.Credentials = {"password": RR.VarValue("testpass1", "string")}
     filter2.ServiceNames.append("service1")
     filter2.Nodes.append(filter2_node)
-    _run_filter_test(client_node, filter2, 1)
+    _run_filter_test(client_node, filter2, 1, "2")
 
     node1.Shutdown()
     node2.Shutdown()
