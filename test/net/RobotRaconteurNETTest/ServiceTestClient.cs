@@ -2267,6 +2267,18 @@ public class ServiceTestClient
         ca<double>(e3.ReceivePacket().mydat, new double[] { 738.29 });
         ca<double>(e3.ReceivePacketWait(100).mydat, new double[] { 89.83 });
 
+        for (int i = 0; i < 50; i++)
+        {
+            if (!ack_recv)
+            {
+                System.Threading.Thread.Sleep(100);
+            }
+            else
+            {
+                break;
+            }
+        }
+
         RRAssert.IsTrue(ack_recv);
 
         r.pipe_check_error();
