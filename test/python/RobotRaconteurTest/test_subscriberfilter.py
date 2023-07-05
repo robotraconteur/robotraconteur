@@ -91,7 +91,7 @@ def _run_attributes_filter_test(client_node, attributes_groups, expected_count):
 def _run_filter_test(client_node, filter_, expected_count, servicetype_suffix=""):
 
     sub2 = client_node.SubscribeServiceByType(
-        [f"com.robotraconteur.testing.subtestfilter.sub_testroot{servicetype_suffix}"], filter_)
+        ["com.robotraconteur.testing.subtestfilter.sub_testroot" + servicetype_suffix], filter_)
     _assert_connected_clients(sub2, expected_count)
     sub2.Close()
 
