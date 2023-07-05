@@ -33,7 +33,8 @@ public class RobotRaconteurJavaTest
                 TcpTransport c = new TcpTransport();
                 c.enableNodeDiscoveryListening();
                 c.enableNodeAnnounce();
-                c.startServer(2323);
+                c.startServer(0);
+                int port = c.getListenPort();
                 RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService1Factory());
                 RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService2Factory());
                 RobotRaconteurNode.s().registerTransport(c);
@@ -61,8 +62,9 @@ public class RobotRaconteurJavaTest
                 for (int i = 0; i < count; i++)
                 {
                     ServiceTestClient stest = new ServiceTestClient();
-                    stest.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService",
-                                      "tcp://localhost:2323/{0}/RobotRaconteurTestService_auth");
+                    stest.RunFullTest(
+                        "rr+tcp://localhost:" + String.valueOf(port) + "/?service=RobotRaconteurTestService",
+                        "rr+tcp://localhost:" + String.valueOf(port) + "/?service=RobotRaconteurTestService_auth");
                 }
                 RobotRaconteurNode.s().shutdown();
                 System.out.println("Finished shutdown");
@@ -75,13 +77,14 @@ public class RobotRaconteurJavaTest
                 RobotRaconteurNode.s().setLogLevelFromEnvVariable();
 
                 ServerNodeSetup node_setup = new ServerNodeSetup(
-                    "com.robotraconteur.testing.TestService2", 2323,
+                    "com.robotraconteur.testing.TestService2", 0,
                     RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT.swigValue() |
                         RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_START_SERVER
                             .swigValue());
 
                 try
                 {
+                    int port = node_setup.getTcpTransport().getListenPort();
                     RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService1Factory());
                     RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService2Factory());
                     RobotRaconteurNode.s().registerServiceType(new com__robotraconteur__testing__TestService3Factory());
@@ -90,7 +93,8 @@ public class RobotRaconteurJavaTest
                     s.RegisterServices(node_setup.getTcpTransport());
 
                     ServiceTestClient2 stest = new ServiceTestClient2();
-                    stest.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService2");
+                    stest.RunFullTest("rr+tcp://localhost:" + String.valueOf(port) +
+                                      "/?service=RobotRaconteurTestService2");
 
                     RobotRaconteurNode.s().shutdown();
                     System.out.println("Finished shutdown");

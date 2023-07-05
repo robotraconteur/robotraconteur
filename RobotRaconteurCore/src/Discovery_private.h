@@ -133,6 +133,8 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
     void DoSubscribe(const std::vector<std::string>& service_types,
                      const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter,
                      const RR_SHARED_PTR<IServiceSubscription>& subscription);
+
+    void DoUpdateAllDetectedServices(const RR_SHARED_PTR<IServiceSubscription>& s);
 };
 
 class Discovery_updatediscoverednodes : public RR_ENABLE_SHARED_FROM_THIS<Discovery_updatediscoverednodes>

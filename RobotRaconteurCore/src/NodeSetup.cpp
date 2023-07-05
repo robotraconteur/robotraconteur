@@ -321,6 +321,10 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
         {
             intra_transport->StartServer();
         }
+        else
+        {
+            intra_transport->StartClient();
+        }
 
         node->RegisterTransport(intra_transport);
     }

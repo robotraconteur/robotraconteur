@@ -4070,7 +4070,19 @@ void WrappedServiceSubscription::UpdateServiceURL(const std::vector<std::string>
 void WrappedServiceSubscription::UpdateServiceURL(const std::string& url, const std::string& username,
                                                   const boost::intrusive_ptr<MessageElementData>& credentials,
                                                   const std::string& objecttype, bool close_connected)
-{}
+{
+    std::vector<std::string> url2;
+    url2.push_back(url);
+    UpdateServiceURL(url2, username, credentials, objecttype, close_connected);
+}
+
+void WrappedServiceSubscription::UpdateServiceByType(const std::vector<std::string>& service_types,
+                                                     const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = GetNode();
+    RR_SHARED_PTR<ServiceSubscriptionFilter> filter2 = WrappedSubscribeService_LoadFilter(node, filter);
+    subscription->UpdateServiceByType(service_types, filter2);
+}
 
 WrappedWireSubscription::WrappedWireSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent,
                                                  const std::string& membername, const std::string& servicepath)
@@ -4320,6 +4332,8 @@ static RR_SHARED_PTR<ServiceSubscriptionFilter> WrappedSubscribeService_LoadFilt
         filter2 = RR_MAKE_SHARED<ServiceSubscriptionFilter>();
         filter2->ServiceNames = filter->ServiceNames;
         filter2->TransportSchemes = filter->TransportSchemes;
+        filter2->Attributes = filter->Attributes;
+        filter2->AttributesMatchOperation = filter->AttributesMatchOperation;
         filter2->MaxConnections = filter->MaxConnections;
         BOOST_FOREACH (RR_SHARED_PTR<WrappedServiceSubscriptionFilterNode>& n, filter->Nodes)
         {

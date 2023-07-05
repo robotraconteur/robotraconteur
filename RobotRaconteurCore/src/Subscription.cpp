@@ -106,7 +106,11 @@ void ServiceSubscription_retrytimer::timer_handler(RR_WEAK_PTR<ServiceSubscripti
 } // namespace detail
 static void ServiceSubscription_close_handler() {}
 
-ServiceSubscriptionFilter::ServiceSubscriptionFilter() { MaxConnections = 0; }
+ServiceSubscriptionFilter::ServiceSubscriptionFilter()
+{
+    MaxConnections = 0;
+    AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_AND;
+}
 
 ServiceSubscriptionClientID::ServiceSubscriptionClientID(const ::RobotRaconteur::NodeID& nodeid,
                                                          boost::string_ref service_name)
@@ -227,7 +231,7 @@ static bool ServiceSubscription_FilterService(const std::vector<std::string>& se
                 }
             }
 
-            if (urls.empty())
+            if (urls.empty() && storage)
             {
                 // We didn't find a match with the ServiceInfo2 urls, attempt to use NodeDiscoveryInfo
                 // TODO: test this....
@@ -252,6 +256,54 @@ static bool ServiceSubscription_FilterService(const std::vector<std::string>& se
             if (boost::range::find(filter->ServiceNames, info.Name) == filter->ServiceNames.end())
             {
                 return false;
+            }
+        }
+
+        if (!filter->Attributes.empty())
+        {
+            typedef std::map<std::string, ServiceSubscriptionFilterAttributeGroup>::value_type attributes_map_type;
+            std::vector<bool> attr_matches;
+            BOOST_FOREACH (const attributes_map_type& e, filter->Attributes)
+            {
+                std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >::const_iterator e2 = info.Attributes.find(e.first);
+                if (e2 == info.Attributes.end())
+                {
+                    RR_INTRUSIVE_PTR<RRValue> null_value;
+                    attr_matches.push_back(e.second.IsMatch(null_value));
+                }
+                else
+                {
+                    attr_matches.push_back(e.second.IsMatch(e2->second));
+                }
+            }
+
+            switch (filter->AttributesMatchOperation)
+            {
+            case ServiceSubscriptionFilterAttributeGroupOperation_OR:
+                if (boost::range::find(attr_matches, true) == attr_matches.end())
+                {
+                    return false;
+                }
+                break;
+            case ServiceSubscriptionFilterAttributeGroupOperation_NOR:
+                if (boost::range::find(attr_matches, true) != attr_matches.end())
+                {
+                    return false;
+                }
+                break;
+            case ServiceSubscriptionFilterAttributeGroupOperation_NAND:
+                if (boost::range::find(attr_matches, false) == attr_matches.end())
+                {
+                    return false;
+                }
+                break;
+            case ServiceSubscriptionFilterAttributeGroupOperation_AND:
+            default:
+                if (boost::range::find(attr_matches, false) != attr_matches.end())
+                {
+                    return false;
+                }
+                break;
             }
         }
 
@@ -1142,6 +1194,13 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
         return;
     RR_SHARED_PTR<detail::ServiceSubscription_client> c2_1 = c2.lock();
     RR_SHARED_PTR<RobotRaconteurNode> n = this1->node.lock();
+
+    if (c2_1->erase)
+    {
+        boost::mutex::scoped_lock lock(this1->this_lock);
+        this1->clients.erase(ServiceSubscriptionClientID(c2_1->nodeid, c2_1->service_name));
+    }
+
     try
     {
         if (!this1 || !c2_1)
@@ -1164,7 +1223,10 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
                 if (rr_cast<ServiceStub>(client)->GetContext() == ctx)
                 {
                     c2_1->client.reset();
-                    this1->ConnectRetry(c2_1);
+                    if (!c2_1->erase)
+                    {
+                        this1->ConnectRetry(c2_1);
+                    }
 
                     if (c2_1->claimed.data())
                     {
@@ -1589,6 +1651,100 @@ void ServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, 
         catch (std::exception&)
         {}
     }
+}
+
+void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& service_types,
+                                              const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter)
+{
+    if (!active)
+    {
+        return;
+    }
+
+    if (use_service_url)
+    {
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "Subscription not using service b type");
+        throw InvalidOperationException("Subscription not using service by type");
+    }
+
+    if (service_types.empty())
+    {
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "service_types most not be empty");
+        throw InvalidArgumentException("service_types must not be empty");
+    }
+
+    boost::mutex::scoped_lock lock(this_lock);
+
+    this->service_types = service_types;
+    this->filter = filter;
+
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+    {
+        return;
+    }
+
+    BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client>& c, clients | boost::adaptors::map_values)
+    {
+        if (c->claimed.data())
+        {
+            continue;
+        }
+
+        RR_SHARED_PTR<RRObject> c2 = c->client.lock();
+        if (!c2)
+            continue;
+
+        try
+        {
+            ServiceInfo2 info;
+            info.NodeID = c->nodeid;
+            info.NodeName = c->nodename;
+            info.Name = c->service_name;
+            info.RootObjectType = c->service_type;
+            info.ConnectionURL = c->urls;
+            info.Attributes = n->GetServiceAttributes(c2);
+            info.ConnectionURL = c->urls;
+
+            c->erase.data() = true;
+
+            std::vector<std::string> filter_res_urls;
+            std::string filter_res;
+            RR_SHARED_PTR<ServiceSubscriptionFilterNode> filter_node;
+            RR_SHARED_PTR<detail::Discovery_nodestorage> node_storage;
+
+            bool connect = ServiceSubscription_FilterService(service_types, this->filter, node_storage, info,
+                                                             filter_res_urls, filter_res, filter_node);
+
+            if (!connect)
+            {
+                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1,
+                                                   "Service filtered by UpdateServiceByType: " << c->nodeid.ToString()
+                                                                                               << "," << c->nodename);
+                try
+                {
+                    n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
+                }
+                catch (std::exception&)
+                {}
+            }
+        }
+        catch (std::exception& exp)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                               "Error updating service by type: " << exp.what());
+        }
+    }
+
+    RR_SHARED_PTR<detail::Discovery> d = parent.lock();
+    if (!d)
+    {
+        return;
+    }
+    RR_SHARED_PTR<Timer> t =
+        n->CreateTimer(boost::posix_time::milliseconds(250),
+                       boost::bind(&detail::Discovery::DoUpdateAllDetectedServices, d, shared_from_this()));
+    t->Start();
 }
 
 // class WireSubscriptionBase
@@ -2846,5 +3002,330 @@ void ServiceSubscription_custom_member_subscribers::SubscribePipe(const RR_SHARE
 }
 
 } // namespace detail
+
+// ServiceSubscriptionFilterAttribute
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute() { UseRegex = false; }
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref value)
+{
+    this->Name = "";
+    this->Value = value.to_string();
+    this->UseRegex = false;
+}
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(const boost::regex& value)
+{
+    this->Name = "";
+    this->Value = "";
+    this->UseRegex = true;
+    this->ValueRegex = value;
+}
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref name, boost::string_ref value)
+{
+    this->Name = name.to_string();
+    this->Value = value.to_string();
+    this->UseRegex = false;
+}
+
+ServiceSubscriptionFilterAttribute::ServiceSubscriptionFilterAttribute(boost::string_ref name,
+                                                                       const boost::regex& value)
+{
+    this->Name = name.to_string();
+    this->Value = "";
+    this->ValueRegex = value;
+    this->UseRegex = true;
+}
+
+bool ServiceSubscriptionFilterAttribute::IsMatch(boost::string_ref value) const
+{
+    if (!Name.empty())
+    {
+        return false;
+    }
+    if (UseRegex)
+    {
+        return boost::regex_match(value.begin(), value.end(), ValueRegex);
+    }
+    else
+    {
+        return value == Value;
+    }
+}
+bool ServiceSubscriptionFilterAttribute::IsMatch(boost::string_ref name, boost::string_ref value) const
+{
+    if (!Name.empty() && Name != name)
+    {
+        return false;
+    }
+    if (UseRegex)
+    {
+        return boost::regex_match(value.begin(), value.end(), ValueRegex);
+    }
+    else
+    {
+        return value == Value;
+    }
+}
+bool ServiceSubscriptionFilterAttribute::IsMatch(const std::vector<std::string>& values) const
+{
+    BOOST_FOREACH (const std::string& e, values)
+    {
+        if (IsMatch(e))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ServiceSubscriptionFilterAttribute::IsMatch(const RR_INTRUSIVE_PTR<RRList<RRValue> >& values) const
+{
+    RR_NULL_CHECK(values);
+    BOOST_FOREACH (RR_INTRUSIVE_PTR<RRValue>& e, values->GetStorageContainer())
+    {
+        if (!e)
+        {
+            continue;
+        }
+
+        RR_INTRUSIVE_PTR<RRArray<char> > s = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(e);
+        if (!s)
+        {
+            continue;
+        }
+
+        std::string s2 = RRArrayToString(s);
+
+        if (IsMatch(s2))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ServiceSubscriptionFilterAttribute::IsMatch(const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& values) const
+{
+    RR_NULL_CHECK(values);
+    typedef std::map<std::string, RR_INTRUSIVE_PTR<RRValue> >::value_type value_type;
+    BOOST_FOREACH (const value_type& e, values->GetStorageContainer())
+    {
+        if (!e.second)
+        {
+            continue;
+        }
+
+        RR_INTRUSIVE_PTR<RRArray<char> > s = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(e.second);
+        if (!s)
+        {
+            continue;
+        }
+
+        std::string s2 = RRArrayToString(s);
+
+        if (IsMatch(e.first, s2))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ServiceSubscriptionFilterAttribute::IsMatch(const std::map<std::string, std::string>& values) const
+{
+    typedef std::map<std::string, std::string>::value_type value_type;
+    BOOST_FOREACH (const value_type& e, values)
+    {
+        if (IsMatch(e.first, e.second))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup()
+{
+    this->Operation = ServiceSubscriptionFilterAttributeGroupOperation_OR;
+    this->SplitStringAttribute = true;
+    this->SplitStringDelimiter = ',';
+}
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(
+    ServiceSubscriptionFilterAttributeGroupOperation operation)
+{
+    this->Operation = operation;
+    this->SplitStringAttribute = true;
+    this->SplitStringDelimiter = ',';
+}
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(
+    ServiceSubscriptionFilterAttributeGroupOperation operation,
+    std::vector<ServiceSubscriptionFilterAttribute> attributes)
+{
+    this->Operation = operation;
+    this->Attributes = RR_MOVE(attributes);
+    this->SplitStringAttribute = true;
+    this->SplitStringDelimiter = ',';
+}
+ServiceSubscriptionFilterAttributeGroup::ServiceSubscriptionFilterAttributeGroup(
+    ServiceSubscriptionFilterAttributeGroupOperation operation,
+    std::vector<ServiceSubscriptionFilterAttributeGroup> groups)
+{
+    this->Operation = operation;
+    this->Groups = RR_MOVE(groups);
+    this->SplitStringAttribute = true;
+    this->SplitStringDelimiter = ',';
+}
+
+template <typename T>
+static bool ServiceSubscriptionFilterAttributeGroup_do_filter(
+    ServiceSubscriptionFilterAttributeGroupOperation operation,
+    const std::vector<ServiceSubscriptionFilterAttribute>& attributes,
+    const std::vector<ServiceSubscriptionFilterAttributeGroup>& groups, const T& values)
+{
+    switch (operation)
+    {
+    case ServiceSubscriptionFilterAttributeGroupOperation_OR: {
+        if (attributes.empty() && groups.empty())
+        {
+            return true;
+        }
+        BOOST_FOREACH (const ServiceSubscriptionFilterAttributeGroup& e, groups)
+        {
+            if (e.IsMatch(values))
+            {
+                return true;
+            }
+        }
+        BOOST_FOREACH (const ServiceSubscriptionFilterAttribute& e, attributes)
+        {
+            if (e.IsMatch(values))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    case ServiceSubscriptionFilterAttributeGroupOperation_AND: {
+        if (attributes.empty() && groups.empty())
+        {
+            return true;
+        }
+        BOOST_FOREACH (const ServiceSubscriptionFilterAttributeGroup& e, groups)
+        {
+            if (!e.IsMatch(values))
+            {
+                return false;
+            }
+        }
+        BOOST_FOREACH (const ServiceSubscriptionFilterAttribute& e, attributes)
+        {
+            if (!e.IsMatch(values))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    case ServiceSubscriptionFilterAttributeGroupOperation_NOR: {
+        return !ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation_OR,
+                                                                  attributes, groups, values);
+    }
+    case ServiceSubscriptionFilterAttributeGroupOperation_NAND: {
+        return !ServiceSubscriptionFilterAttributeGroup_do_filter(ServiceSubscriptionFilterAttributeGroupOperation_AND,
+                                                                  attributes, groups, values);
+    }
+    default: {
+        throw InvalidArgumentException("Invalid attribute filter operation");
+    }
+    }
+}
+
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(boost::string_ref value) const
+{
+    if (!SplitStringAttribute)
+    {
+        std::vector<std::string> value_v;
+        value_v.push_back(value.to_string());
+        return IsMatch(value_v);
+    }
+    else
+    {
+        std::vector<std::string> value_v;
+        boost::split(value_v, value, boost::is_any_of(","));
+        return IsMatch(value_v);
+    }
+}
+
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(RR_INTRUSIVE_PTR<RRArray<char> >& value) const
+{
+    if (!value)
+    {
+        std::vector<std::string> empty_values;
+        return IsMatch(empty_values);
+    }
+
+    return IsMatch(RRArrayToString(value));
+}
+
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const std::vector<std::string>& values) const
+{
+    return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
+}
+
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const RR_INTRUSIVE_PTR<RRList<RRValue> >& values) const
+{
+    return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
+}
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const std::map<std::string, std::string>& values) const
+{
+    return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
+}
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(
+    const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& values) const
+{
+    return ServiceSubscriptionFilterAttributeGroup_do_filter(Operation, Attributes, Groups, values);
+}
+bool ServiceSubscriptionFilterAttributeGroup::IsMatch(const RR_INTRUSIVE_PTR<RRValue>& values) const
+{
+    if (!values)
+    {
+        std::vector<std::string> empty_values;
+        return IsMatch(empty_values);
+    }
+
+    RR_INTRUSIVE_PTR<RRArray<char> > a0 = RR_DYNAMIC_POINTER_CAST<RRArray<char> >(values);
+    if (a0)
+    {
+        return IsMatch(a0);
+    }
+
+    RR_INTRUSIVE_PTR<RRList<RRValue> > a1 = RR_DYNAMIC_POINTER_CAST<RRList<RRValue> >(values);
+    if (a1)
+    {
+        return IsMatch(a1);
+    }
+
+    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > a2 = RR_DYNAMIC_POINTER_CAST<RRMap<std::string, RRValue> >(values);
+    if (a2)
+    {
+        return IsMatch(a2);
+    }
+
+    return false;
+}
+
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref regex_value)
+{
+    boost::regex r(regex_value.begin(), regex_value.end());
+    return ServiceSubscriptionFilterAttribute(r);
+}
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref name,
+                                                                                 boost::string_ref regex_value)
+{
+    boost::regex r(regex_value.begin(), regex_value.end());
+    return ServiceSubscriptionFilterAttribute(name, r);
+}
 
 } // namespace RobotRaconteur

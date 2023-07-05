@@ -42,9 +42,11 @@ class Program
             RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
 
             TcpTransport t = new TcpTransport();
-            t.StartServer(2323);
+            t.StartServer(0);
             t.EnableNodeDiscoveryListening();
             t.EnableNodeAnnounce();
+
+            var port = t.GetListenPort();
 
             RobotRaconteurNode.s.RegisterTransport(t);
 
@@ -69,8 +71,8 @@ class Program
             {
 
                 ServiceTestClient c = new ServiceTestClient();
-                c.RunFullTest("tcp://localhost:2323/{0}/RobotRaconteurTestService",
-                              "tcp://localhost:2323/{0}/RobotRaconteurTestService_auth");
+                c.RunFullTest("rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService",
+                              "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService_auth");
                 // System.Threading.Thread.Sleep(100);
             }
 
@@ -85,7 +87,8 @@ class Program
 
             try
             {
-                object o = RobotRaconteurNode.s.ConnectService("tcp://localhost:2323/{0}/RobotRaconteurTestService");
+                object o = RobotRaconteurNode.s.ConnectService("rr+tcp://localhost:" + port.ToString() +
+                                                               "/?service=RobotRaconteurTestService");
             }
             catch
             {}
@@ -102,17 +105,19 @@ class Program
 
             RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
 
-            using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2", 4565,
+            using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2", 0,
                                                    RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT |
                                                        RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
             {
                 // MultiDimArrayTest.Test();
 
+                var port = setup.TcpTransport.GetListenPort();
+
                 RobotRaconteurTestServiceSupport2 sup = new RobotRaconteurTestServiceSupport2();
                 sup.RegisterServices(setup.TcpTransport);
 
                 ServiceTestClient2 c = new ServiceTestClient2();
-                c.RunFullTest("rr+tcp://localhost:4565/?service=RobotRaconteurTestService2");
+                c.RunFullTest("rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService2");
             }
             Console.WriteLine("Test completed");
             return;

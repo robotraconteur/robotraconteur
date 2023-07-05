@@ -27,6 +27,7 @@ public:
 	virtual std::vector<std::string> GetServerListenUrls();
 	void Close();
 
+	void StartClient();
 	void StartServer();
 };
 

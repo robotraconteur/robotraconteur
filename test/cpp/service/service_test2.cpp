@@ -12,9 +12,33 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
+int my_argc;
+char** my_argv;
 static std::string service2_url;
 
-TEST(RobotRaconteurService, WirePeekPokeTest)
+RR_SHARED_PTR<TestServerNodeConfig> test_server_node_config;
+RR_SHARED_PTR<ClientNodeSetup> client_node_setup;
+
+class ServiceTest : public testing::Test
+{
+  protected:
+    RR_OVIRTUAL void SetUp() RR_OVERRIDE
+    {
+        if (!test_server_node_config)
+        {
+            test_server_node_config = RR_MAKE_SHARED<TestServerNodeConfig>("unit_service_test");
+            service2_url = test_server_node_config->GetServiceURL("RobotRaconteurTestService2");
+        }
+        if (!client_node_setup)
+        {
+            client_node_setup = RR_MAKE_SHARED<ClientNodeSetup>(ROBOTRACONTEUR_SERVICE_TYPES, my_argc, my_argv);
+        }
+    }
+
+    RR_OVIRTUAL void TearDown() RR_OVERRIDE {}
+};
+
+TEST_F(ServiceTest, WirePeekPokeTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -24,7 +48,7 @@ TEST(RobotRaconteurService, WirePeekPokeTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, EnumsTest)
+TEST_F(ServiceTest, EnumsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -34,7 +58,7 @@ TEST(RobotRaconteurService, EnumsTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, PodsTest)
+TEST_F(ServiceTest, PodsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -44,7 +68,7 @@ TEST(RobotRaconteurService, PodsTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, MemoriesTest)
+TEST_F(ServiceTest, MemoriesTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -54,7 +78,7 @@ TEST(RobotRaconteurService, MemoriesTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, GeneratorsTest)
+TEST_F(ServiceTest, GeneratorsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -64,7 +88,7 @@ TEST(RobotRaconteurService, GeneratorsTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, NamedArraysTest)
+TEST_F(ServiceTest, NamedArraysTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -74,7 +98,7 @@ TEST(RobotRaconteurService, NamedArraysTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, NamedArrayMemoriesTest)
+TEST_F(ServiceTest, NamedArrayMemoriesTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -84,7 +108,7 @@ TEST(RobotRaconteurService, NamedArrayMemoriesTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, ComplexTest)
+TEST_F(ServiceTest, ComplexTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -94,7 +118,7 @@ TEST(RobotRaconteurService, ComplexTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, ComplexMemoriesTest)
+TEST_F(ServiceTest, ComplexMemoriesTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -104,7 +128,7 @@ TEST(RobotRaconteurService, ComplexMemoriesTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, NoLockTest)
+TEST_F(ServiceTest, NoLockTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -114,7 +138,7 @@ TEST(RobotRaconteurService, NoLockTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, BoolsTest)
+TEST_F(ServiceTest, BoolsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -124,7 +148,7 @@ TEST(RobotRaconteurService, BoolsTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, BoolMemoriesTest)
+TEST_F(ServiceTest, BoolMemoriesTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -134,7 +158,7 @@ TEST(RobotRaconteurService, BoolMemoriesTest)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
-TEST(RobotRaconteurService, ExceptionParamsTest)
+TEST_F(ServiceTest, ExceptionParamsTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -147,13 +171,13 @@ TEST(RobotRaconteurService, ExceptionParamsTest)
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
-
-    TestServerNodeConfig server("unit_service_test2");
-    service2_url = server.GetServiceURL("RobotRaconteurTestService2");
-
-    ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES, argc, argv);
+    my_argc = argc;
+    my_argv = argv;
 
     int ret = RUN_ALL_TESTS();
+
+    test_server_node_config.reset();
+    client_node_setup.reset();
 
     return ret;
 }

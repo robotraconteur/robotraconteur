@@ -8,7 +8,7 @@ def pytest_generate_tests(metafunc):
         os.path.abspath(__file__)) + "/../robdef")
     os.environ["ROBOTRACONTEUR_ROBDEF_PATH"] = robdef_path
     os.environ["ROBOTRACONTEUR_PYTHON_TRACEBACK_PRINT_EXC"] = "TRUE"
-    os.environ["ROBOTRACONTEUR_PYTHON_ENABLE_DEBUGPY"] = "TRUE"
+    # os.environ["ROBOTRACONTEUR_PYTHON_ENABLE_DEBUGPY"] = "TRUE"
     os.environ["ROBOTRACONTEUR_LOG_LEVEL"] = "ERROR"
 
 

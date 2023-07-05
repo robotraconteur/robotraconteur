@@ -7,13 +7,13 @@ public class ServiceSubscriptionClientID
 
     public ServiceSubscriptionClientID(NodeID node_id, String service_name)
     {
-        this.NodeID = node_id;
+        this.NodeID = new NodeID(node_id);
         this.ServiceName = service_name;
     }
 
     ServiceSubscriptionClientID(WrappedServiceSubscriptionClientID id1)
     {
-        this.NodeID = id1.getNodeID();
+        this.NodeID = new NodeID(id1.getNodeID());
         this.ServiceName = id1.getServiceName();
     }
 
