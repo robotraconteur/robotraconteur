@@ -2493,276 +2493,266 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
     public void func1()
     {
 
-            Thread t = new Thread(delegate()
+        var t = RobotRaconteurNode.s.CreateTimer(1000, delegate(TimerEvent evt) {
+            try
             {
-                try
-                {
-                    Thread.Sleep(1000);
-            ev1();
-    }
-    catch (Exception)
-    {}
-}
-            );
-            t.Start();
-
+                ev1();
             }
+            catch (Exception)
+            {}
+        }, false);
+        t.Start();
+    }
 
-            public void func2(double d1, double d2)
-            {
-            Thread t = new Thread(delegate()
-            {
-                Thread.Sleep(1000);
+    public void func2(double d1, double d2)
+    {
+        var t = RobotRaconteurNode.s.CreateTimer(1000, delegate(TimerEvent evt) {
             teststruct2 s = new teststruct2();
             s.mydat = new double[] { d2 };
             ev2(d1, s);
-            }
-           );
-           t.Start();
-           }
+        }, false);
+        t.Start();
+    }
 
-           TcpTransport tcptransport;
+    TcpTransport tcptransport;
 
-           public double func3(double d1, double d2)
-           {
-               try
-               {
-                   AuthenticatedUser user = ServerEndpoint.GetCurrentAuthenticatedUser();
-                   if (user == null)
-                   {
-                       Console.WriteLine("No user");
-                   }
-                   else
-                   {
-                       Console.WriteLine("User: " + user.Username);
-                       Console.WriteLine("Privileges: " + user.Privileges.Length);
-                       Console.WriteLine("Login Time: " + user.LoginTime.ToString());
-                       Console.WriteLine("Last access: " + user.LastAccessTime.ToString());
-                       Console.WriteLine("Now: " + RobotRaconteurNode.s.NowUTC.ToString());
-                   }
-               }
-               catch (AuthenticationException)
-               {
-                   Console.WriteLine("No user");
-               }
-
-               if (tcptransport.IsTransportConnectionSecure(ServerEndpoint.CurrentEndpoint))
-               {
-
-                   if (tcptransport.IsSecurePeerIdentityVerified(ServerEndpoint.CurrentEndpoint))
-                   {
-                       Console.WriteLine("Peer identity is verified: " +
-                                         tcptransport.GetSecurePeerIdentity(ServerEndpoint.CurrentEndpoint));
-                   }
-                   else
-                   {
-                       Console.WriteLine("Peer identity is not verified");
-                   }
-               }
-
-               return d1 + d2;
-           }
-
-           public int meaning_of_life()
-           {
-               return 42;
-           }
-
-           public void func_errtest()
-           {
-               throw new Exception("This is a test");
-           }
-
-           public void func_errtest1()
-           {
-               throw new DataTypeException("This is a test");
-           }
-
-           public void func_errtest2()
-           {
-               throw new testexception1("This is a test");
-           }
-
-           public void func_errtest3()
-           {
-               throw new testexception3("This is a test");
-           }
-
-           public event Action ev1;
-
-           public event Action<double, teststruct2> ev2;
-
-           sub1_impl o1 = new sub1_impl();
-
-           public sub1 get_o1()
-           {
-               return o1;
-           }
-
-           Dictionary<int, sub1_impl> o2 = new Dictionary<int, sub1_impl>();
-
-           public sub1 get_o2(int ind)
-           {
-               lock (o2)
-               {
-                   if (o2.ContainsKey(ind))
-                       return o2[ind];
-
-                   sub1_impl o = new sub1_impl();
-                   o.i_ind = ind;
-                   o2.Add(ind, o);
-                   return o;
-               }
-           }
-
-           Dictionary<int, sub1_impl> o3 = new Dictionary<int, sub1_impl>();
-           public sub1 get_o3(int ind)
-           {
-               lock (o3)
-               {
-                   if (o3.ContainsKey(ind))
-                       return o3[ind];
-
-                   sub1_impl o = new sub1_impl();
-                   o.i_ind = ind;
-                   o3.Add(ind, o);
-                   return o;
-               }
-           }
-
-           Dictionary<string, sub1_impl> o4 = new Dictionary<string, sub1_impl>();
-           public sub1 get_o4(string ind)
-           {
-               lock (o4)
-               {
-                   if (o4.ContainsKey(ind))
-                       return o4[ind];
-
-                   sub1_impl o = new sub1_impl();
-                   o.s_ind = ind;
-                   o4.Add(ind, o);
-                   return o;
-               }
-           }
-
-           TestService2SubObj o5 = new TestService2SubObj();
-           public com.robotraconteur.testing.TestService2.subobj get_o5()
-           {
-               return o5;
-           }
-
-           object o6 = null;
-           public object get_o6()
-           {
-               return o6;
-           }
-
-           public void o6_op(int op)
-           {
-               try
-               {
-
-                   ServerContext.CurrentServerContext.ReleaseServicePath(ServerContext.CurrentServicePath + ".o6");
-               }
-               catch (ServiceException)
-               {}
-
-               switch (op)
-               {
-               case 0:
-                   o6 = new sub1_impl();
-                   break;
-               case 1:
-                   o6 = new sub2_impl();
-                   break;
-               case 2:
-                   o6 = new TestService2SubObj();
-                   break;
-
-               default:
-                   throw new InvalidOperationException();
-               }
-           }
-
-           Pipe<double[]> m_p1;
-
-           public Pipe<double[]> p1
-           {
-               get {
-                   return m_p1;
-               }
-               set {
-                   m_p1 = (Pipe<double[]>)value;
-                   m_p1.PipeConnectCallback = p1_connect_callback;
-               }
-           }
-
-           bool packet_sent = false;
-           bool ack_recv = false;
-           uint packetnum = 0;
-
-           void p1_connect_callback(Pipe<double[]>.PipeEndpoint p)
-           {
-
-               p.PacketReceivedEvent += p1_packet_received;
-               p.PacketAckReceivedEvent += p1_packet_ack_received;
-               p.RequestPacketAck = true;
-           }
-
-           object p1_lock = new object();
-           void p1_packet_received(Pipe<double[]>.PipeEndpoint p)
-           {
-            Thread t = new Thread(delegate()
+    public double func3(double d1, double d2)
+    {
+        try
+        {
+            AuthenticatedUser user = ServerEndpoint.GetCurrentAuthenticatedUser();
+            if (user == null)
             {
-                try
-                {
-                    Thread.Sleep(500);
-            lock (p1_lock)
-            {
-                while (p.Available > 0)
-                {
-                    double[] dat = p.ReceivePacket();
-                    uint pnum = p.SendPacket(dat);
-                    if (!packet_sent)
-                        packetnum = pnum;
-                    packet_sent = true;
-                }
+                Console.WriteLine("No user");
             }
-           }
-           catch (Exception)
-           {}
-           });
-           t.Start();
-           }
+            else
+            {
+                Console.WriteLine("User: " + user.Username);
+                Console.WriteLine("Privileges: " + user.Privileges.Length);
+                Console.WriteLine("Login Time: " + user.LoginTime.ToString());
+                Console.WriteLine("Last access: " + user.LastAccessTime.ToString());
+                Console.WriteLine("Now: " + RobotRaconteurNode.s.NowUTC.ToString());
+            }
+        }
+        catch (AuthenticationException)
+        {
+            Console.WriteLine("No user");
+        }
 
-           void p1_packet_ack_received(Pipe<double[]>.PipeEndpoint p, uint packetnum)
-           {
-               if (packetnum == this.packetnum)
-                   ack_recv = true;
-           }
+        if (tcptransport.IsTransportConnectionSecure(ServerEndpoint.CurrentEndpoint))
+        {
 
-           Pipe<teststruct2> m_p2;
-           public Pipe<teststruct2> p2
-           {
-               get {
-                   return m_p2;
-               }
-               set {
-                   m_p2 = (Pipe<teststruct2>)value;
-                   m_p2.PipeConnectCallback = p2_connect_callback;
-               }
-           }
-           void p2_connect_callback(Pipe<teststruct2>.PipeEndpoint p)
-           {
-               p.PacketReceivedEvent += p2_packet_received;
-           }
+            if (tcptransport.IsSecurePeerIdentityVerified(ServerEndpoint.CurrentEndpoint))
+            {
+                Console.WriteLine("Peer identity is verified: " +
+                                  tcptransport.GetSecurePeerIdentity(ServerEndpoint.CurrentEndpoint));
+            }
+            else
+            {
+                Console.WriteLine("Peer identity is not verified");
+            }
+        }
 
-           object p2_lock = new object();
-           void p2_packet_received(Pipe<teststruct2>.PipeEndpoint p)
-           {
-            Thread t = new Thread(delegate()
+        return d1 + d2;
+    }
+
+    public int meaning_of_life()
+    {
+        return 42;
+    }
+
+    public void func_errtest()
+    {
+        throw new Exception("This is a test");
+    }
+
+    public void func_errtest1()
+    {
+        throw new DataTypeException("This is a test");
+    }
+
+    public void func_errtest2()
+    {
+        throw new testexception1("This is a test");
+    }
+
+    public void func_errtest3()
+    {
+        throw new testexception3("This is a test");
+    }
+
+    public event Action ev1;
+
+    public event Action<double, teststruct2> ev2;
+
+    sub1_impl o1 = new sub1_impl();
+
+    public sub1 get_o1()
+    {
+        return o1;
+    }
+
+    Dictionary<int, sub1_impl> o2 = new Dictionary<int, sub1_impl>();
+
+    public sub1 get_o2(int ind)
+    {
+        lock (o2)
+        {
+            if (o2.ContainsKey(ind))
+                return o2[ind];
+
+            sub1_impl o = new sub1_impl();
+            o.i_ind = ind;
+            o2.Add(ind, o);
+            return o;
+        }
+    }
+
+    Dictionary<int, sub1_impl> o3 = new Dictionary<int, sub1_impl>();
+    public sub1 get_o3(int ind)
+    {
+        lock (o3)
+        {
+            if (o3.ContainsKey(ind))
+                return o3[ind];
+
+            sub1_impl o = new sub1_impl();
+            o.i_ind = ind;
+            o3.Add(ind, o);
+            return o;
+        }
+    }
+
+    Dictionary<string, sub1_impl> o4 = new Dictionary<string, sub1_impl>();
+    public sub1 get_o4(string ind)
+    {
+        lock (o4)
+        {
+            if (o4.ContainsKey(ind))
+                return o4[ind];
+
+            sub1_impl o = new sub1_impl();
+            o.s_ind = ind;
+            o4.Add(ind, o);
+            return o;
+        }
+    }
+
+    TestService2SubObj o5 = new TestService2SubObj();
+    public com.robotraconteur.testing.TestService2.subobj get_o5()
+    {
+        return o5;
+    }
+
+    object o6 = null;
+    public object get_o6()
+    {
+        return o6;
+    }
+
+    public void o6_op(int op)
+    {
+        try
+        {
+
+            ServerContext.CurrentServerContext.ReleaseServicePath(ServerContext.CurrentServicePath + ".o6");
+        }
+        catch (ServiceException)
+        {}
+
+        switch (op)
+        {
+        case 0:
+            o6 = new sub1_impl();
+            break;
+        case 1:
+            o6 = new sub2_impl();
+            break;
+        case 2:
+            o6 = new TestService2SubObj();
+            break;
+
+        default:
+            throw new InvalidOperationException();
+        }
+    }
+
+    Pipe<double[]> m_p1;
+
+    public Pipe<double[]> p1
+    {
+        get {
+            return m_p1;
+        }
+        set {
+            m_p1 = (Pipe<double[]>)value;
+            m_p1.PipeConnectCallback = p1_connect_callback;
+        }
+    }
+
+    bool packet_sent = false;
+    bool ack_recv = false;
+    uint packetnum = 0;
+
+    void p1_connect_callback(Pipe<double[]>.PipeEndpoint p)
+    {
+
+        p.PacketReceivedEvent += p1_packet_received;
+        p.PacketAckReceivedEvent += p1_packet_ack_received;
+        p.RequestPacketAck = true;
+    }
+
+    object p1_lock = new object();
+    void p1_packet_received(Pipe<double[]>.PipeEndpoint p)
+    {
+        RobotRaconteurNode.s.PostToThreadPool(delegate() {
+            try
             {
                 Thread.Sleep(500);
+                lock (p1_lock)
+                {
+                    while (p.Available > 0)
+                    {
+                        double[] dat = p.ReceivePacket();
+                        uint pnum = p.SendPacket(dat);
+                        if (!packet_sent)
+                            packetnum = pnum;
+                        packet_sent = true;
+                    }
+                }
+            }
+            catch (Exception)
+            {}
+        });
+    }
+
+    void p1_packet_ack_received(Pipe<double[]>.PipeEndpoint p, uint packetnum)
+    {
+        if (packetnum == this.packetnum)
+            ack_recv = true;
+    }
+
+    Pipe<teststruct2> m_p2;
+    public Pipe<teststruct2> p2
+    {
+        get {
+            return m_p2;
+        }
+        set {
+            m_p2 = (Pipe<teststruct2>)value;
+            m_p2.PipeConnectCallback = p2_connect_callback;
+        }
+    }
+    void p2_connect_callback(Pipe<teststruct2>.PipeEndpoint p)
+    {
+        p.PacketReceivedEvent += p2_packet_received;
+    }
+
+    object p2_lock = new object();
+    void p2_packet_received(Pipe<teststruct2>.PipeEndpoint p)
+    {
+        RobotRaconteurNode.s.PostToThreadPool(delegate() {
+            Thread.Sleep(500);
             lock (p2_lock)
             {
                 while (p.Available > 0)
@@ -2771,431 +2761,430 @@ public class RobotRaconteurTest_testroot : com.robotraconteur.testing.TestServic
                     p.SendPacket(dat);
                 }
             }
-           });
-           t.Start();
-           }
+        });
+    }
 
-           public void pipe_check_error()
-           {
-               RRAssert.IsTrue(ack_recv);
-           }
+    public void pipe_check_error()
+    {
+        RRAssert.IsTrue(ack_recv);
+    }
 
-           Pipe<double> m_broadcastpipe = null;
-           PipeBroadcaster<double> m_broadcastpipe_broadcaster;
-           public Pipe<double> broadcastpipe
-           {
-               get {
-                   return m_broadcastpipe;
-               }
-               set {
-                   m_broadcastpipe = value;
-                   m_broadcastpipe_broadcaster = new PipeBroadcaster<double>(value, 3);
-                   RRAssert.AreEqual(m_broadcastpipe_broadcaster.MaxBacklog, 3);
-                   m_broadcastpipe_broadcaster.MaxBacklog = 3;
+    Pipe<double> m_broadcastpipe = null;
+    PipeBroadcaster<double> m_broadcastpipe_broadcaster;
+    public Pipe<double> broadcastpipe
+    {
+        get {
+            return m_broadcastpipe;
+        }
+        set {
+            m_broadcastpipe = value;
+            m_broadcastpipe_broadcaster = new PipeBroadcaster<double>(value, 3);
+            RRAssert.AreEqual(m_broadcastpipe_broadcaster.MaxBacklog, 3);
+            m_broadcastpipe_broadcaster.MaxBacklog = 3;
 
-                   RobotRaconteur.Timer t = RobotRaconteurNode.s.CreateTimer(100, delegate(TimerEvent ev) {
-                       for (double i = 0; i < 10; i++)
-                       {
-                           m_broadcastpipe_broadcaster.AsyncSendPacket(20);
-                       }
-                   });
+            RobotRaconteur.Timer t = RobotRaconteurNode.s.CreateTimer(100, delegate(TimerEvent ev) {
+                for (double i = 0; i < 10; i++)
+                {
+                    m_broadcastpipe_broadcaster.AsyncSendPacket(20);
+                }
+            });
 
-                   t.Start();
-               }
-           }
+            t.Start();
+        }
+    }
 
-           public void test_callbacks()
-           {
-               cb1.GetClientFunction(ServerEndpoint.CurrentEndpoint)();
-               cb2.GetClientFunction(ServerEndpoint.CurrentEndpoint)(739.2, 0.392);
-               double res = cb3.GetClientFunction(ServerEndpoint.CurrentEndpoint)(34, 45);
-               RRAssert.AreEqual(res, (34 + 45 + 3.14));
-               RRAssert.AreEqual(cb_meaning_of_life.GetClientFunction(ServerEndpoint.CurrentEndpoint)(), 42);
+    public void test_callbacks()
+    {
+        cb1.GetClientFunction(ServerEndpoint.CurrentEndpoint)();
+        cb2.GetClientFunction(ServerEndpoint.CurrentEndpoint)(739.2, 0.392);
+        double res = cb3.GetClientFunction(ServerEndpoint.CurrentEndpoint)(34, 45);
+        RRAssert.AreEqual(res, (34 + 45 + 3.14));
+        RRAssert.AreEqual(cb_meaning_of_life.GetClientFunction(ServerEndpoint.CurrentEndpoint)(), 42);
 
-               RRAssert.ThrowsException<RobotRaconteurRemoteException>(
-                   () => cb_errtest.GetClientFunction(ServerEndpoint.CurrentEndpoint)());
-           }
+        RRAssert.ThrowsException<RobotRaconteurRemoteException>(
+            () => cb_errtest.GetClientFunction(ServerEndpoint.CurrentEndpoint)());
+    }
 
-           Callback<Action> m_cb1;
-           public Callback<Action> cb1
-           {
-               get {
-                   return m_cb1;
-               }
-               set {
-                   m_cb1 = value;
-               }
-           }
+    Callback<Action> m_cb1;
+    public Callback<Action> cb1
+    {
+        get {
+            return m_cb1;
+        }
+        set {
+            m_cb1 = value;
+        }
+    }
 
-           Callback<Action<double, double>> m_cb2;
-           public Callback<Action<double, double>> cb2
-           {
-               get {
-                   return m_cb2;
-               }
-               set {
-                   m_cb2 = value;
-               }
-           }
+    Callback<Action<double, double>> m_cb2;
+    public Callback<Action<double, double>> cb2
+    {
+        get {
+            return m_cb2;
+        }
+        set {
+            m_cb2 = value;
+        }
+    }
 
-           Callback<Func<double, double, double>> m_cb3;
-           public Callback<Func<double, double, double>> cb3
-           {
-               get {
-                   return m_cb3;
-               }
-               set {
-                   m_cb3 = value;
-               }
-           }
+    Callback<Func<double, double, double>> m_cb3;
+    public Callback<Func<double, double, double>> cb3
+    {
+        get {
+            return m_cb3;
+        }
+        set {
+            m_cb3 = value;
+        }
+    }
 
-           Callback<Func<int>> m_cb_meaning_of_life;
-           public Callback<Func<int>> cb_meaning_of_life
-           {
-               get {
-                   return m_cb_meaning_of_life;
-               }
-               set {
-                   m_cb_meaning_of_life = value;
-               }
-           }
+    Callback<Func<int>> m_cb_meaning_of_life;
+    public Callback<Func<int>> cb_meaning_of_life
+    {
+        get {
+            return m_cb_meaning_of_life;
+        }
+        set {
+            m_cb_meaning_of_life = value;
+        }
+    }
 
-           Callback<Action> m_cb_errtest;
-           public Callback<Action> cb_errtest
-           {
-               get {
-                   return m_cb_errtest;
-               }
-               set {
-                   m_cb_errtest = value;
-               }
-           }
+    Callback<Action> m_cb_errtest;
+    public Callback<Action> cb_errtest
+    {
+        get {
+            return m_cb_errtest;
+        }
+        set {
+            m_cb_errtest = value;
+        }
+    }
 
-           Wire<double[]> m_w1;
-           public Wire<double[]> w1
-           {
-               get {
-                   return m_w1;
-               }
-               set {
-                   m_w1 = value;
-                   m_w1.WireConnectCallback = w1_connect_callback;
-               }
-           }
-           void w1_connect_callback(Wire<double[]> wire, Wire<double[]>.WireConnection con)
-           {
-               con.WireValueChanged += w1_value_changed;
-           }
+    Wire<double[]> m_w1;
+    public Wire<double[]> w1
+    {
+        get {
+            return m_w1;
+        }
+        set {
+            m_w1 = value;
+            m_w1.WireConnectCallback = w1_connect_callback;
+        }
+    }
+    void w1_connect_callback(Wire<double[]> wire, Wire<double[]>.WireConnection con)
+    {
+        con.WireValueChanged += w1_value_changed;
+    }
 
-           void w1_value_changed(Wire<double[]>.WireConnection con, double[] val, TimeSpec time)
-           {
-               con.OutValue = con.InValue;
-           }
+    void w1_value_changed(Wire<double[]>.WireConnection con, double[] val, TimeSpec time)
+    {
+        con.OutValue = con.InValue;
+    }
 
-           Wire<teststruct2> m_w2;
-           public Wire<teststruct2> w2
-           {
-               get {
-                   return m_w2;
-               }
-               set {
-                   m_w2 = value;
-                   m_w2.WireConnectCallback = w2_connect_callback;
-               }
-           }
-           void w2_connect_callback(Wire<teststruct2> wire, Wire<teststruct2>.WireConnection con)
-           {
-               con.WireValueChanged += w2_value_changed;
-           }
+    Wire<teststruct2> m_w2;
+    public Wire<teststruct2> w2
+    {
+        get {
+            return m_w2;
+        }
+        set {
+            m_w2 = value;
+            m_w2.WireConnectCallback = w2_connect_callback;
+        }
+    }
+    void w2_connect_callback(Wire<teststruct2> wire, Wire<teststruct2>.WireConnection con)
+    {
+        con.WireValueChanged += w2_value_changed;
+    }
 
-           void w2_value_changed(Wire<teststruct2>.WireConnection con, teststruct2 val, TimeSpec time)
-           {
-               con.OutValue = con.InValue;
-           }
+    void w2_value_changed(Wire<teststruct2>.WireConnection con, teststruct2 val, TimeSpec time)
+    {
+        con.OutValue = con.InValue;
+    }
 
-           Wire<MultiDimArray> m_w3;
-           public Wire<MultiDimArray> w3
-           {
-               get {
-                   return m_w3;
-               }
-               set {
-                   m_w3 = value;
-                   m_w3.WireConnectCallback = w3_connect_callback;
-               }
-           }
-           void w3_connect_callback(Wire<MultiDimArray> wire, Wire<MultiDimArray>.WireConnection con)
-           {
-               con.WireValueChanged += w3_value_changed;
-           }
+    Wire<MultiDimArray> m_w3;
+    public Wire<MultiDimArray> w3
+    {
+        get {
+            return m_w3;
+        }
+        set {
+            m_w3 = value;
+            m_w3.WireConnectCallback = w3_connect_callback;
+        }
+    }
+    void w3_connect_callback(Wire<MultiDimArray> wire, Wire<MultiDimArray>.WireConnection con)
+    {
+        con.WireValueChanged += w3_value_changed;
+    }
 
-           void w3_value_changed(Wire<MultiDimArray>.WireConnection con, MultiDimArray val, TimeSpec time)
-           {
-               con.OutValue = con.InValue;
-           }
+    void w3_value_changed(Wire<MultiDimArray>.WireConnection con, MultiDimArray val, TimeSpec time)
+    {
+        con.OutValue = con.InValue;
+    }
 
-           Wire<double> m_broadcastwire;
-           WireBroadcaster<double> m_broadcastwire_broadcaster;
+    Wire<double> m_broadcastwire;
+    WireBroadcaster<double> m_broadcastwire_broadcaster;
 
-           public Wire<double> broadcastwire
-           {
-               get {
-                   return m_broadcastwire;
-               }
-               set {
-                   if (m_broadcastwire != null)
-                       throw new Exception("");
-                   m_broadcastwire = value;
-                   m_broadcastwire_broadcaster = new WireBroadcaster<double>(value);
+    public Wire<double> broadcastwire
+    {
+        get {
+            return m_broadcastwire;
+        }
+        set {
+            if (m_broadcastwire != null)
+                throw new Exception("");
+            m_broadcastwire = value;
+            m_broadcastwire_broadcaster = new WireBroadcaster<double>(value);
 
-                   RobotRaconteur.Timer t = RobotRaconteurNode.s.CreateTimer(40, delegate(TimerEvent ev) {
-                       try
-                       {
-                           for (double i = 0; i < 100; i++)
-                           {
-                               m_broadcastwire_broadcaster.OutValue = i;
-                           }
-                       }
-                       catch
-                       {}
-                   });
-                   t.Start();
-               }
-           }
+            RobotRaconteur.Timer t = RobotRaconteurNode.s.CreateTimer(40, delegate(TimerEvent ev) {
+                try
+                {
+                    for (double i = 0; i < 100; i++)
+                    {
+                        m_broadcastwire_broadcaster.OutValue = i;
+                    }
+                }
+                catch
+                {}
+            });
+            t.Start();
+        }
+    }
 
-           ArrayMemory<double> m_m1 = new ArrayMemory<double>(new double[] {
-               -2.675014e-13, 6.884672e-07,  4.855899e-02,  1.634267e-08,  -5.346105e+06, 9.245749e+09,  2.174639e+16,
-               -3.574166e+04, 3.063678e+16,  4.748279e-16,  -1.478723e-16, 1.507042e-05,  -2.046271e+13, 4.014775e+06,
-               4.140740e+10,  1.318907e+16,  -2.312403e+17, 4.463696e-13,  9.173421e-04,  6.169183e-21,  3.643045e+09,
-               -3.784476e+13, -1.878617e-21, -4.122785e+01, -2.477761e+15, -5.220540e-11, -3.930894e-19, 3.980082e-12,
-               -3.681569e-20, 4.675366e+19,  -7.454667e-06, -1.529932e+17, -3.707663e-04, -3.356188e-20, -2.393304e-07,
-               1.339372e-18,  -3.735916e-15, 1.715447e+01,  1.316085e+02,  9.603036e-05,  1.458992e+16,  9.228113e+11,
-               1.099841e-12,  -2.484793e-09, 4.826956e-19,  -3.662630e-11, -3.274562e+10, 1.866042e-12,  4.061219e-13,
-               1.307997e-18,  -1.210979e+08, 4.036328e+02,  -2.713849e-11, -3.673995e-01, -4.576021e+03, 1.519751e+03,
-               1.792427e-16,  -2.033399e+18, 4.341947e+08,  -1.699292e-09, -1.007978e-21, 3.200139e-15,  -3.157557e+03,
-               -3.717883e-15, 4.337614e+02,  -3.666534e-12, -1.821013e-14, -2.260577e-20, 1.722045e-06,  1.886614e+00,
-               -1.278609e+15, 2.923499e-03,  4.969081e+02,  4.438380e-06,  -3.890489e-11, -3.261564e-17, 6.172945e-10,
-               4.951740e+19,  3.460327e+11,  -3.600349e-16, 2.419445e+11,  -9.124824e+10, 4.127522e+04,  1.443468e+00,
-               -3.968841e-21, -2.507203e+05, 2.214239e+13,  -3.327687e+07, 1.167160e+09,  -4.361249e-11, -4.609514e+14,
-               -2.461408e+13, 5.584758e+06,  3.989706e-07,  2.597151e-12,  -2.961640e+08, -2.173964e-02, -1.866864e-11,
-               4.832786e-08,  2.713705e-07
-           });
-           public ArrayMemory<double> m1
-           {
-               get {
+    ArrayMemory<double> m_m1 = new ArrayMemory<double>(new double[] {
+        -2.675014e-13, 6.884672e-07,  4.855899e-02,  1.634267e-08,  -5.346105e+06, 9.245749e+09,  2.174639e+16,
+        -3.574166e+04, 3.063678e+16,  4.748279e-16,  -1.478723e-16, 1.507042e-05,  -2.046271e+13, 4.014775e+06,
+        4.140740e+10,  1.318907e+16,  -2.312403e+17, 4.463696e-13,  9.173421e-04,  6.169183e-21,  3.643045e+09,
+        -3.784476e+13, -1.878617e-21, -4.122785e+01, -2.477761e+15, -5.220540e-11, -3.930894e-19, 3.980082e-12,
+        -3.681569e-20, 4.675366e+19,  -7.454667e-06, -1.529932e+17, -3.707663e-04, -3.356188e-20, -2.393304e-07,
+        1.339372e-18,  -3.735916e-15, 1.715447e+01,  1.316085e+02,  9.603036e-05,  1.458992e+16,  9.228113e+11,
+        1.099841e-12,  -2.484793e-09, 4.826956e-19,  -3.662630e-11, -3.274562e+10, 1.866042e-12,  4.061219e-13,
+        1.307997e-18,  -1.210979e+08, 4.036328e+02,  -2.713849e-11, -3.673995e-01, -4.576021e+03, 1.519751e+03,
+        1.792427e-16,  -2.033399e+18, 4.341947e+08,  -1.699292e-09, -1.007978e-21, 3.200139e-15,  -3.157557e+03,
+        -3.717883e-15, 4.337614e+02,  -3.666534e-12, -1.821013e-14, -2.260577e-20, 1.722045e-06,  1.886614e+00,
+        -1.278609e+15, 2.923499e-03,  4.969081e+02,  4.438380e-06,  -3.890489e-11, -3.261564e-17, 6.172945e-10,
+        4.951740e+19,  3.460327e+11,  -3.600349e-16, 2.419445e+11,  -9.124824e+10, 4.127522e+04,  1.443468e+00,
+        -3.968841e-21, -2.507203e+05, 2.214239e+13,  -3.327687e+07, 1.167160e+09,  -4.361249e-11, -4.609514e+14,
+        -2.461408e+13, 5.584758e+06,  3.989706e-07,  2.597151e-12,  -2.961640e+08, -2.173964e-02, -1.866864e-11,
+        4.832786e-08,  2.713705e-07
+    });
+    public ArrayMemory<double> m1
+    {
+        get {
 
-                   return m_m1;
-               }
-               set {
-                   throw new InvalidOperationException();
-               }
-           }
-           MultiDimArrayMemory<double> m_m2 = new MultiDimArrayMemory<double>(
-               new MultiDimArray(new uint[] { 10, 10, 10, 10, 10 }, new double[100000]));
-           public MultiDimArrayMemory<double> m2
-           {
-               get {
+            return m_m1;
+        }
+        set {
+            throw new InvalidOperationException();
+        }
+    }
+    MultiDimArrayMemory<double> m_m2 =
+        new MultiDimArrayMemory<double>(new MultiDimArray(new uint[] { 10, 10, 10, 10, 10 }, new double[100000]));
+    public MultiDimArrayMemory<double> m2
+    {
+        get {
 
-                   return m_m2;
-               }
-               set {
-                   throw new InvalidOperationException();
-               }
-           }
-           MultiDimArrayMemory<byte> m_m3 =
-               new MultiDimArrayMemory<byte>(new MultiDimArray(new uint[] { 1024, 1024 }, new byte[1024 * 1024]));
-           public MultiDimArrayMemory<byte> m3
-           {
-               get {
+            return m_m2;
+        }
+        set {
+            throw new InvalidOperationException();
+        }
+    }
+    MultiDimArrayMemory<byte> m_m3 =
+        new MultiDimArrayMemory<byte>(new MultiDimArray(new uint[] { 1024, 1024 }, new byte[1024 * 1024]));
+    public MultiDimArrayMemory<byte> m3
+    {
+        get {
 
-                   return m_m3;
-               }
-               set {
-                   throw new InvalidOperationException();
-               }
-           }
-           }
+            return m_m3;
+        }
+        set {
+            throw new InvalidOperationException();
+        }
+    }
+}
 
-           public class sub1_impl : sub1, IRobotRaconteurMonitorObject
-           {
-               double[] m_d1;
-               public double[] d1
-               {
-                   get {
-                       return m_d1;
-                   }
-                   set {
-                       m_d1 = value;
-                   }
-               }
+public class sub1_impl : sub1, IRobotRaconteurMonitorObject
+{
+    double[] m_d1;
+    public double[] d1
+    {
+        get {
+            return m_d1;
+        }
+        set {
+            m_d1 = value;
+        }
+    }
 
-               MultiDimArray m_d2;
-               public MultiDimArray d2
-               {
-                   get {
-                       return m_d2;
-                   }
-                   set {
-                       m_d2 = value;
-                   }
-               }
+    MultiDimArray m_d2;
+    public MultiDimArray d2
+    {
+        get {
+            return m_d2;
+        }
+        set {
+            m_d2 = value;
+        }
+    }
 
-               public string m_s_ind;
+    public string m_s_ind;
 
-               public string s_ind
-               {
-                   get {
-                       return m_s_ind;
-                   }
-                   set {}
-               }
+    public string s_ind
+    {
+        get {
+            return m_s_ind;
+        }
+        set {}
+    }
 
-               public int m_i_ind;
-               public int i_ind
-               {
-                   get {
-                       return m_i_ind;
-                   }
-                   set {}
-               }
+    public int m_i_ind;
+    public int i_ind
+    {
+        get {
+            return m_i_ind;
+        }
+        set {}
+    }
 
-               sub2_impl o2_1 = new sub2_impl();
+    sub2_impl o2_1 = new sub2_impl();
 
-               public sub2 get_o2_1()
-               {
-                   return o2_1;
-               }
+    public sub2 get_o2_1()
+    {
+        return o2_1;
+    }
 
-               Dictionary<int, sub2_impl> o2_2 = new Dictionary<int, sub2_impl>();
+    Dictionary<int, sub2_impl> o2_2 = new Dictionary<int, sub2_impl>();
 
-               public sub2 get_o2_2(int ind)
-               {
-                   if (o2_2.ContainsKey(ind))
-                       return o2_2[ind];
-                   sub2_impl o = new sub2_impl();
-                   o.i_ind = ind;
-                   o2_2[ind] = o;
-                   return o;
-               }
+    public sub2 get_o2_2(int ind)
+    {
+        if (o2_2.ContainsKey(ind))
+            return o2_2[ind];
+        sub2_impl o = new sub2_impl();
+        o.i_ind = ind;
+        o2_2[ind] = o;
+        return o;
+    }
 
-               Dictionary<string, sub2_impl> o2_3 = new Dictionary<string, sub2_impl>();
+    Dictionary<string, sub2_impl> o2_3 = new Dictionary<string, sub2_impl>();
 
-               public sub2 get_o2_3(string ind)
-               {
-                   if (o2_3.ContainsKey(ind))
-                       return o2_3[ind];
-                   sub2_impl o = new sub2_impl();
-                   o.s_ind = ind;
-                   o2_3[ind] = o;
-                   return o;
-               }
+    public sub2 get_o2_3(string ind)
+    {
+        if (o2_3.ContainsKey(ind))
+            return o2_3[ind];
+        sub2_impl o = new sub2_impl();
+        o.s_ind = ind;
+        o2_3[ind] = o;
+        return o;
+    }
 
-               public void RobotRaconteurMonitorEnter()
-               {
-                   Monitor.Enter(this);
-               }
+    public void RobotRaconteurMonitorEnter()
+    {
+        Monitor.Enter(this);
+    }
 
-               public void RobotRaconteurMonitorEnter(int timeout)
-               {
-                   if (!Monitor.TryEnter(this, timeout))
-                       throw new TimeoutException();
-               }
+    public void RobotRaconteurMonitorEnter(int timeout)
+    {
+        if (!Monitor.TryEnter(this, timeout))
+            throw new TimeoutException();
+    }
 
-               public void RobotRaconteurMonitorExit()
-               {
-                   Monitor.Exit(this);
-               }
-           }
+    public void RobotRaconteurMonitorExit()
+    {
+        Monitor.Exit(this);
+    }
+}
 
-           public class sub2_impl : sub2
-           {
-               public string m_s_ind;
+public class sub2_impl : sub2
+{
+    public string m_s_ind;
 
-               public string s_ind
-               {
-                   get {
-                       return m_s_ind;
-                   }
-                   set {}
-               }
+    public string s_ind
+    {
+        get {
+            return m_s_ind;
+        }
+        set {}
+    }
 
-               public int m_i_ind;
-               public int i_ind
-               {
-                   get {
-                       return m_i_ind;
-                   }
-                   set {}
-               }
+    public int m_i_ind;
+    public int i_ind
+    {
+        get {
+            return m_i_ind;
+        }
+        set {}
+    }
 
-               string m_data;
-               public string data
-               {
-                   get {
-                       return m_data;
-                   }
-                   set {
-                       m_data = value;
-                   }
-               }
+    string m_data;
+    public string data
+    {
+        get {
+            return m_data;
+        }
+        set {
+            m_data = value;
+        }
+    }
 
-               Dictionary<string, sub3_impl> o3_1 = new Dictionary<string, sub3_impl>();
+    Dictionary<string, sub3_impl> o3_1 = new Dictionary<string, sub3_impl>();
 
-               public sub3 get_o3_1(string ind)
-               {
-                   if (o3_1.ContainsKey(ind))
-                       return o3_1[ind];
-                   sub3_impl o = new sub3_impl();
-                   o.m_ind = ind;
-                   o3_1[ind] = o;
-                   return o;
-               }
-           }
+    public sub3 get_o3_1(string ind)
+    {
+        if (o3_1.ContainsKey(ind))
+            return o3_1[ind];
+        sub3_impl o = new sub3_impl();
+        o.m_ind = ind;
+        o3_1[ind] = o;
+        return o;
+    }
+}
 
-           public class sub3_impl : sub3
-           {
-               string m_data2;
-               public string data2
-               {
-                   get {
-                       return m_data2;
-                   }
-                   set {
-                       m_data2 = value;
-                   }
-               }
+public class sub3_impl : sub3
+{
+    string m_data2;
+    public string data2
+    {
+        get {
+            return m_data2;
+        }
+        set {
+            m_data2 = value;
+        }
+    }
 
-               double m_data3;
-               public double data3
-               {
-                   get {
-                       return m_data3;
-                   }
-                   set {
-                       m_data3 = value;
-                   }
-               }
+    double m_data3;
+    public double data3
+    {
+        get {
+            return m_data3;
+        }
+        set {
+            m_data3 = value;
+        }
+    }
 
-               public double add(double d)
-               {
-                   return d + 42;
-               }
+    public double add(double d)
+    {
+        return d + 42;
+    }
 
-               public string m_ind;
-               public string ind
-               {
-                   get {
-                       return m_ind;
-                   }
-                   set {}
-               }
-           }
+    public string m_ind;
+    public string ind
+    {
+        get {
+            return m_ind;
+        }
+        set {}
+    }
+}
 
-           public class TestService2SubObj : com.robotraconteur.testing.TestService2.subobj
-           {
-               public double add_val(double v)
-               {
-                   return v + 1;
-               }
-           }
-           }
+public class TestService2SubObj : com.robotraconteur.testing.TestService2.subobj
+{
+    public double add_val(double v)
+    {
+        return v + 1;
+    }
+}
+}

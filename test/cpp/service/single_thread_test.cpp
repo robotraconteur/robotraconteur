@@ -15,11 +15,31 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
+int my_argc;
+char** my_argv;
+
 static std::string service_url;
+
+RR_SHARED_PTR<TestServerNodeConfig> test_server_node_config;
 
 static RR_BOOST_ASIO_IO_CONTEXT asio_io_context;
 
-TEST(RobotRaconteurServiceSingleThread, SingleThreadTest)
+class ServiceTest : public testing::Test
+{
+  protected:
+    RR_OVIRTUAL void SetUp() RR_OVERRIDE
+    {
+        if (!test_server_node_config)
+        {
+            test_server_node_config = RR_MAKE_SHARED<TestServerNodeConfig>("unit_service_test_st");
+            service_url = test_server_node_config->GetServiceURL("RobotRaconteurTestService");
+        }
+    }
+
+    RR_OVIRTUAL void TearDown() RR_OVERRIDE {}
+};
+
+TEST_F(ServiceTest, SingleThreadTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
@@ -39,11 +59,14 @@ TEST(RobotRaconteurServiceSingleThread, SingleThreadTest)
 
 int main(int argc, char* argv[])
 {
+
     testing::InitGoogleTest(&argc, argv);
-    TestServerNodeConfig server("unit_service_test_st");
-    service_url = server.GetServiceURL("RobotRaconteurTestService");
+    my_argc = argc;
+    my_argv = argv;
 
     int ret = RUN_ALL_TESTS();
+
+    test_server_node_config.reset();
 
     return ret;
 }

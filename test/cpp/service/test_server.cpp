@@ -14,9 +14,13 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteurTest;
 
 static RR_SHARED_PTR<TcpTransport> c;
+int my_argc;
+char** my_argv;
 
 TEST(RobotRaconteurTestServer, Server)
 {
+    ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "testprog", 22222, my_argc, my_argv);
+    c = node_setup.GetTcpTransport();
 
     RobotRaconteurTestServiceSupport s;
     s.RegisterServices(c);
@@ -34,9 +38,8 @@ TEST(RobotRaconteurTestServer, Server)
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
-
-    ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "testprog", 22222, argc, argv);
-    c = node_setup.GetTcpTransport();
+    my_argc = argc;
+    my_argv = argv;
 
     return RUN_ALL_TESTS();
 }

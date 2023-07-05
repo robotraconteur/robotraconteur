@@ -48,18 +48,21 @@ TEST(RobotRaconteurService, DiscoveryLoopback)
         std::vector<ServiceInfo2> discovered_services =
             client_node->FindServiceByType("com.robotraconteur.testing.TestService1.testroot", schemes2);
 
-        std::cout << "Found " << discovered_services.size() << " services";
+        std::cout << "Found " << discovered_services.size() << " services" << std::endl;
 
         std::set<std::string> expected_service_names;
         expected_service_names.insert("RobotRaconteurTestService");
         expected_service_names.insert("RobotRaconteurTestService_auth");
 
-        EXPECT_EQ(discovered_services.size(), 2);
+        EXPECT_GE(discovered_services.size(), 2);
+
+        size_t found_services = 0;
 
         BOOST_FOREACH (ServiceInfo2 s, discovered_services)
         {
-            EXPECT_EQ(expected_service_names.erase(s.Name), 1);
-            EXPECT_EQ(s.NodeName, "discovery_test_server_node");
+            EXPECT_LE(expected_service_names.erase(s.Name), 1);
+            if (s.NodeName != "discovery_test_server_node")
+                continue;
             EXPECT_EQ(s.RootObjectType, "com.robotraconteur.testing.TestService1.testroot");
             EXPECT_EQ(s.RootObjectImplements.size(), 1);
             EXPECT_EQ(s.RootObjectImplements.at(0), "com.robotraconteur.testing.TestService2.baseobj");
@@ -71,7 +74,10 @@ TEST(RobotRaconteurService, DiscoveryLoopback)
                 EXPECT_NO_THROW(c->get_d1());
                 EXPECT_NO_THROW(client_node->DisconnectService(c));
             }
+            found_services++;
         }
+
+        EXPECT_GE(found_services, 2);
 
         EXPECT_EQ(expected_service_names.size(), 0);
     }

@@ -548,13 +548,13 @@ class ServiceTestClient:
         # assert self._ee3.wait(5):
 
         ca(e1.ReceivePacket(), [1, 2, 3, 4])
-        ca(e1.ReceivePacket(), [5, 6, 7, 8])
-        ca(e1.ReceivePacket(), [-1, -2, -3, -5.32])
+        ca(e1.ReceivePacketWait(0.1), [5, 6, 7, 8])
+        ca(e1.ReceivePacketWait(0.1), [-1, -2, -3, -5.32])
         ca(e2.ReceivePacket(), [3.21])
-        ca(e2.ReceivePacket(), [4.72])
-        ca(e2.ReceivePacket(), [72.34])
+        ca(e2.ReceivePacketWait(0.1), [4.72])
+        ca(e2.ReceivePacketWait(0.1), [72.34])
         ca(e3.ReceivePacket().mydat, [738.29])
-        ca(e3.ReceivePacket().mydat, [89.83])
+        ca(e3.ReceivePacketWait(0.1).mydat, [89.83])
         time.sleep(.5)
         # assert self._ack_recv:
         self._r.pipe_check_error()

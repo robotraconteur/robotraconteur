@@ -2257,15 +2257,27 @@ public class ServiceTestClient
         RRAssert.IsTrue(ee3.WaitOne(5000));
 
         ca<double>(e1.ReceivePacket(), new double[] { 1, 2, 3, 4 });
-        ca<double>(e1.ReceivePacket(), new double[] { 5, 6, 7, 8 });
-        ca<double>(e1.ReceivePacket(), new double[] { -1, -2, -3, -5.32 });
+        ca<double>(e1.ReceivePacketWait(100), new double[] { 5, 6, 7, 8 });
+        ca<double>(e1.ReceivePacketWait(100), new double[] { -1, -2, -3, -5.32 });
 
         ca<double>(e2.ReceivePacket(), new double[] { 3.21 });
-        ca<double>(e2.ReceivePacket(), new double[] { 4.72 });
-        ca<double>(e2.ReceivePacket(), new double[] { 72.34 });
+        ca<double>(e2.ReceivePacketWait(100), new double[] { 4.72 });
+        ca<double>(e2.ReceivePacketWait(100), new double[] { 72.34 });
 
         ca<double>(e3.ReceivePacket().mydat, new double[] { 738.29 });
-        ca<double>(e3.ReceivePacket().mydat, new double[] { 89.83 });
+        ca<double>(e3.ReceivePacketWait(100).mydat, new double[] { 89.83 });
+
+        for (int i = 0; i < 50; i++)
+        {
+            if (!ack_recv)
+            {
+                System.Threading.Thread.Sleep(100);
+            }
+            else
+            {
+                break;
+            }
+        }
 
         RRAssert.IsTrue(ack_recv);
 

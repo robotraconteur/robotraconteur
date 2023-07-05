@@ -150,7 +150,7 @@
 #define RR_MEMBER_ARRAY_INIT2(x)
 #endif
 
-#ifndef BOOST_NO_CXX11_OVERRIDE
+#if __cplusplus >= 201103L
 #define RR_OVERRIDE override
 #define RR_OVIRTUAL
 #else

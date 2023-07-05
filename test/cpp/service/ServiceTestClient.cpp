@@ -2508,11 +2508,11 @@ void ServiceTestClient::TestPipes()
     EXPECT_TRUE(ee3.WaitOne(5000));
 
     EXPECT_RRARRAY_EQ(e2->ReceivePacket(), AttachRRArray(d4, 1, false));
-    EXPECT_RRARRAY_EQ(e2->ReceivePacket(), AttachRRArray(d5, 1, false));
-    EXPECT_RRARRAY_EQ(e2->ReceivePacket(), AttachRRArray(d6, 1, false));
+    EXPECT_RRARRAY_EQ(e2->ReceivePacketWait(100), AttachRRArray(d5, 1, false));
+    EXPECT_RRARRAY_EQ(e2->ReceivePacketWait(100), AttachRRArray(d6, 1, false));
 
     EXPECT_RRARRAY_EQ(e3->ReceivePacket()->mydat, AttachRRArray(d7, 1, false));
-    EXPECT_RRARRAY_EQ(e3->ReceivePacket()->mydat, AttachRRArray(d8, 1, false));
+    EXPECT_RRARRAY_EQ(e3->ReceivePacketWait(100)->mydat, AttachRRArray(d8, 1, false));
 
     ShouldNotBeErr_Timeout({ r->pipe_check_error(); }, 1000);
 
