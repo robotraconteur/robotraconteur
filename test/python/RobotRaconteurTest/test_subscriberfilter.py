@@ -157,10 +157,10 @@ def test_subscriber_attribute_filter():
 
 def test_subscriber_filter():
 
-    node1 = _init_node("test_node1", "service1", {})
-    node2 = _init_node("test_node2", "service1", {})
-    node3 = _init_node("test_node3", "service3", {})
-    node4 = _init_node("test_node4", "service2", {})
+    node1 = _init_node("test_node3", "service1", {})
+    node2 = _init_node("test_node4", "service1", {})
+    node3 = _init_node("test_node5", "service3", {})
+    node4 = _init_node("test_node6", "service2", {})
 
     _register_service_auth(node3, "service1")
 
@@ -169,14 +169,14 @@ def test_subscriber_filter():
 
     # Connect and disconnect to make sure everything is working
     c1 = client_node.ConnectService(
-        "rr+intra:///?nodename=test_node1&service=service1")
+        "rr+intra:///?nodename=test_node3&service=service1")
     c2 = client_node.ConnectService(
-        "rr+intra:///?nodename=test_node2&service=service1")
+        "rr+intra:///?nodename=test_node4&service=service1")
     cred1 = {"password": RR.VarValue("testpass1", "string")}
     c3 = client_node.ConnectService(
-        "rr+intra:///?nodename=test_node3&service=service1", "testuser1", cred1)
+        "rr+intra:///?nodename=test_node5&service=service1", "testuser1", cred1)
     c4 = client_node.ConnectService(
-        "rr+intra:///?nodename=test_node4&service=service2")
+        "rr+intra:///?nodename=test_node6&service=service2")
 
     client_node.DisconnectService(c1)
     client_node.DisconnectService(c2)
@@ -193,13 +193,13 @@ def test_subscriber_filter():
     _run_filter_test(client_node, filter1, 3)
 
     filter1_node = RR.ServiceSubscriptionFilterNode()
-    filter1_node.NodeName = "test_node1"
+    filter1_node.NodeName = "test_node3"
     filter1.Nodes.append(filter1_node)
     _run_filter_test(client_node, filter1, 1)
 
     filter2 = RR.ServiceSubscriptionFilter()
     filter2_node = RR.ServiceSubscriptionFilterNode()
-    filter2_node.NodeName = "test_node3"
+    filter2_node.NodeName = "test_node5"
     filter2_node.Username = "testuser1"
     filter2_node.Credentials = {"password": RR.VarValue("testpass1", "string")}
     filter2.ServiceNames.append("service1")
