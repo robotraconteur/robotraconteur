@@ -4673,6 +4673,10 @@ class IntraTransport(Transport):
         """
         return _RobotRaconteurPython.IntraTransport_Close(self)
 
+    def StartClient(self):
+        r"""Start the transport as a client"""
+        return _RobotRaconteurPython.IntraTransport_StartClient(self)
+
     def StartServer(self):
         r"""Start the server to listen for incoming client connections"""
         return _RobotRaconteurPython.IntraTransport_StartServer(self)
@@ -7928,6 +7932,389 @@ class vectorptr_subscriptionclientid(object):
 
 # Register vectorptr_subscriptionclientid in _RobotRaconteurPython:
 _RobotRaconteurPython.vectorptr_subscriptionclientid_swigregister(vectorptr_subscriptionclientid)
+class ServiceSubscriptionFilterAttribute(object):
+    r"""
+
+    ServiceSubscriptionFilterAttribute()
+
+    Subscription filter attribute for use with ServiceSubscriptionFilter
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    Name = property(_RobotRaconteurPython.ServiceSubscriptionFilterAttribute_Name_get, _RobotRaconteurPython.ServiceSubscriptionFilterAttribute_Name_set, doc=r"""(str) The attribute name. Empty for no name""")
+    Value = property(_RobotRaconteurPython.ServiceSubscriptionFilterAttribute_Value_get, _RobotRaconteurPython.ServiceSubscriptionFilterAttribute_Value_set, doc=r"""(str) The string value for the attribute""")
+    UseRegex = property(_RobotRaconteurPython.ServiceSubscriptionFilterAttribute_UseRegex_get, _RobotRaconteurPython.ServiceSubscriptionFilterAttribute_UseRegex_set)
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.ServiceSubscriptionFilterAttribute_swiginit(self, _RobotRaconteurPython.new_ServiceSubscriptionFilterAttribute(*args))
+
+    def IsMatch(self, *args):
+        return _RobotRaconteurPython.ServiceSubscriptionFilterAttribute_IsMatch(self, *args)
+    __swig_destroy__ = _RobotRaconteurPython.delete_ServiceSubscriptionFilterAttribute
+
+# Register ServiceSubscriptionFilterAttribute in _RobotRaconteurPython:
+_RobotRaconteurPython.ServiceSubscriptionFilterAttribute_swigregister(ServiceSubscriptionFilterAttribute)
+
+def CreateServiceSubscriptionFilterAttributeRegex(*args):
+    return _RobotRaconteurPython.CreateServiceSubscriptionFilterAttributeRegex(*args)
+class vector_subscriptionattribute(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute___nonzero__(self)
+
+    def __bool__(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute___bool__(self)
+
+    def __len__(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute___len__(self)
+
+    def __getslice__(self, i, j):
+        return _RobotRaconteurPython.vector_subscriptionattribute___getslice__(self, i, j)
+
+    def __setslice__(self, *args):
+        return _RobotRaconteurPython.vector_subscriptionattribute___setslice__(self, *args)
+
+    def __delslice__(self, i, j):
+        return _RobotRaconteurPython.vector_subscriptionattribute___delslice__(self, i, j)
+
+    def __delitem__(self, *args):
+        return _RobotRaconteurPython.vector_subscriptionattribute___delitem__(self, *args)
+
+    def __getitem__(self, *args):
+        return _RobotRaconteurPython.vector_subscriptionattribute___getitem__(self, *args)
+
+    def __setitem__(self, *args):
+        return _RobotRaconteurPython.vector_subscriptionattribute___setitem__(self, *args)
+
+    def pop(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_pop(self)
+
+    def append(self, x):
+        return _RobotRaconteurPython.vector_subscriptionattribute_append(self, x)
+
+    def empty(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_empty(self)
+
+    def size(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_size(self)
+
+    def swap(self, v):
+        return _RobotRaconteurPython.vector_subscriptionattribute_swap(self, v)
+
+    def begin(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_begin(self)
+
+    def end(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_end(self)
+
+    def rbegin(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_rbegin(self)
+
+    def rend(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_rend(self)
+
+    def clear(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_clear(self)
+
+    def get_allocator(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_get_allocator(self)
+
+    def pop_back(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_pop_back(self)
+
+    def erase(self, *args):
+        return _RobotRaconteurPython.vector_subscriptionattribute_erase(self, *args)
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.vector_subscriptionattribute_swiginit(self, _RobotRaconteurPython.new_vector_subscriptionattribute(*args))
+
+    def push_back(self, x):
+        return _RobotRaconteurPython.vector_subscriptionattribute_push_back(self, x)
+
+    def front(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_front(self)
+
+    def back(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_back(self)
+
+    def assign(self, n, x):
+        return _RobotRaconteurPython.vector_subscriptionattribute_assign(self, n, x)
+
+    def resize(self, *args):
+        return _RobotRaconteurPython.vector_subscriptionattribute_resize(self, *args)
+
+    def insert(self, *args):
+        return _RobotRaconteurPython.vector_subscriptionattribute_insert(self, *args)
+
+    def reserve(self, n):
+        return _RobotRaconteurPython.vector_subscriptionattribute_reserve(self, n)
+
+    def capacity(self):
+        return _RobotRaconteurPython.vector_subscriptionattribute_capacity(self)
+    __swig_destroy__ = _RobotRaconteurPython.delete_vector_subscriptionattribute
+
+# Register vector_subscriptionattribute in _RobotRaconteurPython:
+_RobotRaconteurPython.vector_subscriptionattribute_swigregister(vector_subscriptionattribute)
+class map_subscriptionattribute(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _RobotRaconteurPython.map_subscriptionattribute___nonzero__(self)
+
+    def __bool__(self):
+        return _RobotRaconteurPython.map_subscriptionattribute___bool__(self)
+
+    def __len__(self):
+        return _RobotRaconteurPython.map_subscriptionattribute___len__(self)
+    def __iter__(self):
+        return self.key_iterator()
+    def iterkeys(self):
+        return self.key_iterator()
+    def itervalues(self):
+        return self.value_iterator()
+    def iteritems(self):
+        return self.iterator()
+
+    def __getitem__(self, key):
+        return _RobotRaconteurPython.map_subscriptionattribute___getitem__(self, key)
+
+    def __delitem__(self, key):
+        return _RobotRaconteurPython.map_subscriptionattribute___delitem__(self, key)
+
+    def has_key(self, key):
+        return _RobotRaconteurPython.map_subscriptionattribute_has_key(self, key)
+
+    def keys(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_keys(self)
+
+    def values(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_values(self)
+
+    def items(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_items(self)
+
+    def __contains__(self, key):
+        return _RobotRaconteurPython.map_subscriptionattribute___contains__(self, key)
+
+    def key_iterator(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_key_iterator(self)
+
+    def value_iterator(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_value_iterator(self)
+
+    def __setitem__(self, *args):
+        return _RobotRaconteurPython.map_subscriptionattribute___setitem__(self, *args)
+
+    def asdict(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_asdict(self)
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.map_subscriptionattribute_swiginit(self, _RobotRaconteurPython.new_map_subscriptionattribute(*args))
+
+    def empty(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_empty(self)
+
+    def size(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_size(self)
+
+    def swap(self, v):
+        return _RobotRaconteurPython.map_subscriptionattribute_swap(self, v)
+
+    def begin(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_begin(self)
+
+    def end(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_end(self)
+
+    def rbegin(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_rbegin(self)
+
+    def rend(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_rend(self)
+
+    def clear(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_clear(self)
+
+    def get_allocator(self):
+        return _RobotRaconteurPython.map_subscriptionattribute_get_allocator(self)
+
+    def count(self, x):
+        return _RobotRaconteurPython.map_subscriptionattribute_count(self, x)
+
+    def erase(self, *args):
+        return _RobotRaconteurPython.map_subscriptionattribute_erase(self, *args)
+
+    def find(self, x):
+        return _RobotRaconteurPython.map_subscriptionattribute_find(self, x)
+
+    def lower_bound(self, x):
+        return _RobotRaconteurPython.map_subscriptionattribute_lower_bound(self, x)
+
+    def upper_bound(self, x):
+        return _RobotRaconteurPython.map_subscriptionattribute_upper_bound(self, x)
+    __swig_destroy__ = _RobotRaconteurPython.delete_map_subscriptionattribute
+
+# Register map_subscriptionattribute in _RobotRaconteurPython:
+_RobotRaconteurPython.map_subscriptionattribute_swigregister(map_subscriptionattribute)
+ServiceSubscriptionFilterAttributeGroupOperation_OR = _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroupOperation_OR
+r"""OR operation"""
+ServiceSubscriptionFilterAttributeGroupOperation_AND = _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroupOperation_AND
+r"""AND operation"""
+ServiceSubscriptionFilterAttributeGroupOperation_NOR = _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroupOperation_NOR
+r"""NOR operation. Also used for NOT"""
+ServiceSubscriptionFilterAttributeGroupOperation_NAND = _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroupOperation_NAND
+r"""NAND operation"""
+class ServiceSubscriptionFilterAttributeGroup(object):
+    r"""
+
+    ServiceSubscriptionFilterAttributeGroup()
+
+    Subscription filter attribute group for use with ServiceSubscriptionFilter
+
+    Used to combine multiple ServiceSubscriptionFilterAttribute objects for comparison using
+    AND, OR, NOR, or NAND logic. Other groups can be nested, to allow for complex comparisons.
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    Attributes = property(_RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_Attributes_get, _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_Attributes_set, doc=r"""(list) The list of attributes in the group""")
+    Groups = property(_RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_Groups_get, _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_Groups_set, doc=r"""(list) The nested groups in the group""")
+    Operation = property(_RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_Operation_get, _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_Operation_set, doc=r"""(RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation) The operation to use to combine the attributes""")
+    SplitStringAttribute = property(_RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_get, _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_set, doc=r"""(bool) True if string attributes will be split into a list with delimiter (default ',')""")
+    SplitStringDelimiter = property(_RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_get, _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_set, doc=r"""(str) The delimiter to use for splitting string attributes (default ',')""")
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_swiginit(self, _RobotRaconteurPython.new_ServiceSubscriptionFilterAttributeGroup(*args))
+
+    def IsMatch(self, *args):
+        return _RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_IsMatch(self, *args)
+    __swig_destroy__ = _RobotRaconteurPython.delete_ServiceSubscriptionFilterAttributeGroup
+
+# Register ServiceSubscriptionFilterAttributeGroup in _RobotRaconteurPython:
+_RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroup_swigregister(ServiceSubscriptionFilterAttributeGroup)
+class map_subscriptionattributegroup(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup___nonzero__(self)
+
+    def __bool__(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup___bool__(self)
+
+    def __len__(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup___len__(self)
+    def __iter__(self):
+        return self.key_iterator()
+    def iterkeys(self):
+        return self.key_iterator()
+    def itervalues(self):
+        return self.value_iterator()
+    def iteritems(self):
+        return self.iterator()
+
+    def __getitem__(self, key):
+        return _RobotRaconteurPython.map_subscriptionattributegroup___getitem__(self, key)
+
+    def __delitem__(self, key):
+        return _RobotRaconteurPython.map_subscriptionattributegroup___delitem__(self, key)
+
+    def has_key(self, key):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_has_key(self, key)
+
+    def keys(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_keys(self)
+
+    def values(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_values(self)
+
+    def items(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_items(self)
+
+    def __contains__(self, key):
+        return _RobotRaconteurPython.map_subscriptionattributegroup___contains__(self, key)
+
+    def key_iterator(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_key_iterator(self)
+
+    def value_iterator(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_value_iterator(self)
+
+    def __setitem__(self, *args):
+        return _RobotRaconteurPython.map_subscriptionattributegroup___setitem__(self, *args)
+
+    def asdict(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_asdict(self)
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.map_subscriptionattributegroup_swiginit(self, _RobotRaconteurPython.new_map_subscriptionattributegroup(*args))
+
+    def empty(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_empty(self)
+
+    def size(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_size(self)
+
+    def swap(self, v):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_swap(self, v)
+
+    def begin(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_begin(self)
+
+    def end(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_end(self)
+
+    def rbegin(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_rbegin(self)
+
+    def rend(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_rend(self)
+
+    def clear(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_clear(self)
+
+    def get_allocator(self):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_get_allocator(self)
+
+    def count(self, x):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_count(self, x)
+
+    def erase(self, *args):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_erase(self, *args)
+
+    def find(self, x):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_find(self, x)
+
+    def lower_bound(self, x):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_lower_bound(self, x)
+
+    def upper_bound(self, x):
+        return _RobotRaconteurPython.map_subscriptionattributegroup_upper_bound(self, x)
+    __swig_destroy__ = _RobotRaconteurPython.delete_map_subscriptionattributegroup
+
+# Register map_subscriptionattributegroup in _RobotRaconteurPython:
+_RobotRaconteurPython.map_subscriptionattributegroup_swigregister(map_subscriptionattributegroup)
 class WrappedServiceSubscriptionFilterPredicateDirector(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -7969,6 +8356,8 @@ class WrappedServiceSubscriptionFilter(object):
     Nodes = property(_RobotRaconteurPython.WrappedServiceSubscriptionFilter_Nodes_get, _RobotRaconteurPython.WrappedServiceSubscriptionFilter_Nodes_set)
     ServiceNames = property(_RobotRaconteurPython.WrappedServiceSubscriptionFilter_ServiceNames_get, _RobotRaconteurPython.WrappedServiceSubscriptionFilter_ServiceNames_set)
     TransportSchemes = property(_RobotRaconteurPython.WrappedServiceSubscriptionFilter_TransportSchemes_get, _RobotRaconteurPython.WrappedServiceSubscriptionFilter_TransportSchemes_set)
+    Attributes = property(_RobotRaconteurPython.WrappedServiceSubscriptionFilter_Attributes_get, _RobotRaconteurPython.WrappedServiceSubscriptionFilter_Attributes_set)
+    AttributesMatchOperation = property(_RobotRaconteurPython.WrappedServiceSubscriptionFilter_AttributesMatchOperation_get, _RobotRaconteurPython.WrappedServiceSubscriptionFilter_AttributesMatchOperation_set)
 
     def SetRRPredicateDirector(self, director, id):
         return _RobotRaconteurPython.WrappedServiceSubscriptionFilter_SetRRPredicateDirector(self, director, id)
@@ -8142,6 +8531,9 @@ class WrappedServiceSubscription(object):
 
     def UpdateServiceURL(self, *args):
         return _RobotRaconteurPython.WrappedServiceSubscription_UpdateServiceURL(self, *args)
+
+    def UpdateServiceByType(self, *args):
+        return _RobotRaconteurPython.WrappedServiceSubscription_UpdateServiceByType(self, *args)
     __swig_destroy__ = _RobotRaconteurPython.delete_WrappedServiceSubscription
 
 # Register WrappedServiceSubscription in _RobotRaconteurPython:

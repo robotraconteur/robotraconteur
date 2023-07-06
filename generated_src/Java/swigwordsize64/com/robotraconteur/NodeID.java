@@ -120,4 +120,8 @@ public NodeID(byte[] id)
     this(RobotRaconteurJavaJNI.new_NodeID__SWIG_1(id), true);
   }
 
+  public NodeID(NodeID id) {
+    this(RobotRaconteurJavaJNI.new_NodeID__SWIG_2(NodeID.getCPtr(id), id), true);
+  }
+
 }

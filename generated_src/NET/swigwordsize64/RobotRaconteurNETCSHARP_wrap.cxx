@@ -2197,7 +2197,7 @@ return boost::dynamic_pointer_cast<RobotRaconteur::MemoryDefinition>(t);
 
 };
 
-SWIGINTERN RobotRaconteur::NodeID *new_RobotRaconteur_NodeID__SWIG_2(uint8_t const bytes[16],int32_t bytes_len){
+SWIGINTERN RobotRaconteur::NodeID *new_RobotRaconteur_NodeID__SWIG_3(uint8_t const bytes[16],int32_t bytes_len){
 		if (bytes_len!=16) throw InvalidArgumentException("Invalid NodeID bytes length");
 	
 		boost::array<uint8_t,16> b = {};
@@ -3254,6 +3254,175 @@ SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionClientID_Sg__Set
         if (index+values.size() > self->size())
           throw std::out_of_range("index");
         std::copy(values.begin(), values.end(), self->begin()+index);
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *new_std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg___SWIG_2(int capacity){
+        std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >* pv = 0;
+        if (capacity >= 0) {
+          pv = new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >();
+          pv->reserve(capacity);
+       } else {
+          throw std::out_of_range("capacity");
+       }
+       return pv;
+      }
+SWIGINTERN RobotRaconteur::ServiceSubscriptionFilterAttribute std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitemcopy(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index){
+        if (index>=0 && index<(int)self->size())
+          return (*self)[index];
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::value_type const &std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitem(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index){
+        if (index>=0 && index<(int)self->size())
+          return (*self)[index];
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__setitem(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,RobotRaconteur::ServiceSubscriptionFilterAttribute const &val){
+        if (index>=0 && index<(int)self->size())
+          (*self)[index] = val;
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__AddRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &values){
+        self->insert(self->end(), values.begin(), values.end());
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__GetRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,int count){
+        if (index < 0)
+          throw std::out_of_range("index");
+        if (count < 0)
+          throw std::out_of_range("count");
+        if (index >= (int)self->size()+1 || index+count > (int)self->size())
+          throw std::invalid_argument("invalid range");
+        return new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >(self->begin()+index, self->begin()+index+count);
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Insert(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,RobotRaconteur::ServiceSubscriptionFilterAttribute const &x){
+        if (index>=0 && index<(int)self->size()+1)
+          self->insert(self->begin()+index, x);
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__InsertRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &values){
+        if (index>=0 && index<(int)self->size()+1)
+          self->insert(self->begin()+index, values.begin(), values.end());
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__RemoveAt(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index){
+        if (index>=0 && index<(int)self->size())
+          self->erase(self->begin() + index);
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__RemoveRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,int count){
+        if (index < 0)
+          throw std::out_of_range("index");
+        if (count < 0)
+          throw std::out_of_range("count");
+        if (index >= (int)self->size()+1 || index+count > (int)self->size())
+          throw std::invalid_argument("invalid range");
+        self->erase(self->begin()+index, self->begin()+index+count);
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Repeat(RobotRaconteur::ServiceSubscriptionFilterAttribute const &value,int count){
+        if (count < 0)
+          throw std::out_of_range("count");
+        return new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >(count, value);
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Reverse__SWIG_0(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self){
+        std::reverse(self->begin(), self->end());
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Reverse__SWIG_1(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,int count){
+        if (index < 0)
+          throw std::out_of_range("index");
+        if (count < 0)
+          throw std::out_of_range("count");
+        if (index >= (int)self->size()+1 || index+count > (int)self->size())
+          throw std::invalid_argument("invalid range");
+        std::reverse(self->begin()+index, self->begin()+index+count);
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__SetRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &values){
+        if (index < 0)
+          throw std::out_of_range("index");
+        if (index+values.size() > self->size())
+          throw std::out_of_range("index");
+        std::copy(values.begin(), values.end(), self->begin()+index);
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitem(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end())
+          return iter->second;
+        else
+          throw std::out_of_range("key not found");
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__setitem(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const &x){
+        (*self)[key] = x;
+      }
+SWIGINTERN bool std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__ContainsKey(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = self->find(key);
+        return iter != self->end();
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Add(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const &value){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end())
+          throw std::out_of_range("key already exists");
+        self->insert(std::pair< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute >(key, value));
+      }
+SWIGINTERN bool std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Remove(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end()) {
+          self->erase(iter);
+          return true;
+        }
+        return false;
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__create_iterator_begin(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self){
+        return new std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator(self->begin());
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__get_next_key(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *swigiterator){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = *swigiterator;
+        (*swigiterator)++;
+        return (*iter).first;
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__destroy_iterator(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *swigiterator){
+        delete swigiterator;
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__getitem(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end())
+          return iter->second;
+        else
+          throw std::out_of_range("key not found");
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__setitem(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const &x){
+        (*self)[key] = x;
+      }
+SWIGINTERN bool std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__ContainsKey(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = self->find(key);
+        return iter != self->end();
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__Add(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const &value){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end())
+          throw std::out_of_range("key already exists");
+        self->insert(std::pair< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >(key, value));
+      }
+SWIGINTERN bool std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__Remove(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end()) {
+          self->erase(iter);
+          return true;
+        }
+        return false;
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__create_iterator_begin(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self){
+        return new std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator(self->begin());
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__get_next_key(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *swigiterator){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = *swigiterator;
+        (*swigiterator)++;
+        return (*iter).first;
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__destroy_iterator(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *swigiterator){
+        delete swigiterator;
       }
 SWIGINTERN boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > RobotRaconteur_RRLogRecord_GetNode(RobotRaconteur::RRLogRecord *self){
                 return self->Node.lock();
@@ -36316,7 +36485,55 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_1(const cha
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_2(unsigned char* jarg1, int jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_2(void * jarg1) {
+  void * jresult ;
+  RobotRaconteur::NodeID *arg1 = 0 ;
+  RobotRaconteur::NodeID *result = 0 ;
+  
+  arg1 = (RobotRaconteur::NodeID *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::NodeID const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (RobotRaconteur::NodeID *)new RobotRaconteur::NodeID((RobotRaconteur::NodeID const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_3(unsigned char* jarg1, int jarg2) {
   void * jresult ;
   uint8_t *arg1 ;
   int32_t arg2 ;
@@ -36326,7 +36543,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_2(unsigned 
   arg2 = (int32_t)jarg2; 
   
   try {
-    result = (RobotRaconteur::NodeID *)new_RobotRaconteur_NodeID__SWIG_2((unsigned char const (*))arg1,arg2);
+    result = (RobotRaconteur::NodeID *)new_RobotRaconteur_NodeID__SWIG_3((unsigned char const (*))arg1,arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -49582,6 +49799,49 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_IntraTransport_Close(void * ja
   
   try {
     (arg1)->Close();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_IntraTransport_StartClient(void * jarg1) {
+  RobotRaconteur::IntraTransport *arg1 = (RobotRaconteur::IntraTransport *) 0 ;
+  boost::shared_ptr< RobotRaconteur::IntraTransport > *smartarg1 = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::IntraTransport > *)jarg1;
+  arg1 = (RobotRaconteur::IntraTransport *)(smartarg1 ? smartarg1->get() : 0); 
+  
+  try {
+    (arg1)->StartClient();
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -77895,6 +78155,3407 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_vectorptr_subscriptionc
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Name_set(void * jarg1, const char * jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *arg2 = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  if (arg1) (arg1)->Name = *arg2;
+}
+
+
+SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Name_get(void * jarg1) {
+  const char * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  result = (std::string *) & ((arg1)->Name);
+  jresult = SWIG_csharp_string_callback(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Value_set(void * jarg1, const char * jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *arg2 = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  if (arg1) (arg1)->Value = *arg2;
+}
+
+
+SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Value_get(void * jarg1) {
+  const char * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  result = (std::string *) & ((arg1)->Value);
+  jresult = SWIG_csharp_string_callback(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_UseRegex_set(void * jarg1, unsigned int jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  bool arg2 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  arg2 = jarg2 ? true : false; 
+  if (arg1) (arg1)->UseRegex = arg2;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_UseRegex_get(void * jarg1) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  result = (bool) ((arg1)->UseRegex);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttribute__SWIG_0(const char * jarg1) {
+  void * jresult ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *result = 0 ;
+  
+  if (!jarg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg1_str(jarg1);
+  arg1 = &arg1_str; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)new RobotRaconteur::ServiceSubscriptionFilterAttribute((std::string const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttribute__SWIG_1(const char * jarg1, const char * jarg2) {
+  void * jresult ;
+  std::string *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *result = 0 ;
+  
+  if (!jarg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg1_str(jarg1);
+  arg1 = &arg1_str; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)new RobotRaconteur::ServiceSubscriptionFilterAttribute((std::string const &)*arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_0(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttribute const *)arg1)->IsMatch((std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_1(void * jarg1, const char * jarg2, const char * jarg3) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  if (!jarg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg3_str(jarg3);
+  arg3 = &arg3_str; 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttribute const *)arg1)->IsMatch((std::string const &)*arg2,(std::string const &)*arg3);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_2(void * jarg1, void * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::vector< std::string > *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  arg2 = (std::vector< std::string > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< std::string > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttribute const *)arg1)->IsMatch((std::vector< std::string > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_3(void * jarg1, void * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::map< std::string,std::string,std::less< std::string > > *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  arg2 = (std::map< std::string,std::string,std::less< std::string > > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,std::string,std::less< std::string > > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttribute const *)arg1)->IsMatch((std::map< std::string,std::string,std::less< std::string > > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_ServiceSubscriptionFilterAttribute(void * jarg1) {
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_CreateServiceSubscriptionFilterAttributeRegex__SWIG_0(const char * jarg1) {
+  void * jresult ;
+  std::string *arg1 = 0 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  if (!jarg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg1_str(jarg1);
+  arg1 = &arg1_str; 
+  
+  try {
+    result = RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex((std::string const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute(result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_CreateServiceSubscriptionFilterAttributeRegex__SWIG_1(const char * jarg1, const char * jarg2) {
+  void * jresult ;
+  std::string *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  if (!jarg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg1_str(jarg1);
+  arg1 = &arg1_str; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex((std::string const &)*arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute(result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Clear(void * jarg1) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    (arg1)->clear();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Add(void * jarg1, void * jarg2) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg2 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::ServiceSubscriptionFilterAttribute const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    (arg1)->push_back((RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_size(void * jarg1) {
+  unsigned int jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type result;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = ((std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const *)arg1)->size();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_capacity(void * jarg1) {
+  unsigned int jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type result;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = ((std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const *)arg1)->capacity();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_reserve(void * jarg1, unsigned int jarg2) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type arg2 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type)jarg2; 
+  
+  try {
+    (arg1)->reserve(arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_0() {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  
+  try {
+    result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_1(void * jarg1) {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >((std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_2(int jarg1) {
+  void * jresult ;
+  int arg1 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (int)jarg1; 
+  
+  try {
+    try {
+      result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new_std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg___SWIG_2(arg1);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_getitemcopy(void * jarg1, int jarg2) {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  
+  try {
+    try {
+      result = std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitemcopy(arg1,arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute(result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_getitem(void * jarg1, int jarg2) {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::value_type *result = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  
+  try {
+    try {
+      result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::value_type *) &std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitem(arg1,arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_setitem(void * jarg1, int jarg2, void * jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg3 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::ServiceSubscriptionFilterAttribute const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__setitem(arg1,arg2,(RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_AddRange(void * jarg1, void * jarg2) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg2 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__AddRange(arg1,(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_GetRange(void * jarg1, int jarg2, int jarg3) {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (int)jarg3; 
+  
+  try {
+    try {
+      result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__GetRange(arg1,arg2,arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    } catch(std::invalid_argument &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentException, (&_e)->what(), "");
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Insert(void * jarg1, int jarg2, void * jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg3 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::ServiceSubscriptionFilterAttribute const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Insert(arg1,arg2,(RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_InsertRange(void * jarg1, int jarg2, void * jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg3 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__InsertRange(arg1,arg2,(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_RemoveAt(void * jarg1, int jarg2) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__RemoveAt(arg1,arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_RemoveRange(void * jarg1, int jarg2, int jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (int)jarg3; 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__RemoveRange(arg1,arg2,arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    } catch(std::invalid_argument &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentException, (&_e)->what(), "");
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Repeat(void * jarg1, int jarg2) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = 0 ;
+  int arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::ServiceSubscriptionFilterAttribute const & is null", 0);
+    return 0;
+  } 
+  arg2 = (int)jarg2; 
+  
+  try {
+    try {
+      result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Repeat((RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg1,arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Reverse__SWIG_0(void * jarg1) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Reverse__SWIG_0(arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Reverse__SWIG_1(void * jarg1, int jarg2, int jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (int)jarg3; 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Reverse__SWIG_1(arg1,arg2,arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    } catch(std::invalid_argument &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentException, (&_e)->what(), "");
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_SetRange(void * jarg1, int jarg2, void * jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg3 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__SetRange(arg1,arg2,(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_vector_subscriptionattribute(void * jarg1) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionattribute__SWIG_0() {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionattribute__SWIG_1(void * jarg1) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_size(void * jarg1) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = ((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > const *)arg1)->size();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_empty(void * jarg1) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = (bool)((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > const *)arg1)->empty();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_Clear(void * jarg1) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    (arg1)->clear();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_getitem(void * jarg1, const char * jarg2) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    try {
+      result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *) &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitem(arg1,(std::string const &)*arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_setitem(void * jarg1, const char * jarg2, void * jarg3) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *arg3 = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__setitem(arg1,(std::string const &)*arg2,(RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg3);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_ContainsKey(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__ContainsKey(arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_Add(void * jarg1, const char * jarg2, void * jarg3) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *arg3 = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Add(arg1,(std::string const &)*arg2,(RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_Remove(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Remove(arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_create_iterator_begin(void * jarg1) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__create_iterator_begin(arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_get_next_key(void * jarg1, void * jarg2) {
+  const char * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *)jarg2; 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *) &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__get_next_key(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = SWIG_csharp_string_callback(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_destroy_iterator(void * jarg1, void * jarg2) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *)jarg2; 
+  
+  try {
+    std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__destroy_iterator(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_map_subscriptionattribute(void * jarg1) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Attributes_set(void * jarg1, void * jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg2; 
+  if (arg1) (arg1)->Attributes = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Attributes_get(void * jarg1) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)& ((arg1)->Attributes);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Groups_set(void * jarg1, void * jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg2; 
+  if (arg1) (arg1)->Groups = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Groups_get(void * jarg1) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)& ((arg1)->Groups);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Operation_set(void * jarg1, int jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg2 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg2; 
+  if (arg1) (arg1)->Operation = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Operation_get(void * jarg1) {
+  int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation) ((arg1)->Operation);
+  jresult = (int)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_set(void * jarg1, unsigned int jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  bool arg2 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = jarg2 ? true : false; 
+  if (arg1) (arg1)->SplitStringAttribute = arg2;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_get(void * jarg1) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (bool) ((arg1)->SplitStringAttribute);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_set(void * jarg1, char jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  char arg2 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (char)jarg2; 
+  if (arg1) (arg1)->SplitStringDelimiter = arg2;
+}
+
+
+SWIGEXPORT char SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_get(void * jarg1) {
+  char jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  char result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (char) ((arg1)->SplitStringDelimiter);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_0() {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *result = 0 ;
+  
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)new RobotRaconteur::ServiceSubscriptionFilterAttributeGroup();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_1(int jarg1) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg1 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg1; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)new RobotRaconteur::ServiceSubscriptionFilterAttributeGroup(arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_2(int jarg1, void * jarg2) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg1 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *argp2 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg1; 
+  argp2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg2; 
+  if (!argp2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >", 0);
+    return 0;
+  }
+  arg2 = *argp2; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)new RobotRaconteur::ServiceSubscriptionFilterAttributeGroup(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_3(int jarg1, void * jarg2) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg1 ;
+  SwigValueWrapper< std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > > arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *argp2 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg1; 
+  argp2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg2; 
+  if (!argp2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >", 0);
+    return 0;
+  }
+  arg2 = *argp2; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)new RobotRaconteur::ServiceSubscriptionFilterAttributeGroup(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_0(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::string *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const *)arg1)->IsMatch((std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_1(void * jarg1, void * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< std::string > *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (std::vector< std::string > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< std::string > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const *)arg1)->IsMatch((std::vector< std::string > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_2(void * jarg1, void * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::map< std::string,std::string,std::less< std::string > > *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (std::map< std::string,std::string,std::less< std::string > > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,std::string,std::less< std::string > > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const *)arg1)->IsMatch((std::map< std::string,std::string,std::less< std::string > > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_ServiceSubscriptionFilterAttributeGroup(void * jarg1) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionattributegroup__SWIG_0() {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *result = 0 ;
+  
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)new std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionattributegroup__SWIG_1(void * jarg1) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)new std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_size(void * jarg1) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::size_type result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    result = ((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > const *)arg1)->size();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_empty(void * jarg1) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    result = (bool)((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > const *)arg1)->empty();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_Clear(void * jarg1) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    (arg1)->clear();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_getitem(void * jarg1, const char * jarg2) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    try {
+      result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *) &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__getitem(arg1,(std::string const &)*arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_setitem(void * jarg1, const char * jarg2, void * jarg3) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *arg3 = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__setitem(arg1,(std::string const &)*arg2,(RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const &)*arg3);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_ContainsKey(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__ContainsKey(arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_Add(void * jarg1, const char * jarg2, void * jarg3) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *arg3 = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__Add(arg1,(std::string const &)*arg2,(RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_Remove(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__Remove(arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_create_iterator_begin(void * jarg1) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__create_iterator_begin(arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_get_next_key(void * jarg1, void * jarg2) {
+  const char * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *)jarg2; 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *) &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__get_next_key(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = SWIG_csharp_string_callback(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_destroy_iterator(void * jarg1, void * jarg2) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *)jarg2; 
+  
+  try {
+    std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__destroy_iterator(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_map_subscriptionattributegroup(void * jarg1) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
 SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilterPredicateDirector_Predicate(void * jarg1, void * jarg2) {
   unsigned int jresult ;
   RobotRaconteur::WrappedServiceSubscriptionFilterPredicateDirector *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilterPredicateDirector *) 0 ;
@@ -78342,6 +82003,62 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFi
   arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
   result = (std::vector< std::string > *)& ((arg1)->TransportSchemes);
   jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_Attributes_set(void * jarg1, void * jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionFilter *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *smartarg1 = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *)jarg2; 
+  if (arg1) (arg1)->Attributes = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_Attributes_get(void * jarg1) {
+  void * jresult ;
+  RobotRaconteur::WrappedServiceSubscriptionFilter *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *smartarg1 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *result = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
+  result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *)& ((arg1)->Attributes);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_AttributesMatchOperation_set(void * jarg1, int jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionFilter *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *) 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg2 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *smartarg1 = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg2; 
+  if (arg1) (arg1)->AttributesMatchOperation = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_AttributesMatchOperation_get(void * jarg1) {
+  int jresult ;
+  RobotRaconteur::WrappedServiceSubscriptionFilter *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *smartarg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation result;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
+  result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation) ((arg1)->AttributesMatchOperation);
+  jresult = (int)result; 
   return jresult;
 }
 
@@ -81043,6 +84760,107 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscription_Upd
   
   try {
     (arg1)->UpdateServiceURL((std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscription_UpdateServiceByType__SWIG_0(void * jarg1, void * jarg2, void * jarg3) {
+  RobotRaconteur::WrappedServiceSubscription *arg1 = (RobotRaconteur::WrappedServiceSubscription *) 0 ;
+  std::vector< std::string > *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *arg3 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > tempnull3 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscription > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (std::vector< std::string > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< std::string > const & is null", 0);
+    return ;
+  } 
+  arg3 = jarg3 ? (boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg3 : &tempnull3; 
+  
+  try {
+    (arg1)->UpdateServiceByType((std::vector< std::string > const &)*arg2,(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > const &)*arg3);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscription_UpdateServiceByType__SWIG_1(void * jarg1, void * jarg2) {
+  RobotRaconteur::WrappedServiceSubscription *arg1 = (RobotRaconteur::WrappedServiceSubscription *) 0 ;
+  std::vector< std::string > *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > *smartarg1 = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscription > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (std::vector< std::string > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< std::string > const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    (arg1)->UpdateServiceByType((std::vector< std::string > const &)*arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();

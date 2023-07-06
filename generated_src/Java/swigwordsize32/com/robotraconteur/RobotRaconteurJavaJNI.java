@@ -136,13 +136,13 @@ public class RobotRaconteurJavaJNI {
   public final static native void vector_uint64_t_reserve(long jarg1, vector_uint64_t jarg1_, long jarg2);
   public final static native boolean vector_uint64_t_isEmpty(long jarg1, vector_uint64_t jarg1_);
   public final static native void vector_uint64_t_clear(long jarg1, vector_uint64_t jarg1_);
-  public final static native long new_vector_uint64_t__SWIG_2(int jarg1, long jarg2);
+  public final static native long new_vector_uint64_t__SWIG_2(int jarg1, java.math.BigInteger jarg2);
   public final static native int vector_uint64_t_doSize(long jarg1, vector_uint64_t jarg1_);
-  public final static native void vector_uint64_t_doAdd__SWIG_0(long jarg1, vector_uint64_t jarg1_, long jarg2);
-  public final static native void vector_uint64_t_doAdd__SWIG_1(long jarg1, vector_uint64_t jarg1_, int jarg2, long jarg3);
-  public final static native long vector_uint64_t_doRemove(long jarg1, vector_uint64_t jarg1_, int jarg2);
-  public final static native long vector_uint64_t_doGet(long jarg1, vector_uint64_t jarg1_, int jarg2);
-  public final static native long vector_uint64_t_doSet(long jarg1, vector_uint64_t jarg1_, int jarg2, long jarg3);
+  public final static native void vector_uint64_t_doAdd__SWIG_0(long jarg1, vector_uint64_t jarg1_, java.math.BigInteger jarg2);
+  public final static native void vector_uint64_t_doAdd__SWIG_1(long jarg1, vector_uint64_t jarg1_, int jarg2, java.math.BigInteger jarg3);
+  public final static native java.math.BigInteger vector_uint64_t_doRemove(long jarg1, vector_uint64_t jarg1_, int jarg2);
+  public final static native java.math.BigInteger vector_uint64_t_doGet(long jarg1, vector_uint64_t jarg1_, int jarg2);
+  public final static native java.math.BigInteger vector_uint64_t_doSet(long jarg1, vector_uint64_t jarg1_, int jarg2, java.math.BigInteger jarg3);
   public final static native void vector_uint64_t_doRemoveRange(long jarg1, vector_uint64_t jarg1_, int jarg2, int jarg3);
   public final static native void delete_vector_uint64_t(long jarg1);
   public final static native long new_map_strstr__SWIG_0();
@@ -665,6 +665,7 @@ public class RobotRaconteurJavaJNI {
   public final static native boolean NodeID_isAnyNode(long jarg1, NodeID jarg1_);
   public final static native long NodeID_getAny();
   public final static native long new_NodeID__SWIG_1(String jarg1);
+  public final static native long new_NodeID__SWIG_2(long jarg1, NodeID jarg1_);
   public final static native void delete_NodeID(long jarg1);
   public final static native long new_vectorptr_messageentry__SWIG_0();
   public final static native long new_vectorptr_messageentry__SWIG_1(long jarg1, vectorptr_messageentry jarg1_);
@@ -818,7 +819,7 @@ public class RobotRaconteurJavaJNI {
   public final static native void MessageElementDataUtil_rRBaseArrayToShorts__SWIG_1(long jarg1, RRBaseArray jarg1_, int[] jarg2, int jarg3);
   public final static native void MessageElementDataUtil_rRBaseArrayToInts__SWIG_0(long jarg1, RRBaseArray jarg1_, int[] jarg2, int jarg3);
   public final static native void MessageElementDataUtil_rRBaseArrayToInts__SWIG_1(long jarg1, RRBaseArray jarg1_, long[] jarg2, int jarg3);
-  public final static native void MessageElementDataUtil_rRBaseArrayToLongs(long jarg1, RRBaseArray jarg1_, int[] jarg2, int jarg3);
+  public final static native void MessageElementDataUtil_rRBaseArrayToLongs(long jarg1, RRBaseArray jarg1_, long[] jarg2, int jarg3);
   public final static native void MessageElementDataUtil_rRBaseArrayComplexToDoubles(long jarg1, RRBaseArray jarg1_, double[] jarg2, int jarg3);
   public final static native void MessageElementDataUtil_rRBaseArrayComplexToFloats(long jarg1, RRBaseArray jarg1_, float[] jarg2, int jarg3);
   public final static native void MessageElementDataUtil_rRBaseArrayBoolToBytes__SWIG_0(long jarg1, RRBaseArray jarg1_, short[] jarg2, int jarg3);
@@ -832,7 +833,7 @@ public class RobotRaconteurJavaJNI {
   public final static native long MessageElementDataUtil_shortsToRRBaseArray__SWIG_1(int[] jarg1, int jarg2);
   public final static native long MessageElementDataUtil_intsToRRBaseArray__SWIG_0(int[] jarg1, int jarg2, int jarg3);
   public final static native long MessageElementDataUtil_intsToRRBaseArray__SWIG_1(long[] jarg1, int jarg2);
-  public final static native long MessageElementDataUtil_longsToRRBaseArray__SWIG_0(int[] jarg1, int jarg2, int jarg3);
+  public final static native long MessageElementDataUtil_longsToRRBaseArray__SWIG_0(long[] jarg1, int jarg2, int jarg3);
   public final static native long MessageElementDataUtil_doublesToComplexRRBaseArray__SWIG_0(double[] jarg1, int jarg2);
   public final static native long MessageElementDataUtil_floatsToComplexRRBaseArray__SWIG_0(float[] jarg1, int jarg2);
   public final static native long MessageElementDataUtil_bytesToBoolRRBaseArray__SWIG_0(short[] jarg1, int jarg2);
@@ -845,7 +846,7 @@ public class RobotRaconteurJavaJNI {
   public final static native void MessageElementDataUtil_shortsToRRBaseArray__SWIG_3(int[] jarg1, int jarg2, long jarg3, RRBaseArray jarg3_);
   public final static native void MessageElementDataUtil_intsToRRBaseArray__SWIG_2(int[] jarg1, int jarg2, long jarg3, RRBaseArray jarg3_);
   public final static native void MessageElementDataUtil_intsToRRBaseArray__SWIG_3(long[] jarg1, int jarg2, long jarg3, RRBaseArray jarg3_);
-  public final static native void MessageElementDataUtil_longsToRRBaseArray__SWIG_1(int[] jarg1, int jarg2, long jarg3, RRBaseArray jarg3_);
+  public final static native void MessageElementDataUtil_longsToRRBaseArray__SWIG_1(long[] jarg1, int jarg2, long jarg3, RRBaseArray jarg3_);
   public final static native void MessageElementDataUtil_doublesToComplexRRBaseArray__SWIG_1(double[] jarg1, int jarg2, long jarg3, RRBaseArray jarg3_);
   public final static native void MessageElementDataUtil_floatsToComplexRRBaseArray__SWIG_1(float[] jarg1, int jarg2, long jarg3, RRBaseArray jarg3_);
   public final static native void MessageElementDataUtil_bytesToBoolRRBaseArray__SWIG_2(byte[] jarg1, int jarg2, long jarg3, RRBaseArray jarg3_);
@@ -985,6 +986,7 @@ public class RobotRaconteurJavaJNI {
   public final static native String IntraTransport_getUrlSchemeString(long jarg1, IntraTransport jarg1_);
   public final static native long IntraTransport_getServerListenUrls(long jarg1, IntraTransport jarg1_);
   public final static native void IntraTransport_close(long jarg1, IntraTransport jarg1_);
+  public final static native void IntraTransport_startClient(long jarg1, IntraTransport jarg1_);
   public final static native void IntraTransport_startServer(long jarg1, IntraTransport jarg1_);
   public final static native void delete_IntraTransport(long jarg1);
   public final static native void WallTimer_initstruct_handler_set(long jarg1, WallTimer_initstruct jarg1_, long jarg2, AsyncTimerEventReturnDirector jarg2_);
@@ -1030,12 +1032,12 @@ public class RobotRaconteurJavaJNI {
   public final static native void AutoResetEvent_reset(long jarg1, AutoResetEvent jarg1_);
   public final static native void AutoResetEvent_waitOne__SWIG_0(long jarg1, AutoResetEvent jarg1_);
   public final static native boolean AutoResetEvent_waitOne__SWIG_1(long jarg1, AutoResetEvent jarg1_, int jarg2);
-  public final static native void TimeSpec_seconds_set(long jarg1, TimeSpec jarg1_, int jarg2);
-  public final static native int TimeSpec_seconds_get(long jarg1, TimeSpec jarg1_);
+  public final static native void TimeSpec_seconds_set(long jarg1, TimeSpec jarg1_, long jarg2);
+  public final static native long TimeSpec_seconds_get(long jarg1, TimeSpec jarg1_);
   public final static native void TimeSpec_nanoseconds_set(long jarg1, TimeSpec jarg1_, int jarg2);
   public final static native int TimeSpec_nanoseconds_get(long jarg1, TimeSpec jarg1_);
   public final static native long new_TimeSpec__SWIG_0();
-  public final static native long new_TimeSpec__SWIG_1(int jarg1, int jarg2);
+  public final static native long new_TimeSpec__SWIG_1(long jarg1, int jarg2);
   public final static native boolean TimeSpec_equals(long jarg1, TimeSpec jarg1_, long jarg2, TimeSpec jarg2_);
   public final static native boolean TimeSpec_ne(long jarg1, TimeSpec jarg1_, long jarg2, TimeSpec jarg2_);
   public final static native long TimeSpec_sub(long jarg1, TimeSpec jarg1_, long jarg2, TimeSpec jarg2_);
@@ -1249,15 +1251,15 @@ public class RobotRaconteurJavaJNI {
   public final static native boolean WrappedWireUnicastReceiver_tryGetInValue(long jarg1, WrappedWireUnicastReceiver jarg1_, long jarg2, WrappedService_typed_packet jarg2_, long jarg3, TimeSpec jarg3_);
   public final static native long new_WrappedWireUnicastReceiver();
   public final static native void delete_WrappedWireUnicastReceiver(long jarg1);
-  public final static native long ArrayMemoryBase_length(long jarg1, ArrayMemoryBase jarg1_);
+  public final static native java.math.BigInteger ArrayMemoryBase_length(long jarg1, ArrayMemoryBase jarg1_);
   public final static native int ArrayMemoryBase_elementTypeID(long jarg1, ArrayMemoryBase jarg1_);
   public final static native void delete_ArrayMemoryBase(long jarg1);
   public final static native long MultiDimArrayMemoryBase_dimensions(long jarg1, MultiDimArrayMemoryBase jarg1_);
-  public final static native long MultiDimArrayMemoryBase_dimCount(long jarg1, MultiDimArrayMemoryBase jarg1_);
+  public final static native java.math.BigInteger MultiDimArrayMemoryBase_dimCount(long jarg1, MultiDimArrayMemoryBase jarg1_);
   public final static native int MultiDimArrayMemoryBase_elementTypeID(long jarg1, MultiDimArrayMemoryBase jarg1_);
   public final static native void delete_MultiDimArrayMemoryBase(long jarg1);
-  public final static native long WrappedArrayMemoryClientUtil_read(long jarg1, ArrayMemoryBase jarg1_, long jarg2, long jarg3);
-  public final static native void WrappedArrayMemoryClientUtil_write(long jarg1, ArrayMemoryBase jarg1_, long jarg2, long jarg3, RRBaseArray jarg3_, long jarg4, long jarg5);
+  public final static native long WrappedArrayMemoryClientUtil_read(long jarg1, ArrayMemoryBase jarg1_, java.math.BigInteger jarg2, java.math.BigInteger jarg3);
+  public final static native void WrappedArrayMemoryClientUtil_write(long jarg1, ArrayMemoryBase jarg1_, java.math.BigInteger jarg2, long jarg3, RRBaseArray jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
   public final static native int WrappedArrayMemoryClientUtil_direction(long jarg1, ArrayMemoryBase jarg1_);
   public final static native long new_WrappedArrayMemoryClientUtil();
   public final static native void delete_WrappedArrayMemoryClientUtil(long jarg1);
@@ -1266,17 +1268,17 @@ public class RobotRaconteurJavaJNI {
   public final static native int WrappedMultiDimArrayMemoryClientUtil_direction(long jarg1, MultiDimArrayMemoryBase jarg1_);
   public final static native long new_WrappedMultiDimArrayMemoryClientUtil();
   public final static native void delete_WrappedMultiDimArrayMemoryClientUtil(long jarg1);
-  public final static native void WrappedPodArrayMemoryClientBuffer_unpackReadResult(long jarg1, WrappedPodArrayMemoryClientBuffer jarg1_, long jarg2, MessageElementNestedElementList jarg2_, long jarg3, long jarg4);
-  public final static native long WrappedPodArrayMemoryClientBuffer_packWriteRequest(long jarg1, WrappedPodArrayMemoryClientBuffer jarg1_, long jarg2, long jarg3);
-  public final static native long WrappedPodArrayMemoryClientBuffer_getBufferLength(long jarg1, WrappedPodArrayMemoryClientBuffer jarg1_);
+  public final static native void WrappedPodArrayMemoryClientBuffer_unpackReadResult(long jarg1, WrappedPodArrayMemoryClientBuffer jarg1_, long jarg2, MessageElementNestedElementList jarg2_, java.math.BigInteger jarg3, java.math.BigInteger jarg4);
+  public final static native long WrappedPodArrayMemoryClientBuffer_packWriteRequest(long jarg1, WrappedPodArrayMemoryClientBuffer jarg1_, java.math.BigInteger jarg2, java.math.BigInteger jarg3);
+  public final static native java.math.BigInteger WrappedPodArrayMemoryClientBuffer_getBufferLength(long jarg1, WrappedPodArrayMemoryClientBuffer jarg1_);
   public final static native void delete_WrappedPodArrayMemoryClientBuffer(long jarg1);
   public final static native long new_WrappedPodArrayMemoryClientBuffer();
   public final static native void WrappedPodArrayMemoryClientBuffer_director_connect(WrappedPodArrayMemoryClientBuffer obj, long cptr, boolean mem_own, boolean weak_global);
   public final static native void WrappedPodArrayMemoryClientBuffer_change_ownership(WrappedPodArrayMemoryClientBuffer obj, long cptr, boolean take_or_release);
-  public final static native long WrappedPodArrayMemoryClient_length(long jarg1, WrappedPodArrayMemoryClient jarg1_);
+  public final static native java.math.BigInteger WrappedPodArrayMemoryClient_length(long jarg1, WrappedPodArrayMemoryClient jarg1_);
   public final static native int WrappedPodArrayMemoryClient_direction(long jarg1, WrappedPodArrayMemoryClient jarg1_);
-  public final static native void WrappedPodArrayMemoryClient_read(long jarg1, WrappedPodArrayMemoryClient jarg1_, long jarg2, long jarg3, WrappedPodArrayMemoryClientBuffer jarg3_, long jarg4, long jarg5);
-  public final static native void WrappedPodArrayMemoryClient_write(long jarg1, WrappedPodArrayMemoryClient jarg1_, long jarg2, long jarg3, WrappedPodArrayMemoryClientBuffer jarg3_, long jarg4, long jarg5);
+  public final static native void WrappedPodArrayMemoryClient_read(long jarg1, WrappedPodArrayMemoryClient jarg1_, java.math.BigInteger jarg2, long jarg3, WrappedPodArrayMemoryClientBuffer jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
+  public final static native void WrappedPodArrayMemoryClient_write(long jarg1, WrappedPodArrayMemoryClient jarg1_, java.math.BigInteger jarg2, long jarg3, WrappedPodArrayMemoryClientBuffer jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
   public final static native void delete_WrappedPodArrayMemoryClient(long jarg1);
   public final static native void WrappedPodMultiDimArrayMemoryClientBuffer_unpackReadResult(long jarg1, WrappedPodMultiDimArrayMemoryClientBuffer jarg1_, long jarg2, MessageElementNestedElementList jarg2_, long jarg3, vector_uint64_t jarg3_, long jarg4, vector_uint64_t jarg4_);
   public final static native long WrappedPodMultiDimArrayMemoryClientBuffer_packWriteRequest(long jarg1, WrappedPodMultiDimArrayMemoryClientBuffer jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, vector_uint64_t jarg3_);
@@ -1285,15 +1287,15 @@ public class RobotRaconteurJavaJNI {
   public final static native void WrappedPodMultiDimArrayMemoryClientBuffer_director_connect(WrappedPodMultiDimArrayMemoryClientBuffer obj, long cptr, boolean mem_own, boolean weak_global);
   public final static native void WrappedPodMultiDimArrayMemoryClientBuffer_change_ownership(WrappedPodMultiDimArrayMemoryClientBuffer obj, long cptr, boolean take_or_release);
   public final static native long WrappedPodMultiDimArrayMemoryClient_dimensions(long jarg1, WrappedPodMultiDimArrayMemoryClient jarg1_);
-  public final static native long WrappedPodMultiDimArrayMemoryClient_dimCount(long jarg1, WrappedPodMultiDimArrayMemoryClient jarg1_);
+  public final static native java.math.BigInteger WrappedPodMultiDimArrayMemoryClient_dimCount(long jarg1, WrappedPodMultiDimArrayMemoryClient jarg1_);
   public final static native int WrappedPodMultiDimArrayMemoryClient_direction(long jarg1, WrappedPodMultiDimArrayMemoryClient jarg1_);
   public final static native void WrappedPodMultiDimArrayMemoryClient_read(long jarg1, WrappedPodMultiDimArrayMemoryClient jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, WrappedPodMultiDimArrayMemoryClientBuffer jarg3_, long jarg4, vector_uint64_t jarg4_, long jarg5, vector_uint64_t jarg5_);
   public final static native void WrappedPodMultiDimArrayMemoryClient_write(long jarg1, WrappedPodMultiDimArrayMemoryClient jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, WrappedPodMultiDimArrayMemoryClientBuffer jarg3_, long jarg4, vector_uint64_t jarg4_, long jarg5, vector_uint64_t jarg5_);
   public final static native void delete_WrappedPodMultiDimArrayMemoryClient(long jarg1);
   public final static native void delete_WrappedArrayMemoryDirector(long jarg1);
-  public final static native long WrappedArrayMemoryDirector_length(long jarg1, WrappedArrayMemoryDirector jarg1_);
-  public final static native void WrappedArrayMemoryDirector_read(long jarg1, WrappedArrayMemoryDirector jarg1_, long jarg2, long jarg3, RRBaseArray jarg3_, long jarg4, long jarg5);
-  public final static native void WrappedArrayMemoryDirector_write(long jarg1, WrappedArrayMemoryDirector jarg1_, long jarg2, long jarg3, RRBaseArray jarg3_, long jarg4, long jarg5);
+  public final static native java.math.BigInteger WrappedArrayMemoryDirector_length(long jarg1, WrappedArrayMemoryDirector jarg1_);
+  public final static native void WrappedArrayMemoryDirector_read(long jarg1, WrappedArrayMemoryDirector jarg1_, java.math.BigInteger jarg2, long jarg3, RRBaseArray jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
+  public final static native void WrappedArrayMemoryDirector_write(long jarg1, WrappedArrayMemoryDirector jarg1_, java.math.BigInteger jarg2, long jarg3, RRBaseArray jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
   public final static native void WrappedArrayMemoryDirector_objectheapid_set(long jarg1, WrappedArrayMemoryDirector jarg1_, int jarg2);
   public final static native int WrappedArrayMemoryDirector_objectheapid_get(long jarg1, WrappedArrayMemoryDirector jarg1_);
   public final static native long new_WrappedArrayMemoryDirector();
@@ -1311,7 +1313,7 @@ public class RobotRaconteurJavaJNI {
   public final static native void delete_WrappedMultiDimArrayMemoryParams(long jarg1);
   public final static native void delete_WrappedMultiDimArrayMemoryDirector(long jarg1);
   public final static native long WrappedMultiDimArrayMemoryDirector_dimensions(long jarg1, WrappedMultiDimArrayMemoryDirector jarg1_);
-  public final static native long WrappedMultiDimArrayMemoryDirector_dimCount(long jarg1, WrappedMultiDimArrayMemoryDirector jarg1_);
+  public final static native java.math.BigInteger WrappedMultiDimArrayMemoryDirector_dimCount(long jarg1, WrappedMultiDimArrayMemoryDirector jarg1_);
   public final static native void WrappedMultiDimArrayMemoryDirector_read(long jarg1, WrappedMultiDimArrayMemoryDirector jarg1_, long jarg2, WrappedMultiDimArrayMemoryParams jarg2_);
   public final static native void WrappedMultiDimArrayMemoryDirector_write(long jarg1, WrappedMultiDimArrayMemoryDirector jarg1_, long jarg2, WrappedMultiDimArrayMemoryParams jarg2_);
   public final static native void WrappedMultiDimArrayMemoryDirector_objectheapid_set(long jarg1, WrappedMultiDimArrayMemoryDirector jarg1_, int jarg2);
@@ -1321,16 +1323,16 @@ public class RobotRaconteurJavaJNI {
   public final static native void WrappedMultiDimArrayMemoryDirector_change_ownership(WrappedMultiDimArrayMemoryDirector obj, long cptr, boolean take_or_release);
   public final static native long new_WrappedPodArrayMemoryDirector();
   public final static native void delete_WrappedPodArrayMemoryDirector(long jarg1);
-  public final static native long WrappedPodArrayMemoryDirector_length(long jarg1, WrappedPodArrayMemoryDirector jarg1_);
-  public final static native long WrappedPodArrayMemoryDirector_read(long jarg1, WrappedPodArrayMemoryDirector jarg1_, long jarg2, long jarg3, long jarg4);
-  public final static native void WrappedPodArrayMemoryDirector_write(long jarg1, WrappedPodArrayMemoryDirector jarg1_, long jarg2, long jarg3, MessageElementNestedElementList jarg3_, long jarg4, long jarg5);
+  public final static native java.math.BigInteger WrappedPodArrayMemoryDirector_length(long jarg1, WrappedPodArrayMemoryDirector jarg1_);
+  public final static native long WrappedPodArrayMemoryDirector_read(long jarg1, WrappedPodArrayMemoryDirector jarg1_, java.math.BigInteger jarg2, java.math.BigInteger jarg3, java.math.BigInteger jarg4);
+  public final static native void WrappedPodArrayMemoryDirector_write(long jarg1, WrappedPodArrayMemoryDirector jarg1_, java.math.BigInteger jarg2, long jarg3, MessageElementNestedElementList jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
   public final static native void WrappedPodArrayMemoryDirector_objectheapid_set(long jarg1, WrappedPodArrayMemoryDirector jarg1_, int jarg2);
   public final static native int WrappedPodArrayMemoryDirector_objectheapid_get(long jarg1, WrappedPodArrayMemoryDirector jarg1_);
   public final static native void WrappedPodArrayMemoryDirector_director_connect(WrappedPodArrayMemoryDirector obj, long cptr, boolean mem_own, boolean weak_global);
   public final static native void WrappedPodArrayMemoryDirector_change_ownership(WrappedPodArrayMemoryDirector obj, long cptr, boolean take_or_release);
   public final static native void delete_WrappedPodMultiDimArrayMemoryDirector(long jarg1);
   public final static native long WrappedPodMultiDimArrayMemoryDirector_dimensions(long jarg1, WrappedPodMultiDimArrayMemoryDirector jarg1_);
-  public final static native long WrappedPodMultiDimArrayMemoryDirector_dimCount(long jarg1, WrappedPodMultiDimArrayMemoryDirector jarg1_);
+  public final static native java.math.BigInteger WrappedPodMultiDimArrayMemoryDirector_dimCount(long jarg1, WrappedPodMultiDimArrayMemoryDirector jarg1_);
   public final static native long WrappedPodMultiDimArrayMemoryDirector_read(long jarg1, WrappedPodMultiDimArrayMemoryDirector jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, vector_uint64_t jarg3_, long jarg4, vector_uint64_t jarg4_);
   public final static native void WrappedPodMultiDimArrayMemoryDirector_write(long jarg1, WrappedPodMultiDimArrayMemoryDirector jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, MessageElementNestedElementList jarg3_, long jarg4, vector_uint64_t jarg4_, long jarg5, vector_uint64_t jarg5_);
   public final static native void WrappedPodMultiDimArrayMemoryDirector_objectheapid_set(long jarg1, WrappedPodMultiDimArrayMemoryDirector jarg1_, int jarg2);
@@ -1338,17 +1340,17 @@ public class RobotRaconteurJavaJNI {
   public final static native long new_WrappedPodMultiDimArrayMemoryDirector();
   public final static native void WrappedPodMultiDimArrayMemoryDirector_director_connect(WrappedPodMultiDimArrayMemoryDirector obj, long cptr, boolean mem_own, boolean weak_global);
   public final static native void WrappedPodMultiDimArrayMemoryDirector_change_ownership(WrappedPodMultiDimArrayMemoryDirector obj, long cptr, boolean take_or_release);
-  public final static native void WrappedNamedArrayMemoryClientBuffer_unpackReadResult(long jarg1, WrappedNamedArrayMemoryClientBuffer jarg1_, long jarg2, MessageElementNestedElementList jarg2_, long jarg3, long jarg4);
-  public final static native long WrappedNamedArrayMemoryClientBuffer_packWriteRequest(long jarg1, WrappedNamedArrayMemoryClientBuffer jarg1_, long jarg2, long jarg3);
-  public final static native long WrappedNamedArrayMemoryClientBuffer_getBufferLength(long jarg1, WrappedNamedArrayMemoryClientBuffer jarg1_);
+  public final static native void WrappedNamedArrayMemoryClientBuffer_unpackReadResult(long jarg1, WrappedNamedArrayMemoryClientBuffer jarg1_, long jarg2, MessageElementNestedElementList jarg2_, java.math.BigInteger jarg3, java.math.BigInteger jarg4);
+  public final static native long WrappedNamedArrayMemoryClientBuffer_packWriteRequest(long jarg1, WrappedNamedArrayMemoryClientBuffer jarg1_, java.math.BigInteger jarg2, java.math.BigInteger jarg3);
+  public final static native java.math.BigInteger WrappedNamedArrayMemoryClientBuffer_getBufferLength(long jarg1, WrappedNamedArrayMemoryClientBuffer jarg1_);
   public final static native void delete_WrappedNamedArrayMemoryClientBuffer(long jarg1);
   public final static native long new_WrappedNamedArrayMemoryClientBuffer();
   public final static native void WrappedNamedArrayMemoryClientBuffer_director_connect(WrappedNamedArrayMemoryClientBuffer obj, long cptr, boolean mem_own, boolean weak_global);
   public final static native void WrappedNamedArrayMemoryClientBuffer_change_ownership(WrappedNamedArrayMemoryClientBuffer obj, long cptr, boolean take_or_release);
-  public final static native long WrappedNamedArrayMemoryClient_length(long jarg1, WrappedNamedArrayMemoryClient jarg1_);
+  public final static native java.math.BigInteger WrappedNamedArrayMemoryClient_length(long jarg1, WrappedNamedArrayMemoryClient jarg1_);
   public final static native int WrappedNamedArrayMemoryClient_direction(long jarg1, WrappedNamedArrayMemoryClient jarg1_);
-  public final static native void WrappedNamedArrayMemoryClient_read(long jarg1, WrappedNamedArrayMemoryClient jarg1_, long jarg2, long jarg3, WrappedNamedArrayMemoryClientBuffer jarg3_, long jarg4, long jarg5);
-  public final static native void WrappedNamedArrayMemoryClient_write(long jarg1, WrappedNamedArrayMemoryClient jarg1_, long jarg2, long jarg3, WrappedNamedArrayMemoryClientBuffer jarg3_, long jarg4, long jarg5);
+  public final static native void WrappedNamedArrayMemoryClient_read(long jarg1, WrappedNamedArrayMemoryClient jarg1_, java.math.BigInteger jarg2, long jarg3, WrappedNamedArrayMemoryClientBuffer jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
+  public final static native void WrappedNamedArrayMemoryClient_write(long jarg1, WrappedNamedArrayMemoryClient jarg1_, java.math.BigInteger jarg2, long jarg3, WrappedNamedArrayMemoryClientBuffer jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
   public final static native void delete_WrappedNamedArrayMemoryClient(long jarg1);
   public final static native void WrappedNamedMultiDimArrayMemoryClientBuffer_unpackReadResult(long jarg1, WrappedNamedMultiDimArrayMemoryClientBuffer jarg1_, long jarg2, MessageElementNestedElementList jarg2_, long jarg3, vector_uint64_t jarg3_, long jarg4, vector_uint64_t jarg4_);
   public final static native long WrappedNamedMultiDimArrayMemoryClientBuffer_packWriteRequest(long jarg1, WrappedNamedMultiDimArrayMemoryClientBuffer jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, vector_uint64_t jarg3_);
@@ -1357,23 +1359,23 @@ public class RobotRaconteurJavaJNI {
   public final static native void WrappedNamedMultiDimArrayMemoryClientBuffer_director_connect(WrappedNamedMultiDimArrayMemoryClientBuffer obj, long cptr, boolean mem_own, boolean weak_global);
   public final static native void WrappedNamedMultiDimArrayMemoryClientBuffer_change_ownership(WrappedNamedMultiDimArrayMemoryClientBuffer obj, long cptr, boolean take_or_release);
   public final static native long WrappedNamedMultiDimArrayMemoryClient_dimensions(long jarg1, WrappedNamedMultiDimArrayMemoryClient jarg1_);
-  public final static native long WrappedNamedMultiDimArrayMemoryClient_dimCount(long jarg1, WrappedNamedMultiDimArrayMemoryClient jarg1_);
+  public final static native java.math.BigInteger WrappedNamedMultiDimArrayMemoryClient_dimCount(long jarg1, WrappedNamedMultiDimArrayMemoryClient jarg1_);
   public final static native int WrappedNamedMultiDimArrayMemoryClient_direction(long jarg1, WrappedNamedMultiDimArrayMemoryClient jarg1_);
   public final static native void WrappedNamedMultiDimArrayMemoryClient_read(long jarg1, WrappedNamedMultiDimArrayMemoryClient jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, WrappedNamedMultiDimArrayMemoryClientBuffer jarg3_, long jarg4, vector_uint64_t jarg4_, long jarg5, vector_uint64_t jarg5_);
   public final static native void WrappedNamedMultiDimArrayMemoryClient_write(long jarg1, WrappedNamedMultiDimArrayMemoryClient jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, WrappedNamedMultiDimArrayMemoryClientBuffer jarg3_, long jarg4, vector_uint64_t jarg4_, long jarg5, vector_uint64_t jarg5_);
   public final static native void delete_WrappedNamedMultiDimArrayMemoryClient(long jarg1);
   public final static native long new_WrappedNamedArrayMemoryDirector();
   public final static native void delete_WrappedNamedArrayMemoryDirector(long jarg1);
-  public final static native long WrappedNamedArrayMemoryDirector_length(long jarg1, WrappedNamedArrayMemoryDirector jarg1_);
-  public final static native long WrappedNamedArrayMemoryDirector_read(long jarg1, WrappedNamedArrayMemoryDirector jarg1_, long jarg2, long jarg3, long jarg4);
-  public final static native void WrappedNamedArrayMemoryDirector_write(long jarg1, WrappedNamedArrayMemoryDirector jarg1_, long jarg2, long jarg3, MessageElementNestedElementList jarg3_, long jarg4, long jarg5);
+  public final static native java.math.BigInteger WrappedNamedArrayMemoryDirector_length(long jarg1, WrappedNamedArrayMemoryDirector jarg1_);
+  public final static native long WrappedNamedArrayMemoryDirector_read(long jarg1, WrappedNamedArrayMemoryDirector jarg1_, java.math.BigInteger jarg2, java.math.BigInteger jarg3, java.math.BigInteger jarg4);
+  public final static native void WrappedNamedArrayMemoryDirector_write(long jarg1, WrappedNamedArrayMemoryDirector jarg1_, java.math.BigInteger jarg2, long jarg3, MessageElementNestedElementList jarg3_, java.math.BigInteger jarg4, java.math.BigInteger jarg5);
   public final static native void WrappedNamedArrayMemoryDirector_objectheapid_set(long jarg1, WrappedNamedArrayMemoryDirector jarg1_, int jarg2);
   public final static native int WrappedNamedArrayMemoryDirector_objectheapid_get(long jarg1, WrappedNamedArrayMemoryDirector jarg1_);
   public final static native void WrappedNamedArrayMemoryDirector_director_connect(WrappedNamedArrayMemoryDirector obj, long cptr, boolean mem_own, boolean weak_global);
   public final static native void WrappedNamedArrayMemoryDirector_change_ownership(WrappedNamedArrayMemoryDirector obj, long cptr, boolean take_or_release);
   public final static native void delete_WrappedNamedMultiDimArrayMemoryDirector(long jarg1);
   public final static native long WrappedNamedMultiDimArrayMemoryDirector_dimensions(long jarg1, WrappedNamedMultiDimArrayMemoryDirector jarg1_);
-  public final static native long WrappedNamedMultiDimArrayMemoryDirector_dimCount(long jarg1, WrappedNamedMultiDimArrayMemoryDirector jarg1_);
+  public final static native java.math.BigInteger WrappedNamedMultiDimArrayMemoryDirector_dimCount(long jarg1, WrappedNamedMultiDimArrayMemoryDirector jarg1_);
   public final static native long WrappedNamedMultiDimArrayMemoryDirector_read(long jarg1, WrappedNamedMultiDimArrayMemoryDirector jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, vector_uint64_t jarg3_, long jarg4, vector_uint64_t jarg4_);
   public final static native void WrappedNamedMultiDimArrayMemoryDirector_write(long jarg1, WrappedNamedMultiDimArrayMemoryDirector jarg1_, long jarg2, vector_uint64_t jarg2_, long jarg3, MessageElementNestedElementList jarg3_, long jarg4, vector_uint64_t jarg4_, long jarg5, vector_uint64_t jarg5_);
   public final static native void WrappedNamedMultiDimArrayMemoryDirector_objectheapid_set(long jarg1, WrappedNamedMultiDimArrayMemoryDirector jarg1_, int jarg2);
@@ -1681,6 +1683,90 @@ public class RobotRaconteurJavaJNI {
   public final static native long vectorptr_subscriptionclientid_doSet(long jarg1, vectorptr_subscriptionclientid jarg1_, int jarg2, long jarg3, WrappedServiceSubscriptionClientID jarg3_);
   public final static native void vectorptr_subscriptionclientid_doRemoveRange(long jarg1, vectorptr_subscriptionclientid jarg1_, int jarg2, int jarg3);
   public final static native void delete_vectorptr_subscriptionclientid(long jarg1);
+  public final static native void ServiceSubscriptionFilterAttribute_Name_set(long jarg1, ServiceSubscriptionFilterAttribute jarg1_, String jarg2);
+  public final static native String ServiceSubscriptionFilterAttribute_Name_get(long jarg1, ServiceSubscriptionFilterAttribute jarg1_);
+  public final static native void ServiceSubscriptionFilterAttribute_Value_set(long jarg1, ServiceSubscriptionFilterAttribute jarg1_, String jarg2);
+  public final static native String ServiceSubscriptionFilterAttribute_Value_get(long jarg1, ServiceSubscriptionFilterAttribute jarg1_);
+  public final static native void ServiceSubscriptionFilterAttribute_UseRegex_set(long jarg1, ServiceSubscriptionFilterAttribute jarg1_, boolean jarg2);
+  public final static native boolean ServiceSubscriptionFilterAttribute_UseRegex_get(long jarg1, ServiceSubscriptionFilterAttribute jarg1_);
+  public final static native long new_ServiceSubscriptionFilterAttribute__SWIG_0(String jarg1);
+  public final static native long new_ServiceSubscriptionFilterAttribute__SWIG_1(String jarg1, String jarg2);
+  public final static native boolean ServiceSubscriptionFilterAttribute_isMatch__SWIG_0(long jarg1, ServiceSubscriptionFilterAttribute jarg1_, String jarg2);
+  public final static native boolean ServiceSubscriptionFilterAttribute_isMatch__SWIG_1(long jarg1, ServiceSubscriptionFilterAttribute jarg1_, String jarg2, String jarg3);
+  public final static native boolean ServiceSubscriptionFilterAttribute_isMatch__SWIG_2(long jarg1, ServiceSubscriptionFilterAttribute jarg1_, long jarg2, vectorstring jarg2_);
+  public final static native boolean ServiceSubscriptionFilterAttribute_isMatch__SWIG_3(long jarg1, ServiceSubscriptionFilterAttribute jarg1_, long jarg2, map_strstr jarg2_);
+  public final static native void delete_ServiceSubscriptionFilterAttribute(long jarg1);
+  public final static native long createServiceSubscriptionFilterAttributeRegex__SWIG_0(String jarg1);
+  public final static native long createServiceSubscriptionFilterAttributeRegex__SWIG_1(String jarg1, String jarg2);
+  public final static native long new_vector_subscriptionattribute__SWIG_0();
+  public final static native long new_vector_subscriptionattribute__SWIG_1(long jarg1, vector_subscriptionattribute jarg1_);
+  public final static native long vector_subscriptionattribute_capacity(long jarg1, vector_subscriptionattribute jarg1_);
+  public final static native void vector_subscriptionattribute_reserve(long jarg1, vector_subscriptionattribute jarg1_, long jarg2);
+  public final static native boolean vector_subscriptionattribute_isEmpty(long jarg1, vector_subscriptionattribute jarg1_);
+  public final static native void vector_subscriptionattribute_clear(long jarg1, vector_subscriptionattribute jarg1_);
+  public final static native long new_vector_subscriptionattribute__SWIG_2(int jarg1, long jarg2, ServiceSubscriptionFilterAttribute jarg2_);
+  public final static native int vector_subscriptionattribute_doSize(long jarg1, vector_subscriptionattribute jarg1_);
+  public final static native void vector_subscriptionattribute_doAdd__SWIG_0(long jarg1, vector_subscriptionattribute jarg1_, long jarg2, ServiceSubscriptionFilterAttribute jarg2_);
+  public final static native void vector_subscriptionattribute_doAdd__SWIG_1(long jarg1, vector_subscriptionattribute jarg1_, int jarg2, long jarg3, ServiceSubscriptionFilterAttribute jarg3_);
+  public final static native long vector_subscriptionattribute_doRemove(long jarg1, vector_subscriptionattribute jarg1_, int jarg2);
+  public final static native long vector_subscriptionattribute_doGet(long jarg1, vector_subscriptionattribute jarg1_, int jarg2);
+  public final static native long vector_subscriptionattribute_doSet(long jarg1, vector_subscriptionattribute jarg1_, int jarg2, long jarg3, ServiceSubscriptionFilterAttribute jarg3_);
+  public final static native void vector_subscriptionattribute_doRemoveRange(long jarg1, vector_subscriptionattribute jarg1_, int jarg2, int jarg3);
+  public final static native void delete_vector_subscriptionattribute(long jarg1);
+  public final static native long new_map_subscriptionattribute__SWIG_0();
+  public final static native long new_map_subscriptionattribute__SWIG_1(long jarg1, map_subscriptionattribute jarg1_);
+  public final static native long map_subscriptionattribute_Iterator_getNextUnchecked(long jarg1, map_subscriptionattribute.Iterator jarg1_);
+  public final static native boolean map_subscriptionattribute_Iterator_isNot(long jarg1, map_subscriptionattribute.Iterator jarg1_, long jarg2, map_subscriptionattribute.Iterator jarg2_);
+  public final static native String map_subscriptionattribute_Iterator_getKey(long jarg1, map_subscriptionattribute.Iterator jarg1_);
+  public final static native long map_subscriptionattribute_Iterator_getValue(long jarg1, map_subscriptionattribute.Iterator jarg1_);
+  public final static native void map_subscriptionattribute_Iterator_setValue(long jarg1, map_subscriptionattribute.Iterator jarg1_, long jarg2, ServiceSubscriptionFilterAttribute jarg2_);
+  public final static native void delete_map_subscriptionattribute_Iterator(long jarg1);
+  public final static native boolean map_subscriptionattribute_isEmpty(long jarg1, map_subscriptionattribute jarg1_);
+  public final static native void map_subscriptionattribute_clear(long jarg1, map_subscriptionattribute jarg1_);
+  public final static native long map_subscriptionattribute_find(long jarg1, map_subscriptionattribute jarg1_, String jarg2);
+  public final static native long map_subscriptionattribute_begin(long jarg1, map_subscriptionattribute jarg1_);
+  public final static native long map_subscriptionattribute_end(long jarg1, map_subscriptionattribute jarg1_);
+  public final static native int map_subscriptionattribute_sizeImpl(long jarg1, map_subscriptionattribute jarg1_);
+  public final static native boolean map_subscriptionattribute_containsImpl(long jarg1, map_subscriptionattribute jarg1_, String jarg2);
+  public final static native void map_subscriptionattribute_putUnchecked(long jarg1, map_subscriptionattribute jarg1_, String jarg2, long jarg3, ServiceSubscriptionFilterAttribute jarg3_);
+  public final static native void map_subscriptionattribute_removeUnchecked(long jarg1, map_subscriptionattribute jarg1_, long jarg2, map_subscriptionattribute.Iterator jarg2_);
+  public final static native void delete_map_subscriptionattribute(long jarg1);
+  public final static native void ServiceSubscriptionFilterAttributeGroup_Attributes_set(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_, long jarg2, vector_subscriptionattribute jarg2_);
+  public final static native long ServiceSubscriptionFilterAttributeGroup_Attributes_get(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_);
+  public final static native void ServiceSubscriptionFilterAttributeGroup_Groups_set(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_, long jarg2);
+  public final static native long ServiceSubscriptionFilterAttributeGroup_Groups_get(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_);
+  public final static native void ServiceSubscriptionFilterAttributeGroup_Operation_set(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_, int jarg2);
+  public final static native int ServiceSubscriptionFilterAttributeGroup_Operation_get(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_);
+  public final static native void ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_set(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_, boolean jarg2);
+  public final static native boolean ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_get(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_);
+  public final static native void ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_set(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_, char jarg2);
+  public final static native char ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_get(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_);
+  public final static native long new_ServiceSubscriptionFilterAttributeGroup__SWIG_0();
+  public final static native long new_ServiceSubscriptionFilterAttributeGroup__SWIG_1(int jarg1);
+  public final static native long new_ServiceSubscriptionFilterAttributeGroup__SWIG_2(int jarg1, long jarg2, vector_subscriptionattribute jarg2_);
+  public final static native long new_ServiceSubscriptionFilterAttributeGroup__SWIG_3(int jarg1, long jarg2);
+  public final static native boolean ServiceSubscriptionFilterAttributeGroup_isMatch__SWIG_0(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_, String jarg2);
+  public final static native boolean ServiceSubscriptionFilterAttributeGroup_isMatch__SWIG_1(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_, long jarg2, vectorstring jarg2_);
+  public final static native boolean ServiceSubscriptionFilterAttributeGroup_isMatch__SWIG_2(long jarg1, ServiceSubscriptionFilterAttributeGroup jarg1_, long jarg2, map_strstr jarg2_);
+  public final static native void delete_ServiceSubscriptionFilterAttributeGroup(long jarg1);
+  public final static native long new_map_subscriptionattributegroup__SWIG_0();
+  public final static native long new_map_subscriptionattributegroup__SWIG_1(long jarg1, map_subscriptionattributegroup jarg1_);
+  public final static native long map_subscriptionattributegroup_Iterator_getNextUnchecked(long jarg1, map_subscriptionattributegroup.Iterator jarg1_);
+  public final static native boolean map_subscriptionattributegroup_Iterator_isNot(long jarg1, map_subscriptionattributegroup.Iterator jarg1_, long jarg2, map_subscriptionattributegroup.Iterator jarg2_);
+  public final static native String map_subscriptionattributegroup_Iterator_getKey(long jarg1, map_subscriptionattributegroup.Iterator jarg1_);
+  public final static native long map_subscriptionattributegroup_Iterator_getValue(long jarg1, map_subscriptionattributegroup.Iterator jarg1_);
+  public final static native void map_subscriptionattributegroup_Iterator_setValue(long jarg1, map_subscriptionattributegroup.Iterator jarg1_, long jarg2, ServiceSubscriptionFilterAttributeGroup jarg2_);
+  public final static native void delete_map_subscriptionattributegroup_Iterator(long jarg1);
+  public final static native boolean map_subscriptionattributegroup_isEmpty(long jarg1, map_subscriptionattributegroup jarg1_);
+  public final static native void map_subscriptionattributegroup_clear(long jarg1, map_subscriptionattributegroup jarg1_);
+  public final static native long map_subscriptionattributegroup_find(long jarg1, map_subscriptionattributegroup jarg1_, String jarg2);
+  public final static native long map_subscriptionattributegroup_begin(long jarg1, map_subscriptionattributegroup jarg1_);
+  public final static native long map_subscriptionattributegroup_end(long jarg1, map_subscriptionattributegroup jarg1_);
+  public final static native int map_subscriptionattributegroup_sizeImpl(long jarg1, map_subscriptionattributegroup jarg1_);
+  public final static native boolean map_subscriptionattributegroup_containsImpl(long jarg1, map_subscriptionattributegroup jarg1_, String jarg2);
+  public final static native void map_subscriptionattributegroup_putUnchecked(long jarg1, map_subscriptionattributegroup jarg1_, String jarg2, long jarg3, ServiceSubscriptionFilterAttributeGroup jarg3_);
+  public final static native void map_subscriptionattributegroup_removeUnchecked(long jarg1, map_subscriptionattributegroup jarg1_, long jarg2, map_subscriptionattributegroup.Iterator jarg2_);
+  public final static native void delete_map_subscriptionattributegroup(long jarg1);
   public final static native boolean WrappedServiceSubscriptionFilterPredicateDirector_predicate(long jarg1, WrappedServiceSubscriptionFilterPredicateDirector jarg1_, long jarg2, ServiceInfo2Wrapped jarg2_);
   public final static native void delete_WrappedServiceSubscriptionFilterPredicateDirector(long jarg1);
   public final static native long new_WrappedServiceSubscriptionFilterPredicateDirector();
@@ -1702,6 +1788,10 @@ public class RobotRaconteurJavaJNI {
   public final static native long WrappedServiceSubscriptionFilter_ServiceNames_get(long jarg1, WrappedServiceSubscriptionFilter jarg1_);
   public final static native void WrappedServiceSubscriptionFilter_TransportSchemes_set(long jarg1, WrappedServiceSubscriptionFilter jarg1_, long jarg2, vectorstring jarg2_);
   public final static native long WrappedServiceSubscriptionFilter_TransportSchemes_get(long jarg1, WrappedServiceSubscriptionFilter jarg1_);
+  public final static native void WrappedServiceSubscriptionFilter_Attributes_set(long jarg1, WrappedServiceSubscriptionFilter jarg1_, long jarg2, map_subscriptionattributegroup jarg2_);
+  public final static native long WrappedServiceSubscriptionFilter_Attributes_get(long jarg1, WrappedServiceSubscriptionFilter jarg1_);
+  public final static native void WrappedServiceSubscriptionFilter_AttributesMatchOperation_set(long jarg1, WrappedServiceSubscriptionFilter jarg1_, int jarg2);
+  public final static native int WrappedServiceSubscriptionFilter_AttributesMatchOperation_get(long jarg1, WrappedServiceSubscriptionFilter jarg1_);
   public final static native void WrappedServiceSubscriptionFilter_setRRPredicateDirector(long jarg1, WrappedServiceSubscriptionFilter jarg1_, long jarg2, WrappedServiceSubscriptionFilterPredicateDirector jarg2_, int jarg3);
   public final static native void WrappedServiceSubscriptionFilter_MaxConnections_set(long jarg1, WrappedServiceSubscriptionFilter jarg1_, long jarg2);
   public final static native long WrappedServiceSubscriptionFilter_MaxConnections_get(long jarg1, WrappedServiceSubscriptionFilter jarg1_);
@@ -1767,6 +1857,8 @@ public class RobotRaconteurJavaJNI {
   public final static native void WrappedServiceSubscription_updateServiceURL__SWIG_7(long jarg1, WrappedServiceSubscription jarg1_, String jarg2, String jarg3, long jarg4, MessageElementData jarg4_);
   public final static native void WrappedServiceSubscription_updateServiceURL__SWIG_8(long jarg1, WrappedServiceSubscription jarg1_, String jarg2, String jarg3);
   public final static native void WrappedServiceSubscription_updateServiceURL__SWIG_9(long jarg1, WrappedServiceSubscription jarg1_, String jarg2);
+  public final static native void WrappedServiceSubscription_updateServiceByType__SWIG_0(long jarg1, WrappedServiceSubscription jarg1_, long jarg2, vectorstring jarg2_, long jarg3, WrappedServiceSubscriptionFilter jarg3_);
+  public final static native void WrappedServiceSubscription_updateServiceByType__SWIG_1(long jarg1, WrappedServiceSubscription jarg1_, long jarg2, vectorstring jarg2_);
   public final static native void delete_WrappedServiceSubscription(long jarg1);
   public final static native void WrappedWireSubscriptionDirector_wireValueChanged(long jarg1, WrappedWireSubscriptionDirector jarg1_, long jarg2, WrappedWireSubscription jarg2_, long jarg3, WrappedService_typed_packet jarg3_, long jarg4, TimeSpec jarg4_);
   public final static native void delete_WrappedWireSubscriptionDirector(long jarg1);
@@ -1842,8 +1934,8 @@ public class RobotRaconteurJavaJNI {
   public final static native String RRLogRecord_ComponentName_get(long jarg1, RRLogRecord jarg1_);
   public final static native void RRLogRecord_ComponentObjectID_set(long jarg1, RRLogRecord jarg1_, String jarg2);
   public final static native String RRLogRecord_ComponentObjectID_get(long jarg1, RRLogRecord jarg1_);
-  public final static native void RRLogRecord_Endpoint_set(long jarg1, RRLogRecord jarg1_, int jarg2);
-  public final static native int RRLogRecord_Endpoint_get(long jarg1, RRLogRecord jarg1_);
+  public final static native void RRLogRecord_Endpoint_set(long jarg1, RRLogRecord jarg1_, long jarg2);
+  public final static native long RRLogRecord_Endpoint_get(long jarg1, RRLogRecord jarg1_);
   public final static native void RRLogRecord_ServicePath_set(long jarg1, RRLogRecord jarg1_, String jarg2);
   public final static native String RRLogRecord_ServicePath_get(long jarg1, RRLogRecord jarg1_);
   public final static native void RRLogRecord_Member_set(long jarg1, RRLogRecord jarg1_, String jarg2);
@@ -2155,13 +2247,13 @@ public class RobotRaconteurJavaJNI {
   public static boolean SwigDirector_WrappedWireBroadcasterPredicateDirector_predicate(WrappedWireBroadcasterPredicateDirector jself, long client_endpoint) {
     return jself.predicate(client_endpoint);
   }
-  public static void SwigDirector_WrappedPodArrayMemoryClientBuffer_unpackReadResult(WrappedPodArrayMemoryClientBuffer jself, long res, long bufferpos, long count) {
+  public static void SwigDirector_WrappedPodArrayMemoryClientBuffer_unpackReadResult(WrappedPodArrayMemoryClientBuffer jself, long res, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     jself.unpackReadResult((res == 0) ? null : new MessageElementNestedElementList(res, true), bufferpos, count);
   }
-  public static long SwigDirector_WrappedPodArrayMemoryClientBuffer_packWriteRequest(WrappedPodArrayMemoryClientBuffer jself, long bufferpos, long count) {
+  public static long SwigDirector_WrappedPodArrayMemoryClientBuffer_packWriteRequest(WrappedPodArrayMemoryClientBuffer jself, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     return MessageElementNestedElementList.getCPtr(jself.packWriteRequest(bufferpos, count));
   }
-  public static long SwigDirector_WrappedPodArrayMemoryClientBuffer_getBufferLength(WrappedPodArrayMemoryClientBuffer jself) {
+  public static java.math.BigInteger SwigDirector_WrappedPodArrayMemoryClientBuffer_getBufferLength(WrappedPodArrayMemoryClientBuffer jself) {
     return jself.getBufferLength();
   }
   public static void SwigDirector_WrappedPodMultiDimArrayMemoryClientBuffer_unpackReadResult(WrappedPodMultiDimArrayMemoryClientBuffer jself, long res, long bufferpos, long count) {
@@ -2170,19 +2262,19 @@ public class RobotRaconteurJavaJNI {
   public static long SwigDirector_WrappedPodMultiDimArrayMemoryClientBuffer_packWriteRequest(WrappedPodMultiDimArrayMemoryClientBuffer jself, long bufferpos, long count) {
     return MessageElementNestedElementList.getCPtr(jself.packWriteRequest(new vector_uint64_t(bufferpos, false), new vector_uint64_t(count, false)));
   }
-  public static long SwigDirector_WrappedArrayMemoryDirector_length(WrappedArrayMemoryDirector jself) {
+  public static java.math.BigInteger SwigDirector_WrappedArrayMemoryDirector_length(WrappedArrayMemoryDirector jself) {
     return jself.length();
   }
-  public static void SwigDirector_WrappedArrayMemoryDirector_read(WrappedArrayMemoryDirector jself, long memorypos, long buffer, long bufferpos, long count) {
+  public static void SwigDirector_WrappedArrayMemoryDirector_read(WrappedArrayMemoryDirector jself, java.math.BigInteger memorypos, long buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     jself.read(memorypos, (buffer == 0) ? null : new RRBaseArray(buffer, true), bufferpos, count);
   }
-  public static void SwigDirector_WrappedArrayMemoryDirector_write(WrappedArrayMemoryDirector jself, long memorypos, long buffer, long bufferpos, long count) {
+  public static void SwigDirector_WrappedArrayMemoryDirector_write(WrappedArrayMemoryDirector jself, java.math.BigInteger memorypos, long buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     jself.write(memorypos, (buffer == 0) ? null : new RRBaseArray(buffer, true), bufferpos, count);
   }
   public static long SwigDirector_WrappedMultiDimArrayMemoryDirector_dimensions(WrappedMultiDimArrayMemoryDirector jself) {
     return vector_uint64_t.getCPtr(jself.dimensions());
   }
-  public static long SwigDirector_WrappedMultiDimArrayMemoryDirector_dimCount(WrappedMultiDimArrayMemoryDirector jself) {
+  public static java.math.BigInteger SwigDirector_WrappedMultiDimArrayMemoryDirector_dimCount(WrappedMultiDimArrayMemoryDirector jself) {
     return jself.dimCount();
   }
   public static void SwigDirector_WrappedMultiDimArrayMemoryDirector_read(WrappedMultiDimArrayMemoryDirector jself, long p) {
@@ -2191,19 +2283,19 @@ public class RobotRaconteurJavaJNI {
   public static void SwigDirector_WrappedMultiDimArrayMemoryDirector_write(WrappedMultiDimArrayMemoryDirector jself, long p) {
     jself.write((p == 0) ? null : new WrappedMultiDimArrayMemoryParams(p, false));
   }
-  public static long SwigDirector_WrappedPodArrayMemoryDirector_length(WrappedPodArrayMemoryDirector jself) {
+  public static java.math.BigInteger SwigDirector_WrappedPodArrayMemoryDirector_length(WrappedPodArrayMemoryDirector jself) {
     return jself.length();
   }
-  public static long SwigDirector_WrappedPodArrayMemoryDirector_read(WrappedPodArrayMemoryDirector jself, long memorypos, long bufferpos, long count) {
+  public static long SwigDirector_WrappedPodArrayMemoryDirector_read(WrappedPodArrayMemoryDirector jself, java.math.BigInteger memorypos, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     return MessageElementNestedElementList.getCPtr(jself.read(memorypos, bufferpos, count));
   }
-  public static void SwigDirector_WrappedPodArrayMemoryDirector_write(WrappedPodArrayMemoryDirector jself, long memorypos, long buffer, long bufferpos, long count) {
+  public static void SwigDirector_WrappedPodArrayMemoryDirector_write(WrappedPodArrayMemoryDirector jself, java.math.BigInteger memorypos, long buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     jself.write(memorypos, (buffer == 0) ? null : new MessageElementNestedElementList(buffer, true), bufferpos, count);
   }
   public static long SwigDirector_WrappedPodMultiDimArrayMemoryDirector_dimensions(WrappedPodMultiDimArrayMemoryDirector jself) {
     return vector_uint64_t.getCPtr(jself.dimensions());
   }
-  public static long SwigDirector_WrappedPodMultiDimArrayMemoryDirector_dimCount(WrappedPodMultiDimArrayMemoryDirector jself) {
+  public static java.math.BigInteger SwigDirector_WrappedPodMultiDimArrayMemoryDirector_dimCount(WrappedPodMultiDimArrayMemoryDirector jself) {
     return jself.dimCount();
   }
   public static long SwigDirector_WrappedPodMultiDimArrayMemoryDirector_read(WrappedPodMultiDimArrayMemoryDirector jself, long memorypos, long bufferpos, long count) {
@@ -2212,13 +2304,13 @@ public class RobotRaconteurJavaJNI {
   public static void SwigDirector_WrappedPodMultiDimArrayMemoryDirector_write(WrappedPodMultiDimArrayMemoryDirector jself, long memorypos, long buffer, long bufferpos, long count) {
     jself.write(new vector_uint64_t(memorypos, false), (buffer == 0) ? null : new MessageElementNestedElementList(buffer, true), new vector_uint64_t(bufferpos, false), new vector_uint64_t(count, false));
   }
-  public static void SwigDirector_WrappedNamedArrayMemoryClientBuffer_unpackReadResult(WrappedNamedArrayMemoryClientBuffer jself, long res, long bufferpos, long count) {
+  public static void SwigDirector_WrappedNamedArrayMemoryClientBuffer_unpackReadResult(WrappedNamedArrayMemoryClientBuffer jself, long res, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     jself.unpackReadResult((res == 0) ? null : new MessageElementNestedElementList(res, true), bufferpos, count);
   }
-  public static long SwigDirector_WrappedNamedArrayMemoryClientBuffer_packWriteRequest(WrappedNamedArrayMemoryClientBuffer jself, long bufferpos, long count) {
+  public static long SwigDirector_WrappedNamedArrayMemoryClientBuffer_packWriteRequest(WrappedNamedArrayMemoryClientBuffer jself, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     return MessageElementNestedElementList.getCPtr(jself.packWriteRequest(bufferpos, count));
   }
-  public static long SwigDirector_WrappedNamedArrayMemoryClientBuffer_getBufferLength(WrappedNamedArrayMemoryClientBuffer jself) {
+  public static java.math.BigInteger SwigDirector_WrappedNamedArrayMemoryClientBuffer_getBufferLength(WrappedNamedArrayMemoryClientBuffer jself) {
     return jself.getBufferLength();
   }
   public static void SwigDirector_WrappedNamedMultiDimArrayMemoryClientBuffer_unpackReadResult(WrappedNamedMultiDimArrayMemoryClientBuffer jself, long res, long bufferpos, long count) {
@@ -2227,19 +2319,19 @@ public class RobotRaconteurJavaJNI {
   public static long SwigDirector_WrappedNamedMultiDimArrayMemoryClientBuffer_packWriteRequest(WrappedNamedMultiDimArrayMemoryClientBuffer jself, long bufferpos, long count) {
     return MessageElementNestedElementList.getCPtr(jself.packWriteRequest(new vector_uint64_t(bufferpos, false), new vector_uint64_t(count, false)));
   }
-  public static long SwigDirector_WrappedNamedArrayMemoryDirector_length(WrappedNamedArrayMemoryDirector jself) {
+  public static java.math.BigInteger SwigDirector_WrappedNamedArrayMemoryDirector_length(WrappedNamedArrayMemoryDirector jself) {
     return jself.length();
   }
-  public static long SwigDirector_WrappedNamedArrayMemoryDirector_read(WrappedNamedArrayMemoryDirector jself, long memorypos, long bufferpos, long count) {
+  public static long SwigDirector_WrappedNamedArrayMemoryDirector_read(WrappedNamedArrayMemoryDirector jself, java.math.BigInteger memorypos, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     return MessageElementNestedElementList.getCPtr(jself.read(memorypos, bufferpos, count));
   }
-  public static void SwigDirector_WrappedNamedArrayMemoryDirector_write(WrappedNamedArrayMemoryDirector jself, long memorypos, long buffer, long bufferpos, long count) {
+  public static void SwigDirector_WrappedNamedArrayMemoryDirector_write(WrappedNamedArrayMemoryDirector jself, java.math.BigInteger memorypos, long buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     jself.write(memorypos, (buffer == 0) ? null : new MessageElementNestedElementList(buffer, true), bufferpos, count);
   }
   public static long SwigDirector_WrappedNamedMultiDimArrayMemoryDirector_dimensions(WrappedNamedMultiDimArrayMemoryDirector jself) {
     return vector_uint64_t.getCPtr(jself.dimensions());
   }
-  public static long SwigDirector_WrappedNamedMultiDimArrayMemoryDirector_dimCount(WrappedNamedMultiDimArrayMemoryDirector jself) {
+  public static java.math.BigInteger SwigDirector_WrappedNamedMultiDimArrayMemoryDirector_dimCount(WrappedNamedMultiDimArrayMemoryDirector jself) {
     return jself.dimCount();
   }
   public static long SwigDirector_WrappedNamedMultiDimArrayMemoryDirector_read(WrappedNamedMultiDimArrayMemoryDirector jself, long memorypos, long bufferpos, long count) {

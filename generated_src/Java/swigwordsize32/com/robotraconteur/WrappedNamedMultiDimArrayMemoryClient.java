@@ -44,7 +44,7 @@ public class WrappedNamedMultiDimArrayMemoryClient {
     return new vector_uint64_t(RobotRaconteurJavaJNI.WrappedNamedMultiDimArrayMemoryClient_dimensions(swigCPtr, this), true);
   }
 
-  public long dimCount() {
+  public java.math.BigInteger dimCount() {
     return RobotRaconteurJavaJNI.WrappedNamedMultiDimArrayMemoryClient_dimCount(swigCPtr, this);
   }
 

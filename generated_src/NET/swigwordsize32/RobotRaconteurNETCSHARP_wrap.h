@@ -297,9 +297,9 @@ public:
     virtual uint64_t GetBufferLength();
     virtual ~SwigDirector_WrappedPodArrayMemoryClientBuffer();
 
-    typedef void (SWIGSTDCALL* SWIG_Callback0_t)(void *, unsigned long, unsigned long);
-    typedef void * (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long, unsigned long);
-    typedef unsigned long (SWIGSTDCALL* SWIG_Callback2_t)();
+    typedef void (SWIGSTDCALL* SWIG_Callback0_t)(void *, unsigned long long, unsigned long long);
+    typedef void * (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long long, unsigned long long);
+    typedef unsigned long long (SWIGSTDCALL* SWIG_Callback2_t)();
     void swig_connect_director(SWIG_Callback0_t callbackUnpackReadResult, SWIG_Callback1_t callbackPackWriteRequest, SWIG_Callback2_t callbackGetBufferLength);
 
 private:
@@ -336,9 +336,9 @@ public:
     virtual void Read(uint64_t memorypos,boost::intrusive_ptr< RobotRaconteur::RRBaseArray > buffer,uint64_t bufferpos,uint64_t count);
     virtual void Write(uint64_t memorypos,boost::intrusive_ptr< RobotRaconteur::RRBaseArray > buffer,uint64_t bufferpos,uint64_t count);
 
-    typedef unsigned long (SWIGSTDCALL* SWIG_Callback0_t)();
-    typedef void (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long, void *, unsigned long, unsigned long);
-    typedef void (SWIGSTDCALL* SWIG_Callback2_t)(unsigned long, void *, unsigned long, unsigned long);
+    typedef unsigned long long (SWIGSTDCALL* SWIG_Callback0_t)();
+    typedef void (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long long, void *, unsigned long long, unsigned long long);
+    typedef void (SWIGSTDCALL* SWIG_Callback2_t)(unsigned long long, void *, unsigned long long, unsigned long long);
     void swig_connect_director(SWIG_Callback0_t callbackLength, SWIG_Callback1_t callbackRead, SWIG_Callback2_t callbackWrite);
 
 private:
@@ -359,7 +359,7 @@ public:
     virtual void Write(RobotRaconteur::WrappedMultiDimArrayMemoryParams *p);
 
     typedef void * (SWIGSTDCALL* SWIG_Callback0_t)();
-    typedef unsigned long (SWIGSTDCALL* SWIG_Callback1_t)();
+    typedef unsigned long long (SWIGSTDCALL* SWIG_Callback1_t)();
     typedef void (SWIGSTDCALL* SWIG_Callback2_t)(void *);
     typedef void (SWIGSTDCALL* SWIG_Callback3_t)(void *);
     void swig_connect_director(SWIG_Callback0_t callbackDimensions, SWIG_Callback1_t callbackDimCount, SWIG_Callback2_t callbackRead, SWIG_Callback3_t callbackWrite);
@@ -381,9 +381,9 @@ public:
     virtual boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > Read(uint64_t memorypos,uint64_t bufferpos,uint64_t count);
     virtual void Write(uint64_t memorypos,boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > buffer,uint64_t bufferpos,uint64_t count);
 
-    typedef unsigned long (SWIGSTDCALL* SWIG_Callback0_t)();
-    typedef void * (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long, unsigned long, unsigned long);
-    typedef void (SWIGSTDCALL* SWIG_Callback2_t)(unsigned long, void *, unsigned long, unsigned long);
+    typedef unsigned long long (SWIGSTDCALL* SWIG_Callback0_t)();
+    typedef void * (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long long, unsigned long long, unsigned long long);
+    typedef void (SWIGSTDCALL* SWIG_Callback2_t)(unsigned long long, void *, unsigned long long, unsigned long long);
     void swig_connect_director(SWIG_Callback0_t callbackLength, SWIG_Callback1_t callbackRead, SWIG_Callback2_t callbackWrite);
 
 private:
@@ -404,7 +404,7 @@ public:
     virtual void Write(std::vector< uint64_t > const &memorypos,boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > buffer,std::vector< uint64_t > const &bufferpos,std::vector< uint64_t > const &count);
 
     typedef void * (SWIGSTDCALL* SWIG_Callback0_t)();
-    typedef unsigned long (SWIGSTDCALL* SWIG_Callback1_t)();
+    typedef unsigned long long (SWIGSTDCALL* SWIG_Callback1_t)();
     typedef void * (SWIGSTDCALL* SWIG_Callback2_t)(void *, void *, void *);
     typedef void (SWIGSTDCALL* SWIG_Callback3_t)(void *, void *, void *, void *);
     void swig_connect_director(SWIG_Callback0_t callbackDimensions, SWIG_Callback1_t callbackDimCount, SWIG_Callback2_t callbackRead, SWIG_Callback3_t callbackWrite);
@@ -426,9 +426,9 @@ public:
     virtual uint64_t GetBufferLength();
     virtual ~SwigDirector_WrappedNamedArrayMemoryClientBuffer();
 
-    typedef void (SWIGSTDCALL* SWIG_Callback0_t)(void *, unsigned long, unsigned long);
-    typedef void * (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long, unsigned long);
-    typedef unsigned long (SWIGSTDCALL* SWIG_Callback2_t)();
+    typedef void (SWIGSTDCALL* SWIG_Callback0_t)(void *, unsigned long long, unsigned long long);
+    typedef void * (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long long, unsigned long long);
+    typedef unsigned long long (SWIGSTDCALL* SWIG_Callback2_t)();
     void swig_connect_director(SWIG_Callback0_t callbackUnpackReadResult, SWIG_Callback1_t callbackPackWriteRequest, SWIG_Callback2_t callbackGetBufferLength);
 
 private:
@@ -465,9 +465,9 @@ public:
     virtual boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > Read(uint64_t memorypos,uint64_t bufferpos,uint64_t count);
     virtual void Write(uint64_t memorypos,boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > buffer,uint64_t bufferpos,uint64_t count);
 
-    typedef unsigned long (SWIGSTDCALL* SWIG_Callback0_t)();
-    typedef void * (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long, unsigned long, unsigned long);
-    typedef void (SWIGSTDCALL* SWIG_Callback2_t)(unsigned long, void *, unsigned long, unsigned long);
+    typedef unsigned long long (SWIGSTDCALL* SWIG_Callback0_t)();
+    typedef void * (SWIGSTDCALL* SWIG_Callback1_t)(unsigned long long, unsigned long long, unsigned long long);
+    typedef void (SWIGSTDCALL* SWIG_Callback2_t)(unsigned long long, void *, unsigned long long, unsigned long long);
     void swig_connect_director(SWIG_Callback0_t callbackLength, SWIG_Callback1_t callbackRead, SWIG_Callback2_t callbackWrite);
 
 private:
@@ -488,7 +488,7 @@ public:
     virtual void Write(std::vector< uint64_t > const &memorypos,boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > buffer,std::vector< uint64_t > const &bufferpos,std::vector< uint64_t > const &count);
 
     typedef void * (SWIGSTDCALL* SWIG_Callback0_t)();
-    typedef unsigned long (SWIGSTDCALL* SWIG_Callback1_t)();
+    typedef unsigned long long (SWIGSTDCALL* SWIG_Callback1_t)();
     typedef void * (SWIGSTDCALL* SWIG_Callback2_t)(void *, void *, void *);
     typedef void (SWIGSTDCALL* SWIG_Callback3_t)(void *, void *, void *, void *);
     void swig_connect_director(SWIG_Callback0_t callbackDimensions, SWIG_Callback1_t callbackDimCount, SWIG_Callback2_t callbackRead, SWIG_Callback3_t callbackWrite);

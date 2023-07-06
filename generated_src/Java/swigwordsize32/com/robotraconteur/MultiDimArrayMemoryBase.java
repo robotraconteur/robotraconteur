@@ -44,7 +44,7 @@ public class MultiDimArrayMemoryBase {
     return new vector_uint64_t(RobotRaconteurJavaJNI.MultiDimArrayMemoryBase_dimensions(swigCPtr, this), true);
   }
 
-  public long dimCount() {
+  public java.math.BigInteger dimCount() {
     return RobotRaconteurJavaJNI.MultiDimArrayMemoryBase_dimCount(swigCPtr, this);
   }
 

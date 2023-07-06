@@ -48,12 +48,12 @@ public class WrappedArrayMemoryClientUtil {
     }
   }
 
-  public static RRBaseArray read(ArrayMemoryBase mem, long memorypos, long count) {
+  public static RRBaseArray read(ArrayMemoryBase mem, java.math.BigInteger memorypos, java.math.BigInteger count) {
     long cPtr = RobotRaconteurJavaJNI.WrappedArrayMemoryClientUtil_read(ArrayMemoryBase.getCPtr(mem), mem, memorypos, count);
     return (cPtr == 0) ? null : new RRBaseArray(cPtr, true);
   }
 
-  public static void write(ArrayMemoryBase mem, long memorypos, RRBaseArray buffer, long bufferpos, long count) {
+  public static void write(ArrayMemoryBase mem, java.math.BigInteger memorypos, RRBaseArray buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     RobotRaconteurJavaJNI.WrappedArrayMemoryClientUtil_write(ArrayMemoryBase.getCPtr(mem), mem, memorypos, RRBaseArray.getCPtr(buffer), buffer, bufferpos, count);
   }
 

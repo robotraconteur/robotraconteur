@@ -9394,7 +9394,11 @@ public NodeID(byte[] bytes) : this(bytes,bytes.Length) {}
     if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
   }
 
-  private NodeID(byte[] bytes, int bytes_len) : this(RobotRaconteurNETPINVOKE.new_NodeID__SWIG_2(bytes, bytes_len), true) {
+  public NodeID(NodeID id) : this(RobotRaconteurNETPINVOKE.new_NodeID__SWIG_2(NodeID.getCPtr(id)), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  private NodeID(byte[] bytes, int bytes_len) : this(RobotRaconteurNETPINVOKE.new_NodeID__SWIG_3(bytes, bytes_len), true) {
     if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
   }
 
@@ -12942,6 +12946,11 @@ public class IntraTransport : Transport {
 
   public void Close() {
     RobotRaconteurNETPINVOKE.IntraTransport_Close(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void StartClient() {
+    RobotRaconteurNETPINVOKE.IntraTransport_StartClient(swigCPtr);
     if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
   }
 
@@ -23101,6 +23110,1242 @@ namespace RobotRaconteur {
 using global::System;
 using global::System.Runtime.InteropServices;
 
+public class ServiceSubscriptionFilterAttribute : global::System.IDisposable {
+  private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+  protected bool swigCMemOwn;
+
+  internal ServiceSubscriptionFilterAttribute(global::System.IntPtr cPtr, bool cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
+    swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef getCPtr(ServiceSubscriptionFilterAttribute obj) {
+    return (obj == null) ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero) : obj.swigCPtr;
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef swigRelease(ServiceSubscriptionFilterAttribute obj) {
+    if (obj != null) {
+      if (!obj.swigCMemOwn)
+        throw new global::System.ApplicationException("Cannot release ownership as memory is not owned");
+      global::System.Runtime.InteropServices.HandleRef ptr = obj.swigCPtr;
+      obj.swigCMemOwn = false;
+      obj.Dispose();
+      return ptr;
+    } else {
+      return new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+    }
+  }
+
+  ~ServiceSubscriptionFilterAttribute() {
+    Dispose(false);
+  }
+
+  public void Dispose() {
+    Dispose(true);
+    global::System.GC.SuppressFinalize(this);
+  }
+
+  protected virtual void Dispose(bool disposing) {
+    lock(this) {
+      if (swigCPtr.Handle != global::System.IntPtr.Zero) {
+        if (swigCMemOwn) {
+          swigCMemOwn = false;
+          RobotRaconteurNETPINVOKE.delete_ServiceSubscriptionFilterAttribute(swigCPtr);
+        }
+        swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+      }
+    }
+  }
+
+  public string Name {
+    set {
+      RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_Name_set(swigCPtr, value);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      string ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_Name_get(swigCPtr);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public string Value {
+    set {
+      RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_Value_set(swigCPtr, value);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      string ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_Value_get(swigCPtr);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public bool UseRegex {
+    set {
+      RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_UseRegex_set(swigCPtr, value);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_UseRegex_get(swigCPtr);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public ServiceSubscriptionFilterAttribute(string value) : this(RobotRaconteurNETPINVOKE.new_ServiceSubscriptionFilterAttribute__SWIG_0(value), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public ServiceSubscriptionFilterAttribute(string name, string value) : this(RobotRaconteurNETPINVOKE.new_ServiceSubscriptionFilterAttribute__SWIG_1(name, value), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public bool IsMatch(string value) {
+    bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_IsMatch__SWIG_0(swigCPtr, value);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public bool IsMatch(string name, string value) {
+    bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_IsMatch__SWIG_1(swigCPtr, name, value);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public bool IsMatch(vectorstring values) {
+    bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_IsMatch__SWIG_2(swigCPtr, vectorstring.getCPtr(values));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public bool IsMatch(map_strstr values) {
+    bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttribute_IsMatch__SWIG_3(swigCPtr, map_strstr.getCPtr(values));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+}
+
+}
+namespace RobotRaconteur {
+
+using global::System;
+using global::System.Runtime.InteropServices;
+
+public class vector_subscriptionattribute : global::System.IDisposable, global::System.Collections.IEnumerable, global::System.Collections.Generic.IEnumerable<ServiceSubscriptionFilterAttribute>
+ {
+  private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+  protected bool swigCMemOwn;
+
+  internal vector_subscriptionattribute(global::System.IntPtr cPtr, bool cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
+    swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef getCPtr(vector_subscriptionattribute obj) {
+    return (obj == null) ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero) : obj.swigCPtr;
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef swigRelease(vector_subscriptionattribute obj) {
+    if (obj != null) {
+      if (!obj.swigCMemOwn)
+        throw new global::System.ApplicationException("Cannot release ownership as memory is not owned");
+      global::System.Runtime.InteropServices.HandleRef ptr = obj.swigCPtr;
+      obj.swigCMemOwn = false;
+      obj.Dispose();
+      return ptr;
+    } else {
+      return new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+    }
+  }
+
+  ~vector_subscriptionattribute() {
+    Dispose(false);
+  }
+
+  public void Dispose() {
+    Dispose(true);
+    global::System.GC.SuppressFinalize(this);
+  }
+
+  protected virtual void Dispose(bool disposing) {
+    lock(this) {
+      if (swigCPtr.Handle != global::System.IntPtr.Zero) {
+        if (swigCMemOwn) {
+          swigCMemOwn = false;
+          RobotRaconteurNETPINVOKE.delete_vector_subscriptionattribute(swigCPtr);
+        }
+        swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+      }
+    }
+  }
+
+  public vector_subscriptionattribute(global::System.Collections.IEnumerable c) : this() {
+    if (c == null)
+      throw new global::System.ArgumentNullException("c");
+    foreach (ServiceSubscriptionFilterAttribute element in c) {
+      this.Add(element);
+    }
+  }
+
+  public vector_subscriptionattribute(global::System.Collections.Generic.IEnumerable<ServiceSubscriptionFilterAttribute> c) : this() {
+    if (c == null)
+      throw new global::System.ArgumentNullException("c");
+    foreach (ServiceSubscriptionFilterAttribute element in c) {
+      this.Add(element);
+    }
+  }
+
+  public bool IsFixedSize {
+    get {
+      return false;
+    }
+  }
+
+  public bool IsReadOnly {
+    get {
+      return false;
+    }
+  }
+
+  public ServiceSubscriptionFilterAttribute this[int index]  {
+    get {
+      return getitem(index);
+    }
+    set {
+      setitem(index, value);
+    }
+  }
+
+  public int Capacity {
+    get {
+      return (int)capacity();
+    }
+    set {
+      if (value < 0 || (uint)value < size())
+        throw new global::System.ArgumentOutOfRangeException("Capacity");
+      reserve((uint)value);
+    }
+  }
+
+  public int Count {
+    get {
+      return (int)size();
+    }
+  }
+
+  public bool IsSynchronized {
+    get {
+      return false;
+    }
+  }
+
+  public void CopyTo(ServiceSubscriptionFilterAttribute[] array)
+  {
+    CopyTo(0, array, 0, this.Count);
+  }
+
+  public void CopyTo(ServiceSubscriptionFilterAttribute[] array, int arrayIndex)
+  {
+    CopyTo(0, array, arrayIndex, this.Count);
+  }
+
+  public void CopyTo(int index, ServiceSubscriptionFilterAttribute[] array, int arrayIndex, int count)
+  {
+    if (array == null)
+      throw new global::System.ArgumentNullException("array");
+    if (index < 0)
+      throw new global::System.ArgumentOutOfRangeException("index", "Value is less than zero");
+    if (arrayIndex < 0)
+      throw new global::System.ArgumentOutOfRangeException("arrayIndex", "Value is less than zero");
+    if (count < 0)
+      throw new global::System.ArgumentOutOfRangeException("count", "Value is less than zero");
+    if (array.Rank > 1)
+      throw new global::System.ArgumentException("Multi dimensional array.", "array");
+    if (index+count > this.Count || arrayIndex+count > array.Length)
+      throw new global::System.ArgumentException("Number of elements to copy is too large.");
+    for (int i=0; i<count; i++)
+      array.SetValue(getitemcopy(index+i), arrayIndex+i);
+  }
+
+  public ServiceSubscriptionFilterAttribute[] ToArray() {
+    ServiceSubscriptionFilterAttribute[] array = new ServiceSubscriptionFilterAttribute[this.Count];
+    this.CopyTo(array);
+    return array;
+  }
+
+  global::System.Collections.Generic.IEnumerator<ServiceSubscriptionFilterAttribute> global::System.Collections.Generic.IEnumerable<ServiceSubscriptionFilterAttribute>.GetEnumerator() {
+    return new vector_subscriptionattributeEnumerator(this);
+  }
+
+  global::System.Collections.IEnumerator global::System.Collections.IEnumerable.GetEnumerator() {
+    return new vector_subscriptionattributeEnumerator(this);
+  }
+
+  public vector_subscriptionattributeEnumerator GetEnumerator() {
+    return new vector_subscriptionattributeEnumerator(this);
+  }
+
+  // Type-safe enumerator
+  /// Note that the IEnumerator documentation requires an InvalidOperationException to be thrown
+  /// whenever the collection is modified. This has been done for changes in the size of the
+  /// collection but not when one of the elements of the collection is modified as it is a bit
+  /// tricky to detect unmanaged code that modifies the collection under our feet.
+  public sealed class vector_subscriptionattributeEnumerator : global::System.Collections.IEnumerator
+    , global::System.Collections.Generic.IEnumerator<ServiceSubscriptionFilterAttribute>
+  {
+    private vector_subscriptionattribute collectionRef;
+    private int currentIndex;
+    private object currentObject;
+    private int currentSize;
+
+    public vector_subscriptionattributeEnumerator(vector_subscriptionattribute collection) {
+      collectionRef = collection;
+      currentIndex = -1;
+      currentObject = null;
+      currentSize = collectionRef.Count;
+    }
+
+    // Type-safe iterator Current
+    public ServiceSubscriptionFilterAttribute Current {
+      get {
+        if (currentIndex == -1)
+          throw new global::System.InvalidOperationException("Enumeration not started.");
+        if (currentIndex > currentSize - 1)
+          throw new global::System.InvalidOperationException("Enumeration finished.");
+        if (currentObject == null)
+          throw new global::System.InvalidOperationException("Collection modified.");
+        return (ServiceSubscriptionFilterAttribute)currentObject;
+      }
+    }
+
+    // Type-unsafe IEnumerator.Current
+    object global::System.Collections.IEnumerator.Current {
+      get {
+        return Current;
+      }
+    }
+
+    public bool MoveNext() {
+      int size = collectionRef.Count;
+      bool moveOkay = (currentIndex+1 < size) && (size == currentSize);
+      if (moveOkay) {
+        currentIndex++;
+        currentObject = collectionRef[currentIndex];
+      } else {
+        currentObject = null;
+      }
+      return moveOkay;
+    }
+
+    public void Reset() {
+      currentIndex = -1;
+      currentObject = null;
+      if (collectionRef.Count != currentSize) {
+        throw new global::System.InvalidOperationException("Collection modified.");
+      }
+    }
+
+    public void Dispose() {
+        currentIndex = -1;
+        currentObject = null;
+    }
+  }
+
+  public void Clear() {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_Clear(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void Add(ServiceSubscriptionFilterAttribute x) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_Add(swigCPtr, ServiceSubscriptionFilterAttribute.getCPtr(x));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  private uint size() {
+    uint ret = RobotRaconteurNETPINVOKE.vector_subscriptionattribute_size(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private uint capacity() {
+    uint ret = RobotRaconteurNETPINVOKE.vector_subscriptionattribute_capacity(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private void reserve(uint n) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_reserve(swigCPtr, n);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public vector_subscriptionattribute() : this(RobotRaconteurNETPINVOKE.new_vector_subscriptionattribute__SWIG_0(), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public vector_subscriptionattribute(vector_subscriptionattribute other) : this(RobotRaconteurNETPINVOKE.new_vector_subscriptionattribute__SWIG_1(vector_subscriptionattribute.getCPtr(other)), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public vector_subscriptionattribute(int capacity) : this(RobotRaconteurNETPINVOKE.new_vector_subscriptionattribute__SWIG_2(capacity), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  private ServiceSubscriptionFilterAttribute getitemcopy(int index) {
+    ServiceSubscriptionFilterAttribute ret = new ServiceSubscriptionFilterAttribute(RobotRaconteurNETPINVOKE.vector_subscriptionattribute_getitemcopy(swigCPtr, index), true);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private ServiceSubscriptionFilterAttribute getitem(int index) {
+    ServiceSubscriptionFilterAttribute ret = new ServiceSubscriptionFilterAttribute(RobotRaconteurNETPINVOKE.vector_subscriptionattribute_getitem(swigCPtr, index), false);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private void setitem(int index, ServiceSubscriptionFilterAttribute val) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_setitem(swigCPtr, index, ServiceSubscriptionFilterAttribute.getCPtr(val));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void AddRange(vector_subscriptionattribute values) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_AddRange(swigCPtr, vector_subscriptionattribute.getCPtr(values));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public vector_subscriptionattribute GetRange(int index, int count) {
+    global::System.IntPtr cPtr = RobotRaconteurNETPINVOKE.vector_subscriptionattribute_GetRange(swigCPtr, index, count);
+    vector_subscriptionattribute ret = (cPtr == global::System.IntPtr.Zero) ? null : new vector_subscriptionattribute(cPtr, true);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public void Insert(int index, ServiceSubscriptionFilterAttribute x) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_Insert(swigCPtr, index, ServiceSubscriptionFilterAttribute.getCPtr(x));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void InsertRange(int index, vector_subscriptionattribute values) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_InsertRange(swigCPtr, index, vector_subscriptionattribute.getCPtr(values));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void RemoveAt(int index) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_RemoveAt(swigCPtr, index);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void RemoveRange(int index, int count) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_RemoveRange(swigCPtr, index, count);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public static vector_subscriptionattribute Repeat(ServiceSubscriptionFilterAttribute value, int count) {
+    global::System.IntPtr cPtr = RobotRaconteurNETPINVOKE.vector_subscriptionattribute_Repeat(ServiceSubscriptionFilterAttribute.getCPtr(value), count);
+    vector_subscriptionattribute ret = (cPtr == global::System.IntPtr.Zero) ? null : new vector_subscriptionattribute(cPtr, true);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public void Reverse() {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_Reverse__SWIG_0(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void Reverse(int index, int count) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_Reverse__SWIG_1(swigCPtr, index, count);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void SetRange(int index, vector_subscriptionattribute values) {
+    RobotRaconteurNETPINVOKE.vector_subscriptionattribute_SetRange(swigCPtr, index, vector_subscriptionattribute.getCPtr(values));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+}
+
+}
+namespace RobotRaconteur {
+
+using global::System;
+using global::System.Runtime.InteropServices;
+
+public class map_subscriptionattribute : global::System.IDisposable 
+    , global::System.Collections.Generic.IDictionary<string, ServiceSubscriptionFilterAttribute>
+ {
+  private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+  protected bool swigCMemOwn;
+
+  internal map_subscriptionattribute(global::System.IntPtr cPtr, bool cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
+    swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef getCPtr(map_subscriptionattribute obj) {
+    return (obj == null) ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero) : obj.swigCPtr;
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef swigRelease(map_subscriptionattribute obj) {
+    if (obj != null) {
+      if (!obj.swigCMemOwn)
+        throw new global::System.ApplicationException("Cannot release ownership as memory is not owned");
+      global::System.Runtime.InteropServices.HandleRef ptr = obj.swigCPtr;
+      obj.swigCMemOwn = false;
+      obj.Dispose();
+      return ptr;
+    } else {
+      return new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+    }
+  }
+
+  ~map_subscriptionattribute() {
+    Dispose(false);
+  }
+
+  public void Dispose() {
+    Dispose(true);
+    global::System.GC.SuppressFinalize(this);
+  }
+
+  protected virtual void Dispose(bool disposing) {
+    lock(this) {
+      if (swigCPtr.Handle != global::System.IntPtr.Zero) {
+        if (swigCMemOwn) {
+          swigCMemOwn = false;
+          RobotRaconteurNETPINVOKE.delete_map_subscriptionattribute(swigCPtr);
+        }
+        swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+      }
+    }
+  }
+
+
+  public ServiceSubscriptionFilterAttribute this[string key] {
+    get {
+      return getitem(key);
+    }
+
+    set {
+      setitem(key, value);
+    }
+  }
+
+  public bool TryGetValue(string key, out ServiceSubscriptionFilterAttribute value) {
+    if (this.ContainsKey(key)) {
+      value = this[key];
+      return true;
+    }
+    value = default(ServiceSubscriptionFilterAttribute);
+    return false;
+  }
+
+  public int Count {
+    get {
+      return (int)size();
+    }
+  }
+
+  public bool IsReadOnly {
+    get {
+      return false;
+    }
+  }
+
+  public global::System.Collections.Generic.ICollection<string> Keys {
+    get {
+      global::System.Collections.Generic.ICollection<string> keys = new global::System.Collections.Generic.List<string>();
+      int size = this.Count;
+      if (size > 0) {
+        global::System.IntPtr iter = create_iterator_begin();
+        for (int i = 0; i < size; i++) {
+          keys.Add(get_next_key(iter));
+        }
+        destroy_iterator(iter);
+      }
+      return keys;
+    }
+  }
+
+  public global::System.Collections.Generic.ICollection<ServiceSubscriptionFilterAttribute> Values {
+    get {
+      global::System.Collections.Generic.ICollection<ServiceSubscriptionFilterAttribute> vals = new global::System.Collections.Generic.List<ServiceSubscriptionFilterAttribute>();
+      foreach (global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute> pair in this) {
+        vals.Add(pair.Value);
+      }
+      return vals;
+    }
+  }
+
+  public void Add(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute> item) {
+    Add(item.Key, item.Value);
+  }
+
+  public bool Remove(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute> item) {
+    if (Contains(item)) {
+      return Remove(item.Key);
+    } else {
+      return false;
+    }
+  }
+
+  public bool Contains(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute> item) {
+    if (this[item.Key] == item.Value) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void CopyTo(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute>[] array) {
+    CopyTo(array, 0);
+  }
+
+  public void CopyTo(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute>[] array, int arrayIndex) {
+    if (array == null)
+      throw new global::System.ArgumentNullException("array");
+    if (arrayIndex < 0)
+      throw new global::System.ArgumentOutOfRangeException("arrayIndex", "Value is less than zero");
+    if (array.Rank > 1)
+      throw new global::System.ArgumentException("Multi dimensional array.", "array");
+    if (arrayIndex+this.Count > array.Length)
+      throw new global::System.ArgumentException("Number of elements to copy is too large.");
+
+    global::System.Collections.Generic.IList<string> keyList = new global::System.Collections.Generic.List<string>(this.Keys);
+    for (int i = 0; i < keyList.Count; i++) {
+      string currentKey = keyList[i];
+      array.SetValue(new global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute>(currentKey, this[currentKey]), arrayIndex+i);
+    }
+  }
+
+  global::System.Collections.Generic.IEnumerator<global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute>> global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute>>.GetEnumerator() {
+    return new map_subscriptionattributeEnumerator(this);
+  }
+
+  global::System.Collections.IEnumerator global::System.Collections.IEnumerable.GetEnumerator() {
+    return new map_subscriptionattributeEnumerator(this);
+  }
+
+  public map_subscriptionattributeEnumerator GetEnumerator() {
+    return new map_subscriptionattributeEnumerator(this);
+  }
+
+  // Type-safe enumerator
+  /// Note that the IEnumerator documentation requires an InvalidOperationException to be thrown
+  /// whenever the collection is modified. This has been done for changes in the size of the
+  /// collection but not when one of the elements of the collection is modified as it is a bit
+  /// tricky to detect unmanaged code that modifies the collection under our feet.
+  public sealed class map_subscriptionattributeEnumerator : global::System.Collections.IEnumerator,
+      global::System.Collections.Generic.IEnumerator<global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute>>
+  {
+    private map_subscriptionattribute collectionRef;
+    private global::System.Collections.Generic.IList<string> keyCollection;
+    private int currentIndex;
+    private object currentObject;
+    private int currentSize;
+
+    public map_subscriptionattributeEnumerator(map_subscriptionattribute collection) {
+      collectionRef = collection;
+      keyCollection = new global::System.Collections.Generic.List<string>(collection.Keys);
+      currentIndex = -1;
+      currentObject = null;
+      currentSize = collectionRef.Count;
+    }
+
+    // Type-safe iterator Current
+    public global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute> Current {
+      get {
+        if (currentIndex == -1)
+          throw new global::System.InvalidOperationException("Enumeration not started.");
+        if (currentIndex > currentSize - 1)
+          throw new global::System.InvalidOperationException("Enumeration finished.");
+        if (currentObject == null)
+          throw new global::System.InvalidOperationException("Collection modified.");
+        return (global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute>)currentObject;
+      }
+    }
+
+    // Type-unsafe IEnumerator.Current
+    object global::System.Collections.IEnumerator.Current {
+      get {
+        return Current;
+      }
+    }
+
+    public bool MoveNext() {
+      int size = collectionRef.Count;
+      bool moveOkay = (currentIndex+1 < size) && (size == currentSize);
+      if (moveOkay) {
+        currentIndex++;
+        string currentKey = keyCollection[currentIndex];
+        currentObject = new global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttribute>(currentKey, collectionRef[currentKey]);
+      } else {
+        currentObject = null;
+      }
+      return moveOkay;
+    }
+
+    public void Reset() {
+      currentIndex = -1;
+      currentObject = null;
+      if (collectionRef.Count != currentSize) {
+        throw new global::System.InvalidOperationException("Collection modified.");
+      }
+    }
+
+    public void Dispose() {
+      currentIndex = -1;
+      currentObject = null;
+    }
+  }
+
+
+  public map_subscriptionattribute() : this(RobotRaconteurNETPINVOKE.new_map_subscriptionattribute__SWIG_0(), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public map_subscriptionattribute(map_subscriptionattribute other) : this(RobotRaconteurNETPINVOKE.new_map_subscriptionattribute__SWIG_1(map_subscriptionattribute.getCPtr(other)), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  private uint size() {
+    uint ret = RobotRaconteurNETPINVOKE.map_subscriptionattribute_size(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public bool empty() {
+    bool ret = RobotRaconteurNETPINVOKE.map_subscriptionattribute_empty(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public void Clear() {
+    RobotRaconteurNETPINVOKE.map_subscriptionattribute_Clear(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  private ServiceSubscriptionFilterAttribute getitem(string key) {
+    ServiceSubscriptionFilterAttribute ret = new ServiceSubscriptionFilterAttribute(RobotRaconteurNETPINVOKE.map_subscriptionattribute_getitem(swigCPtr, key), false);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private void setitem(string key, ServiceSubscriptionFilterAttribute x) {
+    RobotRaconteurNETPINVOKE.map_subscriptionattribute_setitem(swigCPtr, key, ServiceSubscriptionFilterAttribute.getCPtr(x));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public bool ContainsKey(string key) {
+    bool ret = RobotRaconteurNETPINVOKE.map_subscriptionattribute_ContainsKey(swigCPtr, key);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public void Add(string key, ServiceSubscriptionFilterAttribute value) {
+    RobotRaconteurNETPINVOKE.map_subscriptionattribute_Add(swigCPtr, key, ServiceSubscriptionFilterAttribute.getCPtr(value));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public bool Remove(string key) {
+    bool ret = RobotRaconteurNETPINVOKE.map_subscriptionattribute_Remove(swigCPtr, key);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private global::System.IntPtr create_iterator_begin() {
+    global::System.IntPtr ret = RobotRaconteurNETPINVOKE.map_subscriptionattribute_create_iterator_begin(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private string get_next_key(global::System.IntPtr swigiterator) {
+    string ret = RobotRaconteurNETPINVOKE.map_subscriptionattribute_get_next_key(swigCPtr, swigiterator);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private void destroy_iterator(global::System.IntPtr swigiterator) {
+    RobotRaconteurNETPINVOKE.map_subscriptionattribute_destroy_iterator(swigCPtr, swigiterator);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+}
+
+}
+namespace RobotRaconteur {
+
+public enum ServiceSubscriptionFilterAttributeGroupOperation {
+  OR,
+  AND,
+  NOR,
+  NAND
+}
+
+}
+namespace RobotRaconteur {
+
+using global::System;
+using global::System.Runtime.InteropServices;
+
+public class ServiceSubscriptionFilterAttributeGroup : global::System.IDisposable {
+  private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+  protected bool swigCMemOwn;
+
+  internal ServiceSubscriptionFilterAttributeGroup(global::System.IntPtr cPtr, bool cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
+    swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef getCPtr(ServiceSubscriptionFilterAttributeGroup obj) {
+    return (obj == null) ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero) : obj.swigCPtr;
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef swigRelease(ServiceSubscriptionFilterAttributeGroup obj) {
+    if (obj != null) {
+      if (!obj.swigCMemOwn)
+        throw new global::System.ApplicationException("Cannot release ownership as memory is not owned");
+      global::System.Runtime.InteropServices.HandleRef ptr = obj.swigCPtr;
+      obj.swigCMemOwn = false;
+      obj.Dispose();
+      return ptr;
+    } else {
+      return new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+    }
+  }
+
+  ~ServiceSubscriptionFilterAttributeGroup() {
+    Dispose(false);
+  }
+
+  public void Dispose() {
+    Dispose(true);
+    global::System.GC.SuppressFinalize(this);
+  }
+
+  protected virtual void Dispose(bool disposing) {
+    lock(this) {
+      if (swigCPtr.Handle != global::System.IntPtr.Zero) {
+        if (swigCMemOwn) {
+          swigCMemOwn = false;
+          RobotRaconteurNETPINVOKE.delete_ServiceSubscriptionFilterAttributeGroup(swigCPtr);
+        }
+        swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+      }
+    }
+  }
+
+  public vector_subscriptionattribute Attributes {
+    set {
+      RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_Attributes_set(swigCPtr, vector_subscriptionattribute.getCPtr(value));
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      global::System.IntPtr cPtr = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_Attributes_get(swigCPtr);
+      vector_subscriptionattribute ret = (cPtr == global::System.IntPtr.Zero) ? null : new vector_subscriptionattribute(cPtr, false);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t Groups {
+    set {
+      RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_Groups_set(swigCPtr, SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t.getCPtr(value));
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      global::System.IntPtr cPtr = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_Groups_get(swigCPtr);
+      SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t(cPtr, false);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public ServiceSubscriptionFilterAttributeGroupOperation Operation {
+    set {
+      RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_Operation_set(swigCPtr, (int)value);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      ServiceSubscriptionFilterAttributeGroupOperation ret = (ServiceSubscriptionFilterAttributeGroupOperation)RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_Operation_get(swigCPtr);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public bool SplitStringAttribute {
+    set {
+      RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_set(swigCPtr, value);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_get(swigCPtr);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public char SplitStringDelimiter {
+    set {
+      RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_set(swigCPtr, value);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      char ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_get(swigCPtr);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public ServiceSubscriptionFilterAttributeGroup() : this(RobotRaconteurNETPINVOKE.new_ServiceSubscriptionFilterAttributeGroup__SWIG_0(), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation) : this(RobotRaconteurNETPINVOKE.new_ServiceSubscriptionFilterAttributeGroup__SWIG_1((int)operation), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, vector_subscriptionattribute attributes) : this(RobotRaconteurNETPINVOKE.new_ServiceSubscriptionFilterAttributeGroup__SWIG_2((int)operation, vector_subscriptionattribute.getCPtr(attributes)), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public ServiceSubscriptionFilterAttributeGroup(ServiceSubscriptionFilterAttributeGroupOperation operation, SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t groups) : this(RobotRaconteurNETPINVOKE.new_ServiceSubscriptionFilterAttributeGroup__SWIG_3((int)operation, SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t.getCPtr(groups)), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public bool IsMatch(string value) {
+    bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_0(swigCPtr, value);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public bool IsMatch(vectorstring values) {
+    bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_1(swigCPtr, vectorstring.getCPtr(values));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public bool IsMatch(map_strstr values) {
+    bool ret = RobotRaconteurNETPINVOKE.ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_2(swigCPtr, map_strstr.getCPtr(values));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+}
+
+}
+namespace RobotRaconteur {
+
+using global::System;
+using global::System.Runtime.InteropServices;
+
+public class map_subscriptionattributegroup : global::System.IDisposable 
+    , global::System.Collections.Generic.IDictionary<string, ServiceSubscriptionFilterAttributeGroup>
+ {
+  private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+  protected bool swigCMemOwn;
+
+  internal map_subscriptionattributegroup(global::System.IntPtr cPtr, bool cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
+    swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef getCPtr(map_subscriptionattributegroup obj) {
+    return (obj == null) ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero) : obj.swigCPtr;
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef swigRelease(map_subscriptionattributegroup obj) {
+    if (obj != null) {
+      if (!obj.swigCMemOwn)
+        throw new global::System.ApplicationException("Cannot release ownership as memory is not owned");
+      global::System.Runtime.InteropServices.HandleRef ptr = obj.swigCPtr;
+      obj.swigCMemOwn = false;
+      obj.Dispose();
+      return ptr;
+    } else {
+      return new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+    }
+  }
+
+  ~map_subscriptionattributegroup() {
+    Dispose(false);
+  }
+
+  public void Dispose() {
+    Dispose(true);
+    global::System.GC.SuppressFinalize(this);
+  }
+
+  protected virtual void Dispose(bool disposing) {
+    lock(this) {
+      if (swigCPtr.Handle != global::System.IntPtr.Zero) {
+        if (swigCMemOwn) {
+          swigCMemOwn = false;
+          RobotRaconteurNETPINVOKE.delete_map_subscriptionattributegroup(swigCPtr);
+        }
+        swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+      }
+    }
+  }
+
+
+  public ServiceSubscriptionFilterAttributeGroup this[string key] {
+    get {
+      return getitem(key);
+    }
+
+    set {
+      setitem(key, value);
+    }
+  }
+
+  public bool TryGetValue(string key, out ServiceSubscriptionFilterAttributeGroup value) {
+    if (this.ContainsKey(key)) {
+      value = this[key];
+      return true;
+    }
+    value = default(ServiceSubscriptionFilterAttributeGroup);
+    return false;
+  }
+
+  public int Count {
+    get {
+      return (int)size();
+    }
+  }
+
+  public bool IsReadOnly {
+    get {
+      return false;
+    }
+  }
+
+  public global::System.Collections.Generic.ICollection<string> Keys {
+    get {
+      global::System.Collections.Generic.ICollection<string> keys = new global::System.Collections.Generic.List<string>();
+      int size = this.Count;
+      if (size > 0) {
+        global::System.IntPtr iter = create_iterator_begin();
+        for (int i = 0; i < size; i++) {
+          keys.Add(get_next_key(iter));
+        }
+        destroy_iterator(iter);
+      }
+      return keys;
+    }
+  }
+
+  public global::System.Collections.Generic.ICollection<ServiceSubscriptionFilterAttributeGroup> Values {
+    get {
+      global::System.Collections.Generic.ICollection<ServiceSubscriptionFilterAttributeGroup> vals = new global::System.Collections.Generic.List<ServiceSubscriptionFilterAttributeGroup>();
+      foreach (global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup> pair in this) {
+        vals.Add(pair.Value);
+      }
+      return vals;
+    }
+  }
+
+  public void Add(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup> item) {
+    Add(item.Key, item.Value);
+  }
+
+  public bool Remove(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup> item) {
+    if (Contains(item)) {
+      return Remove(item.Key);
+    } else {
+      return false;
+    }
+  }
+
+  public bool Contains(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup> item) {
+    if (this[item.Key] == item.Value) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void CopyTo(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup>[] array) {
+    CopyTo(array, 0);
+  }
+
+  public void CopyTo(global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup>[] array, int arrayIndex) {
+    if (array == null)
+      throw new global::System.ArgumentNullException("array");
+    if (arrayIndex < 0)
+      throw new global::System.ArgumentOutOfRangeException("arrayIndex", "Value is less than zero");
+    if (array.Rank > 1)
+      throw new global::System.ArgumentException("Multi dimensional array.", "array");
+    if (arrayIndex+this.Count > array.Length)
+      throw new global::System.ArgumentException("Number of elements to copy is too large.");
+
+    global::System.Collections.Generic.IList<string> keyList = new global::System.Collections.Generic.List<string>(this.Keys);
+    for (int i = 0; i < keyList.Count; i++) {
+      string currentKey = keyList[i];
+      array.SetValue(new global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup>(currentKey, this[currentKey]), arrayIndex+i);
+    }
+  }
+
+  global::System.Collections.Generic.IEnumerator<global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup>> global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup>>.GetEnumerator() {
+    return new map_subscriptionattributegroupEnumerator(this);
+  }
+
+  global::System.Collections.IEnumerator global::System.Collections.IEnumerable.GetEnumerator() {
+    return new map_subscriptionattributegroupEnumerator(this);
+  }
+
+  public map_subscriptionattributegroupEnumerator GetEnumerator() {
+    return new map_subscriptionattributegroupEnumerator(this);
+  }
+
+  // Type-safe enumerator
+  /// Note that the IEnumerator documentation requires an InvalidOperationException to be thrown
+  /// whenever the collection is modified. This has been done for changes in the size of the
+  /// collection but not when one of the elements of the collection is modified as it is a bit
+  /// tricky to detect unmanaged code that modifies the collection under our feet.
+  public sealed class map_subscriptionattributegroupEnumerator : global::System.Collections.IEnumerator,
+      global::System.Collections.Generic.IEnumerator<global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup>>
+  {
+    private map_subscriptionattributegroup collectionRef;
+    private global::System.Collections.Generic.IList<string> keyCollection;
+    private int currentIndex;
+    private object currentObject;
+    private int currentSize;
+
+    public map_subscriptionattributegroupEnumerator(map_subscriptionattributegroup collection) {
+      collectionRef = collection;
+      keyCollection = new global::System.Collections.Generic.List<string>(collection.Keys);
+      currentIndex = -1;
+      currentObject = null;
+      currentSize = collectionRef.Count;
+    }
+
+    // Type-safe iterator Current
+    public global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup> Current {
+      get {
+        if (currentIndex == -1)
+          throw new global::System.InvalidOperationException("Enumeration not started.");
+        if (currentIndex > currentSize - 1)
+          throw new global::System.InvalidOperationException("Enumeration finished.");
+        if (currentObject == null)
+          throw new global::System.InvalidOperationException("Collection modified.");
+        return (global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup>)currentObject;
+      }
+    }
+
+    // Type-unsafe IEnumerator.Current
+    object global::System.Collections.IEnumerator.Current {
+      get {
+        return Current;
+      }
+    }
+
+    public bool MoveNext() {
+      int size = collectionRef.Count;
+      bool moveOkay = (currentIndex+1 < size) && (size == currentSize);
+      if (moveOkay) {
+        currentIndex++;
+        string currentKey = keyCollection[currentIndex];
+        currentObject = new global::System.Collections.Generic.KeyValuePair<string, ServiceSubscriptionFilterAttributeGroup>(currentKey, collectionRef[currentKey]);
+      } else {
+        currentObject = null;
+      }
+      return moveOkay;
+    }
+
+    public void Reset() {
+      currentIndex = -1;
+      currentObject = null;
+      if (collectionRef.Count != currentSize) {
+        throw new global::System.InvalidOperationException("Collection modified.");
+      }
+    }
+
+    public void Dispose() {
+      currentIndex = -1;
+      currentObject = null;
+    }
+  }
+
+
+  public map_subscriptionattributegroup() : this(RobotRaconteurNETPINVOKE.new_map_subscriptionattributegroup__SWIG_0(), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public map_subscriptionattributegroup(map_subscriptionattributegroup other) : this(RobotRaconteurNETPINVOKE.new_map_subscriptionattributegroup__SWIG_1(map_subscriptionattributegroup.getCPtr(other)), true) {
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  private uint size() {
+    uint ret = RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_size(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public bool empty() {
+    bool ret = RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_empty(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public void Clear() {
+    RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_Clear(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  private ServiceSubscriptionFilterAttributeGroup getitem(string key) {
+    ServiceSubscriptionFilterAttributeGroup ret = new ServiceSubscriptionFilterAttributeGroup(RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_getitem(swigCPtr, key), false);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private void setitem(string key, ServiceSubscriptionFilterAttributeGroup x) {
+    RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_setitem(swigCPtr, key, ServiceSubscriptionFilterAttributeGroup.getCPtr(x));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public bool ContainsKey(string key) {
+    bool ret = RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_ContainsKey(swigCPtr, key);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public void Add(string key, ServiceSubscriptionFilterAttributeGroup value) {
+    RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_Add(swigCPtr, key, ServiceSubscriptionFilterAttributeGroup.getCPtr(value));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public bool Remove(string key) {
+    bool ret = RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_Remove(swigCPtr, key);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private global::System.IntPtr create_iterator_begin() {
+    global::System.IntPtr ret = RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_create_iterator_begin(swigCPtr);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private string get_next_key(global::System.IntPtr swigiterator) {
+    string ret = RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_get_next_key(swigCPtr, swigiterator);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  private void destroy_iterator(global::System.IntPtr swigiterator) {
+    RobotRaconteurNETPINVOKE.map_subscriptionattributegroup_destroy_iterator(swigCPtr, swigiterator);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+}
+
+}
+namespace RobotRaconteur {
+
+using global::System;
+using global::System.Runtime.InteropServices;
+
 public class WrappedServiceSubscriptionFilterPredicateDirector : global::System.IDisposable {
   private global::System.Runtime.InteropServices.HandleRef swigCPtr;
   protected bool swigCMemOwn;
@@ -23380,6 +24625,31 @@ public class WrappedServiceSubscriptionFilter : global::System.IDisposable {
     get {
       global::System.IntPtr cPtr = RobotRaconteurNETPINVOKE.WrappedServiceSubscriptionFilter_TransportSchemes_get(swigCPtr);
       vectorstring ret = (cPtr == global::System.IntPtr.Zero) ? null : new vectorstring(cPtr, false);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public map_subscriptionattributegroup Attributes {
+    set {
+      RobotRaconteurNETPINVOKE.WrappedServiceSubscriptionFilter_Attributes_set(swigCPtr, map_subscriptionattributegroup.getCPtr(value));
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      global::System.IntPtr cPtr = RobotRaconteurNETPINVOKE.WrappedServiceSubscriptionFilter_Attributes_get(swigCPtr);
+      map_subscriptionattributegroup ret = (cPtr == global::System.IntPtr.Zero) ? null : new map_subscriptionattributegroup(cPtr, false);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public ServiceSubscriptionFilterAttributeGroupOperation AttributesMatchOperation {
+    set {
+      RobotRaconteurNETPINVOKE.WrappedServiceSubscriptionFilter_AttributesMatchOperation_set(swigCPtr, (int)value);
+      if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      ServiceSubscriptionFilterAttributeGroupOperation ret = (ServiceSubscriptionFilterAttributeGroupOperation)RobotRaconteurNETPINVOKE.WrappedServiceSubscriptionFilter_AttributesMatchOperation_get(swigCPtr);
       if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
@@ -24121,6 +25391,16 @@ public class WrappedServiceSubscription : global::System.IDisposable {
 
   public void UpdateServiceURL(string url) {
     RobotRaconteurNETPINVOKE.WrappedServiceSubscription_UpdateServiceURL__SWIG_9(swigCPtr, url);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void UpdateServiceByType(vectorstring service_types, WrappedServiceSubscriptionFilter filter) {
+    RobotRaconteurNETPINVOKE.WrappedServiceSubscription_UpdateServiceByType__SWIG_0(swigCPtr, vectorstring.getCPtr(service_types), WrappedServiceSubscriptionFilter.getCPtr(filter));
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void UpdateServiceByType(vectorstring service_types) {
+    RobotRaconteurNETPINVOKE.WrappedServiceSubscription_UpdateServiceByType__SWIG_1(swigCPtr, vectorstring.getCPtr(service_types));
     if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
   }
 
@@ -29493,7 +30773,10 @@ class RobotRaconteurNETPINVOKE {
   public static extern global::System.IntPtr new_NodeID__SWIG_1(string jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_NodeID__SWIG_2")]
-  public static extern global::System.IntPtr new_NodeID__SWIG_2([global::System.Runtime.InteropServices.In, global::System.Runtime.InteropServices.MarshalAs(global::System.Runtime.InteropServices.UnmanagedType.LPArray)]byte[] jarg1, int jarg2);
+  public static extern global::System.IntPtr new_NodeID__SWIG_2(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_NodeID__SWIG_3")]
+  public static extern global::System.IntPtr new_NodeID__SWIG_3([global::System.Runtime.InteropServices.In, global::System.Runtime.InteropServices.MarshalAs(global::System.Runtime.InteropServices.UnmanagedType.LPArray)]byte[] jarg1, int jarg2);
 
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_NodeID_ToByteArrayC")]
   public static extern void NodeID_ToByteArrayC(global::System.Runtime.InteropServices.HandleRef jarg1, [global::System.Runtime.InteropServices.Out, global::System.Runtime.InteropServices.MarshalAs(global::System.Runtime.InteropServices.UnmanagedType.LPArray)]byte[] jarg2);
@@ -30496,6 +31779,9 @@ class RobotRaconteurNETPINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_IntraTransport_Close")]
   public static extern void IntraTransport_Close(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_IntraTransport_StartClient")]
+  public static extern void IntraTransport_StartClient(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_IntraTransport_StartServer")]
   public static extern void IntraTransport_StartServer(global::System.Runtime.InteropServices.HandleRef jarg1);
@@ -32552,6 +33838,255 @@ class RobotRaconteurNETPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_delete_vectorptr_subscriptionclientid")]
   public static extern void delete_vectorptr_subscriptionclientid(global::System.Runtime.InteropServices.HandleRef jarg1);
 
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Name_set")]
+  public static extern void ServiceSubscriptionFilterAttribute_Name_set(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Name_get")]
+  public static extern string ServiceSubscriptionFilterAttribute_Name_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Value_set")]
+  public static extern void ServiceSubscriptionFilterAttribute_Value_set(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Value_get")]
+  public static extern string ServiceSubscriptionFilterAttribute_Value_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_UseRegex_set")]
+  public static extern void ServiceSubscriptionFilterAttribute_UseRegex_set(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_UseRegex_get")]
+  public static extern bool ServiceSubscriptionFilterAttribute_UseRegex_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttribute__SWIG_0")]
+  public static extern global::System.IntPtr new_ServiceSubscriptionFilterAttribute__SWIG_0(string jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttribute__SWIG_1")]
+  public static extern global::System.IntPtr new_ServiceSubscriptionFilterAttribute__SWIG_1(string jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_0")]
+  public static extern bool ServiceSubscriptionFilterAttribute_IsMatch__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_1")]
+  public static extern bool ServiceSubscriptionFilterAttribute_IsMatch__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, string jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_2")]
+  public static extern bool ServiceSubscriptionFilterAttribute_IsMatch__SWIG_2(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_3")]
+  public static extern bool ServiceSubscriptionFilterAttribute_IsMatch__SWIG_3(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_delete_ServiceSubscriptionFilterAttribute")]
+  public static extern void delete_ServiceSubscriptionFilterAttribute(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_CreateServiceSubscriptionFilterAttributeRegex__SWIG_0")]
+  public static extern global::System.IntPtr CreateServiceSubscriptionFilterAttributeRegex__SWIG_0(string jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_CreateServiceSubscriptionFilterAttributeRegex__SWIG_1")]
+  public static extern global::System.IntPtr CreateServiceSubscriptionFilterAttributeRegex__SWIG_1(string jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_Clear")]
+  public static extern void vector_subscriptionattribute_Clear(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_Add")]
+  public static extern void vector_subscriptionattribute_Add(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_size")]
+  public static extern uint vector_subscriptionattribute_size(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_capacity")]
+  public static extern uint vector_subscriptionattribute_capacity(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_reserve")]
+  public static extern void vector_subscriptionattribute_reserve(global::System.Runtime.InteropServices.HandleRef jarg1, uint jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_0")]
+  public static extern global::System.IntPtr new_vector_subscriptionattribute__SWIG_0();
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_1")]
+  public static extern global::System.IntPtr new_vector_subscriptionattribute__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_2")]
+  public static extern global::System.IntPtr new_vector_subscriptionattribute__SWIG_2(int jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_getitemcopy")]
+  public static extern global::System.IntPtr vector_subscriptionattribute_getitemcopy(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_getitem")]
+  public static extern global::System.IntPtr vector_subscriptionattribute_getitem(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_setitem")]
+  public static extern void vector_subscriptionattribute_setitem(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_AddRange")]
+  public static extern void vector_subscriptionattribute_AddRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_GetRange")]
+  public static extern global::System.IntPtr vector_subscriptionattribute_GetRange(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, int jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_Insert")]
+  public static extern void vector_subscriptionattribute_Insert(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_InsertRange")]
+  public static extern void vector_subscriptionattribute_InsertRange(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_RemoveAt")]
+  public static extern void vector_subscriptionattribute_RemoveAt(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_RemoveRange")]
+  public static extern void vector_subscriptionattribute_RemoveRange(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, int jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_Repeat")]
+  public static extern global::System.IntPtr vector_subscriptionattribute_Repeat(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_Reverse__SWIG_0")]
+  public static extern void vector_subscriptionattribute_Reverse__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_Reverse__SWIG_1")]
+  public static extern void vector_subscriptionattribute_Reverse__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, int jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_vector_subscriptionattribute_SetRange")]
+  public static extern void vector_subscriptionattribute_SetRange(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_delete_vector_subscriptionattribute")]
+  public static extern void delete_vector_subscriptionattribute(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_map_subscriptionattribute__SWIG_0")]
+  public static extern global::System.IntPtr new_map_subscriptionattribute__SWIG_0();
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_map_subscriptionattribute__SWIG_1")]
+  public static extern global::System.IntPtr new_map_subscriptionattribute__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_size")]
+  public static extern uint map_subscriptionattribute_size(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_empty")]
+  public static extern bool map_subscriptionattribute_empty(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_Clear")]
+  public static extern void map_subscriptionattribute_Clear(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_getitem")]
+  public static extern global::System.IntPtr map_subscriptionattribute_getitem(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_setitem")]
+  public static extern void map_subscriptionattribute_setitem(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_ContainsKey")]
+  public static extern bool map_subscriptionattribute_ContainsKey(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_Add")]
+  public static extern void map_subscriptionattribute_Add(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_Remove")]
+  public static extern bool map_subscriptionattribute_Remove(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_create_iterator_begin")]
+  public static extern global::System.IntPtr map_subscriptionattribute_create_iterator_begin(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_get_next_key")]
+  public static extern string map_subscriptionattribute_get_next_key(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.IntPtr jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattribute_destroy_iterator")]
+  public static extern void map_subscriptionattribute_destroy_iterator(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.IntPtr jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_delete_map_subscriptionattribute")]
+  public static extern void delete_map_subscriptionattribute(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Attributes_set")]
+  public static extern void ServiceSubscriptionFilterAttributeGroup_Attributes_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Attributes_get")]
+  public static extern global::System.IntPtr ServiceSubscriptionFilterAttributeGroup_Attributes_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Groups_set")]
+  public static extern void ServiceSubscriptionFilterAttributeGroup_Groups_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Groups_get")]
+  public static extern global::System.IntPtr ServiceSubscriptionFilterAttributeGroup_Groups_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Operation_set")]
+  public static extern void ServiceSubscriptionFilterAttributeGroup_Operation_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Operation_get")]
+  public static extern int ServiceSubscriptionFilterAttributeGroup_Operation_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_set")]
+  public static extern void ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_set(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_get")]
+  public static extern bool ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_set")]
+  public static extern void ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_set(global::System.Runtime.InteropServices.HandleRef jarg1, char jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_get")]
+  public static extern char ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_0")]
+  public static extern global::System.IntPtr new_ServiceSubscriptionFilterAttributeGroup__SWIG_0();
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_1")]
+  public static extern global::System.IntPtr new_ServiceSubscriptionFilterAttributeGroup__SWIG_1(int jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_2")]
+  public static extern global::System.IntPtr new_ServiceSubscriptionFilterAttributeGroup__SWIG_2(int jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_3")]
+  public static extern global::System.IntPtr new_ServiceSubscriptionFilterAttributeGroup__SWIG_3(int jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_0")]
+  public static extern bool ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_1")]
+  public static extern bool ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_2")]
+  public static extern bool ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_2(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_delete_ServiceSubscriptionFilterAttributeGroup")]
+  public static extern void delete_ServiceSubscriptionFilterAttributeGroup(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_map_subscriptionattributegroup__SWIG_0")]
+  public static extern global::System.IntPtr new_map_subscriptionattributegroup__SWIG_0();
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_new_map_subscriptionattributegroup__SWIG_1")]
+  public static extern global::System.IntPtr new_map_subscriptionattributegroup__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_size")]
+  public static extern uint map_subscriptionattributegroup_size(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_empty")]
+  public static extern bool map_subscriptionattributegroup_empty(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_Clear")]
+  public static extern void map_subscriptionattributegroup_Clear(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_getitem")]
+  public static extern global::System.IntPtr map_subscriptionattributegroup_getitem(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_setitem")]
+  public static extern void map_subscriptionattributegroup_setitem(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_ContainsKey")]
+  public static extern bool map_subscriptionattributegroup_ContainsKey(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_Add")]
+  public static extern void map_subscriptionattributegroup_Add(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_Remove")]
+  public static extern bool map_subscriptionattributegroup_Remove(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_create_iterator_begin")]
+  public static extern global::System.IntPtr map_subscriptionattributegroup_create_iterator_begin(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_get_next_key")]
+  public static extern string map_subscriptionattributegroup_get_next_key(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.IntPtr jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_map_subscriptionattributegroup_destroy_iterator")]
+  public static extern void map_subscriptionattributegroup_destroy_iterator(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.IntPtr jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_delete_map_subscriptionattributegroup")]
+  public static extern void delete_map_subscriptionattributegroup(global::System.Runtime.InteropServices.HandleRef jarg1);
+
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscriptionFilterPredicateDirector_Predicate")]
   public static extern bool WrappedServiceSubscriptionFilterPredicateDirector_Predicate(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
@@ -32611,6 +34146,18 @@ class RobotRaconteurNETPINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_TransportSchemes_get")]
   public static extern global::System.IntPtr WrappedServiceSubscriptionFilter_TransportSchemes_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_Attributes_set")]
+  public static extern void WrappedServiceSubscriptionFilter_Attributes_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_Attributes_get")]
+  public static extern global::System.IntPtr WrappedServiceSubscriptionFilter_Attributes_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_AttributesMatchOperation_set")]
+  public static extern void WrappedServiceSubscriptionFilter_AttributesMatchOperation_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_AttributesMatchOperation_get")]
+  public static extern int WrappedServiceSubscriptionFilter_AttributesMatchOperation_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_SetRRPredicateDirector")]
   public static extern void WrappedServiceSubscriptionFilter_SetRRPredicateDirector(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, int jarg3);
@@ -32800,6 +34347,12 @@ class RobotRaconteurNETPINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscription_UpdateServiceURL__SWIG_9")]
   public static extern void WrappedServiceSubscription_UpdateServiceURL__SWIG_9(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscription_UpdateServiceByType__SWIG_0")]
+  public static extern void WrappedServiceSubscription_UpdateServiceByType__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_WrappedServiceSubscription_UpdateServiceByType__SWIG_1")]
+  public static extern void WrappedServiceSubscription_UpdateServiceByType__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
   [global::System.Runtime.InteropServices.DllImport("RobotRaconteurNETNative", EntryPoint="CSharp_RobotRaconteur_delete_WrappedServiceSubscription")]
   public static extern void delete_WrappedServiceSubscription(global::System.Runtime.InteropServices.HandleRef jarg1);
@@ -34158,6 +35711,18 @@ public class RobotRaconteurNET {
     return ret;
   }
 
+  public static ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(string regex_value) {
+    ServiceSubscriptionFilterAttribute ret = new ServiceSubscriptionFilterAttribute(RobotRaconteurNETPINVOKE.CreateServiceSubscriptionFilterAttributeRegex__SWIG_0(regex_value), true);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public static ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex(string name, string regex_value) {
+    ServiceSubscriptionFilterAttribute ret = new ServiceSubscriptionFilterAttribute(RobotRaconteurNETPINVOKE.CreateServiceSubscriptionFilterAttributeRegex__SWIG_1(name, regex_value), true);
+    if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
   public static vectorptr_subscriptionclientid WrappedServiceInfo2SubscriptionServicesToVector(map_subscriptionserviceinfo2 infos) {
     vectorptr_subscriptionclientid ret = new vectorptr_subscriptionclientid(RobotRaconteurNETPINVOKE.WrappedServiceInfo2SubscriptionServicesToVector(map_subscriptionserviceinfo2.getCPtr(infos)), true);
     if (RobotRaconteurNETPINVOKE.SWIGPendingException.Pending) throw RobotRaconteurNETPINVOKE.SWIGPendingException.Retrieve();
@@ -34262,6 +35827,32 @@ public class RobotRaconteurNET {
 
   public static readonly int RR_TIMEOUT_INFINITE = RobotRaconteurNETPINVOKE.RR_TIMEOUT_INFINITE_get();
   public static readonly int RR_VALUE_LIFESPAN_INFINITE = RobotRaconteurNETPINVOKE.RR_VALUE_LIFESPAN_INFINITE_get();
+}
+
+}
+namespace RobotRaconteur {
+
+using global::System;
+using global::System.Runtime.InteropServices;
+
+public class SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t {
+  private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+
+  internal SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t(global::System.IntPtr cPtr, bool futureUse) {
+    swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+  }
+
+  protected SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t() {
+    swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef getCPtr(SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t obj) {
+    return (obj == null) ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero) : obj.swigCPtr;
+  }
+
+  internal static global::System.Runtime.InteropServices.HandleRef swigRelease(SWIGTYPE_p_std__vectorT_RobotRaconteur__ServiceSubscriptionFilterAttributeGroup_t obj) {
+    return (obj == null) ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero) : obj.swigCPtr;
+  }
 }
 
 }

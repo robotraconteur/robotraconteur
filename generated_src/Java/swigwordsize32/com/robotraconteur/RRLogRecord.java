@@ -89,11 +89,11 @@ public class RRLogRecord {
     return RobotRaconteurJavaJNI.RRLogRecord_ComponentObjectID_get(swigCPtr, this);
   }
 
-  public void setEndpoint(int value) {
+  public void setEndpoint(long value) {
     RobotRaconteurJavaJNI.RRLogRecord_Endpoint_set(swigCPtr, this, value);
   }
 
-  public int getEndpoint() {
+  public long getEndpoint() {
     return RobotRaconteurJavaJNI.RRLogRecord_Endpoint_get(swigCPtr, this);
   }
 

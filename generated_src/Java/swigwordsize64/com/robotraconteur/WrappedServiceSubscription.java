@@ -163,4 +163,12 @@ public class WrappedServiceSubscription {
     RobotRaconteurJavaJNI.WrappedServiceSubscription_updateServiceURL__SWIG_9(swigCPtr, this, url);
   }
 
+  public void updateServiceByType(vectorstring service_types, WrappedServiceSubscriptionFilter filter) {
+    RobotRaconteurJavaJNI.WrappedServiceSubscription_updateServiceByType__SWIG_0(swigCPtr, this, vectorstring.getCPtr(service_types), service_types, WrappedServiceSubscriptionFilter.getCPtr(filter), filter);
+  }
+
+  public void updateServiceByType(vectorstring service_types) {
+    RobotRaconteurJavaJNI.WrappedServiceSubscription_updateServiceByType__SWIG_1(swigCPtr, this, vectorstring.getCPtr(service_types), service_types);
+  }
+
 }

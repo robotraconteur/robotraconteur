@@ -40,7 +40,7 @@ public class ArrayMemoryBase {
     }
   }
 
-  public long length() {
+  public java.math.BigInteger length() {
     return RobotRaconteurJavaJNI.ArrayMemoryBase_length(swigCPtr, this);
   }
 

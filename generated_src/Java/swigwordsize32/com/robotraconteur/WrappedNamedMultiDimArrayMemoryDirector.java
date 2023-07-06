@@ -67,7 +67,7 @@ public class WrappedNamedMultiDimArrayMemoryDirector {
     return new vector_uint64_t(RobotRaconteurJavaJNI.WrappedNamedMultiDimArrayMemoryDirector_dimensions(swigCPtr, this), true);
   }
 
-  public long dimCount() {
+  public java.math.BigInteger dimCount() {
     return RobotRaconteurJavaJNI.WrappedNamedMultiDimArrayMemoryDirector_dimCount(swigCPtr, this);
   }
 

@@ -40,7 +40,7 @@ public class WrappedNamedArrayMemoryClient {
     }
   }
 
-  public long length() {
+  public java.math.BigInteger length() {
     return RobotRaconteurJavaJNI.WrappedNamedArrayMemoryClient_length(swigCPtr, this);
   }
 
@@ -48,11 +48,11 @@ public class WrappedNamedArrayMemoryClient {
     return MemberDefinition_Direction.swigToEnum(RobotRaconteurJavaJNI.WrappedNamedArrayMemoryClient_direction(swigCPtr, this));
   }
 
-  public void read(long memorypos, WrappedNamedArrayMemoryClientBuffer buffer, long bufferpos, long count) {
+  public void read(java.math.BigInteger memorypos, WrappedNamedArrayMemoryClientBuffer buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     RobotRaconteurJavaJNI.WrappedNamedArrayMemoryClient_read(swigCPtr, this, memorypos, WrappedNamedArrayMemoryClientBuffer.getCPtr(buffer), buffer, bufferpos, count);
   }
 
-  public void write(long memorypos, WrappedNamedArrayMemoryClientBuffer buffer, long bufferpos, long count) {
+  public void write(java.math.BigInteger memorypos, WrappedNamedArrayMemoryClientBuffer buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     RobotRaconteurJavaJNI.WrappedNamedArrayMemoryClient_write(swigCPtr, this, memorypos, WrappedNamedArrayMemoryClientBuffer.getCPtr(buffer), buffer, bufferpos, count);
   }
 

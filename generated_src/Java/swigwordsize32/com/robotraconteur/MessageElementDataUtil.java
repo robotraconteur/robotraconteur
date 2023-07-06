@@ -304,7 +304,7 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
     RobotRaconteurJavaJNI.MessageElementDataUtil_rRBaseArrayToInts__SWIG_1(RRBaseArray.getCPtr(rrarray), rrarray, array_out, len);
   }
 
-  public static void rRBaseArrayToLongs(RRBaseArray rrarray, int[] array_out, int len) {
+  public static void rRBaseArrayToLongs(RRBaseArray rrarray, long[] array_out, int len) {
     RobotRaconteurJavaJNI.MessageElementDataUtil_rRBaseArrayToLongs(RRBaseArray.getCPtr(rrarray), rrarray, array_out, len);
   }
 
@@ -369,7 +369,7 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
     return (cPtr == 0) ? null : new RRBaseArray(cPtr, true);
   }
 
-  public static RRBaseArray longsToRRBaseArray(int[] array_in, int len, DataTypes type) {
+  public static RRBaseArray longsToRRBaseArray(long[] array_in, int len, DataTypes type) {
     long cPtr = RobotRaconteurJavaJNI.MessageElementDataUtil_longsToRRBaseArray__SWIG_0(array_in, len, type.swigValue());
     return (cPtr == 0) ? null : new RRBaseArray(cPtr, true);
   }
@@ -426,7 +426,7 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
     RobotRaconteurJavaJNI.MessageElementDataUtil_intsToRRBaseArray__SWIG_3(array_in, len, RRBaseArray.getCPtr(rrarray), rrarray);
   }
 
-  public static void longsToRRBaseArray(int[] array_in, int len, RRBaseArray rrarray) {
+  public static void longsToRRBaseArray(long[] array_in, int len, RRBaseArray rrarray) {
     RobotRaconteurJavaJNI.MessageElementDataUtil_longsToRRBaseArray__SWIG_1(array_in, len, RRBaseArray.getCPtr(rrarray), rrarray);
   }
 

@@ -63,6 +63,10 @@ public class IntraTransport extends Transport {
     RobotRaconteurJavaJNI.IntraTransport_close(swigCPtr, this);
   }
 
+  public void startClient() {
+    RobotRaconteurJavaJNI.IntraTransport_startClient(swigCPtr, this);
+  }
+
   public void startServer() {
     RobotRaconteurJavaJNI.IntraTransport_startServer(swigCPtr, this);
   }

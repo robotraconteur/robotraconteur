@@ -48,11 +48,11 @@ public class TimeSpec {
     }
   }
 
-  public void setSeconds(int value) {
+  public void setSeconds(long value) {
     RobotRaconteurJavaJNI.TimeSpec_seconds_set(swigCPtr, this, value);
   }
 
-  public int getSeconds() {
+  public long getSeconds() {
     return RobotRaconteurJavaJNI.TimeSpec_seconds_get(swigCPtr, this);
   }
 
@@ -68,7 +68,7 @@ public class TimeSpec {
     this(RobotRaconteurJavaJNI.new_TimeSpec__SWIG_0(), true);
   }
 
-  public TimeSpec(int seconds, int nanoseconds) {
+  public TimeSpec(long seconds, int nanoseconds) {
     this(RobotRaconteurJavaJNI.new_TimeSpec__SWIG_1(seconds, nanoseconds), true);
   }
 

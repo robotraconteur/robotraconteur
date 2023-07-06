@@ -247,6 +247,14 @@ public class RobotRaconteurJava implements RobotRaconteurJavaConstants {
     return RobotRaconteurJavaJNI.wrappedTryGetDetectedNodeCacheInfo(RobotRaconteurNode.getCPtr(node), node, NodeID.getCPtr(nodeid), nodeid, WrappedNodeInfo2.getCPtr(nodeinfo2), nodeinfo2);
   }
 
+  public static ServiceSubscriptionFilterAttribute createServiceSubscriptionFilterAttributeRegex(String regex_value) {
+    return new ServiceSubscriptionFilterAttribute(RobotRaconteurJavaJNI.createServiceSubscriptionFilterAttributeRegex__SWIG_0(regex_value), true);
+  }
+
+  public static ServiceSubscriptionFilterAttribute createServiceSubscriptionFilterAttributeRegex(String name, String regex_value) {
+    return new ServiceSubscriptionFilterAttribute(RobotRaconteurJavaJNI.createServiceSubscriptionFilterAttributeRegex__SWIG_1(name, regex_value), true);
+  }
+
   public static vectorptr_subscriptionclientid wrappedServiceInfo2SubscriptionServicesToVector(map_subscriptionserviceinfo2 infos) {
     return new vectorptr_subscriptionclientid(RobotRaconteurJavaJNI.wrappedServiceInfo2SubscriptionServicesToVector(map_subscriptionserviceinfo2.getCPtr(infos), infos), true);
   }

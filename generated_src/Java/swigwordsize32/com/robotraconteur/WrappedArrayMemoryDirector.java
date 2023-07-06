@@ -63,15 +63,15 @@ public class WrappedArrayMemoryDirector {
     RobotRaconteurJavaJNI.WrappedArrayMemoryDirector_change_ownership(this, swigCPtr, true);
   }
 
-  public long length() {
+  public java.math.BigInteger length() {
     return RobotRaconteurJavaJNI.WrappedArrayMemoryDirector_length(swigCPtr, this);
   }
 
-  public void read(long memorypos, RRBaseArray buffer, long bufferpos, long count) {
+  public void read(java.math.BigInteger memorypos, RRBaseArray buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     RobotRaconteurJavaJNI.WrappedArrayMemoryDirector_read(swigCPtr, this, memorypos, RRBaseArray.getCPtr(buffer), buffer, bufferpos, count);
   }
 
-  public void write(long memorypos, RRBaseArray buffer, long bufferpos, long count) {
+  public void write(java.math.BigInteger memorypos, RRBaseArray buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     RobotRaconteurJavaJNI.WrappedArrayMemoryDirector_write(swigCPtr, this, memorypos, RRBaseArray.getCPtr(buffer), buffer, bufferpos, count);
   }
 

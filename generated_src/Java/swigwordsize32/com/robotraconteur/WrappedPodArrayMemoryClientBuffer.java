@@ -63,16 +63,16 @@ public class WrappedPodArrayMemoryClientBuffer {
     RobotRaconteurJavaJNI.WrappedPodArrayMemoryClientBuffer_change_ownership(this, swigCPtr, true);
   }
 
-  public void unpackReadResult(MessageElementNestedElementList res, long bufferpos, long count) {
+  public void unpackReadResult(MessageElementNestedElementList res, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     RobotRaconteurJavaJNI.WrappedPodArrayMemoryClientBuffer_unpackReadResult(swigCPtr, this, MessageElementNestedElementList.getCPtr(res), res, bufferpos, count);
   }
 
-  public MessageElementNestedElementList packWriteRequest(long bufferpos, long count) {
+  public MessageElementNestedElementList packWriteRequest(java.math.BigInteger bufferpos, java.math.BigInteger count) {
     long cPtr = RobotRaconteurJavaJNI.WrappedPodArrayMemoryClientBuffer_packWriteRequest(swigCPtr, this, bufferpos, count);
     return (cPtr == 0) ? null : new MessageElementNestedElementList(cPtr, true);
   }
 
-  public long getBufferLength() {
+  public java.math.BigInteger getBufferLength() {
     return RobotRaconteurJavaJNI.WrappedPodArrayMemoryClientBuffer_getBufferLength(swigCPtr, this);
   }
 

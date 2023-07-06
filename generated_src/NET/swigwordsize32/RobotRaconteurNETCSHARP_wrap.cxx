@@ -414,15 +414,6 @@ using namespace std;
 #include <stdint.h>		// Use the C99 official header
 
 
-#define SWIGWORDSIZE64
-#ifndef LONG_MAX
-#include <limits.h>
-#endif
-#if (__WORDSIZE == 32) || (LONG_MAX == INT_MAX)
-# error "SWIG wrapped code invalid in 32 bit architecture, regenerate code using -DSWIGWORDSIZE32"
-#endif
-
-
 #include <stdio.h>
 
 
@@ -1028,52 +1019,52 @@ SWIGINTERN bool std_vector_Sl_uint8_t_Sg__Remove(std::vector< uint8_t > *self,un
         return false;
       }
 SWIGINTERN std::vector< uint64_t > *new_std_vector_Sl_uint64_t_Sg___SWIG_2(int capacity){
-        std::vector< unsigned long >* pv = 0;
+        std::vector< unsigned long long >* pv = 0;
         if (capacity >= 0) {
-          pv = new std::vector< unsigned long >();
+          pv = new std::vector< unsigned long long >();
           pv->reserve(capacity);
        } else {
           throw std::out_of_range("capacity");
        }
        return pv;
       }
-SWIGINTERN unsigned long std_vector_Sl_uint64_t_Sg__getitemcopy(std::vector< uint64_t > *self,int index){
+SWIGINTERN unsigned long long std_vector_Sl_uint64_t_Sg__getitemcopy(std::vector< uint64_t > *self,int index){
         if (index>=0 && index<(int)self->size())
           return (*self)[index];
         else
           throw std::out_of_range("index");
       }
-SWIGINTERN std::vector< unsigned long >::value_type const &std_vector_Sl_uint64_t_Sg__getitem(std::vector< uint64_t > *self,int index){
+SWIGINTERN std::vector< unsigned long long >::value_type const &std_vector_Sl_uint64_t_Sg__getitem(std::vector< uint64_t > *self,int index){
         if (index>=0 && index<(int)self->size())
           return (*self)[index];
         else
           throw std::out_of_range("index");
       }
-SWIGINTERN void std_vector_Sl_uint64_t_Sg__setitem(std::vector< uint64_t > *self,int index,unsigned long const &val){
+SWIGINTERN void std_vector_Sl_uint64_t_Sg__setitem(std::vector< uint64_t > *self,int index,unsigned long long const &val){
         if (index>=0 && index<(int)self->size())
           (*self)[index] = val;
         else
           throw std::out_of_range("index");
       }
-SWIGINTERN void std_vector_Sl_uint64_t_Sg__AddRange(std::vector< uint64_t > *self,std::vector< unsigned long > const &values){
+SWIGINTERN void std_vector_Sl_uint64_t_Sg__AddRange(std::vector< uint64_t > *self,std::vector< unsigned long long > const &values){
         self->insert(self->end(), values.begin(), values.end());
       }
-SWIGINTERN std::vector< unsigned long > *std_vector_Sl_uint64_t_Sg__GetRange(std::vector< uint64_t > *self,int index,int count){
+SWIGINTERN std::vector< unsigned long long > *std_vector_Sl_uint64_t_Sg__GetRange(std::vector< uint64_t > *self,int index,int count){
         if (index < 0)
           throw std::out_of_range("index");
         if (count < 0)
           throw std::out_of_range("count");
         if (index >= (int)self->size()+1 || index+count > (int)self->size())
           throw std::invalid_argument("invalid range");
-        return new std::vector< unsigned long >(self->begin()+index, self->begin()+index+count);
+        return new std::vector< unsigned long long >(self->begin()+index, self->begin()+index+count);
       }
-SWIGINTERN void std_vector_Sl_uint64_t_Sg__Insert(std::vector< uint64_t > *self,int index,unsigned long const &x){
+SWIGINTERN void std_vector_Sl_uint64_t_Sg__Insert(std::vector< uint64_t > *self,int index,unsigned long long const &x){
         if (index>=0 && index<(int)self->size()+1)
           self->insert(self->begin()+index, x);
         else
           throw std::out_of_range("index");
       }
-SWIGINTERN void std_vector_Sl_uint64_t_Sg__InsertRange(std::vector< uint64_t > *self,int index,std::vector< unsigned long > const &values){
+SWIGINTERN void std_vector_Sl_uint64_t_Sg__InsertRange(std::vector< uint64_t > *self,int index,std::vector< unsigned long long > const &values){
         if (index>=0 && index<(int)self->size()+1)
           self->insert(self->begin()+index, values.begin(), values.end());
         else
@@ -1094,10 +1085,10 @@ SWIGINTERN void std_vector_Sl_uint64_t_Sg__RemoveRange(std::vector< uint64_t > *
           throw std::invalid_argument("invalid range");
         self->erase(self->begin()+index, self->begin()+index+count);
       }
-SWIGINTERN std::vector< unsigned long > *std_vector_Sl_uint64_t_Sg__Repeat(unsigned long const &value,int count){
+SWIGINTERN std::vector< unsigned long long > *std_vector_Sl_uint64_t_Sg__Repeat(unsigned long long const &value,int count){
         if (count < 0)
           throw std::out_of_range("count");
-        return new std::vector< unsigned long >(count, value);
+        return new std::vector< unsigned long long >(count, value);
       }
 SWIGINTERN void std_vector_Sl_uint64_t_Sg__Reverse__SWIG_0(std::vector< uint64_t > *self){
         std::reverse(self->begin(), self->end());
@@ -1111,32 +1102,32 @@ SWIGINTERN void std_vector_Sl_uint64_t_Sg__Reverse__SWIG_1(std::vector< uint64_t
           throw std::invalid_argument("invalid range");
         std::reverse(self->begin()+index, self->begin()+index+count);
       }
-SWIGINTERN void std_vector_Sl_uint64_t_Sg__SetRange(std::vector< uint64_t > *self,int index,std::vector< unsigned long > const &values){
+SWIGINTERN void std_vector_Sl_uint64_t_Sg__SetRange(std::vector< uint64_t > *self,int index,std::vector< unsigned long long > const &values){
         if (index < 0)
           throw std::out_of_range("index");
         if (index+values.size() > self->size())
           throw std::out_of_range("index");
         std::copy(values.begin(), values.end(), self->begin()+index);
       }
-SWIGINTERN bool std_vector_Sl_uint64_t_Sg__Contains(std::vector< uint64_t > *self,unsigned long const &value){
+SWIGINTERN bool std_vector_Sl_uint64_t_Sg__Contains(std::vector< uint64_t > *self,unsigned long long const &value){
         return std::find(self->begin(), self->end(), value) != self->end();
       }
-SWIGINTERN int std_vector_Sl_uint64_t_Sg__IndexOf(std::vector< uint64_t > *self,unsigned long const &value){
+SWIGINTERN int std_vector_Sl_uint64_t_Sg__IndexOf(std::vector< uint64_t > *self,unsigned long long const &value){
         int index = -1;
-        std::vector< unsigned long >::iterator it = std::find(self->begin(), self->end(), value);
+        std::vector< unsigned long long >::iterator it = std::find(self->begin(), self->end(), value);
         if (it != self->end())
           index = (int)(it - self->begin());
         return index;
       }
-SWIGINTERN int std_vector_Sl_uint64_t_Sg__LastIndexOf(std::vector< uint64_t > *self,unsigned long const &value){
+SWIGINTERN int std_vector_Sl_uint64_t_Sg__LastIndexOf(std::vector< uint64_t > *self,unsigned long long const &value){
         int index = -1;
-        std::vector< unsigned long >::reverse_iterator rit = std::find(self->rbegin(), self->rend(), value);
+        std::vector< unsigned long long >::reverse_iterator rit = std::find(self->rbegin(), self->rend(), value);
         if (rit != self->rend())
           index = (int)(self->rend() - 1 - rit);
         return index;
       }
-SWIGINTERN bool std_vector_Sl_uint64_t_Sg__Remove(std::vector< uint64_t > *self,unsigned long const &value){
-        std::vector< unsigned long >::iterator it = std::find(self->begin(), self->end(), value);
+SWIGINTERN bool std_vector_Sl_uint64_t_Sg__Remove(std::vector< uint64_t > *self,unsigned long long const &value){
+        std::vector< unsigned long long >::iterator it = std::find(self->begin(), self->end(), value);
         if (it != self->end()) {
           self->erase(it);
           return true;
@@ -2197,7 +2188,7 @@ return boost::dynamic_pointer_cast<RobotRaconteur::MemoryDefinition>(t);
 
 };
 
-SWIGINTERN RobotRaconteur::NodeID *new_RobotRaconteur_NodeID__SWIG_2(uint8_t const bytes[16],int32_t bytes_len){
+SWIGINTERN RobotRaconteur::NodeID *new_RobotRaconteur_NodeID__SWIG_3(uint8_t const bytes[16],int32_t bytes_len){
 		if (bytes_len!=16) throw InvalidArgumentException("Invalid NodeID bytes length");
 	
 		boost::array<uint8_t,16> b = {};
@@ -3255,6 +3246,175 @@ SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionClientID_Sg__Set
           throw std::out_of_range("index");
         std::copy(values.begin(), values.end(), self->begin()+index);
       }
+SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *new_std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg___SWIG_2(int capacity){
+        std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >* pv = 0;
+        if (capacity >= 0) {
+          pv = new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >();
+          pv->reserve(capacity);
+       } else {
+          throw std::out_of_range("capacity");
+       }
+       return pv;
+      }
+SWIGINTERN RobotRaconteur::ServiceSubscriptionFilterAttribute std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitemcopy(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index){
+        if (index>=0 && index<(int)self->size())
+          return (*self)[index];
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::value_type const &std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitem(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index){
+        if (index>=0 && index<(int)self->size())
+          return (*self)[index];
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__setitem(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,RobotRaconteur::ServiceSubscriptionFilterAttribute const &val){
+        if (index>=0 && index<(int)self->size())
+          (*self)[index] = val;
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__AddRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &values){
+        self->insert(self->end(), values.begin(), values.end());
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__GetRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,int count){
+        if (index < 0)
+          throw std::out_of_range("index");
+        if (count < 0)
+          throw std::out_of_range("count");
+        if (index >= (int)self->size()+1 || index+count > (int)self->size())
+          throw std::invalid_argument("invalid range");
+        return new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >(self->begin()+index, self->begin()+index+count);
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Insert(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,RobotRaconteur::ServiceSubscriptionFilterAttribute const &x){
+        if (index>=0 && index<(int)self->size()+1)
+          self->insert(self->begin()+index, x);
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__InsertRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &values){
+        if (index>=0 && index<(int)self->size()+1)
+          self->insert(self->begin()+index, values.begin(), values.end());
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__RemoveAt(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index){
+        if (index>=0 && index<(int)self->size())
+          self->erase(self->begin() + index);
+        else
+          throw std::out_of_range("index");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__RemoveRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,int count){
+        if (index < 0)
+          throw std::out_of_range("index");
+        if (count < 0)
+          throw std::out_of_range("count");
+        if (index >= (int)self->size()+1 || index+count > (int)self->size())
+          throw std::invalid_argument("invalid range");
+        self->erase(self->begin()+index, self->begin()+index+count);
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Repeat(RobotRaconteur::ServiceSubscriptionFilterAttribute const &value,int count){
+        if (count < 0)
+          throw std::out_of_range("count");
+        return new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >(count, value);
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Reverse__SWIG_0(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self){
+        std::reverse(self->begin(), self->end());
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Reverse__SWIG_1(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,int count){
+        if (index < 0)
+          throw std::out_of_range("index");
+        if (count < 0)
+          throw std::out_of_range("count");
+        if (index >= (int)self->size()+1 || index+count > (int)self->size())
+          throw std::invalid_argument("invalid range");
+        std::reverse(self->begin()+index, self->begin()+index+count);
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__SetRange(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,int index,std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &values){
+        if (index < 0)
+          throw std::out_of_range("index");
+        if (index+values.size() > self->size())
+          throw std::out_of_range("index");
+        std::copy(values.begin(), values.end(), self->begin()+index);
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitem(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end())
+          return iter->second;
+        else
+          throw std::out_of_range("key not found");
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__setitem(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const &x){
+        (*self)[key] = x;
+      }
+SWIGINTERN bool std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__ContainsKey(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = self->find(key);
+        return iter != self->end();
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Add(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const &value){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end())
+          throw std::out_of_range("key already exists");
+        self->insert(std::pair< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute >(key, value));
+      }
+SWIGINTERN bool std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Remove(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end()) {
+          self->erase(iter);
+          return true;
+        }
+        return false;
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__create_iterator_begin(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self){
+        return new std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator(self->begin());
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type const &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__get_next_key(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *swigiterator){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttribute, std::less< std::string > >::iterator iter = *swigiterator;
+        (*swigiterator)++;
+        return (*iter).first;
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__destroy_iterator(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *swigiterator){
+        delete swigiterator;
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__getitem(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end())
+          return iter->second;
+        else
+          throw std::out_of_range("key not found");
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__setitem(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const &x){
+        (*self)[key] = x;
+      }
+SWIGINTERN bool std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__ContainsKey(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = self->find(key);
+        return iter != self->end();
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__Add(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const &value){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end())
+          throw std::out_of_range("key already exists");
+        self->insert(std::pair< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >(key, value));
+      }
+SWIGINTERN bool std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__Remove(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &key){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = self->find(key);
+        if (iter != self->end()) {
+          self->erase(iter);
+          return true;
+        }
+        return false;
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__create_iterator_begin(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self){
+        return new std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator(self->begin());
+      }
+SWIGINTERN std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type const &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__get_next_key(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *swigiterator){
+        std::map< std::string, RobotRaconteur::ServiceSubscriptionFilterAttributeGroup, std::less< std::string > >::iterator iter = *swigiterator;
+        (*swigiterator)++;
+        return (*iter).first;
+      }
+SWIGINTERN void std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__destroy_iterator(std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *self,std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *swigiterator){
+        delete swigiterator;
+      }
 SWIGINTERN boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > RobotRaconteur_RRLogRecord_GetNode(RobotRaconteur::RRLogRecord *self){
                 return self->Node.lock();
             }
@@ -4147,8 +4307,8 @@ SwigDirector_WrappedPodArrayMemoryClientBuffer::SwigDirector_WrappedPodArrayMemo
 
 void SwigDirector_WrappedPodArrayMemoryClientBuffer::UnpackReadResult(boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > res,uint64_t bufferpos,uint64_t count) {
   void * jres  ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   
   if (!swig_callbackUnpackReadResult) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedPodArrayMemoryClientBuffer::UnpackReadResult");
@@ -4162,8 +4322,8 @@ void SwigDirector_WrappedPodArrayMemoryClientBuffer::UnpackReadResult(boost::int
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jres = 0;
     }
     
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jbufferpos = bufferpos;
+    jcount = count;
     swig_callbackUnpackReadResult(jres, jbufferpos, jcount);
   }
 }
@@ -4171,16 +4331,16 @@ void SwigDirector_WrappedPodArrayMemoryClientBuffer::UnpackReadResult(boost::int
 boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > SwigDirector_WrappedPodArrayMemoryClientBuffer::PackWriteRequest(uint64_t bufferpos,uint64_t count) {
   boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > c_result ;
   void * jresult = 0 ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > *smartarg ;
   
   if (!swig_callbackPackWriteRequest) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedPodArrayMemoryClientBuffer::PackWriteRequest");
     return c_result;
   } else {
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jbufferpos = bufferpos;
+    jcount = count;
     jresult = (void *) swig_callbackPackWriteRequest(jbufferpos, jcount);
     
     //if (jresult) {
@@ -4199,13 +4359,13 @@ boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > SwigDire
 
 uint64_t SwigDirector_WrappedPodArrayMemoryClientBuffer::GetBufferLength() {
   uint64_t c_result = SwigValueInit< uint64_t >() ;
-  unsigned long jresult = 0 ;
+  unsigned long long jresult = 0 ;
   
   if (!swig_callbackGetBufferLength) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedPodArrayMemoryClientBuffer::GetBufferLength");
     return c_result;
   } else {
-    jresult = (unsigned long) swig_callbackGetBufferLength();
+    jresult = (unsigned long long) swig_callbackGetBufferLength();
     c_result = (uint64_t)jresult; 
   }
   return c_result;
@@ -4310,29 +4470,29 @@ SwigDirector_WrappedArrayMemoryDirector::~SwigDirector_WrappedArrayMemoryDirecto
 
 uint64_t SwigDirector_WrappedArrayMemoryDirector::Length() {
   uint64_t c_result = SwigValueInit< uint64_t >() ;
-  unsigned long jresult = 0 ;
+  unsigned long long jresult = 0 ;
   
   if (!swig_callbackLength) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedArrayMemoryDirector::Length");
     return c_result;
   } else {
-    jresult = (unsigned long) swig_callbackLength();
+    jresult = (unsigned long long) swig_callbackLength();
     c_result = (uint64_t)jresult; 
   }
   return c_result;
 }
 
 void SwigDirector_WrappedArrayMemoryDirector::Read(uint64_t memorypos,boost::intrusive_ptr< RobotRaconteur::RRBaseArray > buffer,uint64_t bufferpos,uint64_t count) {
-  unsigned long jmemorypos  ;
+  unsigned long long jmemorypos  ;
   void * jbuffer  ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   
   if (!swig_callbackRead) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedArrayMemoryDirector::Read");
     return;
   } else {
-    jmemorypos = (unsigned long)memorypos;
+    jmemorypos = memorypos;
     
     //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::RRBaseArray >(buffer) : 0; 
     if (buffer) {
@@ -4342,23 +4502,23 @@ void SwigDirector_WrappedArrayMemoryDirector::Read(uint64_t memorypos,boost::int
       *(boost::shared_ptr< RobotRaconteur::RRBaseArray > **)&jbuffer = 0;
     }
     
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jbufferpos = bufferpos;
+    jcount = count;
     swig_callbackRead(jmemorypos, jbuffer, jbufferpos, jcount);
   }
 }
 
 void SwigDirector_WrappedArrayMemoryDirector::Write(uint64_t memorypos,boost::intrusive_ptr< RobotRaconteur::RRBaseArray > buffer,uint64_t bufferpos,uint64_t count) {
-  unsigned long jmemorypos  ;
+  unsigned long long jmemorypos  ;
   void * jbuffer  ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   
   if (!swig_callbackWrite) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedArrayMemoryDirector::Write");
     return;
   } else {
-    jmemorypos = (unsigned long)memorypos;
+    jmemorypos = memorypos;
     
     //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::RRBaseArray >(buffer) : 0; 
     if (buffer) {
@@ -4368,8 +4528,8 @@ void SwigDirector_WrappedArrayMemoryDirector::Write(uint64_t memorypos,boost::in
       *(boost::shared_ptr< RobotRaconteur::RRBaseArray > **)&jbuffer = 0;
     }
     
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jbufferpos = bufferpos;
+    jcount = count;
     swig_callbackWrite(jmemorypos, jbuffer, jbufferpos, jcount);
   }
 }
@@ -4415,13 +4575,13 @@ std::vector< uint64_t > SwigDirector_WrappedMultiDimArrayMemoryDirector::Dimensi
 
 uint64_t SwigDirector_WrappedMultiDimArrayMemoryDirector::DimCount() {
   uint64_t c_result = SwigValueInit< uint64_t >() ;
-  unsigned long jresult = 0 ;
+  unsigned long long jresult = 0 ;
   
   if (!swig_callbackDimCount) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedMultiDimArrayMemoryDirector::DimCount");
     return c_result;
   } else {
-    jresult = (unsigned long) swig_callbackDimCount();
+    jresult = (unsigned long long) swig_callbackDimCount();
     c_result = (uint64_t)jresult; 
   }
   return c_result;
@@ -4476,13 +4636,13 @@ SwigDirector_WrappedPodArrayMemoryDirector::~SwigDirector_WrappedPodArrayMemoryD
 
 uint64_t SwigDirector_WrappedPodArrayMemoryDirector::Length() {
   uint64_t c_result = SwigValueInit< uint64_t >() ;
-  unsigned long jresult = 0 ;
+  unsigned long long jresult = 0 ;
   
   if (!swig_callbackLength) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedPodArrayMemoryDirector::Length");
     return c_result;
   } else {
-    jresult = (unsigned long) swig_callbackLength();
+    jresult = (unsigned long long) swig_callbackLength();
     c_result = (uint64_t)jresult; 
   }
   return c_result;
@@ -4491,18 +4651,18 @@ uint64_t SwigDirector_WrappedPodArrayMemoryDirector::Length() {
 boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > SwigDirector_WrappedPodArrayMemoryDirector::Read(uint64_t memorypos,uint64_t bufferpos,uint64_t count) {
   boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > c_result ;
   void * jresult = 0 ;
-  unsigned long jmemorypos  ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jmemorypos  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > *smartarg ;
   
   if (!swig_callbackRead) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedPodArrayMemoryDirector::Read");
     return c_result;
   } else {
-    jmemorypos = (unsigned long)memorypos;
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jmemorypos = memorypos;
+    jbufferpos = bufferpos;
+    jcount = count;
     jresult = (void *) swig_callbackRead(jmemorypos, jbufferpos, jcount);
     
     //if (jresult) {
@@ -4520,16 +4680,16 @@ boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > SwigDire
 }
 
 void SwigDirector_WrappedPodArrayMemoryDirector::Write(uint64_t memorypos,boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > buffer,uint64_t bufferpos,uint64_t count) {
-  unsigned long jmemorypos  ;
+  unsigned long long jmemorypos  ;
   void * jbuffer  ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   
   if (!swig_callbackWrite) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedPodArrayMemoryDirector::Write");
     return;
   } else {
-    jmemorypos = (unsigned long)memorypos;
+    jmemorypos = memorypos;
     
     //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0; 
     if (buffer) {
@@ -4539,8 +4699,8 @@ void SwigDirector_WrappedPodArrayMemoryDirector::Write(uint64_t memorypos,boost:
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jbuffer = 0;
     }
     
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jbufferpos = bufferpos;
+    jcount = count;
     swig_callbackWrite(jmemorypos, jbuffer, jbufferpos, jcount);
   }
 }
@@ -4586,13 +4746,13 @@ std::vector< uint64_t > SwigDirector_WrappedPodMultiDimArrayMemoryDirector::Dime
 
 uint64_t SwigDirector_WrappedPodMultiDimArrayMemoryDirector::DimCount() {
   uint64_t c_result = SwigValueInit< uint64_t >() ;
-  unsigned long jresult = 0 ;
+  unsigned long long jresult = 0 ;
   
   if (!swig_callbackDimCount) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedPodMultiDimArrayMemoryDirector::DimCount");
     return c_result;
   } else {
-    jresult = (unsigned long) swig_callbackDimCount();
+    jresult = (unsigned long long) swig_callbackDimCount();
     c_result = (uint64_t)jresult; 
   }
   return c_result;
@@ -4675,8 +4835,8 @@ SwigDirector_WrappedNamedArrayMemoryClientBuffer::SwigDirector_WrappedNamedArray
 
 void SwigDirector_WrappedNamedArrayMemoryClientBuffer::UnpackReadResult(boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > res,uint64_t bufferpos,uint64_t count) {
   void * jres  ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   
   if (!swig_callbackUnpackReadResult) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedNamedArrayMemoryClientBuffer::UnpackReadResult");
@@ -4690,8 +4850,8 @@ void SwigDirector_WrappedNamedArrayMemoryClientBuffer::UnpackReadResult(boost::i
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jres = 0;
     }
     
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jbufferpos = bufferpos;
+    jcount = count;
     swig_callbackUnpackReadResult(jres, jbufferpos, jcount);
   }
 }
@@ -4699,16 +4859,16 @@ void SwigDirector_WrappedNamedArrayMemoryClientBuffer::UnpackReadResult(boost::i
 boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > SwigDirector_WrappedNamedArrayMemoryClientBuffer::PackWriteRequest(uint64_t bufferpos,uint64_t count) {
   boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > c_result ;
   void * jresult = 0 ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > *smartarg ;
   
   if (!swig_callbackPackWriteRequest) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedNamedArrayMemoryClientBuffer::PackWriteRequest");
     return c_result;
   } else {
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jbufferpos = bufferpos;
+    jcount = count;
     jresult = (void *) swig_callbackPackWriteRequest(jbufferpos, jcount);
     
     //if (jresult) {
@@ -4727,13 +4887,13 @@ boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > SwigDire
 
 uint64_t SwigDirector_WrappedNamedArrayMemoryClientBuffer::GetBufferLength() {
   uint64_t c_result = SwigValueInit< uint64_t >() ;
-  unsigned long jresult = 0 ;
+  unsigned long long jresult = 0 ;
   
   if (!swig_callbackGetBufferLength) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedNamedArrayMemoryClientBuffer::GetBufferLength");
     return c_result;
   } else {
-    jresult = (unsigned long) swig_callbackGetBufferLength();
+    jresult = (unsigned long long) swig_callbackGetBufferLength();
     c_result = (uint64_t)jresult; 
   }
   return c_result;
@@ -4838,13 +4998,13 @@ SwigDirector_WrappedNamedArrayMemoryDirector::~SwigDirector_WrappedNamedArrayMem
 
 uint64_t SwigDirector_WrappedNamedArrayMemoryDirector::Length() {
   uint64_t c_result = SwigValueInit< uint64_t >() ;
-  unsigned long jresult = 0 ;
+  unsigned long long jresult = 0 ;
   
   if (!swig_callbackLength) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedNamedArrayMemoryDirector::Length");
     return c_result;
   } else {
-    jresult = (unsigned long) swig_callbackLength();
+    jresult = (unsigned long long) swig_callbackLength();
     c_result = (uint64_t)jresult; 
   }
   return c_result;
@@ -4853,18 +5013,18 @@ uint64_t SwigDirector_WrappedNamedArrayMemoryDirector::Length() {
 boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > SwigDirector_WrappedNamedArrayMemoryDirector::Read(uint64_t memorypos,uint64_t bufferpos,uint64_t count) {
   boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > c_result ;
   void * jresult = 0 ;
-  unsigned long jmemorypos  ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jmemorypos  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > *smartarg ;
   
   if (!swig_callbackRead) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedNamedArrayMemoryDirector::Read");
     return c_result;
   } else {
-    jmemorypos = (unsigned long)memorypos;
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jmemorypos = memorypos;
+    jbufferpos = bufferpos;
+    jcount = count;
     jresult = (void *) swig_callbackRead(jmemorypos, jbufferpos, jcount);
     
     //if (jresult) {
@@ -4882,16 +5042,16 @@ boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > SwigDire
 }
 
 void SwigDirector_WrappedNamedArrayMemoryDirector::Write(uint64_t memorypos,boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > buffer,uint64_t bufferpos,uint64_t count) {
-  unsigned long jmemorypos  ;
+  unsigned long long jmemorypos  ;
   void * jbuffer  ;
-  unsigned long jbufferpos  ;
-  unsigned long jcount  ;
+  unsigned long long jbufferpos  ;
+  unsigned long long jcount  ;
   
   if (!swig_callbackWrite) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedNamedArrayMemoryDirector::Write");
     return;
   } else {
-    jmemorypos = (unsigned long)memorypos;
+    jmemorypos = memorypos;
     
     //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0; 
     if (buffer) {
@@ -4901,8 +5061,8 @@ void SwigDirector_WrappedNamedArrayMemoryDirector::Write(uint64_t memorypos,boos
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jbuffer = 0;
     }
     
-    jbufferpos = (unsigned long)bufferpos;
-    jcount = (unsigned long)count;
+    jbufferpos = bufferpos;
+    jcount = count;
     swig_callbackWrite(jmemorypos, jbuffer, jbufferpos, jcount);
   }
 }
@@ -4948,13 +5108,13 @@ std::vector< uint64_t > SwigDirector_WrappedNamedMultiDimArrayMemoryDirector::Di
 
 uint64_t SwigDirector_WrappedNamedMultiDimArrayMemoryDirector::DimCount() {
   uint64_t c_result = SwigValueInit< uint64_t >() ;
-  unsigned long jresult = 0 ;
+  unsigned long long jresult = 0 ;
   
   if (!swig_callbackDimCount) {
     Swig::DirectorPureVirtualException::raise("RobotRaconteur::WrappedNamedMultiDimArrayMemoryDirector::DimCount");
     return c_result;
   } else {
-    jresult = (unsigned long) swig_callbackDimCount();
+    jresult = (unsigned long long) swig_callbackDimCount();
     c_result = (uint64_t)jresult; 
   }
   return c_result;
@@ -6999,8 +7159,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_Add(void * jarg1,
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< std::string > *arg1 = (std::vector< std::string > *) 0 ;
   std::vector< std::string >::size_type result;
   
@@ -7038,13 +7198,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_size(void
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< std::string > *arg1 = (std::vector< std::string > *) 0 ;
   std::vector< std::string >::size_type result;
   
@@ -7082,12 +7242,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_capacity(
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorstring_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< std::string > *arg1 = (std::vector< std::string > *) 0 ;
   std::vector< std::string >::size_type arg2 ;
   
@@ -8261,8 +8421,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_Add(void * jarg1, 
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< int32_t > *arg1 = (std::vector< int32_t > *) 0 ;
   std::vector< int >::size_type result;
   
@@ -8300,13 +8460,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_size(void 
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< int32_t > *arg1 = (std::vector< int32_t > *) 0 ;
   std::vector< int >::size_type result;
   
@@ -8344,12 +8504,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_capacity(v
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorint32_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< int32_t > *arg1 = (std::vector< int32_t > *) 0 ;
   std::vector< int >::size_type arg2 ;
   
@@ -9502,8 +9662,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_Add(void * jarg1,
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< uint32_t > *arg1 = (std::vector< uint32_t > *) 0 ;
   std::vector< unsigned int >::size_type result;
   
@@ -9541,13 +9701,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_size(void
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< uint32_t > *arg1 = (std::vector< uint32_t > *) 0 ;
   std::vector< unsigned int >::size_type result;
   
@@ -9585,12 +9745,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_capacity(
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectoruint32_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< uint32_t > *arg1 = (std::vector< uint32_t > *) 0 ;
   std::vector< unsigned int >::size_type arg2 ;
   
@@ -10743,8 +10903,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_Add(void * jarg1
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< int8_t > *arg1 = (std::vector< int8_t > *) 0 ;
   std::vector< signed char >::size_type result;
   
@@ -10782,13 +10942,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_size(voi
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< int8_t > *arg1 = (std::vector< int8_t > *) 0 ;
   std::vector< signed char >::size_type result;
   
@@ -10826,12 +10986,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_capacity
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_int8_t_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< int8_t > *arg1 = (std::vector< int8_t > *) 0 ;
   std::vector< signed char >::size_type arg2 ;
   
@@ -11984,8 +12144,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_Add(void * jarg
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< uint8_t > *arg1 = (std::vector< uint8_t > *) 0 ;
   std::vector< unsigned char >::size_type result;
   
@@ -12023,13 +12183,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_size(vo
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< uint8_t > *arg1 = (std::vector< uint8_t > *) 0 ;
   std::vector< unsigned char >::size_type result;
   
@@ -12067,12 +12227,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_capacit
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint8_t_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< uint8_t > *arg1 = (std::vector< uint8_t > *) 0 ;
   std::vector< unsigned char >::size_type arg2 ;
   
@@ -13181,17 +13341,17 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Clear(void * j
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Add(void * jarg1, unsigned long jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Add(void * jarg1, unsigned long long jarg2) {
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  unsigned long *arg2 = 0 ;
-  unsigned long temp2 ;
+  unsigned long long *arg2 = 0 ;
+  unsigned long long temp2 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
-  temp2 = (unsigned long)jarg2; 
+  temp2 = (unsigned long long)jarg2; 
   arg2 = &temp2; 
   
   try {
-    (arg1)->push_back((unsigned long const &)*arg2);
+    (arg1)->push_back((unsigned long long const &)*arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -13225,10 +13385,10 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Add(void * jar
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  std::vector< unsigned long >::size_type result;
+  std::vector< unsigned long long >::size_type result;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   
@@ -13264,15 +13424,15 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_size(v
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  std::vector< unsigned long >::size_type result;
+  std::vector< unsigned long long >::size_type result;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   
@@ -13308,17 +13468,17 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_capaci
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  std::vector< unsigned long >::size_type arg2 ;
+  std::vector< unsigned long long >::size_type arg2 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
-  arg2 = (std::vector< unsigned long >::size_type)jarg2; 
+  arg2 = (std::vector< unsigned long long >::size_type)jarg2; 
   
   try {
     (arg1)->reserve(arg2);
@@ -13494,18 +13654,18 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_vector_uint64_t__SWIG_2(
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_getitemcopy(void * jarg1, int jarg2) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_getitemcopy(void * jarg1, int jarg2) {
+  unsigned long long jresult ;
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
   int arg2 ;
-  unsigned long result;
+  unsigned long long result;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   arg2 = (int)jarg2; 
   
   try {
     try {
-      result = (unsigned long)std_vector_Sl_uint64_t_Sg__getitemcopy(arg1,arg2);
+      result = (unsigned long long)std_vector_Sl_uint64_t_Sg__getitemcopy(arg1,arg2);
     } catch(std::out_of_range &_e) {
       SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
       return 0;
@@ -13540,23 +13700,23 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_getit
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_getitem(void * jarg1, int jarg2) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_getitem(void * jarg1, int jarg2) {
+  unsigned long long jresult ;
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
   int arg2 ;
-  std::vector< unsigned long >::value_type *result = 0 ;
+  std::vector< unsigned long long >::value_type *result = 0 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   arg2 = (int)jarg2; 
   
   try {
     try {
-      result = (std::vector< unsigned long >::value_type *) &std_vector_Sl_uint64_t_Sg__getitem(arg1,arg2);
+      result = (std::vector< unsigned long long >::value_type *) &std_vector_Sl_uint64_t_Sg__getitem(arg1,arg2);
     } catch(std::out_of_range &_e) {
       SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
       return 0;
@@ -13591,25 +13751,25 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_getit
     return 0;
   }
   
-  jresult = (unsigned long)*result; 
+  jresult = *result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_setitem(void * jarg1, int jarg2, unsigned long jarg3) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_setitem(void * jarg1, int jarg2, unsigned long long jarg3) {
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
   int arg2 ;
-  unsigned long *arg3 = 0 ;
-  unsigned long temp3 ;
+  unsigned long long *arg3 = 0 ;
+  unsigned long long temp3 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   arg2 = (int)jarg2; 
-  temp3 = (unsigned long)jarg3; 
+  temp3 = (unsigned long long)jarg3; 
   arg3 = &temp3; 
   
   try {
     try {
-      std_vector_Sl_uint64_t_Sg__setitem(arg1,arg2,(unsigned long const &)*arg3);
+      std_vector_Sl_uint64_t_Sg__setitem(arg1,arg2,(unsigned long long const &)*arg3);
     } catch(std::out_of_range &_e) {
       SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
       return ;
@@ -13649,17 +13809,17 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_setitem(void *
 
 SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_AddRange(void * jarg1, void * jarg2) {
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  std::vector< unsigned long > *arg2 = 0 ;
+  std::vector< unsigned long long > *arg2 = 0 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
-  arg2 = (std::vector< unsigned long > *)jarg2;
+  arg2 = (std::vector< unsigned long long > *)jarg2;
   if (!arg2) {
-    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< unsigned long > const & is null", 0);
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< unsigned long long > const & is null", 0);
     return ;
   } 
   
   try {
-    std_vector_Sl_uint64_t_Sg__AddRange(arg1,(std::vector< unsigned long > const &)*arg2);
+    std_vector_Sl_uint64_t_Sg__AddRange(arg1,(std::vector< unsigned long long > const &)*arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -13698,7 +13858,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_GetRange(voi
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
   int arg2 ;
   int arg3 ;
-  std::vector< unsigned long > *result = 0 ;
+  std::vector< unsigned long long > *result = 0 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   arg2 = (int)jarg2; 
@@ -13706,7 +13866,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_GetRange(voi
   
   try {
     try {
-      result = (std::vector< unsigned long > *)std_vector_Sl_uint64_t_Sg__GetRange(arg1,arg2,arg3);
+      result = (std::vector< unsigned long long > *)std_vector_Sl_uint64_t_Sg__GetRange(arg1,arg2,arg3);
     } catch(std::out_of_range &_e) {
       SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
       return 0;
@@ -13749,20 +13909,20 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_GetRange(voi
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Insert(void * jarg1, int jarg2, unsigned long jarg3) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Insert(void * jarg1, int jarg2, unsigned long long jarg3) {
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
   int arg2 ;
-  unsigned long *arg3 = 0 ;
-  unsigned long temp3 ;
+  unsigned long long *arg3 = 0 ;
+  unsigned long long temp3 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   arg2 = (int)jarg2; 
-  temp3 = (unsigned long)jarg3; 
+  temp3 = (unsigned long long)jarg3; 
   arg3 = &temp3; 
   
   try {
     try {
-      std_vector_Sl_uint64_t_Sg__Insert(arg1,arg2,(unsigned long const &)*arg3);
+      std_vector_Sl_uint64_t_Sg__Insert(arg1,arg2,(unsigned long long const &)*arg3);
     } catch(std::out_of_range &_e) {
       SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
       return ;
@@ -13803,19 +13963,19 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Insert(void * 
 SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_InsertRange(void * jarg1, int jarg2, void * jarg3) {
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
   int arg2 ;
-  std::vector< unsigned long > *arg3 = 0 ;
+  std::vector< unsigned long long > *arg3 = 0 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   arg2 = (int)jarg2; 
-  arg3 = (std::vector< unsigned long > *)jarg3;
+  arg3 = (std::vector< unsigned long long > *)jarg3;
   if (!arg3) {
-    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< unsigned long > const & is null", 0);
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< unsigned long long > const & is null", 0);
     return ;
   } 
   
   try {
     try {
-      std_vector_Sl_uint64_t_Sg__InsertRange(arg1,arg2,(std::vector< unsigned long > const &)*arg3);
+      std_vector_Sl_uint64_t_Sg__InsertRange(arg1,arg2,(std::vector< unsigned long long > const &)*arg3);
     } catch(std::out_of_range &_e) {
       SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
       return ;
@@ -13952,20 +14112,20 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_RemoveRange(vo
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Repeat(unsigned long jarg1, int jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Repeat(unsigned long long jarg1, int jarg2) {
   void * jresult ;
-  unsigned long *arg1 = 0 ;
+  unsigned long long *arg1 = 0 ;
   int arg2 ;
-  unsigned long temp1 ;
-  std::vector< unsigned long > *result = 0 ;
+  unsigned long long temp1 ;
+  std::vector< unsigned long long > *result = 0 ;
   
-  temp1 = (unsigned long)jarg1; 
+  temp1 = (unsigned long long)jarg1; 
   arg1 = &temp1; 
   arg2 = (int)jarg2; 
   
   try {
     try {
-      result = (std::vector< unsigned long > *)std_vector_Sl_uint64_t_Sg__Repeat((unsigned long const &)*arg1,arg2);
+      result = (std::vector< unsigned long long > *)std_vector_Sl_uint64_t_Sg__Repeat((unsigned long long const &)*arg1,arg2);
     } catch(std::out_of_range &_e) {
       SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
       return 0;
@@ -14100,19 +14260,19 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Reverse__SWIG_
 SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_SetRange(void * jarg1, int jarg2, void * jarg3) {
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
   int arg2 ;
-  std::vector< unsigned long > *arg3 = 0 ;
+  std::vector< unsigned long long > *arg3 = 0 ;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
   arg2 = (int)jarg2; 
-  arg3 = (std::vector< unsigned long > *)jarg3;
+  arg3 = (std::vector< unsigned long long > *)jarg3;
   if (!arg3) {
-    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< unsigned long > const & is null", 0);
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< unsigned long long > const & is null", 0);
     return ;
   } 
   
   try {
     try {
-      std_vector_Sl_uint64_t_Sg__SetRange(arg1,arg2,(std::vector< unsigned long > const &)*arg3);
+      std_vector_Sl_uint64_t_Sg__SetRange(arg1,arg2,(std::vector< unsigned long long > const &)*arg3);
     } catch(std::out_of_range &_e) {
       SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
       return ;
@@ -14150,19 +14310,19 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_SetRange(void 
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Contains(void * jarg1, unsigned long jarg2) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Contains(void * jarg1, unsigned long long jarg2) {
   unsigned int jresult ;
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  unsigned long *arg2 = 0 ;
-  unsigned long temp2 ;
+  unsigned long long *arg2 = 0 ;
+  unsigned long long temp2 ;
   bool result;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
-  temp2 = (unsigned long)jarg2; 
+  temp2 = (unsigned long long)jarg2; 
   arg2 = &temp2; 
   
   try {
-    result = (bool)std_vector_Sl_uint64_t_Sg__Contains(arg1,(unsigned long const &)*arg2);
+    result = (bool)std_vector_Sl_uint64_t_Sg__Contains(arg1,(unsigned long long const &)*arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -14198,19 +14358,19 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Contai
 }
 
 
-SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_IndexOf(void * jarg1, unsigned long jarg2) {
+SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_IndexOf(void * jarg1, unsigned long long jarg2) {
   int jresult ;
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  unsigned long *arg2 = 0 ;
-  unsigned long temp2 ;
+  unsigned long long *arg2 = 0 ;
+  unsigned long long temp2 ;
   int result;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
-  temp2 = (unsigned long)jarg2; 
+  temp2 = (unsigned long long)jarg2; 
   arg2 = &temp2; 
   
   try {
-    result = (int)std_vector_Sl_uint64_t_Sg__IndexOf(arg1,(unsigned long const &)*arg2);
+    result = (int)std_vector_Sl_uint64_t_Sg__IndexOf(arg1,(unsigned long long const &)*arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -14246,19 +14406,19 @@ SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_IndexOf(void * 
 }
 
 
-SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_LastIndexOf(void * jarg1, unsigned long jarg2) {
+SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_LastIndexOf(void * jarg1, unsigned long long jarg2) {
   int jresult ;
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  unsigned long *arg2 = 0 ;
-  unsigned long temp2 ;
+  unsigned long long *arg2 = 0 ;
+  unsigned long long temp2 ;
   int result;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
-  temp2 = (unsigned long)jarg2; 
+  temp2 = (unsigned long long)jarg2; 
   arg2 = &temp2; 
   
   try {
-    result = (int)std_vector_Sl_uint64_t_Sg__LastIndexOf(arg1,(unsigned long const &)*arg2);
+    result = (int)std_vector_Sl_uint64_t_Sg__LastIndexOf(arg1,(unsigned long long const &)*arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -14294,19 +14454,19 @@ SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_LastIndexOf(voi
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Remove(void * jarg1, unsigned long jarg2) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_uint64_t_Remove(void * jarg1, unsigned long long jarg2) {
   unsigned int jresult ;
   std::vector< uint64_t > *arg1 = (std::vector< uint64_t > *) 0 ;
-  unsigned long *arg2 = 0 ;
-  unsigned long temp2 ;
+  unsigned long long *arg2 = 0 ;
+  unsigned long long temp2 ;
   bool result;
   
   arg1 = (std::vector< uint64_t > *)jarg1; 
-  temp2 = (unsigned long)jarg2; 
+  temp2 = (unsigned long long)jarg2; 
   arg2 = &temp2; 
   
   try {
-    result = (bool)std_vector_Sl_uint64_t_Sg__Remove(arg1,(unsigned long const &)*arg2);
+    result = (bool)std_vector_Sl_uint64_t_Sg__Remove(arg1,(unsigned long long const &)*arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -14472,8 +14632,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_strstr__SWIG_1(void 
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_strstr_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_map_strstr_size(void * jarg1) {
+  unsigned long jresult ;
   std::map< std::string,std::string > *arg1 = (std::map< std::string,std::string > *) 0 ;
   std::map< std::string,std::string >::size_type result;
   
@@ -14511,7 +14671,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_strstr_size(void *
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -15455,8 +15615,8 @@ SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_RRBaseArray_GetTypeStr
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_RRBaseArray_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_RRBaseArray_size(void * jarg1) {
+  unsigned long jresult ;
   RobotRaconteur::RRBaseArray *arg1 = (RobotRaconteur::RRBaseArray *) 0 ;
   boost::shared_ptr< RobotRaconteur::RRBaseArray > *smartarg1 = 0 ;
   size_t result;
@@ -15499,7 +15659,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_RRBaseArray_size(void 
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -15553,8 +15713,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_RRBaseArray_void_ptr(void * 
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_RRBaseArray_ElementSize(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_RRBaseArray_ElementSize(void * jarg1) {
+  unsigned long jresult ;
   RobotRaconteur::RRBaseArray *arg1 = (RobotRaconteur::RRBaseArray *) 0 ;
   boost::shared_ptr< RobotRaconteur::RRBaseArray > *smartarg1 = 0 ;
   size_t result;
@@ -15597,7 +15757,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_RRBaseArray_ElementSiz
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -15696,7 +15856,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_RRBaseArray(void * jarg
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_AllocateRRArrayByType(int jarg1, unsigned int jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_AllocateRRArrayByType(int jarg1, unsigned long jarg2) {
   void * jresult ;
   RobotRaconteur::DataTypes arg1 ;
   size_t arg2 ;
@@ -16181,8 +16341,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefinition_Add(v
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefinition_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefinition_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > >::size_type result;
   
@@ -16220,13 +16380,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefiniti
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefinition_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefinition_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > >::size_type result;
   
@@ -16264,12 +16424,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefiniti
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefinition_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_typedefinition_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > >::size_type arg2 ;
   
@@ -17226,8 +17386,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefinition_Add
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefinition_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefinition_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > >::size_type result;
   
@@ -17265,13 +17425,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefini
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefinition_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefinition_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > >::size_type result;
   
@@ -17309,12 +17469,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefini
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefinition_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_memberdefinition_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::MemberDefinition > >::size_type arg2 ;
   
@@ -18271,8 +18431,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentrydefiniti
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentrydefinition_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentrydefinition_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > >::size_type result;
   
@@ -18310,13 +18470,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentry
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentrydefinition_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentrydefinition_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > >::size_type result;
   
@@ -18354,12 +18514,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentry
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentrydefinition_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_serviceentrydefinition_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceEntryDefinition > >::size_type arg2 ;
   
@@ -19316,8 +19476,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefinition_A
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefinition_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefinition_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > >::size_type result;
   
@@ -19355,13 +19515,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefi
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefinition_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefinition_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > >::size_type result;
   
@@ -19399,12 +19559,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefi
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefinition_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_constantdefinition_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ConstantDefinition > >::size_type arg2 ;
   
@@ -20361,8 +20521,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefinition_Add(v
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefinition_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefinition_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > >::size_type result;
   
@@ -20400,13 +20560,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefiniti
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefinition_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefinition_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > >::size_type result;
   
@@ -20444,12 +20604,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefiniti
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefinition_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_enumdefinition_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::EnumDefinition > >::size_type arg2 ;
   
@@ -21409,8 +21569,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinition_stru
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinition_structfield_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinition_structfield_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::ConstantDefinition_StructField > *arg1 = (std::vector< RobotRaconteur::ConstantDefinition_StructField > *) 0 ;
   std::vector< RobotRaconteur::ConstantDefinition_StructField >::size_type result;
   
@@ -21448,13 +21608,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinit
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinition_structfield_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinition_structfield_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::ConstantDefinition_StructField > *arg1 = (std::vector< RobotRaconteur::ConstantDefinition_StructField > *) 0 ;
   std::vector< RobotRaconteur::ConstantDefinition_StructField >::size_type result;
   
@@ -21492,12 +21652,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinit
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinition_structfield_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_constantdefinition_structfield_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< RobotRaconteur::ConstantDefinition_StructField > *arg1 = (std::vector< RobotRaconteur::ConstantDefinition_StructField > *) 0 ;
   std::vector< RobotRaconteur::ConstantDefinition_StructField >::size_type arg2 ;
   
@@ -22466,8 +22626,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionvalues_Ad
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionvalues_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionvalues_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::EnumDefinitionValue > *arg1 = (std::vector< RobotRaconteur::EnumDefinitionValue > *) 0 ;
   std::vector< RobotRaconteur::EnumDefinitionValue >::size_type result;
   
@@ -22505,13 +22665,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionv
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionvalues_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionvalues_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::EnumDefinitionValue > *arg1 = (std::vector< RobotRaconteur::EnumDefinitionValue > *) 0 ;
   std::vector< RobotRaconteur::EnumDefinitionValue >::size_type result;
   
@@ -22549,12 +22709,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionv
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionvalues_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_enumdefinitionvalues_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< RobotRaconteur::EnumDefinitionValue > *arg1 = (std::vector< RobotRaconteur::EnumDefinitionValue > *) 0 ;
   std::vector< RobotRaconteur::EnumDefinitionValue >::size_type arg2 ;
   
@@ -23520,8 +23680,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition_Add(voi
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > >::size_type result;
   
@@ -23559,13 +23719,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > >::size_type result;
   
@@ -23603,12 +23763,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_usingdefinition_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::UsingDefinition > >::size_type arg2 ;
   
@@ -24565,8 +24725,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondefinition_
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondefinition_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondefinition_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > >::size_type result;
   
@@ -24604,13 +24764,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondef
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondefinition_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondefinition_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > >::size_type result;
   
@@ -24648,12 +24808,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondef
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondefinition_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_exceptiondefinition_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ExceptionDefinition > >::size_type arg2 ;
   
@@ -25610,8 +25770,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefinition_Ad
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefinition_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefinition_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > >::size_type result;
   
@@ -25649,13 +25809,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefin
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefinition_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefinition_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > >::size_type result;
   
@@ -25693,12 +25853,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefin
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefinition_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_servicedefinition_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::ServiceDefinition > >::size_type arg2 ;
   
@@ -36316,7 +36476,55 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_1(const cha
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_2(unsigned char* jarg1, int jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_2(void * jarg1) {
+  void * jresult ;
+  RobotRaconteur::NodeID *arg1 = 0 ;
+  RobotRaconteur::NodeID *result = 0 ;
+  
+  arg1 = (RobotRaconteur::NodeID *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::NodeID const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (RobotRaconteur::NodeID *)new RobotRaconteur::NodeID((RobotRaconteur::NodeID const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_3(unsigned char* jarg1, int jarg2) {
   void * jresult ;
   uint8_t *arg1 ;
   int32_t arg2 ;
@@ -36326,7 +36534,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_NodeID__SWIG_2(unsigned 
   arg2 = (int32_t)jarg2; 
   
   try {
-    result = (RobotRaconteur::NodeID *)new_RobotRaconteur_NodeID__SWIG_2((unsigned char const (*))arg1,arg2);
+    result = (RobotRaconteur::NodeID *)new_RobotRaconteur_NodeID__SWIG_3((unsigned char const (*))arg1,arg2);
   } catch (RobotRaconteurException& e)
   {
     RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
@@ -36542,8 +36750,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry_Add(voi
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > > *arg1 = (std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > > *) 0 ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > >::size_type result;
   
@@ -36581,13 +36789,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > > *arg1 = (std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > > *) 0 ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > >::size_type result;
   
@@ -36625,12 +36833,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageentry_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > > *arg1 = (std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > > *) 0 ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageEntry > >::size_type arg2 ;
   
@@ -37645,8 +37853,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageelement_Add(v
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageelement_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageelement_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > > *arg1 = (std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > > *) 0 ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > >::size_type result;
   
@@ -37684,13 +37892,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageeleme
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageelement_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageelement_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > > *arg1 = (std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > > *) 0 ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > >::size_type result;
   
@@ -37728,12 +37936,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageeleme
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageelement_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_messageelement_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > > *arg1 = (std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > > *) 0 ;
   std::vector< boost::intrusive_ptr< RobotRaconteur::MessageElement > >::size_type arg2 ;
   
@@ -42167,7 +42375,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_RRBaseA
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_RRBaseArrayToLongs__SWIG_0(void * jarg1, long* jarg2, int jarg3) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_RRBaseArrayToLongs__SWIG_0(void * jarg1, long long* jarg2, int jarg3) {
   boost::intrusive_ptr< RobotRaconteur::RRBaseArray > *arg1 = 0 ;
   int64_t *arg2 = (int64_t *) 0 ;
   int32_t arg3 ;
@@ -42225,7 +42433,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_RRBaseA
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_RRBaseArrayToLongs__SWIG_1(void * jarg1, unsigned long* jarg2, int jarg3) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_RRBaseArrayToLongs__SWIG_1(void * jarg1, unsigned long long* jarg2, int jarg3) {
   boost::intrusive_ptr< RobotRaconteur::RRBaseArray > *arg1 = 0 ;
   uint64_t *arg2 = (uint64_t *) 0 ;
   int32_t arg3 ;
@@ -43017,7 +43225,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_IntsT
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsToRRBaseArray__SWIG_0(long* jarg1, int jarg2, int jarg3) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsToRRBaseArray__SWIG_0(long long* jarg1, int jarg2, int jarg3) {
   void * jresult ;
   int64_t *arg1 = (int64_t *) 0 ;
   int32_t arg2 ;
@@ -43074,7 +43282,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_Longs
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsToRRBaseArray__SWIG_1(unsigned long* jarg1, int jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsToRRBaseArray__SWIG_1(unsigned long long* jarg1, int jarg2) {
   void * jresult ;
   uint64_t *arg1 = (uint64_t *) 0 ;
   int32_t arg2 ;
@@ -43813,7 +44021,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_IntsToR
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsToRRBaseArray__SWIG_2(long* jarg1, int jarg2, void * jarg3) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsToRRBaseArray__SWIG_2(long long* jarg1, int jarg2, void * jarg3) {
   int64_t *arg1 = (int64_t *) 0 ;
   int32_t arg2 ;
   boost::intrusive_ptr< RobotRaconteur::RRBaseArray > *arg3 = 0 ;
@@ -43871,7 +44079,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsTo
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsToRRBaseArray__SWIG_3(unsigned long* jarg1, int jarg2, void * jarg3) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_MessageElementDataUtil_LongsToRRBaseArray__SWIG_3(unsigned long long* jarg1, int jarg2, void * jarg3) {
   uint64_t *arg1 = (uint64_t *) 0 ;
   int32_t arg2 ;
   boost::intrusive_ptr< RobotRaconteur::RRBaseArray > *arg3 = 0 ;
@@ -45156,7 +45364,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_AsyncUInt32ReturnDirector_dire
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_rr_memcpy_memcpy(void * jarg1, void * jarg2, long jarg3) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_rr_memcpy_memcpy(void * jarg1, void * jarg2, long long jarg3) {
   void *arg1 = (void *) 0 ;
   void *arg2 = (void *) 0 ;
   int64_t arg3 ;
@@ -49615,6 +49823,49 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_IntraTransport_Close(void * ja
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_IntraTransport_StartClient(void * jarg1) {
+  RobotRaconteur::IntraTransport *arg1 = (RobotRaconteur::IntraTransport *) 0 ;
+  boost::shared_ptr< RobotRaconteur::IntraTransport > *smartarg1 = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::IntraTransport > *)jarg1;
+  arg1 = (RobotRaconteur::IntraTransport *)(smartarg1 ? smartarg1->get() : 0); 
+  
+  try {
+    (arg1)->StartClient();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
 SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_IntraTransport_StartServer(void * jarg1) {
   RobotRaconteur::IntraTransport *arg1 = (RobotRaconteur::IntraTransport *) 0 ;
   boost::shared_ptr< RobotRaconteur::IntraTransport > *smartarg1 = 0 ;
@@ -51272,7 +51523,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_AutoResetEvent_WaitOne
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_TimeSpec_seconds_set(void * jarg1, long jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_TimeSpec_seconds_set(void * jarg1, long long jarg2) {
   RobotRaconteur::TimeSpec *arg1 = (RobotRaconteur::TimeSpec *) 0 ;
   int64_t arg2 ;
   
@@ -51282,8 +51533,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_TimeSpec_seconds_set(void * ja
 }
 
 
-SWIGEXPORT long SWIGSTDCALL CSharp_RobotRaconteur_TimeSpec_seconds_get(void * jarg1) {
-  long jresult ;
+SWIGEXPORT long long SWIGSTDCALL CSharp_RobotRaconteur_TimeSpec_seconds_get(void * jarg1) {
+  long long jresult ;
   RobotRaconteur::TimeSpec *arg1 = (RobotRaconteur::TimeSpec *) 0 ;
   int64_t result;
   
@@ -51358,7 +51609,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_TimeSpec__SWIG_0() {
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_TimeSpec__SWIG_1(long jarg1, int jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_TimeSpec__SWIG_1(long long jarg1, int jarg2) {
   void * jresult ;
   int64_t arg1 ;
   int32_t arg2 ;
@@ -53242,8 +53493,8 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeEndpoint_Ge
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeEndpoint_Available(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeEndpoint_Available(void * jarg1) {
+  unsigned long jresult ;
   RobotRaconteur::WrappedPipeEndpoint *arg1 = (RobotRaconteur::WrappedPipeEndpoint *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedPipeEndpoint > *smartarg1 = 0 ;
   size_t result;
@@ -53284,7 +53535,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeEndpoint_Av
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -54897,8 +55148,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeBroadcaster_AsyncSe
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeBroadcaster_GetActivePipeEndpointCount(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeBroadcaster_GetActivePipeEndpointCount(void * jarg1) {
+  unsigned long jresult ;
   RobotRaconteur::WrappedPipeBroadcaster *arg1 = (RobotRaconteur::WrappedPipeBroadcaster *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedPipeBroadcaster > *smartarg1 = 0 ;
   size_t result;
@@ -54939,7 +55190,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeBroadcaster
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -58786,8 +59037,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedWireBroadcaster_SetOutV
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedWireBroadcaster_GetActiveWireConnectionCount(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedWireBroadcaster_GetActiveWireConnectionCount(void * jarg1) {
+  unsigned long jresult ;
   RobotRaconteur::WrappedWireBroadcaster *arg1 = (RobotRaconteur::WrappedWireBroadcaster *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedWireBroadcaster > *smartarg1 = 0 ;
   size_t result;
@@ -58828,7 +59079,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedWireBroadcaster
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -59499,8 +59750,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_WrappedWireUnicastRecei
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_ArrayMemoryBase_Length(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_ArrayMemoryBase_Length(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::ArrayMemoryBase *arg1 = (RobotRaconteur::ArrayMemoryBase *) 0 ;
   boost::shared_ptr< RobotRaconteur::ArrayMemoryBase > *smartarg1 = 0 ;
   uint64_t result;
@@ -59541,7 +59792,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_ArrayMemoryBase_Lengt
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -59683,8 +59934,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_MultiDimArrayMemoryBase_Dime
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_MultiDimArrayMemoryBase_DimCount(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_MultiDimArrayMemoryBase_DimCount(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::MultiDimArrayMemoryBase *arg1 = (RobotRaconteur::MultiDimArrayMemoryBase *) 0 ;
   boost::shared_ptr< RobotRaconteur::MultiDimArrayMemoryBase > *smartarg1 = 0 ;
   uint64_t result;
@@ -59725,7 +59976,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_MultiDimArrayMemoryBa
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -59820,7 +60071,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_MultiDimArrayMemoryBase
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryClientUtil_Read(void * jarg1, unsigned long jarg2, unsigned long jarg3) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryClientUtil_Read(void * jarg1, unsigned long long jarg2, unsigned long long jarg3) {
   void * jresult ;
   boost::shared_ptr< RobotRaconteur::ArrayMemoryBase > *arg1 = 0 ;
   uint64_t arg2 ;
@@ -59876,7 +60127,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryClientUtil
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryClientUtil_Write(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryClientUtil_Write(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   boost::shared_ptr< RobotRaconteur::ArrayMemoryBase > *arg1 = 0 ;
   uint64_t arg2 ;
   boost::intrusive_ptr< RobotRaconteur::RRBaseArray > *arg3 = 0 ;
@@ -60320,7 +60571,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_WrappedMultiDimArrayMem
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientBuffer_UnpackReadResult(void * jarg1, void * jarg2, unsigned long jarg3, unsigned long jarg4) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientBuffer_UnpackReadResult(void * jarg1, void * jarg2, unsigned long long jarg3, unsigned long long jarg4) {
   RobotRaconteur::WrappedPodArrayMemoryClientBuffer *arg1 = (RobotRaconteur::WrappedPodArrayMemoryClientBuffer *) 0 ;
   boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > arg2 ;
   uint64_t arg3 ;
@@ -60373,7 +60624,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientBuf
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientBuffer_PackWriteRequest(void * jarg1, unsigned long jarg2, unsigned long jarg3) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientBuffer_PackWriteRequest(void * jarg1, unsigned long long jarg2, unsigned long long jarg3) {
   void * jresult ;
   RobotRaconteur::WrappedPodArrayMemoryClientBuffer *arg1 = (RobotRaconteur::WrappedPodArrayMemoryClientBuffer *) 0 ;
   uint64_t arg2 ;
@@ -60428,8 +60679,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientB
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientBuffer_GetBufferLength(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientBuffer_GetBufferLength(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedPodArrayMemoryClientBuffer *arg1 = (RobotRaconteur::WrappedPodArrayMemoryClientBuffer *) 0 ;
   uint64_t result;
   
@@ -60467,7 +60718,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemory
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -60561,8 +60812,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClientBuf
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClient_Length(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClient_Length(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedPodArrayMemoryClient *arg1 = (RobotRaconteur::WrappedPodArrayMemoryClient *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedPodArrayMemoryClient > *smartarg1 = 0 ;
   uint64_t result;
@@ -60603,7 +60854,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemory
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -60655,7 +60906,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClient_Dir
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClient_Read(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClient_Read(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   RobotRaconteur::WrappedPodArrayMemoryClient *arg1 = (RobotRaconteur::WrappedPodArrayMemoryClient *) 0 ;
   uint64_t arg2 ;
   RobotRaconteur::WrappedPodArrayMemoryClientBuffer *arg3 = (RobotRaconteur::WrappedPodArrayMemoryClientBuffer *) 0 ;
@@ -60706,7 +60957,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClient_Re
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClient_Write(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryClient_Write(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   RobotRaconteur::WrappedPodArrayMemoryClient *arg1 = (RobotRaconteur::WrappedPodArrayMemoryClient *) 0 ;
   uint64_t arg2 ;
   RobotRaconteur::WrappedPodArrayMemoryClientBuffer *arg3 = (RobotRaconteur::WrappedPodArrayMemoryClientBuffer *) 0 ;
@@ -61060,8 +61311,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArrayMemor
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArrayMemoryClient_DimCount(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArrayMemoryClient_DimCount(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedPodMultiDimArrayMemoryClient *arg1 = (RobotRaconteur::WrappedPodMultiDimArrayMemoryClient *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedPodMultiDimArrayMemoryClient > *smartarg1 = 0 ;
   uint64_t result;
@@ -61102,7 +61353,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArr
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -61363,8 +61614,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_WrappedArrayMemoryDirec
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryDirector_Length(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryDirector_Length(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedArrayMemoryDirector *) 0 ;
   uint64_t result;
   
@@ -61402,12 +61653,12 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryDir
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryDirector_Read(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryDirector_Read(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   RobotRaconteur::WrappedArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedArrayMemoryDirector *) 0 ;
   uint64_t arg2 ;
   boost::intrusive_ptr< RobotRaconteur::RRBaseArray > arg3 ;
@@ -61462,7 +61713,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryDirector_Rea
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryDirector_Write(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedArrayMemoryDirector_Write(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   RobotRaconteur::WrappedArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedArrayMemoryDirector *) 0 ;
   uint64_t arg2 ;
   boost::intrusive_ptr< RobotRaconteur::RRBaseArray > arg3 ;
@@ -61843,8 +62094,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedMultiDimArrayMemoryDi
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedMultiDimArrayMemoryDirector_DimCount(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedMultiDimArrayMemoryDirector_DimCount(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedMultiDimArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedMultiDimArrayMemoryDirector *) 0 ;
   uint64_t result;
   
@@ -61882,7 +62133,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedMultiDimArrayM
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -62124,8 +62375,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_WrappedPodArrayMemoryDi
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryDirector_Length(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryDirector_Length(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedPodArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedPodArrayMemoryDirector *) 0 ;
   uint64_t result;
   
@@ -62163,12 +62414,12 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemory
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryDirector_Read(void * jarg1, unsigned long jarg2, unsigned long jarg3, unsigned long jarg4) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryDirector_Read(void * jarg1, unsigned long long jarg2, unsigned long long jarg3, unsigned long long jarg4) {
   void * jresult ;
   RobotRaconteur::WrappedPodArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedPodArrayMemoryDirector *) 0 ;
   uint64_t arg2 ;
@@ -62225,7 +62476,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryDirecto
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryDirector_Write(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodArrayMemoryDirector_Write(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   RobotRaconteur::WrappedPodArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedPodArrayMemoryDirector *) 0 ;
   uint64_t arg2 ;
   boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > arg3 ;
@@ -62393,8 +62644,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArrayMemor
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArrayMemoryDirector_DimCount(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArrayMemoryDirector_DimCount(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedPodMultiDimArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedPodMultiDimArrayMemoryDirector *) 0 ;
   uint64_t result;
   
@@ -62432,7 +62683,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArr
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -62644,7 +62895,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedPodMultiDimArrayMemoryD
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClientBuffer_UnpackReadResult(void * jarg1, void * jarg2, unsigned long jarg3, unsigned long jarg4) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClientBuffer_UnpackReadResult(void * jarg1, void * jarg2, unsigned long long jarg3, unsigned long long jarg4) {
   RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *) 0 ;
   boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > arg2 ;
   uint64_t arg3 ;
@@ -62697,7 +62948,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClientB
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClientBuffer_PackWriteRequest(void * jarg1, unsigned long jarg2, unsigned long jarg3) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClientBuffer_PackWriteRequest(void * jarg1, unsigned long long jarg2, unsigned long long jarg3) {
   void * jresult ;
   RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *) 0 ;
   uint64_t arg2 ;
@@ -62752,8 +63003,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClien
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClientBuffer_GetBufferLength(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClientBuffer_GetBufferLength(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *) 0 ;
   uint64_t result;
   
@@ -62791,7 +63042,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemo
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -62885,8 +63136,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClientB
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClient_Length(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClient_Length(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedNamedArrayMemoryClient *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryClient *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedNamedArrayMemoryClient > *smartarg1 = 0 ;
   uint64_t result;
@@ -62927,7 +63178,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemo
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -62979,7 +63230,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClient_D
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClient_Read(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClient_Read(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   RobotRaconteur::WrappedNamedArrayMemoryClient *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryClient *) 0 ;
   uint64_t arg2 ;
   RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *arg3 = (RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *) 0 ;
@@ -63030,7 +63281,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClient_
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClient_Write(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryClient_Write(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   RobotRaconteur::WrappedNamedArrayMemoryClient *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryClient *) 0 ;
   uint64_t arg2 ;
   RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *arg3 = (RobotRaconteur::WrappedNamedArrayMemoryClientBuffer *) 0 ;
@@ -63384,8 +63635,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedMultiDimArrayMem
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedMultiDimArrayMemoryClient_DimCount(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedMultiDimArrayMemoryClient_DimCount(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedNamedMultiDimArrayMemoryClient *arg1 = (RobotRaconteur::WrappedNamedMultiDimArrayMemoryClient *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedNamedMultiDimArrayMemoryClient > *smartarg1 = 0 ;
   uint64_t result;
@@ -63426,7 +63677,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedMultiDimA
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -63729,8 +63980,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_WrappedNamedArrayMemory
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryDirector_Length(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryDirector_Length(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedNamedArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryDirector *) 0 ;
   uint64_t result;
   
@@ -63768,12 +64019,12 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemo
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryDirector_Read(void * jarg1, unsigned long jarg2, unsigned long jarg3, unsigned long jarg4) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryDirector_Read(void * jarg1, unsigned long long jarg2, unsigned long long jarg3, unsigned long long jarg4) {
   void * jresult ;
   RobotRaconteur::WrappedNamedArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryDirector *) 0 ;
   uint64_t arg2 ;
@@ -63830,7 +64081,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryDirec
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryDirector_Write(void * jarg1, unsigned long jarg2, void * jarg3, unsigned long jarg4, unsigned long jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedArrayMemoryDirector_Write(void * jarg1, unsigned long long jarg2, void * jarg3, unsigned long long jarg4, unsigned long long jarg5) {
   RobotRaconteur::WrappedNamedArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedNamedArrayMemoryDirector *) 0 ;
   uint64_t arg2 ;
   boost::intrusive_ptr< RobotRaconteur::MessageElementNestedElementList > arg3 ;
@@ -63998,8 +64249,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedMultiDimArrayMem
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedMultiDimArrayMemoryDirector_DimCount(void * jarg1) {
-  unsigned long jresult ;
+SWIGEXPORT unsigned long long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedMultiDimArrayMemoryDirector_DimCount(void * jarg1) {
+  unsigned long long jresult ;
   RobotRaconteur::WrappedNamedMultiDimArrayMemoryDirector *arg1 = (RobotRaconteur::WrappedNamedMultiDimArrayMemoryDirector *) 0 ;
   uint64_t result;
   
@@ -64037,7 +64288,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedNamedMultiDimA
     return 0;
   }
   
-  jresult = (unsigned long)result; 
+  jresult = result; 
   return jresult;
 }
 
@@ -71821,8 +72072,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrapped_Add(
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrapped_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrapped_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::ServiceInfo2Wrapped > *arg1 = (std::vector< RobotRaconteur::ServiceInfo2Wrapped > *) 0 ;
   std::vector< RobotRaconteur::ServiceInfo2Wrapped >::size_type result;
   
@@ -71860,13 +72111,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrap
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrapped_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrapped_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::ServiceInfo2Wrapped > *arg1 = (std::vector< RobotRaconteur::ServiceInfo2Wrapped > *) 0 ;
   std::vector< RobotRaconteur::ServiceInfo2Wrapped >::size_type result;
   
@@ -71904,12 +72155,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrap
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrapped_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorserviceinfo2wrapped_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< RobotRaconteur::ServiceInfo2Wrapped > *arg1 = (std::vector< RobotRaconteur::ServiceInfo2Wrapped > *) 0 ;
   std::vector< RobotRaconteur::ServiceInfo2Wrapped >::size_type arg2 ;
   
@@ -73520,8 +73771,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_Add(void * jar
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::NodeInfo2 > *arg1 = (std::vector< RobotRaconteur::NodeInfo2 > *) 0 ;
   std::vector< RobotRaconteur::NodeInfo2 >::size_type result;
   
@@ -73559,13 +73810,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_size(v
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::NodeInfo2 > *arg1 = (std::vector< RobotRaconteur::NodeInfo2 > *) 0 ;
   std::vector< RobotRaconteur::NodeInfo2 >::size_type result;
   
@@ -73603,12 +73854,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_capaci
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectornodeinfo2_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< RobotRaconteur::NodeInfo2 > *arg1 = (std::vector< RobotRaconteur::NodeInfo2 > *) 0 ;
   std::vector< RobotRaconteur::NodeInfo2 >::size_type arg2 ;
   
@@ -74581,8 +74832,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionservicei
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionserviceinfo2_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionserviceinfo2_size(void * jarg1) {
+  unsigned long jresult ;
   std::map< RobotRaconteur::ServiceSubscriptionClientID,RobotRaconteur::ServiceInfo2Wrapped > *arg1 = (std::map< RobotRaconteur::ServiceSubscriptionClientID,RobotRaconteur::ServiceInfo2Wrapped > *) 0 ;
   std::map< RobotRaconteur::ServiceSubscriptionClientID,RobotRaconteur::ServiceInfo2Wrapped >::size_type result;
   
@@ -74620,7 +74871,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionservic
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -75235,8 +75486,8 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionclients_
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionclients_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionclients_size(void * jarg1) {
+  unsigned long jresult ;
   std::map< RobotRaconteur::ServiceSubscriptionClientID,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > > *arg1 = (std::map< RobotRaconteur::ServiceSubscriptionClientID,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > > *) 0 ;
   std::map< RobotRaconteur::ServiceSubscriptionClientID,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > >::size_type result;
   
@@ -75274,7 +75525,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionclient
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -75876,8 +76127,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservicesubscr
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservicesubscriptionnode_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservicesubscriptionnode_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > >::size_type result;
   
@@ -75915,13 +76166,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservi
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservicesubscriptionnode_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservicesubscriptionnode_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > >::size_type result;
   
@@ -75959,12 +76210,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservi
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservicesubscriptionnode_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_wrappedservicesubscriptionnode_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > > *arg1 = (std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > > *) 0 ;
   std::vector< boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilterNode > >::size_type arg2 ;
   
@@ -76924,8 +77175,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscriptionclientid
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscriptionclientid_size(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscriptionclientid_size(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::ServiceSubscriptionClientID > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionClientID > *) 0 ;
   std::vector< RobotRaconteur::ServiceSubscriptionClientID >::size_type result;
   
@@ -76963,13 +77214,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscription
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscriptionclientid_capacity(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscriptionclientid_capacity(void * jarg1) {
+  unsigned long jresult ;
   std::vector< RobotRaconteur::ServiceSubscriptionClientID > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionClientID > *) 0 ;
   std::vector< RobotRaconteur::ServiceSubscriptionClientID >::size_type result;
   
@@ -77007,12 +77258,12 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscription
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscriptionclientid_reserve(void * jarg1, unsigned int jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vectorptr_subscriptionclientid_reserve(void * jarg1, unsigned long jarg2) {
   std::vector< RobotRaconteur::ServiceSubscriptionClientID > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionClientID > *) 0 ;
   std::vector< RobotRaconteur::ServiceSubscriptionClientID >::size_type arg2 ;
   
@@ -77895,6 +78146,3407 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_vectorptr_subscriptionc
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Name_set(void * jarg1, const char * jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *arg2 = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  if (arg1) (arg1)->Name = *arg2;
+}
+
+
+SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Name_get(void * jarg1) {
+  const char * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  result = (std::string *) & ((arg1)->Name);
+  jresult = SWIG_csharp_string_callback(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Value_set(void * jarg1, const char * jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *arg2 = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  if (arg1) (arg1)->Value = *arg2;
+}
+
+
+SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_Value_get(void * jarg1) {
+  const char * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  result = (std::string *) & ((arg1)->Value);
+  jresult = SWIG_csharp_string_callback(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_UseRegex_set(void * jarg1, unsigned int jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  bool arg2 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  arg2 = jarg2 ? true : false; 
+  if (arg1) (arg1)->UseRegex = arg2;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_UseRegex_get(void * jarg1) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  result = (bool) ((arg1)->UseRegex);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttribute__SWIG_0(const char * jarg1) {
+  void * jresult ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *result = 0 ;
+  
+  if (!jarg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg1_str(jarg1);
+  arg1 = &arg1_str; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)new RobotRaconteur::ServiceSubscriptionFilterAttribute((std::string const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttribute__SWIG_1(const char * jarg1, const char * jarg2) {
+  void * jresult ;
+  std::string *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *result = 0 ;
+  
+  if (!jarg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg1_str(jarg1);
+  arg1 = &arg1_str; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)new RobotRaconteur::ServiceSubscriptionFilterAttribute((std::string const &)*arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_0(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttribute const *)arg1)->IsMatch((std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_1(void * jarg1, const char * jarg2, const char * jarg3) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  if (!jarg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg3_str(jarg3);
+  arg3 = &arg3_str; 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttribute const *)arg1)->IsMatch((std::string const &)*arg2,(std::string const &)*arg3);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_2(void * jarg1, void * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::vector< std::string > *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  arg2 = (std::vector< std::string > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< std::string > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttribute const *)arg1)->IsMatch((std::vector< std::string > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttribute_IsMatch__SWIG_3(void * jarg1, void * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  std::map< std::string,std::string,std::less< std::string > > *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  arg2 = (std::map< std::string,std::string,std::less< std::string > > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,std::string,std::less< std::string > > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttribute const *)arg1)->IsMatch((std::map< std::string,std::string,std::less< std::string > > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_ServiceSubscriptionFilterAttribute(void * jarg1) {
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_CreateServiceSubscriptionFilterAttributeRegex__SWIG_0(const char * jarg1) {
+  void * jresult ;
+  std::string *arg1 = 0 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  if (!jarg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg1_str(jarg1);
+  arg1 = &arg1_str; 
+  
+  try {
+    result = RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex((std::string const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute(result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_CreateServiceSubscriptionFilterAttributeRegex__SWIG_1(const char * jarg1, const char * jarg2) {
+  void * jresult ;
+  std::string *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  if (!jarg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg1_str(jarg1);
+  arg1 = &arg1_str; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex((std::string const &)*arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute(result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Clear(void * jarg1) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    (arg1)->clear();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Add(void * jarg1, void * jarg2) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg2 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::ServiceSubscriptionFilterAttribute const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    (arg1)->push_back((RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_size(void * jarg1) {
+  unsigned long jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type result;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = ((std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const *)arg1)->size();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (unsigned long)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_capacity(void * jarg1) {
+  unsigned long jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type result;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = ((std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const *)arg1)->capacity();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (unsigned long)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_reserve(void * jarg1, unsigned long jarg2) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type arg2 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type)jarg2; 
+  
+  try {
+    (arg1)->reserve(arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_0() {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  
+  try {
+    result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_1(void * jarg1) {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >((std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_vector_subscriptionattribute__SWIG_2(int jarg1) {
+  void * jresult ;
+  int arg1 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (int)jarg1; 
+  
+  try {
+    try {
+      result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new_std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg___SWIG_2(arg1);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_getitemcopy(void * jarg1, int jarg2) {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  
+  try {
+    try {
+      result = std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitemcopy(arg1,arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute(result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_getitem(void * jarg1, int jarg2) {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::value_type *result = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  
+  try {
+    try {
+      result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >::value_type *) &std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitem(arg1,arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_setitem(void * jarg1, int jarg2, void * jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg3 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::ServiceSubscriptionFilterAttribute const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__setitem(arg1,arg2,(RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_AddRange(void * jarg1, void * jarg2) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg2 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__AddRange(arg1,(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_GetRange(void * jarg1, int jarg2, int jarg3) {
+  void * jresult ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (int)jarg3; 
+  
+  try {
+    try {
+      result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__GetRange(arg1,arg2,arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    } catch(std::invalid_argument &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentException, (&_e)->what(), "");
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Insert(void * jarg1, int jarg2, void * jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg3 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::ServiceSubscriptionFilterAttribute const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Insert(arg1,arg2,(RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_InsertRange(void * jarg1, int jarg2, void * jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg3 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__InsertRange(arg1,arg2,(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_RemoveAt(void * jarg1, int jarg2) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__RemoveAt(arg1,arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_RemoveRange(void * jarg1, int jarg2, int jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (int)jarg3; 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__RemoveRange(arg1,arg2,arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    } catch(std::invalid_argument &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentException, (&_e)->what(), "");
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Repeat(void * jarg1, int jarg2) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = 0 ;
+  int arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "RobotRaconteur::ServiceSubscriptionFilterAttribute const & is null", 0);
+    return 0;
+  } 
+  arg2 = (int)jarg2; 
+  
+  try {
+    try {
+      result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Repeat((RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg1,arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Reverse__SWIG_0(void * jarg1) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Reverse__SWIG_0(arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_Reverse__SWIG_1(void * jarg1, int jarg2, int jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (int)jarg3; 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Reverse__SWIG_1(arg1,arg2,arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    } catch(std::invalid_argument &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentException, (&_e)->what(), "");
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_vector_subscriptionattribute_SetRange(void * jarg1, int jarg2, void * jarg3) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  int arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg3 = 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__SetRange(arg1,arg2,(std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_vector_subscriptionattribute(void * jarg1) {
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionattribute__SWIG_0() {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionattribute__SWIG_1(void * jarg1) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)new std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_size(void * jarg1) {
+  unsigned long jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::size_type result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = ((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > const *)arg1)->size();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (unsigned long)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_empty(void * jarg1) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = (bool)((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > const *)arg1)->empty();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_Clear(void * jarg1) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    (arg1)->clear();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_getitem(void * jarg1, const char * jarg2) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    try {
+      result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *) &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__getitem(arg1,(std::string const &)*arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_setitem(void * jarg1, const char * jarg2, void * jarg3) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *arg3 = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__setitem(arg1,(std::string const &)*arg2,(RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg3);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_ContainsKey(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__ContainsKey(arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_Add(void * jarg1, const char * jarg2, void * jarg3) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *arg3 = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::mapped_type const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Add(arg1,(std::string const &)*arg2,(RobotRaconteur::ServiceSubscriptionFilterAttribute const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_Remove(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__Remove(arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_create_iterator_begin(void * jarg1) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__create_iterator_begin(arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_get_next_key(void * jarg1, void * jarg2) {
+  const char * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *)jarg2; 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute >::key_type *) &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__get_next_key(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = SWIG_csharp_string_callback(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattribute_destroy_iterator(void * jarg1, void * jarg2) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute,std::less< std::string > >::iterator *)jarg2; 
+  
+  try {
+    std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg__destroy_iterator(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_map_subscriptionattribute(void * jarg1) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Attributes_set(void * jarg1, void * jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *) 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg2; 
+  if (arg1) (arg1)->Attributes = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Attributes_get(void * jarg1) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)& ((arg1)->Attributes);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Groups_set(void * jarg1, void * jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg2; 
+  if (arg1) (arg1)->Groups = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Groups_get(void * jarg1) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)& ((arg1)->Groups);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Operation_set(void * jarg1, int jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg2 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg2; 
+  if (arg1) (arg1)->Operation = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Operation_get(void * jarg1) {
+  int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation) ((arg1)->Operation);
+  jresult = (int)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_set(void * jarg1, unsigned int jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  bool arg2 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = jarg2 ? true : false; 
+  if (arg1) (arg1)->SplitStringAttribute = arg2;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringAttribute_get(void * jarg1) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (bool) ((arg1)->SplitStringAttribute);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_set(void * jarg1, char jarg2) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  char arg2 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (char)jarg2; 
+  if (arg1) (arg1)->SplitStringDelimiter = arg2;
+}
+
+
+SWIGEXPORT char SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_SplitStringDelimiter_get(void * jarg1) {
+  char jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  char result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  result = (char) ((arg1)->SplitStringDelimiter);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_0() {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *result = 0 ;
+  
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)new RobotRaconteur::ServiceSubscriptionFilterAttributeGroup();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_1(int jarg1) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg1 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg1; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)new RobotRaconteur::ServiceSubscriptionFilterAttributeGroup(arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_2(int jarg1, void * jarg2) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg1 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *argp2 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg1; 
+  argp2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *)jarg2; 
+  if (!argp2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute >", 0);
+    return 0;
+  }
+  arg2 = *argp2; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)new RobotRaconteur::ServiceSubscriptionFilterAttributeGroup(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_ServiceSubscriptionFilterAttributeGroup__SWIG_3(int jarg1, void * jarg2) {
+  void * jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg1 ;
+  SwigValueWrapper< std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > > arg2 ;
+  std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *argp2 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *result = 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg1; 
+  argp2 = (std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg2; 
+  if (!argp2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null std::vector< RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >", 0);
+    return 0;
+  }
+  arg2 = *argp2; 
+  
+  try {
+    result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)new RobotRaconteur::ServiceSubscriptionFilterAttributeGroup(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_0(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::string *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const *)arg1)->IsMatch((std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_1(void * jarg1, void * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::vector< std::string > *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (std::vector< std::string > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< std::string > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const *)arg1)->IsMatch((std::vector< std::string > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_IsMatch__SWIG_2(void * jarg1, void * jarg2) {
+  unsigned int jresult ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  std::map< std::string,std::string,std::less< std::string > > *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  arg2 = (std::map< std::string,std::string,std::less< std::string > > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,std::string,std::less< std::string > > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (bool)((RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const *)arg1)->IsMatch((std::map< std::string,std::string,std::less< std::string > > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_ServiceSubscriptionFilterAttributeGroup(void * jarg1) {
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *) 0 ;
+  
+  arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroup *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionattributegroup__SWIG_0() {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *result = 0 ;
+  
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)new std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_new_map_subscriptionattributegroup__SWIG_1(void * jarg1) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1;
+  if (!arg1) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > const & is null", 0);
+    return 0;
+  } 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)new std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > const &)*arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_size(void * jarg1) {
+  unsigned long jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::size_type result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    result = ((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > const *)arg1)->size();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (unsigned long)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_empty(void * jarg1) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    result = (bool)((std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > const *)arg1)->empty();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_Clear(void * jarg1) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    (arg1)->clear();
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_getitem(void * jarg1, const char * jarg2) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    try {
+      result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *) &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__getitem(arg1,(std::string const &)*arg2);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return 0;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_setitem(void * jarg1, const char * jarg2, void * jarg3) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *arg3 = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__setitem(arg1,(std::string const &)*arg2,(RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const &)*arg3);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_ContainsKey(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__ContainsKey(arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_Add(void * jarg1, const char * jarg2, void * jarg3) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *arg3 = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::mapped_type const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    try {
+      std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__Add(arg1,(std::string const &)*arg2,(RobotRaconteur::ServiceSubscriptionFilterAttributeGroup const &)*arg3);
+    } catch(std::out_of_range &_e) {
+      SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, 0, (&_e)->what());
+      return ;
+    }
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_Remove(void * jarg1, const char * jarg2) {
+  unsigned int jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *arg2 = 0 ;
+  bool result;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  
+  try {
+    result = (bool)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__Remove(arg1,(std::string const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_create_iterator_begin(void * jarg1) {
+  void * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *)std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__create_iterator_begin(arg1);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_get_next_key(void * jarg1, void * jarg2) {
+  const char * jresult ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *result = 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *)jarg2; 
+  
+  try {
+    result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup >::key_type *) &std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__get_next_key(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return 0;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return 0;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return 0;
+  }
+  
+  jresult = SWIG_csharp_string_callback(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_map_subscriptionattributegroup_destroy_iterator(void * jarg1, void * jarg2) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > >::iterator *)jarg2; 
+  
+  try {
+    std_map_Sl_std_string_Sc_RobotRaconteur_ServiceSubscriptionFilterAttributeGroup_Sg__destroy_iterator(arg1,arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_map_subscriptionattributegroup(void * jarg1) {
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *) 0 ;
+  
+  arg1 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup > *)jarg1; 
+  
+  try {
+    delete arg1;
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
 SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilterPredicateDirector_Predicate(void * jarg1, void * jarg2) {
   unsigned int jresult ;
   RobotRaconteur::WrappedServiceSubscriptionFilterPredicateDirector *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilterPredicateDirector *) 0 ;
@@ -78342,6 +81994,62 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFi
   arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
   result = (std::vector< std::string > *)& ((arg1)->TransportSchemes);
   jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_Attributes_set(void * jarg1, void * jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionFilter *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *) 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *smartarg1 = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *)jarg2; 
+  if (arg1) (arg1)->Attributes = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_Attributes_get(void * jarg1) {
+  void * jresult ;
+  RobotRaconteur::WrappedServiceSubscriptionFilter *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *smartarg1 = 0 ;
+  std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *result = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
+  result = (std::map< std::string,RobotRaconteur::ServiceSubscriptionFilterAttributeGroup,std::less< std::string > > *)& ((arg1)->Attributes);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_AttributesMatchOperation_set(void * jarg1, int jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionFilter *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *) 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation arg2 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *smartarg1 = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation)jarg2; 
+  if (arg1) (arg1)->AttributesMatchOperation = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscriptionFilter_AttributesMatchOperation_get(void * jarg1) {
+  int jresult ;
+  RobotRaconteur::WrappedServiceSubscriptionFilter *arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *smartarg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation result;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionFilter *)(smartarg1 ? smartarg1->get() : 0); 
+  result = (RobotRaconteur::ServiceSubscriptionFilterAttributeGroupOperation) ((arg1)->AttributesMatchOperation);
+  jresult = (int)result; 
   return jresult;
 }
 
@@ -81076,6 +84784,107 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscription_Upd
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscription_UpdateServiceByType__SWIG_0(void * jarg1, void * jarg2, void * jarg3) {
+  RobotRaconteur::WrappedServiceSubscription *arg1 = (RobotRaconteur::WrappedServiceSubscription *) 0 ;
+  std::vector< std::string > *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *arg3 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > tempnull3 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscription > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (std::vector< std::string > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< std::string > const & is null", 0);
+    return ;
+  } 
+  arg3 = jarg3 ? (boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *)jarg3 : &tempnull3; 
+  
+  try {
+    (arg1)->UpdateServiceByType((std::vector< std::string > const &)*arg2,(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > const &)*arg3);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedServiceSubscription_UpdateServiceByType__SWIG_1(void * jarg1, void * jarg2) {
+  RobotRaconteur::WrappedServiceSubscription *arg1 = (RobotRaconteur::WrappedServiceSubscription *) 0 ;
+  std::vector< std::string > *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > *smartarg1 = 0 ;
+  
+  
+  smartarg1 = (boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscription > *)jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (std::vector< std::string > *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "std::vector< std::string > const & is null", 0);
+    return ;
+  } 
+  
+  try {
+    (arg1)->UpdateServiceByType((std::vector< std::string > const &)*arg2);
+  } catch (RobotRaconteurException& e)
+  {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    if (robotRaconteurExceptionHelper!=NULL)
+    {
+      RobotRaconteur::HandlerErrorInfo err3(e);
+      robotRaconteurExceptionHelper->SetRobotRaconteurException(err3);
+      return ;
+    }
+    else
+    {
+      SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+      return ;
+    }
+    
+    
+  } catch (std::exception& e) {
+    RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
+    if (default_node)
+    {
+      ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
+    }
+    SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
+    return ;
+  }
+  
+}
+
+
 SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_delete_WrappedServiceSubscription(void * jarg1) {
   RobotRaconteur::WrappedServiceSubscription *arg1 = (RobotRaconteur::WrappedServiceSubscription *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > *smartarg1 = 0 ;
@@ -81747,8 +85556,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_WrappedWireSubscription_SetInV
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedWireSubscription_GetActiveWireConnectionCount(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedWireSubscription_GetActiveWireConnectionCount(void * jarg1) {
+  unsigned long jresult ;
   RobotRaconteur::WrappedWireSubscription *arg1 = (RobotRaconteur::WrappedWireSubscription *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedWireSubscription > *smartarg1 = 0 ;
   size_t result;
@@ -81789,7 +85598,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedWireSubscriptio
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -82642,8 +86451,8 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeSubscriptio
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeSubscription_Available(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeSubscription_Available(void * jarg1) {
+  unsigned long jresult ;
   RobotRaconteur::WrappedPipeSubscription *arg1 = (RobotRaconteur::WrappedPipeSubscription *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedPipeSubscription > *smartarg1 = 0 ;
   size_t result;
@@ -82684,13 +86493,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeSubscriptio
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeSubscription_GetActivePipeEndpointCount(void * jarg1) {
-  unsigned int jresult ;
+SWIGEXPORT unsigned long SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeSubscription_GetActivePipeEndpointCount(void * jarg1) {
+  unsigned long jresult ;
   RobotRaconteur::WrappedPipeSubscription *arg1 = (RobotRaconteur::WrappedPipeSubscription *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedPipeSubscription > *smartarg1 = 0 ;
   size_t result;
@@ -82731,7 +86540,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_RobotRaconteur_WrappedPipeSubscriptio
     return 0;
   }
   
-  jresult = result; 
+  jresult = (unsigned long)result; 
   return jresult;
 }
 
@@ -84272,7 +88081,7 @@ SWIGEXPORT const char * SWIGSTDCALL CSharp_RobotRaconteur_RRLogRecord_ComponentO
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_RRLogRecord_Endpoint_set(void * jarg1, long jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_RRLogRecord_Endpoint_set(void * jarg1, long long jarg2) {
   RobotRaconteur::RRLogRecord *arg1 = (RobotRaconteur::RRLogRecord *) 0 ;
   int64_t arg2 ;
   
@@ -84282,8 +88091,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_RobotRaconteur_RRLogRecord_Endpoint_set(void 
 }
 
 
-SWIGEXPORT long SWIGSTDCALL CSharp_RobotRaconteur_RRLogRecord_Endpoint_get(void * jarg1) {
-  long jresult ;
+SWIGEXPORT long long SWIGSTDCALL CSharp_RobotRaconteur_RRLogRecord_Endpoint_get(void * jarg1) {
+  long long jresult ;
   RobotRaconteur::RRLogRecord *arg1 = (RobotRaconteur::RRLogRecord *) 0 ;
   int64_t result;
   

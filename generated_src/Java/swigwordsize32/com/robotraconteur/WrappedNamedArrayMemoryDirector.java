@@ -68,16 +68,16 @@ public class WrappedNamedArrayMemoryDirector {
     RobotRaconteurJavaJNI.WrappedNamedArrayMemoryDirector_director_connect(this, swigCPtr, true, true);
   }
 
-  public long length() {
+  public java.math.BigInteger length() {
     return RobotRaconteurJavaJNI.WrappedNamedArrayMemoryDirector_length(swigCPtr, this);
   }
 
-  public MessageElementNestedElementList read(long memorypos, long bufferpos, long count) {
+  public MessageElementNestedElementList read(java.math.BigInteger memorypos, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     long cPtr = RobotRaconteurJavaJNI.WrappedNamedArrayMemoryDirector_read(swigCPtr, this, memorypos, bufferpos, count);
     return (cPtr == 0) ? null : new MessageElementNestedElementList(cPtr, true);
   }
 
-  public void write(long memorypos, MessageElementNestedElementList buffer, long bufferpos, long count) {
+  public void write(java.math.BigInteger memorypos, MessageElementNestedElementList buffer, java.math.BigInteger bufferpos, java.math.BigInteger count) {
     RobotRaconteurJavaJNI.WrappedNamedArrayMemoryDirector_write(swigCPtr, this, memorypos, MessageElementNestedElementList.getCPtr(buffer), buffer, bufferpos, count);
   }
 

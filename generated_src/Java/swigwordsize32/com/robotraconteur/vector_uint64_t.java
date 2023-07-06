@@ -8,7 +8,7 @@
 
 package com.robotraconteur;
 
-public class vector_uint64_t extends java.util.AbstractList<Long> implements java.util.RandomAccess {
+public class vector_uint64_t extends java.util.AbstractList<java.math.BigInteger> implements java.util.RandomAccess {
   private transient long swigCPtr;
   protected transient boolean swigCMemOwn;
 
@@ -48,42 +48,42 @@ public class vector_uint64_t extends java.util.AbstractList<Long> implements jav
     }
   }
 
-  public vector_uint64_t(long[] initialElements) {
+  public vector_uint64_t(java.math.BigInteger[] initialElements) {
     this();
     reserve(initialElements.length);
 
-    for (long element : initialElements) {
+    for (java.math.BigInteger element : initialElements) {
       add(element);
     }
   }
 
-  public vector_uint64_t(Iterable<Long> initialElements) {
+  public vector_uint64_t(Iterable<java.math.BigInteger> initialElements) {
     this();
-    for (long element : initialElements) {
+    for (java.math.BigInteger element : initialElements) {
       add(element);
     }
   }
 
-  public Long get(int index) {
+  public java.math.BigInteger get(int index) {
     return doGet(index);
   }
 
-  public Long set(int index, Long e) {
+  public java.math.BigInteger set(int index, java.math.BigInteger e) {
     return doSet(index, e);
   }
 
-  public boolean add(Long e) {
+  public boolean add(java.math.BigInteger e) {
     modCount++;
     doAdd(e);
     return true;
   }
 
-  public void add(int index, Long e) {
+  public void add(int index, java.math.BigInteger e) {
     modCount++;
     doAdd(index, e);
   }
 
-  public Long remove(int index) {
+  public java.math.BigInteger remove(int index) {
     modCount++;
     return doRemove(index);
   }
@@ -121,7 +121,7 @@ public class vector_uint64_t extends java.util.AbstractList<Long> implements jav
     RobotRaconteurJavaJNI.vector_uint64_t_clear(swigCPtr, this);
   }
 
-  public vector_uint64_t(int count, long value) {
+  public vector_uint64_t(int count, java.math.BigInteger value) {
     this(RobotRaconteurJavaJNI.new_vector_uint64_t__SWIG_2(count, value), true);
   }
 
@@ -129,23 +129,23 @@ public class vector_uint64_t extends java.util.AbstractList<Long> implements jav
     return RobotRaconteurJavaJNI.vector_uint64_t_doSize(swigCPtr, this);
   }
 
-  private void doAdd(long x) {
+  private void doAdd(java.math.BigInteger x) {
     RobotRaconteurJavaJNI.vector_uint64_t_doAdd__SWIG_0(swigCPtr, this, x);
   }
 
-  private void doAdd(int index, long x) {
+  private void doAdd(int index, java.math.BigInteger x) {
     RobotRaconteurJavaJNI.vector_uint64_t_doAdd__SWIG_1(swigCPtr, this, index, x);
   }
 
-  private long doRemove(int index) {
+  private java.math.BigInteger doRemove(int index) {
     return RobotRaconteurJavaJNI.vector_uint64_t_doRemove(swigCPtr, this, index);
   }
 
-  private long doGet(int index) {
+  private java.math.BigInteger doGet(int index) {
     return RobotRaconteurJavaJNI.vector_uint64_t_doGet(swigCPtr, this, index);
   }
 
-  private long doSet(int index, long val) {
+  private java.math.BigInteger doSet(int index, java.math.BigInteger val) {
     return RobotRaconteurJavaJNI.vector_uint64_t_doSet(swigCPtr, this, index, val);
   }
 

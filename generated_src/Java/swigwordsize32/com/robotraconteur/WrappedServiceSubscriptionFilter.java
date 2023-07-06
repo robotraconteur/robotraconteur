@@ -67,6 +67,23 @@ public class WrappedServiceSubscriptionFilter {
     return (cPtr == 0) ? null : new vectorstring(cPtr, false);
   }
 
+  public void setAttributes(map_subscriptionattributegroup value) {
+    RobotRaconteurJavaJNI.WrappedServiceSubscriptionFilter_Attributes_set(swigCPtr, this, map_subscriptionattributegroup.getCPtr(value), value);
+  }
+
+  public map_subscriptionattributegroup getAttributes() {
+    long cPtr = RobotRaconteurJavaJNI.WrappedServiceSubscriptionFilter_Attributes_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new map_subscriptionattributegroup(cPtr, false);
+  }
+
+  public void setAttributesMatchOperation(ServiceSubscriptionFilterAttributeGroupOperation value) {
+    RobotRaconteurJavaJNI.WrappedServiceSubscriptionFilter_AttributesMatchOperation_set(swigCPtr, this, value.swigValue());
+  }
+
+  public ServiceSubscriptionFilterAttributeGroupOperation getAttributesMatchOperation() {
+    return ServiceSubscriptionFilterAttributeGroupOperation.swigToEnum(RobotRaconteurJavaJNI.WrappedServiceSubscriptionFilter_AttributesMatchOperation_get(swigCPtr, this));
+  }
+
   public void setRRPredicateDirector(WrappedServiceSubscriptionFilterPredicateDirector director, int id) {
     RobotRaconteurJavaJNI.WrappedServiceSubscriptionFilter_setRRPredicateDirector(swigCPtr, this, WrappedServiceSubscriptionFilterPredicateDirector.getCPtr(director), director, id);
   }
