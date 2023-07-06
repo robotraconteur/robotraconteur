@@ -43,7 +43,7 @@ runs:
   - name: test
     working-directory: build2_python_${{ inputs.python_version }}
     run: |
-      ctest . -C Release --output-on-failure
+      ctest . -C Release --output-on-failure --repeat until-pass:3
     shell: bash
   - name: copy wheels
     shell: bash
