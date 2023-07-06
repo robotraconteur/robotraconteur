@@ -71,6 +71,10 @@ def _assert_connected_clients(c, count):
             break
         except AssertionError:
             if try_count > 50:
+                s = c.GetConnectedClients()
+                for s1 in s:
+                    print(s1.NodeID.ToString())
+                    print(s1.ServiceName)
                 print(len(c.GetConnectedClients()))
                 raise
             try_count += 1
