@@ -160,8 +160,14 @@ def test_subscriber_attribute_filter():
     attr_grps2 = {"a4": attr_grp2}
     _run_attributes_filter_test(client_node, attr_grps2, 2)
 
-    attr_grp2.Operation = RR.ServiceSubscriptionFilterAttributeGroupOperation_AND
-    _run_attributes_filter_test(client_node, attr_grps2, 1)
+    attr_grp4 = RR.ServiceSubscriptionFilterAttributeGroup()
+    attr_grp4.Attributes.append(
+        RR.ServiceSubscriptionFilterAttribute("test_attr_val4"))
+    attr_grp4.Attributes.append(
+        RR.ServiceSubscriptionFilterAttribute("test_attr_val4_2"))
+    attr_grps4 = {"a4": attr_grp4}
+    attr_grp4.Operation = RR.ServiceSubscriptionFilterAttributeGroupOperation_AND
+    _run_attributes_filter_test(client_node, attr_grps4, 1)
 
     attr_grp3 = RR.ServiceSubscriptionFilterAttributeGroup()
     attr_grp3.Attributes.append(
