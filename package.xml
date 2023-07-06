@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>robotraconteur</name>
   <version>0.16.1</version>
   <description>The robotraconteur package</description>
@@ -13,7 +13,7 @@
   <author email="wason@wasontech.com">John Wason</author>
   
   <buildtool_depend>cmake</buildtool_depend>
-  <buildtool_depend>swig</buildtool_depend>
+  <buildtool_depend condition="$ROS_VERSION == 1">catkin</buildtool_depend>
   <depend>boost</depend>
   <depend>libssl-dev</depend>
   <depend>libusb-1.0-dev</depend>
