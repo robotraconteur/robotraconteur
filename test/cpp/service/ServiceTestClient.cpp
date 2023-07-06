@@ -2526,10 +2526,7 @@ void ServiceTestClient::TestPipes()
     ec4.disconnect();
 }
 
-void ServiceTestClient::ee1_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
-{
-    ee1.Set();
-}
+void ServiceTestClient::ee1_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p) { ee1.Set(); }
 
 void ServiceTestClient::ee1_ack_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p,
                                    uint32_t packetnum)
@@ -2538,15 +2535,9 @@ void ServiceTestClient::ee1_ack_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<R
         ack_recv = true;
 }
 
-void ServiceTestClient::ee2_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
-{
-    ee2.Set();
-}
+void ServiceTestClient::ee2_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p) { ee2.Set(); }
 
-void ServiceTestClient::ee3_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p)
-{
-    ee3.Set();
-}
+void ServiceTestClient::ee3_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p) { ee3.Set(); }
 
 void ServiceTestClient::TestWires()
 {

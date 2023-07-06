@@ -544,7 +544,7 @@ class ServiceTestClient:
         e3.SendPacket(s2)
         assert self._ee1.wait(5)
         assert self._ee2.wait(5)
-        #time.sleep(1)
+        # time.sleep(1)
         assert self._ee3.wait(5)
 
         ca(e1.ReceivePacket(), [1, 2, 3, 4])
