@@ -2528,8 +2528,6 @@ void ServiceTestClient::TestPipes()
 
 void ServiceTestClient::ee1_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
 {
-    if (p->Available() < 3)
-        return;
     ee1.Set();
 }
 
@@ -2542,15 +2540,11 @@ void ServiceTestClient::ee1_ack_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<R
 
 void ServiceTestClient::ee2_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
 {
-    if (p->Available() < 3)
-        return;
     ee2.Set();
 }
 
 void ServiceTestClient::ee3_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p)
 {
-    if (p->Available() < 2)
-        return;
     ee3.Set();
 }
 
