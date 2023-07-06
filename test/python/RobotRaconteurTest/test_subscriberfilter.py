@@ -122,7 +122,9 @@ def test_subscriber_attribute_filter():
 
     node1 = _init_node("test_node1", "service1", node1_attrs)
     node2 = _init_node("test_node2", "service2", node2_attrs)
-    node3 = _init_node("test_node2", "service7", node3_attrs)
+    node3 = _init_node("test_node7", "service3", node3_attrs)
+
+    time.sleep(0.5)
 
     # Create client node
     client_node = _init_client_node()
@@ -132,9 +134,12 @@ def test_subscriber_attribute_filter():
         "rr+intra:///?nodename=test_node1&service=service1")
     c2 = client_node.ConnectService(
         "rr+intra:///?nodename=test_node2&service=service2")
+    c3 = client_node.ConnectService(
+        "rr+intra:///?nodename=test_node7&service=service3")
 
     client_node.DisconnectService(c1)
     client_node.DisconnectService(c2)
+    client_node.DisconnectService(c3)
 
     sub1 = client_node.SubscribeServiceByType(
         ["com.robotraconteur.testing.subtestfilter.sub_testroot"])
@@ -177,6 +182,8 @@ def test_subscriber_filter():
     node4 = _init_node("test_node6", "service2", {}, "2")
 
     _register_service_auth(node3, "service1", "2")
+
+    time.sleep(0.5)
 
     # Create client node
     client_node = _init_client_node()
