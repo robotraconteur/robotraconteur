@@ -74,6 +74,7 @@ def _assert_connected_clients(c, count):
                 print(len(c.GetConnectedClients()))
                 raise
             try_count += 1
+            time.sleep(0.1)
 
 
 def _run_attributes_filter_test(client_node, attributes_groups, expected_count):
@@ -113,8 +114,15 @@ def test_subscriber_attribute_filter():
         "a3": RR.VarValue("test_attr_val3,test_attr_val3_1", "string")
     }
 
+    node3_attrs = {
+        "a1": RR.VarValue("test_attr_val3", "string"),
+        "a2": RR.VarValue("test_attr_val5", "string"),
+        "a4": RR.VarValue("test_attr_val4,test_attr_val4_2", "string")
+    }
+
     node1 = _init_node("test_node1", "service1", node1_attrs)
     node2 = _init_node("test_node2", "service2", node2_attrs)
+    node3 = _init_node("test_node2", "service7", node3_attrs)
 
     # Create client node
     client_node = _init_client_node()
@@ -130,25 +138,25 @@ def test_subscriber_attribute_filter():
 
     sub1 = client_node.SubscribeServiceByType(
         ["com.robotraconteur.testing.subtestfilter.sub_testroot"])
-    _assert_connected_clients(sub1, 2)
+    _assert_connected_clients(sub1, 3)
     sub1.Close()
 
     attr_grp1 = RR.ServiceSubscriptionFilterAttributeGroup()
     attr_grp1.Attributes.append(
         RR.ServiceSubscriptionFilterAttribute("test_attr_val1"))
     attr_grps1 = {"a1": attr_grp1}
-    # _run_attributes_filter_test(client_node, attr_grps1, 1)
+    _run_attributes_filter_test(client_node, attr_grps1, 1)
 
     attr_grp2 = RR.ServiceSubscriptionFilterAttributeGroup()
     attr_grp2.Attributes.append(
-        RR.ServiceSubscriptionFilterAttribute("test_attr_val1"))
-    attr_grp2.Attributes.append(
         RR.ServiceSubscriptionFilterAttribute("test_attr_val4"))
-    attr_grps2 = {"a1": attr_grp2}
-    _run_attributes_filter_test(client_node, attr_grps2, 1)
+    attr_grp2.Attributes.append(
+        RR.ServiceSubscriptionFilterAttribute("test_attr_val4_2"))
+    attr_grps2 = {"a4": attr_grp2}
+    _run_attributes_filter_test(client_node, attr_grps2, 2)
 
     attr_grp2.Operation = RR.ServiceSubscriptionFilterAttributeGroupOperation_AND
-    _run_attributes_filter_test(client_node, attr_grps2, 0)
+    _run_attributes_filter_test(client_node, attr_grps2, 1)
 
     attr_grp3 = RR.ServiceSubscriptionFilterAttributeGroup()
     attr_grp3.Attributes.append(
@@ -158,6 +166,7 @@ def test_subscriber_attribute_filter():
 
     node1.Shutdown()
     node2.Shutdown()
+    node3.Shutdown()
 
 
 def test_subscriber_filter():
