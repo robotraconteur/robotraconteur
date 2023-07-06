@@ -2623,7 +2623,7 @@ void ServiceTestClient::TestWires()
             boost::this_thread::sleep(boost::posix_time::milliseconds(5));
             RR_INTRUSIVE_PTR<RRArray<double> > in1;
             TimeSpec in1_time;
-            if(!w1->TryGetInValue(in1, in1_time))
+            if (!w1->TryGetInValue(in1, in1_time))
             {
                 throw std::runtime_error("TryGetInValue failed");
             }
