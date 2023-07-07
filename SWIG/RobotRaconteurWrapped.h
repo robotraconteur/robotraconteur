@@ -1849,8 +1849,9 @@ class WrappedServiceSubscriptionFilter
     void SetRRPredicateDirector(WrappedServiceSubscriptionFilterPredicateDirector* director, int32_t id);
     uint32_t MaxConnections;
 
-    WrappedServiceSubscriptionFilter() : MaxConnections(0), 
-      AttributesMatchOperation(ServiceSubscriptionFilterAttributeGroupOperation_AND) {}
+    WrappedServiceSubscriptionFilter()
+        : MaxConnections(0), AttributesMatchOperation(ServiceSubscriptionFilterAttributeGroupOperation_AND)
+    {}
 };
 
 class WrappedServiceInfo2Subscription;
