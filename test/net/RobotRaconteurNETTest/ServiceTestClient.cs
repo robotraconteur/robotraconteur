@@ -2259,8 +2259,11 @@ public class ServiceTestClient
         e1.PacketAckReceivedEvent += ee1_ack_cb;
         e2.PacketReceivedEvent += ee2_cb;
         e3.PacketReceivedEvent += ee3_cb;
-
-        packetnum = e1.SendPacket(new double[] { 1, 2, 3, 4 });
+        lock (this)
+        {
+            packetnum = e1.SendPacket(new double[] { 1, 2, 3, 4 });
+        }
+        Console.WriteLine("Sent packet " + packetnum.ToString());
         e1.SendPacket(new double[] { 5, 6, 7, 8 });
         e1.SendPacket(new double[] { -1, -2, -3, -5.32 });
 
@@ -2292,8 +2295,10 @@ public class ServiceTestClient
         ca<double>(e3.ReceivePacketWait(1000).mydat, new double[] { 89.83 });
 
         RetryUntilTimeout(() => RRAssert.IsTrue(ack_recv), 1000);
+        Console.WriteLine("Packet ack received");
 
         RetryUntilTimeout(() => r.pipe_check_error(), 1000);
+        Console.WriteLine("Pipe error checked");
 
         e1.Close();
         e2.Close();
@@ -2312,8 +2317,12 @@ public class ServiceTestClient
 
     void ee1_ack_cb(Pipe<double[]>.PipeEndpoint p, uint packetnum)
     {
-        if (packetnum == this.packetnum)
-            ack_recv = true;
+        Console.WriteLine("Packet ack received: " + packetnum.ToString());
+        lock (this)
+        {
+            if (packetnum == this.packetnum)
+                ack_recv = true;
+        }
     }
 
     void ee2_cb(Pipe<double[]>.PipeEndpoint p)

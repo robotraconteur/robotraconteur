@@ -2440,8 +2440,10 @@ public class ServiceTestClient
         e1.addPacketAckReceivedListener(ee1_ack);
         e2.addPacketReceivedListener(ee2);
         e3.addPacketReceivedListener(ee3);
-
-        packetnum = e1.sendPacket(new double[] {1, 2, 3, 4});
+        synchronized (this)
+        {
+            packetnum = e1.sendPacket(new double[] {1, 2, 3, 4});
+        }
         e1.sendPacket(new double[] {5, 6, 7, 8});
         e1.sendPacket(new double[] {-1, -2, -3, -5.32});
 
@@ -2554,9 +2556,12 @@ public class ServiceTestClient
 
     private void ee1_ack_cb(Pipe<double[]>.PipeEndpoint p, long packetnum)
     {
-        if (packetnum == this.packetnum)
+        synchronized (this)
         {
-            ack_recv = true;
+            if (packetnum == this.packetnum)
+            {
+                ack_recv = true;
+            }
         }
     }
 

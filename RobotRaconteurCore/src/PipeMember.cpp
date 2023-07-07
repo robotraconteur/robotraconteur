@@ -719,7 +719,7 @@ void PipeClientBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                     RR_UNORDERED_MAP<int32_t, RR_SHARED_PTR<PipeEndpointBase> >::iterator e1 =
                         pipeendpoints.find(index);
                     if (e1 == pipeendpoints.end())
-                        return;
+                        continue;
                     e = e1->second;
                 }
                 DispatchPacketAck(me, e);
@@ -1019,7 +1019,7 @@ void PipeServerBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                     RR_UNORDERED_MAP<pipe_endpoint_server_id, RR_SHARED_PTR<PipeEndpointBase> >::iterator e1 =
                         pipeendpoints.find(pipe_endpoint_server_id(e, index));
                     if (e1 == pipeendpoints.end())
-                        return;
+                        continue;
                     p = e1->second;
                 }
                 if (DispatchPacket(me, p, pnum))
@@ -1088,7 +1088,7 @@ void PipeServerBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                     RR_UNORDERED_MAP<pipe_endpoint_server_id, RR_SHARED_PTR<PipeEndpointBase> >::iterator e1 =
                         pipeendpoints.find(pipe_endpoint_server_id(e, index));
                     if (e1 == pipeendpoints.end())
-                        return;
+                        continue;
                     p = e1->second;
                 }
                 DispatchPacketAck(me, p);
