@@ -1,5 +1,22 @@
 cmake_minimum_required(VERSION 3.3)
-project(RobotRaconteur)
+
+# Read version
+
+file(STRINGS "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h"
+     ROBOTRACONTEUR_CONFIG_VERSION REGEX "#define +ROBOTRACONTEUR_VERSION_TEXT +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
+if("${ROBOTRACONTEUR_CONFIG_VERSION}" STREQUAL "")
+    message(FATAL_ERROR "Could not read Robot Raconteur version.")
+endif()
+string(REGEX REPLACE "#define ROBOTRACONTEUR_VERSION_TEXT \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" ROBOTRACONTEUR_VERSION
+                     ${ROBOTRACONTEUR_CONFIG_VERSION})
+
+project(RobotRaconteur VERSION ${ROBOTRACONTEUR_VERSION})
+
+message(STATUS "Robot Raconteur version: ${ROBOTRACONTEUR_VERSION}")
+
+if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/cmake_config_options.cmake)
+    include(${CMAKE_CURRENT_LIST_DIR}/cmake_config_options.cmake)
+endif()
 
 include(cmake/CMakeMacros.cmake)
 include(CTest)
@@ -9,15 +26,6 @@ check_type_size("long int" SIZEOF_LONG_INT BUILTIN_TYPES_ONLY)
 
 configure_file("${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h"
                "${CMAKE_BINARY_DIR}/RobotRaconteurConfig.h" COPYONLY)
-
-file(STRINGS "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h"
-     ROBOTRACONTEUR_CONFIG_VERSION REGEX "#define +ROBOTRACONTEUR_VERSION_TEXT +\"[0-9]+\\.[0-9]+\\.[0-9]+\"")
-if("${ROBOTRACONTEUR_CONFIG_VERSION}" STREQUAL "")
-    message(FATAL_ERROR "Could not read Robot Raconteur version.")
-endif()
-string(REGEX REPLACE "#define ROBOTRACONTEUR_VERSION_TEXT \"([0-9]+\\.[0-9]+\\.[0-9]+)\"" "\\1" ROBOTRACONTEUR_VERSION
-                     ${ROBOTRACONTEUR_CONFIG_VERSION})
-message(STATUS "Robot Raconteur version: ${ROBOTRACONTEUR_VERSION}")
 
 if(NOT ROBOTRACONTEUR_VERSION_SEMVER)
     set(ROBOTRACONTEUR_VERSION_SEMVER ${ROBOTRACONTEUR_VERSION})
@@ -52,12 +60,30 @@ endif()
 
 set(ROBOTRACONTEUR_ROS "" CACHE BOOL "Build Robot Raconteur for ROS workspace")
 if(ROBOTRACONTEUR_ROS)
-    set(BUILD_GEN true CACHE BOOL "Build RobotRaconteurGen")
-    set(BUILD_TESTING true CACHE BOOL "Build RobotRaconteurTest")
-    if($ENV{ROS_PYTHON_VERSION} LESS 3)
-        set(BUILD_PYTHON true CACHE BOOL "Build Python wrappers")
-    else()
-        set(BUILD_PYTHON3 true CACHE BOOL "Build Python 3 wrappers")
+    set(BUILD_GEN ON CACHE BOOL "Build RobotRaconteurGen")
+    set(BUILD_TESTING ON CACHE BOOL "Build RobotRaconteurTest")
+    set(BUILD_PYTHON3 ON CACHE BOOL "Build Python 3 wrappers")
+endif()
+
+if(EXISTS ${CMAKE_SOURCE_DIR}/generated_src)
+    set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
+else()
+    set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
+endif()
+
+if(BUILD_PYTHON
+   OR BUILD_PYTHON3
+   OR BUILD_NET
+   OR BUILD_JAVA)
+    if(USE_PREGENERATED_SOURCE)
+        set(PREGENERATED_SOURCE_DIR ${CMAKE_SOURCE_DIR}/generated_src CACHE PATH "generated_src directory location")
+        if(NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
+           OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python3/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
+           OR NOT EXISTS
+              ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotraconteur/RobotRaconteurJavaJAVA_wrap.cxx
+           OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/NET/swigwordsize32/RobotRaconteurNETCSHARP_wrap.cxx)
+            message(FATAL_ERROR "Invalid PREGENERATED_SOURCE_DIR")
+        endif()
     endif()
 endif()
 
@@ -91,29 +117,17 @@ if(BUILD_MATLAB_MEX)
     add_subdirectory(RobotRaconteurMex)
 endif()
 
-if(EXISTS ${CMAKE_SOURCE_DIR}/generated_src)
-    set(USE_PREGENERATED_SOURCE ON CACHE BOOL ON)
-else()
-    set(USE_PREGENERATED_SOURCE OFF CACHE BOOL OFF)
-endif()
-
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
-if(BUILD_PYTHON OR BUILD_NET OR BUILD_JAVA)
-    if(USE_PREGENERATED_SOURCE)
-        set(PREGENERATED_SOURCE_DIR ${CMAKE_SOURCE_DIR}/generated_src CACHE PATH "generated_src directory location")
-        if(NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
-           OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/Python3/swigwordsize32/RobotRaconteurPythonPYTHON_wrap.cxx
-           OR NOT EXISTS
-              ${PREGENERATED_SOURCE_DIR}/Java/swigwordsize32/com/robotraconteur/RobotRaconteurJavaJAVA_wrap.cxx
-           OR NOT EXISTS ${PREGENERATED_SOURCE_DIR}/NET/swigwordsize32/RobotRaconteurNETCSHARP_wrap.cxx)
-            message(FATAL_ERROR "Invalid PREGENERATED_SOURCE_DIR")
-        endif()
-    else()
-        include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
-    endif()
+if(BUILD_PYTHON
+   OR BUILD_PYTHON3
+   OR BUILD_NET
+   OR BUILD_JAVA
+   AND NOT USE_PREGENERATED_SOURCE)
+
+    include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
 endif()
 
 include(CMakePackageConfigHelpers)

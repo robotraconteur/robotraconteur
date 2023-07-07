@@ -43,7 +43,6 @@ RR_Py_Exception()
 %init
 {
 
-PyEval_InitThreads();
 PyDateTime_IMPORT;
 
 RobotRaconteur::PythonTypeSupport_Init();
