@@ -2476,8 +2476,10 @@ void ServiceTestClient::TestPipes()
     double d6[] = {72.34};
     double d7[] = {738.29};
     double d8[] = {89.83};
-
-    EXPECT_NO_THROW(packetnum = e1->SendPacket(AttachRRArray(d1, 4, false)));
+    {
+        boost::mutex::scoped_lock lock(pipe_ack_lock);
+        EXPECT_NO_THROW(packetnum = e1->SendPacket(AttachRRArray(d1, 4, false)));
+    }
     EXPECT_NO_THROW(e1->SendPacket(AttachRRArray(d2, 4, false)));
     EXPECT_NO_THROW(e1->SendPacket(AttachRRArray(d3, 4, false)));
 
@@ -2531,6 +2533,7 @@ void ServiceTestClient::ee1_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArr
 void ServiceTestClient::ee1_ack_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p,
                                    uint32_t packetnum)
 {
+    boost::mutex::scoped_lock lock(pipe_ack_lock);
     if (packetnum == this->packetnum)
         ack_recv = true;
 }

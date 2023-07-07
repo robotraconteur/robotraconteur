@@ -2259,8 +2259,10 @@ public class ServiceTestClient
         e1.PacketAckReceivedEvent += ee1_ack_cb;
         e2.PacketReceivedEvent += ee2_cb;
         e3.PacketReceivedEvent += ee3_cb;
-
+        lock(this)
+        {
         packetnum = e1.SendPacket(new double[] { 1, 2, 3, 4 });
+        }
         Console.WriteLine("Sent packet " + packetnum.ToString());
         e1.SendPacket(new double[] { 5, 6, 7, 8 });
         e1.SendPacket(new double[] { -1, -2, -3, -5.32 });
@@ -2316,8 +2318,11 @@ public class ServiceTestClient
     void ee1_ack_cb(Pipe<double[]>.PipeEndpoint p, uint packetnum)
     {
         Console.WriteLine("Packet ack received: " + packetnum.ToString());
+        lock(this)
+        {
         if (packetnum == this.packetnum)
             ack_recv = true;
+        }
     }
 
     void ee2_cb(Pipe<double[]>.PipeEndpoint p)
