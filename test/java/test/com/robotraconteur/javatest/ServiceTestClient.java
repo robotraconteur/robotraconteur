@@ -2442,7 +2442,7 @@ public class ServiceTestClient
         e3.addPacketReceivedListener(ee3);
         synchronized (this)
         {
-        packetnum = e1.sendPacket(new double[] {1, 2, 3, 4});
+            packetnum = e1.sendPacket(new double[] {1, 2, 3, 4});
         }
         e1.sendPacket(new double[] {5, 6, 7, 8});
         e1.sendPacket(new double[] {-1, -2, -3, -5.32});
@@ -2558,11 +2558,11 @@ public class ServiceTestClient
     {
         synchronized (this)
         {
-        if (packetnum == this.packetnum)
-        {
-            ack_recv = true;
+            if (packetnum == this.packetnum)
+            {
+                ack_recv = true;
+            }
         }
-    }
     }
 
     private class ee2a implements Action1<Pipe<double[]>.PipeEndpoint>
