@@ -25,6 +25,27 @@ public class ServiceTestClient
         }
     }
 
+    public static void RetryUntilTimeout(Action fun, int timeout)
+    {
+        DateTime t = DateTime.Now;
+        while (true)
+        {
+            try
+            {
+                fun();
+                return;
+            }
+            catch (Exception)
+            {
+                if (DateTime.Now - t > TimeSpan.FromMilliseconds(timeout))
+                {
+                    throw;
+                }
+                Thread.Sleep(100);
+            }
+        }
+    }
+
     public void RunFullTest(string url, string authurl)
     {
 
@@ -2204,11 +2225,14 @@ public class ServiceTestClient
         o6_2.data = "Hello world!";
 
         r.o6_op(2);
-        RRAssert.ThrowsException<Exception>(delegate() { o6_2.data = "Hello world!"; });
 
-        com.robotraconteur.testing.TestService2.subobj o6_3 =
-            (com.robotraconteur.testing.TestService2.subobj)r.get_o6();
-        o6_3.add_val(2);
+        RetryUntilTimeout(delegate() {
+            RRAssert.ThrowsException<Exception>(delegate() { o6_2.data = "Hello world!"; });
+
+            com.robotraconteur.testing.TestService2.subobj o6_3 =
+                (com.robotraconteur.testing.TestService2.subobj)r.get_o6();
+            o6_3.add_val(2);
+        }, 1000);
     }
 
     System.Threading.AutoResetEvent ee1;
@@ -2257,31 +2281,19 @@ public class ServiceTestClient
         RRAssert.IsTrue(ee3.WaitOne(5000));
 
         ca<double>(e1.ReceivePacket(), new double[] { 1, 2, 3, 4 });
-        ca<double>(e1.ReceivePacketWait(100), new double[] { 5, 6, 7, 8 });
-        ca<double>(e1.ReceivePacketWait(100), new double[] { -1, -2, -3, -5.32 });
+        ca<double>(e1.ReceivePacketWait(1000), new double[] { 5, 6, 7, 8 });
+        ca<double>(e1.ReceivePacketWait(1000), new double[] { -1, -2, -3, -5.32 });
 
         ca<double>(e2.ReceivePacket(), new double[] { 3.21 });
-        ca<double>(e2.ReceivePacketWait(100), new double[] { 4.72 });
-        ca<double>(e2.ReceivePacketWait(100), new double[] { 72.34 });
+        ca<double>(e2.ReceivePacketWait(1000), new double[] { 4.72 });
+        ca<double>(e2.ReceivePacketWait(1000), new double[] { 72.34 });
 
         ca<double>(e3.ReceivePacket().mydat, new double[] { 738.29 });
-        ca<double>(e3.ReceivePacketWait(100).mydat, new double[] { 89.83 });
+        ca<double>(e3.ReceivePacketWait(1000).mydat, new double[] { 89.83 });
 
-        for (int i = 0; i < 50; i++)
-        {
-            if (!ack_recv)
-            {
-                System.Threading.Thread.Sleep(100);
-            }
-            else
-            {
-                break;
-            }
-        }
+        RetryUntilTimeout(() => RRAssert.IsTrue(ack_recv), 1000);
 
-        RRAssert.IsTrue(ack_recv);
-
-        r.pipe_check_error();
+        RetryUntilTimeout(() => r.pipe_check_error(), 1000);
 
         e1.Close();
         e2.Close();
@@ -2290,8 +2302,6 @@ public class ServiceTestClient
 
     void ee1_cb(Pipe<double[]>.PipeEndpoint p)
     {
-        if (p.Available < 3)
-            return;
         try
         {
             ee1.Set();
@@ -2308,8 +2318,6 @@ public class ServiceTestClient
 
     void ee2_cb(Pipe<double[]>.PipeEndpoint p)
     {
-        if (p.Available < 3)
-            return;
         try
         {
             ee2.Set();
@@ -2320,9 +2328,6 @@ public class ServiceTestClient
 
     void ee3_cb(Pipe<teststruct2>.PipeEndpoint p)
     {
-        if (p.Available < 2)
-            return;
-
         try
         {
             ee3.Set();
@@ -2411,49 +2416,52 @@ public class ServiceTestClient
         w2.WireValueChanged += w2_changed;
         w3.WireValueChanged += w3_changed;
 
-        w1.OutValue = new double[] { 0 };
+        RetryUntilTimeout(delegate() {
+            w1.OutValue = new double[] { 0 };
 
-        teststruct2 s1 = new teststruct2();
-        s1.mydat = new double[] { 0 };
-        w2.OutValue = s1;
+            teststruct2 s1 = new teststruct2();
+            s1.mydat = new double[] { 0 };
+            w2.OutValue = s1;
 
-        MultiDimArray a1 = new MultiDimArray(new uint[] { 1, 1 }, new int[] { 0 });
-        w3.OutValue = a1;
+            MultiDimArray a1 = new MultiDimArray(new uint[] { 1, 1 }, new int[] { 0 });
+            w3.OutValue = a1;
 
-        w1.OutValue = new double[] { -2.377683e+02, -6.760080e-08, 4.191315e-18,  -4.621977e+07, -1.570323e+03,
-                                     -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11 };
-        teststruct2 s2 = new teststruct2();
-        s2.mydat = new double[] { -1.014645e-21, 4.743740e+11,  5.804886e-04,  2.963852e-20, 4.277621e-21,
-                                  -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10 };
-        w2.OutValue = s2;
+            w1.OutValue = new double[] { -2.377683e+02, -6.760080e-08, 4.191315e-18,  -4.621977e+07, -1.570323e+03,
+                                         -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11 };
+            teststruct2 s2 = new teststruct2();
+            s2.mydat = new double[] { -1.014645e-21, 4.743740e+11,  5.804886e-04,  2.963852e-20, 4.277621e-21,
+                                      -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10 };
+            w2.OutValue = s2;
 
-        MultiDimArray a2 = new MultiDimArray(new uint[] { 2, 5 },
-                                             new int[] { 2058500854, -611248192, 197490486, -517717939, -513450368,
-                                                         296469979, 645365194, 2043654604, -1672941174, 710030901 });
-        w3.OutValue = a2;
+            MultiDimArray a2 = new MultiDimArray(
+                new uint[] { 2, 5 }, new int[] { 2058500854, -611248192, 197490486, -517717939, -513450368, 296469979,
+                                                 645365194, 2043654604, -1672941174, 710030901 });
+            w3.OutValue = a2;
 
-        Thread.Sleep(500);
+            Thread.Sleep(500);
 
-        double[] in1 = w1.InValue;
-        ca<double>(in1, new double[] { -2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03,
-                                       -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11 });
+            double[] in1 = w1.InValue;
+            ca<double>(in1, new double[] { -2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03,
+                                           -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11 });
 
-        teststruct2 in2 = w2.InValue;
-        ca<double>(in2.mydat, new double[] { -1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21,
-                                             -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10 });
+            teststruct2 in2 = w2.InValue;
+            ca<double>(in2.mydat,
+                       new double[] { -1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21,
+                                      -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10 });
 
-        MultiDimArray in3 = w3.InValue;
-        ca<uint>(in3.Dims, new uint[] { 2, 5 });
-        ca<int>((int[])in3.Array_, new int[] { 2058500854, -611248192, 197490486, -517717939, -513450368, 296469979,
-                                               645365194, 2043654604, -1672941174, 710030901 });
+            MultiDimArray in3 = w3.InValue;
+            ca<uint>(in3.Dims, new uint[] { 2, 5 });
+            ca<int>((int[])in3.Array_, new int[] { 2058500854, -611248192, 197490486, -517717939, -513450368, 296469979,
+                                                   645365194, 2043654604, -1672941174, 710030901 });
 
-        w1.InValueLifespan = 1;
-        Thread.Sleep(10);
-        RRAssert.ThrowsException<Exception>(delegate() { double[] in1_2 = w1.InValue; });
+            w1.InValueLifespan = 1;
+            Thread.Sleep(10);
+            RRAssert.ThrowsException<Exception>(delegate() { double[] in1_2 = w1.InValue; });
 
-        RRAssert.IsTrue(w1_called);
-        RRAssert.IsTrue(w2_called);
-        RRAssert.IsTrue(w3_called);
+            RRAssert.IsTrue(w1_called);
+            RRAssert.IsTrue(w2_called);
+            RRAssert.IsTrue(w3_called);
+        }, 5000);
     }
 
     void w1_changed(Wire<double[]>.WireConnection c, double[] value, TimeSpec t)

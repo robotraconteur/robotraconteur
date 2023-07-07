@@ -4914,7 +4914,7 @@ def _SubscribeService_LoadFilter(node, filter_):
         if (filter_.Attributes is not None):
             for n, v in filter_.Attributes.items():
                 filter2.Attributes[n] = v
-        filter_.AttributesMatchOperation = filter_.AttributesMatchOperation
+        filter2.AttributesMatchOperation = filter_.AttributesMatchOperation
         if (filter_.Nodes is not None):
             nodes2 = RobotRaconteurPython.vectorptr_wrappedservicesubscriptionnode()
             for n1 in filter_.Nodes:

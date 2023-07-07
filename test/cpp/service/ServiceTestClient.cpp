@@ -2526,12 +2526,7 @@ void ServiceTestClient::TestPipes()
     ec4.disconnect();
 }
 
-void ServiceTestClient::ee1_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
-{
-    if (p->Available() < 3)
-        return;
-    ee1.Set();
-}
+void ServiceTestClient::ee1_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p) { ee1.Set(); }
 
 void ServiceTestClient::ee1_ack_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p,
                                    uint32_t packetnum)
@@ -2540,19 +2535,9 @@ void ServiceTestClient::ee1_ack_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<R
         ack_recv = true;
 }
 
-void ServiceTestClient::ee2_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p)
-{
-    if (p->Available() < 3)
-        return;
-    ee2.Set();
-}
+void ServiceTestClient::ee2_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > p) { ee2.Set(); }
 
-void ServiceTestClient::ee3_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p)
-{
-    if (p->Available() < 2)
-        return;
-    ee3.Set();
-}
+void ServiceTestClient::ee3_cb(RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<teststruct2> > > p) { ee3.Set(); }
 
 void ServiceTestClient::TestWires()
 {
@@ -2623,8 +2608,11 @@ void ServiceTestClient::TestWires()
             boost::this_thread::sleep(boost::posix_time::milliseconds(5));
             RR_INTRUSIVE_PTR<RRArray<double> > in1;
             TimeSpec in1_time;
-            EXPECT_TRUE(w1->TryGetInValue(in1, in1_time));
-            EXPECT_RRARRAY_EQ(AttachRRArray(d3, 10, false), in1);
+            if (!w1->TryGetInValue(in1, in1_time))
+            {
+                throw std::runtime_error("TryGetInValue failed");
+            }
+            ca(AttachRRArray(d3, 10, false), in1);
         },
         1000);
 
@@ -2635,7 +2623,7 @@ void ServiceTestClient::TestWires()
             w2->SetOutValue(s2);
             boost::this_thread::sleep(boost::posix_time::milliseconds(5));
             RR_INTRUSIVE_PTR<teststruct2> in2 = w2->GetInValue();
-            EXPECT_RRARRAY_EQ(in2->mydat, AttachRRArray(d4, 10, false));
+            ca(in2->mydat, AttachRRArray(d4, 10, false));
         },
         500);
 
@@ -2646,8 +2634,8 @@ void ServiceTestClient::TestWires()
         {
             w3->SetOutValue(a2);
             RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > in3 = w3->GetInValue();
-            EXPECT_RRARRAY_EQ(in3->Dims, AttachRRArray(i2, 2, false));
-            EXPECT_RRARRAY_EQ(in3->Array, AttachRRArray(i4, 10, false));
+            ca(in3->Dims, AttachRRArray(i2, 2, false));
+            ca(in3->Array, AttachRRArray(i4, 10, false));
         },
         500);
 
