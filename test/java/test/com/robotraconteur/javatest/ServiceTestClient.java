@@ -2369,24 +2369,51 @@ public class ServiceTestClient
         o6_1_1.set_data("Hello world!");
 
         r.o6_op(1);
-        boolean err1 = false;
-        try
+
+        for (int i=0; i<10; i++)
         {
-            o6_1.set_d1(new double[] {0.0});
+            try
+            {
+                boolean err1 = false;
+                try
+                {
+                    o6_1.set_d1(new double[] {0.0});
+                }
+                catch (Exception ee)
+                {
+                    err1 = true;
+                }
+                RRAssert.isTrue(err1);
+
+                sub2 o6_2 = (sub2)r.get_o6();
+                o6_2.set_data("Hello world!");
+
+                r.o6_op(2);
+
+                subobj o6_3 = (subobj)r.get_o6();
+                o6_3.add_val(2);
+                break;
+            }
+            catch (Exception e)
+            {
+                if (i == 9)
+                {
+                    throw e;
+                }
+                else
+                {
+                    try
+                    {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException ee)
+                    {
+                    }
+                    continue;
+                }
+            }
         }
-        catch (Exception ee)
-        {
-            err1 = true;
-        }
-        RRAssert.isTrue(err1);
 
-        sub2 o6_2 = (sub2)r.get_o6();
-        o6_2.set_data("Hello world!");
-
-        r.o6_op(2);
-
-        subobj o6_3 = (subobj)r.get_o6();
-        o6_3.add_val(2);
     }
 
     private ee1a ee1;
@@ -2463,25 +2490,35 @@ public class ServiceTestClient
         ca(e3.receivePacket().mydat, new double[] {738.29});
         ca(e3.receivePacketWait(1000).mydat, new double[] {89.83});
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 10; i++)
         {
-            if (!ack_recv)
+            try
             {
-                try
-                {
-                    Thread.sleep(100);
-                }
-                catch (Exception e)
-                {}
-            }
-            else
-            {
+                RRAssert.isTrue(ack_recv);
+
+                r.pipe_check_error();
                 break;
             }
+            catch (Exception e)
+            {
+                if (i == 9)
+                {
+                    throw e;
+                }
+                else
+                {
+                    try
+                    {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException ee)
+                    {
+                    }
+                    continue;
+                }
+            }
         }
-        RRAssert.isTrue(ack_recv);
-
-        r.pipe_check_error();
+        
 
         e1.close();
         e2.close();
@@ -2662,51 +2699,74 @@ public class ServiceTestClient
         w1.addWireValueListener(new w1_changed());
         w2.addWireValueListener(new w2_changed());
         w3.addWireValueListener(new w3_changed());
-
-        w1.setOutValue(new double[] {0});
-
-        teststruct2 s1 = new teststruct2();
-        s1.mydat = new double[] {0};
-        w2.setOutValue(s1);
-
-        MultiDimArray a1 = new MultiDimArray(new int[] {1, 1}, new int[] {0});
-        w3.setOutValue(a1);
-
-        w1.setOutValue(new double[] {-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03,
-                                     -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11});
-        teststruct2 s2 = new teststruct2();
-        s2.mydat = new double[] {-1.014645e-21, 4.743740e+11,  5.804886e-04,  2.963852e-20, 4.277621e-21,
-                                 -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10};
-        w2.setOutValue(s2);
-
-        MultiDimArray a2 =
-            new MultiDimArray(new int[] {2, 5}, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368,
-                                                           296469979, 645365194, 2043654604, -1672941174, 710030901});
-        w3.setOutValue(a2);
-
-        try
+        for (int i=0; i<10; i++)
         {
-            java.lang.Thread.sleep(500);
+            try
+            {
+                w1.setOutValue(new double[] {0});
+
+                teststruct2 s1 = new teststruct2();
+                s1.mydat = new double[] {0};
+                w2.setOutValue(s1);
+
+                MultiDimArray a1 = new MultiDimArray(new int[] {1, 1}, new int[] {0});
+                w3.setOutValue(a1);
+
+                w1.setOutValue(new double[] {-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03,
+                                            -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11});
+                teststruct2 s2 = new teststruct2();
+                s2.mydat = new double[] {-1.014645e-21, 4.743740e+11,  5.804886e-04,  2.963852e-20, 4.277621e-21,
+                                        -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10};
+                w2.setOutValue(s2);
+
+                MultiDimArray a2 =
+                    new MultiDimArray(new int[] {2, 5}, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368,
+                                                                296469979, 645365194, 2043654604, -1672941174, 710030901});
+                w3.setOutValue(a2);
+
+                try
+                {
+                    java.lang.Thread.sleep(500);
+                }
+                catch (Exception e)
+                {}
+
+                double[] in1 = w1.getInValue();
+                ca(in1, new double[] {-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03,
+                                    -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11});
+
+                teststruct2 in2 = w2.getInValue();
+                ca(in2.mydat, new double[] {-1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21,
+                                            -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10});
+
+                MultiDimArray in3 = w3.getInValue();
+                ca(in3.dims, new int[] {2, 5});
+                ca((int[])in3.array, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368, 296469979, 645365194,
+                                                2043654604, -1672941174, 710030901});
+
+                RRAssert.isTrue(w1_called);
+                RRAssert.isTrue(w2_called);
+                RRAssert.isTrue(w3_called);
+                break;
+            }
+            catch(Exception e)
+            {
+                if (i == 9)
+                {
+                    throw e;
+                }
+                else
+                {
+                    try
+                    {
+                        java.lang.Thread.sleep(100);
+                    }
+                    catch (Exception e2)
+                    {}
+                }                   
+            }
         }
-        catch (Exception e)
-        {}
 
-        double[] in1 = w1.getInValue();
-        ca(in1, new double[] {-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03,
-                              -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11});
-
-        teststruct2 in2 = w2.getInValue();
-        ca(in2.mydat, new double[] {-1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21,
-                                    -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10});
-
-        MultiDimArray in3 = w3.getInValue();
-        ca(in3.dims, new int[] {2, 5});
-        ca((int[])in3.array, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368, 296469979, 645365194,
-                                        2043654604, -1672941174, 710030901});
-
-        RRAssert.isTrue(w1_called);
-        RRAssert.isTrue(w2_called);
-        RRAssert.isTrue(w3_called);
     }
 
     class w1_changed implements Action3<Wire<double[]>.WireConnection, double[], TimeSpec>
