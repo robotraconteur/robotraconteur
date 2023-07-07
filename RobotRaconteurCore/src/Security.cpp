@@ -33,7 +33,14 @@
 #include <Windows.h>
 #include <WinCrypt.h>
 #else
+
+#include <openssl/conf.h>
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
 #include <openssl/md5.h>
+#else
+#include <openssl/evp.h>
+#define MD5_DIGEST_LENGTH 16
+#endif
 #endif
 
 #include <iostream>
@@ -245,8 +252,16 @@ std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
     return s2;
 #else
     boost::array<uint8_t, MD5_DIGEST_LENGTH> md = {};
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     MD5(reinterpret_cast<const uint8_t*>(text.data()), text.size(), reinterpret_cast<uint8_t*>(md.data()));
-
+#else
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX_init(ctx);
+    EVP_DigestInit_ex(ctx, EVP_md5(), NULL);
+    EVP_DigestUpdate(ctx, reinterpret_cast<const uint8_t*>(text.data()), text.size());
+    EVP_DigestFinal_ex(ctx, reinterpret_cast<uint8_t*>(md.data()), NULL);
+    EVP_MD_CTX_destroy(ctx);
+#endif
     std::string s2;
     for (size_t i = 0; i < 16; i++)
     {

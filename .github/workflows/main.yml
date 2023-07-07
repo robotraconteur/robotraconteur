@@ -2,7 +2,13 @@ name: CI
 
 on:
   push:
+    branches-ignore:
+      - ros-**
+      - ros2-**
   pull_request:
+    branches-ignore:
+      - ros-**
+      - ros2-**
   release:
     types:
       - created

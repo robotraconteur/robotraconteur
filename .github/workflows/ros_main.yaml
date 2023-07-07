@@ -1,0 +1,40 @@
+name: ROS CI
+
+on:
+  push:
+    branches:
+      - ros-**
+      - ros2-**
+  pull_request:
+    branches:
+      - ros-**
+      - ros2-**
+  
+  workflow_dispatch:
+
+jobs:
+
+  build-ros:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: ROS Distro
+      run: echo "ROS_DISTRO=$(echo "$GITHUB_REF" | sed 's/^.*ros\(2\?\)-\([[:alnum:]]*\).*$/\2/')" >> $GITHUB_ENV
+    - name: ros industrial-ci
+      uses: ros-industrial/industrial_ci@master
+      env:
+        ROS_DISTRO: ${{ env.ROS_DISTRO }}
+        ROS_REPO: main
+
+  build-ros-prerelease:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: ROS Distro
+      run: echo "ROS_DISTRO=$(echo "$GITHUB_REF" | sed 's/^.*ros\(2\?\)-\([[:alnum:]]*\).*$/\2/')" >> $GITHUB_ENV
+    - name: ros industrial-ci
+      uses: ros-industrial/industrial_ci@master
+      env:
+        ROS_DISTRO: ${{ env.ROS_DISTRO }}
+        ROS_REPO: main
+        PRERELEASE: true
