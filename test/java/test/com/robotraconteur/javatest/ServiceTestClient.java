@@ -2370,7 +2370,7 @@ public class ServiceTestClient
 
         r.o6_op(1);
 
-        for (int i=0; i<10; i++)
+        for (int i = 0; i < 10; i++)
         {
             try
             {
@@ -2407,13 +2407,11 @@ public class ServiceTestClient
                         Thread.sleep(1000);
                     }
                     catch (InterruptedException ee)
-                    {
-                    }
+                    {}
                     continue;
                 }
             }
         }
-
     }
 
     private ee1a ee1;
@@ -2512,13 +2510,11 @@ public class ServiceTestClient
                         Thread.sleep(1000);
                     }
                     catch (InterruptedException ee)
-                    {
-                    }
+                    {}
                     continue;
                 }
             }
         }
-        
 
         e1.close();
         e2.close();
@@ -2699,7 +2695,7 @@ public class ServiceTestClient
         w1.addWireValueListener(new w1_changed());
         w2.addWireValueListener(new w2_changed());
         w3.addWireValueListener(new w3_changed());
-        for (int i=0; i<10; i++)
+        for (int i = 0; i < 10; i++)
         {
             try
             {
@@ -2713,15 +2709,15 @@ public class ServiceTestClient
                 w3.setOutValue(a1);
 
                 w1.setOutValue(new double[] {-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03,
-                                            -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11});
+                                             -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11});
                 teststruct2 s2 = new teststruct2();
                 s2.mydat = new double[] {-1.014645e-21, 4.743740e+11,  5.804886e-04,  2.963852e-20, 4.277621e-21,
-                                        -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10};
+                                         -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10};
                 w2.setOutValue(s2);
 
-                MultiDimArray a2 =
-                    new MultiDimArray(new int[] {2, 5}, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368,
-                                                                296469979, 645365194, 2043654604, -1672941174, 710030901});
+                MultiDimArray a2 = new MultiDimArray(
+                    new int[] {2, 5}, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368, 296469979,
+                                                 645365194, 2043654604, -1672941174, 710030901});
                 w3.setOutValue(a2);
 
                 try
@@ -2732,8 +2728,8 @@ public class ServiceTestClient
                 {}
 
                 double[] in1 = w1.getInValue();
-                ca(in1, new double[] {-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03,
-                                    -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11});
+                ca(in1, new double[] {-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03,
+                                      -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11});
 
                 teststruct2 in2 = w2.getInValue();
                 ca(in2.mydat, new double[] {-1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21,
@@ -2741,15 +2737,15 @@ public class ServiceTestClient
 
                 MultiDimArray in3 = w3.getInValue();
                 ca(in3.dims, new int[] {2, 5});
-                ca((int[])in3.array, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368, 296469979, 645365194,
-                                                2043654604, -1672941174, 710030901});
+                ca((int[])in3.array, new int[] {2058500854, -611248192, 197490486, -517717939, -513450368, 296469979,
+                                                645365194, 2043654604, -1672941174, 710030901});
 
                 RRAssert.isTrue(w1_called);
                 RRAssert.isTrue(w2_called);
                 RRAssert.isTrue(w3_called);
                 break;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 if (i == 9)
                 {
@@ -2763,10 +2759,9 @@ public class ServiceTestClient
                     }
                     catch (Exception e2)
                     {}
-                }                   
+                }
             }
         }
-
     }
 
     class w1_changed implements Action3<Wire<double[]>.WireConnection, double[], TimeSpec>
