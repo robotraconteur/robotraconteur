@@ -179,6 +179,20 @@ def test_subscriber_attribute_filter():
     attr_grps3 = {"a1": attr_grp3}
     _run_attributes_filter_test(client_node, attr_grps3, 1)
 
+    attr_grp5 = RR.ServiceSubscriptionFilterAttributeGroup()
+    attr_grp5.Attributes.append(
+        RR.CreateServiceSubscriptionFilterAttributeRegex(".*_attr_val1"))
+    attr_grps5 = {"a1": attr_grp5}
+    attr_grp6 = RR.ServiceSubscriptionFilterAttributeGroup()
+    attr_grp6.Attributes.append(
+        RR.ServiceSubscriptionFilterAttribute("test_attr_val_not_there"))
+    attr_grps5["a4"] = attr_grp6
+
+    filter2 = RR.ServiceSubscriptionFilter()
+    filter2.Attributes = attr_grps5
+    filter2.AttributesMatchOperation = RR.ServiceSubscriptionFilterAttributeGroupOperation_OR
+    _run_filter_test(client_node, filter2, 1)
+
     node1.Shutdown()
     node2.Shutdown()
     node3.Shutdown()
