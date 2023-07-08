@@ -144,12 +144,12 @@ jobs:
       if: ${{ matrix.config.container == '' }}
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure --repeat until-pass:3
+        ctest . -C Release --output-on-failure
     - name: test
       if: ${{ matrix.config.container != '' }}
       working-directory: build2
       run: |
-        ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure --repeat until-pass:3
+        ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
     - name: python 3.7
       if: ${{ matrix.config.os == 'ubuntu-20.04' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
@@ -283,12 +283,12 @@ jobs:
       if: ${{ matrix.config.arch != 'x86' }}
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure --repeat until-pass:3
+        ctest . -C Release --output-on-failure
     - name: test x86
       if: ${{ matrix.config.arch == 'x86' }}
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure -E java --repeat until-pass:3
+        ctest . -C Release --output-on-failure -E java
     - name: python 3.6
       uses: ./robotraconteur/tools/actions/build_python_ver/win
       with:
@@ -383,7 +383,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure --repeat until-pass:3
+        ctest . -C Release --output-on-failure
     - name: build artifacts
       if: failure()
       uses: actions/upload-artifact@v3
@@ -453,7 +453,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure --repeat until-pass:3
+        ctest . -C Release --output-on-failure
     - name: python 3.7
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
@@ -560,7 +560,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure --repeat until-pass:3
+        ctest . -C Release --output-on-failure
     - name: matlab out tar
       run: >
          export RR_VER=`cat build2/rrversion.txt` 
@@ -614,7 +614,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure --repeat until-pass:3
+        ctest . -C Release --output-on-failure
       shell: cmd /C call {0}
   
   build-conda-linux:
@@ -652,7 +652,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure --repeat until-pass:3
+        ctest . -C Release --output-on-failure
 
   build-conda-osx:
     runs-on: macos-11
@@ -683,7 +683,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure --repeat until-pass:3
+        ctest . -C Release --output-on-failure
   build-android:
 
     runs-on: ubuntu-22.04
