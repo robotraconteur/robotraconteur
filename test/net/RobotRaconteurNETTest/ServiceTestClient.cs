@@ -2214,22 +2214,22 @@ public class ServiceTestClient
         sub1 o6_1 = null;
         sub2 o6_1_1 = null;
         r.o6_op(0);
-        RetryUntilTimeout (delegate() {
-        o6_1 = (sub1)r.get_o6();
-        o6_1_1 = o6_1.get_o2_1();
-        o6_1.d1 = new double[] { 0.0 };
-        o6_1_1.data = "Hello world!";
+        RetryUntilTimeout(delegate() {
+            o6_1 = (sub1)r.get_o6();
+            o6_1_1 = o6_1.get_o2_1();
+            o6_1.d1 = new double[] { 0.0 };
+            o6_1_1.data = "Hello world!";
         }, 1000);
 
         r.o6_op(1);
 
         sub2 o6_2 = null;
         RetryUntilTimeout(delegate() {
-        RRAssert.ThrowsException<Exception>(delegate() { o6_1.d1 = new double[] { 0.0 }; });
-        RRAssert.ThrowsException<Exception>(delegate() { o6_1_1.data = "Hello world!"; });
+            RRAssert.ThrowsException<Exception>(delegate() { o6_1.d1 = new double[] { 0.0 }; });
+            RRAssert.ThrowsException<Exception>(delegate() { o6_1_1.data = "Hello world!"; });
 
-        o6_2 = (sub2)r.get_o6();
-        o6_2.data = "Hello world!";
+            o6_2 = (sub2)r.get_o6();
+            o6_2.data = "Hello world!";
         }, 1000);
 
         r.o6_op(2);
