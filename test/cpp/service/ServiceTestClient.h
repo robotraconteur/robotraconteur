@@ -178,6 +178,8 @@ class ServiceTestClient
                      RR_SHARED_PTR<RobotRaconteurException> exp);
 
     void TestAsync15();
+
+    boost::mutex pipe_ack_lock;
 };
 
 } // namespace RobotRaconteurTest

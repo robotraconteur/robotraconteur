@@ -468,7 +468,7 @@ run_code_formatting:
   script:
     - export GIT_SSL_CAINFO="$CI_SERVER_TLS_CA_FILE"
     - ./tools/formatting/run-all-formatting
-    - git -c "user.name=John Wason" -c "user.email=wason@wasontech.com" commit -a -m "Code formatting"
+    - git diff-index --quiet HEAD || git -c "user.name=John Wason" -c "user.email=wason@wasontech.com" commit -a -m "Code formatting"
     - git push "https://code_formatting:$CODE_FORMATTING_TOKEN@$CI_SERVER_HOST:$CI_SERVER_PORT/$CI_PROJECT_PATH.git" HEAD:$CI_COMMIT_BRANCH
 
 build_raspbian_buster_armhf:

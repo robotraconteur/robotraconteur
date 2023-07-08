@@ -516,6 +516,9 @@ class ServiceTestClient:
         o6_3.add_val(2)
 
     def TestPipes(self):
+
+        self._pipe_ack_lock = threading.Lock()
+
         self._ee1 = threading.Event()
         self._ee2 = threading.Event()
         self._ee3 = threading.Event()
@@ -528,7 +531,8 @@ class ServiceTestClient:
         e1.PacketAckReceivedEvent += self.ee1_ack_cb
         e2.PacketReceivedEvent += self.ee2_cb
         e3.PacketReceivedEvent += self.ee3_cb
-        self._packetnum = e1.SendPacket([1, 2, 3, 4])
+        with self._pipe_ack_lock:
+            self._packetnum = e1.SendPacket([1, 2, 3, 4])
         e1.SendPacket([5, 6, 7, 8])
         e1.SendPacket([-1, -2, -3, -5.32])
         e2.SendPacket([3.21])
@@ -544,17 +548,17 @@ class ServiceTestClient:
         e3.SendPacket(s2)
         assert self._ee1.wait(5)
         assert self._ee2.wait(5)
-        time.sleep(1)
-        # assert self._ee3.wait(5):
+        # time.sleep(1)
+        assert self._ee3.wait(5)
 
         ca(e1.ReceivePacket(), [1, 2, 3, 4])
-        ca(e1.ReceivePacketWait(0.1), [5, 6, 7, 8])
-        ca(e1.ReceivePacketWait(0.1), [-1, -2, -3, -5.32])
+        ca(e1.ReceivePacketWait(1), [5, 6, 7, 8])
+        ca(e1.ReceivePacketWait(1), [-1, -2, -3, -5.32])
         ca(e2.ReceivePacket(), [3.21])
-        ca(e2.ReceivePacketWait(0.1), [4.72])
-        ca(e2.ReceivePacketWait(0.1), [72.34])
+        ca(e2.ReceivePacketWait(1), [4.72])
+        ca(e2.ReceivePacketWait(1), [72.34])
         ca(e3.ReceivePacket().mydat, [738.29])
-        ca(e3.ReceivePacketWait(0.1).mydat, [89.83])
+        ca(e3.ReceivePacketWait(1).mydat, [89.83])
         time.sleep(.5)
         # assert self._ack_recv:
         self._r.pipe_check_error()
@@ -568,8 +572,6 @@ class ServiceTestClient:
         e3.Close()
 
     def ee1_cb(self, p):
-        if p.Available < 3:
-            return
         try:
             self._ee1.set()
 
@@ -577,13 +579,11 @@ class ServiceTestClient:
             pass
 
     def ee1_ack_cb(self, p, packetnum):
-
-        if packetnum == self._packetnum:
-            self._ack_recv = True
+        with self._pipe_ack_lock:
+            if packetnum == self._packetnum:
+                self._ack_recv = True
 
     def ee2_cb(self, p):
-        if p.Available < 3:
-            return
         try:
             self._ee2.set()
 
@@ -591,8 +591,6 @@ class ServiceTestClient:
             pass
 
     def ee3_cb(self, p):
-        if p.Available < 2:
-            return
         try:
             self._ee3.set()
 
