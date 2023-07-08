@@ -497,11 +497,13 @@ class ServiceTestClient:
         o2_10_o2_1_32_o3_ind1.data2 = "Test string 1"
         o2_10_o2_1_32_o3_ind2.data2 = "Test string 2"
         self._r.o6_op(0)
+        time.sleep(0.1)
         o6_1 = self._r.get_o6()
         o6_1_1 = o6_1.get_o2_1()
         o6_1.d1 = [0.0]
         o6_1_1.data = "Hello world!"
         self._r.o6_op(1)
+        time.sleep(0.1)
         with pytest.raises(Exception):
             o6_1.d1 = [0.0]
         with pytest.raises(Exception):
@@ -510,6 +512,7 @@ class ServiceTestClient:
         o6_2 = self._r.get_o6()
         o6_2.data = "Hello world!"
         self._r.o6_op(2)
+        time.sleep(0.1)
         with pytest.raises(Exception):
             o6_2.data = "Hello world!"
         o6_3 = self._r.get_o6()
