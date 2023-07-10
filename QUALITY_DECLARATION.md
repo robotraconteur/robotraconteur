@@ -24,8 +24,19 @@ Category Requirements:
 * 4.ii: N/A
 * 4.iiia: Code coverage is included in GitHub Actions workflow
 * 4.iiib: N/A
+* 4.iv: N/A
+* 4.va: Code style is enforced by clang-format
+* 4.vb: clang-tidy, cppcheck, and Coverity Scan are used for static analysis
 * 5.i: The package has no ROS dependencies
 * 5.ii: N/A
 * 5.iii: Only external dependencies are Boost, OpenSSL, SWIG, and system packages. These are all equivalent ROS Quality Category 1
 * 6.i: Windows, Linux, and MacOS are fully supported on all architectures
 * 7.i: TODO
+
+
+Experimental Features:
+
+* HandwareTransport for USB, PCIe, and Bluetooth
+* Java wrappers
+* StringTable message compression
+* Taps for message interception
