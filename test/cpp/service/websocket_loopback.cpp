@@ -46,7 +46,8 @@ TEST(RobotRaconteurService, WebsocketLoopback)
         ServiceTestClient cl;
         EXPECT_NO_THROW(
             cl.RunFullTest(std::string("rr+ws://localhost:") + port_str + "/?service=RobotRaconteurTestService",
-                           std::string("rr+ws://localhost:") + port_str + "/?nodename=websocket_loopback&service=RobotRaconteurTestService_auth"));
+                           std::string("rr+ws://localhost:") + port_str +
+                               "/?nodename=websocket_loopback&service=RobotRaconteurTestService_auth"));
     }
 
     cout << "start shutdown" << endl;
