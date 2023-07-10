@@ -1792,8 +1792,8 @@ void ObjRefDefinition::FromString(boost::string_ref s, const ServiceDefinitionPa
     MemberDefinition_FromStringFormat1(s, "objref", shared_from_this(), t, ParseInfo);
     if (!t)
     {
-        throw ServiceDefinitionParseException(
-            "Invalid objref definition \"" + boost::trim_copy(s.to_string()) + "\"", ParseInfo);
+        throw ServiceDefinitionParseException("Invalid objref definition \"" + boost::trim_copy(s.to_string()) + "\"",
+                                              ParseInfo);
     }
 
     switch (t->ArrayType)

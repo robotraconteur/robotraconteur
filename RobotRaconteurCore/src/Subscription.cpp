@@ -1646,8 +1646,8 @@ void ServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, 
         if (!c2)
             continue;
         try
-        {            
-            n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);            
+        {
+            n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
         }
         catch (std::exception&)
         {}
