@@ -1735,8 +1735,8 @@ void TcpWSSWebSocketConnector::Connect2(
     }
 }
 
-TcpWSSWebSocketConnector::TcpWSSWebSocketConnector(
-    const RR_SHARED_PTR<TcpTransport>& parent) // cppcheck-suppress uninitMemberVar
+TcpWSSWebSocketConnector::TcpWSSWebSocketConnector( // cppcheck-suppress uninitMemberVar
+    const RR_SHARED_PTR<TcpTransport>& parent)
 {
     this->endpoint = 0;
     this->parent = parent;
