@@ -217,6 +217,10 @@ The Robot Raconteur project maintains a list of available drivers. The directory
 
 https://github.com/robotraconteur/robotraconteur-directory
 
+## Package Quality
+
+Robot Raconteur Core is a ROS Quality Level 2 package. See the [Quality Declaration](QUALITY_DECLARATION.md) for more details.
+
 ## License
 
 The Robot Raconteur core library is Apache 2.0 licensed.
