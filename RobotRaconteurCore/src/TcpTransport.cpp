@@ -1409,6 +1409,7 @@ void TcpWSSWebSocketConnector::Connect2(
 
 TcpWSSWebSocketConnector::TcpWSSWebSocketConnector(const RR_SHARED_PTR<TcpTransport>& parent)
 {
+    this->endpoint = 0;
     this->parent = parent;
     this->node = parent->GetNode();
 }
@@ -1647,6 +1648,11 @@ bool TcpWSSWebSocketConnector::verify_callback(bool preverified, boost::asio::ss
     }
     sk_X509_pop_free(certs, X509_free);
 
+    if (certarray1.empty())
+    {
+        return false;
+    }
+
     CFArrayRef certarray = CFArrayCreate(NULL, (const void**)&certarray1[0], certarray1.size(), &kCFTypeArrayCallBacks);
     std::string servername1 = servername.to_string();
     CFStringRef host2 = CFStringCreateWithCString(NULL, servername1.c_str(), kCFStringEncodingUTF8);
@@ -1729,9 +1735,9 @@ void TcpWSSWebSocketConnector::Connect2(
     }
 }
 
-TcpWSSWebSocketConnector::TcpWSSWebSocketConnector(const RR_SHARED_PTR<TcpTransport>& parent)
+TcpWSSWebSocketConnector::TcpWSSWebSocketConnector(const RR_SHARED_PTR<TcpTransport>& parent) // cppcheck-suppress uninitMemberVar
 {
-    endpoint = 0;
+    this->endpoint = 0;
     this->parent = parent;
     this->node = parent->GetNode();
 }
@@ -6527,10 +6533,7 @@ void TcpTransportPortSharerClient::Close()
     if (localsocket)
     {
         boost::system::error_code ec;
-        if (localsocket)
-        {
-            localsocket->close(ec);
-        }
+        localsocket->close(ec);
         localsocket.reset();
     }
 
@@ -6915,7 +6918,7 @@ ssize_t read_fd(int fd, void* ptr, size_t nbytes, int* recvfd)
     struct iovec iov[1];
     ssize_t n = 0;
 #ifndef HAVE_MSGHDR_MSG_CONTROL
-    int newfd;
+    int newfd = -1;
 #endif
 
 #ifdef HAVE_MSGHDR_MSG_CONTROL

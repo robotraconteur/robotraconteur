@@ -1614,6 +1614,10 @@ void ServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, 
     this->service_url_credentials = credentials;
 
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+    {
+        return;
+    }
 
     BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client>& c, clients | boost::adaptors::map_values)
     {
@@ -1642,11 +1646,8 @@ void ServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, 
         if (!c2)
             continue;
         try
-        {
-            if (n)
-            {
-                n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
-            }
+        {            
+            n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);            
         }
         catch (std::exception&)
         {}
@@ -2409,6 +2410,11 @@ bool PipeSubscriptionBase::TryReceivePacketBaseWait(RR_INTRUSIVE_PTR<RRValue>& p
 
         if (recv_packets.empty())
             return false;
+    }
+
+    if (recv_packets.empty())
+    {
+        return false;
     }
 
     packet = recv_packets.front().get<0>();

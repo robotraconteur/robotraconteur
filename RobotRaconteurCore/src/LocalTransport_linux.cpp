@@ -111,7 +111,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
     ssize_t len = read(notify_fd, buf, sizeof(buf));
     if (len == -1 && errno != EAGAIN)
     {
-        return errno == EAGAIN;
+        return false;
     }
 
     if (len == 0)
