@@ -1520,9 +1520,8 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
         break;
 
         case MessageEntryType_ServiceClosed:
-        case MessageEntryType_ServiceClosedRet:
-        {
-            // Pass ServiceClosed to client context         
+        case MessageEntryType_ServiceClosedRet: {
+            // Pass ServiceClosed to client context
             return RR_INTRUSIVE_PTR<Message>();
         }
         break;
