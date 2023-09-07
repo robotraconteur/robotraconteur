@@ -1519,6 +1519,13 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
         }
         break;
 
+        case MessageEntryType_ServiceClosed:
+        case MessageEntryType_ServiceClosedRet: {
+            // Pass ServiceClosed to client context
+            return RR_INTRUSIVE_PTR<Message>();
+        }
+        break;
+
         default:
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                     e->MemberName,
