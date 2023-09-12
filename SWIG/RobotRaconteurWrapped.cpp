@@ -4127,7 +4127,7 @@ bool WrappedWireSubscription::TryGetInValue(WrappedService_typed_packet& val, Ti
         throw InvalidOperationException("Invalid subscription wire client");
     RR_SHARED_PTR<WrappedWireConnection> connection2 = rr_cast<WrappedWireConnection>(connection1);
     val.type = connection2->Type;
-    
+
     // TODO: Make this more efficient
     try
     {
