@@ -4100,10 +4100,10 @@ WrappedService_typed_packet WrappedWireSubscription::GetInValue(TimeSpec* time)
         throw InvalidOperationException("Invalid subscription wire client");
     RR_SHARED_PTR<WrappedWireConnection> connection2 = rr_cast<WrappedWireConnection>(connection1);
     o.type = connection2->Type;
-    o.stub = connection2->GetStub();
     // TODO: Make this more efficient
     try
     {
+        o.stub = connection2->GetStub();
         o.context = o.stub->GetContext();
     }
     catch (InvalidOperationException&)
@@ -4127,11 +4127,11 @@ bool WrappedWireSubscription::TryGetInValue(WrappedService_typed_packet& val, Ti
         throw InvalidOperationException("Invalid subscription wire client");
     RR_SHARED_PTR<WrappedWireConnection> connection2 = rr_cast<WrappedWireConnection>(connection1);
     val.type = connection2->Type;
-    val.stub = connection2->GetStub();
 
     // TODO: Make this more efficient
     try
     {
+        val.stub = connection2->GetStub();
         val.context = val.stub->GetContext();
     }
     catch (InvalidOperationException&)
@@ -4155,10 +4155,10 @@ void WrappedWireSubscription::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRVal
     val.packet = RR_STATIC_POINTER_CAST<MessageElement>(value);
     RR_SHARED_PTR<WrappedWireConnection> connection2 = rr_cast<WrappedWireConnection>(connection);
     val.type = connection2->Type;
-    val.stub = connection2->GetStub();
     // TODO: Make this more efficient
     try
     {
+        val.stub = connection2->GetStub();
         val.context = val.stub->GetContext();
     }
     catch (InvalidOperationException&)
@@ -4238,10 +4238,10 @@ bool WrappedPipeSubscription::TryReceivePacketWait(WrappedService_typed_packet& 
         throw InvalidOperationException("Invalid subscription pipe endpoint");
     RR_SHARED_PTR<WrappedPipeEndpoint> endpoint2 = rr_cast<WrappedPipeEndpoint>(endpoint1);
     packet.type = endpoint2->Type;
-    packet.stub = endpoint2->GetStub();
     // TODO: Make this more efficient
     try
     {
+        packet.stub = endpoint2->GetStub();
         packet.context = packet.stub->GetContext();
     }
     catch (InvalidOperationException&)
