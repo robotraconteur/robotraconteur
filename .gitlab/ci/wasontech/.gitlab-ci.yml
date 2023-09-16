@@ -147,6 +147,7 @@
     CONFIG_CMAKE_ARGS: >-
       -DCMAKE_C_FLAGS_RELEASE='/MD /O0 /Ob0 /DNDEBUG'
       -DCMAKE_CXX_FLAGS_RELEASE='/MD /O0 /Ob0 /DNDEBUG'
+      -DROBOTRACONTEUR_EXTRA_TESTS=ON
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
 .windows_build_release:
@@ -225,6 +226,7 @@ build_ubuntu_focal_amd64_release:
   extends: .linux_build_release
   variables:
     OUTNAME: "out-ubuntu_focal_amd64"
+    EXTRA_CMAKE_PYTHON_ARGS: -DROBOTRACONTEUR_EXTRA_TESTS=ON
 
 build_ubuntu_xenial_amd64:
   stage: build
@@ -352,6 +354,7 @@ build_freebsd_amd64:
       -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
       -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
       -DCMAKE_FIND_ROOT_PATH="/usr/local;/Library;/System/Library;/Applications"
+      -DROBOTRACONTEUR_EXTRA_TESTS=ON
       ..
     - ${RUNCMD} cmake --build . --config Release
     - ${RUNCMD} ctest . -C Release --output-on-failure
