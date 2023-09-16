@@ -5112,8 +5112,7 @@ class RobotRaconteurNodeSetup(object):
     :type node: RobotRaconteur.RobotRaconteurNode
     :param argv: (optional) The command line argument vector. Default is ``sys.argv``
     """
-    __slots__ = ["__setup", "__node", "tcp_transport", "local_transport",
-                 "hardware_transport", "intra_transport", "command_line_config"]
+    __slots__ = ["__setup", "__node"]
 
     def __init__(self, node_name=None, tcp_port=None, flags=None, allowed_overrides=None, node=None, argv=None, config=None):
         if (config is not None):
@@ -5135,23 +5134,40 @@ class RobotRaconteurNodeSetup(object):
                 argv = sys.argv
             self.__setup = RobotRaconteurPython.WrappedRobotRaconteurNodeSetup(node, node_name, tcp_port, flags, allowed_overrides,
                                                                                RobotRaconteurPython.vectorstring(argv))
-        self.tcp_transport = self.__setup.GetTcpTransport()
-        """The TcpTransport, will be None if TcpTransport is not specified in flags"""
-        self.local_transport = self.__setup.GetLocalTransport()
-        """The LocalTransport, will be None if LocalTransport is not specified in flags"""
-        self.hardware_transport = self.__setup.GetHardwareTransport()
-        """The HardwareTransport, will be None if HardwareTransport is not specified in flags, Note: Hardware transport is not enabled by default"""
-        self.intra_transport = self.__setup.GetIntraTransport()
-        """The IntraTransport, will be None if IntraTransport is not specified in flags"""
-        self.command_line_config = self.__setup.GetCommandLineConfig()
-        """The command line config parser object used to configure node"""
         self.__node = node
+
+    @property
+    def tcp_transport(self):
+        """The TcpTransport, will be None if TcpTransport is not specified in flags"""
+        return self.__setup.GetTcpTransport()
+
+    @property
+    def local_transport(self):
+        """The LocalTransport, will be None if LocalTransport is not specified in flags"""
+        return self.__setup.GetLocalTransport()
+
+    @property
+    def hardware_transport(self):
+        """The HardwareTransport, will be None if HardwareTransport is not specified in flags, Note: Hardware transport is not enabled by default"""
+        return self.__setup.GetHardwareTransport()
+
+    @property
+    def intra_transport(self):
+        """The IntraTransport, will be None if IntraTransport is not specified in flags"""
+        return self.__setup.GetIntraTransport()
+
+    @property
+    def command_line_config(self):
+        """The command line config parser object used to configure node"""
+        return self.__setup.GetCommandLineConfig()
 
     def __enter__(self):
         return self
 
     def __exit__(self, etype, value, traceback):
         self.__node.Shutdown()
+        self.__node = None
+        del self.__setup
 
     def ReleaseNode(self):
         """
@@ -5358,7 +5374,7 @@ class SecureServerNodeSetup(RobotRaconteurNodeSetup):
 
     def __init__(self, node_name, tcp_port, node=None, argv=None):
         super(SecureServerNodeSetup, self).__init__(node_name, tcp_port, RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT,
-                                                    RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVVERIDE, node, argv)
+                                                    RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE, node, argv)
 
 
 class UserLogRecordHandlerDirectorPython(RobotRaconteurPython.UserLogRecordHandlerDirector):
