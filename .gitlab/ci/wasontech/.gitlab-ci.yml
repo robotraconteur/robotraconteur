@@ -216,6 +216,7 @@ build_ubuntu_focal_amd64:
   extends: .linux_build_dev
   variables:
     OUTNAME: "out-ubuntu_focal_amd64"
+    EXTRA_CMAKE_PYTHON_ARGS: -DROBOTRACONTEUR_EXTRA_TESTS=ON
 
 build_ubuntu_focal_amd64_release:
   stage: build
@@ -226,7 +227,6 @@ build_ubuntu_focal_amd64_release:
   extends: .linux_build_release
   variables:
     OUTNAME: "out-ubuntu_focal_amd64"
-    EXTRA_CMAKE_PYTHON_ARGS: -DROBOTRACONTEUR_EXTRA_TESTS=ON
 
 build_ubuntu_xenial_amd64:
   stage: build
@@ -370,7 +370,7 @@ build_freebsd_amd64:
       - ${OUTNAME}/out/*
   variables:
     BOOST_VERSION: 1.81.0
-    CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+    CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
 
 .osx_build_amd64_dev:
@@ -379,7 +379,7 @@ build_freebsd_amd64:
   - .dev_build
   variables:
     CONFIG_CMAKE_ARGS: ""
-    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
 
 .osx_build_amd64_release:
   extends: 
@@ -387,7 +387,7 @@ build_freebsd_amd64:
   - .release_build
   variables:
     CONFIG_CMAKE_ARGS: ""
-    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
 
 
 build_osx_amd64:
