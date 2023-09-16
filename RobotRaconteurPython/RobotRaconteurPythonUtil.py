@@ -5150,12 +5150,12 @@ class RobotRaconteurNodeSetup(object):
     def hardware_transport(self):
         """The HardwareTransport, will be None if HardwareTransport is not specified in flags, Note: Hardware transport is not enabled by default"""
         return self.__setup.GetHardwareTransport()
-    
+
     @property
     def intra_transport(self):
         """The IntraTransport, will be None if IntraTransport is not specified in flags"""
         return self.__setup.GetIntraTransport()
-    
+
     @property
     def command_line_config(self):
         """The command line config parser object used to configure node"""

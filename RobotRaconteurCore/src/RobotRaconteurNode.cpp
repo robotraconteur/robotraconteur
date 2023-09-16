@@ -467,7 +467,8 @@ void RobotRaconteurNode::Shutdown()
                 catch (std::exception& exp2)
                 {
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Transport, -1,
-                                                       "Error closing transport " << e->GetUrlSchemeString() << " " << exp2.what());
+                                                       "Error closing transport " << e->GetUrlSchemeString() << " "
+                                                                                  << exp2.what());
                 }
             }
 
