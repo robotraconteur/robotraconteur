@@ -5358,7 +5358,7 @@ class SecureServerNodeSetup(RobotRaconteurNodeSetup):
 
     def __init__(self, node_name, tcp_port, node=None, argv=None):
         super(SecureServerNodeSetup, self).__init__(node_name, tcp_port, RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT,
-                                                    RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVVERIDE, node, argv)
+                                                    RobotRaconteurPython.RobotRaconteurNodeSetupFlags_SECURE_SERVER_DEFAULT_ALLOWED_OVERRIDE, node, argv)
 
 
 class UserLogRecordHandlerDirectorPython(RobotRaconteurPython.UserLogRecordHandlerDirector):
