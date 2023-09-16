@@ -1,3 +1,6 @@
+
+add_subdirectory(tcp_tls)
+
 if(BUILD_PYTHON3)
     if(WIN32)
         set(RR_TEST_PYTHON_PATH "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python3\\\;${CMAKE_CURRENT_SOURCE_DIR}")

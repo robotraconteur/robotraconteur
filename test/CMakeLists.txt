@@ -27,6 +27,6 @@ endif()
 
 option(ROBOTRACONTEUR_EXTRA_TESTS "Run extra tests" OFF)
 
-if(ROBOTRACONTEUR_EXTRA_TESTS AND BUILD_PYTHON3)
+if(ROBOTRACONTEUR_EXTRA_TESTS)
     add_subdirectory(extra)
 endif()
