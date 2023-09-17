@@ -5165,9 +5165,16 @@ class RobotRaconteurNodeSetup(object):
         return self
 
     def __exit__(self, etype, value, traceback):
-        self.__node.Shutdown()
-        self.__node = None
-        del self.__setup
+        self.close()
+
+    def close(self):
+        """Shutdown the node and release the node from lifecycle management"""
+        if self.__node is not None:
+            self.__node.Shutdown()
+            self.__node = None
+        if self.__setup is not None:
+            self.__setup.ReleaseNode()
+            self.__setup = None
 
     def ReleaseNode(self):
         """
@@ -5178,6 +5185,7 @@ class RobotRaconteurNodeSetup(object):
         """
         if self.__setup is None:
             return
+        self.__node = None
         self.__setup.ReleaseNode()
 
 
