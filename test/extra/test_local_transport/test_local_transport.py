@@ -10,23 +10,24 @@ object testobj
 end object
 """
 
+
 class _testobj_impl():
 
     def add_two_numbers(self, a, b):
         return a + b
 
+
 def test_local_transport():
 
-    local_server_flags =  RR.RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT \
+    local_server_flags = RR.RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT \
         | RR.RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER \
         | RR.RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE \
         | RR.RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING \
         | RR.RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
-        
-    local_client_flags =  RR.RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT \
+
+    local_client_flags = RR.RobotRaconteurNodeSetupFlags_ENABLE_LOCAL_TRANSPORT \
         | RR.RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING \
         | RR.RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
-        
 
     node1 = RR.RobotRaconteurNode()
     node2 = RR.RobotRaconteurNode()
@@ -35,16 +36,18 @@ def test_local_transport():
     node2.Init()
 
     node1_setup = RR.RobotRaconteurNodeSetup(node_name="testprog_local_server", tcp_port=0, flags=local_server_flags,
-                     node=node1)
-    node2_setup = RR.RobotRaconteurNodeSetup(node_name="", tcp_port=0, flags=local_client_flags, node=node2)
+                                             node=node1)
+    node2_setup = RR.RobotRaconteurNodeSetup(
+        node_name="", tcp_port=0, flags=local_client_flags, node=node2)
 
     node1.RegisterServiceType(_local_test_service_def)
 
     obj = _testobj_impl()
-    ctx = node1.RegisterService("test_service", "experimental.local_test.testobj", obj)
+    ctx = node1.RegisterService(
+        "test_service", "experimental.local_test.testobj", obj)
 
     with node1_setup, node2_setup:
-        
+
         # wait a moment for transport to register
         time.sleep(1)
 
@@ -65,6 +68,3 @@ def test_local_transport():
         c = sub.GetDefaultClientWait(1)
         assert c.add_two_numbers(1, 2) == 3
         sub.Close()
-
-
-
