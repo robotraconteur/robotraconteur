@@ -60,7 +60,7 @@ void DarwinLocalTransportDiscovery::Init()
     std::string public_path = (node_dirs.system_run_dir / "transport" / "local").string();
     this->private_path = private_path;
     this->public_path = public_path;
-    
+
     boost::thread(boost::bind(&DarwinLocalTransportDiscovery::run, shared_from_this()));
 }
 void DarwinLocalTransportDiscovery::Shutdown()
