@@ -61,5 +61,10 @@ def test_local_transport():
         assert c2.add_two_numbers(3, 2) == 5
         node2.DisconnectService(c2)
 
+        sub = node2.SubscribeServiceByType("experimental.local_test.testobj")
+        c = sub.GetDefaultClientWait(1)
+        assert c.add_two_numbers(1, 2) == 3
+        sub.Close()
+
 
 

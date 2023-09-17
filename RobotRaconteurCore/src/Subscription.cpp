@@ -673,14 +673,16 @@ void ServiceSubscription::Close()
     connect_listeners.disconnect_all_slots();
     disconnect_listeners.disconnect_all_slots();
     connect_failed_listeners.disconnect_all_slots();
+    listener_strand.reset();
 
     RR_SHARED_PTR<detail::Discovery> d = parent.lock();
-    if (!d)
-        return;
 
     lock.unlock();
 
-    d->SubscriptionClosed(shared_from_this());
+    if (d)
+    {
+        d->SubscriptionClosed(shared_from_this());
+    }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription closed");
 }
@@ -1046,11 +1048,14 @@ void ServiceSubscription::ClientConnected(const RR_SHARED_PTR<RRObject>& c,
         ConnectRetry(c2);
         try
         {
+            if (listener_strand)
+            {
             RobotRaconteurNode::TryPostToThreadPool(
                 n, RR_BOOST_ASIO_STRAND_WRAP(
                        *listener_strand,
                        boost::bind(&ServiceSubscription::fire_ClientConnectFailedListeners, shared_from_this(),
                                    ServiceSubscriptionClientID(c2->nodeid, c2->service_name), url, err)));
+            }
         }
         catch (std::exception&)
         {}
@@ -1079,11 +1084,14 @@ void ServiceSubscription::ClientConnected(const RR_SHARED_PTR<RRObject>& c,
     {
         try
         {
+            if (listener_strand)
+            {
             RobotRaconteurNode::TryPostToThreadPool(
                 n,
                 RR_BOOST_ASIO_STRAND_WRAP(
                     *listener_strand, boost::bind(&ServiceSubscription::fire_ClientConnectListeners, shared_from_this(),
                                                   ServiceSubscriptionClientID(c2->nodeid, c2->service_name), c)));
+            }
         }
         catch (std::exception&)
         {}
@@ -1249,12 +1257,15 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
                     {
                         try
                         {
+                            if (this1->listener_strand)
+                            {
                             RobotRaconteurNode::TryPostToThreadPool(
                                 n, RR_BOOST_ASIO_STRAND_WRAP(
                                        *this1->listener_strand,
                                        boost::bind(&ServiceSubscription::fire_ClientDisconnectListeners, this1,
                                                    ServiceSubscriptionClientID(c2_1->nodeid, c2_1->service_name),
                                                    client)));
+                            }
                         }
                         catch (std::exception&)
                         {}
