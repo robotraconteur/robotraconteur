@@ -3570,7 +3570,7 @@ class WireUnicastReceiver(object):
 
         :rtype: float
         """
-        t = self.__innerpipe.GetInValueLifespan()
+        t = self._innerpipe.GetInValueLifespan()
         if t < 0:
             return t
         return float(t) / 1000.0
@@ -3578,9 +3578,9 @@ class WireUnicastReceiver(object):
     @InValueLifespan.setter
     def InValueLifespan(self, secs):
         if secs < 0:
-            self.__innerpipe.SetInValueLifespan(-1)
+            self._innerpipe.SetInValueLifespan(-1)
         else:
-            self.__innerpipe.SetInValueLifespan(int(secs * 1000.0))
+            self._innerpipe.SetInValueLifespan(int(secs * 1000.0))
 
 
 class BroadcastDownsamplerStep(object):
