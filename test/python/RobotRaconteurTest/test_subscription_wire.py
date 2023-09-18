@@ -17,6 +17,7 @@ object testobj2
 end
 """
 
+
 class _testobj_impl:
     def __init__(self):
         self.subobj = _testobj2_impl()
@@ -28,7 +29,8 @@ class _testobj_impl:
 class _testobj2_impl:
     def __init__(self):
         pass
-    
+
+
 intra_server_flags = RR.RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT \
     | RR.RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER \
     | RR.RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE \
@@ -49,18 +51,21 @@ class _testservice_impl():
         self._node.Init()
 
         self._node.RegisterServiceType(_wire_sub_test_service_def)
-        self._node.RegisterService("test_service", "experimental.wire_sub_test.testobj", self.obj)
+        self._node.RegisterService(
+            "test_service", "experimental.wire_sub_test.testobj", self.obj)
 
-        self._node_setup = RR.RobotRaconteurNodeSetup(nodename, 0, flags=intra_server_flags, node=self._node)
+        self._node_setup = RR.RobotRaconteurNodeSetup(
+            nodename, 0, flags=intra_server_flags, node=self._node)
 
     def __enter__(self):
         return self
-    
+
     def __exit__(self, exc_type, exc_value, traceback):
         self._node_setup.ReleaseNode()
         self._node.Shutdown()
         self._node_setup = None
         self._node = None
+
 
 def test_wire_subscription():
 
@@ -73,7 +78,8 @@ def test_wire_subscription():
     client_node = RR.RobotRaconteurNode()
     client_node.Init()
 
-    client_node_setup = RR.RobotRaconteurNodeSetup("", 0, flags=intra_client_flags, node=client_node)
+    client_node_setup = RR.RobotRaconteurNodeSetup(
+        "", 0, flags=intra_client_flags, node=client_node)
 
     server1 = _testservice_impl("server1", test_servers["server1"])
 
@@ -84,7 +90,8 @@ def test_wire_subscription():
         def value_changed(wire, value, time):
             value_changed_count[0] += 1
 
-        sub = client_node.SubscribeServiceByType("experimental.wire_sub_test.testobj")
+        sub = client_node.SubscribeServiceByType(
+            "experimental.wire_sub_test.testobj")
         wire_sub = sub.SubscribeWire("testwire1")
         wire_sub.WireValueChanged += value_changed
         sub.GetDefaultClientWait(5)
@@ -141,5 +148,3 @@ def test_wire_subscription():
         server1.obj.testwire2.InValueLifespan = 0.1
         time.sleep(0.2)
         assert not server1.obj.testwire2.TryGetInValue()[0]
-
-

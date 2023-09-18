@@ -17,6 +17,7 @@ object testobj2
 end
 """
 
+
 class _testobj_impl:
     def __init__(self):
         self.subobj = _testobj2_impl()
@@ -24,7 +25,7 @@ class _testobj_impl:
 
     def get_subobj(self):
         return self.subobj, "experimental.pipe_sub_test.testobj2"
-    
+
     def RRServiceObjectInit(self, ctx, service_path):
         self.testpipe2.PipeConnectCallback = self._pipe_ep_connected
 
@@ -39,7 +40,8 @@ class _testobj_impl:
 class _testobj2_impl:
     def __init__(self):
         pass
-    
+
+
 intra_server_flags = RR.RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT \
     | RR.RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER \
     | RR.RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE \
@@ -60,18 +62,21 @@ class _testservice_impl():
         self._node.Init()
 
         self._node.RegisterServiceType(_pipe_sub_test_service_def)
-        self._node.RegisterService("test_service", "experimental.pipe_sub_test.testobj", self.obj)
+        self._node.RegisterService(
+            "test_service", "experimental.pipe_sub_test.testobj", self.obj)
 
-        self._node_setup = RR.RobotRaconteurNodeSetup(nodename, 0, flags=intra_server_flags, node=self._node)
+        self._node_setup = RR.RobotRaconteurNodeSetup(
+            nodename, 0, flags=intra_server_flags, node=self._node)
 
     def __enter__(self):
         return self
-    
+
     def __exit__(self, exc_type, exc_value, traceback):
         self._node_setup.ReleaseNode()
         self._node.Shutdown()
         self._node_setup = None
         self._node = None
+
 
 def test_pipe_subscription():
 
@@ -84,7 +89,8 @@ def test_pipe_subscription():
     client_node = RR.RobotRaconteurNode()
     client_node.Init()
 
-    client_node_setup = RR.RobotRaconteurNodeSetup("", 0, flags=intra_client_flags, node=client_node)
+    client_node_setup = RR.RobotRaconteurNodeSetup(
+        "", 0, flags=intra_client_flags, node=client_node)
 
     server1 = _testservice_impl("server1", test_servers["server1"])
 
@@ -95,7 +101,8 @@ def test_pipe_subscription():
         def packet_recv(ep):
             packet_recv_count[0] += 1
 
-        sub = client_node.SubscribeServiceByType("experimental.pipe_sub_test.testobj")
+        sub = client_node.SubscribeServiceByType(
+            "experimental.pipe_sub_test.testobj")
         pipe_sub = sub.SubscribePipe("testpipe1")
         pipe_sub.PipePacketReceived += packet_recv
         sub.GetDefaultClientWait(5)
@@ -125,7 +132,7 @@ def test_pipe_subscription():
         assert res and val == 3.0
         time.sleep(0.005)
         assert pipe_sub.Available == 1
-        res, val = pipe_sub.TryReceivePacketWait(1,True)
+        res, val = pipe_sub.TryReceivePacketWait(1, True)
         assert res and val == 4.0
         assert pipe_sub.Available == 1
         res, val = pipe_sub.TryReceivePacketWait(1)
@@ -150,4 +157,3 @@ def test_pipe_subscription():
         assert res and value == 7.0
         res, value = pipe_sub3.TryReceivePacketWait(1)
         assert res and value == 8.0
-        
