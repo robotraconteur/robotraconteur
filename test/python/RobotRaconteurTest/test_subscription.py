@@ -8,7 +8,7 @@ service experimental.sub_test
 
 object testobj
     function double add_two_numbers(double a, double b)
-end object
+end
 """
 
 intra_server_flags = RR.RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT \
