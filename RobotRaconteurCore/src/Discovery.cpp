@@ -1959,6 +1959,8 @@ RR_SHARED_PTR<ServiceSubscription> Discovery::SubscribeService(
 {
     RR_SHARED_PTR<ServiceSubscription> s = RR_MAKE_SHARED<ServiceSubscription>(shared_from_this());
     s->InitServiceURL(url, username, credentials, objecttype);
+    boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
+    subscriptions.push_back(s);
     return s;
 }
 
@@ -2059,7 +2061,8 @@ void Discovery::Shutdown()
     {
         boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
         is_shutdown.data() = true;
-        subscriptions = RR_MOVE(subscriptions1);
+        subscriptions1 = RR_MOVE(subscriptions);
+        subscriptions.clear();
     }
 
     BOOST_FOREACH (RR_WEAK_PTR<IServiceSubscription>& s, subscriptions1)

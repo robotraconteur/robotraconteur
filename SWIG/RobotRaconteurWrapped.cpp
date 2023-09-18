@@ -4224,7 +4224,7 @@ WrappedService_typed_packet WrappedPipeSubscription::ReceivePacket()
 }
 bool WrappedPipeSubscription::TryReceivePacket(WrappedService_typed_packet& packet)
 {
-    return TryReceivePacketWait(packet, -1, false);
+    return TryReceivePacketWait(packet, 0, false);
 }
 bool WrappedPipeSubscription::TryReceivePacketWait(WrappedService_typed_packet& packet, int32_t timeout, bool peek)
 {
