@@ -116,6 +116,7 @@ class crosscheck_client:
                 print(f"    Hostname: {c.hostname}")
                 print(f"    Platform: {c.platform}")
                 print()
+            print()
         else:
             insecure_clients = self.insecure_sub.GetConnectedClients()
             insecure_clients_list = []
