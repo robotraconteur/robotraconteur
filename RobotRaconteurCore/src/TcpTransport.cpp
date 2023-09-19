@@ -1883,6 +1883,7 @@ void TcpTransport::Close()
             boost::system::error_code ec;
             e->acceptor->close(ec);
         }
+        acceptors.clear();
     }
     catch (std::exception&)
     {}
@@ -1953,7 +1954,7 @@ void TcpTransport::Close()
         }
 
         if (!stillopen)
-            return;
+            break;
         boost::this_thread::sleep(boost::posix_time::milliseconds(25));
         t2 = boost::posix_time::microsec_clock::universal_time();
     }
@@ -1973,6 +1974,11 @@ void TcpTransport::Close()
         }
         catch (std::exception&)
         {}
+    }
+
+    {
+        boost::mutex::scoped_lock lock4(this->node_discovery_lock);
+        node_discovery.reset();
     }
 
     close_signal();

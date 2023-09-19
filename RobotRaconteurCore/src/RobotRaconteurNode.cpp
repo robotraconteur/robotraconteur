@@ -464,8 +464,12 @@ void RobotRaconteurNode::Shutdown()
                 {
                     e->Close();
                 }
-                catch (std::exception&)
-                {}
+                catch (std::exception& exp2)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Transport, -1,
+                                                       "Error closing transport " << e->GetUrlSchemeString() << " "
+                                                                                  << exp2.what());
+                }
             }
 
             transports.clear();
@@ -1516,6 +1520,13 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 eret->Error = MessageErrorType_AuthenticationError;
                 break;
             }
+        }
+        break;
+
+        case MessageEntryType_ServiceClosed:
+        case MessageEntryType_ServiceClosedRet: {
+            // Pass ServiceClosed to client context
+            return RR_INTRUSIVE_PTR<Message>();
         }
         break;
 

@@ -1391,7 +1391,8 @@ static RR_INTRUSIVE_PTR<RRArray<Y> > StaticVectorToRRArray(boost::container::sta
  * @param string_vector The input string vector to be converted
  * @return RR_INTRUSIVE_PTR<RRList<RRArray<char> > > The converted RRList
  */
-RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector<std::string>& string_vector);
+ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(
+    const std::vector<std::string>& string_vector);
 
 /**
  * @brief Convert a RRList containing strings to a string vector
@@ -1401,7 +1402,8 @@ RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector
  * @param list The input RRList to be converted
  * @return std::vector<std::string> The converted string vector
  */
-std::vector<std::string> RRListToStringVector(const RR_INTRUSIVE_PTR<RRList<RRArray<char> > >& list);
+ROBOTRACONTEUR_CORE_API std::vector<std::string> RRListToStringVector(
+    const RR_INTRUSIVE_PTR<RRList<RRArray<char> > >& list);
 
 /**
  * @brief Checks if a value RR_INTRUSIVE_PTR is null

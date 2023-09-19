@@ -24,3 +24,9 @@ endif()
 if(BUILD_MATLAB_MEX)
     add_subdirectory(matlab)
 endif()
+
+option(ROBOTRACONTEUR_EXTRA_TESTS "Run extra tests" OFF)
+
+if(ROBOTRACONTEUR_EXTRA_TESTS)
+    add_subdirectory(extra)
+endif()
