@@ -54,9 +54,21 @@ class crosscheck_server_nodes:
         self.insecure_node_setup = RR.ServerNodeSetup(args.insecure_nodename, args.insecure_tcp_port,  
                                                       node=self.insecure_node)
         
+        if args.secure_enabled:
+            self.secure_node = RR.RobotRaconteurNode()
+            self.secure_node.Init()
+            self.secure_obj = crosscheck_impl(self.secure_node)
+            self.secure_node.RegisterServiceType(_crosscheck_robdef)
+            self.secure_node.RegisterService("crosscheck", "experimental.crosscheck.Crosscheck", self.secure_obj)
+            self.secure_node_setup = RR.SecureServerNodeSetup(args.secure_nodename, args.secure_tcp_port,
+                                                        node=self.secure_node)
+        
     def close(self):
-        if self.insecure_node:
-            self.insecure_node.close()
+        if self.insecure_node_setup:
+            self.insecure_node_setup.close()
+
+        if self.secure_node_setup:
+            self.secure_node_setup.close()
         
 
 
