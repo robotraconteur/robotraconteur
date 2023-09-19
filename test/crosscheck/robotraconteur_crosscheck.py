@@ -70,7 +70,83 @@ class crosscheck_server_nodes:
         if self.secure_node_setup:
             self.secure_node_setup.close()
         
+class crosscheck_client:
+    def __init__(self, json=False):
 
+        client_node_flags = RR.RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT \
+            | RR.RobotRaconteurNodeSetupFlags_TCP_TRANSPORT_IPV6_DISCOVERY \
+            | RR.RobotRaconteurNodeSetupFlags_ENABLE_NODE_DISCOVERY_LISTENING \
+            | RR.RobotRaconteurNodeSetupFlags_DISABLE_STRINGTABLE
+
+        
+
+        self.json = json
+        self.node = RR.RobotRaconteurNode()
+        self.node.Init()
+        self.node_setup = RR.RobotRaconteurNodeSetup("", 0, client_node_flags, node=self.node)
+
+        insecure_sub_filter = RR.ServiceSubscriptionFilter()
+        insecure_sub_filter.TransportSchemes = ["rr+tcp"]
+        self.insecure_sub = self.node.SubscribeServiceByType("experimental.crosscheck.Crosscheck", insecure_sub_filter)
+
+        secure_sub_filter = RR.ServiceSubscriptionFilter()
+        secure_sub_filter.TransportSchemes = ["rrs+tcp"]
+        self.secure_sub = self.node.SubscribeServiceByType("experimental.crosscheck.Crosscheck", secure_sub_filter)
+
+        self.timer = self.node.CreateTimer(1, self.timer_cb)
+        self.timer.Start()
+
+    def timer_cb(self, timer_event):
+        if not self.json:
+            insecure_clients = self.insecure_sub.GetConnectedClients()
+            print(f"Insecure connected client count: {len(insecure_clients)}")
+            for c in insecure_clients.values():
+                print(f"    Node Name: {self.node.GetServiceNodeName(c)}")
+                print(f"    Node ID: {self.node.GetServiceNodeID(c)}")
+                print(f"    RR Version: {c.version_robotraconteur}")
+                print(f"    Hostname: {c.hostname}")
+                print(f"    Platform: {c.platform}")
+                print()
+            secure_clients = self.secure_sub.GetConnectedClients()
+            print(f"Secure connected client count: {len(secure_clients)}")
+            for c in secure_clients.values():
+                print(f"    Node Name: {self.node.GetServiceNodeName(c)}")
+                print(f"    Node ID: {self.node.GetServiceNodeID(c)}")
+                print(f"    RR Version: {c.version_robotraconteur}")
+                print(f"    Hostname: {c.hostname}")
+                print(f"    Platform: {c.platform}")
+                print()
+        else:
+            insecure_clients = self.insecure_sub.GetConnectedClients()
+            insecure_clients_list = []
+            for c in insecure_clients.values():
+                insecure_clients_list.append({
+                    "nodename": self.node.GetServiceNodeName(c),
+                    "nodeid": str(self.node.GetServiceNodeID(c)),
+                    "version_robotraconteur": c.version_robotraconteur,
+                    "hostname": c.hostname,
+                    "platform": c.platform
+                })
+            secure_clients = self.secure_sub.GetConnectedClients()
+            secure_clients_list = []
+            for c in secure_clients.values():
+                secure_clients_list.append({
+                    "nodename": self.node.GetServiceNodeName(c),
+                    "nodeid": str(self.node.GetServiceNodeID(c)),
+                    "version_robotraconteur": c.version_robotraconteur,
+                    "hostname": c.hostname,
+                    "platform": c.platform
+                })
+            print(json.dumps({
+                "insecure": insecure_clients_list,
+                "secure": secure_clients_list
+            }))
+            sys.stdout.flush()
+
+
+    def close(self):
+        if self.node_setup:
+            self.node_setup.close()
 
 def main():
     
@@ -81,19 +157,24 @@ def main():
     parser.add_argument("--secure-enabled", type=bool, default=True, help="Enable secure server node")
     parser.add_argument("--secure-nodename", type=str, default="crosscheck_secure", help="Node name for secure server node")
     parser.add_argument("--secure-tcp-port", type=int, default=0, help="TCP lister port for secure server node")
+    parser.add_argument("--json", action="store_true", help="Output in JSON format")
 
     args = parser.parse_args()
 
     servers = None
+    client = None
 
     try:
         servers = crosscheck_server_nodes(args)
+        client = crosscheck_client(json=args.json)
         print("Press enter to quit")
         input()
 
     finally:
         if servers:
             servers.close()
+        if client:
+            client.close()
 
 
 if __name__ == "__main__":
