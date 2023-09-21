@@ -113,7 +113,6 @@ class LocalTransportConnection : public detail::ASIOStreamBaseTransport
     RR_SHARED_PTR<detail::LocalTransport_socket> socket;
 
     boost::mutex socket_lock;
-    bool server;
 
     RR_WEAK_PTR<LocalTransport> parent;
 

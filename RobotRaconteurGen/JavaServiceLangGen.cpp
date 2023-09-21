@@ -3491,7 +3491,7 @@ void JavaServiceLangGen::GenerateFiles(const RR_SHARED_PTR<ServiceDefinition>& d
 
     for (std::vector<std::string>::iterator e = dname2.begin(); e != dname2.end(); e++)
     {
-        p = p /= boost::filesystem::path(*e);
+        p /= boost::filesystem::path(*e);
         if (!boost::filesystem::is_directory(p))
             boost::filesystem::create_directory(p);
     }

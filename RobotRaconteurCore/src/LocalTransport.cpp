@@ -134,7 +134,10 @@ void LocalTransport::Close()
     {
         boost::mutex::scoped_lock lock(acceptor_lock);
         if (acceptor)
+        {
             acceptor->acceptor.close();
+            acceptor.reset();
+        }
     }
     catch (std::exception&)
     {}

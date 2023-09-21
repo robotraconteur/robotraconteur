@@ -44,16 +44,6 @@ TEST(RobotRaconteurService, IntraLoopback)
                            "rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService_auth"));
     }
 
-    int count = 1;
-
-    for (int j = 0; j < count; j++)
-    {
-        ServiceTestClient cl;
-        EXPECT_NO_THROW(
-            cl.RunFullTest("rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService",
-                           "rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService_auth"));
-    }
-
     cout << "start shutdown" << endl;
 
     RobotRaconteurNode::s()->Shutdown();

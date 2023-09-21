@@ -77,6 +77,7 @@ class ROBOTRACONTEUR_CORE_API IntraTransportConnection : public ITransportConnec
 
     RR_WEAK_PTR<IntraTransportConnection> peer;
     RR_SHARED_PTR<IntraTransportConnection> peer_storage;
+    boost::mutex peer_lock;
 
     boost::atomic<bool> connected;
 

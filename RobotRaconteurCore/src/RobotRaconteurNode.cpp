@@ -464,8 +464,12 @@ void RobotRaconteurNode::Shutdown()
                 {
                     e->Close();
                 }
-                catch (std::exception&)
-                {}
+                catch (std::exception& exp2)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Transport, -1,
+                                                       "Error closing transport " << e->GetUrlSchemeString() << " "
+                                                                                  << exp2.what());
+                }
             }
 
             transports.clear();
@@ -1339,6 +1343,10 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
 
                 if (returnservicedef)
                 {
+                    if (!c)
+                    {
+                        throw ServiceException("Service not found");
+                    }
                     RR_SHARED_PTR<ServiceFactory> servicedef1 = c->GetRootObjectServiceDef(v);
                     std::map<std::string, RR_SHARED_PTR<ServiceFactory> > defs;
                     defs.insert(std::make_pair(servicedef1->GetServiceName(), servicedef1));
@@ -1405,6 +1413,10 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
 
             try
             {
+                if (!c)
+                {
+                    throw ServiceException("Service not found");
+                }
 
                 se = RR_MAKE_SHARED<ServerEndpoint>(shared_from_this());
 
@@ -1447,6 +1459,10 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
 
             try
             {
+                if (!c)
+                {
+                    throw ServiceException("Service not found");
+                }
                 if (c->RequireValidUser())
                 {
                     RR_INTRUSIVE_PTR<MessageElement> username_el;
@@ -1489,8 +1505,11 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                                                         e->MemberName, "Error authenticating client: " << exp.what())
                 try
                 {
-                    c->RemoveClient(se);
-                    DeleteEndpoint(se);
+                    if (c && se)
+                    {
+                        c->RemoveClient(se);
+                        DeleteEndpoint(se);
+                    }
                 }
                 catch (std::exception&)
                 {}
@@ -1501,6 +1520,13 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 eret->Error = MessageErrorType_AuthenticationError;
                 break;
             }
+        }
+        break;
+
+        case MessageEntryType_ServiceClosed:
+        case MessageEntryType_ServiceClosedRet: {
+            // Pass ServiceClosed to client context
+            return RR_INTRUSIVE_PTR<Message>();
         }
         break;
 
@@ -1738,7 +1764,10 @@ uint32_t RobotRaconteurNode::RegisterEndpoint(const RR_SHARED_PTR<Endpoint>& e)
 
 void RobotRaconteurNode::DeleteEndpoint(const RR_SHARED_PTR<Endpoint>& e)
 {
-
+    if (!e)
+    {
+        return;
+    }
     try
     {
 
