@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "LocalTransport_private.h"
+#include <boost/optional/optional_io.hpp>
 
 #ifdef ROBOTRACONTEUR_OSX
 
@@ -51,10 +52,16 @@ void DarwinLocalTransportDiscovery::Init()
     boost::mutex::scoped_lock lock(runloop_lock);
     running = true;
     RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
-    if (node1)
+    if (!node1)
     {
-        node_dirs = node1->GetNodeDirectories();
+        return;
     }
+    node_dirs = node1->GetNodeDirectories();
+    std::string private_path = (node_dirs.user_run_dir / "transport" / "local").string();
+    std::string public_path = (node_dirs.system_run_dir / "transport" / "local").string();
+    this->private_path = private_path;
+    this->public_path = public_path;
+
     boost::thread(boost::bind(&DarwinLocalTransportDiscovery::run, shared_from_this()));
 }
 void DarwinLocalTransportDiscovery::Shutdown()
@@ -83,12 +90,9 @@ void DarwinLocalTransportDiscovery::run()
             runloop = CFRunLoopGetCurrent();
         }
 
-        std::string private_path = (node_dirs.user_run_dir / "transport" / "local").string();
-        std::string public_path = (node_dirs.system_run_dir / "transport" / "local").string();
-
         CFStringRef cf_paths[2];
-        cf_paths[0] = CFStringCreateWithCString(kCFAllocatorDefault, private_path.c_str(), kCFStringEncodingUTF8);
-        cf_paths[1] = CFStringCreateWithCString(kCFAllocatorDefault, public_path.c_str(), kCFStringEncodingUTF8);
+        cf_paths[0] = CFStringCreateWithCString(kCFAllocatorDefault, private_path->c_str(), kCFStringEncodingUTF8);
+        cf_paths[1] = CFStringCreateWithCString(kCFAllocatorDefault, public_path->c_str(), kCFStringEncodingUTF8);
         if (!cf_paths[0] || !cf_paths[1])
             throw SystemResourceException("");
         CFArrayRef paths = CFArrayCreate(NULL, (const void**)cf_paths, 2, NULL);

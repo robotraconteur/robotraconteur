@@ -47,8 +47,6 @@ class HardwareTransportConnection : public detail::ASIOStreamBaseTransport
     RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE;
 
   protected:
-    bool server;
-
     RR_WEAK_PTR<HardwareTransport> parent;
 
     uint32_t m_RemoteEndpoint;

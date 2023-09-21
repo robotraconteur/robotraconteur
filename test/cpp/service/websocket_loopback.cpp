@@ -12,13 +12,15 @@
 #include "robotraconteur_generated.h"
 #include "service_test_utils.h"
 
+#include <boost/lexical_cast.hpp>
+
 using namespace RobotRaconteur;
 using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
-TEST(RobotRaconteurService, IntraLoopback)
+TEST(RobotRaconteurService, WebsocketLoopback)
 {
-    RobotRaconteurNode::s()->SetNodeName("test_intra_loopback");
+    RobotRaconteurNode::s()->SetNodeName("websocket_loopback");
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
     RR_SHARED_PTR<IntraTransport> c = RR_MAKE_SHARED<IntraTransport>();
@@ -31,17 +33,21 @@ TEST(RobotRaconteurService, IntraLoopback)
     // c->EnableNodeDiscoveryListening();
 
     RobotRaconteurNode::s()->RegisterTransport(c);
+    RobotRaconteurNode::s()->RegisterTransport(c2);
     RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
     RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
     RobotRaconteurTestServiceSupport s;
     s.RegisterServices(c2);
 
+    std::string port_str = boost::lexical_cast<std::string>(c2->GetListenPort());
+
     {
         ServiceTestClient cl;
         EXPECT_NO_THROW(
-            cl.RunFullTest("rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService",
-                           "rr+intra:///?nodename=test_intra_loopback&service=RobotRaconteurTestService_auth"));
+            cl.RunFullTest(std::string("rr+ws://localhost:") + port_str + "/?service=RobotRaconteurTestService",
+                           std::string("rr+ws://localhost:") + port_str +
+                               "/?nodename=websocket_loopback&service=RobotRaconteurTestService_auth"));
     }
 
     cout << "start shutdown" << endl;

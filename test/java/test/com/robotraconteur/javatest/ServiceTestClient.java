@@ -2368,12 +2368,17 @@ public class ServiceTestClient
         o6_1.set_d1(new double[] {0.0});
         o6_1_1.set_data("Hello world!");
 
-        r.o6_op(1);
-
         for (int i = 0; i < 10; i++)
         {
             try
             {
+                r.o6_op(1);
+                try
+                {
+                    Thread.sleep(100);
+                }
+                catch (InterruptedException e)
+                {}
                 boolean err1 = false;
                 try
                 {
@@ -2389,6 +2394,12 @@ public class ServiceTestClient
                 o6_2.set_data("Hello world!");
 
                 r.o6_op(2);
+                try
+                {
+                    Thread.sleep(100);
+                }
+                catch (InterruptedException e)
+                {}
 
                 subobj o6_3 = (subobj)r.get_o6();
                 o6_3.add_val(2);

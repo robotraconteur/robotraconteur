@@ -1790,6 +1790,11 @@ void ObjRefDefinition::FromString(boost::string_ref s, const ServiceDefinitionPa
 
     RR_SHARED_PTR<TypeDefinition> t;
     MemberDefinition_FromStringFormat1(s, "objref", shared_from_this(), t, ParseInfo);
+    if (!t)
+    {
+        throw ServiceDefinitionParseException("Invalid objref definition \"" + boost::trim_copy(s.to_string()) + "\"",
+                                              ParseInfo);
+    }
 
     switch (t->ArrayType)
     {
@@ -4028,7 +4033,14 @@ std::string VerifyMember(const RR_SHARED_PTR<MemberDefinition>& m, const RR_SHAR
         return m2->Name;
     }
 
-    throw ServiceDefinitionVerifyException("Invalid member \"" + m->Name + "\"", m2->ParseInfo);
+    if (m2)
+    {
+        throw ServiceDefinitionVerifyException("Invalid member \"" + m->Name + "\"", m2->ParseInfo);
+    }
+    else
+    {
+        throw ServiceDefinitionVerifyException("Invalid member \"" + m->Name + "\"");
+    }
 }
 
 struct rrimplements

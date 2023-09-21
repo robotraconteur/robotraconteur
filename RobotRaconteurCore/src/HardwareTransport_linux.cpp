@@ -167,6 +167,12 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
     char* adapter1 = NULL;
 
     dbus_f->dbus_message_iter_get_basic(&reply_iter, &adapter1);
+    if (adapter1 == NULL)
+    {
+        dbus_f->dbus_message_unref(reply);
+        dbus_f->dbus_connection_unref(conn);
+        return o;
+    }
 
     std::string adapter(adapter1);
 
@@ -292,13 +298,16 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
                             {
                                 const char* value1 = NULL;
                                 dbus_f->dbus_message_iter_get_basic(&iter_uuid_val, &value1);
-                                std::string value(value1);
-                                boost::uuids::string_generator gen;
-                                boost::uuids::uuid uuid1 = gen(value);
-
-                                if (uuid1 == svc_uuid)
+                                if (value1)
                                 {
-                                    service_uuid_invalid = false;
+                                    std::string value(value1);
+                                    boost::uuids::string_generator gen;
+                                    boost::uuids::uuid uuid1 = gen(value);
+
+                                    if (uuid1 == svc_uuid)
+                                    {
+                                        service_uuid_invalid = false;
+                                    }
                                 }
                             }
                             catch (boost::bad_lexical_cast&)
