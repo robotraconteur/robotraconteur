@@ -1064,8 +1064,6 @@ class PipeServer : public virtual PipeServerBase, public virtual Pipe<T>
         callback(RR_STATIC_POINTER_CAST<PipeEndpoint<T> >(e));
     }
 
-    boost::function<void(RR_INTRUSIVE_PTR<RRValue>&)> verify;
-
   public:
     RR_OVIRTUAL void Shutdown() RR_OVERRIDE
     {

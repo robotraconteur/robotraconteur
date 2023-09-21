@@ -528,6 +528,11 @@ int main(int argc, char* argv[])
                 sdefs_str.push_back(file_contents);
             }
 
+            if (!d)
+            {
+                std::cout << "RobotRaconteurGen: fatal error: robdef file not found " << e << std::endl;
+                return 1002;
+            }
             BOOST_FOREACH (const std::string& imp, d->Imports)
             {
                 required_imports.insert(imp);

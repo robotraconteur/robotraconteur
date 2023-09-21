@@ -191,7 +191,6 @@ class HardwareTransport_linux_discovery
     RR_SHARED_PTR<boost::asio::generic::datagram_protocol::socket> netlink_sock;
 
     bool running;
-    boost::mutex this_lock;
     boost::shared_array<uint8_t> msg;
 
     static const size_t NL_MAX_PAYLOAD = 8192;

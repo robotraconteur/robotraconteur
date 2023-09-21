@@ -15,6 +15,10 @@
 from __future__ import absolute_import
 
 import numpy
+import sys
+
+if sys.version_info[0] >= 3:
+    import reprlib
 
 
 class EventHook(object):
@@ -60,7 +64,12 @@ class EventHook(object):
 
 class RobotRaconteurStructure(object):
     __slots__ = []
-    pass
+
+    if sys.version_info[0] >= 3:
+        @reprlib.recursive_repr()
+        def __repr__(self):
+            return '{}({})'.format(self.__class__.__name__, ', '.join(['{}={}'.format(k,
+                                                                                      repr(getattr(self, k))) for k in self.__slots__]))
 
 
 class RobotRaconteurVarValue(object):

@@ -602,7 +602,6 @@ class HardwareTransport_win_discovery
     void OnBluetoothChanged_win(GUID guid, DWORD evt, PBYTE buf);
 
     bool running;
-    boost::mutex this_lock;
 
     std::list<boost::shared_ptr<void> > hDeviceNotify;
     std::list<boost::shared_ptr<void> > hBtNotify;
