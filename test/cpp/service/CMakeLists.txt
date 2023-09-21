@@ -69,6 +69,8 @@ endif()
 
 rr_service_test_add_test(intra_loopback SRC intra_loopback.cpp)
 
+rr_service_test_add_test(websocket_loopback SRC websocket_loopback.cpp)
+
 rr_service_test_add_exe(
     certauthserver
     SRC

@@ -1808,11 +1808,12 @@ RR_SHARED_PTR<T> TryFindByName(const std::vector<RR_SHARED_PTR<T> >& v, boost::s
 {
     for (typename std::vector<RR_SHARED_PTR<T> >::const_iterator e = v.begin(); e != v.end(); ++e)
     {
-        if (*e)
+        const RR_SHARED_PTR<T>& ee = *e;
+        if (ee)
         {
-            if ((*e)->Name == name)
+            if (ee->Name == name)
             {
-                return *e;
+                return ee;
             }
         }
     }

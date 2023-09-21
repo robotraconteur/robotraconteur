@@ -1,0 +1,5 @@
+service experimental.tls_test
+
+object testobj
+    function double add_two_numbers(double a, double b)
+end object

@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-matlab-toolbox:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
       with:
@@ -21,9 +21,11 @@ jobs:
     - name: Set up MATLAB
       uses: matlab-actions/setup-matlab@v1
       with:
-        release: R2020a
+        release: R2020b
     - name: pip
-      run: python3 -m pip install pygithub
+      run: |
+       python3 -m pip install --upgrade pyopenssl
+       python3 -m pip install pygithub
     - name: build matlab toolbox
       env:
         BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}

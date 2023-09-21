@@ -65,6 +65,11 @@ ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::v
         }
     }
 
+    if (split_dim_block == 0)
+    {
+        throw InvalidArgumentException("Could not split array into blocks");
+    }
+
     // block_count_edge = std::vector<uint64_t>(block_count.size());
     // Array::Copy(block_count, block_count_edge, block_count.size());
     block_count_edge = block_count;

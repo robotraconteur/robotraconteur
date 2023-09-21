@@ -141,7 +141,6 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
   protected:
     RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket;
     boost::mutex socket_lock;
-    bool server;
     std::string url;
 
     RR_WEAK_PTR<TcpTransport> parent;

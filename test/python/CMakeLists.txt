@@ -7,7 +7,7 @@ if(BUILD_PYTHON3)
 
     set(RR_PYTHON_TEST_CMD "\"${CMAKE_COMMAND}\"")
     set(RR_PYTHON_TEST_CMD_ARGS
-        "-E env PYTHONPATH=${RR_TEST_PYTHON_PATH} ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/test/robdef \"${PYTHON3_EXECUTABLE}\" "
+        "-E env PYTHONPATH=${RR_TEST_PYTHON_PATH} ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_CURRENT_SOURCE_DIR}/test/robdef \"${PYTHON3_EXECUTABLE}\" "
     )
 
     rrconfiguretest(
@@ -19,7 +19,7 @@ if(BUILD_PYTHON3)
         ARGS
         "${RR_PYTHON_TEST_CMD_ARGS} -m")
     rrconfiguretest(test_python3_pytest "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS
-                    "${RR_PYTHON_TEST_CMD_ARGS} -m pytest ${CMAKE_SOURCE_DIR}")
+                    "${RR_PYTHON_TEST_CMD_ARGS} -m pytest ${CMAKE_CURRENT_SOURCE_DIR}")
 
 endif()
 
@@ -32,7 +32,7 @@ if(BUILD_PYTHON)
 
     set(RR_PYTHON_TEST_CMD "\"${CMAKE_COMMAND}\"")
     set(RR_PYTHON_TEST_CMD_ARGS
-        "-E env PYTHONPATH=${RR_TEST_PYTHON_PATH} ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_SOURCE_DIR}/test/robdef \"${PYTHON_EXECUTABLE}\" "
+        "-E env PYTHONPATH=${RR_TEST_PYTHON_PATH} ROBOTRACONTEUR_ROBDEF_PATH=${CMAKE_CURRENT_SOURCE_DIR}/test/robdef \"${PYTHON_EXECUTABLE}\" "
     )
 
     rrconfiguretest(
@@ -44,6 +44,6 @@ if(BUILD_PYTHON)
         ARGS
         "${RR_PYTHON_TEST_CMD_ARGS} -m")
     rrconfiguretest(test_python_pytest "${RR_PYTHON_TEST_CMD}" "test_prog" NODEBUG ARGS
-                    "${RR_PYTHON_TEST_CMD_ARGS} -m pytest ${CMAKE_SOURCE_DIR}")
+                    "${RR_PYTHON_TEST_CMD_ARGS} -m pytest ${CMAKE_CURRENT_SOURCE_DIR}")
 
 endif()
