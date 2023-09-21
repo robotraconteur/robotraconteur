@@ -342,9 +342,9 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
 {
     std::list<UsbDeviceManager_detected_device> devices;
 
-    libusb_device** list1 = NULL;
+    libusb_device** list1 = NULL; // cppcheck-suppress nullPointerRedundantCheck
     ssize_t device_count = f->libusb_get_device_list(context.get(), &list1);
-    if (device_count <= 0)
+    if (list1 == NULL || device_count <= 0)
     {
         f->libusb_free_device_list(list1, 1);
         return devices;

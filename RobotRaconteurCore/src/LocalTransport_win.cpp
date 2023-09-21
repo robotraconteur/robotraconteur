@@ -20,6 +20,7 @@
 #include "LocalTransport_private.h"
 
 #include <boost/locale.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <aclapi.h>
 

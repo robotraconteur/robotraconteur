@@ -42,8 +42,9 @@ class ROBOTRACONTEUR_CORE_API WireConnectionBaseListener;
 namespace detail
 {
 class WireSubscription_connection;
-bool WireConnectionBase_IsValueExpired(RR_WEAK_PTR<RobotRaconteurNode> node, const boost::posix_time::ptime& recv_time,
-                                       int32_t lifespan);
+ROBOTRACONTEUR_CORE_API bool WireConnectionBase_IsValueExpired(RR_WEAK_PTR<RobotRaconteurNode> node,
+                                                               const boost::posix_time::ptime& recv_time,
+                                                               int32_t lifespan);
 } // namespace detail
 
 /**

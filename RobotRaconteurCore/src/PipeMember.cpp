@@ -253,6 +253,9 @@ bool PipeEndpointBase::TryReceivePacketBaseWait(RR_INTRUSIVE_PTR<RRValue>& packe
             return false;
     }
 
+    if (recv_packets.empty())
+        return false;
+
     packet = recv_packets.front();
     if (!peek)
     {
