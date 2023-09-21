@@ -760,7 +760,12 @@ void IntraTransportConnection::AsyncSendMessage(
     const RR_INTRUSIVE_PTR<Message>& m,
     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
-    RR_SHARED_PTR<IntraTransportConnection> peer1 = peer.lock();
+    RR_SHARED_PTR<IntraTransportConnection> peer1;
+    {
+        boost::mutex::scoped_lock lock(peer_lock);
+        peer1 = peer.lock();
+    }
+
     if (!peer1)
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "Connection lost");
@@ -784,9 +789,13 @@ void IntraTransportConnection::SimpleAsyncEndSendMessage(const RR_SHARED_PTR<Rob
 
 void IntraTransportConnection::Close()
 {
-    RR_SHARED_PTR<IntraTransportConnection> peer1 = peer.lock();
-    peer.reset();
-    peer_storage.reset();
+    RR_SHARED_PTR<IntraTransportConnection> peer1;
+    {
+        boost::mutex::scoped_lock lock(peer_lock);
+        peer1 = peer.lock();
+        peer.reset();
+        peer_storage.reset();
+    }
 
     bool connected1 = connected.exchange(false);
 
@@ -844,7 +853,12 @@ RR_SHARED_PTR<RobotRaconteurNode> IntraTransportConnection::GetNode()
 
 void IntraTransportConnection::CheckConnection(uint32_t endpoint)
 {
-    RR_SHARED_PTR<IntraTransportConnection> peer1 = peer.lock();
+    RR_SHARED_PTR<IntraTransportConnection> peer1;
+    {
+        boost::mutex::scoped_lock lock(peer_lock);
+        peer1 = peer.lock();
+    }
+
     if (endpoint != m_LocalEndpoint || !connected.load() || !peer1)
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "Connection lost");
@@ -860,12 +874,15 @@ bool IntraTransportConnection::CheckCapabilityActive(uint32_t flag)
 
 void IntraTransportConnection::SetPeer(const RR_SHARED_PTR<IntraTransportConnection>& peer)
 {
-    boost::unique_lock<boost::shared_mutex> lock(RemoteNodeID_lock);
-    this->peer = peer;
-    if (!server)
     {
-        this->peer_storage = peer;
+        boost::mutex::scoped_lock lock(peer_lock);
+        this->peer = peer;
+        if (!server)
+        {
+            this->peer_storage = peer;
+        }
     }
+    boost::unique_lock<boost::shared_mutex> lock(RemoteNodeID_lock);
     this->RemoteNodeID = peer->GetNode()->NodeID();
     this->m_RemoteEndpoint = peer->GetLocalEndpoint();
     connected.exchange(true);
@@ -875,9 +892,12 @@ void IntraTransportConnection::SetPeer(const RR_SHARED_PTR<IntraTransportConnect
 
 bool IntraTransportConnection::IsConnected()
 {
-    RR_SHARED_PTR<IntraTransportConnection> peer1 = peer.lock();
-    if (!peer1)
-        return false;
+    {
+        boost::mutex::scoped_lock lock(peer_lock);
+        RR_SHARED_PTR<IntraTransportConnection> peer1 = peer.lock();
+        if (!peer1)
+            return false;
+    }
     return connected.load();
 }
 

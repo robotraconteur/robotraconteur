@@ -1272,7 +1272,8 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
 
             try
             {
-                AsyncClose(&ClientContext_empty_handler);
+                AsyncClose1(RR_INTRUSIVE_PTR<MessageEntry>(), RR_SHARED_PTR<RobotRaconteurException>(),
+                            &ClientContext_empty_handler);
             }
             catch (std::exception&)
             {

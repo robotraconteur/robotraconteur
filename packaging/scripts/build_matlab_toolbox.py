@@ -19,7 +19,7 @@ def main():
     parser.add_argument(
         "--token-file", type=argparse.FileType("r"), help="Load token from file")
     parser.add_argument("--matlab-dir", type=str,
-                        default="/usr/local/MATLAB/R2020a", help="Matlab directory")
+                        default="/usr/local/MATLAB/R2020b", help="Matlab directory")
     parser.add_argument("--no-download", action="store_true")
 
     args = parser.parse_args()

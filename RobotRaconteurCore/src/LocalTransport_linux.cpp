@@ -18,6 +18,8 @@
 #include "sys/inotify.h"
 #include <boost/foreach.hpp>
 
+#include <boost/optional/optional_io.hpp>
+
 namespace RobotRaconteur
 {
 namespace detail
@@ -111,7 +113,7 @@ bool LinuxLocalTransportDiscovery_dir::Refresh()
     ssize_t len = read(notify_fd, buf, sizeof(buf));
     if (len == -1 && errno != EAGAIN)
     {
-        return errno == EAGAIN;
+        return false;
     }
 
     if (len == 0)
