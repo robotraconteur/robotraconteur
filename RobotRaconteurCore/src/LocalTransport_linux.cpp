@@ -18,6 +18,8 @@
 #include "sys/inotify.h"
 #include <boost/foreach.hpp>
 
+#include <boost/optional/optional_io.hpp>
+
 namespace RobotRaconteur
 {
 namespace detail

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "LocalTransport_private.h"
+#include <boost/optional/optional_io.hpp>
 
 #ifdef ROBOTRACONTEUR_OSX
 
