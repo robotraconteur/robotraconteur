@@ -68,6 +68,7 @@ jobs:
         apt install sudo tzdata python3 -y
         ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
+        apt install ca-certificates-java -y
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: apt update
