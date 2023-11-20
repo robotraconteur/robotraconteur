@@ -1022,3 +1022,46 @@ jobs:
       with:
         name: codecov
         path: build/codecov
+
+  vcpkg-test-win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: vcpkg build
+        uses: johnwason/vcpkg-action@v5
+        id: vcpkg
+        with:
+          pkgs: robotraconteur
+          triplet: x64-windows-release
+          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports
+          cache-key: vcpkg-test-win
+          token: ${{ github.token }}
+
+  vcpkg-test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: vcpkg build
+        uses: johnwason/vcpkg-action@v5
+        id: vcpkg
+        with:
+          pkgs: robotraconteur
+          triplet: x64-linux-release
+          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports
+          cache-key: vcpkg-test-linux
+          token: ${{ github.token }}
+
+  vcpkg-test-osx:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: vcpkg build
+        uses: johnwason/vcpkg-action@v5
+        id: vcpkg
+        with:
+          pkgs: robotraconteur
+          triplet: x64-osx-release
+          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports
+          cache-key: vcpkg-test-osx
+          token: ${{ github.token }}
+      
