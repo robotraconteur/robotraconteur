@@ -1047,7 +1047,7 @@ jobs:
       - name: run-build-disttest-cpp
         working-directory: test/dist/cpp/build
         run: |
-          disttest_cpp.exe
+          .\disttest_cpp.exe
 
   vcpkg-test-linux:
     runs-on: ubuntu-latest
@@ -1055,6 +1055,13 @@ jobs:
       VCPKG_MAX_CONCURRENCY: 2
     steps:
       - uses: actions/checkout@v2
+      - name: apt update
+        run: sudo apt update
+      - name: apt
+        run: >
+          sudo apt-get install zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+          libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
+          git cmake g++ make curl libgtest-dev -qq
       - name: vcpkg build
         uses: johnwason/vcpkg-action@v5
         id: vcpkg
