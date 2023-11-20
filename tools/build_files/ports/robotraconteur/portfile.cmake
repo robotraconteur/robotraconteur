@@ -4,7 +4,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
 	OPTIONS
 	    -DBUILD_GEN=ON
-	    -DBUILD_SHARED_LIBS=OFF
 	    -DBUILD_TESTING=OFF
 )
 
@@ -18,8 +17,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/RobotRaconteur")
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

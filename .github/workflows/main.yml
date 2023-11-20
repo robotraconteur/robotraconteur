@@ -1033,9 +1033,18 @@ jobs:
         with:
           pkgs: robotraconteur
           triplet: x64-windows-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports
+          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-win
           token: ${{ github.token }}
+      - name: build-disttest-cpp
+        working-directory: test/dist/cpp
+        run: |
+          cmake -G "Ninja" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+          cmake --build build --config Release -j 4
+      - name: run-build-disttest-cpp
+        working-directory: test/dist/cpp/build
+        run: |
+          disttest_cpp.exe
 
   vcpkg-test-linux:
     runs-on: ubuntu-latest
@@ -1047,9 +1056,18 @@ jobs:
         with:
           pkgs: robotraconteur
           triplet: x64-linux-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports
+          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-linux
           token: ${{ github.token }}
+      - name: build-disttest-cpp
+        working-directory: test/dist/cpp
+        run: |
+          cmake -G "Ninja" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+          cmake --build build --config Release -j 4
+      - name: run-build-disttest-cpp
+        working-directory: test/dist/cpp/build
+        run: |
+          ./disttest_cpp
 
   vcpkg-test-osx:
     runs-on: macos-latest
@@ -1061,7 +1079,16 @@ jobs:
         with:
           pkgs: robotraconteur
           triplet: x64-osx-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports
+          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-osx
           token: ${{ github.token }}
+      - name: build-disttest-cpp
+        working-directory: test/dist/cpp
+        run: |
+          cmake -G "Ninja" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+          cmake --build build --config Release -j 4
+      - name: run-build-disttest-cpp
+        working-directory: test/dist/cpp/build
+        run: |
+          ./disttest_cpp
       
