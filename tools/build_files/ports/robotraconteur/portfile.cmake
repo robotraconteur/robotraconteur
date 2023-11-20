@@ -1,11 +1,6 @@
 set(SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../../..)
 
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-	OPTIONS
-	    -DBUILD_GEN=ON
-	    -DBUILD_TESTING=OFF
-)
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH} OPTIONS -DBUILD_GEN=ON -DBUILD_TESTING=OFF)
 
 vcpkg_cmake_install()
 
