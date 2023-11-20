@@ -1039,7 +1039,7 @@ jobs:
       - name: build-disttest-cpp
         working-directory: test/dist/cpp
         run: |
-          cmake -G "Ninja" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+          cmake -G "NMake Makefiles" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
           cmake --build build --config Release -j 4
       - name: run-build-disttest-cpp
         working-directory: test/dist/cpp/build
@@ -1048,6 +1048,8 @@ jobs:
 
   vcpkg-test-linux:
     runs-on: ubuntu-latest
+    env:
+      VCPKG_MAX_CONCURRENCY: 2
     steps:
       - uses: actions/checkout@v2
       - name: vcpkg build
@@ -1062,7 +1064,7 @@ jobs:
       - name: build-disttest-cpp
         working-directory: test/dist/cpp
         run: |
-          cmake -G "Ninja" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+          cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
           cmake --build build --config Release -j 4
       - name: run-build-disttest-cpp
         working-directory: test/dist/cpp/build
@@ -1085,7 +1087,7 @@ jobs:
       - name: build-disttest-cpp
         working-directory: test/dist/cpp
         run: |
-          cmake -G "Ninja" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+          cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
           cmake --build build --config Release -j 4
       - name: run-build-disttest-cpp
         working-directory: test/dist/cpp/build
