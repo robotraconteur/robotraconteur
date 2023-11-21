@@ -37,7 +37,7 @@ jobs:
         with:
           python_version: 3.7
           arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp37-cp37m_${{ matrix.config.wheel_arch }}.whl
+          wheel_filename: RobotRaconteur-*-cp37-cp37m-${{ matrix.config.wheel_arch }}.whl
       - uses: ./robotraconteur/test/dist/python/action/win
         with:
           python_version: 3.8
