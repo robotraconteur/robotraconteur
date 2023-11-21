@@ -38,5 +38,5 @@ runs:
     shell: cmd
   - name: test
     run: |
-      python -e "import RobotRaconteur as RR; print(RR.RobotRaconteurNode.s.RobotRaconteurVersion)"
+      python -c "import RobotRaconteur as RR; print(RR.RobotRaconteurNode.s.RobotRaconteurVersion)"
     shell: cmd
