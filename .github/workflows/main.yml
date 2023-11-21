@@ -233,6 +233,10 @@ jobs:
     - name: choco python2.7
       run: |
         choco install python2 ${{ matrix.config.arch == 'x86' && '-x86' || '' }} -r
+    - name: pip
+      run: |
+        C:\python27\python -m pip install --upgrade pip
+        C:\python27\python -m pip install numpy setuptools wheel pytest
     - uses: actions/setup-python@v4
       id: python3
       with:
@@ -263,7 +267,7 @@ jobs:
     - name: configure
       run: >
         cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON 
-        -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=OFF
+        -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
         -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
         -DPYTHON_EXECUTABLE="C:/python27/python.exe"
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}" 
@@ -403,14 +407,6 @@ jobs:
     - name: brew
       run: |
         brew install swig boost openssl googletest
-    - name: install pip
-      run: |
-        sudo /usr/bin/python -m pip install --upgrade pip
-    - name: pip
-      run: |
-        /usr/bin/python -m pip install setuptools wheel pytest
-    - name: env python2
-      run: echo "PYTHON2_EXE=/usr/bin/python" >> $GITHUB_ENV
     - uses: actions/setup-python@v4
       id: python3
       with:
@@ -436,8 +432,8 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release 
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON 
-        -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
-        -DOPENSSL_USE_STATIC_LIBS=ON -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
+        -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
+        -DOPENSSL_USE_STATIC_LIBS=ON
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
