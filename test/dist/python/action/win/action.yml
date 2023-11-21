@@ -22,6 +22,8 @@ runs:
   - name: pip3
     working-directory: artifacts/distfiles
     run: |
+      echo ${{ inputs.wheel_filename }}
+      dir ${{ inputs.wheel_filename }}
       python -m pip install ${{ inputs.wheel_filename }}
     shell: cmd
   - name: test
