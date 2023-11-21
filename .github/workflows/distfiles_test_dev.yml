@@ -131,4 +131,4 @@ jobs:
       - uses: ./robotraconteur/test/dist/python/action/osx
         with:
           python_version: "3.11"
-          wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
+          wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*universal2.whl
