@@ -1112,7 +1112,7 @@ jobs:
         run: |
           ./disttest_cpp
       
-  destfiles-test-win:
+  distfiles-test-win:
     needs:
       - build-dist
     runs-on: windows-latest
@@ -1137,24 +1137,24 @@ jobs:
         with:
           python_version: 3.7
           arch: ${{ matrix.config.arch }}
-          wheel-filename: RobotRaconteur-*-cp37-cp37m-win_${{ matrix.config.wheel_arch }}.whl
+          wheel_filename: RobotRaconteur-*-cp37-cp37m-win_${{ matrix.config.wheel_arch }}.whl
       - uses: ./robotraconteur/test/dist/python/action/win
         with:
           python_version: 3.8
           arch: ${{ matrix.config.arch }}
-          wheel-filename: RobotRaconteur-*-cp38-cp38-win_${{ matrix.config.wheel_arch }}.whl
+          wheel_filename: RobotRaconteur-*-cp38-cp38-win_${{ matrix.config.wheel_arch }}.whl
       - uses: ./robotraconteur/test/dist/python/action/win
         with:
           python_version: 3.9
           arch: ${{ matrix.config.arch }}
-          wheel-filename: RobotRaconteur-*-cp39-cp39-win_${{ matrix.config.wheel_arch }}.whl
+          wheel_filename: RobotRaconteur-*-cp39-cp39-win_${{ matrix.config.wheel_arch }}.whl
       - uses: ./robotraconteur/test/dist/python/action/win
         with:
           python_version: "3.10"
           arch: ${{ matrix.config.arch }}
-          wheel-filename: RobotRaconteur-*-cp310-cp310-win_${{ matrix.config.wheel_arch }}.whl
+          wheel_filename: RobotRaconteur-*-cp310-cp310-win_${{ matrix.config.wheel_arch }}.whl
       - uses: ./robotraconteur/test/dist/python/action/win
         with:
           python_version: "3.11"
           arch: ${{ matrix.config.arch }}
-          wheel-filename: RobotRaconteur-*-cp311-cp311-win_${{ matrix.config.wheel_arch }}.whl
+          wheel_filename: RobotRaconteur-*-cp311-cp311-win_${{ matrix.config.wheel_arch }}.whl
