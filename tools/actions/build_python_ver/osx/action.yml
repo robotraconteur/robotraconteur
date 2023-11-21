@@ -29,6 +29,7 @@ runs:
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
       -DBUILD_TESTING=ON
       -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
+      -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macos-11.0-x86_64"
       -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
       ${{ env.CMAKE_CACHE_ARGS }}
       -DCMAKE_BUILD_TYPE=Release
