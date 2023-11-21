@@ -1158,3 +1158,72 @@ jobs:
           python_version: "3.11"
           arch: ${{ matrix.config.arch }}
           wheel_filename: RobotRaconteur-*-cp311-cp311-win_${{ matrix.config.wheel_arch }}.whl
+  
+  distfiles-test-linux:
+    needs:
+      - build-dist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: robotraconteur
+      - name: Download distfiles
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts/distfiles
+          name: distfiles
+      - uses: ./robotraconteur/test/dist/python/action/linux
+        with:
+          python_version: 3.7
+          wheel_filename: RobotRaconteur-*-cp37-cp37m-manylinux*x86_64.whl
+      - uses: ./robotraconteur/test/dist/python/action/linux
+        with:
+          python_version: 3.8
+          wheel_filename: RobotRaconteur-*-cp38-cp38-manylinux*x86_64.whl
+      - uses: ./robotraconteur/test/dist/python/action/linux
+        with:
+          python_version: 3.9
+          wheel_filename: RobotRaconteur-*-cp39-cp39-manylinux*x86_64.whl
+      - uses: ./robotraconteur/test/dist/python/action/linux
+        with:
+          python_version: "3.10"
+          wheel_filename: RobotRaconteur-*-cp310-cp310-manylinux*x86_64.whl
+      - uses: ./robotraconteur/test/dist/python/action/linux
+        with:
+          python_version: "3.11"
+          wheel_filename: RobotRaconteur-*-cp311-cp311-manylinux*x86_64.whl
+  distfiles-test-osx:
+    needs:
+      - build-dist
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: robotraconteur
+      - name: Download distfiles
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts/distfiles
+          name: distfiles
+      - uses: ./robotraconteur/test/dist/python/action/osx
+        with:
+          python_version: 3.7
+          wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*x86_64.whl
+      - uses: ./robotraconteur/test/dist/python/action/osx
+        with:
+          python_version: 3.8
+          wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*x86_64.whl
+      - uses: ./robotraconteur/test/dist/python/action/osx
+        with:
+          python_version: 3.9
+          wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*x86_64.whl
+      - uses: ./robotraconteur/test/dist/python/action/osx
+        with:
+          python_version: "3.10"
+          wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*x86_64.whl
+      - uses: ./robotraconteur/test/dist/python/action/osx
+        with:
+          python_version: "3.11"
+          wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
+          
+        
