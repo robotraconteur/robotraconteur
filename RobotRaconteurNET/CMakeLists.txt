@@ -84,6 +84,7 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
         add_custom_target(
             RobotRaconteurNET ALL
             msbuild $<$<CONFIG:debug>:/p:Configuration=Debug>$<$<CONFIG:release>:/p:Configuration=Release> /t:rebuild
+            /p:Platform="Any CPU"
             /nowarn:CS1591 RobotRaconteurNET.csproj WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
     else()
         find_program(XBUILD_EXECUTABLE NAMES xbuild msbuild)
@@ -91,6 +92,7 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
             RobotRaconteurNET ALL
             "${XBUILD_EXECUTABLE}"
             $<$<CONFIG:debug>:/p:Configuration=Debug>$<$<CONFIG:release>:/p:Configuration=Release>
+            /p:Platform="Any CPU"
             RobotRaconteurNET.csproj
             WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
     endif()
@@ -162,6 +164,7 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
             RobotRaconteurNET_standard ALL
             msbuild /restore /verbosity:quiet
             $<$<CONFIG:debug>:/p:Configuration=Debug>$<$<CONFIG:release>:/p:Configuration=Release> /t:rebuild
+            /p:Platform="Any CPU"
             RobotRaconteurNET.csproj
             WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/netstandard/Lib")
         add_custom_command(
