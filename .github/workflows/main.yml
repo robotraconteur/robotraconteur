@@ -1126,6 +1126,8 @@ jobs:
             wheel_arch: win32
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: robotraconteur
       - name: Download distfiles
         uses: actions/download-artifact@v2
         with:
