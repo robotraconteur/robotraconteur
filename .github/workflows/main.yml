@@ -1113,6 +1113,8 @@ jobs:
           ./disttest_cpp
       
   destfiles-test-win:
+    needs:
+      - build-dist
     runs-on: windows-latest
     strategy:
       fail-fast: false
