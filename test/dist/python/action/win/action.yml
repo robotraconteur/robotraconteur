@@ -20,6 +20,7 @@ runs:
       python-version: '${{ inputs.python_version }}'
       architecture: ${{ inputs.arch }}
   - name: Find Wheel File
+    working-directory: artifacts/distfiles
     shell: powershell
     run: |
       $pattern = "${{ inputs.wheel_filename }}"
