@@ -25,7 +25,7 @@ jobs:
       #     path: artifacts/distfiles
       #     name: distfiles
       - name: Download distfiles
-        uses: davidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
           path: artifacts/distfiles
           name: distfiles
