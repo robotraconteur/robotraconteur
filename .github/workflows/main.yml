@@ -395,7 +395,7 @@ jobs:
 
   build-osx:
 
-    runs-on: macos-11
+    runs-on: macos-12
     env:
       LIBRARY_PATH: /usr/local/opt/icu4c/lib
     steps:
@@ -445,6 +445,7 @@ jobs:
         -DOPENSSL_USE_STATIC_LIBS=ON -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
@@ -656,7 +657,7 @@ jobs:
         ctest . -C Release --output-on-failure
 
   build-conda-osx:
-    runs-on: macos-11
+    runs-on: macos-12
     defaults:
       run:
         shell: bash -l {0}
@@ -810,7 +811,7 @@ jobs:
         path: build2/*
         retention-days: 2
   build-ios:
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v3
       with:
