@@ -31,7 +31,7 @@ jobs:
           name: distfiles
           run_id: 6938290245
       - name: tree
-        run: tree
+        run: tree /F artifacts
         shell: cmd
       - uses: ./robotraconteur/test/dist/python/action/win
         with:
