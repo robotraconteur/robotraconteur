@@ -30,12 +30,12 @@ runs:
       dotnet nuget add source ${{ github.workspace }}\nuget_packages
       nuget add -source ${{ github.workspace }}/nuget_packages ${{ env.NUPKG_FILENAME }}
       nuget sources Disable -Name "nuget.org"
-      tree ${{ github.workspace }}/nuget_packages
+      tree /F ${{ github.workspace }}/nuget_packages
     shell: cmd
   - name: test
     working-directory: ${{ github.workspace }}/robotraconteur/test/dist/net/src
     run: |
-      dotnet add package RobotRaconteur --prerelease
+      dotnet add package RobotRaconteurNET --prerelease
       dotnet build
       dotnet run -a ${{ inputs.arch }}
     shell: cmd
