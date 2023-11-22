@@ -122,6 +122,7 @@ if(BUILD_PYTHON3_WHEEL)
         "${PYTHON3_EXECUTABLE}"
         setup.py
         bdist_wheel
+        ${PYTHON3_WHEEL_EXTRA_ARGS}
         DEPENDS ${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME})
     if(WIN32)
         set_target_properties(RobotRaconteurPython3_Wheel PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD_DEBUG TRUE)

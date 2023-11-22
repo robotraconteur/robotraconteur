@@ -5,6 +5,8 @@ on:
     branches-ignore:
       - ros-**
       - ros2-**
+    tags:
+      - v*
   pull_request:
     branches-ignore:
       - ros-**
@@ -181,6 +183,12 @@ jobs:
       with:
         python_version: "3.11"
         arch: x64
+    - name: python 3.12
+      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: "3.12"
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -326,6 +334,12 @@ jobs:
         python_version: "3.11"
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.12
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: "3.12"
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: move out
       run: |
         copy build2/rrversion.txt build2/out/
@@ -395,7 +409,7 @@ jobs:
 
   build-osx:
 
-    runs-on: macos-11
+    runs-on: macos-12
     env:
       LIBRARY_PATH: /usr/local/opt/icu4c/lib
     steps:
@@ -407,15 +421,6 @@ jobs:
     - name: brew
       run: |
         brew install swig boost openssl googletest
-    - name: install pip
-      run: |
-        sudo /usr/bin/easy_install pip==19.3.1
-        sudo /usr/bin/python -m pip install --upgrade pip
-    - name: pip
-      run: |
-        /usr/bin/python -m pip install setuptools wheel pytest
-    - name: env python2
-      run: echo "PYTHON2_EXE=/usr/bin/python" >> $GITHUB_ENV
     - uses: actions/setup-python@v4
       id: python3
       with:
@@ -438,13 +443,14 @@ jobs:
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: configure
       run: >
-        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF 
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release 
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON 
-        -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
-        -DOPENSSL_USE_STATIC_LIBS=ON -DPYTHON_EXECUTABLE="${{ env.PYTHON2_EXE }}"
+        -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
+        -DOPENSSL_USE_STATIC_LIBS=ON
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
@@ -479,6 +485,11 @@ jobs:
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.11"
+        arch: x64
+    - name: python 3.12
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: "3.12"
         arch: x64
     - name: move out
       run: |
@@ -656,7 +667,7 @@ jobs:
         ctest . -C Release --output-on-failure
 
   build-conda-osx:
-    runs-on: macos-11
+    runs-on: macos-12
     defaults:
       run:
         shell: bash -l {0}
@@ -810,7 +821,7 @@ jobs:
         path: build2/*
         retention-days: 2
   build-ios:
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v3
       with:
