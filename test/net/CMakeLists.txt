@@ -64,7 +64,7 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
         find_program(MONO_EXECUTABLE mono)
         set(RR_NET_TEST_CMD "\"${CMAKE_COMMAND}\"")
         set(RR_NET_TEST_CMD_ARGS
-            "-E env LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/Native\ ${MONO_EXECUTABLE} ${CMAKE_BINARY_DIR}/test/@OUT_DIR_NAME@/NET/RobotRaconteurNETTest.exe"
+            "-E env LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/Native\ DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/NET/Native\ ${MONO_EXECUTABLE} ${CMAKE_BINARY_DIR}/test/@OUT_DIR_NAME@/NET/RobotRaconteurNETTest.exe"
         )
     endif()
     rrconfiguretest(test_prog_net "${RR_NET_TEST_CMD}" "test_prog" NOCTEST ARGS "${RR_NET_TEST_CMD_ARGS}")
