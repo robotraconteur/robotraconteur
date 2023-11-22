@@ -63,7 +63,7 @@ jobs:
           arch: ${{ matrix.config.arch }}
           wheel_filename: RobotRaconteur-*-cp311-cp311-${{ matrix.config.wheel_arch }}.whl
   distfiles-test-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -78,6 +78,12 @@ jobs:
         with:
           path: artifacts/distfiles
           name: distfiles
+          run_id: 6952928340
+      - name: Download distfiles out-ubuntu
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          path: artifacts/out-ubuntu
+          name: out-ubuntu-22.04
           run_id: 6952928340
       - uses: ./robotraconteur/test/dist/python/action/linux
         with:
@@ -118,6 +124,12 @@ jobs:
         with:
           path: artifacts/distfiles
           name: distfiles
+          run_id: 6952928340
+      - name: Download distfiles out-osx
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          path: artifacts/out-osx
+          name: out-osx
           run_id: 6952928340
       - uses: ./robotraconteur/test/dist/python/action/osx
         with:

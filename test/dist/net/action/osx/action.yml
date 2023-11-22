@@ -1,5 +1,5 @@
-name: rr_net_dist_test_win
-description: rr_net_dist_test_win
+name: rr_net_dist_test_osx
+description: rr_net_dist_test_osx
 
 runs:
   using: "composite"
@@ -29,6 +29,8 @@ runs:
   - name: test
     working-directory: ${{ github.workspace }}/robotraconteur/test/dist/net/src
     run: |
+      export PATH=$PATH:${{ github.workspace }}/artifacts/out-osx/bin
+      export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${{ github.workspace }}/artifacts/out-osx/NET/Native
       dotnet restore
       nuget sources Disable -Name "nuget.org"
       dotnet add package RobotRaconteurNET --prerelease
