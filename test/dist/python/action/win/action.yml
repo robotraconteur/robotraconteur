@@ -37,6 +37,7 @@ runs:
       python -m pip install ${{ env.WHEEL_FILENAME }}
     shell: cmd
   - name: test
+    working-directory: ${{ github.workspace }}/robotraconteur/test/dist/python
     run: |
-      python -c "import RobotRaconteur as RR; print(RR.RobotRaconteurNode.s.RobotRaconteurVersion)"
+      python python_distfiles_test.py
     shell: cmd
