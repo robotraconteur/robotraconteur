@@ -27,9 +27,10 @@ runs:
   - name: add nuget packages
     run: |
       mkdir ${{ github.workspace }}\nuget_packages
-      dotnet nuget add source -n Local ${{ github.workspace }}\nuget_packages
+      dotnet nuget add source ${{ github.workspace }}\nuget_packages
       nuget add -source ${{ github.workspace }}/nuget_packages ${{ env.NUPKG_FILENAME }}
       nuget sources Disable -Name "nuget.org"
+      tree ${{ github.workspace }}/nuget_packages
     shell: cmd
   - name: test
     working-directory: ${{ github.workspace }}/robotraconteur/test/dist/net/src
