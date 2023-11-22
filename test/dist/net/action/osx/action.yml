@@ -12,7 +12,7 @@ runs:
     working-directory: artifacts/distfiles
     shell: bash
     run: |
-      pattern="*.nupkg"
+      pattern=*.nupkg
       file=$(find . -name "$pattern" | head -n 1)
       if [[ ! -f "$file" ]]; then
         echo "Nuget file not found"
