@@ -29,6 +29,7 @@ runs:
   - name: test
     working-directory: ${{ github.workspace }}/robotraconteur/test/dist/net/src
     run: |
+      chmod +x ${{ github.workspace }}/artifacts/out-osx/bin/RobotRaconteurGen
       export PATH=$PATH:${{ github.workspace }}/artifacts/out-osx/bin
       export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${{ github.workspace }}/artifacts/out-osx/NET/Native
       dotnet restore
