@@ -37,5 +37,5 @@ runs:
       dotnet add package RobotRaconteurNET --prerelease
       nuget sources Enable -Name "nuget.org"
       dotnet build
-      dotnet run -a ${{ inputs.arch }}
+      dotnet run
     shell: bash

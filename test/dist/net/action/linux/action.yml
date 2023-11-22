@@ -29,13 +29,13 @@ runs:
   - name: test
     working-directory: ${{ github.workspace }}/robotraconteur/test/dist/net/src
     run: |
-      chmod +x ${{ github.workspace }}/artifacts/out-linux/bin/RobotRaconteurGen
-      export PATH=$PATH:${{ github.workspace }}/artifacts/out-linux/bin
-      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ github.workspace }}/artifacts/out-linux/NET/Native
+      chmod +x ${{ github.workspace }}/artifacts/out-ubuntu/bin/RobotRaconteurGen
+      export PATH=$PATH:${{ github.workspace }}/artifacts/out-ubuntu/bin
+      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ github.workspace }}/artifacts/out-ubuntu/NET/Native
       dotnet restore
       nuget sources Disable -Name "nuget.org"
       dotnet add package RobotRaconteurNET --prerelease
       nuget sources Enable -Name "nuget.org"
       dotnet build
-      dotnet run -a ${{ inputs.arch }}
+      dotnet run
     shell: bash
