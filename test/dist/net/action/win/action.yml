@@ -28,7 +28,7 @@ runs:
     run: |
       mkdir ${{ github.workspace }}\nuget_packages
       dotnet nuget add source -n Local ${{ github.workspace }}\nuget_packages
-      nuget add -source ${{ github.workspace }}/nuget_packages ${{ github.workspace }}/artifacts/distfiles/${{ env.NUPKG_FILENAME }}
+      nuget add -source ${{ github.workspace }}/nuget_packages ${{ env.NUPKG_FILENAME }}
       nuget sources Disable -Name "nuget.org"
     shell: cmd
   - name: test
