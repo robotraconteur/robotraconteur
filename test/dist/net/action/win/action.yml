@@ -1,5 +1,9 @@
 name: rr_net_dist_test_win
 description: rr_net_dist_test_win
+inputs:
+  arch:
+    description: arch
+    required: true
 
 runs:
   using: "composite"
@@ -32,5 +36,5 @@ runs:
     run: |
       dotnet add package RobotRaconteur --prerelease
       dotnet build
-      dotnet run
+      dotnet run -a ${{ inputs.arch }}
     shell: cmd

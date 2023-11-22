@@ -5,15 +5,11 @@
       <TargetFramework>net6.0</TargetFramework>
       <ImplicitUsings>enable</ImplicitUsings>
       <Nullable>enable</Nullable>
+      <PlatformTarget>AnyCpu</PlatformTarget>
     </PropertyGroup>
   
     <ItemGroup>
       <RobotRaconteurGenCSharp Include="experimental.distfiles_test.robdef" />
     </ItemGroup>
-  
-    <ItemGroup>
-      <PackageReference Include="RobotRaconteurNET" Version="0.18.0--dev6950989410" />
-    </ItemGroup>
-  
   
   </Project>
