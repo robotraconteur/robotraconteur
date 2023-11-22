@@ -99,6 +99,9 @@ jobs:
         with:
           python_version: "3.11"
           wheel_filename: RobotRaconteur-*-cp311-cp311-manylinux*x86_64.whl
+      - name: .net test
+        uses: ./robotraconteur/test/dist/net/action/win
+
   distfiles-test-osx:
     runs-on: macos-latest
     steps:
@@ -136,3 +139,5 @@ jobs:
         with:
           python_version: "3.11"
           wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
+      - name: .net test
+        uses: ./robotraconteur/test/dist/net/action/win
