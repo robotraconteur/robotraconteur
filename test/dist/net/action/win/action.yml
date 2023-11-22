@@ -37,6 +37,7 @@ runs:
       dotnet restore
       nuget sources Disable -Name "nuget.org"
       dotnet add package RobotRaconteurNET --prerelease
+      nuget sources Enable -Name "nuget.org"
       dotnet build
       dotnet run -a ${{ inputs.arch }}
     shell: cmd
