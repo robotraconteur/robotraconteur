@@ -33,6 +33,8 @@ jobs:
       - name: tree
         run: tree /F artifacts
         shell: cmd
+      - name: .net test
+        uses: ./robotraconteur/test/dist/dotnet/action/win
       - uses: ./robotraconteur/test/dist/python/action/win
         with:
           python_version: 3.7

@@ -1,0 +1,36 @@
+name: rr_net_dist_test_win
+description: rr_net_dist_test_win
+
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/setup-dotnet@v3
+    id: dotnet
+    with:
+      dotnet-version: "6.0.x"
+  - name: Find nuget File
+    working-directory: artifacts/distfiles
+    shell: powershell
+    run: |
+      $pattern = "*.nupkg"
+      $file = Get-ChildItem $pattern | Select-Object -First 1
+      if ($null -eq $file) {
+        Write-Error "Nuget file not found"
+        exit 1
+      }
+      echo "NUPKG_FILENAME=$file" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+  - name: add nuget packages
+    run: |
+      mkdir ${{ github.workspace }}\nuget_packages
+      dotnet nuget add source -n Local ${{ github.workspace }}\nuget_packages
+      nuget add -source ${{ github.workspace }}/nuget_packages ${{ github.workspace }}/artifacts/distfiles/${{ env.NUPKG_FILENAME }}
+      nuget sources Disable -Name "nuget.org"
+    shell: cmd
+  - name: test
+    working-directory: ${{ github.workspace }}/robotraconteur/test/dist/net/src
+    run: |
+      dotnet add package RobotRaconteur --prerelease
+      dotnet build
+      dotnet run
+    shell: cmd
