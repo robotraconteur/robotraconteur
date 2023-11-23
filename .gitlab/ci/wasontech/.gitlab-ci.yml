@@ -516,7 +516,7 @@ build_raspbian_buster_armhf:
       -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
       -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
       -DROBOTRACONTEUR_EXTRA_TESTS=ON 
-      -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/3.12/bin/python
+      -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
       -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib 
       -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12 
       ..
