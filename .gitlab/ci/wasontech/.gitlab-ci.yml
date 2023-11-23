@@ -518,7 +518,8 @@ build_raspbian_buster_armhf:
       -DROBOTRACONTEUR_EXTRA_TESTS=ON 
       -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
       -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib 
-      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12 
+      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12
+      -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12-arm64"
       ..
     - ${RUNCMD} cmake --build . --config Release
     - ${RUNCMD} ctest . -C Release --output-on-failure
