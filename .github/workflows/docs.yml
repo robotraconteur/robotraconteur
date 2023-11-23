@@ -48,7 +48,7 @@ jobs:
         mv build2/docs/net doc/doc/core/latest/net
         mv build2/docs/cpp/html doc/doc/core/latest/cpp
     - name: archive docs
-      uses: actions/upload-pages-artifact@v1
+      uses: actions/upload-pages-artifact@v2
       with:
         path: doc
   # Deploy job
