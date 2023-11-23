@@ -356,8 +356,8 @@ build_freebsd_amd64:
       -DCMAKE_FIND_ROOT_PATH="/usr/local;/Library;/System/Library;/Applications"
       -DROBOTRACONTEUR_EXTRA_TESTS=ON 
       -DPYTHON3_EXECUTABLE=/Users/wasonj/python3-intel64/venv/bin/python3-intel64 
-      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.10/lib/libpython3.10.dylib 
-      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.10/include/python3.10 
+      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib 
+      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12 
       ..
     - ${RUNCMD} cmake --build . --config Release
     - ${RUNCMD} ctest . -C Release --output-on-failure
