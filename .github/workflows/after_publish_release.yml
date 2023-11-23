@@ -40,7 +40,7 @@ jobs:
       run: nuget push files/*.nupkg -Source https://api.nuget.org/v3/index.json
     - name: update vcpkg
       if: always()
-      uses: benc-uk/workflow-dispatch@v1
+      uses: benc-uk/workflow-dispatch@v121
       with:
         workflow: Update vcpkg port
         repo: ${{ github.repository_owner }}/vcpkg-robotraconteur
@@ -49,7 +49,7 @@ jobs:
         inputs: '{ "port": "robotraconteur", "source_repository": "${{ github.repository }}", "tag_name": "${{ github.event.release.tag_name || github.event.inputs.tag_name }}" }'
     - name: update homebrew
       if: always()
-      uses: benc-uk/workflow-dispatch@v1
+      uses: benc-uk/workflow-dispatch@v121
       with:
         workflow: Update homebrew formula
         repo: ${{ github.repository_owner }}/homebrew-robotraconteur
