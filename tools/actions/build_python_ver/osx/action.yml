@@ -47,6 +47,10 @@ runs:
     run: |
       ctest . -C Release --output-on-failure
     shell: bash
+  - name: delocate pip
+    run: |
+      python -m pip install delocate
+      delocate-wheel -v build2_python_${{ inputs.python_version }}/out/Python3/dist/*.whl
   - name: copy wheels
     shell: bash
     run: |
