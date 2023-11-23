@@ -1,0 +1,43 @@
+name: rr_python_dist_test_win
+description: rr_python_dist_test_win
+inputs:
+  python_version:
+    description: python_version
+    required: true
+  arch:
+    description: arch
+    required: true
+  wheel_filename:
+    description: wheel_filename
+    required: true  
+
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/setup-python@v4
+    id: python3
+    with:
+      python-version: '${{ inputs.python_version }}'
+      architecture: ${{ inputs.arch }}
+  - name: Find Wheel File
+    working-directory: artifacts/distfiles
+    shell: powershell
+    run: |
+      $pattern = "${{ inputs.wheel_filename }}"
+      $file = Get-ChildItem $pattern | Select-Object -First 1
+      if ($null -eq $file) {
+        Write-Error "Wheel file not found"
+        exit 1
+      }
+      echo "WHEEL_FILENAME=$file" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+  - name: pip3
+    working-directory: artifacts/distfiles
+    run: |
+      python -m pip install ${{ env.WHEEL_FILENAME }}
+    shell: cmd
+  - name: test
+    working-directory: ${{ github.workspace }}/robotraconteur/test/dist/python
+    run: |
+      python python_distfiles_test.py
+    shell: cmd
