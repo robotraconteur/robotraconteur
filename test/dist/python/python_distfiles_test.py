@@ -10,12 +10,14 @@ object DistfilesTest
 end
 """
 
+
 class DistfilesTest_impl(object):
     def __init__(self):
         self.c = 0
 
     def add(self, a, b):
-        return  a + b + self.c
+        return a + b + self.c
+
 
 def main():
     node = RR.RobotRaconteurNode()
@@ -35,13 +37,15 @@ def main():
         listen_port = server_tcp_transport.GetListenPort()
 
         obj = DistfilesTest_impl()
-        node.RegisterService("DistfilesTest", "experimental.distfiles_test.DistfilesTest", obj)
+        node.RegisterService(
+            "DistfilesTest", "experimental.distfiles_test.DistfilesTest", obj)
         time.sleep(0.5)
 
-        c = client_node.ConnectService(f"rr+tcp://localhost:{listen_port}?service=DistfilesTest")
+        c = client_node.ConnectService(
+            f"rr+tcp://localhost:{listen_port}?service=DistfilesTest")
 
         c.c = 5
-        assert(c.add(1,2) == 8)
+        assert (c.add(1, 2) == 8)
 
         print("Test complete")
 
@@ -49,6 +53,6 @@ def main():
         node.Shutdown()
         client_node.Shutdown()
 
-    
+
 if __name__ == '__main__':
     main()
