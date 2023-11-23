@@ -572,3 +572,85 @@ build_osx_arm64_release:
     - m1
   variables:
     OUTNAME: "out-osx_arm64"
+
+.osx_arm64_build_python_ver:
+  script:
+    - cd ${CI_PROJECT_DIR}
+    - mkdir build_$PYVER
+    - cd build_$PYVER
+    - >
+      ${RUNCMD} cmake -G Ninja
+      -DBUILD_CORE=OFF -DBUILD_GEN=OFF -DBUILD_TESTING=ON
+      -DCMAKE_OSX_ARCHITECTURES=arm64
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
+      -DOPENSSL_USE_STATIC_LIBS=ON    
+      ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
+      -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
+      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0 
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
+      -DBoost_NO_BOOST_CMAKE=ON 
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
+      -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/$PYVER/bin/python3
+      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/$PYVER/lib/libpython$PYVER.dylib 
+      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/$PYVER/include/python$PYVER
+      -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64"
+      -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+      -DRobotRaconteur_DIR=${CI_PROJECT_DIR}/build
+      ..
+    - ${RUNCMD} cmake --build . --config Release
+    - cp out/Python3/dist/*.whl ${CI_PROJECT_DIR}/${OUTNAME}/
+    - ${RUNCMD} ctest . -C Release --output-on-failure
+
+.osx_arm64_build_python:
+  script:
+    - export LIBRARY_PATH=/usr/local/opt/icu4c/lib
+    - mkdir build
+    - cd build
+    - >
+      ${RUNCMD} cmake -G Ninja
+      -DCMAKE_OSX_ARCHITECTURES=arm64
+      -DBUILD_GEN=OFF -DBUILD_TESTING=OFF
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
+      -DOPENSSL_USE_STATIC_LIBS=ON    
+      ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
+      -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
+      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0 
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
+      -DBoost_NO_BOOST_CMAKE=ON 
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
+      ..
+    - ${RUNCMD} cmake --build . --config Release
+    - cd ${CI_PROJECT_DIR}
+    - export PYVER=3.10
+    - mkdir osx-arm64-python-wheels
+    - !reference [.osx_arm64_build_python_ver, script]
+    - export PYVER=3.11
+    - !reference [.osx_arm64_build_python_ver, script]
+    - export PYVER=3.12
+    - !reference [.osx_arm64_build_python_ver, script]
+  
+  artifacts:
+    when: always
+    name: "${OUTNAME}"
+    paths:
+      - ${OUTNAME}/*.whl
+
+build_osx_arm64_python_release:
+  stage: build
+  extends: 
+    - .release_build
+    - .osx_arm64_build_python
+  tags:
+    - wasontech
+    - macos
+    - m1
+  variables:
+    OUTNAME: "osx-arm64-python-wheels"
