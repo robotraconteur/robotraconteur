@@ -1,0 +1,6 @@
+service experimental.distfiles_test
+
+object DistfilesTest
+    property double c
+    function double add(double a, int32 b)
+end
