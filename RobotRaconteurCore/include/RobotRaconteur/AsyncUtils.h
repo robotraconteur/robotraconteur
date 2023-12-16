@@ -203,10 +203,9 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
             }
             handled = true;
 
-           
             if (timeout_timer_)
                 timeout_timer_->TryStop();
-            
+
             timeout_timer_.reset();
         }
 
@@ -223,10 +222,9 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
 
             {
 
-                
                 if (timeout_timer_)
                     timeout_timer_->TryStop();
-                
+
                 timeout_timer_.reset();
             }
         }

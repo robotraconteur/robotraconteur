@@ -892,8 +892,8 @@ void ClientContext::connection_test(const TimerEvent& ev)
 
             if (connection_test_timer)
             {
-                
-                connection_test_timer->TryStop();                
+
+                connection_test_timer->TryStop();
                 connection_test_timer.reset();
             }
         }
@@ -1160,10 +1160,10 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
                     return;
                 t = e1->second;
                 t->ret = m;
-                
+
                 if (t->timer)
                     t->timer->TryStop();
-                
+
                 t->evt->Set();
             }
             catch (std::exception&)
@@ -1196,8 +1196,8 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
 
                                     if (!async_running)
                                     {
-                                        
-                                        connection_test_timer->TryStop();                                        
+
+                                        connection_test_timer->TryStop();
                                         connection_test_timer.reset();
                                     }
                                 }
@@ -2290,8 +2290,8 @@ void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
 
             if (connection_test_timer)
             {
-                
-                connection_test_timer->TryStop();                
+
+                connection_test_timer->TryStop();
                 connection_test_timer.reset();
             }
         }

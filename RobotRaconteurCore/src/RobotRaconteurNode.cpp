@@ -488,9 +488,9 @@ void RobotRaconteurNode::Shutdown()
         boost::unique_lock<boost::shared_mutex> lock(PeriodicCleanupTask_timer_lock);
         if (this->PeriodicCleanupTask_timer)
         {
-            
+
             this->PeriodicCleanupTask_timer->TryStop();
-           
+
             this->PeriodicCleanupTask_timer->Clear();
             this->PeriodicCleanupTask_timer.reset();
         }

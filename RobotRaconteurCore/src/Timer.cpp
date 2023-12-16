@@ -151,7 +151,7 @@ void WallTimer::Stop()
 
     boost::system::error_code ec;
     timer->cancel(ec);
-    
+
     timer.reset();
     running = false;
 
@@ -167,7 +167,7 @@ void WallTimer::TryStop()
 
     boost::system::error_code ec;
     timer->cancel(ec);
-    
+
     timer.reset();
     running = false;
 

@@ -81,10 +81,10 @@ void Discovery_updatediscoverednodes::timeout_timer_callback(const TimerEvent& e
 
         {
             boost::mutex::scoped_lock lock(timeout_timer_lock);
-           
+
             if (timeout_timer)
                 timeout_timer->TryStop();
-            
+
             timeout_timer.reset();
         }
 
@@ -135,10 +135,10 @@ void Discovery_updatediscoverednodes::getdetectednodes_callback(
 
         {
             boost::mutex::scoped_lock lock(timeout_timer_lock);
-            
+
             if (timeout_timer)
                 timeout_timer->TryStop();
-            
+
             timeout_timer.reset();
         }
 
@@ -255,10 +255,10 @@ void Discovery_findservicebytype::handle_error(const int32_t& key, const RR_SHAR
 
     {
         boost::mutex::scoped_lock lock(timeout_timer_lock);
-       
+
         if (timeout_timer)
             timeout_timer->TryStop();
-       
+
         timeout_timer.reset();
     }
 
@@ -284,10 +284,10 @@ void Discovery_findservicebytype::timeout_timer_callback(const TimerEvent& e)
 
         {
             boost::mutex::scoped_lock lock(timeout_timer_lock);
-            
+
             if (timeout_timer)
                 timeout_timer->TryStop();
-            
+
             timeout_timer.reset();
         }
 
@@ -461,10 +461,10 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
                 {
                     {
                         boost::mutex::scoped_lock lock(timeout_timer_lock);
-                       
+
                         if (timeout_timer)
                             timeout_timer->TryStop();
-                        
+
                         timeout_timer.reset();
                     }
 
