@@ -203,13 +203,10 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
             }
             handled = true;
 
-            try
-            {
-                if (timeout_timer_)
-                    timeout_timer_->Stop();
-            }
-            catch (std::exception&)
-            {}
+           
+            if (timeout_timer_)
+                timeout_timer_->TryStop();
+            
             timeout_timer_.reset();
         }
 
@@ -226,13 +223,10 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
 
             {
 
-                try
-                {
-                    if (timeout_timer_)
-                        timeout_timer_->Stop();
-                }
-                catch (std::exception&)
-                {}
+                
+                if (timeout_timer_)
+                    timeout_timer_->TryStop();
+                
                 timeout_timer_.reset();
             }
         }

@@ -1248,13 +1248,10 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
                 }
                 t = e1->second;
                 t->ret = m;
-                try
-                {
-                    if (t->timer)
-                        t->timer->Stop();
-                }
-                catch (std::exception&)
-                {}
+                
+                if (t->timer)
+                    t->timer->TryStop();
+                
                 t->evt->Set();
                 noreturn = true;
             }

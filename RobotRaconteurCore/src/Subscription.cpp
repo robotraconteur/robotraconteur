@@ -2316,12 +2316,9 @@ void WireSubscription_connection::Close()
     retry_timer.reset();
     if (retry_timer1)
     {
-        try
-        {
-            retry_timer1->Stop();
-        }
-        catch (std::exception&)
-        {}
+        
+        retry_timer1->TryStop();
+       
     }
 }
 
@@ -2950,13 +2947,8 @@ void PipeSubscription_connection::Close()
     RR_SHARED_PTR<Timer> retry_timer1 = retry_timer;
     retry_timer.reset();
     if (retry_timer1)
-    {
-        try
-        {
-            retry_timer1->Stop();
-        }
-        catch (std::exception&)
-        {}
+    {      
+        retry_timer1->TryStop();       
     }
 }
 

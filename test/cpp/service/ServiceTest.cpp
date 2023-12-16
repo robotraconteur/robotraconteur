@@ -3105,13 +3105,10 @@ void RobotRaconteurTest_testroot::Shutdown()
 {
     {
         boost::mutex::scoped_lock lock(broadcastpipe_lock);
-        try
-        {
-            if (broadcastpipe_timer)
-                broadcastpipe_timer->Stop();
-        }
-        catch (std::exception&)
-        {}
+       
+        if (broadcastpipe_timer)
+            broadcastpipe_timer->TryStop();
+       
         broadcastpipe_timer.reset();
     }
 }
