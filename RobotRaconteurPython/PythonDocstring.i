@@ -1128,6 +1128,10 @@ Must be called after RobotRaconteurNode.CreateTimer()
 Stop the timer
 """
 
+%feature("docstring") RobotRaconteur::Timer::TryStop() """
+Stop the timer without throwing an exception if the timer is not running
+"""
+
 %feature("docstring") RobotRaconteur::Timer::GetPeriod() """
 Get the period of the timer in seconds
 
