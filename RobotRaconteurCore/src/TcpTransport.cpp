@@ -3635,6 +3635,7 @@ TcpTransportConnection::TcpTransportConnection(const RR_SHARED_PTR<TcpTransport>
     this->max_message_size = parent->GetMaxMessageSize();
     this->tls_mutual_auth = false;
     this->tls_handshaking = false;
+    this->tls_handshake_complete = false;
     this->use_websocket = false;
     this->use_wss_websocket = false;
 }
@@ -4049,6 +4050,7 @@ void TcpTransportConnection::do_starttls1(
                         RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), "", ec1));
         streamop_waiting = true;
         tls_handshaking = true;
+        tls_handshake_complete = false;
         lock.unlock();
         {
             boost::mutex::scoped_lock lock2(send_lock);
@@ -4151,12 +4153,18 @@ void TcpTransportConnection::do_starttls4(const std::string& servername, const b
 
     boost::system::error_code ec2 = error;
 
+    if (tls_handshake_complete)
+    {
+        return;
+    }
+
     if (!tls_handshaking)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint, "Client received unexpected STARTTLS");
         return;
     }
     tls_handshaking = false;
+    tls_handshake_complete = true;
 
     if (ec2)
     {
