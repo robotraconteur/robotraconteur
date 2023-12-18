@@ -162,6 +162,7 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 
     bool tls_mutual_auth;
     bool tls_handshaking;
+    bool tls_handshake_complete;
 
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
     RR_SHARED_PTR<RobotRaconteur::detail::TlsSchannelAsyncStreamAdapter> tls_socket;
