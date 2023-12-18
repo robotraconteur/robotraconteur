@@ -6101,7 +6101,18 @@ void IPNodeDiscovery::StopListeningForNodes()
         }
     }
     if (receive_update_timer)
-        receive_update_timer->cancel();
+    {
+        boost::system::error_code cancel_ec;
+        receive_update_timer->cancel(cancel_ec);
+        receive_update_timer.reset();
+    }
+
+    if (discovery_request_timer)
+    {
+        boost::system::error_code cancel_ec;
+        discovery_request_timer->cancel(cancel_ec);
+        discovery_request_timer.reset();
+    }
 }
 
 void IPNodeDiscovery::StartAnnouncingNode(uint32_t flags)
