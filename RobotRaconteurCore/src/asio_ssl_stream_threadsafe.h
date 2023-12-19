@@ -24,7 +24,7 @@ class asio_ssl_stream_threadsafe
     RR_BOOST_ASIO_STRAND2(executor_type) strand_;
 
     template <typename Handler, typename Executor>
-    class handler_wrapper
+    class handler_wrapper // NOLINT(bugprone-exception-escape)
     {
       public:
         typedef typename std::remove_const<typename boost::remove_reference<Handler>::type>::type HandlerValueType;
