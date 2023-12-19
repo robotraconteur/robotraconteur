@@ -145,9 +145,9 @@
 #endif
 
 #if BOOST_ASIO_VERSION < 101400
-#define RR_BOOST_ASIO_MAKE_STRAND(x) boost::asio::strand(x)
+#define RR_BOOST_ASIO_MAKE_STRAND(exec_type,x) boost::asio::strand(x)
 #else
-#define RR_BOOST_ASIO_MAKE_STRAND(x) boost::asio::make_strand(x)
+#define RR_BOOST_ASIO_MAKE_STRAND(exec_type,x) boost::asio::make_strand<exec_type>(x)
 #endif
 
 #if BOOST_VERSION <= 105900
