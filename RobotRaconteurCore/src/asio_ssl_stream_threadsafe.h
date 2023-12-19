@@ -56,7 +56,7 @@ class asio_ssl_stream_threadsafe
   public:
     asio_ssl_stream_threadsafe(Stream& stream, boost::asio::ssl::context& context)
         : ssl_stream_(stream, context), context_(context),
-          strand_(RR_BOOST_ASIO_MAKE_STRAND(executor_type,RR_BOOST_ASIO_GET_IO_SERVICE(stream)))
+          strand_(RR_BOOST_ASIO_MAKE_STRAND(executor_type, RR_BOOST_ASIO_GET_IO_SERVICE(stream)))
     {}
 
     // async_read_some using strand for callback
