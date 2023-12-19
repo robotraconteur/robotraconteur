@@ -30,7 +30,7 @@ namespace detail
         public:
             typedef typename boost::remove_reference<Handler>::type HandlerValueType;
 
-            handler_wrapper(const Handler& handler, const Executor& executor) : handler_(handler),
+            handler_wrapper(const Handler& handler, RR_BOOST_ASIO_NEW_API_CONST Executor& executor) : handler_(handler),
                 executor_(executor) {}
 
             void operator()(const boost::system::error_code& ec, const std::size_t& bytes_transferred)
