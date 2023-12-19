@@ -128,7 +128,6 @@
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) (strand).wrap(f)
 #define RR_BOOST_ASIO_NEW_STRAND(context) (new boost::asio::strand(context))
 #define RR_BOOST_ASIO_GET_IO_SERVICE(s) (s).get_io_service()
-#define RR_BOOST_ASIO_MAKE_STRAND(x) boost::asio::strand(x)
 #define RR_BOOST_ASIO_REF_IO_SERVICE(x) boost::ref(x)
 #define RR_BOOST_ASIO_NEW_API_CONST
 #else
@@ -140,10 +139,15 @@
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) boost::asio::bind_executor(strand, f)
 #define RR_BOOST_ASIO_NEW_STRAND(context)                                                                              \
     (new boost::asio::strand<boost::asio::io_context::executor_type>((context).get_executor()))
-#define RR_BOOST_ASIO_MAKE_STRAND(x) boost::asio::make_strand(x)
 #define RR_BOOST_ASIO_GET_IO_SERVICE(s) (s).get_executor()
 #define RR_BOOST_ASIO_REF_IO_SERVICE(x) (x)
 #define RR_BOOST_ASIO_NEW_API_CONST const
+#endif
+
+#if BOOST_ASIO_VERSION < 101400
+#define RR_BOOST_ASIO_MAKE_STRAND(x) boost::asio::strand(x)
+#else
+#define RR_BOOST_ASIO_MAKE_STRAND(x) boost::asio::make_strand(x)
 #endif
 
 #if BOOST_VERSION <= 105900
