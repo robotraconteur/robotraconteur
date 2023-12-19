@@ -176,3 +176,11 @@
 #define RR_OVIRTUAL virtual
 #endif
 #define RR_NULL_FN 0
+
+#if BOOST_VERSION >= 108400
+#include <utility>
+#define RR_SWAP std::swap
+#else
+#include <boost/core/swap.hpp>
+#define RR_SWAP boost::swap
+#endif

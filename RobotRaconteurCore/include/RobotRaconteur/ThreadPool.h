@@ -358,7 +358,7 @@ class IOContextThreadPool_AsyncResultAdapter
 
         result_type res;
         RR_SHARED_PTR<RobotRaconteurException> exp;
-        boost::swap(res, _data->_result.data());
+        RR_SWAP(res, _data->_result.data());
         exp = _data->_exp;
         _data->_exp.reset();
         if (exp)
@@ -390,8 +390,8 @@ class IOContextThreadPool_AsyncResultAdapter
             return false;
         }
 
-        boost::swap(ret, _data->_result.data());
-        boost::swap(exp, _data->_exp);
+        RR_SWAP(ret, _data->_result.data());
+        RR_SWAP(exp, _data->_exp);
         return true;
     }
 };
