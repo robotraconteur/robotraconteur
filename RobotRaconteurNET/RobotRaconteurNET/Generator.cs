@@ -277,7 +277,7 @@ public interface Generator3<ParamType>
     /// </remarks>
     /// <param name="param">Parameter to pass to generator</param>
     void Next(ParamType param);
-    
+
     /// <summary>
     /// Try to advance the generator. Returns false if there are no more values.
     /// </summary>
