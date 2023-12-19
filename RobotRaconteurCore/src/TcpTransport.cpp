@@ -1479,7 +1479,8 @@ void TcpWSSWebSocketConnector::Connect4(
     const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<ITransportConnection>& connection,
     const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
     const RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >& tls_stream,
-    const RR_SHARED_PTR<websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >& websocket,
+    const RR_SHARED_PTR<websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >&
+        websocket,
     const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
                                const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
@@ -1516,7 +1517,8 @@ void TcpWSSWebSocketConnector::Connect3(
     const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
     const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
     const RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >& tls_stream,
-    const RR_SHARED_PTR<websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >& websocket,
+    const RR_SHARED_PTR<websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >&
+        websocket,
     const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
                                const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
@@ -1718,12 +1720,12 @@ void TcpWSSWebSocketConnector::Connect2(
 
         RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> > tls_stream =
             RR_MAKE_SHARED<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >(boost::ref(*socket),
-                                                                                     boost::ref(*context));
+                                                                                               boost::ref(*context));
 
-        RobotRaconteurNode::asio_async_handshake(
-            node, tls_stream, boost::asio::ssl::stream_base::client,
-            boost::bind(&TcpWSSWebSocketConnector::Connect2_1, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), socket,
-                        socket_closer, tls_stream, boost::protect(handler)));
+        RobotRaconteurNode::asio_async_handshake(node, tls_stream, boost::asio::ssl::stream_base::client,
+                                                 boost::bind(&TcpWSSWebSocketConnector::Connect2_1, shared_from_this(),
+                                                             RR_BOOST_PLACEHOLDERS(_1), socket, socket_closer,
+                                                             tls_stream, boost::protect(handler)));
     }
     catch (std::exception& exp)
     {
@@ -4261,12 +4263,11 @@ void TcpTransportConnection::do_starttls4(const std::string& servername, const b
         else if (use_websocket)
         {
             tls_context = RR_STATIC_POINTER_CAST<detail::OpenSSLAuthContext>(p->GetTlsContext());
-            tls_websocket =
-                RR_MAKE_SHARED<detail::asio_ssl_stream_threadsafe<detail::websocket_stream<boost::asio::ip::tcp::socket&>&> >(
-                    boost::ref(*websocket), boost::ref(*(tls_context->GetClientCredentials())));
+            tls_websocket = RR_MAKE_SHARED<
+                detail::asio_ssl_stream_threadsafe<detail::websocket_stream<boost::asio::ip::tcp::socket&>&> >(
+                boost::ref(*websocket), boost::ref(*(tls_context->GetClientCredentials())));
             RobotRaconteurNode::asio_async_handshake(
-                node, tls_websocket,
-                boost::asio::ssl::stream_base::client,
+                node, tls_websocket, boost::asio::ssl::stream_base::client,
                 boost::bind(&TcpTransportConnection::do_starttls5,
                             RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()),
                             RR_BOOST_PLACEHOLDERS(_1)));
@@ -4279,8 +4280,7 @@ void TcpTransportConnection::do_starttls4(const std::string& servername, const b
                 detail::websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&>&> >(
                 boost::ref(*wss_websocket), boost::ref(*(tls_context->GetClientCredentials())));
             RobotRaconteurNode::asio_async_handshake(
-                node, tls_wss_websocket,
-                boost::asio::ssl::stream_base::client,
+                node, tls_wss_websocket, boost::asio::ssl::stream_base::client,
                 boost::bind(&TcpTransportConnection::do_starttls5,
                             RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()),
                             RR_BOOST_PLACEHOLDERS(_1)));
@@ -4678,9 +4678,9 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
         else if (use_websocket)
         {
             tls_context = RR_STATIC_POINTER_CAST<detail::OpenSSLAuthContext>(p->GetTlsContext());
-            tls_websocket =
-                RR_MAKE_SHARED<detail::asio_ssl_stream_threadsafe<detail::websocket_stream<boost::asio::ip::tcp::socket&>&> >(
-                    boost::ref(*websocket), boost::ref(*(tls_context->GetServerCredentials())));
+            tls_websocket = RR_MAKE_SHARED<
+                detail::asio_ssl_stream_threadsafe<detail::websocket_stream<boost::asio::ip::tcp::socket&>&> >(
+                boost::ref(*websocket), boost::ref(*(tls_context->GetServerCredentials())));
 
             if (tls_mutual_auth)
             {
@@ -4706,8 +4706,7 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
             }
             RobotRaconteurNode::asio_async_handshake(
-                node, tls_wss_websocket,
-                boost::asio::ssl::stream_base::server,
+                node, tls_wss_websocket, boost::asio::ssl::stream_base::server,
                 boost::bind(&TcpTransportConnection::do_starttls9,
                             RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()),
                             RR_BOOST_PLACEHOLDERS(_1)));

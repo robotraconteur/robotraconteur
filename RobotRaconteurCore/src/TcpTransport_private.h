@@ -65,7 +65,8 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     void AsyncAttachWSSWebSocket(
         const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
         const RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >& wss_websocket_tls,
-        const RR_SHARED_PTR<detail::websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >&
+        const RR_SHARED_PTR<
+            detail::websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >&
             wss_websocket,
         const RR_SHARED_PTR<boost::asio::ssl::context>& wss_context,
         const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
@@ -178,11 +179,13 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
 #ifdef ROBOTRACONTEUR_USE_OPENSSL
     RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> > tls_socket;
     RR_SHARED_PTR<detail::OpenSSLAuthContext> tls_context;
-    RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<detail::websocket_stream<boost::asio::ip::tcp::socket&>&> > tls_websocket;
-    RR_SHARED_PTR<detail::websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> > wss_websocket;
+    RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<detail::websocket_stream<boost::asio::ip::tcp::socket&>&> >
+        tls_websocket;
+    RR_SHARED_PTR<detail::websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >
+        wss_websocket;
     RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> > wss_websocket_tls;
-    RR_SHARED_PTR<
-        detail::asio_ssl_stream_threadsafe<detail::websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&>&> >
+    RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<
+        detail::websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&>&> >
         tls_wss_websocket;
     RR_SHARED_PTR<boost::asio::ssl::context> wss_context;
 #endif
@@ -440,7 +443,8 @@ class TcpWSSWebSocketConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpWSSWebSock
         const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<ITransportConnection>& connection,
         const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
         const RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >& tls_stream,
-        const RR_SHARED_PTR<websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >& websocket,
+        const RR_SHARED_PTR<websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >&
+            websocket,
         const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
                                    const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 
@@ -448,7 +452,8 @@ class TcpWSSWebSocketConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpWSSWebSock
         const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
         const RR_SHARED_PTR<boost::signals2::scoped_connection>& socket_closer,
         const RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >& tls_stream,
-        const RR_SHARED_PTR<websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >& websocket,
+        const RR_SHARED_PTR<websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&> >&
+            websocket,
         const boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
                                    const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
 

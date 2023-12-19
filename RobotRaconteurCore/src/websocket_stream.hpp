@@ -66,14 +66,12 @@ class websocket_stream : private boost::noncopyable
         WebSocketOpcode_pong = 0xA
     };
 
-
     typedef typename boost::remove_reference<Stream>::type next_layer_type;
     typedef typename next_layer_type::lowest_layer_type lowest_layer_type;
 
     lowest_layer_type& lowest_layer() { return next_layer_.lowest_layer(); }
 
     const lowest_layer_type& lowest_layer() const { return next_layer_.lowest_layer(); }
-
 
   protected:
     boost::mutex random_lock;
@@ -1535,27 +1533,29 @@ class websocket_stream : private boost::noncopyable
       public:
         typedef typename boost::remove_reference<Handler>::type HandlerValueType;
 
-        handler_wrapper(const Handler& handler, RR_BOOST_ASIO_NEW_API_CONST Executor& executor) : handler_(handler),
-            executor_(executor) {}
+        handler_wrapper(const Handler& handler, RR_BOOST_ASIO_NEW_API_CONST Executor& executor)
+            : handler_(handler), executor_(executor)
+        {}
 
         void do_complete(const boost::system::error_code& ec, const std::size_t& bytes_transferred)
         {
-            boost::asio::detail::binder2<HandlerValueType, boost::system::error_code, std::size_t>
-              handler(handler_, ec, bytes_transferred);
+            boost::asio::detail::binder2<HandlerValueType, boost::system::error_code, std::size_t> handler(
+                handler_, ec, bytes_transferred);
 #if BOOST_ASIO_VERSION >= 101200
-            boost::asio::post(boost::asio::get_associated_executor(handler, executor_),handler);
+            boost::asio::post(boost::asio::get_associated_executor(handler, executor_), handler);
 #else
             executor_.post(handler);
 #endif
-            // boost::asio::asio_handler_invoke(handler, boost::asio::detail::addressof(handler_), ec, bytes_transferred);
+            // boost::asio::asio_handler_invoke(handler, boost::asio::detail::addressof(handler_), ec,
+            // bytes_transferred);
         }
 
       private:
         HandlerValueType handler_;
 #if BOOST_ASIO_VERSION >= 101200
-            Executor executor_;
+        Executor executor_;
 #else
-            boost::asio::io_service& executor_;
+        boost::asio::io_service& executor_;
 #endif
     };
 
@@ -1582,7 +1582,8 @@ class websocket_stream : private boost::noncopyable
 
         // TODO: use more than first buffer
         boost::shared_ptr<handler_wrapper<Handler, executor_type> > handler2 =
-            boost::make_shared<handler_wrapper<Handler, executor_type> >(boost::ref(handler), RR_BOOST_ASIO_REF_IO_SERVICE(RR_BOOST_ASIO_GET_IO_SERVICE((*this))));
+            boost::make_shared<handler_wrapper<Handler, executor_type> >(
+                boost::ref(handler), RR_BOOST_ASIO_REF_IO_SERVICE(RR_BOOST_ASIO_GET_IO_SERVICE((*this))));
         async_read_some2(
             boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence>::first(
                 buffers),
@@ -1594,7 +1595,8 @@ class websocket_stream : private boost::noncopyable
     void async_write_some(const const_buffers& buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
     {
         boost::shared_ptr<handler_wrapper<Handler, executor_type> > handler2 =
-            boost::make_shared<handler_wrapper<Handler, executor_type> >(boost::ref(handler), RR_BOOST_ASIO_REF_IO_SERVICE(RR_BOOST_ASIO_GET_IO_SERVICE((*this))));
+            boost::make_shared<handler_wrapper<Handler, executor_type> >(
+                boost::ref(handler), RR_BOOST_ASIO_REF_IO_SERVICE(RR_BOOST_ASIO_GET_IO_SERVICE((*this))));
         if (ping_requested)
         {
             boost::shared_array<uint8_t> ping_data2;
@@ -1625,8 +1627,8 @@ class websocket_stream : private boost::noncopyable
         {
             // TODO: use more than first buffer
             async_write_message(DataFrameType, buffers,
-                                boost::bind(&handler_wrapper<Handler, executor_type>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1),
-                                            RR_BOOST_PLACEHOLDERS(_2)));
+                                boost::bind(&handler_wrapper<Handler, executor_type>::do_complete, handler2,
+                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
         }
     }
 
