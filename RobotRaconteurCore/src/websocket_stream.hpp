@@ -66,14 +66,14 @@ class websocket_stream : private boost::noncopyable
         WebSocketOpcode_pong = 0xA
     };
 
-#ifdef ROBOTRACONTEUR_USE_OPENSSL
+
     typedef typename boost::remove_reference<Stream>::type next_layer_type;
     typedef typename next_layer_type::lowest_layer_type lowest_layer_type;
 
     lowest_layer_type& lowest_layer() { return next_layer_.lowest_layer(); }
 
     const lowest_layer_type& lowest_layer() const { return next_layer_.lowest_layer(); }
-#endif
+
 
   protected:
     boost::mutex random_lock;
@@ -1535,7 +1535,7 @@ class websocket_stream : private boost::noncopyable
       public:
         typedef typename boost::remove_reference<Handler>::type HandlerValueType;
 
-        handler_wrapper(const Handler& handler, Executor& executor) : handler_(RR_MOVE(handler)),
+        handler_wrapper(const Handler& handler, const Executor& executor) : handler_(handler),
             executor_(executor) {}
 
         void do_complete(const boost::system::error_code& ec, const std::size_t& bytes_transferred)
