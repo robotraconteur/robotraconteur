@@ -144,8 +144,10 @@
 #define RR_BOOST_ASIO_NEW_API_CONST const
 #endif
 
-#if BOOST_ASIO_VERSION < 101400
+#if BOOST_ASIO_VERSION < 101200
 #define RR_BOOST_ASIO_MAKE_STRAND(exec_type,x) boost::asio::strand(x)
+#elif BOOST_ASIO_VERSION < 101400
+#define RR_BOOST_ASIO_MAKE_STRAND(exec_type,x) boost::asio::strand<exec_type>(x)
 #else
 #define RR_BOOST_ASIO_MAKE_STRAND(exec_type,x) boost::asio::make_strand<exec_type>(x)
 #endif
