@@ -81,7 +81,7 @@ class websocket_stream : private boost::noncopyable
 
   public:
 #if BOOST_ASIO_VERSION >= 101200
-    typedef RR_BOOST_ASIO_IO_CONTEXT executor_type;
+    typedef typename lowest_layer_type::executor_type executor_type;
     executor_type get_executor() BOOST_ASIO_NOEXCEPT { return next_layer_.get_executor(); }
 #endif
 
