@@ -27,7 +27,7 @@ class asio_ssl_stream_threadsafe
     class handler_wrapper
     {
       public:
-        typedef typename boost::remove_reference<Handler>::type HandlerValueType;
+        typedef typename std::remove_const<typename boost::remove_reference<Handler>::type>::type HandlerValueType;
 
         handler_wrapper(const Handler& handler, RR_BOOST_ASIO_NEW_API_CONST Executor& executor)
             : handler_(handler), executor_(executor)
