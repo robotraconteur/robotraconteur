@@ -5965,6 +5965,10 @@ void IPNodeDiscovery::handle_receive_update_timer(const boost::system::error_cod
         }
     }
 
+    if (!receive_update_timer)
+    {
+        return;
+    }
     receive_update_timer->expires_from_now(boost::posix_time::seconds(5));
     RobotRaconteurNode::asio_async_wait(node, receive_update_timer,
                                         boost::bind(&IPNodeDiscovery::handle_receive_update_timer, shared_from_this(),
@@ -6101,7 +6105,18 @@ void IPNodeDiscovery::StopListeningForNodes()
         }
     }
     if (receive_update_timer)
-        receive_update_timer->cancel();
+    {
+        boost::system::error_code cancel_ec;
+        receive_update_timer->cancel(cancel_ec);
+        receive_update_timer.reset();
+    }
+
+    if (discovery_request_timer)
+    {
+        boost::system::error_code cancel_ec;
+        discovery_request_timer->cancel(cancel_ec);
+        discovery_request_timer.reset();
+    }
 }
 
 void IPNodeDiscovery::StartAnnouncingNode(uint32_t flags)
@@ -6473,6 +6488,10 @@ void IPNodeDiscovery::handle_request_timer(const boost::system::error_code& erro
 
     if (c > 0)
     {
+        if (!discovery_request_timer)
+        {
+            return;
+        }
         uint32_t delay = p1->GetNode()->GetRandomInt<uint32_t>(900, 1500);
         discovery_request_timer->expires_from_now(boost::posix_time::milliseconds(delay));
         RobotRaconteurNode::asio_async_wait(node, discovery_request_timer,
@@ -6484,6 +6503,10 @@ void IPNodeDiscovery::handle_request_timer(const boost::system::error_code& erro
         if ((last_request_send_time + boost::posix_time::milliseconds(1000)) >
             boost::posix_time::microsec_clock::universal_time())
         {
+            if (!discovery_request_timer)
+            {
+                return;
+            }
             discovery_request_timer->expires_from_now(boost::posix_time::seconds(5));
             RobotRaconteurNode::asio_async_wait(node, discovery_request_timer,
                                                 boost::bind(&IPNodeDiscovery::handle_request_timer, shared_from_this(),
