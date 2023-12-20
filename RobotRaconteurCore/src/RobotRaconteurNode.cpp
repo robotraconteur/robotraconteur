@@ -295,7 +295,7 @@ std::vector<std::string> RobotRaconteurNode::GetRegisteredServiceTypes()
 uint32_t RobotRaconteurNode::RegisterTransport(const RR_SHARED_PTR<Transport>& transport)
 {
     {
-        boost::mutex::scoped_lock lock(transports_lock);
+        boost::unique_lock<boost::shared_mutex> lock(transports_lock);
         if (transport_count >= std::numeric_limits<uint32_t>::max())
             transport_count = 0;
         else
@@ -457,7 +457,7 @@ void RobotRaconteurNode::Shutdown()
         }
 
         {
-            boost::mutex::scoped_lock lock(transports_lock);
+            boost::unique_lock<boost::shared_mutex> lock(transports_lock);
             BOOST_FOREACH (RR_SHARED_PTR<Transport>& e, transports | boost::adaptors::map_values)
             {
                 try
@@ -636,7 +636,7 @@ void RobotRaconteurNode::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
 
     RR_SHARED_PTR<Transport> c;
     {
-        boost::shared_lock<boost::shared_mutex> lock(transport_lock);
+        boost::shared_lock<boost::shared_mutex> lock(transports_lock);
         RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Transport> >::iterator e1 = transports.find(e->GetTransport());
         if (e1 == transports.end())
         {
@@ -693,7 +693,7 @@ void RobotRaconteurNode::AsyncSendMessage(
 
     RR_SHARED_PTR<Transport> c;
     {
-        boost::shared_lock<boost::shared_mutex> lock(transport_lock);
+        boost::shared_lock<boost::shared_mutex> lock(transports_lock);
         RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Transport> >::iterator e1 = transports.find(e->GetTransport());
         if (e1 == transports.end())
         {
@@ -1588,7 +1588,7 @@ void RobotRaconteurNode::AsyncConnectService(
 
     std::map<std::string, RR_WEAK_PTR<Transport> > connectors;
     {
-        boost::shared_lock<boost::shared_mutex> lock(transport_lock);
+        boost::shared_lock<boost::shared_mutex> lock(transports_lock);
         boost::copy(transports | boost::adaptors::map_values, std::back_inserter(atransports));
     }
 
@@ -1788,7 +1788,7 @@ void RobotRaconteurNode::DeleteEndpoint(const RR_SHARED_PTR<Endpoint>& e)
     {
         RR_SHARED_PTR<Transport> c;
         {
-            boost::shared_lock<boost::shared_mutex> lock(transport_lock);
+            boost::shared_lock<boost::shared_mutex> lock(transports_lock);
             RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Transport> >::iterator e1 = transports.find(e->GetTransport());
             if (e1 != transports.end())
             {
@@ -1827,7 +1827,7 @@ void RobotRaconteurNode::CheckConnection(uint32_t endpoint)
 
     RR_SHARED_PTR<Transport> c;
     {
-        boost::shared_lock<boost::shared_mutex> lock(transport_lock);
+        boost::shared_lock<boost::shared_mutex> lock(transports_lock);
         RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Transport> >::iterator e1 = transports.find(e->GetTransport());
         if (e1 == transports.end())
             throw ConnectionException("Transport connection not found");
@@ -2347,7 +2347,7 @@ void RobotRaconteurNode::PeriodicCleanupTask(const TimerEvent& err)
 
         std::vector<RR_SHARED_PTR<Transport> > c;
         {
-            boost::shared_lock<boost::shared_mutex> lock(transport_lock);
+            boost::shared_lock<boost::shared_mutex> lock(transports_lock);
             boost::copy(transports | boost::adaptors::map_values, std::back_inserter(c));
         }
 
@@ -3058,7 +3058,7 @@ void RobotRaconteurNode::UpdateServiceStateNonce()
     }
 
     {
-        boost::mutex::scoped_lock lock(transports_lock);
+        boost::shared_lock<boost::shared_mutex> lock(transports_lock);
         BOOST_FOREACH (RR_SHARED_PTR<Transport>& t, transports | boost::adaptors::map_values)
         {
             t->LocalNodeServicesChanged();
