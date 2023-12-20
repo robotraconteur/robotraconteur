@@ -3568,6 +3568,42 @@
         in the extra imports vector</returns>
     </member>
 
+    <member name="M:RobotRaconteur.ServerContext.GetCandidateConnectionURLs">
+        <summary>
+            Get the candidate connection URLs for this service.
+        </summary>
+        <remarks>
+            <para>
+                The candidate connection URLs are the URLs that can be used to connect to the service. 
+                The correct URL to use depends on the transport being used to connect to the service, 
+                and the network configuration of the client and service.
+            </para>
+        </remarks>
+        <returns>The candidate connection URLs</returns>
+    </member>
+    
+    <member name="M:RobotRaconteur.ServerContext.PrintCandidateConnectionURLs">
+        <summary>
+            Print the candidate connection URLs for this service.
+        </summary>
+        <remarks>
+            <para>
+                See GetCandidateConnectionURLs() for more information.
+            </para>
+        </remarks>
+    </member>
+    
+    <member name="M:RobotRaconteur.ServerContext.LogCandidateConnectionURLs(RobotRaconteur.LogLevel)">
+        <summary>
+            Log the candidate connection URLs for this service.
+        </summary>
+        <remarks>
+            <para>
+                See GetCandidateConnectionURLs() for more information.
+            </para>
+        </remarks>
+        <param name="level">The log level to use. Defaults to RobotRaconteur_LogLevel_Info</param>
+    </member>
 
     <member name="M:RobotRaconteur.ServerContext.SetServiceAttributes(System.Collections.Generic.Dictionary{System.String,System.Object})">
       <summary>

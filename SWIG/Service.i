@@ -186,6 +186,12 @@ public:
 	void AddExtraImport(const std::string& import_);
 
 	bool RemoveExtraImport(const std::string& import_);
+
+	std::vector<std::string> GetCandidateConnectionURLs();
+
+    void PrintCandidateConnectionURLs();
+
+    void LogCandidateConnectionURLs(RobotRaconteur_LogLevel level = RobotRaconteur_LogLevel_Info);
 };
 
 %nodefaultctor AuthenticatedUser;
