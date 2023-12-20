@@ -1454,7 +1454,7 @@ void Discovery::AsyncUpdateDetectedNodes(const std::vector<std::string>& schemes
 
     std::vector<RR_SHARED_PTR<Transport> > t;
     {
-        boost::mutex::scoped_lock lock(n->transports_lock);
+        boost::shared_lock<boost::shared_mutex> lock(n->transports_lock);
         boost::copy(n->transports | boost::adaptors::map_values, std::back_inserter(t));
     }
 

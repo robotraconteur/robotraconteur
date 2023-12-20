@@ -137,6 +137,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
   public:
     friend class detail::Discovery;
     friend class Transport;
+    friend class ServerContext;
 
     /**
      * @brief Initialize the node. Called automatically for `s()` and `sp()`
@@ -880,7 +881,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     /** @internal @brief transports storage*/
     RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Transport> > transports;
     /** @internal @brief transports storage mutex */
-    boost::mutex transports_lock;
+    boost::shared_mutex transports_lock;
 
     /** @internal @brief dynamic_factory for wrappers*/
     RR_SHARED_PTR<RobotRaconteur::DynamicServiceFactory> dynamic_factory;
@@ -1233,7 +1234,6 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
   private:
     uint32_t transport_count;
 
-    boost::shared_mutex transport_lock;
     boost::mutex endpoint_lock;
 
     static RobotRaconteurNode m_s;
