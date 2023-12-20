@@ -2476,6 +2476,62 @@ void ServerContext::SetAttributes(const std::map<std::string, RR_INTRUSIVE_PTR<R
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "", "Service attributes set");
 }
 
+std::vector<std::string> ServerContext::GetCandidateConnectionURLs()
+{
+    std::vector<std::string> o;
+    RR_SHARED_PTR<RobotRaconteurNode> n = GetNode();
+    std::string nodeid_str = n->NodeID().ToString("D");
+    std::string nodename = n->NodeName();
+    boost::shared_lock<boost::shared_mutex> lock(n->transports_lock);
+    BOOST_FOREACH(const RR_SHARED_PTR<Transport>& t, n->transports | boost::adaptors::map_values)
+    {
+        std::vector<std::string> urls1 = t->GetServerListenUrls();
+        BOOST_FOREACH(const std::string& url, urls1)
+        {
+            std::vector<std::string> url_split;
+            boost::split(url_split, url, boost::is_from_range('?', '?'), boost::token_compress_on);
+            std::string url2 = url_split.at(0) + "?nodeid=" + nodeid_str + "&service=" + m_ServiceName;
+            o.push_back(url2);
+            if (!nodename.empty())
+            {
+                url2 = url_split.at(0) + "?nodename=" + nodename + "&service=" + m_ServiceName;
+                o.push_back(url2);
+            }
+        }
+    }
+
+    return o;
+}
+
+void ServerContext::PrintCandidateConnectionURLs(std::ostream& out)
+{    
+    std::vector<std::string> urls = GetCandidateConnectionURLs();
+    BOOST_FOREACH (const std::string& url, urls)
+    {
+        out << url << std::endl;
+    }
+}
+
+void ServerContext::LogCandidateConnectionURLs(RobotRaconteur_LogLevel level)
+{
+    // Combine into one message
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n) return;
+    std::stringstream out;
+    out << "Candidate connection URLs:" << std::endl;
+    PrintCandidateConnectionURLs(out);
+    RRLogRecord r;
+    r.Node = node;
+    r.Level = level;
+    r.Component = RobotRaconteur_LogComponent_Service;
+    r.Message = out.str();
+    r.SourceFile = __FILE__;
+    r.SourceLine = __LINE__;
+    r.ComponentName = m_ServiceName;
+    r.Time = boost::posix_time::microsec_clock::local_time();
+    n->LogRecord(r);
+}
+
 boost::thread_specific_ptr<RR_SHARED_PTR<ServerEndpoint> > ServerEndpoint::m_CurrentEndpoint;
 
 RR_SHARED_PTR<ServerEndpoint> ServerEndpoint::GetCurrentEndpoint()

@@ -684,6 +684,36 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
   protected:
     RR_SHARED_PTR<ThreadPool> monitor_thread_pool;
     boost::mutex monitor_thread_pool_lock;
+
+  public:
+    /**
+     * @brief Get the candidate connection URLs for this service
+     * 
+     * The candidate connection URLs are the URLs that can be used to connect to the service. The
+     * correct URL to use depends on the transport being used to connect to the service, and the network
+     * configuration of the client and service. 
+     * 
+     * @return std::vector<std::string> The candidate connection URLs
+     */
+    std::vector<std::string> GetCandidateConnectionURLs();
+
+    /**
+     * @brief Print the candidate connection URLs for this service
+     * 
+     * See GetCandidateConnectionURLs() for more information
+     * 
+     * @param out The output stream to print to. Defaults to std::cout
+     */
+    void PrintCandidateConnectionURLs(std::ostream& out = std::cout);
+
+    /**
+     * @brief Log the candidate connection URLs for this service
+     * 
+     * See GetCandidateConnectionURLs() for more information
+     * 
+     * @param level The log level to use. Defaults to RobotRaconteur_LogLevel_Info
+     */
+    void LogCandidateConnectionURLs(RobotRaconteur_LogLevel level = RobotRaconteur_LogLevel_Info);
 };
 
 /**
