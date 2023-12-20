@@ -6347,13 +6347,10 @@ void IPNodeDiscovery::broadcast_discovery_packet(const boost::asio::ip::address&
         }
     }
 
-    try
-    {
-        s.shutdown(boost::asio::ip::udp::socket::shutdown_both);
-        s.close();
-    }
-    catch (std::exception&)
-    {}
+    boost::system::error_code ec1;
+    s.shutdown(boost::asio::ip::udp::socket::shutdown_both, ec1);
+    boost::system::error_code ec2;
+    s.close(ec2);
 }
 
 std::string IPNodeDiscovery::generate_response_packet(const boost::asio::ip::address& source, boost::string_ref scheme,
