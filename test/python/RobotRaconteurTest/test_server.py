@@ -27,7 +27,7 @@ def main():
 
         t2 = testroot_impl(t)
         ctx = node.RegisterService("RobotRaconteurTestService",
-                             "com.robotraconteur.testing.TestService1.testroot", t2)
+                                   "com.robotraconteur.testing.TestService1.testroot", t2)
 
         ctx.LogCandidateConnectionURLs()
 

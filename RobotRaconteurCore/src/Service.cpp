@@ -2483,10 +2483,10 @@ std::vector<std::string> ServerContext::GetCandidateConnectionURLs()
     std::string nodeid_str = n->NodeID().ToString("D");
     std::string nodename = n->NodeName();
     boost::shared_lock<boost::shared_mutex> lock(n->transports_lock);
-    BOOST_FOREACH(const RR_SHARED_PTR<Transport>& t, n->transports | boost::adaptors::map_values)
+    BOOST_FOREACH (const RR_SHARED_PTR<Transport>& t, n->transports | boost::adaptors::map_values)
     {
         std::vector<std::string> urls1 = t->GetServerListenUrls();
-        BOOST_FOREACH(const std::string& url, urls1)
+        BOOST_FOREACH (const std::string& url, urls1)
         {
             std::vector<std::string> url_split;
             boost::split(url_split, url, boost::is_from_range('?', '?'), boost::token_compress_on);
@@ -2504,7 +2504,7 @@ std::vector<std::string> ServerContext::GetCandidateConnectionURLs()
 }
 
 void ServerContext::PrintCandidateConnectionURLs(std::ostream& out)
-{    
+{
     std::vector<std::string> urls = GetCandidateConnectionURLs();
     BOOST_FOREACH (const std::string& url, urls)
     {
@@ -2516,7 +2516,8 @@ void ServerContext::LogCandidateConnectionURLs(RobotRaconteur_LogLevel level)
 {
     // Combine into one message
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
-    if (!n) return;
+    if (!n)
+        return;
     std::stringstream out;
     out << "Candidate connection URLs:" << std::endl;
     PrintCandidateConnectionURLs(out);
