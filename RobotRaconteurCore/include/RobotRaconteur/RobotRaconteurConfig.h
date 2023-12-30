@@ -187,6 +187,8 @@
 
 #if BOOST_ASIO_VERSION >= 101009
 #define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tls
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD_HTTPS boost::asio::ssl::context::tls
 #else
 #define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tlsv11
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD_HTTPS boost::asio::ssl::context::tlsv12
 #endif
