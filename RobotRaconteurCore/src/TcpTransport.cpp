@@ -1707,7 +1707,7 @@ void TcpWSSWebSocketConnector::Connect2(
             RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
                 socket, boost::bind(&boost::asio::ip::tcp::socket::close, RR_BOOST_PLACEHOLDERS(_1))));
 
-        context = RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tlsv1);
+        context = RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tls_client);
         context->set_default_verify_paths();
 
         context->set_verify_mode(boost::asio::ssl::verify_peer);
@@ -1721,6 +1721,12 @@ void TcpWSSWebSocketConnector::Connect2(
         RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> > tls_stream =
             RR_MAKE_SHARED<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >(boost::ref(*socket),
                                                                                                boost::ref(*context));
+
+        if(SSL_set_tlsext_host_name(tls_stream->native_handle(), servername.c_str()) != 1)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, endpoint,
+                                           "Could not set TLS SNI hostname");
+        }
 
         RobotRaconteurNode::asio_async_handshake(node, tls_stream, boost::asio::ssl::stream_base::client,
                                                  boost::bind(&TcpWSSWebSocketConnector::Connect2_1, shared_from_this(),
