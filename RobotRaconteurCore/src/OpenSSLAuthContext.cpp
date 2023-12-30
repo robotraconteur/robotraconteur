@@ -21,12 +21,6 @@
 #include "RobotRaconteurNodeRootCA.h"
 #include <boost/shared_array.hpp>
 
-#if BOOST_ASIO_VERSION >= 101009
-#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tls
-#else
-#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tlsv11
-#endif
-
 namespace RobotRaconteur
 {
 namespace detail

@@ -1706,11 +1706,9 @@ void TcpWSSWebSocketConnector::Connect2(
         RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer =
             RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
                 socket, boost::bind(&boost::asio::ip::tcp::socket::close, RR_BOOST_PLACEHOLDERS(_1))));
-#if BOOST_ASIO_VERSION > 101009
-        context = RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tls_client);
-#else
-        context = RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tlsv12_client);
-#endif
+
+        context = RR_MAKE_SHARED<boost::asio::ssl::context>(ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD);
+
         context->set_default_verify_paths();
 
         context->set_verify_mode(boost::asio::ssl::verify_peer);

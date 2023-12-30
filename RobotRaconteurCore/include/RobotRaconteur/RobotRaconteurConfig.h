@@ -184,3 +184,9 @@
 #include <boost/core/swap.hpp>
 #define RR_SWAP boost::swap
 #endif
+
+#if BOOST_ASIO_VERSION >= 101009
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tls
+#else
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tlsv11
+#endif
