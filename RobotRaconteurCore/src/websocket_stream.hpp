@@ -277,24 +277,24 @@ class websocket_stream : private boost::noncopyable
                     return;
                 }
 
-                std::string name = line.substr(0, colon_pos);
+                std::string name = boost::to_lower_copy(line.substr(0, colon_pos));
                 std::string value;
                 if (line.size() > colon_pos + 1)
                 {
                     value = boost::trim_copy(line.substr(colon_pos + 1));
                 }
 
-                if (name == "Sec-WebSocket-Version" &&
-                    handshake_recv_args.find("Sec-WebSocket-Version") != handshake_recv_args.end())
+                if (name == "sec-websocket-version" &&
+                    handshake_recv_args.find("sec-websocket-version") != handshake_recv_args.end())
                 {
-                    std::string value2 = handshake_recv_args.at("Sec-WebSocket-Version") + ", " + value;
-                    handshake_recv_args.at("Sec-WebSocket-Version") = value2;
+                    std::string value2 = handshake_recv_args.at("sec-websocket-version") + ", " + value;
+                    handshake_recv_args.at("sec-websocket-version") = value2;
                 }
-                if (name == "Sec-WebSocket-Protocol" &&
-                    handshake_recv_args.find("Sec-WebSocket-Protocol") != handshake_recv_args.end())
+                if (name == "sec-websocket-protocol" &&
+                    handshake_recv_args.find("sec-websocket-protocol") != handshake_recv_args.end())
                 {
-                    std::string value2 = handshake_recv_args.at("Sec-WebSocket-Protocol") + ", " + value;
-                    handshake_recv_args.at("Sec-WebSocket-Protocol") = value2;
+                    std::string value2 = handshake_recv_args.at("sec-websocket-protocol") + ", " + value;
+                    handshake_recv_args.at("sec-websocket-protocol") = value2;
                 }
                 else
                 {
@@ -304,23 +304,24 @@ class websocket_stream : private boost::noncopyable
         }
 
         std::string accept_key;
+        // Make all keys in handshake_recv_args lowercase
 
-        if (handshake_recv_args.find("Upgrade") == handshake_recv_args.end() ||
-            handshake_recv_args.find("Sec-WebSocket-Key") == handshake_recv_args.end() ||
-            handshake_recv_args.find("Sec-WebSocket-Version") == handshake_recv_args.end())
+        if (handshake_recv_args.find("upgrade") == handshake_recv_args.end() ||
+            handshake_recv_args.find("sec-websocket-key") == handshake_recv_args.end() ||
+            handshake_recv_args.find("sec-websocket-version") == handshake_recv_args.end())
         {
             send_server_error("426 Upgrade Required", handler);
             return;
         }
 
-        if (boost::to_lower_copy(handshake_recv_args.at("Upgrade")) != "websocket")
+        if (boost::to_lower_copy(handshake_recv_args.at("upgrade")) != "websocket")
         {
             send_server_error("426 Upgrade Required", handler);
             return;
         }
 
         std::vector<std::string> s2;
-        boost::split(s2, handshake_recv_args.at("Sec-WebSocket-Version"), boost::is_from_range(',', ','));
+        boost::split(s2, handshake_recv_args.at("sec-websocket-version"), boost::is_from_range(',', ','));
 
         bool found_ver = false;
         BOOST_FOREACH (std::string& e, s2)
@@ -338,12 +339,12 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
-        if (handshake_recv_args.find("Sec-WebSocket-Protocol") != handshake_recv_args.end())
+        if (handshake_recv_args.find("sec-websocket-protocol") != handshake_recv_args.end())
         {
             bool found_protocol = false;
 
             std::vector<std::string> s3;
-            boost::split(s3, handshake_recv_args.at("Sec-WebSocket-Protocol"), boost::is_from_range(',', ','));
+            boost::split(s3, handshake_recv_args.at("sec-websocket-protocol"), boost::is_from_range(',', ','));
 
             BOOST_FOREACH (std::string& e, s3)
             {
@@ -361,19 +362,13 @@ class websocket_stream : private boost::noncopyable
             }
         }
 
-        if (handshake_recv_args.find("Origin") != handshake_recv_args.end() ||
-            handshake_recv_args.find("origin") != handshake_recv_args.end())
+        if (handshake_recv_args.find("origin") != handshake_recv_args.end())
         {
 
             std::string origin1;
-            if (handshake_recv_args.find("Origin") != handshake_recv_args.end())
-            {
-                origin1 = handshake_recv_args.at("Origin");
-            }
-            else
-            {
-                origin1 = handshake_recv_args.at("origin");
-            }
+            
+            origin1 = handshake_recv_args.at("origin");
+            
             bool good_origin = false;
 
             if (boost::range::find(allowed_origins, origin1) != allowed_origins.end())
@@ -451,7 +446,7 @@ class websocket_stream : private boost::noncopyable
             }
         }
 
-        std::string key = handshake_recv_args.at("Sec-WebSocket-Key") + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+        std::string key = handshake_recv_args.at("sec-websocket-key") + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
         accept_key = sha1_hash(key);
 
         send_server_success_response(accept_key, protocol, handler);
@@ -804,9 +799,18 @@ class websocket_stream : private boost::noncopyable
             }
         }
 
-        if (handshake_recv_args.find("Upgrade") == handshake_recv_args.end() ||
-            handshake_recv_args.find("Connection") == handshake_recv_args.end() ||
-            handshake_recv_args.find("Sec-WebSocket-Accept") == handshake_recv_args.end())
+        // Make all keys in handshake_recv_args lowercase
+        std::map<std::string, std::string> handshake_recv_args2;
+        typedef std::map<std::string, std::string>::value_type map_value_type;
+        BOOST_FOREACH (map_value_type& e, handshake_recv_args)
+        {
+            handshake_recv_args2.insert(std::make_pair(boost::to_lower_copy(e.first), e.second));
+        }
+        handshake_recv_args = handshake_recv_args2;
+
+        if (handshake_recv_args.find("upgrade") == handshake_recv_args.end() ||
+            handshake_recv_args.find("connection") == handshake_recv_args.end() ||
+            handshake_recv_args.find("sec-websocket-accept") == handshake_recv_args.end())
         {
             {
                 boost::mutex::scoped_lock lock(next_layer_lock);
@@ -819,9 +823,9 @@ class websocket_stream : private boost::noncopyable
 
         std::string accept = sha1_hash(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
 
-        if (boost::to_lower_copy(handshake_recv_args.at("Upgrade")) != "websocket" ||
-            boost::to_lower_copy(handshake_recv_args.at("Connection")) != "upgrade" ||
-            handshake_recv_args.at("Sec-WebSocket-Accept") != accept)
+        if (boost::to_lower_copy(handshake_recv_args.at("upgrade")) != "websocket" ||
+            boost::to_lower_copy(handshake_recv_args.at("connection")) != "upgrade" ||
+            handshake_recv_args.at("sec-websocket-accept") != accept)
         {
             {
                 boost::mutex::scoped_lock lock(next_layer_lock);
@@ -832,9 +836,9 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
-        if (handshake_recv_args.find("Sec-WebSocket-Protocol") != handshake_recv_args.end())
+        if (handshake_recv_args.find("sec-websocket-protocol") != handshake_recv_args.end())
         {
-            if (boost::to_lower_copy(handshake_recv_args.at("Sec-WebSocket-Protocol")) !=
+            if (boost::to_lower_copy(handshake_recv_args.at("sec-websocket-protocol")) !=
                 boost::to_lower_copy(protocol))
             {
                 {
