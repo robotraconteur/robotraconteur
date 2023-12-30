@@ -1723,10 +1723,9 @@ void TcpWSSWebSocketConnector::Connect2(
             RR_MAKE_SHARED<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >(boost::ref(*socket),
                                                                                                boost::ref(*context));
 
-        if(SSL_set_tlsext_host_name(tls_stream->native_handle(), servername.c_str()) != 1)
+        if (SSL_set_tlsext_host_name(tls_stream->native_handle(), servername.c_str()) != 1)
         {
-            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, endpoint,
-                                           "Could not set TLS SNI hostname");
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, endpoint, "Could not set TLS SNI hostname");
         }
 
         RobotRaconteurNode::asio_async_handshake(node, tls_stream, boost::asio::ssl::stream_base::client,

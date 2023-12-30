@@ -366,9 +366,9 @@ class websocket_stream : private boost::noncopyable
         {
 
             std::string origin1;
-            
+
             origin1 = handshake_recv_args.at("origin");
-            
+
             bool good_origin = false;
 
             if (boost::range::find(allowed_origins, origin1) != allowed_origins.end())
