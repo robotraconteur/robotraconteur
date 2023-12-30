@@ -1707,7 +1707,7 @@ void TcpWSSWebSocketConnector::Connect2(
             RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
                 socket, boost::bind(&boost::asio::ip::tcp::socket::close, RR_BOOST_PLACEHOLDERS(_1))));
 
-        context = RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tls_client);
+        context = RR_MAKE_SHARED<boost::asio::ssl::context>(boost::asio::ssl::context::tls);
         context->set_default_verify_paths();
 
         context->set_verify_mode(boost::asio::ssl::verify_peer);
