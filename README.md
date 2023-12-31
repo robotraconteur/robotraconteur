@@ -44,6 +44,8 @@ A communication framework for robotics, automation, and the Internet of Things
   - [Standard Service Types](#standard-service-types)
   - [Companion Libraries](#companion-libraries)
   - [Robot Raconteur Directory](#robot-raconteur-directory)
+  - [Package Quality](#package-quality)
+  - [Contributing](#contributing)
   - [License](#license)
   - [Acknowledgment](#acknowledgment)
 
@@ -216,6 +218,15 @@ See https://github.com/robotraconteur-contrib/robotraconteur_camera_driver/blob/
 The Robot Raconteur project maintains a list of available drivers. The directory can be found here:
 
 https://github.com/robotraconteur/robotraconteur-directory
+
+## Package Quality
+
+Robot Raconteur Core is a ROS Quality Level 2 package. See the [Quality Declaration](QUALITY_DECLARATION.md) for more details.
+
+## Contributing
+
+Contributors must sign a Contributor License Agreement (CLA). Please see https://www.wasontech.com/contributors to 
+complete and return a signed agreement. Wason Technology, LLC uses the Harmony CLA (https://www.harmonyagreements.org/).
 
 ## License
 
