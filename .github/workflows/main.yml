@@ -757,7 +757,7 @@ jobs:
       run: |
         git clone --depth=1 https://github.com/johnwason/Boost-for-Android.git boost_android
         cd boost_android
-        ./build-android.sh $ANDROID_NDK_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.80.0 
+        ./build-android.sh $ANDROID_NDK_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.81.0 
     - name: build_openssl
       env:
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
