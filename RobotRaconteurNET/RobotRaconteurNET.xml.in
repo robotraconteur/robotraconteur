@@ -3568,6 +3568,42 @@
         in the extra imports vector</returns>
     </member>
 
+    <member name="M:RobotRaconteur.ServerContext.GetCandidateConnectionURLs">
+        <summary>
+            Get the candidate connection URLs for this service.
+        </summary>
+        <remarks>
+            <para>
+                The candidate connection URLs are the URLs that can be used to connect to the service. 
+                The correct URL to use depends on the transport being used to connect to the service, 
+                and the network configuration of the client and service.
+            </para>
+        </remarks>
+        <returns>The candidate connection URLs</returns>
+    </member>
+    
+    <member name="M:RobotRaconteur.ServerContext.PrintCandidateConnectionURLs">
+        <summary>
+            Print the candidate connection URLs for this service.
+        </summary>
+        <remarks>
+            <para>
+                See GetCandidateConnectionURLs() for more information.
+            </para>
+        </remarks>
+    </member>
+    
+    <member name="M:RobotRaconteur.ServerContext.LogCandidateConnectionURLs(RobotRaconteur.LogLevel)">
+        <summary>
+            Log the candidate connection URLs for this service.
+        </summary>
+        <remarks>
+            <para>
+                See GetCandidateConnectionURLs() for more information.
+            </para>
+        </remarks>
+        <param name="level">The log level to use. Defaults to RobotRaconteur_LogLevel_Info</param>
+    </member>
 
     <member name="M:RobotRaconteur.ServerContext.SetServiceAttributes(System.Collections.Generic.Dictionary{System.String,System.Object})">
       <summary>
@@ -4065,69 +4101,85 @@
       </remarks>
     </member>
 
-    <MemberName name="T:RobotRaconteur.ServiceSubscriptionFilterAttribute">
+    <member name="T:RobotRaconteur.ServiceSubscriptionFilterAttribute">
       <summary>Subscription filter attribute for use with ServiceSubscriptionFilter</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="M:RobotRaconteur.ServiceSubscriptionFilterAttribute.#ctor">
+    <member name="M:RobotRaconteur.ServiceSubscriptionFilterAttribute.#ctor">
       <summary>Construct a new ServiceSubscriptionFilterAttribute</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttribute.Name">
+    <member name="P:RobotRaconteur.ServiceSubscriptionFilterAttribute.Name">
       <summary>The attribute name. Empty for no name</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttribute.Value">
+    <member name="P:RobotRaconteur.ServiceSubscriptionFilterAttribute.Value">
       <summary>The string value of the attribute</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="T:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation">
+    <member name="T:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation">
       <summary>Subscription filter attribute group for use with ServiceSubscriptionFilter</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.OR">
+    <member name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.OR">
       <summary>OR Operation</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
   
-    <MemberName name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.AND">
+    <member name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.AND">
       <summary>AND Operation</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.NOR">
+    <member name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.NOR">
       <summary>NOR Operation</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.NAND">
+    <member name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.NAND">
       <summary>NAND Operation</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="T:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup">
+    <member name="T:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup">
       <summary>Subscription filter for use with ServiceSubscription</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="M:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.#ctor">
+    <member name="M:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.#ctor">
       <summary>Construct a new ServiceSubscriptionFilterAttributeGroup</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Attributes">
+    <member name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Attributes">
       <summary>The attributes in the group</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Groups">
+    <member name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Groups">
       <summary>The nested groups in the group</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Operation">
+    <member name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.Operation">
       <summary>The operation to use for matching the attributes and groups</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.SplitStringAttribute">
+    <member name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.SplitStringAttribute">
       <summary>True if string attributes will be split into a list with delimiter (default ",")</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
 
-    <MemberName name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.SplitStringDelimiter">
+    <member name="P:RobotRaconteur.ServiceSubscriptionFilterAttributeGroup.SplitStringDelimiter">
       <summary>Delimiter to use to split string attributes (default ",")</summary>
-    </MemberName>
+      <remarks>None</remarks>
+    </member>
     
 
     <!-- BEGIN GENERATED_MEMBERS -->

@@ -25,8 +25,8 @@
 
 #ifndef ROBOTRACONTEUR_VERSION
 // Boost Style Version Number
-#define ROBOTRACONTEUR_VERSION 001800
-#define ROBOTRACONTEUR_VERSION_TEXT "0.18.0"
+#define ROBOTRACONTEUR_VERSION 100000
+#define ROBOTRACONTEUR_VERSION_TEXT "1.0.0"
 #endif
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ == 7)
@@ -110,9 +110,11 @@
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 #define RR_MOVE_ARG(type) type&&
 #define RR_MOVE(x) std::move(x)
+#define RR_FORWARD(type, x) std::forward<type>(x)
 #else
 #define RR_MOVE_ARG(type) type
 #define RR_MOVE(x) x
+#define RR_FORWARD(type, x) x
 #endif
 
 #include <boost/asio/version.hpp>
@@ -120,18 +122,34 @@
 #if BOOST_ASIO_VERSION < 101200
 #define RR_BOOST_ASIO_IO_CONTEXT boost::asio::io_service
 #define RR_BOOST_ASIO_STRAND boost::asio::io_service::strand
+#define RR_BOOST_ASIO_STRAND2(exec_type) boost::asio::io_service::strand
 #define RR_BOOST_ASIO_POST(context, func) context.post(func)
 #define RR_BOOST_ASIO_BUFFER_CAST(type, buf) boost::asio::buffer_cast<type>(buf)
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) (strand).wrap(f)
 #define RR_BOOST_ASIO_NEW_STRAND(context) (new boost::asio::strand(context))
+#define RR_BOOST_ASIO_GET_IO_SERVICE(s) (s).get_io_service()
+#define RR_BOOST_ASIO_REF_IO_SERVICE(x) boost::ref(x)
+#define RR_BOOST_ASIO_NEW_API_CONST
 #else
 #define RR_BOOST_ASIO_IO_CONTEXT boost::asio::io_context
 #define RR_BOOST_ASIO_STRAND boost::asio::strand<boost::asio::io_context::executor_type>
+#define RR_BOOST_ASIO_STRAND2(exec_type) boost::asio::strand<exec_type>
 #define RR_BOOST_ASIO_POST(context, func) boost::asio::post(context, func)
 #define RR_BOOST_ASIO_BUFFER_CAST(type, buf) (type)(buf).data()
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) boost::asio::bind_executor(strand, f)
 #define RR_BOOST_ASIO_NEW_STRAND(context)                                                                              \
     (new boost::asio::strand<boost::asio::io_context::executor_type>((context).get_executor()))
+#define RR_BOOST_ASIO_GET_IO_SERVICE(s) (s).get_executor()
+#define RR_BOOST_ASIO_REF_IO_SERVICE(x) (x)
+#define RR_BOOST_ASIO_NEW_API_CONST const
+#endif
+
+#if BOOST_ASIO_VERSION < 101200
+#define RR_BOOST_ASIO_MAKE_STRAND(exec_type, x) boost::asio::strand(x)
+#elif BOOST_ASIO_VERSION < 101400
+#define RR_BOOST_ASIO_MAKE_STRAND(exec_type, x) boost::asio::strand<exec_type>(x)
+#else
+#define RR_BOOST_ASIO_MAKE_STRAND(exec_type, x) boost::asio::make_strand<exec_type>(x)
 #endif
 
 #if BOOST_VERSION <= 105900
@@ -158,3 +176,19 @@
 #define RR_OVIRTUAL virtual
 #endif
 #define RR_NULL_FN 0
+
+#if BOOST_VERSION >= 108400
+#include <utility>
+#define RR_SWAP std::swap
+#else
+#include <boost/core/swap.hpp>
+#define RR_SWAP boost::swap
+#endif
+
+#if BOOST_ASIO_VERSION >= 101009
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tls
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD_HTTPS boost::asio::ssl::context::tls
+#else
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tlsv11
+#define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD_HTTPS boost::asio::ssl::context::tlsv12
+#endif

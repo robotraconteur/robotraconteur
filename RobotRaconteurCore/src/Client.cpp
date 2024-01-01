@@ -892,13 +892,8 @@ void ClientContext::connection_test(const TimerEvent& ev)
 
             if (connection_test_timer)
             {
-                try
-                {
-                    connection_test_timer->Stop();
-                }
 
-                catch (std::exception&)
-                {}
+                connection_test_timer->TryStop();
                 connection_test_timer.reset();
             }
         }
@@ -1165,13 +1160,9 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
                     return;
                 t = e1->second;
                 t->ret = m;
-                try
-                {
-                    if (t->timer)
-                        t->timer->Stop();
-                }
-                catch (std::exception&)
-                {}
+
+                if (t->timer)
+                    t->timer->TryStop();
 
                 t->evt->Set();
             }
@@ -1205,13 +1196,8 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
 
                                     if (!async_running)
                                     {
-                                        try
-                                        {
-                                            connection_test_timer->Stop();
-                                        }
-                                        catch (std::exception&)
-                                        {}
 
+                                        connection_test_timer->TryStop();
                                         connection_test_timer.reset();
                                     }
                                 }
@@ -2304,12 +2290,8 @@ void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
 
             if (connection_test_timer)
             {
-                try
-                {
-                    connection_test_timer->Stop();
-                }
-                catch (std::exception&)
-                {}
+
+                connection_test_timer->TryStop();
                 connection_test_timer.reset();
             }
         }

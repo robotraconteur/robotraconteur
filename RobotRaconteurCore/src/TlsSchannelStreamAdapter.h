@@ -170,6 +170,10 @@ class TlsSchannelAsyncStreamAdapter_ASIO_adapter
     void close();
 
     TlsSchannelAsyncStreamAdapter& lowest_layer() { return next_layer_; }
+
+    typedef typename TlsSchannelAsyncStreamAdapter lowest_layer_type;
+    typedef typename TlsSchannelAsyncStreamAdapter next_layer_type;
+    typedef typename RR_BOOST_ASIO_IO_CONTEXT::executor_type executor_type;
 };
 
 class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsSchannelAsyncStreamAdapter>,
@@ -314,6 +318,12 @@ class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsS
     void set_mutual_auth(bool mutual_auth);
 
     TlsSchannelAsyncStreamAdapter_ASIO_adapter& get_asio_adapter() { return asio_adapter; }
+
+    typedef typename TlsSchannelAsyncStreamAdapter lowest_layer_type;
+    typedef typename TlsSchannelAsyncStreamAdapter next_layer_type;
+    typedef typename RR_BOOST_ASIO_IO_CONTEXT::executor_type executor_type;
+
+    executor_type get_executor() { return _io_context.get_executor(); }
 };
 } // namespace detail
 } // namespace RobotRaconteur

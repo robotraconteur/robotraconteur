@@ -1,0 +1,31 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<ItemGroup>
+  <AvailableItemName Include="RobotRaconteurGenCSharp" />   
+  <AvailableItemName Include="RobotRaconteurGenInclude" />
+  <AvailableItemName Include="RobotRaconteurGenIncludePath" /> 
+</ItemGroup>
+		
+<Target Name="BeforeBuild">
+	<Message Text="RobotRaconteurGenCSharp: @(RobotRaconteurGenCSharp->'&quot;%(fullpath)&quot;', ' ')"/>
+	<Message Text="RobotRaconteurGenInclude: @(RobotRaconteurGenInclude->'--include &quot;%(fullpath)&quot;', ' ')"/>
+</Target>
+
+<Target Name="UpdateRobotRaconteurGenFiles" DependsOnTargets="_UpdateRobotRaconteurGenFiles" Condition="'@(RobotRaconteurGenCSharp)' != ''">
+  <ItemGroup>
+    <Compile Include="$(BaseIntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs" />    
+  </ItemGroup>
+</Target>
+<Target Name="_UpdateRobotRaconteurGenFiles" Inputs="$(MSBuildProjectFile);@(RobotRaconteurGenCSharp)"
+  Outputs="$(BaseIntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs">  
+  <Exec Command="&quot;$(MSBuildThisFileDirectory)..\..\tools\RobotRaconteurGen.exe&quot; --thunksource --lang=csharp --outfile=$(BaseIntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs @(RobotRaconteurGenInclude->'--include &quot;%(fullpath)&quot;', ' ') @(RobotRaconteurGenIncludePath->'--include-path &quot;%(FullPath)&quot;', ' ') --auto-import @(RobotRaconteurGenCSharp->'&quot;%(fullpath)&quot;',' ')"
+        Condition=" '$(OS)' == 'Windows_NT' " />
+  <Exec Command="RobotRaconteurGen --thunksource --lang=csharp --outfile=$(BaseIntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs @(RobotRaconteurGenInclude->'--include &quot;%(fullpath)&quot;', ' ') @(RobotRaconteurGenIncludePath->'--include-path &quot;%(FullPath)&quot;', ' ') --auto-import @(RobotRaconteurGenCSharp->'&quot;%(fullpath)&quot;',' ')"
+        Condition=" '$(OS)' != 'Windows_NT' " />
+</Target>
+
+<PropertyGroup>
+  <CoreCompileDependsOn>UpdateRobotRaconteurGenFiles;$(CoreCompileDependsOn)</CoreCompileDependsOn>
+</PropertyGroup>
+		
+</Project>

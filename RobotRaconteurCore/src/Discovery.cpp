@@ -81,13 +81,10 @@ void Discovery_updatediscoverednodes::timeout_timer_callback(const TimerEvent& e
 
         {
             boost::mutex::scoped_lock lock(timeout_timer_lock);
-            try
-            {
-                if (timeout_timer)
-                    timeout_timer->Stop();
-            }
-            catch (std::exception&)
-            {}
+
+            if (timeout_timer)
+                timeout_timer->TryStop();
+
             timeout_timer.reset();
         }
 
@@ -138,13 +135,10 @@ void Discovery_updatediscoverednodes::getdetectednodes_callback(
 
         {
             boost::mutex::scoped_lock lock(timeout_timer_lock);
-            try
-            {
-                if (timeout_timer)
-                    timeout_timer->Stop();
-            }
-            catch (std::exception&)
-            {}
+
+            if (timeout_timer)
+                timeout_timer->TryStop();
+
             timeout_timer.reset();
         }
 
@@ -261,13 +255,10 @@ void Discovery_findservicebytype::handle_error(const int32_t& key, const RR_SHAR
 
     {
         boost::mutex::scoped_lock lock(timeout_timer_lock);
-        try
-        {
-            if (timeout_timer)
-                timeout_timer->Stop();
-        }
-        catch (std::exception&)
-        {}
+
+        if (timeout_timer)
+            timeout_timer->TryStop();
+
         timeout_timer.reset();
     }
 
@@ -293,13 +284,10 @@ void Discovery_findservicebytype::timeout_timer_callback(const TimerEvent& e)
 
         {
             boost::mutex::scoped_lock lock(timeout_timer_lock);
-            try
-            {
-                if (timeout_timer)
-                    timeout_timer->Stop();
-            }
-            catch (std::exception&)
-            {}
+
+            if (timeout_timer)
+                timeout_timer->TryStop();
+
             timeout_timer.reset();
         }
 
@@ -473,13 +461,10 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
                 {
                     {
                         boost::mutex::scoped_lock lock(timeout_timer_lock);
-                        try
-                        {
-                            if (timeout_timer)
-                                timeout_timer->Stop();
-                        }
-                        catch (std::exception&)
-                        {}
+
+                        if (timeout_timer)
+                            timeout_timer->TryStop();
+
                         timeout_timer.reset();
                     }
 
@@ -1469,7 +1454,7 @@ void Discovery::AsyncUpdateDetectedNodes(const std::vector<std::string>& schemes
 
     std::vector<RR_SHARED_PTR<Transport> > t;
     {
-        boost::mutex::scoped_lock lock(n->transports_lock);
+        boost::shared_lock<boost::shared_mutex> lock(n->transports_lock);
         boost::copy(n->transports | boost::adaptors::map_values, std::back_inserter(t));
     }
 

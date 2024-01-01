@@ -118,7 +118,7 @@ std::vector<std::string> IntraTransport::GetServerListenUrls()
     if (is_server)
     {
         NodeID nodeid = GetNode()->NodeID();
-        o.push_back("rr+intra://?nodeid=" + nodeid.ToString("D"));
+        o.push_back("rr+intra:///?nodeid=" + nodeid.ToString("D"));
     }
     return o;
 }

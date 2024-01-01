@@ -50,6 +50,7 @@ public:
 	NodeID();
 	%javamethodmodifiers ToString "public ";
 	virtual std::string ToString() const;
+	virtual std::string ToString(const std::string& format) const;
 	static NodeID NewUniqueID();
     
     %rename(equals) operator==;
