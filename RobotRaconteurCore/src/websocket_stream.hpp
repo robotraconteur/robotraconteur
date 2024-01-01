@@ -66,14 +66,12 @@ class websocket_stream : private boost::noncopyable
         WebSocketOpcode_pong = 0xA
     };
 
-#ifdef ROBOTRACONTEUR_USE_OPENSSL
     typedef typename boost::remove_reference<Stream>::type next_layer_type;
     typedef typename next_layer_type::lowest_layer_type lowest_layer_type;
 
     lowest_layer_type& lowest_layer() { return next_layer_.lowest_layer(); }
 
     const lowest_layer_type& lowest_layer() const { return next_layer_.lowest_layer(); }
-#endif
 
   protected:
     boost::mutex random_lock;
@@ -81,8 +79,11 @@ class websocket_stream : private boost::noncopyable
 
   public:
 #if BOOST_ASIO_VERSION >= 101200
-    typedef RR_BOOST_ASIO_IO_CONTEXT executor_type;
-    executor_type get_executor() BOOST_ASIO_NOEXCEPT { return next_layer_.get_executor(); }
+    typedef typename lowest_layer_type::executor_type executor_type;
+    executor_type get_executor() BOOST_ASIO_NOEXCEPT { return next_layer_.lowest_layer().get_executor(); }
+#else
+    typedef typename boost::asio::io_service executor_type;
+    boost::asio::io_service& get_io_service() { return next_layer_.lowest_layer().get_io_service(); }
 #endif
 
     websocket_stream(Stream& next_layer)
@@ -276,24 +277,24 @@ class websocket_stream : private boost::noncopyable
                     return;
                 }
 
-                std::string name = line.substr(0, colon_pos);
+                std::string name = boost::to_lower_copy(line.substr(0, colon_pos));
                 std::string value;
                 if (line.size() > colon_pos + 1)
                 {
                     value = boost::trim_copy(line.substr(colon_pos + 1));
                 }
 
-                if (name == "Sec-WebSocket-Version" &&
-                    handshake_recv_args.find("Sec-WebSocket-Version") != handshake_recv_args.end())
+                if (name == "sec-websocket-version" &&
+                    handshake_recv_args.find("sec-websocket-version") != handshake_recv_args.end())
                 {
-                    std::string value2 = handshake_recv_args.at("Sec-WebSocket-Version") + ", " + value;
-                    handshake_recv_args.at("Sec-WebSocket-Version") = value2;
+                    std::string value2 = handshake_recv_args.at("sec-websocket-version") + ", " + value;
+                    handshake_recv_args.at("sec-websocket-version") = value2;
                 }
-                if (name == "Sec-WebSocket-Protocol" &&
-                    handshake_recv_args.find("Sec-WebSocket-Protocol") != handshake_recv_args.end())
+                if (name == "sec-websocket-protocol" &&
+                    handshake_recv_args.find("sec-websocket-protocol") != handshake_recv_args.end())
                 {
-                    std::string value2 = handshake_recv_args.at("Sec-WebSocket-Protocol") + ", " + value;
-                    handshake_recv_args.at("Sec-WebSocket-Protocol") = value2;
+                    std::string value2 = handshake_recv_args.at("sec-websocket-protocol") + ", " + value;
+                    handshake_recv_args.at("sec-websocket-protocol") = value2;
                 }
                 else
                 {
@@ -303,23 +304,24 @@ class websocket_stream : private boost::noncopyable
         }
 
         std::string accept_key;
+        // Make all keys in handshake_recv_args lowercase
 
-        if (handshake_recv_args.find("Upgrade") == handshake_recv_args.end() ||
-            handshake_recv_args.find("Sec-WebSocket-Key") == handshake_recv_args.end() ||
-            handshake_recv_args.find("Sec-WebSocket-Version") == handshake_recv_args.end())
+        if (handshake_recv_args.find("upgrade") == handshake_recv_args.end() ||
+            handshake_recv_args.find("sec-websocket-key") == handshake_recv_args.end() ||
+            handshake_recv_args.find("sec-websocket-version") == handshake_recv_args.end())
         {
             send_server_error("426 Upgrade Required", handler);
             return;
         }
 
-        if (boost::to_lower_copy(handshake_recv_args.at("Upgrade")) != "websocket")
+        if (boost::to_lower_copy(handshake_recv_args.at("upgrade")) != "websocket")
         {
             send_server_error("426 Upgrade Required", handler);
             return;
         }
 
         std::vector<std::string> s2;
-        boost::split(s2, handshake_recv_args.at("Sec-WebSocket-Version"), boost::is_from_range(',', ','));
+        boost::split(s2, handshake_recv_args.at("sec-websocket-version"), boost::is_from_range(',', ','));
 
         bool found_ver = false;
         BOOST_FOREACH (std::string& e, s2)
@@ -337,12 +339,12 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
-        if (handshake_recv_args.find("Sec-WebSocket-Protocol") != handshake_recv_args.end())
+        if (handshake_recv_args.find("sec-websocket-protocol") != handshake_recv_args.end())
         {
             bool found_protocol = false;
 
             std::vector<std::string> s3;
-            boost::split(s3, handshake_recv_args.at("Sec-WebSocket-Protocol"), boost::is_from_range(',', ','));
+            boost::split(s3, handshake_recv_args.at("sec-websocket-protocol"), boost::is_from_range(',', ','));
 
             BOOST_FOREACH (std::string& e, s3)
             {
@@ -360,19 +362,13 @@ class websocket_stream : private boost::noncopyable
             }
         }
 
-        if (handshake_recv_args.find("Origin") != handshake_recv_args.end() ||
-            handshake_recv_args.find("origin") != handshake_recv_args.end())
+        if (handshake_recv_args.find("origin") != handshake_recv_args.end())
         {
 
             std::string origin1;
-            if (handshake_recv_args.find("Origin") != handshake_recv_args.end())
-            {
-                origin1 = handshake_recv_args.at("Origin");
-            }
-            else
-            {
-                origin1 = handshake_recv_args.at("origin");
-            }
+
+            origin1 = handshake_recv_args.at("origin");
+
             bool good_origin = false;
 
             if (boost::range::find(allowed_origins, origin1) != allowed_origins.end())
@@ -450,7 +446,7 @@ class websocket_stream : private boost::noncopyable
             }
         }
 
-        std::string key = handshake_recv_args.at("Sec-WebSocket-Key") + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+        std::string key = handshake_recv_args.at("sec-websocket-key") + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
         accept_key = sha1_hash(key);
 
         send_server_success_response(accept_key, protocol, handler);
@@ -803,9 +799,18 @@ class websocket_stream : private boost::noncopyable
             }
         }
 
-        if (handshake_recv_args.find("Upgrade") == handshake_recv_args.end() ||
-            handshake_recv_args.find("Connection") == handshake_recv_args.end() ||
-            handshake_recv_args.find("Sec-WebSocket-Accept") == handshake_recv_args.end())
+        // Make all keys in handshake_recv_args lowercase
+        std::map<std::string, std::string> handshake_recv_args2;
+        typedef std::map<std::string, std::string>::value_type map_value_type;
+        BOOST_FOREACH (map_value_type& e, handshake_recv_args)
+        {
+            handshake_recv_args2.insert(std::make_pair(boost::to_lower_copy(e.first), e.second));
+        }
+        handshake_recv_args = handshake_recv_args2;
+
+        if (handshake_recv_args.find("upgrade") == handshake_recv_args.end() ||
+            handshake_recv_args.find("connection") == handshake_recv_args.end() ||
+            handshake_recv_args.find("sec-websocket-accept") == handshake_recv_args.end())
         {
             {
                 boost::mutex::scoped_lock lock(next_layer_lock);
@@ -818,9 +823,9 @@ class websocket_stream : private boost::noncopyable
 
         std::string accept = sha1_hash(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
 
-        if (boost::to_lower_copy(handshake_recv_args.at("Upgrade")) != "websocket" ||
-            boost::to_lower_copy(handshake_recv_args.at("Connection")) != "upgrade" ||
-            handshake_recv_args.at("Sec-WebSocket-Accept") != accept)
+        if (boost::to_lower_copy(handshake_recv_args.at("upgrade")) != "websocket" ||
+            boost::to_lower_copy(handshake_recv_args.at("connection")) != "upgrade" ||
+            handshake_recv_args.at("sec-websocket-accept") != accept)
         {
             {
                 boost::mutex::scoped_lock lock(next_layer_lock);
@@ -831,9 +836,9 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
-        if (handshake_recv_args.find("Sec-WebSocket-Protocol") != handshake_recv_args.end())
+        if (handshake_recv_args.find("sec-websocket-protocol") != handshake_recv_args.end())
         {
-            if (boost::to_lower_copy(handshake_recv_args.at("Sec-WebSocket-Protocol")) !=
+            if (boost::to_lower_copy(handshake_recv_args.at("sec-websocket-protocol")) !=
                 boost::to_lower_copy(protocol))
             {
                 {
@@ -1526,24 +1531,36 @@ class websocket_stream : private boost::noncopyable
     size_t ping_data_len;
     boost::mutex ping_lock;
 
-    template <typename Handler>
+    template <typename Handler, typename Executor>
     class handler_wrapper
     {
       public:
-        typedef typename boost::remove_reference<Handler>::type HandlerValueType;
+        typedef typename boost::remove_const<typename boost::remove_reference<Handler>::type>::type HandlerValueType;
 
-        handler_wrapper(const Handler& handler) : handler_(static_cast<const Handler&>(handler)) {}
+        handler_wrapper(const Handler& handler, RR_BOOST_ASIO_NEW_API_CONST Executor& executor)
+            : handler_(handler), executor_(executor)
+        {}
 
         void do_complete(const boost::system::error_code& ec, const std::size_t& bytes_transferred)
         {
-            // boost::asio::detail::binder2<Handler, boost::system::error_code, std::size_t>
-            // handler(handler_, ec, bytes_transferred);
-            // boost_asio_handler_invoke_helpers::invoke(handler, handler.handler_);
-            handler_(ec, bytes_transferred);
+            boost::asio::detail::binder2<HandlerValueType, boost::system::error_code, std::size_t> handler(
+                handler_, ec, bytes_transferred);
+#if BOOST_ASIO_VERSION >= 101200
+            boost::asio::post(boost::asio::get_associated_executor(handler, executor_), handler);
+#else
+            executor_.post(handler);
+#endif
+            // boost::asio::asio_handler_invoke(handler, boost::asio::detail::addressof(handler_), ec,
+            // bytes_transferred);
         }
 
       private:
         HandlerValueType handler_;
+#if BOOST_ASIO_VERSION >= 101200
+        Executor executor_;
+#else
+        boost::asio::io_service& executor_;
+#endif
     };
 
   public:
@@ -1568,20 +1585,22 @@ class websocket_stream : private boost::noncopyable
         }
 
         // TODO: use more than first buffer
-        boost::shared_ptr<handler_wrapper<Handler> > handler2 =
-            boost::make_shared<handler_wrapper<Handler> >(boost::ref(handler));
+        boost::shared_ptr<handler_wrapper<Handler, executor_type> > handler2 =
+            boost::make_shared<handler_wrapper<Handler, executor_type> >(
+                boost::ref(handler), RR_BOOST_ASIO_REF_IO_SERVICE(RR_BOOST_ASIO_GET_IO_SERVICE((*this))));
         async_read_some2(
             boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence>::first(
                 buffers),
-            boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1),
+            boost::bind(&handler_wrapper<Handler, executor_type>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1),
                         RR_BOOST_PLACEHOLDERS(_2)));
     }
 
     template <typename Handler>
     void async_write_some(const const_buffers& buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
     {
-        boost::shared_ptr<handler_wrapper<Handler> > handler2 =
-            boost::make_shared<handler_wrapper<Handler> >(boost::ref(handler));
+        boost::shared_ptr<handler_wrapper<Handler, executor_type> > handler2 =
+            boost::make_shared<handler_wrapper<Handler, executor_type> >(
+                boost::ref(handler), RR_BOOST_ASIO_REF_IO_SERVICE(RR_BOOST_ASIO_GET_IO_SERVICE((*this))));
         if (ping_requested)
         {
             boost::shared_array<uint8_t> ping_data2;
@@ -1605,15 +1624,15 @@ class websocket_stream : private boost::noncopyable
                     boost::asio::placeholders::bytes_transferred, ping_data2, ping_data_len2, 0,
                     boost::asio::detail::buffer_sequence_adapter<boost::asio::const_buffer, const_buffers>::first(
                         buffers),
-                    boost::protect(boost::bind(&handler_wrapper<Handler>::do_complete, handler2,
+                    boost::protect(boost::bind(&handler_wrapper<Handler, executor_type>::do_complete, handler2,
                                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)))));
         }
         else
         {
             // TODO: use more than first buffer
             async_write_message(DataFrameType, buffers,
-                                boost::bind(&handler_wrapper<Handler>::do_complete, handler2, RR_BOOST_PLACEHOLDERS(_1),
-                                            RR_BOOST_PLACEHOLDERS(_2)));
+                                boost::bind(&handler_wrapper<Handler, executor_type>::do_complete, handler2,
+                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
         }
     }
 

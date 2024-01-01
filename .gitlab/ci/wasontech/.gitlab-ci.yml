@@ -356,8 +356,8 @@ build_freebsd_amd64:
       -DCMAKE_FIND_ROOT_PATH="/usr/local;/Library;/System/Library;/Applications"
       -DROBOTRACONTEUR_EXTRA_TESTS=ON 
       -DPYTHON3_EXECUTABLE=/Users/wasonj/python3-intel64/venv/bin/python3-intel64 
-      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.10/lib/libpython3.10.dylib 
-      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.10/include/python3.10 
+      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib 
+      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12 
       ..
     - ${RUNCMD} cmake --build . --config Release
     - ${RUNCMD} ctest . -C Release --output-on-failure
@@ -492,3 +492,165 @@ build_raspbian_buster_armhf:
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=ON
     OUTNAME: out-raspbian_bullseye_armhf
 
+.osx_build_arm64:
+  stage: build
+
+  script:
+    - export LIBRARY_PATH=/usr/local/opt/icu4c/lib
+    - mkdir build
+    - cd build
+    - > 
+      ${RUNCMD} cmake -G Ninja
+      -DCMAKE_OSX_ARCHITECTURES=arm64
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
+      -DOPENSSL_USE_STATIC_LIBS=ON    
+      ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_MATLAB_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS} ${EXTRA_CMAKE_ARGS}
+      -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
+      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0 
+      -DGTest_DIR=/opt/homebrew/Cellar/googletest/1.12.1/lib/cmake/GTest 
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
+      -DBoost_NO_BOOST_CMAKE=ON 
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
+      -DROBOTRACONTEUR_EXTRA_TESTS=ON 
+      -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
+      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib 
+      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12
+      -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64"
+      ..
+    - ${RUNCMD} cmake --build . --config Release
+    - ${RUNCMD} ctest . -C Release --output-on-failure
+    - cp ../LICENSE.txt out/
+    - cp rrversion.txt out/
+  after_script:
+    - mkdir $OUTNAME
+    - mv build/out $OUTNAME/
+  artifacts:
+    when: always
+    name: "${OUTNAME}"
+    paths:
+      - ${OUTNAME}/out/*
+  variables:
+    BOOST_VERSION: 1.83.0
+    CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON
+
+.osx_build_arm64_dev:
+  extends: 
+  - .osx_build_arm64
+  - .dev_build
+  variables:
+    CONFIG_CMAKE_ARGS: ""
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+
+.osx_build_arm64_release:
+  extends: 
+  - .osx_build_arm64
+  - .release_build
+  variables:
+    CONFIG_CMAKE_ARGS: ""
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+
+build_osx_arm64:
+  stage: build
+  extends: .osx_build_arm64_dev
+  tags:
+    - wasontech
+    - macos
+    - m1
+  variables:
+    OUTNAME: "out-osx_arm64"
+
+build_osx_arm64_release:
+  stage: build
+  extends: .osx_build_arm64_release
+  tags:
+    - wasontech
+    - macos
+    - m1
+  variables:
+    OUTNAME: "out-osx_arm64"
+
+.osx_arm64_build_python_ver:
+  script:
+    - cd ${CI_PROJECT_DIR}
+    - mkdir build_$PYVER
+    - cd build_$PYVER
+    - >
+      ${RUNCMD} cmake -G Ninja
+      -DBUILD_CORE=OFF -DBUILD_GEN=OFF -DBUILD_TESTING=ON
+      -DCMAKE_OSX_ARCHITECTURES=arm64
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
+      -DOPENSSL_USE_STATIC_LIBS=ON    
+      ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
+      -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
+      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0 
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
+      -DBoost_NO_BOOST_CMAKE=ON 
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
+      -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/$PYVER/bin/python3
+      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/$PYVER/lib/libpython$PYVER.dylib 
+      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/$PYVER/include/python$PYVER
+      -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64"
+      -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+      -DRobotRaconteur_DIR=${CI_PROJECT_DIR}/build
+      ..
+    - ${RUNCMD} cmake --build . --config Release
+    - cp out/Python3/dist/*.whl ${CI_PROJECT_DIR}/${OUTNAME}/
+    - ${RUNCMD} ctest . -C Release --output-on-failure
+
+.osx_arm64_build_python:
+  script:
+    - export LIBRARY_PATH=/usr/local/opt/icu4c/lib
+    - mkdir build
+    - cd build
+    - >
+      ${RUNCMD} cmake -G Ninja
+      -DCMAKE_OSX_ARCHITECTURES=arm64
+      -DBUILD_GEN=OFF -DBUILD_TESTING=OFF
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
+      -DOPENSSL_USE_STATIC_LIBS=ON    
+      ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
+      -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
+      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0 
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
+      -DBoost_NO_BOOST_CMAKE=ON 
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
+      ..
+    - ${RUNCMD} cmake --build . --config Release
+    - cd ${CI_PROJECT_DIR}
+    - export PYVER=3.10
+    - mkdir osx-arm64-python-wheels
+    - !reference [.osx_arm64_build_python_ver, script]
+    - export PYVER=3.11
+    - !reference [.osx_arm64_build_python_ver, script]
+    - export PYVER=3.12
+    - !reference [.osx_arm64_build_python_ver, script]
+  
+  artifacts:
+    when: always
+    name: "${OUTNAME}"
+    paths:
+      - ${OUTNAME}/*.whl
+
+build_osx_arm64_python_release:
+  stage: build
+  extends: 
+    - .release_build
+    - .osx_arm64_build_python
+  tags:
+    - wasontech
+    - macos
+    - m1
+  variables:
+    OUTNAME: "osx-arm64-python-wheels"

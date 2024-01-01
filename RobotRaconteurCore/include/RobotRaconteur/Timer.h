@@ -80,6 +80,12 @@ class ROBOTRACONTEUR_CORE_API Timer : private boost::noncopyable
     virtual void Stop() = 0;
 
     /**
+     * @brief Stop the timer without throwing an exception if the timer is not running
+     *
+     */
+    virtual void TryStop() = 0;
+
+    /**
      * @brief Get the period of the timer
      *
      * @return boost::posix_time::time_duration
@@ -177,6 +183,8 @@ class ROBOTRACONTEUR_CORE_API WallTimer : public Timer, public RR_ENABLE_SHARED_
     RR_OVIRTUAL void Start() RR_OVERRIDE;
 
     RR_OVIRTUAL void Stop() RR_OVERRIDE;
+
+    RR_OVIRTUAL void TryStop() RR_OVERRIDE;
 
     RR_OVIRTUAL boost::posix_time::time_duration GetPeriod() RR_OVERRIDE;
 

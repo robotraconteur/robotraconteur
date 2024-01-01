@@ -42,7 +42,7 @@ with tempfile.TemporaryDirectory() as tmpdirname:
 
     shutil.copyfile(f'{win32dir}/NET/RobotRaconteurNET.dll',
                     tmpdir.joinpath('lib/net45/RobotRaconteurNET.dll').absolute())
-    shutil.copyfile(f'{win32dir}/NET/netstandard/RobotRaconteurNET.dll',
+    shutil.copyfile(f'{win64dir}/NET/netstandard/RobotRaconteurNET.dll',
                     tmpdir.joinpath('lib/netstandard2.0/RobotRaconteurNET.dll').absolute())
     shutil.copyfile(f'{win32dir}/NET/Native/RobotRaconteurNETNative.dll',
                     tmpdir.joinpath('runtimes/win-x86/native/RobotRaconteurNETNative.dll').absolute())
