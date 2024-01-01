@@ -149,12 +149,25 @@ void WallTimer::Stop()
     if (!running)
         throw InvalidOperationException("Not running");
 
-    try
-    {
-        timer->cancel();
-    }
-    catch (std::exception&)
-    {}
+    boost::system::error_code ec;
+    timer->cancel(ec);
+
+    timer.reset();
+    running = false;
+
+    if (oneshot)
+        handler.clear();
+}
+
+void WallTimer::TryStop()
+{
+    boost::mutex::scoped_lock lock(running_lock);
+    if (!running)
+        return;
+
+    boost::system::error_code ec;
+    timer->cancel(ec);
+
     timer.reset();
     running = false;
 

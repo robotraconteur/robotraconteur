@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
     cout << "Press enter to quit" << endl;
     boost::this_thread::sleep(boost::posix_time::seconds(120));
     servicetest_keepgoing = false;
-    t->Stop();
+    t->TryStop();
     RobotRaconteurNode::s()->DisconnectService(obj);
     RobotRaconteurNode::s()->Shutdown();
     cout << "Test completed, no errors detected!" << endl;

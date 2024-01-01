@@ -1,0 +1,41 @@
+name: rr_net_dist_test_osx
+description: rr_net_dist_test_osx
+
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/setup-dotnet@v3
+    id: dotnet
+    with:
+      dotnet-version: "6.0.x"
+  - name: Find Nuget File
+    working-directory: artifacts/distfiles
+    shell: bash
+    run: |
+      pattern=*.nupkg
+      file=$(find . -name "$pattern" | head -n 1)
+      if [[ ! -f "$file" ]]; then
+        echo "Nuget file not found"
+        exit 1
+      fi
+      echo "NUPKG_FILENAME=$file" >> $GITHUB_ENV
+
+  - name: add nuget packages
+    run: |
+      mkdir ${{ github.workspace }}/nuget_packages
+      dotnet nuget add source ${{ github.workspace }}/nuget_packages
+      nuget add -source ${{ github.workspace }}/nuget_packages ${{ github.workspace }}/artifacts/distfiles/${{ env.NUPKG_FILENAME }}
+    shell: bash
+  - name: test
+    working-directory: ${{ github.workspace }}/robotraconteur/test/dist/net/src
+    run: |
+      chmod +x ${{ github.workspace }}/artifacts/out-osx/bin/RobotRaconteurGen
+      export PATH=$PATH:${{ github.workspace }}/artifacts/out-osx/bin
+      export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${{ github.workspace }}/artifacts/out-osx/NET/Native
+      dotnet restore
+      nuget sources Disable -Name "nuget.org"
+      dotnet add package RobotRaconteurNET --prerelease
+      nuget sources Enable -Name "nuget.org"
+      dotnet build
+      dotnet run
+    shell: bash

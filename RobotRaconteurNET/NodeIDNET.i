@@ -49,6 +49,8 @@ public:
 	NodeID();
 	%csmethodmodifiers ToString "public override";
 	virtual std::string ToString() const;
+	%csmethodmodifiers ToString "public";
+	virtual std::string ToString(const std::string& format) const;
 	static NodeID NewUniqueID();
     
     %csmethodmodifiers operator== "public virtual";

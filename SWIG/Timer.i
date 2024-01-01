@@ -52,6 +52,8 @@ public:
 
 	virtual void Stop()=0;
 
+	virtual void TryStop()=0;
+
 	virtual boost::posix_time::time_duration GetPeriod()=0;
 
 	virtual void SetPeriod(const boost::posix_time::time_duration& period)=0;
@@ -70,6 +72,8 @@ public:
 	virtual void Start();
 
 	virtual void Stop();
+
+	virtual void TryStop();
 	
 	virtual boost::posix_time::time_duration GetPeriod();
 

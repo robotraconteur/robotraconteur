@@ -3105,13 +3105,10 @@ void RobotRaconteurTest_testroot::Shutdown()
 {
     {
         boost::mutex::scoped_lock lock(broadcastpipe_lock);
-        try
-        {
-            if (broadcastpipe_timer)
-                broadcastpipe_timer->Stop();
-        }
-        catch (std::exception&)
-        {}
+
+        if (broadcastpipe_timer)
+            broadcastpipe_timer->TryStop();
+
         broadcastpipe_timer.reset();
     }
 }
@@ -3291,6 +3288,8 @@ void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTranspo
     m.insert(make_pair("test", stringToRRArray("This is a test attribute")));
     m.insert(make_pair("test2", ScalarToRRArray<int32_t>(42)));
     c->SetAttributes(m);
+
+    c->LogCandidateConnectionURLs();
 
     string authdata =
         "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\ntestuser2 841c4221c2e7e0cefbc0392a35222512 "

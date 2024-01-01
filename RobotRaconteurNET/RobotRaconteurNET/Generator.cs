@@ -277,14 +277,6 @@ public interface Generator3<ParamType>
     /// </remarks>
     /// <param name="param">Parameter to pass to generator</param>
     void Next(ParamType param);
-    /// <summary>
-    /// Asynchronously advance the generator
-    /// </summary>
-    /// <remarks>
-    /// Same as Next() but async.
-    /// </remarks>
-    /// <param name="param">Parameter to pass to generator</param>
-    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
 
     /// <summary>
     /// Try to advance the generator. Returns false if there are no more values.
@@ -295,6 +287,15 @@ public interface Generator3<ParamType>
     /// <param name="param">Parameter to pass to generator</param>
     /// <returns>True if more values are available, otherwise false</returns>
     bool TryNext(ParamType param);
+
+    /// <summary>
+    /// Asynchronously advance the generator
+    /// </summary>
+    /// <remarks>
+    /// Same as Next() but async.
+    /// </remarks>
+    /// <param name="param">Parameter to pass to generator</param>
+    /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout.</param>
     Task AsyncNext(ParamType param, int timeout = RobotRaconteurNode.RR_TIMEOUT_INFINITE);
     /// <summary>
     /// Abort the generator

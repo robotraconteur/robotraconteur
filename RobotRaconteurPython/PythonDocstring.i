@@ -1128,6 +1128,10 @@ Must be called after RobotRaconteurNode.CreateTimer()
 Stop the timer
 """
 
+%feature("docstring") RobotRaconteur::Timer::TryStop() """
+Stop the timer without throwing an exception if the timer is not running
+"""
+
 %feature("docstring") RobotRaconteur::Timer::GetPeriod() """
 Get the period of the timer in seconds
 
@@ -1442,6 +1446,27 @@ See AddExtraImport()
 :type import_: str
 :return: True The service definition was removed, False The service definition was not found in the extra imports vector
 :rtype: bool 
+"""
+
+%feature("docstring") RobotRaconteur::ServerContext::GetCandidateConnectionURLs() """
+Get the candidate connection URLs for this service. The candidate connection URLs are 
+the URLs that can be used to connect to the service. The correct URL to use depends on the 
+transport being used to connect to the service, and the network configuration of the client and service.
+
+:return: The candidate connection URLs
+:rtype: List[str]
+"""
+
+%feature("docstring") RobotRaconteur::ServerContext::PrintCandidateConnectionURLs() """
+Print the candidate connection URLs for this service. See GetCandidateConnectionURLs() for more information.
+
+"""
+
+%feature("docstring") RobotRaconteur::ServerContext::LogCandidateConnectionURLs(RobotRaconteur_LogLevel level = RobotRaconteur_LogLevel_Info) """
+Log the candidate connection URLs for this service. See GetCandidateConnectionURLs() for more information.
+
+:param level: The log level to use. Defaults to RobotRaconteur.LogLevel_Info
+:type level: RobotRaconteur.LogLevel
 """
 
 %feature("docstring") RobotRaconteur::ServerEndpoint """
