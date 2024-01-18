@@ -225,7 +225,7 @@ jobs:
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v5
+      uses: johnwason/vcpkg-action@7c4b562bb35ef5a01d9d728acc90100b107dee4d
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -233,6 +233,7 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
+        github-binarycache: true
     - uses: actions/setup-java@v1
       with:
         java-version: 8
@@ -365,7 +366,7 @@ jobs:
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v5
+      uses: johnwason/vcpkg-action@7c4b562bb35ef5a01d9d728acc90100b107dee4d
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -373,6 +374,7 @@ jobs:
         extra-args: --clean-after-build
         cache-key: win-shared-build-main
         token: ${{ github.token }}
+        github-binarycache: true
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -536,7 +538,7 @@ jobs:
       with:
         release: R2020b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v5
+      uses: johnwason/vcpkg-action@7c4b562bb35ef5a01d9d728acc90100b107dee4d
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -544,6 +546,7 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ubuntu-build-matlab
         token: ${{ github.token }}
+        github-binarycache: true
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -827,7 +830,7 @@ jobs:
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v5
+      uses: johnwason/vcpkg-action@7c4b562bb35ef5a01d9d728acc90100b107dee4d
       id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
@@ -836,6 +839,7 @@ jobs:
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
         token: ${{ github.token }}
         revision: 2023.08.09
+        github-binarycache: true
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
@@ -1039,7 +1043,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: vcpkg build
-        uses: johnwason/vcpkg-action@v5
+        uses: johnwason/vcpkg-action@7c4b562bb35ef5a01d9d728acc90100b107dee4d
         id: vcpkg
         with:
           pkgs: robotraconteur
@@ -1047,6 +1051,7 @@ jobs:
           extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-win
           token: ${{ github.token }}
+          github-binarycache: true
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
@@ -1074,7 +1079,7 @@ jobs:
           libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
           git cmake g++ make curl libgtest-dev -qq
       - name: vcpkg build
-        uses: johnwason/vcpkg-action@v5
+        uses: johnwason/vcpkg-action@7c4b562bb35ef5a01d9d728acc90100b107dee4d
         id: vcpkg
         with:
           pkgs: robotraconteur
@@ -1082,6 +1087,7 @@ jobs:
           extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-linux
           token: ${{ github.token }}
+          github-binarycache: true
       - name: build-disttest-cpp
         working-directory: test/dist/cpp
         run: |
@@ -1105,7 +1111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: vcpkg build
-        uses: johnwason/vcpkg-action@v5
+        uses: johnwason/vcpkg-action@7c4b562bb35ef5a01d9d728acc90100b107dee4d
         id: vcpkg
         with:
           pkgs: robotraconteur
@@ -1113,6 +1119,7 @@ jobs:
           extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-osx
           token: ${{ github.token }}
+          github-binarycache: true
       - name: build-disttest-cpp
         working-directory: test/dist/cpp
         run: |
