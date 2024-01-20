@@ -24,7 +24,6 @@
 #include "RobotRaconteur/ServiceIndexer.h"
 #include "RobotRaconteur/DataTypes.h"
 #include <boost/regex.hpp>
-#include <boost/asio/steady_timer.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range/adaptors.hpp>
 #include <boost/range/algorithm.hpp>
@@ -32,6 +31,10 @@
 
 #include "Discovery_private.h"
 #include "RobotRaconteurNode_connector_private.h"
+
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+#include <boost/asio/steady_timer.hpp>
+#endif
 
 namespace RobotRaconteur
 {

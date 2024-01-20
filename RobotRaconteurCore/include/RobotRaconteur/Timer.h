@@ -23,7 +23,12 @@
 
 #include <boost/date_time.hpp>
 #include "RobotRaconteur/DataTypes.h"
+
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
 #include <boost/asio/deadline_timer.hpp>
+#endif
+
+#include <boost/system/error_code.hpp>
 
 #pragma once
 

@@ -22,8 +22,8 @@
  */
 
 #include <boost/bind/placeholders.hpp>
-#include <boost/asio.hpp>
 #include <boost/scope_exit.hpp>
+#include <boost/system/error_code.hpp>
 
 #include "RobotRaconteur/Error.h"
 #include "RobotRaconteur/DataTypes.h"
