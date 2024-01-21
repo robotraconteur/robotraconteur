@@ -188,6 +188,16 @@ set(RobotRaconteurCore_header
     include/RobotRaconteur/ASIOStreamBaseTransport.h
     include/RobotRaconteur/NodeSetup.h
 )
+else()
+set(RobotRaconteurCore_src
+    ${RobotRaconteurCore_src}
+    src/RobotRaconteurEmscripten.cpp
+)
+
+set(RobotRaconteurCore_header
+    ${RobotRaconteurCore_header}
+    include/RobotRaconteur/RobotRaconteurEmscripten.h
+)
 endif()
 
 

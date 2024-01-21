@@ -59,3 +59,10 @@ package_source_swig_java("-DSWIGWORDSIZE64" ${CMAKE_BINARY_DIR}/generated_src/Ja
 package_source_swig_python("-DSWIGWORDSIZE64" ${CMAKE_BINARY_DIR}/generated_src/Python/swigwordsize64 python_sources_64)
 package_source_swig_python("-DSWIGWORDSIZE64" ${CMAKE_BINARY_DIR}/generated_src/Python3/swigwordsize64
                            python3_sources_64)
+
+
+package_source_swig_python("-DROBOTRACONTEUR_EMSCRIPTEN=1;-DROBOTRACONTEUR_NO_TCP_TRANSPORT=1;-DROBOTRACONTEUR_NO_LOCAL_TRANSPORT=1;-DROBOTRACONTEUR_NO_HARDWARE_TRANSPORT=1;-DROBOTRACONTEUR_NO_NODE_SETUP=1" 
+    ${CMAKE_BINARY_DIR}/generated_src/Python3_emscripten/swigwordsize32 python3_sources_32)
+package_source_swig_python("-DSWIGWORDSIZE64;-DROBOTRACONTEUR_EMSCRIPTEN=1;-DROBOTRACONTEUR_NO_TCP_TRANSPORT=1;-DROBOTRACONTEUR_NO_LOCAL_TRANSPORT=1;-DROBOTRACONTEUR_NO_HARDWARE_TRANSPORT=1;-DROBOTRACONTEUR_NO_NODE_SETUP=1" 
+    ${CMAKE_BINARY_DIR}/generated_src/Python3_emscripten/swigwordsize64
+                            python3_sources_64)

@@ -86,7 +86,7 @@ namespace boost
         };
         class deadline_timer {
             public:
-                deadline_timer(io_service& service) {}
+                deadline_timer(io_service& service);
                 void expires_from_now(boost::posix_time::time_duration duration);
                 boost::posix_time::time_duration expires_from_now();
                 void expires_at(boost::posix_time::ptime duration);
@@ -114,6 +114,11 @@ namespace boost
             val_ = val;
         }
 
+        void reset()
+        {
+            reset(0);
+        }
+
         T* get()
         {
             return val_;
@@ -132,7 +137,7 @@ namespace boost
         template <typename U>
         thread(U u) {}
 
-        void join();
+        void join() {}
     };
 
     typedef boost::posix_time::ptime system_time; 
@@ -140,15 +145,12 @@ namespace boost
     namespace this_thread
     {
         template <typename T>
-        void sleep(T& t)
+        static void sleep(T& t)
         {
             throw std::runtime_error("Operation requires threading");
         }
 
-        int get_id()
-        {
-            return 1;
-        }
+        int get_id();
     }
 }
 

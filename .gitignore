@@ -359,3 +359,5 @@ generated_src
 vcpkg
 build_xcframework
 .cache
+
+/setup.py
