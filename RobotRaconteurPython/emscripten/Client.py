@@ -15,4 +15,5 @@
 import RobotRaconteur as RR
 RRN = RR.RobotRaconteurNode.s
 
-# TODO: initialize BrowserTransport
+browser_websocket_transport = RR.BrowserWebSocketTransport()
+RRN.RegisterTransport(browser_websocket_transport)

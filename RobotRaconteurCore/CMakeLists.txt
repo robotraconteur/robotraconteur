@@ -76,6 +76,7 @@ if(UNIX AND NOT "${CMAKE_SYSTEM}" MATCHES "Linux")
 endif()
 
 set(RobotRaconteurCore_src
+    src/ASIOStreamBaseTransport.cpp
     src/AutoResetEvent.cpp
     src/CallbackMember.cpp
     src/DataTypes.cpp
@@ -124,6 +125,7 @@ set(RobotRaconteurCore_src
     src/NodeDirectories.cpp)
 
 set(RobotRaconteurCore_header
+    include/RobotRaconteur/ASIOStreamBaseTransport.h
     include/RobotRaconteur/RobotRaconteurConfig.h
     include/RobotRaconteur/AutoResetEvent.h
     include/RobotRaconteur/CallbackMember.h
@@ -172,7 +174,6 @@ set(RobotRaconteurCore_src
     src/TcpTransport.cpp
     src/LocalTransport.cpp
     src/LocalTransport_private.h
-    src/ASIOStreamBaseTransport.cpp
     src/HardwareTransport.cpp
     src/HardwareTransport_private.h
     src/websocket_stream.hpp
@@ -185,18 +186,20 @@ set(RobotRaconteurCore_header
     include/RobotRaconteur/TcpTransport.h
     include/RobotRaconteur/LocalTransport.h
     include/RobotRaconteur/HardwareTransport.h
-    include/RobotRaconteur/ASIOStreamBaseTransport.h
     include/RobotRaconteur/NodeSetup.h
 )
 else()
 set(RobotRaconteurCore_src
     ${RobotRaconteurCore_src}
     src/RobotRaconteurEmscripten.cpp
+    src/BrowserWebSocketTransport.cpp
+    src/BrowserWebSocketTransport_private.h
 )
 
 set(RobotRaconteurCore_header
     ${RobotRaconteurCore_header}
     include/RobotRaconteur/RobotRaconteurEmscripten.h
+    include/RobotRaconteur/BrowserWebSocketTransport.h
 )
 endif()
 

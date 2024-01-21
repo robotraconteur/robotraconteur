@@ -29,7 +29,6 @@ using namespace boost::asio;
 using namespace RobotRaconteur;
 
 using namespace std;
-using namespace boost::asio::ip;
 using namespace boost;
 
 namespace RobotRaconteur

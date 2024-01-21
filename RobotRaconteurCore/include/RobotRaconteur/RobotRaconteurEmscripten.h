@@ -87,6 +87,7 @@ namespace boost
         class deadline_timer {
             public:
                 deadline_timer(io_service& service);
+                deadline_timer(io_service& service, boost::posix_time::time_duration duration);
                 void expires_from_now(boost::posix_time::time_duration duration);
                 boost::posix_time::time_duration expires_from_now();
                 void expires_at(boost::posix_time::ptime duration);

@@ -14,6 +14,11 @@ namespace asio
 
     }
 
+    deadline_timer::deadline_timer(io_service& service, boost::posix_time::time_duration duration)
+    {
+        
+    }
+
     void deadline_timer::expires_from_now(boost::posix_time::time_duration duration)
     {
 

@@ -91,6 +91,10 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 #endif
 %include "IntraTransport.i"
 
+#ifdef ROBOTRACONTEUR_EMSCRIPTEN
+%include "BrowserWebSocketTransport.i"
+#endif
+
 %include "TimerPython.i"
 
 %include "TimeSpecPython.i"
