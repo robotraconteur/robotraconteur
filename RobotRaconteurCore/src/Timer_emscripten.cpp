@@ -23,22 +23,22 @@ namespace RobotRaconteur
 {
     TimerEvent::TimerEvent() { stopped = false; }
 
-	std::map<void*,RR_SHARED_PTR<WallTimer> > WallTimer::timers;
+	std::map<void*,RR_SHARED_PTR<WallTimer> > WallTimer::em_timers;
 
 	void WallTimer::node_shutdown(RobotRaconteurNode* node)
 	{
-		for(std::map<void*,RR_SHARED_PTR<WallTimer> >::iterator e = timers.begin(); e!=timers.end();)
+		for(std::map<void*,RR_SHARED_PTR<WallTimer> >::iterator e = em_timers.begin(); e!=em_timers.end();)
 		{
 			RR_SHARED_PTR<RobotRaconteurNode> node1=e->second->node.lock();
 			if (!node1)
 			{
-				e = timers.erase(e);
+				e = em_timers.erase(e);
 				continue;
 			}
 			if (e->second->node.lock().get() == node)
 			{
-				emscripten_clear_timeout(e->second->timer);
-				e=timers.erase(e);
+				emscripten_clear_timeout(e->second->em_timer);
+				e=em_timers.erase(e);
 				continue;
 			}
 			++e;
@@ -47,8 +47,8 @@ namespace RobotRaconteur
 
 	void timer_handler(void* userData)
 	{
-		std::map<void*,RR_SHARED_PTR<WallTimer> >::iterator e=WallTimer::timers.find(userData);
-		if(e==WallTimer::timers.end())
+		std::map<void*,RR_SHARED_PTR<WallTimer> >::iterator e=WallTimer::em_timers.find(userData);
+		if(e==WallTimer::em_timers.end())
 		{
 			return;
 		}
@@ -56,7 +56,7 @@ namespace RobotRaconteur
 		const RR_SHARED_PTR<WallTimer> t = e->second;
 		if (!t->running || t->oneshot)
 		{
-			WallTimer::timers.erase(e);
+			WallTimer::em_timers.erase(e);
 		}
 
 		RR_WEAK_PTR<RobotRaconteurNode> node=t->node;
@@ -104,7 +104,7 @@ namespace RobotRaconteur
 		}
 		catch (std::exception& exp)
 		{
-			n->HandleException(&exp);
+			RobotRaconteurNode::TryHandleException(node, &exp);
 		}
 		if (!oneshot)
 		{
@@ -121,7 +121,7 @@ namespace RobotRaconteur
 		}
 		else
 		{			
-			timer = 0;			
+			em_timer.data() = 0;			
 		}
 
 	}
@@ -134,7 +134,6 @@ namespace RobotRaconteur
 		running=false;
 		if (!node) this->node=RobotRaconteurNode::weak_sp();
 		this->node=node;
-		this->timer = 0;
 	}
 
 	void WallTimer::Start()
@@ -151,17 +150,17 @@ namespace RobotRaconteur
 		last_time=start_time;
 		actual_last_time=last_time;
 
-		timer = 0;
+		em_timer.data() = 0;
 		
 		if (oneshot)
 		{
-			timer = emscripten_set_timeout(&timer_handler, period.total_milliseconds(), this);
+			em_timer.data() = emscripten_set_timeout(&timer_handler, period.total_milliseconds(), this);
 		}
 		else
 		{
-			timer = emscripten_set_interval(&timer_handler, period.total_milliseconds(), this);
+			em_timer.data() = emscripten_set_interval(&timer_handler, period.total_milliseconds(), this);
 		}
-		timers.insert(std::make_pair(this,shared_from_this()));
+		em_timers.insert(std::make_pair(this,shared_from_this()));
 		running=true;
 	}
 
@@ -176,21 +175,21 @@ namespace RobotRaconteur
 
 	void WallTimer::Stop()
 	{
-		timers.erase(this);
+		em_timers.erase(this);
 
 		if (!running) throw InvalidOperationException("Not running");
 
 		try
 		{
-			if (timer != 0)
+			if (em_timer.data() != 0)
 			{
 				if (oneshot)
 				{
-					emscripten_clear_timeout(timer);
+					emscripten_clear_timeout(em_timer.data());
 				}
 				else
 				{
-					emscripten_clear_interval(timer);
+					emscripten_clear_interval(em_timer.data());
 				}
 			}
 		}
