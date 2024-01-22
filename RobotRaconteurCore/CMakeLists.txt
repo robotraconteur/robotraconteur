@@ -105,7 +105,6 @@ set(RobotRaconteurCore_src
     src/Transport.cpp
     src/WireMember.cpp
     src/WireMember_private.h
-    src/Timer.cpp
     src/AsyncUtils.cpp
     src/StringTable.cpp
     src/AsyncMessageReader.cpp
@@ -179,6 +178,7 @@ set(RobotRaconteurCore_src
     src/websocket_stream.hpp
     src/NodeSetup.cpp
     src/Tap.cpp
+    src/Timer.cpp
 )
 
 set(RobotRaconteurCore_header
@@ -194,6 +194,7 @@ set(RobotRaconteurCore_src
     src/RobotRaconteurEmscripten.cpp
     src/BrowserWebSocketTransport.cpp
     src/BrowserWebSocketTransport_private.h
+    src/Timer_emscripten.cpp
 )
 
 set(RobotRaconteurCore_header

@@ -50,13 +50,15 @@ set(SWIG_DEPENDS ${RobotRaconteur_SWIG_sources} ${Python_SWIG_sources} ${Python_
 set(SWIG_CXX_EXTENSION cxx)
 
 if (EMSCRIPTEN)
-set(SWIG_PYTHON_EXTRA_ARGS ${SWIG_PYTHON_EXTRA_ARGS} -DROBOTRACONTEUR_EMSCRIPTEN=1 -DROBOTRACONTEUR_NO_TCP_TRANSPORT=1 -DROBOTRACONTEUR_NO_LOCAL_TRANSPORT=1 
+set(SWIG_PYTHON_EXTRA_ARGS2 ${SWIG_PYTHON_EXTRA_ARGS} -DROBOTRACONTEUR_EMSCRIPTEN=1 -DROBOTRACONTEUR_NO_TCP_TRANSPORT=1 -DROBOTRACONTEUR_NO_LOCAL_TRANSPORT=1 
     -DROBOTRACONTEUR_NO_HARDWARE_TRANSPORT=1 -DROBOTRACONTEUR_NO_NODE_SETUP=1)
+else()
+    set(SWIG_PYTHON_EXTRA_ARGS2 ${SWIG_PYTHON_EXTRA_ARGS} -threads)
 endif()
 
 set_property(SOURCE ${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurPython.i PROPERTY CPLUSPLUS ON)
-set_property(SOURCE ${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurPython.i PROPERTY SWIG_FLAGS ${SWIG_PYTHON_EXTRA_ARGS}
-                                                                              -relativeimport -threads)
+set_property(SOURCE ${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurPython.i PROPERTY SWIG_FLAGS ${SWIG_PYTHON_EXTRA_ARGS2}
+                                                                              -relativeimport)
 
 endif()
 

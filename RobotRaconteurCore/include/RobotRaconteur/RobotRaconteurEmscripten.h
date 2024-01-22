@@ -4,6 +4,11 @@
 #include <boost/function.hpp>
 #include <boost/system/error_code.hpp>
 
+namespace RobotRaconteur
+{
+    class WallTimer;
+}
+
 namespace boost
 {
     template <typename T>
@@ -88,6 +93,7 @@ namespace boost
             public:
                 deadline_timer(io_service& service);
                 deadline_timer(io_service& service, boost::posix_time::time_duration duration);
+                ~deadline_timer();
                 void expires_from_now(boost::posix_time::time_duration duration);
                 boost::posix_time::time_duration expires_from_now();
                 void expires_at(boost::posix_time::ptime duration);
@@ -95,6 +101,10 @@ namespace boost
                 void cancel();
                 void cancel(boost::system::error_code ec);
                 void wait();
+
+            protected:
+                boost::shared_ptr<RobotRaconteur::WallTimer> timer;
+                double next_timeout;
         };
     }
 
