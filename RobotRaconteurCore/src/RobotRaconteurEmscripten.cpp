@@ -18,8 +18,6 @@ namespace asio
         boost::function<void()>* f_ptr = reinterpret_cast<boost::function<void()>*>(user_data);
         f_ptr->swap(f);
         delete f_ptr;
-
-        // TODO: Call with node exception handler wrapper?
         f();
     }   
 
