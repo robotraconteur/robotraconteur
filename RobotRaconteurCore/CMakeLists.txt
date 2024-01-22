@@ -5,32 +5,32 @@ set(RobotRaconteur_DISABLE_STRINGTABLE FALSE CACHE BOOL "Disable Robot Raconteur
 mark_as_advanced(RobotRaconteur_DISABLE_MESSAGE4 RobotRaconteur_DISABLE_STRINGTABLE)
 
 include(FindBoost)
-if (NOT EMSCRIPTEN)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
-find_package(
-    Boost
-    COMPONENTS date_time
-               filesystem
-               system
-               regex
-               chrono
-               atomic
-               thread
-               random
-               program_options
-    REQUIRED)
+if(NOT EMSCRIPTEN)
+    set(Boost_USE_MULTITHREADED ON)
+    set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
+    find_package(
+        Boost
+        COMPONENTS date_time
+                   filesystem
+                   system
+                   regex
+                   chrono
+                   atomic
+                   thread
+                   random
+                   program_options
+        REQUIRED)
 else()
-find_package(
-    Boost
-    COMPONENTS date_time
-               filesystem
-               system
-               regex
-               chrono               
-               random
-               program_options
-    REQUIRED)
+    find_package(
+        Boost
+        COMPONENTS date_time
+                   filesystem
+                   system
+                   regex
+                   chrono
+                   random
+                   program_options
+        REQUIRED)
 endif()
 
 if(WIN32 AND ROBOTRACONTEUR_USE_OPENSSL)
@@ -166,44 +166,31 @@ set(RobotRaconteurCore_header
     include/RobotRaconteur/BroadcastDownsampler.h
     include/RobotRaconteur/NodeDirectories.h)
 
-if (NOT EMSCRIPTEN)
-set(RobotRaconteurCore_src
-    ${RobotRaconteurCore_src}
-    src/TcpTransport_private.h
-    src/TcpTransport.cpp
-    src/LocalTransport.cpp
-    src/LocalTransport_private.h
-    src/HardwareTransport.cpp
-    src/HardwareTransport_private.h
-    src/websocket_stream.hpp
-    src/NodeSetup.cpp
-    src/Tap.cpp
-    src/Timer.cpp
-)
+if(NOT EMSCRIPTEN)
+    set(RobotRaconteurCore_src
+        ${RobotRaconteurCore_src}
+        src/TcpTransport_private.h
+        src/TcpTransport.cpp
+        src/LocalTransport.cpp
+        src/LocalTransport_private.h
+        src/HardwareTransport.cpp
+        src/HardwareTransport_private.h
+        src/websocket_stream.hpp
+        src/NodeSetup.cpp
+        src/Tap.cpp
+        src/Timer.cpp)
 
-set(RobotRaconteurCore_header
-    ${RobotRaconteurCore_header}
-    include/RobotRaconteur/TcpTransport.h
-    include/RobotRaconteur/LocalTransport.h
-    include/RobotRaconteur/HardwareTransport.h
-    include/RobotRaconteur/NodeSetup.h
-)
+    set(RobotRaconteurCore_header
+        ${RobotRaconteurCore_header} include/RobotRaconteur/TcpTransport.h include/RobotRaconteur/LocalTransport.h
+        include/RobotRaconteur/HardwareTransport.h include/RobotRaconteur/NodeSetup.h)
 else()
-set(RobotRaconteurCore_src
-    ${RobotRaconteurCore_src}
-    src/RobotRaconteurEmscripten.cpp
-    src/BrowserWebSocketTransport.cpp
-    src/BrowserWebSocketTransport_private.h
-    src/Timer_emscripten.cpp
-)
+    set(RobotRaconteurCore_src
+        ${RobotRaconteurCore_src} src/RobotRaconteurEmscripten.cpp src/BrowserWebSocketTransport.cpp
+        src/BrowserWebSocketTransport_private.h src/Timer_emscripten.cpp)
 
-set(RobotRaconteurCore_header
-    ${RobotRaconteurCore_header}
-    include/RobotRaconteur/RobotRaconteurEmscripten.h
-    include/RobotRaconteur/BrowserWebSocketTransport.h
-)
+    set(RobotRaconteurCore_header ${RobotRaconteurCore_header} include/RobotRaconteur/RobotRaconteurEmscripten.h
+                                  include/RobotRaconteur/BrowserWebSocketTransport.h)
 endif()
-
 
 if(WIN32)
     set(RobotRaconteurCore_src
@@ -268,32 +255,32 @@ else()
     set_target_properties(RobotRaconteurCore PROPERTIES PREFIX lib)
 endif()
 
-if (NOT EMSCRIPTEN)
-target_link_libraries(
-    RobotRaconteurCore
-    PUBLIC Boost::boost
-           Boost::disable_autolinking
-           Boost::date_time
-           Boost::filesystem
-           Boost::system
-           Boost::regex
-           Boost::chrono
-           Boost::atomic
-           Boost::thread
-           Boost::random
-           Boost::program_options)
+if(NOT EMSCRIPTEN)
+    target_link_libraries(
+        RobotRaconteurCore
+        PUBLIC Boost::boost
+               Boost::disable_autolinking
+               Boost::date_time
+               Boost::filesystem
+               Boost::system
+               Boost::regex
+               Boost::chrono
+               Boost::atomic
+               Boost::thread
+               Boost::random
+               Boost::program_options)
 else()
-target_link_libraries(
-    RobotRaconteurCore
-    PUBLIC Boost::boost
-           Boost::disable_autolinking
-           Boost::date_time
-           Boost::filesystem
-           Boost::system
-           Boost::regex
-           Boost::chrono
-           Boost::random
-           Boost::program_options)
+    target_link_libraries(
+        RobotRaconteurCore
+        PUBLIC Boost::boost
+               Boost::disable_autolinking
+               Boost::date_time
+               Boost::filesystem
+               Boost::system
+               Boost::regex
+               Boost::chrono
+               Boost::random
+               Boost::program_options)
 endif()
 
 if(RobotRaconteur_DISABLE_MESSAGE4)
@@ -367,13 +354,10 @@ if(ANDROID)
     target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
 endif()
 
-if (EMSCRIPTEN)
-    target_compile_definitions(RobotRaconteurCore PUBLIC 
-        ROBOTRACONTEUR_NO_TCP_TRANSPORT
-        ROBOTRACONTEUR_NO_LOCAL_TRANSPORT
-        ROBOTRACONTEUR_NO_HARDWARE_TRANSPORT
-        ROBOTRACONTEUR_NO_NODE_SETUP
-    )
+if(EMSCRIPTEN)
+    target_compile_definitions(
+        RobotRaconteurCore PUBLIC ROBOTRACONTEUR_NO_TCP_TRANSPORT ROBOTRACONTEUR_NO_LOCAL_TRANSPORT
+                                  ROBOTRACONTEUR_NO_HARDWARE_TRANSPORT ROBOTRACONTEUR_NO_NODE_SETUP)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)

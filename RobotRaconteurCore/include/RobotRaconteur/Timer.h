@@ -180,8 +180,8 @@ class ROBOTRACONTEUR_CORE_API WallTimer : public Timer, public RR_ENABLE_SHARED_
 #ifndef ROBOTRACONTEUR_EMSCRIPTEN
     RR_SHARED_PTR<boost::asio::deadline_timer> timer;
 #else
-   boost::initialized<long> em_timer;
-   static std::map<void*, RR_SHARED_PTR<WallTimer> > em_timers;
+    boost::initialized<long> em_timer;
+    static std::map<void*, RR_SHARED_PTR<WallTimer> > em_timers;
 #endif
 
     RR_WEAK_PTR<RobotRaconteurNode> node;
@@ -189,8 +189,8 @@ class ROBOTRACONTEUR_CORE_API WallTimer : public Timer, public RR_ENABLE_SHARED_
 #ifndef ROBOTRACONTEUR_EMSCRIPTEN
     void timer_handler(const boost::system::error_code& ec);
 #else
-    friend void timer_handler(void* userData);	
-	  void timer_handler1();
+    friend void timer_handler(void* userData);
+    void timer_handler1();
     static void node_shutdown(RobotRaconteurNode* node);
 #endif
 

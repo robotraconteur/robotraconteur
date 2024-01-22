@@ -174,7 +174,7 @@ RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser
 
     bool client_verified = false;
 
-    #ifndef ROBOTRACONTEUR_EMSCRIPTEN
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
     if (require_verified_client && transport)
     {
         RR_SHARED_PTR<Transport> t = transport->GetTransport();
@@ -218,12 +218,12 @@ RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser
             }
         }
     }
-    #else
+#else
     if (require_verified_client)
     {
         throw AuthenticationException("Client connection verification not supported");
     }
-    #endif
+#endif
 
     std::vector<std::string> properties;
     return RR_MAKE_SHARED<AuthenticatedUser>(username, validusers.at(username.to_string())->privileges, properties,

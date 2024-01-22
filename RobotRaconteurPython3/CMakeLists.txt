@@ -50,7 +50,7 @@ if(NOT USE_PREGENERATED_SOURCE)
     swig_link_libraries(RobotRaconteurPython3 RobotRaconteurCore)
 else()
     set(SWIG_MODULE_RobotRaconteurPython3_REAL_NAME _RobotRaconteurPython3)
-    if (NOT EMSCRIPTEN)
+    if(NOT EMSCRIPTEN)
         set(PYTHON_LIB_TYPE MODULE)
         if("${SIZEOF_LONG_INT}" EQUAL 8 AND CMAKE_COMPILER_IS_GNUCXX)
             set(CMAKE_SWIG_OUTDIR ${PREGENERATED_SOURCE_DIR}/Python3/swigwordsize64/)
@@ -68,10 +68,10 @@ else()
     include_directories(${CMAKE_SOURCE_DIR}/SWIG ${CMAKE_SWIG_OUTDIR})
 
     add_library(
-        _RobotRaconteurPython3 ${PYTHON_LIB_TYPE}
-        ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h
-        ${PYTHON2_SOURCE_DIR}/PythonTypeSupport.cpp ${PYTHON2_SOURCE_DIR}/PythonTypeSupport.h
-        ${CMAKE_SWIG_OUTDIR}/RobotRaconteurPythonPYTHON_wrap.cxx)
+        _RobotRaconteurPython3
+        ${PYTHON_LIB_TYPE} ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.cpp
+        ${CMAKE_SOURCE_DIR}/SWIG/RobotRaconteurWrapped.h ${PYTHON2_SOURCE_DIR}/PythonTypeSupport.cpp
+        ${PYTHON2_SOURCE_DIR}/PythonTypeSupport.h ${CMAKE_SWIG_OUTDIR}/RobotRaconteurPythonPYTHON_wrap.cxx)
     target_link_libraries(_RobotRaconteurPython3 RobotRaconteurCore)
     set_target_properties(_RobotRaconteurPython3 PROPERTIES PREFIX "")
 endif()
@@ -92,7 +92,7 @@ rrsettargetdirs(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} "Python3/RobotRac
 if(WIN32)
     set_target_properties(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PROPERTIES SUFFIX ".pyd")
 elseif(NOT "${PYTHON_LIB_TYPE}" STREQUAL "STATIC")
-    #set_target_properties(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PROPERTIES SUFFIX ".so")
+    # set_target_properties(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PROPERTIES SUFFIX ".so")
 endif()
 set_target_properties(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PROPERTIES OUTPUT_NAME "_RobotRaconteurPython")
 
@@ -115,13 +115,13 @@ foreach(P ${RR_PY_SOURCES})
         COMMAND ${CMAKE_COMMAND} -E copy ${P} $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME}>/)
 endforeach(P)
 
-if (NOT EMSCRIPTEN)
-configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out/Python3/setup.py" @ONLY)
-configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out_debug/Python3/setup.py" @ONLY)
-configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out_reldebug/Python3/setup.py" @ONLY)
+if(NOT EMSCRIPTEN)
+    configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out/Python3/setup.py" @ONLY)
+    configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out_debug/Python3/setup.py" @ONLY)
+    configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out_reldebug/Python3/setup.py" @ONLY)
 else()
-set(ROBOTRACONTEUR_PYTHON3_SETUPPY_EXTRA "package_dir={'RobotRaconteur': 'out/Python3/RobotRaconteur'},")
-configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_SOURCE_DIR}/setup.py" @ONLY)
+    set(ROBOTRACONTEUR_PYTHON3_SETUPPY_EXTRA "package_dir={'RobotRaconteur': 'out/Python3/RobotRaconteur'},")
+    configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_SOURCE_DIR}/setup.py" @ONLY)
 endif()
 
 include("${PYTHON2_SOURCE_DIR}/PythonExceptions.cmake")
