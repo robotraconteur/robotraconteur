@@ -3,7 +3,7 @@
  *
  * @author John Wason, PhD
  *
- * @copyright Copyright 2011-2023 Wason Technology, LLC
+ * @copyright Copyright 2011-2024 Wason Technology, LLC
  *
  * @par License
  * Software License Agreement (Apache License)
@@ -30,7 +30,37 @@ namespace RobotRaconteur
 {
 
 class BrowserWebSocketTransportConnection;
-
+/**
+ * @brief Transport for creating client connections inside a web browser using WebSockets
+ * 
+ * Robot Raconteur can be compiled to run inside a web browser using Emscripten and WebAssembly (WASM).
+ * While inside a web browser, the only connection method currently available to connection to
+ * a Robot Raconteur service is using WebSockets. The BrowserWebSocketTransport class implements
+ * the WebSocket transport for the web browser. Currently only the client side is implemented.
+ * 
+ * See \ref robotraconteur_url for more information on URLs.
+ * 
+ * Currently the url connections schemes `rr+ws`, `rr+wss` and `rr+tcp` are supported.
+ * `rr+tcp` are treated as `rr+ws` connections.
+ * 
+ * BrowserWebSocketTransport must be manually registered with the node using
+ * `RobotRaconteurNode::RegisterTransport()`. NodeSetup is not currently
+ * available in the web browser.
+ * 
+ * Note that for services to accept a WebSocket connection, the service must
+ * have the WebSocket "origin" configured correctly. The origin is the base
+ * URL of the web page that is hosting the web page that is connecting to the
+ * service. For example, if the web page is hosted at `https://example.com/application/index.html`,
+ * the origin would be `https://example.com`. For localhost, the origin is `http://localhost:8080`,
+ * where 8080 is the port the web page is hosted on. The origin can be configured
+ * using the function `TcpTransport::AddWebSocketAllowedOrigin()`, or using
+ * the `--robotraconteur-tcp-ws-add-origin` command line option if a node setup class is used.
+ * If a local file is used to host the web page, the origin is `null` and no origin
+ * checking is performed.
+ * 
+ * See `TcpTransport::AddWebSocketAllowedOrigin()` for more information on configuring
+ * the WebSocket origin and the default origins that are automatically configured.
+ */
 class BrowserWebSocketTransport : public Transport, public RR_ENABLE_SHARED_FROM_THIS<BrowserWebSocketTransport>
 {
   public:
@@ -38,6 +68,17 @@ class BrowserWebSocketTransport : public Transport, public RR_ENABLE_SHARED_FROM
 
     RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ITransportConnection> > TransportConnections;
 
+    /**
+     * @brief Construct a new BrowserWebSocketTransport
+     *
+     * Must use boost::make_shared<BrowserWebSocketTransport>()
+     *
+     *
+     * The transport must be registered with the node using
+     * RobotRaconteurNode::RegisterTransport() after construction.
+     *
+     * @param node The node that will use the transport. Default is the singleton node
+     */
     BrowserWebSocketTransport(RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp());
 
     RR_OVIRTUAL ~BrowserWebSocketTransport() RR_OVERRIDE;
@@ -80,19 +121,118 @@ class BrowserWebSocketTransport : public Transport, public RR_ENABLE_SHARED_FROM
 
     RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
+    /**
+     * @brief Get the default heartbeat period
+     *
+     * The heartbeat is used to keep the connection alive
+     * if no communication is occuring between nodes.
+     *
+     * Default: 5 seconds
+     *
+     * @return int32_t The period in milliseconds
+     */
     virtual int32_t GetDefaultHeartbeatPeriod();
+    /**
+     * @brief Set the default heartbeat period
+     *
+     * The heartbeat is used to keep the connection alive
+     * if no communication is occuring between nodes.
+     *
+     * Default: 5 seconds
+     *
+     * @param milliseconds The heartbeat in milliseconds
+     */
     virtual void SetDefaultHeartbeatPeriod(int32_t milliseconds);
 
+    /**
+     * @brief Get disable Message Format Version 4
+     *
+     * Message Format Version 2 will be used
+     *
+     * Default: Message V4 is enabled
+     *
+     * @return true Disable Message V4
+     * @return false Enable Message V4
+     */
     virtual bool GetDisableMessage4();
+    /**
+     * @brief Set disable Message Format Version 4
+     *
+     * Message Format Version 2 will be used
+     *
+     * Default: Message V4 is enabled
+     *
+     * @param d If true, Message V4 is disabled
+     */
     virtual void SetDisableMessage4(bool d);
 
+    /**
+     * @brief Get disable string table
+     *
+     * Default: false
+     *
+     * RobotRaconteurNodeSetup and its subclasses
+     * will disable the string table by default
+     *
+     * @return true Disable the string table
+     * @return false String table is not disabled
+     */
     virtual bool GetDisableStringTable();
+    /**
+     * @brief Set disable string table
+     *
+     * Default: false
+     *
+     * RobotRaconteurNodeSetup and its subclasses
+     * will disable the string table by default
+     *
+     * @param d If true, string table is disabled
+     */
     virtual void SetDisableStringTable(bool d);
 
+    /**
+     * @brief Get if async message io is disabled
+     *
+     * Async message io has better memory handling, at the
+     * expense of slightly higher latency.
+     *
+     * Default: Async io disabled
+     *
+     * @return true Async message io is disabled
+     * @return false Async message io is not disabled
+     */
     virtual bool GetDisableAsyncMessageIO();
+    /**
+     * @brief Set if async message io is disabled
+     *
+     * Async message io is not well supported 
+     * by this transport. Enabling async message io
+     * is not recommended.
+     * 
+     * Async message io has better memory handling, at the
+     * expense of slightly higher latency.
+     *
+     * Default: Async io disabled
+     *
+     * @param d If true, async io is disabled
+     */
     virtual void SetDisableAsyncMessageIO(bool d);
 
+    /**
+     * @brief Get the maximum serialized message size
+     *
+     * Default: 10 MB
+     *
+     * @return int32_t The size in bytes
+     */
     virtual int32_t GetMaxMessageSize();
+    /**
+     * @brief Set the maximum serialized message size
+     *
+     * Default: 10 MB
+     *
+     * @param size The size in bytes
+     */
     virtual void SetMaxMessageSize(int32_t size);
 
     RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE;
