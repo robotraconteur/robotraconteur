@@ -22,8 +22,11 @@
  */
 
 #include <boost/bind/placeholders.hpp>
-#include <boost/asio.hpp>
 #include "RobotRaconteur/DataTypes.h"
+
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+#include <boost/asio.hpp>
+#endif
 
 #pragma once
 

@@ -21,6 +21,7 @@ setup(name='RobotRaconteur',
       author_email='wason@wasontech.com',
       url='http://robotraconteur.com/',
       packages=['RobotRaconteur'],
+      @ROBOTRACONTEUR_PYTHON3_SETUPPY_EXTRA@
       package_data={'RobotRaconteur': ['_RobotRaconteurPython.pyd', '_RobotRaconteurPython.so']},
 	  distclass=BinaryDistribution,
 	  license='Apache-2.0',

@@ -61,6 +61,8 @@
 
 #include <boost/variant.hpp>
 
+#include <boost/date_time/posix_time/ptime.hpp>
+
 #pragma once
 
 namespace RobotRaconteur

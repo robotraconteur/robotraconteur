@@ -866,7 +866,89 @@ jobs:
       with:
         name: 'build-artifacts-ios-arm64'
         path: build2/*
-        retention-days: 2 
+        retention-days: 2
+  build-pyodide:
+    runs-on: ubuntu-22.04
+    container: pyodide/pyodide-env:20230506-chrome112-firefox112-py311
+    env:
+      EMSDK_NUM_CORES: 3
+      EMCC_CORES: 3
+      PYODIDE_JOBS: 3
+      #CCACHE_DIR: /tmp/dep-ccache
+      HOME: /root
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: rr_src
+    - uses: actions/checkout@v4
+      with:
+        repository: pyodide/pyodide
+        path: src
+    # - name: ccache deps
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       /tmp/dep-ccache
+    #     key: pyodide-deps-${{ hashFiles('Makefile.envs') }}
+    - name: cp meta.yaml
+      run: |
+        cp rr_src/tools/build_files/pyodide/meta.yaml src/packages/RobotRaconteur/meta.yaml
+    - name: apt 
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev
+    - name: pip-install
+      working-directory: src
+      run: |
+        pip install -e ./pyodide-build
+        pip install -r requirements.txt
+        pip install numpy
+    - name: playwright install
+      run: playwright install
+    - name: deps build
+      working-directory: src
+      run: |
+        make -C emsdk
+        make -C cpython
+        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest"
+        make
+    - name: remove apt swig
+      run: sudo apt remove '^swig.*' -y -qq || true
+    - name: build-swig      
+      uses: johnwason/swig-build-action@v1.1
+      with:
+        cache-key: pyodide-swig
+    - name: build pregenerated_src
+      run: |
+        cmake -S $GITHUB_WORKSPACE/rr_src -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF -DPYTHON3_EXECUTABLE=/usr/local/bin/python3
+        cmake --build gen_src --config Release --target package_source_swig
+        cp -r $GITHUB_WORKSPACE/gen_src/generated_src $GITHUB_WORKSPACE/rr_src/
+        cmake --build gen_src --config Release --target install -j4
+        python -m pip install $GITHUB_WORKSPACE/gen_src/out/Python3
+    - name: build
+      working-directory: src
+      # env:
+      #   CCACHE_DIR: /tmp/ccache
+      run: |
+        # mkdir -p /tmp/ccache
+        ln -s $GITHUB_WORKSPACE/rr_src /rr_src
+        pyodide build-recipes --no-deps RobotRaconteur
+        pyodide build-recipes RobotRaconteur numpy pytest --install
+    - name: test
+      working-directory: src
+      run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
+    - name: archive dist
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'pyodide-dist'
+        path: src/dist/*
+    - name: archive package logs
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'pyodide-package-logs'
+        path: src/packages/build-logs/*  
+        
   build-dist:
     needs:
     - build-ubuntu

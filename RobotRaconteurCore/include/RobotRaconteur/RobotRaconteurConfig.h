@@ -64,7 +64,6 @@
 
 #define RR_UNORDERED_MAP boost::unordered_map
 
-#include <boost/thread.hpp>
 #include <boost/regex.hpp>
 
 #ifdef BOOST_WINDOWS
@@ -81,6 +80,14 @@
 #else
 #define ROBOTRACONTEUR_OSX
 #endif
+#elif defined(__EMSCRIPTEN__)
+#define ROBOTRACONTEUR_EMSCRIPTEN
+#endif
+
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+#include <boost/thread.hpp>
+#include <boost/asio/version.hpp>
+#include <boost/asio/strand.hpp>
 #endif
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -116,8 +123,6 @@
 #define RR_MOVE(x) x
 #define RR_FORWARD(type, x) x
 #endif
-
-#include <boost/asio/version.hpp>
 
 #if BOOST_ASIO_VERSION < 101200
 #define RR_BOOST_ASIO_IO_CONTEXT boost::asio::io_service
@@ -191,4 +196,8 @@
 #else
 #define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tlsv11
 #define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD_HTTPS boost::asio::ssl::context::tlsv12
+#endif
+
+#ifdef ROBOTRACONTEUR_EMSCRIPTEN
+#include "RobotRaconteurEmscripten.h"
 #endif
