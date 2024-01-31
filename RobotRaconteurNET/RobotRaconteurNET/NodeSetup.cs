@@ -79,14 +79,24 @@ public class RobotRaconteurNodeSetup : IDisposable
     /// <remarks>
     /// Will be null if TcpTransport is not specified in flags
     /// </remarks>
-    public TcpTransport TcpTransport { get {return _tcp_transport; } }
+    public TcpTransport TcpTransport
+    {
+        get {
+            return _tcp_transport;
+        }
+    }
     /// <summary>
     /// Get the LocalTransport
     /// </summary>
     /// <remarks>
     /// Will be null if LocalTransport is not specified in flags
     /// </remarks>
-    public LocalTransport LocalTransport { get {return _local_transport; } }
+    public LocalTransport LocalTransport
+    {
+        get {
+            return _local_transport;
+        }
+    }
     /// <summary>
     /// Get the HardwareTransport
     /// </summary>
@@ -98,7 +108,12 @@ public class RobotRaconteurNodeSetup : IDisposable
     ///  Note: Hardware transport is not enabled by default
     /// </para>
     /// </remarks>
-    public HardwareTransport HardwareTransport { get {return _hardware_transport; } }
+    public HardwareTransport HardwareTransport
+    {
+        get {
+            return _hardware_transport;
+        }
+    }
 
     /// <summary>
     /// Get the IntraTransport
@@ -106,13 +121,23 @@ public class RobotRaconteurNodeSetup : IDisposable
     /// <remarks>
     /// Will be null if IntraTransport is not specified in flags
     /// </remarks>
-    public IntraTransport IntraTransport { get {return _intra_transport; } }
+    public IntraTransport IntraTransport
+    {
+        get {
+            return _intra_transport;
+        }
+    }
 
     /// <summary>
     /// Get the command line config parser object used to configure node
     /// </summary>
     /// <remarks>None</remarks>
-    public CommandLineConfigParser CommandLineConfig { get {return _command_line_config; } }
+    public CommandLineConfigParser CommandLineConfig
+    {
+        get {
+            return _command_line_config;
+        }
+    }
 
     protected WrappedRobotRaconteurNodeSetup setup;
 

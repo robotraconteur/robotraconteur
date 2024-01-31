@@ -547,8 +547,18 @@ public class NamedArrayElementTypeAndCount : System.Attribute
         _elementArrayCount = element_array_count;
     }
 
-    public Type ElementArrayType {get { return _elementArrayType; } }
-    public int ElementArrayCount {get { return _elementArrayCount; } }
+    public Type ElementArrayType
+    {
+        get {
+            return _elementArrayType;
+        }
+    }
+    public int ElementArrayCount
+    {
+        get {
+            return _elementArrayCount;
+        }
+    }
 }
 
 public interface INamedArrayStub

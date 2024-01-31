@@ -78,11 +78,9 @@ mark_as_advanced(RR_NET_BUILD_NATIVE_ONLY)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/NETExceptions.cmake")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Properties/AssemblyInfo.cs.in"
-"${CMAKE_CURRENT_BINARY_DIR}/AssemblyInfo.cs" @ONLY)
-
+               "${CMAKE_CURRENT_BINARY_DIR}/AssemblyInfo.cs" @ONLY)
 
 if(NOT RR_NET_BUILD_NATIVE_ONLY)
-
 
     if(WIN32)
         add_custom_target(

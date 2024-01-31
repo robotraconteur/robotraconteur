@@ -143,7 +143,7 @@ public class RRObjectHeap
 }
 
 public static class TaskFromResult
-{        
+{
     public static Task<T> FromResult<T>(T value)
     {
 #if !NET45_OR_GREATER
@@ -153,7 +153,6 @@ public static class TaskFromResult
 #else
         return Task.FromResult(value);
 #endif
-
     }
 
     public static Task Delay(double milliseconds)
@@ -162,9 +161,7 @@ public static class TaskFromResult
         var tcs = new TaskCompletionSource<bool>();
         System.Timers.Timer timer = new System.Timers.Timer();
         timer.Elapsed += (obj, args) =>
-        {
-            tcs.TrySetResult(true);
-        };
+        { tcs.TrySetResult(true); };
         timer.Interval = milliseconds;
         timer.AutoReset = false;
         timer.Start();
