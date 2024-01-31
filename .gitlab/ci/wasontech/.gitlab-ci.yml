@@ -703,9 +703,9 @@ build_winxp_x86:
     - msbuild /p:Configuration=Release RobotRaconteurNET.csproj
     - cp $Env:CI_PROJECT_DIR/RobotRaconteurNET/RobotRaconteurNET/net4.0/bin/Release/RobotRaconteurNET.dll $Env:CI_PROJECT_DIR/build/out/NET
     - cd $Env:CI_PROJECT_DIR/build/out
-    - $Env:RR_VER = Get-Content .\rrversion.txt
     - cp ../rrversion.txt .
     - cp ../../LICENSE.txt .
+    - $Env:RR_VER = Get-Content .\rrversion.txt
     - New-Item -ItemType Directory -Path RobotRaconteur-$Env:RR_VER-winxp-x86
     - Copy-Item -Path NET\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86
     - Copy-Item -Path NET\Native\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86
