@@ -7,7 +7,6 @@
 
 #ifdef _WIN32
 #include <WinSock2.h>
-#include <versionhelpers.h>
 
 #ifdef IO_REPARSE_TAG_AF_UNIX
 #include <afunix.h>

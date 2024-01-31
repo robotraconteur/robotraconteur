@@ -29,6 +29,7 @@
 #include "RobotRaconteur/ServiceDefinition.h"
 #include "RobotRaconteur/ServiceStructure.h"
 #include <boost/atomic.hpp>
+#include <set>
 
 #pragma warning(push)
 #pragma warning(disable : 4996)
