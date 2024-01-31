@@ -379,19 +379,19 @@ public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnT
     public Task AsyncAbort(int timeout = -1)
     {
         Abort();
-        return Task.FromResult(0);
+        return TaskFromResult.FromResult(0);
     }
 
     public Task AsyncClose(int timeout = -1)
     {
         Close();
-        return Task.FromResult(0);
+        return TaskFromResult.FromResult(0);
     }
 
     public Task<ReturnType> AsyncNext(ParamType param, int timeout = -1)
     {
         ReturnType r = Next(param);
-        return Task.FromResult(r);
+        return TaskFromResult.FromResult(r);
     }
 }
 
@@ -439,19 +439,19 @@ public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
     public Task AsyncAbort(int timeout = -1)
     {
         Abort();
-        return Task.FromResult(0);
+        return TaskFromResult.FromResult(0);
     }
 
     public Task AsyncClose(int timeout = -1)
     {
         Close();
-        return Task.FromResult(0);
+        return TaskFromResult.FromResult(0);
     }
 
     public Task<ReturnType> AsyncNext(int timeout = -1)
     {
         ReturnType r = Next();
-        return Task.FromResult(r);
+        return TaskFromResult.FromResult(r);
     }
 
     public ReturnType[] NextAll()
@@ -513,19 +513,19 @@ public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
     public Task AsyncAbort(int timeout = -1)
     {
         Abort();
-        return Task.FromResult(0);
+        return TaskFromResult.FromResult(0);
     }
 
     public Task AsyncClose(int timeout = -1)
     {
         Close();
-        return Task.FromResult(0);
+        return TaskFromResult.FromResult(0);
     }
 
     public Task AsyncNext(ParamType param, int timeout = -1)
     {
         Next(param);
-        return Task.FromResult(0);
+        return TaskFromResult.FromResult(0);
     }
 }
 

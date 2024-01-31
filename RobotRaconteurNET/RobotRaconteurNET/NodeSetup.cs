@@ -79,14 +79,14 @@ public class RobotRaconteurNodeSetup : IDisposable
     /// <remarks>
     /// Will be null if TcpTransport is not specified in flags
     /// </remarks>
-    public TcpTransport TcpTransport { get; }
+    public TcpTransport TcpTransport { get {return _tcp_transport; } }
     /// <summary>
     /// Get the LocalTransport
     /// </summary>
     /// <remarks>
     /// Will be null if LocalTransport is not specified in flags
     /// </remarks>
-    public LocalTransport LocalTransport { get; }
+    public LocalTransport LocalTransport { get {return _local_transport; } }
     /// <summary>
     /// Get the HardwareTransport
     /// </summary>
@@ -98,7 +98,7 @@ public class RobotRaconteurNodeSetup : IDisposable
     ///  Note: Hardware transport is not enabled by default
     /// </para>
     /// </remarks>
-    public HardwareTransport HardwareTransport { get; }
+    public HardwareTransport HardwareTransport { get {return _hardware_transport; } }
 
     /// <summary>
     /// Get the IntraTransport
@@ -106,15 +106,21 @@ public class RobotRaconteurNodeSetup : IDisposable
     /// <remarks>
     /// Will be null if IntraTransport is not specified in flags
     /// </remarks>
-    public IntraTransport IntraTransport { get; }
+    public IntraTransport IntraTransport { get {return _intra_transport; } }
 
     /// <summary>
     /// Get the command line config parser object used to configure node
     /// </summary>
     /// <remarks>None</remarks>
-    public CommandLineConfigParser CommandLineConfig { get; }
+    public CommandLineConfigParser CommandLineConfig { get {return _command_line_config; } }
 
     protected WrappedRobotRaconteurNodeSetup setup;
+
+    protected TcpTransport _tcp_transport;
+    protected LocalTransport _local_transport;
+    protected HardwareTransport _hardware_transport;
+    protected IntraTransport _intra_transport;
+    protected CommandLineConfigParser _command_line_config;
 
     /// <summary>
     /// Construct a new RobotRaconteurNodeSetup with default node, NodeName, TCP port, and flags
@@ -137,11 +143,11 @@ public class RobotRaconteurNodeSetup : IDisposable
             node_name = "";
         LoadAllServiceTypes(RobotRaconteurNode.s);
         setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s, node_name, tcp_port, (uint)flags);
-        TcpTransport = setup.GetTcpTransport();
-        LocalTransport = setup.GetLocalTransport();
-        HardwareTransport = setup.GetHardwareTransport();
-        IntraTransport = setup.GetIntraTransport();
-        CommandLineConfig = setup.GetCommandLineConfig();
+        _tcp_transport = setup.GetTcpTransport();
+        _local_transport = setup.GetLocalTransport();
+        _hardware_transport = setup.GetHardwareTransport();
+        _intra_transport = setup.GetIntraTransport();
+        _command_line_config = setup.GetCommandLineConfig();
     }
 
     /// <summary>
@@ -169,11 +175,11 @@ public class RobotRaconteurNodeSetup : IDisposable
         LoadAllServiceTypes(RobotRaconteurNode.s);
         setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s, node_name, tcp_port, (uint)flags,
                                                    (uint)allowed_overrides, new vectorstring(args));
-        TcpTransport = setup.GetTcpTransport();
-        LocalTransport = setup.GetLocalTransport();
-        HardwareTransport = setup.GetHardwareTransport();
-        IntraTransport = setup.GetIntraTransport();
-        CommandLineConfig = setup.GetCommandLineConfig();
+        _tcp_transport = setup.GetTcpTransport();
+        _local_transport = setup.GetLocalTransport();
+        _hardware_transport = setup.GetHardwareTransport();
+        _intra_transport = setup.GetIntraTransport();
+        _command_line_config = setup.GetCommandLineConfig();
     }
 
     /// <summary>
@@ -189,11 +195,11 @@ public class RobotRaconteurNodeSetup : IDisposable
     {
         LoadAllServiceTypes(RobotRaconteurNode.s);
         setup = new WrappedRobotRaconteurNodeSetup(RobotRaconteurNode.s, config);
-        TcpTransport = setup.GetTcpTransport();
-        LocalTransport = setup.GetLocalTransport();
-        HardwareTransport = setup.GetHardwareTransport();
-        IntraTransport = setup.GetIntraTransport();
-        CommandLineConfig = setup.GetCommandLineConfig();
+        _tcp_transport = setup.GetTcpTransport();
+        _local_transport = setup.GetLocalTransport();
+        _hardware_transport = setup.GetHardwareTransport();
+        _intra_transport = setup.GetIntraTransport();
+        _command_line_config = setup.GetCommandLineConfig();
     }
 
     /// <summary>
