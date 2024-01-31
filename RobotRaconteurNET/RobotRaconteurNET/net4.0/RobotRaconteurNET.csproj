@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F953875C-03C5-49A9-9FF8-309ADF72641B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RobotRaconteurNET</RootNamespace>
+    <AssemblyName>RobotRaconteurNET</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO">
+      <HintPath>Microsoft.Bcl.1.1.8\lib\net40\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>Microsoft.Bcl.1.1.8\lib\net40\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>Microsoft.Bcl.1.1.8\lib\net40\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <RRSourceDir>../</RRSourceDir>
+    <RRBinDir>../../../build/RobotRaconteurNET\RobotRaconteurNET\</RRBinDir>
+    <RRSwigDir>../../../build/RobotRaconteurNET\</RRSwigDir>
+    <PointerSize>4</PointerSize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(RRSwigDir)\RobotRaconteurNET_SWIG.cs">
+      <Link>RobotRaconteurNET_SWIG.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSwigDir)\Error.cs" />
+    <Compile Include="$(RRSwigDir)\AssemblyInfo.cs" />
+    <Compile Include="$(RRSourceDir)\MultiDimArray.cs">
+      <Link>MultiDimArray.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\Util.cs">
+      <Link>Util.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\Service.cs">
+      <Link>Service.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\ServiceFactory.cs">
+      <Link>ServiceFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\Generator.cs">
+      <Link>Generator.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\Memory.cs">
+      <Link>Memory.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\AsyncUtil.cs">
+      <Link>AsyncUtil.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\DataTypes.cs">
+      <Link>DataTypes.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\Discovery.cs">
+      <Link>Discovery.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\Message.cs">
+      <Link>Message.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\NodeSetup.cs">
+      <Link>NodeSetup.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\RobotRaconteurNode.cs">
+      <Link>RobotRaconteurNode.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\Subscription.cs">
+      <Link>Subscription.cs</Link>
+    </Compile>
+    <Compile Include="$(RRSourceDir)\Timer.cs">
+      <Link>Timer.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" />
+</Project>

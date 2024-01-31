@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include "RobotRaconteur/RobotRaconteurConfig.h"
 #include "RobotRaconteur/DataTypes.h"
 #include "RobotRaconteur/AutoResetEvent.h"
 #include "RobotRaconteur/CallbackMember.h"
@@ -40,16 +41,24 @@
 #include "RobotRaconteur/Client.h"
 #include "RobotRaconteur/Service.h"
 #include "RobotRaconteur/ServiceFactory.h"
+#ifndef ROBOTRACONTEUR_NO_TCP_TRANSPORT
 #include "RobotRaconteur/TcpTransport.h"
+#endif
 #include "RobotRaconteur/Transport.h"
 #include "RobotRaconteur/WireMember.h"
 #include "RobotRaconteur/Timer.h"
+#ifndef ROBOTRACONTEUR_NO_LOCAL_TRANSPORT
 #include "RobotRaconteur/LocalTransport.h"
+#endif
+#ifndef ROBOTRACONTEUR_NO_HARDWARE_TRANSPORT
 #include "RobotRaconteur/HardwareTransport.h"
+#endif
 #include "RobotRaconteur/Security.h"
 #include "RobotRaconteur/Subscription.h"
 #include "RobotRaconteur/Generator.h"
+#ifndef ROBOTRACONTEUR_NO_NODE_SETUP
 #include "RobotRaconteur/NodeSetup.h"
+#endif
 #include "RobotRaconteur/Logging.h"
 #include "RobotRaconteur/IntraTransport.h"
 #include "RobotRaconteur/BroadcastDownsampler.h"

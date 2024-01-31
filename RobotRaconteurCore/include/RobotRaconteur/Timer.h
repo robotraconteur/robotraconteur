@@ -23,7 +23,12 @@
 
 #include <boost/date_time.hpp>
 #include "RobotRaconteur/DataTypes.h"
+
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
 #include <boost/asio/deadline_timer.hpp>
+#endif
+
+#include <boost/system/error_code.hpp>
 
 #pragma once
 
@@ -146,7 +151,9 @@ class ROBOTRACONTEUR_CORE_API WallRate : public Rate
     boost::posix_time::ptime start_time;
     boost::posix_time::ptime last_time;
 
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
     boost::asio::deadline_timer timer;
+#endif
 
   public:
     WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>());
@@ -170,11 +177,22 @@ class ROBOTRACONTEUR_CORE_API WallTimer : public Timer, public RR_ENABLE_SHARED_
 
     boost::function<void(const TimerEvent&)> handler;
 
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
     RR_SHARED_PTR<boost::asio::deadline_timer> timer;
+#else
+    boost::initialized<long> em_timer;
+    static std::map<void*, RR_SHARED_PTR<WallTimer> > em_timers;
+#endif
 
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
     void timer_handler(const boost::system::error_code& ec);
+#else
+    friend void timer_handler(void* userData);
+    void timer_handler1();
+    static void node_shutdown(RobotRaconteurNode* node);
+#endif
 
   public:
     WallTimer(const boost::posix_time::time_duration& period, boost::function<void(const TimerEvent&)> handler,

@@ -538,14 +538,27 @@ public abstract class PodStub<T> : IPodStub
 
 public class NamedArrayElementTypeAndCount : System.Attribute
 {
+    private readonly Type _elementArrayType;
+    private readonly int _elementArrayCount;
+
     public NamedArrayElementTypeAndCount(Type element_type, int element_array_count)
     {
-        ElementArrayType = element_type;
-        ElementArrayCount = element_array_count;
+        _elementArrayType = element_type;
+        _elementArrayCount = element_array_count;
     }
 
-    public Type ElementArrayType { get; }
-    public int ElementArrayCount { get; }
+    public Type ElementArrayType
+    {
+        get {
+            return _elementArrayType;
+        }
+    }
+    public int ElementArrayCount
+    {
+        get {
+            return _elementArrayCount;
+        }
+    }
 }
 
 public interface INamedArrayStub
