@@ -114,7 +114,7 @@
 #endif
 
 // Use Boost ASIO move detection
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#if __cplusplus >= 201103L
 #define RR_MOVE_ARG(type) type&&
 #define RR_MOVE(x) std::move(x)
 #define RR_FORWARD(type, x) std::forward<type>(x)
