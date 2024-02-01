@@ -707,8 +707,9 @@ build_winxp_x86:
     - cp ../../LICENSE.txt .
     - $Env:RR_VER = Get-Content .\rrversion.txt
     - New-Item -ItemType Directory -Path RobotRaconteur-$Env:RR_VER-winxp-x86
-    - Copy-Item -Path NET\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86
-    - Copy-Item -Path NET\Native\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86
+    - New-Item -ItemType Directory -Path RobotRaconteur-$Env:RR_VER-winxp-x86\NET
+    - Copy-Item -Path NET\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86\NET\
+    - Copy-Item -Path NET\Native\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86\NET\
     - Copy-Item -Path Python -Destination RobotRaconteur-$Env:RR_VER-winxp-x86 -Recurse
     - Remove-Item RobotRaconteur-$Env:RR_VER-winxp-x86\Python\RobotRaconteur\*.lib
     - Remove-Item RobotRaconteur-$Env:RR_VER-winxp-x86\Python\RobotRaconteur\*.exp
