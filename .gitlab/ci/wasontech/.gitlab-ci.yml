@@ -701,11 +701,24 @@ build_winxp_x86:
     - $Env:PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin;" + $Env:PATH
     - nuget restore -PackagesDirectory .
     - msbuild /p:Configuration=Release RobotRaconteurNET.csproj
+    - cp $Env:CI_PROJECT_DIR/RobotRaconteurNET/RobotRaconteurNET/net4.0/bin/Release/RobotRaconteurNET.dll $Env:CI_PROJECT_DIR/build/out/NET
+    - cd $Env:CI_PROJECT_DIR/build/out
+    - cp ../rrversion.txt .
+    - cp ../../LICENSE.txt .
+    - $Env:RR_VER = Get-Content .\rrversion.txt
+    - New-Item -ItemType Directory -Path RobotRaconteur-$Env:RR_VER-winxp-x86
+    - New-Item -ItemType Directory -Path RobotRaconteur-$Env:RR_VER-winxp-x86\NET
+    - Copy-Item -Path NET\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86\NET\
+    - Copy-Item -Path NET\Native\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86\NET\
+    - Copy-Item -Path Python -Destination RobotRaconteur-$Env:RR_VER-winxp-x86 -Recurse
+    - Remove-Item RobotRaconteur-$Env:RR_VER-winxp-x86\Python\RobotRaconteur\*.lib
+    - Remove-Item RobotRaconteur-$Env:RR_VER-winxp-x86\Python\RobotRaconteur\*.exp
+    - Copy-Item -Path LICENSE.txt -Destination RobotRaconteur-$Env:RR_VER-winxp-x86
+    - Compress-Archive -Path RobotRaconteur-$Env:RR_VER-winxp-x86 -DestinationPath RobotRaconteur-$Env:RR_VER-winxp-x86.zip
+    - Remove-Item -Recurse -Force RobotRaconteur-$Env:RR_VER-winxp-x86
   after_script:
     - mkdir $OUTNAME
     - mv build/out $OUTNAME/
-    - cp $Env:CI_PROJECT_DIR/LICENSE.txt $OUTNAME/out
-    - cp $Env:CI_PROJECT_DIR/RobotRaconteurNET/RobotRaconteurNET/net4.0/bin/Release/RobotRaconteurNET.dll $OUTNAME/out/NET
   artifacts:
     when: always
     name: ${OUTNAME}
