@@ -992,11 +992,11 @@ jobs:
         files: |
           distfiles/*
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
-    - uses: pre-commit/action@v3.0.0
+    - run: python -m pip install pre-commit
+    - run: pre-commit run --show-diff-on-failure --color=always --all-files
   clang-tidy:
     runs-on: ubuntu-20.04
     steps:
