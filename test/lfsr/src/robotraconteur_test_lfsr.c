@@ -6,14 +6,15 @@ uint32_t robotraconteur_test_lfsr_initkey(uint32_t seed, const char* key, uint32
 {
 
     // Run the LFSR a few times on the seed to shuffle
-    for (size_t i=0; i<128; i++)
+    for (size_t i = 0; i < 128; i++)
     {
         seed = robotraconteur_test_lfsr_next(seed);
     }
 
     size_t i = 0;
     uint32_t hash = robotraconteur_test_lfsr_next(seed);
-    while (i != key_len) {
+    while (i != key_len)
+    {
         hash += key[i++];
         hash += hash << 10;
         hash ^= hash >> 6;
@@ -23,7 +24,7 @@ uint32_t robotraconteur_test_lfsr_initkey(uint32_t seed, const char* key, uint32
     hash += hash << 15;
 
     // Shuffle again
-    for (size_t i = 0; i<128; i++)
+    for (size_t i = 0; i < 128; i++)
     {
         hash = robotraconteur_test_lfsr_next(hash);
     }
@@ -133,7 +134,8 @@ uint32_t robotraconteur_test_lfsr_next_cdouble(uint32_t lfsr, double* r_val_out,
 
 uint32_t robotraconteur_test_lfsr_next_char(uint32_t lfsr, char* val_out)
 {
-    const char chars[] = " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+    const char chars[] =
+        " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
     uint32_t ind = lfsr2 % strlen(chars);
     *val_out = chars[ind];
@@ -158,6 +160,6 @@ uint32_t robotraconteur_test_lfsr_next_dist(uint32_t lfsr, uint32_t min_, uint32
 {
     assert(max_ > min_);
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
-    *val_out = (lfsr2 % ((max_-min_)+1)) + min_;
+    *val_out = (lfsr2 % ((max_ - min_) + 1)) + min_;
     return lfsr2;
 }
