@@ -739,6 +739,7 @@ jobs:
       with:
         path: bluez-src
         repository: bluez/bluez
+        fetch-depth: 1
     - name: copy bluez headers
       run: |
         mkdir -p bluez/include/bluetooth
