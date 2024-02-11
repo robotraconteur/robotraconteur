@@ -740,13 +740,17 @@ jobs:
     - name: remove-swig      
       run: |
         sudo apt remove '^swig.*' -qq || true
+    - name: Install libbluetooth-dev
+      run: |
+        sudo apt update -qq
+        sudo apt install --no-install-recommends libbluetooth-dev -qq
     - uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: "latest"
-        channels: conda-forge,robotraconteur
+        channels: conda-forge
     - name: conda install
       run: >
-        conda install git cmake boost-cpp python swig numpy pytest pip dbus make zlib openssl libusb libbluetooth-headers compilers gcc_impl_linux-64 gtest gmock
+        conda install git cmake boost-cpp python swig numpy pytest pip dbus make zlib openssl libusb compilers gcc_impl_linux-64 gtest gmock
     - name: printenv
       run: printenv    
     - name: configure
