@@ -516,7 +516,7 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<Me
             }
             gen = e->second;
             if (m->Error == MessageErrorType_StopIteration)
-            {                
+            {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->second->GetEndpoint(), m_ServicePath, "",
                                                         "Destroying generator id " << e->first << " due to close");
             }
