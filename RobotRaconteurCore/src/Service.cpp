@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2020 Wason Technology, LLC
+// Copyright 2011-2020 Wason Technology, LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -538,6 +538,7 @@ void ServiceSkel::CleanupGenerators()
 {
     boost::posix_time::ptime destroy_time =
         boost::posix_time::second_clock::universal_time() - boost::posix_time::minutes(10);
+    std::list<RR_SHARED_PTR<GeneratorServerBase> > destroy_storage;
     boost::mutex::scoped_lock lock(generators_lock);
     for (boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> >::iterator e = generators.begin();
          e != generators.end();)
@@ -546,6 +547,7 @@ void ServiceSkel::CleanupGenerators()
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->second->GetEndpoint(), m_ServicePath, "",
                                                     "Destroying generator id " << e->first << " due to timeout");
+            destroy_storage.push_back(e->second);
             e = generators.erase(e);
         }
         else
@@ -553,6 +555,8 @@ void ServiceSkel::CleanupGenerators()
             ++e;
         }
     }
+    lock.unlock();
+    destroy_storage.clear();
 }
 
 RR_SHARED_PTR<ServiceFactory> ServerContext::GetServiceDef() const { return m_ServiceDef; }
