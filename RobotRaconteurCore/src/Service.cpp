@@ -1,4 +1,4 @@
-// Copyright 2011-2020 Wason Technology, LLC
+﻿// Copyright 2011-2020 Wason Technology, LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -504,9 +504,9 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<Me
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, m->MemberName,
                                             "SendGeneratorResponse generator id: " << index);
+    RR_SHARED_PTR<GeneratorServerBase> gen;
     if (m->Error != MessageErrorType_None)
     {
-        RR_SHARED_PTR<GeneratorServerBase> gen;
         {
             boost::mutex::scoped_lock lock(generators_lock);
             boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> >::iterator e = generators.find(index);
@@ -515,6 +515,17 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<Me
                 throw InvalidOperationException("Invalid generator");
             }
             gen = e->second;
+            if (m->Error == MessageErrorType_StopIteration)
+            {                
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->second->GetEndpoint(), m_ServicePath, "",
+                                                        "Destroying generator id " << e->first << " due to close");
+            }
+            else
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->second->GetEndpoint(), m_ServicePath, "",
+                                                        "Destroying generator id " << e->first << " due to error");
+            }
+            generators.erase(e);
         }
     }
 
