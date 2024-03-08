@@ -490,6 +490,12 @@ void ServiceSkel::CallGeneratorNext(const RR_INTRUSIVE_PTR<MessageEntry>& m, con
         }
         gen = e->second;
         gen->last_access_time = boost::posix_time::second_clock::universal_time();
+        if (m->Error != MessageErrorType_None)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, "",
+                                                    "Destroying generator id " << e->first << " due to close or abort");
+            generators.erase(e);
+        }
     }
 
     if (gen->GetEndpoint() != ep->GetLocalEndpoint())
