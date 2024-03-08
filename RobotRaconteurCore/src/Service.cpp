@@ -493,7 +493,8 @@ void ServiceSkel::CallGeneratorNext(const RR_INTRUSIVE_PTR<MessageEntry>& m, con
         if (m->Error != MessageErrorType_None)
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, "",
-                                                    "Scheduling generator id " << e->first << " to destroy due to close or abort");
+                                                    "Scheduling generator id " << e->first
+                                                                               << " to destroy due to close or abort");
             gen->last_access_time -= (boost::posix_time::minutes(10) - boost::posix_time::seconds(30));
         }
     }
