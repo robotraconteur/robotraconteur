@@ -490,6 +490,13 @@ void ServiceSkel::CallGeneratorNext(const RR_INTRUSIVE_PTR<MessageEntry>& m, con
         }
         gen = e->second;
         gen->last_access_time = boost::posix_time::second_clock::universal_time();
+        if (m->Error != MessageErrorType_None)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, "",
+                                                    "Scheduling generator id " << e->first
+                                                                               << " to destroy due to close or abort");
+            gen->last_access_time -= (boost::posix_time::minutes(10) - boost::posix_time::seconds(30));
+        }
     }
 
     if (gen->GetEndpoint() != ep->GetLocalEndpoint())
@@ -512,7 +519,7 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<Me
             boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> >::iterator e = generators.find(index);
             if (e == generators.end())
             {
-                throw InvalidOperationException("Invalid generator");
+                return;
             }
             gen = e->second;
             if (m->Error == MessageErrorType_StopIteration)
