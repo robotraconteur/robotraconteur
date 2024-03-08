@@ -518,7 +518,7 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<Me
             boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> >::iterator e = generators.find(index);
             if (e == generators.end())
             {
-                throw InvalidOperationException("Invalid generator");
+                return;
             }
             gen = e->second;
             if (m->Error == MessageErrorType_StopIteration)
