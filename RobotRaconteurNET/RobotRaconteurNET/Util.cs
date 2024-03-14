@@ -142,4 +142,34 @@ public class RRObjectHeap
     }
 }
 
+public static class TaskFromResult
+{
+    public static Task<T> FromResult<T>(T value)
+    {
+#if !NET45_OR_GREATER
+        var tcs = new TaskCompletionSource<T>();
+        tcs.SetResult(value);
+        return tcs.Task;
+#else
+        return Task.FromResult(value);
+#endif
+    }
+
+    public static Task Delay(double milliseconds)
+    {
+#if !NET45_OR_GREATER
+        var tcs = new TaskCompletionSource<bool>();
+        System.Timers.Timer timer = new System.Timers.Timer();
+        timer.Elapsed += (obj, args) =>
+        { tcs.TrySetResult(true); };
+        timer.Interval = milliseconds;
+        timer.AutoReset = false;
+        timer.Start();
+        return tcs.Task;
+#else
+        return Task.Delay((int)milliseconds);
+#endif
+    }
+};
+
 }

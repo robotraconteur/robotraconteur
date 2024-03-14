@@ -107,7 +107,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2.11
       with:
         key: ${{ runner.os }}-${{ matrix.config.os }}-build-main-ccache
     - name: cmake cache args
@@ -206,6 +206,100 @@ jobs:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
         retention-days: 2
+  
+  build-gentoo:
+    runs-on: ubuntu-latest
+    container: gentoo/stage3:latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur
+        repository: robotraconteur/robotraconteur
+    - name: enable-binary-pkgs-make-conf
+      run: |
+        echo "FEATURES=\"${FEATURES} binpkg-request-signature getbinpkg\"" >> /etc/portage/make.conf
+    - name: sync-portage
+      run: |
+        emerge --sync --quiet
+    - name: install-deps
+      run: >-
+        emerge --getbinpkg --usepkg  
+        dev-libs/boost dev-libs/openssl 
+        sys-apps/dbus dev-libs/libusb net-wireless/bluez 
+        dev-cpp/gtest dev-lang/python dev-python/numpy 
+        dev-python/pip dev-python/pytest dev-build/cmake 
+        dev-build/ninja dev-lang/swig
+    - name: config
+      run: >-
+        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON 
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
+    - name: build
+      run: >-
+        cmake --build build --config Release
+    - name: test
+      run: >-
+        ctest --test-dir build -C Release
+        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" 
+        --output-on-failure
+
+  build-fedora:
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur
+        repository: robotraconteur/robotraconteur
+    - name: install-pkgs
+      run: >-
+        yum install -y boost-devel cmake ninja-build 
+        gcc gcc-c++ make openssl-devel dbus-devel 
+        libusb1-devel bluez-libs-devel gtest-devel 
+        python3-devel python3-pip python3-numpy 
+        python3-pytest zlib-devel swig
+    - name: config
+      run: >-
+        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON 
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release 
+        -DPYTHON3_EXECUTABLE=/usr/bin/python3
+    - name: build
+      run: >-
+        cmake --build build --config Release
+    - name: test
+      run: >-
+        ctest --test-dir build -C Release
+        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" 
+        --output-on-failure 
+
+  build-archlinux:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur
+        repository: robotraconteur/robotraconteur
+    - name: install-pkgs
+      run: >-
+        pacman -Syu --noconfirm boost cmake ninja
+        gcc  make openssl dbus
+        libusb bluez-libs gtest
+        python python-pip python-numpy
+        python-pytest zlib swig
+    - name: config
+      run: >-
+        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON 
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release 
+        -DPYTHON3_EXECUTABLE=/usr/bin/python3
+    - name: build
+      run: >-
+        cmake --build build --config Release
+    - name: test
+      run: >-
+        ctest --test-dir build -C Release
+        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" 
+        --output-on-failure 
+
   build-win:
     runs-on: windows-2019
     strategy:
@@ -225,7 +319,7 @@ jobs:
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v5
+      uses: johnwason/vcpkg-action@v6
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -233,6 +327,7 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
+        github-binarycache: true
     - uses: actions/setup-java@v1
       with:
         java-version: 8
@@ -365,7 +460,7 @@ jobs:
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v5
+      uses: johnwason/vcpkg-action@v6
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -373,6 +468,7 @@ jobs:
         extra-args: --clean-after-build
         cache-key: win-shared-build-main
         token: ${{ github.token }}
+        github-binarycache: true
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -432,7 +528,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2.11
       with:
         key: ${{ runner.os }}-build-main-ccache
     - name: cmake cache args
@@ -536,7 +632,7 @@ jobs:
       with:
         release: R2020b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v5
+      uses: johnwason/vcpkg-action@v6
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -544,10 +640,11 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ubuntu-build-matlab
         token: ${{ github.token }}
+        github-binarycache: true
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2.11
       with:
         key: ${{ runner.os }}-matlab-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}
     - name: cmake cache args
@@ -638,18 +735,32 @@ jobs:
     - uses: actions/checkout@v3
       with:
         path: robotraconteur
+    - uses: actions/checkout@v3
+      with:
+        path: bluez-src
+        repository: bluez/bluez
+        fetch-depth: 1
+    - name: copy bluez headers
+      run: |
+        mkdir -p bluez/include/bluetooth
+        cp -r bluez-src/lib/*.h bluez/include/bluetooth/
+        echo CXXFLAGS="$CXXFLAGS -I$GITHUB_WORKSPACE/bluez/include" >> $GITHUB_ENV
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: remove-swig      
       run: |
         sudo apt remove '^swig.*' -qq || true
+    - name: Install libbluetooth-dev
+      run: |
+        sudo apt update -qq
+        sudo apt install --no-install-recommends libbluetooth-dev -qq
     - uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: "latest"
-        channels: conda-forge,robotraconteur
+        channels: conda-forge
     - name: conda install
       run: >
-        conda install git cmake boost-cpp python swig numpy pytest pip dbus make zlib openssl libusb libbluetooth-headers compilers gcc_impl_linux-64 gtest gmock
+        conda install git cmake boost-cpp python swig numpy pytest pip dbus make zlib openssl libusb compilers gcc_impl_linux-64 gtest gmock
     - name: printenv
       run: printenv    
     - name: configure
@@ -827,7 +938,7 @@ jobs:
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v5
+      uses: johnwason/vcpkg-action@v6
       id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
@@ -836,6 +947,7 @@ jobs:
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
         token: ${{ github.token }}
         revision: 2023.08.09
+        github-binarycache: true
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
@@ -862,7 +974,89 @@ jobs:
       with:
         name: 'build-artifacts-ios-arm64'
         path: build2/*
-        retention-days: 2 
+        retention-days: 2
+  build-pyodide:
+    runs-on: ubuntu-22.04
+    container: pyodide/pyodide-env:20240127-chrome114-firefox122-py312
+    env:
+      EMSDK_NUM_CORES: 3
+      EMCC_CORES: 3
+      PYODIDE_JOBS: 3
+      #CCACHE_DIR: /tmp/dep-ccache
+      HOME: /root
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: rr_src
+    - uses: actions/checkout@v4
+      with:
+        repository: pyodide/pyodide
+        path: src
+    # - name: ccache deps
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       /tmp/dep-ccache
+    #     key: pyodide-deps-${{ hashFiles('Makefile.envs') }}
+    - name: cp meta.yaml
+      run: |
+        cp rr_src/tools/build_files/pyodide/meta.yaml src/packages/RobotRaconteur/meta.yaml
+    - name: apt 
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev
+    - name: pip-install
+      working-directory: src
+      run: |
+        pip install -e ./pyodide-build
+        pip install -r requirements.txt
+        pip install numpy
+    - name: playwright install
+      run: playwright install
+    - name: deps build
+      working-directory: src
+      run: |
+        make -C emsdk
+        make -C cpython
+        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest"
+        make
+    - name: remove apt swig
+      run: sudo apt remove '^swig.*' -y -qq || true
+    - name: build-swig      
+      uses: johnwason/swig-build-action@v1.1
+      with:
+        cache-key: pyodide-swig
+    - name: build pregenerated_src
+      run: |
+        cmake -S $GITHUB_WORKSPACE/rr_src -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF -DPYTHON3_EXECUTABLE=/usr/local/bin/python3
+        cmake --build gen_src --config Release --target package_source_swig
+        cp -r $GITHUB_WORKSPACE/gen_src/generated_src $GITHUB_WORKSPACE/rr_src/
+        cmake --build gen_src --config Release --target install -j4
+        python -m pip install $GITHUB_WORKSPACE/gen_src/out/Python3
+    - name: build
+      working-directory: src
+      # env:
+      #   CCACHE_DIR: /tmp/ccache
+      run: |
+        # mkdir -p /tmp/ccache
+        ln -s $GITHUB_WORKSPACE/rr_src /rr_src
+        pyodide build-recipes-no-deps RobotRaconteur
+        pyodide build-recipes RobotRaconteur numpy pytest --install
+    - name: test
+      working-directory: src
+      run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
+    - name: archive dist
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'pyodide-dist'
+        path: src/dist/*
+    - name: archive package logs
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'pyodide-package-logs'
+        path: src/packages/build-logs/*  
+        
   build-dist:
     needs:
     - build-ubuntu
@@ -905,25 +1099,16 @@ jobs:
         draft: true
         files: |
           distfiles/*
-  check-formatting:
-    runs-on: ubuntu-20.04
+  pre-commit:
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
+    - run: python -m pip install pre-commit
+    - uses: actions/cache@v3
       with:
-        path: robotraconteur
-    - name: pip
-      run: sudo python3 -m pip install autopep8 cmakelang
-    - name: clang-format-14
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 14 all
-    - name: run formatting
-      run: ./tools/formatting/run-all-formatting
-      working-directory: robotraconteur
-    - name: git diff for changes
-      run: git diff --name-only --exit-code
-      working-directory: robotraconteur
+        path: ~/.cache/pre-commit
+        key: pre-commit-3|/usr/bin/python3|${{ hashFiles('.pre-commit-config.yaml') }}
+    - run: pre-commit run --show-diff-on-failure --color=always --all-files
   clang-tidy:
     runs-on: ubuntu-20.04
     steps:
@@ -1039,7 +1224,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: vcpkg build
-        uses: johnwason/vcpkg-action@v5
+        uses: johnwason/vcpkg-action@v6
         id: vcpkg
         with:
           pkgs: robotraconteur
@@ -1047,6 +1232,7 @@ jobs:
           extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-win
           token: ${{ github.token }}
+          github-binarycache: true
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
@@ -1074,7 +1260,7 @@ jobs:
           libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
           git cmake g++ make curl libgtest-dev -qq
       - name: vcpkg build
-        uses: johnwason/vcpkg-action@v5
+        uses: johnwason/vcpkg-action@v6
         id: vcpkg
         with:
           pkgs: robotraconteur
@@ -1082,6 +1268,7 @@ jobs:
           extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-linux
           token: ${{ github.token }}
+          github-binarycache: true
       - name: build-disttest-cpp
         working-directory: test/dist/cpp
         run: |
@@ -1105,7 +1292,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: vcpkg build
-        uses: johnwason/vcpkg-action@v5
+        uses: johnwason/vcpkg-action@v6
         id: vcpkg
         with:
           pkgs: robotraconteur
@@ -1113,6 +1300,7 @@ jobs:
           extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
           cache-key: vcpkg-test-osx
           token: ${{ github.token }}
+          github-binarycache: true
       - name: build-disttest-cpp
         working-directory: test/dist/cpp
         run: |

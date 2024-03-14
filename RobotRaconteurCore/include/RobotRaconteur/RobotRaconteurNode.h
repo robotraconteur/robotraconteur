@@ -41,13 +41,18 @@
 
 #include <queue>
 #include <boost/bind/placeholders.hpp>
-#include <boost/asio.hpp>
 #include <boost/unordered_map.hpp>
 #include <boost/function.hpp>
 #include <boost/bind/protect.hpp>
 #include <boost/random.hpp>
 #include <boost/random/random_device.hpp>
 #include <boost/chrono.hpp>
+
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+#include <boost/asio.hpp>
+#endif
+#include <boost/asio/error.hpp>
+#include <boost/asio/placeholders.hpp>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
 

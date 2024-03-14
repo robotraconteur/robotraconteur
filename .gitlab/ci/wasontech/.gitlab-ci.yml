@@ -654,3 +654,76 @@ build_osx_arm64_python_release:
     - m1
   variables:
     OUTNAME: "osx-arm64-python-wheels"
+
+build_winxp_x86:
+  stage: build
+  extends: .all_build
+  tags:
+    - wasontech
+    - windows
+    - amd64
+  script:
+    - $OLDPATH = $Env:PATH
+    - |
+      Invoke-Expression 'cmd /C "C:\Program^ Files^ ^(x86^)\Microsoft^ Visual^ Studio^ 10.0\VC\vcvarsall.bat x86 && set"' |
+      foreach {
+        if ($_ -match "^(.*?)=(.*)$") {
+          Set-Item -Path "Env:\$($matches[1])" -Value $matches[2]
+        }
+      }
+    - mkdir build
+    - cd build
+    - > 
+      cmake
+      -GNinja
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON      
+      -DBUILD_GEN=ON -DBUILD_TESTING=OFF 
+      -DBUILD_NET=ON -DBUILD_JAVA=OFF
+      -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=OFF
+      -DBUILD_PYTHON3=OFF -DBUILD_PYTHON3_WHEEL=OFF
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+      -DROBOTRACONTEUR_USE_OPENSSL=ON
+      -DPYTHON_EXECUTABLE=C:/winxp/Python27/python.exe
+      -DOPENSSL_ROOT_DIR=c:/winxp/openssl_install
+      -DBOOSTROOT=C:/winxp/boost_xp/boost_1_58_0
+      -DBOOST_INCLUDEDIR=C:/winxp/boost_1_58_0
+      -DBOOST_LIBRARYDIR=C:/winxp/boost_1_58_0/stage/lib
+      -DBoost_USE_STATIC_LIBS=ON
+      -DCMAKE_EXE_LINKER_FLAGS="/MANIFEST:NO"
+      -DCMAKE_SHARED_LINKER_FLAGS="/MANIFEST:NO"
+      -DCMAKE_MODULE_LINKER_FLAGS="/MANIFEST:NO"
+      -DRR_NET_BUILD_NATIVE_ONLY=ON
+      ..
+    - cmake --build . --config Release --target RobotRaconteurCore -- -j6
+    - cmake --build . --config Release -- -j4
+    - cd $Env:CI_PROJECT_DIR/RobotRaconteurNET/RobotRaconteurNET/net4.0
+    - $Env:PATH = $OLDPATH
+    - $Env:PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin;" + $Env:PATH
+    - nuget restore -PackagesDirectory .
+    - msbuild /p:Configuration=Release RobotRaconteurNET.csproj
+    - cp $Env:CI_PROJECT_DIR/RobotRaconteurNET/RobotRaconteurNET/net4.0/bin/Release/RobotRaconteurNET.dll $Env:CI_PROJECT_DIR/build/out/NET
+    - cd $Env:CI_PROJECT_DIR/build/out
+    - cp ../rrversion.txt .
+    - cp ../../LICENSE.txt .
+    - $Env:RR_VER = Get-Content .\rrversion.txt
+    - New-Item -ItemType Directory -Path RobotRaconteur-$Env:RR_VER-winxp-x86
+    - New-Item -ItemType Directory -Path RobotRaconteur-$Env:RR_VER-winxp-x86\NET
+    - Copy-Item -Path NET\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86\NET\
+    - Copy-Item -Path NET\Native\*.dll -Destination RobotRaconteur-$Env:RR_VER-winxp-x86\NET\
+    - Copy-Item -Path Python -Destination RobotRaconteur-$Env:RR_VER-winxp-x86 -Recurse
+    - Remove-Item RobotRaconteur-$Env:RR_VER-winxp-x86\Python\RobotRaconteur\*.lib
+    - Remove-Item RobotRaconteur-$Env:RR_VER-winxp-x86\Python\RobotRaconteur\*.exp
+    - Copy-Item -Path LICENSE.txt -Destination RobotRaconteur-$Env:RR_VER-winxp-x86
+    - Compress-Archive -Path RobotRaconteur-$Env:RR_VER-winxp-x86 -DestinationPath RobotRaconteur-$Env:RR_VER-winxp-x86.zip
+    - Remove-Item -Recurse -Force RobotRaconteur-$Env:RR_VER-winxp-x86
+  after_script:
+    - mkdir $OUTNAME
+    - mv build/out $OUTNAME/
+  artifacts:
+    when: always
+    name: ${OUTNAME}
+    paths:
+      - ${OUTNAME}/out/*
+  variables:
+    OUTNAME: "out-winxp_x86"
+  

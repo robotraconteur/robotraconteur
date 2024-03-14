@@ -7,6 +7,7 @@
 public:
     void Init(size_t thread_count=20)
     {
+    #ifndef ROBOTRACONTEUR_EMSCRIPTEN
     $self->SetDynamicServiceFactory(RR_MAKE_SHARED<RobotRaconteur::WrappedDynamicServiceFactory>());
     $self->SetThreadPoolFactory(RR_MAKE_SHARED<RobotRaconteur::PythonThreadPoolFactory>());
 
@@ -15,8 +16,9 @@ public:
         boost::shared_ptr<RobotRaconteur::ThreadPool> thread_pool=$self->GetThreadPoolFactory()->NewThreadPool($self->shared_from_this());
         thread_pool->SetThreadPoolCount(thread_count);
         $self->SetThreadPool(thread_pool);
-        $self->GetThreadPool();
+        $self->GetThreadPool();        
     }
+    #endif
     
     $self->Init();
     

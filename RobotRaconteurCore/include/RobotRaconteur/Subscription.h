@@ -24,7 +24,6 @@
 #include "RobotRaconteur/Client.h"
 
 #include <boost/tuple/tuple_comparison.hpp>
-#include <boost/asio/strand.hpp>
 #include <boost/unordered_set.hpp>
 
 #pragma once

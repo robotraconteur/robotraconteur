@@ -1,0 +1,16 @@
+exclude: (^generated_src/.*$|^build\d?/.*$|^test/gen/.*$)
+repos:
+- repo: https://github.com/pre-commit/mirrors-clang-format
+  rev: v14.0.6
+  hooks:
+  - id: clang-format
+    types_or: [c++, c,  java, c#]
+- repo: https://github.com/hhatto/autopep8
+  rev: v2.0.4
+  hooks:
+  - id: autopep8
+    args: ["--ignore=E402", "-i"]
+- repo: https://github.com/Kr4is/cmake-format-precommit
+  rev: b912a5a5bce3c479f4cb52763979cc5a8319eb44
+  hooks:
+  - id: cmake-format

@@ -18,9 +18,11 @@
 
 #include "RobotRaconteur/Service.h"
 #include "RobotRaconteur/Security.h"
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
 #include "RobotRaconteur/LocalTransport.h"
 #include "RobotRaconteur/IntraTransport.h"
 #include "RobotRaconteur/TcpTransport.h"
+#endif
 
 #include <boost/algorithm/string.hpp>
 #include <boost/range/adaptors.hpp>
@@ -172,6 +174,7 @@ RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser
 
     bool client_verified = false;
 
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
     if (require_verified_client && transport)
     {
         RR_SHARED_PTR<Transport> t = transport->GetTransport();
@@ -215,6 +218,12 @@ RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser
             }
         }
     }
+#else
+    if (require_verified_client)
+    {
+        throw AuthenticationException("Client connection verification not supported");
+    }
+#endif
 
     std::vector<std::string> properties;
     return RR_MAKE_SHARED<AuthenticatedUser>(username, validusers.at(username.to_string())->privileges, properties,

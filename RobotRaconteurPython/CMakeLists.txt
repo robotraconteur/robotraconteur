@@ -96,7 +96,6 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPythonError.py
             $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython_REAL_NAME}>/)
 
-file(GLOB RR_PY_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.py)
 foreach(P ${RR_PY_SOURCES})
     get_filename_component(P_NAME ${P} NAME)
     set(P2 ${P})

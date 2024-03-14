@@ -26,7 +26,6 @@
 #include "RobotRaconteur/Logging.h"
 #include "RobotRaconteur/Message.h"
 #include <boost/bind/placeholders.hpp>
-#include <boost/asio.hpp>
 
 namespace RobotRaconteur
 {
@@ -75,6 +74,8 @@ class ROBOTRACONTEUR_CORE_API MessageTap
     virtual ~MessageTap() {}
 };
 
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+
 namespace detail
 {
 class LocalMessageTapImpl;
@@ -116,5 +117,7 @@ class ROBOTRACONTEUR_CORE_API LocalMessageTap : public MessageTap
     RR_OVIRTUAL void RecordLogRecord(const RRLogRecord& log_record) RR_OVERRIDE;
     RR_OVIRTUAL void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message) RR_OVERRIDE;
 };
+
+#endif
 
 }; // namespace RobotRaconteur
