@@ -23,13 +23,16 @@
 
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include <boost/bind/placeholders.hpp>
-#include <boost/asio.hpp>
 #include <list>
 #include <boost/bind/protect.hpp>
 #include <boost/shared_array.hpp>
-#include <boost/asio/steady_timer.hpp>
 #include <boost/atomic.hpp>
 #include "RobotRaconteur/AsyncMessageIO.h"
+
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+#include <boost/asio.hpp>
+#include <boost/asio/steady_timer.hpp>
+#endif
 
 #pragma once
 

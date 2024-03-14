@@ -33,8 +33,8 @@ function(package_source_swig_python SWIG_PYTHON_EXTRA_ARGS SWIG_PYTHON_OUTDIR ou
         TARGET package_source_swig
         COMMAND "${CMAKE_COMMAND}" -E make_directory ${SWIG_PYTHON_OUTDIR}
         COMMAND
-            "${CMAKE_COMMAND}" -E env "SWIG_LIB=${SWIG_DIR}" "${SWIG_EXECUTABLE}" -python -relativeimport -threads
-            -outdir ${SWIG_PYTHON_OUTDIR} -c++ -I${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include -I${CMAKE_SOURCE_DIR}
+            "${CMAKE_COMMAND}" -E env "SWIG_LIB=${SWIG_DIR}" "${SWIG_EXECUTABLE}" -python -relativeimport -outdir
+            ${SWIG_PYTHON_OUTDIR} -c++ -I${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include -I${CMAKE_SOURCE_DIR}
             -I${CMAKE_SOURCE_DIR}/RobotRaconteurPython -I${CMAKE_SOURCE_DIR}/SWIG -o
             ${SWIG_PYTHON_OUTDIR}/RobotRaconteurPythonPYTHON_wrap.cxx ${SWIG_PYTHON_EXTRA_ARGS}
             ${CMAKE_SOURCE_DIR}/RobotRaconteurPython/RobotRaconteurPython.i)
@@ -51,11 +51,21 @@ endif()
 
 package_source_swig_net("" ${CMAKE_BINARY_DIR}/generated_src/NET/swigwordsize32 net_sources_32)
 package_source_swig_java("" ${CMAKE_BINARY_DIR}/generated_src/Java/swigwordsize32/com/robotraconteur java_sources_32)
-package_source_swig_python("" ${CMAKE_BINARY_DIR}/generated_src/Python/swigwordsize32 python_sources_32)
-package_source_swig_python("" ${CMAKE_BINARY_DIR}/generated_src/Python3/swigwordsize32 python3_sources_32)
+package_source_swig_python("-threads" ${CMAKE_BINARY_DIR}/generated_src/Python/swigwordsize32 python_sources_32)
+package_source_swig_python("-threads" ${CMAKE_BINARY_DIR}/generated_src/Python3/swigwordsize32 python3_sources_32)
 package_source_swig_net("-DSWIGWORDSIZE64" ${CMAKE_BINARY_DIR}/generated_src/NET/swigwordsize64 net_sources_64)
 package_source_swig_java("-DSWIGWORDSIZE64" ${CMAKE_BINARY_DIR}/generated_src/Java/swigwordsize64/com/robotraconteur
                          java_sources_64)
-package_source_swig_python("-DSWIGWORDSIZE64" ${CMAKE_BINARY_DIR}/generated_src/Python/swigwordsize64 python_sources_64)
-package_source_swig_python("-DSWIGWORDSIZE64" ${CMAKE_BINARY_DIR}/generated_src/Python3/swigwordsize64
+package_source_swig_python("-DSWIGWORDSIZE64;-threads" ${CMAKE_BINARY_DIR}/generated_src/Python/swigwordsize64
+                           python_sources_64)
+package_source_swig_python("-DSWIGWORDSIZE64;-threads" ${CMAKE_BINARY_DIR}/generated_src/Python3/swigwordsize64
                            python3_sources_64)
+
+package_source_swig_python(
+    "-DROBOTRACONTEUR_EMSCRIPTEN=1;-DROBOTRACONTEUR_NO_TCP_TRANSPORT=1;-DROBOTRACONTEUR_NO_LOCAL_TRANSPORT=1;-DROBOTRACONTEUR_NO_HARDWARE_TRANSPORT=1;-DROBOTRACONTEUR_NO_NODE_SETUP=1"
+    ${CMAKE_BINARY_DIR}/generated_src/Python3_emscripten/swigwordsize32
+    python3_sources_32)
+package_source_swig_python(
+    "-DSWIGWORDSIZE64;-DROBOTRACONTEUR_EMSCRIPTEN=1;-DROBOTRACONTEUR_NO_TCP_TRANSPORT=1;-DROBOTRACONTEUR_NO_LOCAL_TRANSPORT=1;-DROBOTRACONTEUR_NO_HARDWARE_TRANSPORT=1;-DROBOTRACONTEUR_NO_NODE_SETUP=1"
+    ${CMAKE_BINARY_DIR}/generated_src/Python3_emscripten/swigwordsize64
+    python3_sources_64)
