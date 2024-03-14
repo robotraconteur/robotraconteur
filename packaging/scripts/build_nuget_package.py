@@ -44,6 +44,10 @@ with tempfile.TemporaryDirectory() as tmpdirname:
                     tmpdir.joinpath('lib/net45/RobotRaconteurNET.dll').absolute())
     shutil.copyfile(f'{win64dir}/NET/netstandard/RobotRaconteurNET.dll',
                     tmpdir.joinpath('lib/netstandard2.0/RobotRaconteurNET.dll').absolute())
+    shutil.copyfile(f'{win32dir}/NET/RobotRaconteurNET.xml',
+                    tmpdir.joinpath('lib/net45/RobotRaconteurNET.xml').absolute())
+    shutil.copyfile(f'{win64dir}/NET/netstandard/RobotRaconteurNET.xml',
+                    tmpdir.joinpath('lib/netstandard2.0/RobotRaconteurNET.xml').absolute())
     shutil.copyfile(f'{win32dir}/NET/Native/RobotRaconteurNETNative.dll',
                     tmpdir.joinpath('runtimes/win-x86/native/RobotRaconteurNETNative.dll').absolute())
     shutil.copyfile(f'{win64dir}/NET/Native/RobotRaconteurNETNative.dll',

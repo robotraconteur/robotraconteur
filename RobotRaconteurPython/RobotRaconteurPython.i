@@ -80,10 +80,20 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 %include "ServiceDefinitionPython.i"
 
 %include "Transport.i"
+#ifndef ROBOTRACONTEUR_NO_TCP_TRANSPORT
 %include "TcpTransportPython.i"
+#endif
+#ifndef ROBOTRACONTEUR_NO_LOCAL_TRANSPORT
 %include "LocalTransportPython.i"
+#endif
+#ifndef ROBOTRACONTEUR_NO_HARDWARE_TRANSPORT
 %include "HardwareTransportPython.i"
+#endif
 %include "IntraTransport.i"
+
+#ifdef ROBOTRACONTEUR_EMSCRIPTEN
+%include "BrowserWebSocketTransportPython.i"
+#endif
 
 %include "TimerPython.i"
 
@@ -112,7 +122,9 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 
 %include "PythonTypeSupport.i"
 
+#ifndef ROBOTRACONTEUR_NO_NODE_SETUP
 %include "NodeSetup.i"
+#endif
 
 %include "BroadcastDownsamplerPython.i"
 

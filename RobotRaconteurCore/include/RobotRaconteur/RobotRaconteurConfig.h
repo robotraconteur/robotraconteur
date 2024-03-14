@@ -25,8 +25,8 @@
 
 #ifndef ROBOTRACONTEUR_VERSION
 // Boost Style Version Number
-#define ROBOTRACONTEUR_VERSION 100000
-#define ROBOTRACONTEUR_VERSION_TEXT "1.0.0"
+#define ROBOTRACONTEUR_VERSION 100100
+#define ROBOTRACONTEUR_VERSION_TEXT "1.1.0"
 #endif
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ == 7)
@@ -64,7 +64,6 @@
 
 #define RR_UNORDERED_MAP boost::unordered_map
 
-#include <boost/thread.hpp>
 #include <boost/regex.hpp>
 
 #ifdef BOOST_WINDOWS
@@ -81,6 +80,14 @@
 #else
 #define ROBOTRACONTEUR_OSX
 #endif
+#elif defined(__EMSCRIPTEN__)
+#define ROBOTRACONTEUR_EMSCRIPTEN
+#endif
+
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+#include <boost/thread.hpp>
+#include <boost/asio/version.hpp>
+#include <boost/asio/strand.hpp>
 #endif
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -107,7 +114,7 @@
 #endif
 
 // Use Boost ASIO move detection
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#if __cplusplus >= 201103L
 #define RR_MOVE_ARG(type) type&&
 #define RR_MOVE(x) std::move(x)
 #define RR_FORWARD(type, x) std::forward<type>(x)
@@ -116,8 +123,6 @@
 #define RR_MOVE(x) x
 #define RR_FORWARD(type, x) x
 #endif
-
-#include <boost/asio/version.hpp>
 
 #if BOOST_ASIO_VERSION < 101200
 #define RR_BOOST_ASIO_IO_CONTEXT boost::asio::io_service
@@ -191,4 +196,8 @@
 #else
 #define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD boost::asio::ssl::context::tlsv11
 #define ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD_HTTPS boost::asio::ssl::context::tlsv12
+#endif
+
+#ifdef ROBOTRACONTEUR_EMSCRIPTEN
+#include "RobotRaconteurEmscripten.h"
 #endif

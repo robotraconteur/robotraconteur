@@ -490,6 +490,13 @@ void ServiceSkel::CallGeneratorNext(const RR_INTRUSIVE_PTR<MessageEntry>& m, con
         }
         gen = e->second;
         gen->last_access_time = boost::posix_time::second_clock::universal_time();
+        if (m->Error != MessageErrorType_None)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, "",
+                                                    "Scheduling generator id " << e->first
+                                                                               << " to destroy due to close or abort");
+            gen->last_access_time -= (boost::posix_time::minutes(10) - boost::posix_time::seconds(30));
+        }
     }
 
     if (gen->GetEndpoint() != ep->GetLocalEndpoint())
@@ -504,17 +511,28 @@ void ServiceSkel::SendGeneratorResponse(int32_t index, const RR_INTRUSIVE_PTR<Me
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, ep->GetLocalEndpoint(), m_ServicePath, m->MemberName,
                                             "SendGeneratorResponse generator id: " << index);
+    RR_SHARED_PTR<GeneratorServerBase> gen;
     if (m->Error != MessageErrorType_None)
     {
-        RR_SHARED_PTR<GeneratorServerBase> gen;
         {
             boost::mutex::scoped_lock lock(generators_lock);
             boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> >::iterator e = generators.find(index);
             if (e == generators.end())
             {
-                throw InvalidOperationException("Invalid generator");
+                return;
             }
             gen = e->second;
+            if (m->Error == MessageErrorType_StopIteration)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->second->GetEndpoint(), m_ServicePath, "",
+                                                        "Destroying generator id " << e->first << " due to close");
+            }
+            else
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->second->GetEndpoint(), m_ServicePath, "",
+                                                        "Destroying generator id " << e->first << " due to error");
+            }
+            generators.erase(e);
         }
     }
 
@@ -538,6 +556,7 @@ void ServiceSkel::CleanupGenerators()
 {
     boost::posix_time::ptime destroy_time =
         boost::posix_time::second_clock::universal_time() - boost::posix_time::minutes(10);
+    std::list<RR_SHARED_PTR<GeneratorServerBase> > destroy_storage;
     boost::mutex::scoped_lock lock(generators_lock);
     for (boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> >::iterator e = generators.begin();
          e != generators.end();)
@@ -546,6 +565,7 @@ void ServiceSkel::CleanupGenerators()
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, e->second->GetEndpoint(), m_ServicePath, "",
                                                     "Destroying generator id " << e->first << " due to timeout");
+            destroy_storage.push_back(e->second);
             e = generators.erase(e);
         }
         else
@@ -553,6 +573,8 @@ void ServiceSkel::CleanupGenerators()
             ++e;
         }
     }
+    lock.unlock();
+    destroy_storage.clear();
 }
 
 RR_SHARED_PTR<ServiceFactory> ServerContext::GetServiceDef() const { return m_ServiceDef; }
