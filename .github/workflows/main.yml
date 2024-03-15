@@ -1103,12 +1103,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
-    - run: python -m pip install pre-commit
-    - uses: actions/cache@v3
-      with:
-        path: ~/.cache/pre-commit
-        key: pre-commit-3|/usr/bin/python3|${{ hashFiles('.pre-commit-config.yaml') }}
-    - run: pre-commit run --show-diff-on-failure --color=always --all-files
+    - uses: actions/setup-python@v3
+    - uses: pre-commit/action@v3.0.1
   clang-tidy:
     runs-on: ubuntu-20.04
     steps:
