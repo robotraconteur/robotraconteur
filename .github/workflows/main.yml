@@ -1136,7 +1136,7 @@ jobs:
     - name: configure
       working-directory: build2
       run: >
-        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF 
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF -DCMAKE_CXX_STANDARD=11
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON -DCMAKE_CXX_CLANG_TIDY=clang-tidy-14
         -DCMAKE_BUILD_TYPE=Debug
         ../robotraconteur
