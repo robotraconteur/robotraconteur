@@ -1544,6 +1544,7 @@ jobs:
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
         -DRobotRaconteur_DIR=$GITHUB_WORKSPACE/build2  -DBUILD_TESTING=ON
         -DROBOTRACONTEUR_GEN_EXECUTABLE=$GITHUB_WORKSPACE/build2/out/bin/RobotRaconteurGen
+        -DEigen3_DIR=/usr/lib/cmake/eigen3
         ../robotraconteur_companion
     - name: build-companion
       working-directory: build2_companion
