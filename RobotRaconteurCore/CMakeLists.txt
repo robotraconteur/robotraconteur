@@ -372,20 +372,19 @@ if(MSVC)
     target_compile_options(RobotRaconteurCore PRIVATE "/wd4251" "/wd4275" "/bigobj")
 endif()
 
-
-if (DEFINED CMAKE_CXX_STANDARD)
+if(DEFINED CMAKE_CXX_STANDARD)
     if(CMAKE_CXX_STANDARD GREATER_EQUAL 11 AND NOT CMAKE_CXX_STANDARD EQUAL 98)
         set(ROBOTRACONTEUR_USE_CXX11 TRUE)
     endif()
 endif()
 
-if (DEFINED MSVC_VERSION)
+if(DEFINED MSVC_VERSION)
     if(MSVC_VERSION GREATER_EQUAL 1900)
         set(ROBOTRACONTEUR_USE_CXX11 TRUE)
     endif()
 endif()
 
-if (NOT ROBOTRACONTEUR_USE_CXX11)
+if(NOT ROBOTRACONTEUR_USE_CXX11)
     target_compile_definitions(RobotRaconteurCore PUBLIC ROBOTRACONTEUR_NO_CXX11)
 endif()
 
