@@ -1484,6 +1484,8 @@ jobs:
         apt install sudo tzdata python3 -y
         ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
+    - name: apt update
+      run: sudo apt update
     - name: apt
       run: >
         sudo apt-get install 
