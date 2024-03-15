@@ -1612,8 +1612,8 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DCMAKE_BUILD_TYPE=Release
-        -DRobotRaconteur_DIR=%GITHUB_WORKSPACE%/build2
-        -DROBOTRACONTEUR_GEN_EXECUTABLE=%GITHUB_WORKSPACE%/build2/out/bin/RobotRaconteurGen
+        -DRobotRaconteur_DIR=${{ github.workspace }}/build2
+        -DROBOTRACONTEUR_GEN_EXECUTABLE=${{ github.workspace }}/build2/out/bin/RobotRaconteurGen
         -S robotraconteur_companion -B build2_companion
     - name: build-companion
       working-directory: build2_companion
