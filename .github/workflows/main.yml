@@ -1461,7 +1461,7 @@ jobs:
           container: debian:buster-slim
         cxx_standard:
         - ""
-        - "11"
+        - "-DCMAKE_CXX_STANDARD=11"
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
