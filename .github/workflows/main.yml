@@ -1466,6 +1466,7 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
     steps:
     - name: install git
+      if: ${{ matrix.config.container != '' }}
       run: |
         apt-get update
         apt-get install git -y
