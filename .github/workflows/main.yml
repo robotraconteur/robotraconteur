@@ -1539,7 +1539,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
-        -DROBOTRACONTEUR_DIR=$GITHUB_WORKSPACE/build2  -DBUILD_TESTING=ON
+        -DRobotRaconteur_DIR=$GITHUB_WORKSPACE/build2  -DBUILD_TESTING=ON
         -DROBOTRACONTEUR_GEN_EXECUTABLE=$GITHUB_WORKSPACE/build2/out/bin/RobotRaconteurGen
         ../robotraconteur_companion
     - name: build-companion
@@ -1566,7 +1566,7 @@ jobs:
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
-        triplet: x64-windows-release
+        triplet: x64-windows-static-md-release
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-x64-build-companion
         token: ${{ github.token }}
@@ -1579,6 +1579,9 @@ jobs:
       uses: mikehardy/buildcache-action@v1
       with:
         cache_key: ${{ runner.os }}-x64-build-companion-buildcache
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
     - name: configure
       run: >
         cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=OFF
@@ -1602,8 +1605,8 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DCMAKE_BUILD_TYPE=Release
-        -DROBOTRACONTEUR_DIR=$GITHUB_WORKSPACE/build2
-        -DROBOTRACONTEUR_GEN_EXECUTABLE=$GITHUB_WORKSPACE/build2/out/bin/RobotRaconteurGen
+        -DRobotRaconteur_DIR=%GITHUB_WORKSPACE%/build2
+        -DROBOTRACONTEUR_GEN_EXECUTABLE=%GITHUB_WORKSPACE%/build2/out/bin/RobotRaconteurGen
         -S robotraconteur_companion -B build2_companion
     - name: build-companion
       working-directory: build2_companion
