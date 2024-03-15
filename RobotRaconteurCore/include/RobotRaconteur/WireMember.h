@@ -1911,7 +1911,7 @@ template <typename T>
 class WireUnicastReceiver : public WireUnicastReceiverBase<Wire<T>, T>
 {
 };
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for WireConnectionBase shared_ptr */
 using WireConnectionBasePtr = RR_SHARED_PTR<WireConnectionBase>;
 /** @brief Convenience alias for WireConnection shared_ptr */

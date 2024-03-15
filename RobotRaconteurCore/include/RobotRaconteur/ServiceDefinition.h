@@ -1833,7 +1833,7 @@ ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes, size_t> GetNamedArrayElementType
     const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>(),
     const RR_SHARED_PTR<RRObject>& client = RR_SHARED_PTR<RRObject>());
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for ServiceDefinition shared_ptr */
 using ServiceDefinitionPtr = RR_SHARED_PTR<ServiceDefinition>;
 /** @brief Convenience alias for NamedTypeDefinition shared_ptr */

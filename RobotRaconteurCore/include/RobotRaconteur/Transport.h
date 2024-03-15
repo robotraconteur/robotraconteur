@@ -222,7 +222,7 @@ struct ROBOTRACONTEUR_CORE_API ParseConnectionURLResult
 
 ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::string_ref url);
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for Transport shared_ptr */
 using TransportPtr = RR_SHARED_PTR<Transport>;
 using ITransportConnectionPtr = RR_SHARED_PTR<ITransportConnection>;

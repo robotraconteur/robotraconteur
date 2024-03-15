@@ -518,7 +518,7 @@ ROBOTRACONTEUR_CORE_API void MessageElement_SetElementNumber(const RR_INTRUSIVE_
 ROBOTRACONTEUR_CORE_API bool MessageElement_GetElementName(const RR_INTRUSIVE_PTR<MessageElement>& m,
                                                            MessageStringPtr& name);
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using MessagePtr = RR_INTRUSIVE_PTR<Message>;
 using MessageHeaderPtr = RR_INTRUSIVE_PTR<MessageHeader>;
 using MessageEntryPtr = RR_INTRUSIVE_PTR<MessageEntry>;

@@ -402,7 +402,7 @@ class IOContextThreadPool_AsyncResultAdapter
 #define ROBOTRACONTEUR_ASSERT_MULTITHREADED(node)                                                                      \
     BOOST_ASSERT_MSG(detail::ThreadPool_IsNodeMultithreaded(node), "multithreading required for requested operation")
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for ThreadPool shared_ptr */
 using ThreadPoolPtr = RR_SHARED_PTR<ThreadPool>;
 /** @brief Convenience alias for ThreadPoolFactory shared_ptr */

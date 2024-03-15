@@ -163,6 +163,10 @@
 #define RR_BOOST_PLACEHOLDERS(arg) boost::placeholders::arg
 #endif
 
+#if defined(ROBOTRACONTEUR_NO_CXX11) && (__cplusplus < 201103L || defined(BOOST_NO_CXX11_TEMPLATE_ALIASES))
+#define ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
+#endif
+
 #define RR_UNUSED(var_) ((void)(var_))
 
 #ifndef BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX

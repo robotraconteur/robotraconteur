@@ -334,7 +334,7 @@ class ROBOTRACONTEUR_CORE_API NodeIDAlreadyInUse : public std::runtime_error
     NodeIDAlreadyInUse() : runtime_error("Could not start server: NodeID already in use"){};
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for LocalTransport shared_ptr */
 using LocalTransportPtr = RR_SHARED_PTR<LocalTransport>;
 #endif

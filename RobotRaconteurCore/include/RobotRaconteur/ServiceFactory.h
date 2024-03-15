@@ -169,7 +169,7 @@ class ROBOTRACONTEUR_CORE_API DynamicServiceFactory
     virtual std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def) = 0;
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for ServiceFactory shared_ptr */
 using ServiceFactoryPtr = RR_SHARED_PTR<ServiceFactory>;
 /** @brief Convenience alias for DynamicServiceFactory shared_ptr */

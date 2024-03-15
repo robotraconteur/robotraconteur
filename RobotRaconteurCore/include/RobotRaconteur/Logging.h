@@ -333,7 +333,7 @@ class ROBOTRACONTEUR_CORE_API FileLogRecordHandler : public LogRecordHandler
 
 #endif
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using RRLogRecordStreamPtr = RR_INTRUSIVE_PTR<RRLogRecordStream>;
 using RRLogRecordStreamConstPtr = RR_INTRUSIVE_PTR<const RRLogRecordStream>;
 /** @brief Convenience alias for LogRecordHandler shared_ptr */

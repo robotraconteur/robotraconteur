@@ -215,7 +215,7 @@ class ROBOTRACONTEUR_CORE_API WallTimer : public Timer, public RR_ENABLE_SHARED_
     RR_OVIRTUAL ~WallTimer() RR_OVERRIDE {}
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for Timer shared_ptr */
 using TimerPtr = RR_SHARED_PTR<Timer>;
 /** @brief Convenience alias for Rate shared_ptr */

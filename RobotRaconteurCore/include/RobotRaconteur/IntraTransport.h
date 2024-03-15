@@ -180,7 +180,7 @@ class ROBOTRACONTEUR_CORE_API IntraTransport : public Transport, public RR_ENABL
     boost::signals2::signal<void()> close_signal;
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for IntraTransport shared_ptr */
 using IntraTransportPtr = RR_SHARED_PTR<IntraTransport>;
 #endif
