@@ -685,7 +685,7 @@ MessageStringPtr::MessageStringPtr(const MessageStringRef& str_ref)
 {
     this->_str_ptr = boost::apply_visitor(detail::MessageStringPtr_from_ref(), str_ref._str);
 }
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#ifndef ROBOTRACONTEUR_NO_CXX11
 MessageStringPtr::MessageStringPtr(std::string&& str)
 {
     detail::MessageStringData dat;

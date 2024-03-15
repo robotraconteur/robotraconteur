@@ -296,7 +296,7 @@ class ROBOTRACONTEUR_CORE_API MessageStringPtr
     MessageStringPtr(boost::string_ref str, bool is_static = false);
     MessageStringPtr(const MessageStringPtr& str_ptr);
     MessageStringPtr(const MessageStringRef& str_ref);
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#ifndef ROBOTRACONTEUR_NO_CXX11
     MessageStringPtr(std::string&& str);
 #endif
     // WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
