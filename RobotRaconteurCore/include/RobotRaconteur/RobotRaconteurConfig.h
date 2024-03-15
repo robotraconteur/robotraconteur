@@ -169,7 +169,7 @@
 
 #define RR_UNUSED(var_) ((void)(var_))
 
-#ifndef BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
+#if !defined(ROBOTRACONTEUR_NO_CXX11) && !defined(BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX)
 #define RR_MEMBER_ARRAY_INIT(x) , x({})
 #define RR_MEMBER_ARRAY_INIT2(x) : x({})
 #else

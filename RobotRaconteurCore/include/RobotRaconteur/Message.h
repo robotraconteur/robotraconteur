@@ -268,7 +268,7 @@ class ROBOTRACONTEUR_CORE_API MessageElementNestedElementList : public MessageEl
 
     MessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_,
                                     const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& elements_);
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#ifndef ROBOTRACONTEUR_NO_CXX11
     MessageElementNestedElementList(DataTypes type_, MessageStringRef type_name_,
                                     std::vector<RR_INTRUSIVE_PTR<MessageElement> >&& elements_);
 #endif
@@ -288,7 +288,7 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElement> CreateMessageElement(
     int32_t number, const RR_INTRUSIVE_PTR<MessageElementData>& datin);
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(
     DataTypes type_, MessageStringRef type_name_, const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& elements_);
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#ifndef ROBOTRACONTEUR_NO_CXX11
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(
     DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> >&& elements_);
 #endif
