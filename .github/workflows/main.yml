@@ -1467,8 +1467,8 @@ jobs:
     steps:
     - name: install git
       run: |
-        sudo apt-get update
-        sudo apt-get install git -y
+        apt-get update
+        apt-get install git -y
     - uses: actions/checkout@v3
       with:
         path: robotraconteur
