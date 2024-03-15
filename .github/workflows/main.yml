@@ -1465,6 +1465,10 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
+    - name: install git
+      run: |
+        sudo apt-get update
+        sudo apt-get install git -y
     - uses: actions/checkout@v3
       with:
         path: robotraconteur
@@ -1472,18 +1476,13 @@ jobs:
       with:
         repository: robotraconteur/robotraconteur_companion
         path: robotraconteur_companion
-    - name: init submodules
-      working-directory: robotraconteur_companion
-      run: git submodule update --init --recursive
+        submodules: recursive
     - name: install sudo and tzdata
       if: ${{ matrix.config.container != '' }}
       run: |
-        apt update 
         apt install sudo tzdata python3 -y
         ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
-    - name: apt update
-      run: sudo apt update
     - name: apt
       run: >
         sudo apt-get install 
