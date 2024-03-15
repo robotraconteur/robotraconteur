@@ -1477,7 +1477,9 @@ jobs:
       with:
         repository: robotraconteur/robotraconteur_companion
         path: robotraconteur_companion
-        submodules: recursive
+    - name: init submodules
+      working-directory: robotraconteur_companion
+      run: git submodule update --init --recursive
     - name: install sudo and tzdata
       if: ${{ matrix.config.container != '' }}
       run: |
