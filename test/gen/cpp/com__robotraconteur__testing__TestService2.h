@@ -33,7 +33,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > a1;
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService2.ostruct2";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using ostruct2Ptr = RR_INTRUSIVE_PTR<ostruct2>;
 #endif
 
@@ -68,7 +68,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<double > > get_m1()=0;
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService2.baseobj";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using baseobjPtr = RR_SHARED_PTR<baseobj>;
 #endif
 
@@ -82,7 +82,7 @@ virtual double add_val(double v)=0;
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService2.subobj";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using subobjPtr = RR_SHARED_PTR<subobj>;
 #endif
 
@@ -91,7 +91,7 @@ class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService2_
     public:
     testexception3(const std::string& message, const std::string& sub_name = "", const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService2.testexception3",message,sub_name,param_) {}
 };
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using testexception3Ptr = RR_SHARED_PTR<testexception3>;
 #endif
 }

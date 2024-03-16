@@ -214,7 +214,7 @@ class ROBOTRACONTEUR_CORE_API HardwareTransport : public Transport, public RR_EN
     boost::mutex closed_lock;
     boost::signals2::signal<void()> close_signal;
 };
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using HardwareTransportPtr = RR_SHARED_PTR<HardwareTransport>;
 #endif
 } // namespace RobotRaconteur

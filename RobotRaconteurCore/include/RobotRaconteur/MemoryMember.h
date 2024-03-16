@@ -1589,7 +1589,7 @@ class NamedMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSke
     }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for ArrayMemoryBase shared_ptr */
 using ArrayMemoryBasePtr = RR_SHARED_PTR<ArrayMemoryBase>;
 /** @brief Convenience alias for ArrayMemory shared_ptr */

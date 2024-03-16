@@ -1549,7 +1549,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription_custom_member_subscribers
 };
 } // namespace detail
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for ServiceSubscriptionFilterNode shared_ptr */
 using ServiceSubscriptionFilterNodePtr = RR_SHARED_PTR<ServiceSubscriptionFilterNode>;
 /** @brief Convenience alias for ServiceSubscriptionFilter shared_ptr */
