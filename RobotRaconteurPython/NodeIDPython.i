@@ -11,9 +11,9 @@
 	{
 		boost::array<uint8_t,16> b = {};
 		memcpy(&b[0],bytes,16);
-	
+
 		NodeID n(b);
-		return n;	
+		return n;
 	}
 
 	%pythoncode %{

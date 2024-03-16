@@ -1,6 +1,6 @@
 # C++ Discovery {#cpp_discovery}
 
-Discovery is used by clients to find available services on the local machine or local network. See \ref discovery for an introduction to discovery. 
+Discovery is used by clients to find available services on the local machine or local network. See \ref discovery for an introduction to discovery.
 
 Nodes and transports must be configured to enable discovery. The RobotRaconteur::ClientNodeSetup, RobotRaconteur::ServerNodeSetup, and RobotRaconteur::SecureNodeSetup enable node discovery be default. See \ref cpp_node_setup for more information.
 
@@ -58,7 +58,7 @@ An example using `FindServiceByType()`:
 
 Nodes can be discovered directly, without considering which services are available on the nodes. The functions RobotRaconteur::RobotRaconteurNode::FindNodeByID() and RobotRaconteur::RobotRaconteurNode::FindNodeByName() are provided by the C++ library for detecting nodes by NodeID and NodeName, respectively. See \ref nodeid for more information on NodeID and NodeName. The asynchronous versions RobotRaconteur::RobotRaconteurNode::AsyncFindNodeByID() and RobotRaconteur::RobotRaconteurNode::AsyncFindNodeByName() are also provided.
 
-The node discovery functions return a vector of RobotRaconteur::NodeInfo2. 
+The node discovery functions return a vector of RobotRaconteur::NodeInfo2.
 
 **The results of node discovery are not verified, and are raw discovery information received on the network.**
 

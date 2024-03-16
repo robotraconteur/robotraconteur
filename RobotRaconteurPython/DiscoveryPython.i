@@ -8,8 +8,8 @@ def FindServiceByType(self,servicetype,transportschemes):
 	Use discovery to find available services by service type
 
 	Uses discovery to find available services based on a service type. This
-	service type is the type of the root object, ie 
-	\"com.robotraconteur.robotics.robot.Robot\". This process will update the detected 
+	service type is the type of the root object, ie
+	\"com.robotraconteur.robotics.robot.Robot\". This process will update the detected
 	node cache.
 
 	:param servicetype: The service type to find, ie \"com.robotraconteur.robotics.robot.Robot\"
@@ -28,7 +28,7 @@ def FindServiceByType(self,servicetype,transportschemes):
 	for e in info1:
 		ret.append(ServiceInfo2(e))
 	return ret
-	
+
 def AsyncFindServiceByType(self,servicetype,transportschemes,handler,timeout=5):
 	"""
 	Asynchronously use discovery to find availabe services by service type
@@ -47,24 +47,24 @@ def AsyncFindServiceByType(self,servicetype,transportschemes,handler,timeout=5):
 	:type timeout: float
 	"""
 	class ServiceInfo2Director(AsyncServiceInfo2VectorReturnDirector):
-		def __init__(self,handler):			
+		def __init__(self,handler):
 			super(ServiceInfo2Director,self).__init__()
 			self._handler=handler
-		
+
 		def handler(self,info1):
 			from .RobotRaconteurPythonUtil import ServiceInfo2
-			ret=[]			
+			ret=[]
 			for e in info1:
 				ret.append(ServiceInfo2(e))
 			self._handler(ret)
-	
+
 	ts2=vectorstring()
 	for t in transportschemes:
 		ts2.push_back(t)
-	
+
 	from .RobotRaconteurPythonUtil import async_call, adjust_timeout
 	return async_call(AsyncWrappedFindServiceByType,(self,servicetype,ts2,adjust_timeout(timeout)),ServiceInfo2Director,handler,False)
-	
+
 %}
 }
 
@@ -120,7 +120,7 @@ def FindNodeByName(self,name,transportschemes):
 	for e in info1:
 		ret.append(NodeInfo2(e))
 	return ret
-	
+
 def AsyncFindNodeByID(self,id,transportschemes,handler,timeout=5):
 	"""
 	Asynchronously finds nodes on the network with the specified NodeID
@@ -142,20 +142,20 @@ def AsyncFindNodeByID(self,id,transportschemes,handler,timeout=5):
 		def __init__(self,handler):
 			super(NodeInfo2Director,self).__init__()
 			self._handler=handler
-		
+
 		def handler(self,info1):
 			from .RobotRaconteurPythonUtil import NodeInfo2
-			ret=[]			
+			ret=[]
 			for e in info1:
 				ret.append(NodeInfo2(e))
 			self._handler(ret)
 	ts2=vectorstring()
 	for t in transportschemes:
 		ts2.push_back(t)
-	
+
 	from .RobotRaconteurPythonUtil import async_call, adjust_timeout
 	return async_call(AsyncWrappedFindNodeByID,(self,id,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,False)
-	
+
 def AsyncFindNodeByName(self,name,transportschemes,handler,timeout=5):
 	"""
 	Asynchronously finds nodes on the network with the specified NodeName
@@ -177,19 +177,19 @@ def AsyncFindNodeByName(self,name,transportschemes,handler,timeout=5):
 		def __init__(self,handler):
 			super(NodeInfo2Director,self).__init__()
 			self._handler=handler
-		
+
 		def handler(self,info1):
 			from .RobotRaconteurPythonUtil import NodeInfo2
-			ret=[]			
+			ret=[]
 			for e in info1:
 				ret.append(NodeInfo2(e))
 			self._handler(ret)
 	ts2=vectorstring()
 	for t in transportschemes:
 		ts2.push_back(t)
-	
+
 	from .RobotRaconteurPythonUtil import async_call, adjust_timeout
-	return async_call(AsyncWrappedFindNodeByName,(self,name,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,False)	
+	return async_call(AsyncWrappedFindNodeByName,(self,name,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,False)
 
 def UpdateDetectedNodes(self, schemes):
 	"""
@@ -238,7 +238,7 @@ def GetDetectedNodes(self):
 	information to the parent node, where it is stored. Normally this information
 	will expire after one minute, and needs to be constantly refreshed.
 
-	This node information is not verified. It is the raw discovery 
+	This node information is not verified. It is the raw discovery
 	information received by the transports. Verification is done
 	when the node is interrogated for service information.
 

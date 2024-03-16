@@ -1,14 +1,14 @@
 function c=RobotRaconteurMemoryClient(objecttype,stubid,membername)
 %RobotRaconteurMemoryClient Access memory member on the service
 %    Memories represent random access memory regions that are typically
-%    represented as arrays of various shapes and types. Memories can be 
+%    represented as arrays of various shapes and types. Memories can be
 %    declared in service definition files using the `memory` member keyword
-%    within service definitions. Services expose memories to clients, and 
-%    the nodes will proxy read, write, and parameter requests between the client 
+%    within service definitions. Services expose memories to clients, and
+%    the nodes will proxy read, write, and parameter requests between the client
 %    and service. The node will also break up large requests to avoid the
 %    message size limit of the transport.
 %
-%    Memory clients are retrieved using clients connected with 
+%    Memory clients are retrieved using clients connected with
 %    RobotRaconteur.ConnectService(). For example, to retrieve the my_memory
 %    wire client, use:
 %

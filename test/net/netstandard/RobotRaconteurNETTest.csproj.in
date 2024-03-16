@@ -8,7 +8,7 @@
   <PropertyGroup>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
-  
+
   <PropertyGroup>
 	<RRSourceDir>@CMAKE_CURRENT_SOURCE_DIR@\RobotRaconteurNETTest\</RRSourceDir>
 	<RRThunkDir>@CMAKE_CURRENT_BINARY_DIR@\test</RRThunkDir>

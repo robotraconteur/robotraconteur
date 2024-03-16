@@ -91,12 +91,12 @@ Server:
 ### Python
 
 Python can either be initialized using `from RobotRaconteur.Client import *` for a default client configurations, or using the node setup classes. The `RobotRaconteur.Client` module supports command line options starting in version 0.10.
-    
+
 
 Client:
 
     from RobotRaconteur.Client import *
-    
+
     ...
 
 Server:

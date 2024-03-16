@@ -25,8 +25,8 @@ The above example will generate the following code in the thunk source:
     {
     namespace constants_example1
     {
-    
-    namespace example__constants_example1Constants 
+
+    namespace example__constants_example1Constants
     {
         static const uint32_t myconst=0xFB;
         static const double myarray[]={10.3, 584.9, 594};
@@ -41,7 +41,7 @@ The above example will generate the following code in the thunk source:
         value2 = 0xf1,
         value3 = 0xf2,
         value4 = 0xf3
-    };    
+    };
     }
 
     }

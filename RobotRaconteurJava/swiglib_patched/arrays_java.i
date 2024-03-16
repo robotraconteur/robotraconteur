@@ -2,7 +2,7 @@
  * arrays_java.i
  *
  * These typemaps give more natural support for arrays. The typemaps are not efficient
- * as there is a lot of copying of the array values whenever the array is passed to C/C++ 
+ * as there is a lot of copying of the array values whenever the array is passed to C/C++
  * from Java and vice versa. The Java array is expected to be the same size as the C array.
  * An exception is thrown if they are not.
  *
@@ -21,8 +21,8 @@
  *   fs = example.getFiddleSticks();
  * ----------------------------------------------------------------------------- */
 
-/* Primitive array support is a combination of SWIG macros and functions in order to reduce 
- * code bloat and aid maintainability. The SWIG preprocessor expands the macros into functions 
+/* Primitive array support is a combination of SWIG macros and functions in order to reduce
+ * code bloat and aid maintainability. The SWIG preprocessor expands the macros into functions
  * for inclusion in the generated code. */
 
 /* Array support functions declarations macro */
@@ -162,13 +162,13 @@ JAVA_ARRAYS_IMPL(double, jdouble, Double, Double)     /* double[] */
     return $null;
   }
   if (!SWIG_JavaArrayIn##JFUNCNAME(jenv, &jarr, (CTYPE **)&$1, $input)) return $null; %}
-%typemap(argout) CTYPE[ANY], CTYPE[] 
+%typemap(argout) CTYPE[ANY], CTYPE[]
 %{ SWIG_JavaArrayArgout##JFUNCNAME(jenv, jarr$argnum, (CTYPE *)$1, $input); %}
 %typemap(out) CTYPE[ANY]
 %{$result = SWIG_JavaArrayOut##JFUNCNAME(jenv, (CTYPE *)$1, $1_dim0); %}
-%typemap(out) CTYPE[] 
+%typemap(out) CTYPE[]
 %{$result = SWIG_JavaArrayOut##JFUNCNAME(jenv, (CTYPE *)$1, FillMeInAsSizeCannotBeDeterminedAutomatically); %}
-%typemap(freearg) CTYPE[ANY], CTYPE[] 
+%typemap(freearg) CTYPE[ANY], CTYPE[]
 #ifdef __cplusplus
 %{ delete [] $1; %}
 #else
@@ -218,7 +218,7 @@ JAVA_ARRAYS_TYPEMAPS(double, double, jdouble, Double, "[D")     /* double[ANY] *
 #if defined(SWIGWORDSIZE64)
 %typecheck(SWIG_TYPECHECK_INT32_ARRAY) /* Java int[] */
     unsigned short[ANY], unsigned short[],
-    int[ANY], int[]    
+    int[ANY], int[]
     ""
 #else
 %typecheck(SWIG_TYPECHECK_INT32_ARRAY) /* Java int[] */
@@ -230,7 +230,7 @@ JAVA_ARRAYS_TYPEMAPS(double, double, jdouble, Double, "[D")     /* double[ANY] *
 
 #if defined(SWIGWORDSIZE64)
 %typecheck(SWIG_TYPECHECK_INT64_ARRAY) /* Java long[] */
-    unsigned int[ANY], unsigned int[],    
+    unsigned int[ANY], unsigned int[],
     long[ANY], long[]
     ""
 #else
@@ -260,10 +260,10 @@ JAVA_ARRAYS_TYPEMAPS(double, double, jdouble, Double, "[D")     /* double[ANY] *
     ""
 
 
-/* Arrays of proxy classes. The typemaps in this macro make it possible to treat an array of 
- * class/struct/unions as an array of Java classes. 
+/* Arrays of proxy classes. The typemaps in this macro make it possible to treat an array of
+ * class/struct/unions as an array of Java classes.
  * Use the following macro to use these typemaps for an array of class/struct/unions called name:
- * JAVA_ARRAYSOFCLASSES(name) 
+ * JAVA_ARRAYSOFCLASSES(name)
  * Note that multiple copies of the class/struct is made when using the array as a parameter input. */
 %define JAVA_ARRAYSOFCLASSES(ARRAYSOFCLASSES)
 
@@ -367,7 +367,7 @@ JAVA_ARRAYS_TYPEMAPS(double, double, jdouble, Double, "[D")     /* double[ANY] *
 %{ free($1); %}
 #endif
 
-/* Add some code to the proxy class of the array type for converting between type used in 
+/* Add some code to the proxy class of the array type for converting between type used in
  * JNI class (long[]) and type used in proxy class ( ARRAYSOFCLASSES[] ) */
 %extend ARRAYSOFCLASSES {
 %proxycode %{
@@ -390,7 +390,7 @@ JAVA_ARRAYS_TYPEMAPS(double, double, jdouble, Double, "[D")     /* double[ANY] *
 %enddef /* JAVA_ARRAYSOFCLASSES */
 
 
-/* Arrays of enums. 
+/* Arrays of enums.
  * Use the following to use these typemaps for an array of enums called name:
  * %apply ARRAYSOFENUMS[ANY] { name[ANY] }; */
 %typemap(jni) ARRAYSOFENUMS[ANY], ARRAYSOFENUMS[] "jintArray"
@@ -411,11 +411,11 @@ JAVA_ARRAYS_TYPEMAPS(double, double, jdouble, Double, "[D")     /* double[ANY] *
   }
   if (!SWIG_JavaArrayInInt(jenv, &jarr, (int **)&$1, $input)) return $null;
 }
-%typemap(argout) ARRAYSOFENUMS[ANY], ARRAYSOFENUMS[] 
+%typemap(argout) ARRAYSOFENUMS[ANY], ARRAYSOFENUMS[]
 %{ SWIG_JavaArrayArgoutInt(jenv, jarr$argnum, (int *)$1, $input); %}
-%typemap(out) ARRAYSOFENUMS[ANY] 
+%typemap(out) ARRAYSOFENUMS[ANY]
 %{$result = SWIG_JavaArrayOutInt(jenv, (int *)$1, $1_dim0); %}
-%typemap(freearg) ARRAYSOFENUMS[ANY], ARRAYSOFENUMS[] 
+%typemap(freearg) ARRAYSOFENUMS[ANY], ARRAYSOFENUMS[]
 #ifdef __cplusplus
 %{ delete [] $1; %}
 #else

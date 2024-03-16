@@ -69,13 +69,13 @@ public:
 	virtual boost::intrusive_ptr<MessageElement> GetInValue();
 	virtual boost::intrusive_ptr<MessageElement> GetOutValue();
 	virtual void SetOutValue(const boost::intrusive_ptr<MessageElement>& value);
-	
+
 	//WrappedWireConnectionDirector* RR_Director;
-	
+
 	//WrappedWireConnectionDirector* GetRRDirector();
-	
+
 	void SetRRDirector(WrappedWireConnectionDirector* director, int32_t id);
-	
+
 	boost::shared_ptr<TypeDefinition> Type;
 RR_RELEASE_GIL()
 	virtual void Close();
@@ -84,18 +84,18 @@ RR_KEEP_GIL()
 	virtual uint32_t GetEndpoint();
 
 	TimeSpec GetLastValueReceivedTime();
-	
+
 	TimeSpec GetLastValueSentTime();
-	
+
 	bool GetInValueValid();
 
 	bool GetOutValueValid();
-	
+
 	TryGetValueResult TryGetInValue();
 	TryGetValueResult TryGetOutValue();
 
 	void AsyncClose(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
-	
+
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
 
 	bool GetIgnoreInValue();
@@ -114,7 +114,7 @@ RR_KEEP_GIL()
 
     MemberDefinition_Direction Direction();
 
-	
+
 };
 
 %nodefaultctor WrappedWireClient;
@@ -134,14 +134,14 @@ RR_RELEASE_GIL()
 	boost::intrusive_ptr<RobotRaconteur::MessageElement> PeekOutValue(TimeSpec& ts);
 	void PokeOutValue(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& value);
 RR_KEEP_GIL()
-		
+
 	void AsyncPeekInValue(int32_t timeout, AsyncWirePeekReturnDirector* handler, int32_t id);
 	void AsyncPeekOutValue(int32_t timeout, AsyncWirePeekReturnDirector* handler, int32_t id);
 	void AsyncPokeOutValue(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& value, int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
-		
-	
+
+
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
-	
+
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
 
 	MemberDefinition_Direction Direction();
@@ -156,14 +156,14 @@ public:
 
 class WrappedWireServerPeekValueDirector
 {
-public:	
+public:
     virtual ~WrappedWireServerPeekValueDirector() {}
 	virtual boost::intrusive_ptr<RobotRaconteur::MessageElement> PeekValue(const uint32_t& ep) =0;
 };
 
 class WrappedWireServerPokeValueDirector
 {
-public:	
+public:
     virtual ~WrappedWireServerPokeValueDirector() {}
 	virtual void PokeValue(boost::intrusive_ptr<RobotRaconteur::MessageElement> value, const RobotRaconteur::TimeSpec& ts, const uint32_t& ep) = 0;
 };
@@ -172,19 +172,19 @@ public:
 class WrappedWireServer
 {
 public:
-	
+
 	virtual std::string GetMemberName();
-	
+
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
-	
+
 	void SetWrappedWireConnectCallback(WrappedWireServerConnectDirector* director, int32_t id);
-	
+
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
-	
+
 	void SetPeekInValueCallback(WrappedWireServerPeekValueDirector* director, int32_t id);
 	void SetPeekOutValueCallback(WrappedWireServerPeekValueDirector* director, int32_t id);
 	void SetPokeOutValueCallback(WrappedWireServerPokeValueDirector* director, int32_t id);
-	
+
 	MemberDefinition_Direction Direction();
 
 };
@@ -199,12 +199,12 @@ public:
 
 class WrappedWireBroadcaster
 {
-public:		
+public:
 
 	void Init(const boost::shared_ptr<WrappedWireServer>& wire);
 
 	void SetOutValue(const boost::intrusive_ptr<MessageElement>& value);
-	
+
 	size_t GetActiveWireConnectionCount();
 
 	void SetPredicateDirector(WrappedWireBroadcasterPredicateDirector* f, int32_t id);
@@ -222,7 +222,7 @@ class WrappedWireUnicastReceiver
 public:
 	void Init(const boost::shared_ptr<WrappedWireServer>& wire);
 
-	boost::intrusive_ptr<MessageElement> GetInValue(TimeSpec& ts, uint32_t& ep);	
+	boost::intrusive_ptr<MessageElement> GetInValue(TimeSpec& ts, uint32_t& ep);
 
 	void AddInValueChangedListener(WrappedWireServerPokeValueDirector* director, int32_t id);
 

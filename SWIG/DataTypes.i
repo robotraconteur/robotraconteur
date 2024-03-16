@@ -38,13 +38,13 @@ bool IsTypeNumeric(DataTypes type);
 %nodefaultctor RRObject;
 class RRObject
 {
-    
+
 };
 
 %nodefaultctor RRValue;
 class RRValue
 {
-    
+
 };
 
 class  MessageElementData : public RRValue
@@ -71,14 +71,14 @@ boost::intrusive_ptr<RobotRaconteur::RRBaseArray> AllocateRRArrayByType(DataType
 class RRMultiDimArrayUntyped
 {
 public:
-	
+
 	boost::intrusive_ptr<RRBaseArray > Dims;
 
 	boost::intrusive_ptr<RRBaseArray> Array;
-	
+
 
 };
-    
+
 }
 
 //MultiDimArray helpers

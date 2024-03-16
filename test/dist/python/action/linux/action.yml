@@ -9,7 +9,7 @@ inputs:
     required: true
   wheel_filename:
     description: wheel_filename
-    required: true  
+    required: true
 
 runs:
   using: "composite"

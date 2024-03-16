@@ -69,8 +69,8 @@ between the client member reference and the real member in the service.
 To the user the network layer is *almost* invisible. Robot Raconteur
 uses plain-text files called *Service Definition* files to define the
 objects and composite data types (structures) that are used in a
-service. Example 
-`experimental.create2 <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/experimental.create2.robdef>`_ 
+service. Example
+`experimental.create2 <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/experimental.create2.robdef>`_
 shows an example service definition, and Section
 :doc:`ServiceDefinition` goes into great detail how
 these files are used. A service definition is a very simple way to
@@ -142,7 +142,7 @@ certificate based authentication. Details on TLS and certificates are
 covered in the document *Robot Raconteur Security using TLS and
 Certificates*.
 
-Python examples can be found in the 
+Python examples can be found in the
 `RobotRaconteur_Python_Examples <https://github.com/robotraconteur/RobotRaconteur_Python_Examples>`_
 GitHub repository.
 

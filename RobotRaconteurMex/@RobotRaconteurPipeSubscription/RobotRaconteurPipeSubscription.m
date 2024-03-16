@@ -1,12 +1,12 @@
 function c=RobotRaconteurPipeSubscription(objecttype,stubid)
 %RobotRaconteurPipeSubscription Subscription for pipe members that aggregates incoming packets
-%    Pipe subscriptions are created using the RobotRaconteurServiceSubscription.SubscribePipe() function. 
-%    This function takes the the type of the pipe packets, the name of the pipe member, and an optional 
+%    Pipe subscriptions are created using the RobotRaconteurServiceSubscription.SubscribePipe() function.
+%    This function takes the the type of the pipe packets, the name of the pipe member, and an optional
 %    service path of the service object that owns the pipe member.
 %
 %    Pipe subscriptions collect all incoming packets from connect pipe endpoints. When a client connects,
 %    the pipe subscription will automatically connect a pipe endpoint the pipe endpoint specified when
-%    the PipeSubscription was created using RobotRaconteurServiceSubscription.SubscribePipe(). The packets 
+%    the PipeSubscription was created using RobotRaconteurServiceSubscription.SubscribePipe(). The packets
 %    received from each of the collected pipes are collected and placed into a common receive queue. This queue
 %    is read using ReceivePacket(). The number of packets available to receive can be checked using Available.
 %
@@ -21,7 +21,7 @@ function c=RobotRaconteurPipeSubscription(objecttype,stubid)
 %
 %    pipe_sub.Available - The number of packets in the receive queue
 %    pipe_sub.IgnoreInValue - Set to true to ignore incoming packets
-%    
+%
 %    The following functions are available:
 %
 %    pipe_sub.ReceivePacket() - Receive the next pipe in the receive queue. Throws an error

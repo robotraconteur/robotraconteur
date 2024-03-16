@@ -659,7 +659,7 @@ class PipeEndpoint(object):
     See Pipe for more information on pipe members.
 
     Pipe endpoints are created by clients using the Pipe.Connect() or Pipe.AsyncConnect()
-    functions. Services receive incoming pipe endpoint connection requests through a 
+    functions. Services receive incoming pipe endpoint connection requests through a
     callback function specified using the Pipe.PipeConnectCallback property. Services
     may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
     sending packets to all connected client endpoints.
@@ -670,7 +670,7 @@ class PipeEndpoint(object):
 
     Pipes send reliable packet streams between connected client/service endpoint pairs.
     Packets are sent using the SendPacket() or AsyncSendPacket() functions. Packets
-    are read from the receive queue using the ReceivePacket(), ReceivePacketWait(), 
+    are read from the receive queue using the ReceivePacket(), ReceivePacketWait(),
     TryReceivePacketWait(), TryReceivePacketWait(), or PeekNextPacket(). The endpoint is closed
     using the Close() or AsyncClose() function.
 
@@ -1034,7 +1034,7 @@ class Pipe(object):
     Pipes may be *unreliable*, meaning that packets may arrive out of order or be dropped. Use IsUnreliable to check for
     unreliable pipes. The member modifier `unreliable` is used to specify that a pipe should be unreliable.
 
-    Pipes may be declared *readonly* or *writeonly*. If neither is specified, the pipe is assumed to be full duplex. *readonly* 
+    Pipes may be declared *readonly* or *writeonly*. If neither is specified, the pipe is assumed to be full duplex. *readonly*
     pipes may only send packets from service to client. *writeonly* pipes may only send packets from client to service. Use
     Direction to determine the direction of the pipe.
 
@@ -1138,7 +1138,7 @@ class Pipe(object):
 
         Callback function invoked when a client attempts to connect a pipe endpoint. The callback
         will receive the incoming pipe endpoint as a parameter. The service must maintain a reference to the
-        pipe endpoint, but the pipe will retain ownership of the endpoint until it is closed. 
+        pipe endpoint, but the pipe will retain ownership of the endpoint until it is closed.
 
         The callback may throw an exception to reject incoming connect request.
 
@@ -1187,14 +1187,14 @@ class WireConnection(object):
     wire members. See Wire for more information on wire members.
 
     Wire connections are created by clients using the Wire.Connect() or Wire.AsyncConnect()
-    functions. Services receive incoming wire connection requests through a 
+    functions. Services receive incoming wire connection requests through a
     callback function specified using the Wire.WireConnectCallback property. Services
     may also use the WireBroadcaster class to automate managing wire connection lifecycles and
     sending values to all connected clients, or use WireUnicastReceiver to receive an incoming
     value from the most recently connected client.
 
     Wire connections are used to transmit "most recent" values between clients and services. Connection
-    the wire creates a connection pair, one in the client, and one in the service. Each wire connection 
+    the wire creates a connection pair, one in the client, and one in the service. Each wire connection
     object has an InValue and an OutValue. Setting the OutValue of one will cause the specified value to
     be transmitted to the InValue of the peer. See Wire for more information.
 
@@ -1246,7 +1246,7 @@ class WireConnection(object):
         """
         Close the wire connection
 
-        Close the wire connection. Blocks until close complete. The peer wire connection 
+        Close the wire connection. Blocks until close complete. The peer wire connection
         is destroyed automatically.
         """
         return self.__innerwire.Close()
@@ -1323,7 +1323,7 @@ class WireConnection(object):
         """
         Get if the InValue is valid
 
-        The InValue is valid if a value has been received and 
+        The InValue is valid if a value has been received and
         the value has not expired
 
         :rtype: bool
@@ -1348,7 +1348,7 @@ class WireConnection(object):
         Set whether wire connection should ignore incoming values
 
         Wire connections may optionally desire to ignore incoming values. This is useful if the connection
-        is only being used to send out values, and received values may create a potential memory . If ignore is true, 
+        is only being used to send out values, and received values may create a potential memory . If ignore is true,
         incoming values will be discarded.
 
         :rtype: bool
@@ -1427,7 +1427,7 @@ class WireConnection(object):
 
            def my_handler(con, value, ts):
               # Handle new value
-              pass              
+              pass
 
            my_wire_connection.WireValueChanged += my_handler
 
@@ -1606,8 +1606,8 @@ class Wire(object):
     The Wire class implements the \"wire\" member type. Wires are declared in service definition files
     using the \"wire\" keyword within object declarations. Wires provide "most recent" value streaming
     between clients and services. They work by creating "connection" pairs between the client and service.
-    The wire streams the current value between the wire connection pairs using packets. Wires 
-    are unreliable; only the most recent value is of interest, and any older values 
+    The wire streams the current value between the wire connection pairs using packets. Wires
+    are unreliable; only the most recent value is of interest, and any older values
     will be dropped. Wire connections have an InValue and an OutValue. Users set the OutValue on the
     connection. The new OutValue is transmitted to the peer wire connection, and becomes the peer's
     InValue. The peer can then read the InValue. The client and service have their own InValue
@@ -1624,7 +1624,7 @@ class Wire(object):
 
     Wire clients may also optionally "peek" and "poke" the wire without forming a streaming
     connection. This is useful if the client needs to read the InValue or set the OutValue
-    instantaniously, but does not need continuous updating. PeekInValue() or 
+    instantaniously, but does not need continuous updating. PeekInValue() or
     AsyncPeekInValue() will retrieve the client's current InValue. PokeOutValue() or
     AsyncPokeOutValue() will send a new client OutValue to the service.
     PeekOutValue() or AsyncPeekOutValue() will retrieve the last client OutValue received by
@@ -1633,7 +1633,7 @@ class Wire(object):
     "Peek" and "poke" operations initiated by the client are received on the service using
     callbacks. Use PeekInValueCallback, PeekOutValueCallback,
     and PokeOutValueCallback to configure the callbacks to handle these requests.
-    WireBroadcaster and WireUnicastReceiver configure these callbacks automatically, so 
+    WireBroadcaster and WireUnicastReceiver configure these callbacks automatically, so
     the user does not need to configure the callbacks when these classes are used.
 
     Wires can be declared *readonly* or *writeonly*. If neither is specified, the wire is assumed
@@ -1726,9 +1726,9 @@ class Wire(object):
         Set wire connected callback function
 
         Callback function invoked when a client attempts to connect a the wire. The callback
-        will receive the incoming wire connection as a parameter. The service must maintain a 
-        reference to the wire connection, but the wire will retain ownership of the wire connection 
-        until it is closed. Using  boost::weak_ptr to store the reference to the connection 
+        will receive the incoming wire connection as a parameter. The service must maintain a
+        reference to the wire connection, but the wire will retain ownership of the wire connection
+        until it is closed. Using  boost::weak_ptr to store the reference to the connection
         is recommended.
 
         The callback may throw an exception to reject incoming connect request.
@@ -1754,7 +1754,7 @@ class Wire(object):
         Peek the current InValue
 
         Peeks the current InValue using a "request" instead of a streaming value. Use
-        if only the instantanouse value is required. 
+        if only the instantanouse value is required.
 
         Peek and poke are similar to "property" members. Unlike streaming,
         peek and poke are reliable operations.
@@ -1774,10 +1774,10 @@ class Wire(object):
         Peek the current OutValue
 
         Peeks the current OutValue using a "request" instead of a streaming value. Use
-        if only the instantanouse value is required. 
+        if only the instantanouse value is required.
 
         Peek and poke are similar to "property" members. Unlike streaming,
-        peek and poke are reliable operations. 
+        peek and poke are reliable operations.
 
         Throws ValueNotSetException if OutValue is not valid.
 
@@ -1793,7 +1793,7 @@ class Wire(object):
         """
         Poke the OutValue
 
-        Pokes the OutValue using a "request" instead of a streaming value. Use 
+        Pokes the OutValue using a "request" instead of a streaming value. Use
         to update the OutValue if the value is updated infrequently.
 
         Peek and poke are similar to `property` members. Unlike streaming,
@@ -1927,7 +1927,7 @@ class Wire(object):
 
         PokeOutValueCallback configures the service callback for PokeOutValue() requests.
 
-        The function receives the new out value, the new out value timestamp in the client's clock, 
+        The function receives the new out value, the new out value timestamp in the client's clock,
         and the client endpoint ID.
 
         Note: Callback is configured automatically by WireBroadcaster or
@@ -2296,7 +2296,7 @@ class ServiceInfo2(object):
 
     Contains information about a service found using discovery
 
-    ServiceInfo2 contains information about a service required to 
+    ServiceInfo2 contains information about a service required to
     connect to the service, metadata, and the service attributes
 
     ServiceInfo2 structures are returned by RobotRaconteurNode.FindServiceByType()
@@ -2344,7 +2344,7 @@ class NodeInfo2(object):
         self.NodeName = info.NodeName
         """(str) The NodeName of the detected node"""
         self.ConnectionURL = list(info.ConnectionURL)
-        """(List[str]) Candidate URLs to connect to the node 
+        """(List[str]) Candidate URLs to connect to the node
 
         The URLs for the node typically contain the node transport endpoint
         and the nodeid. A URL service parameter must be appended
@@ -3181,18 +3181,18 @@ class PipeBroadcaster(object):
     no provisions for receiving incoming packets from the client.
 
     PipeBroadcaster is initialized by the user, or by default if the service
-    object has no attribute for *readonly* pipes. If default 
+    object has no attribute for *readonly* pipes. If default
     an attribute is specified for the pipe
-    not used, the broadcaster must be instantiated manually. It is 
+    not used, the broadcaster must be instantiated manually. It is
     recommended this be done using the RRServiceObjectInit() function. If present
-    in the service object, function is called after the pipes have been instantiated 
+    in the service object, function is called after the pipes have been instantiated
     by the service.
 
     Use SendPacket() or AsyncSendPacket() to broadcast packets to all
     connected clients.
 
     PipeBroadcaster provides flow control by optionally tracking how many packets
-    are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a 
+    are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a
     maximum backlog is specified, pipe endpoints exceeding this count will stop sending packets.
     Specify the maximum backlog on construction or the MaxBacklog property.
 
@@ -3250,7 +3250,7 @@ class PipeBroadcaster(object):
         Set the predicate callback function
 
         A predicate is optionally used to regulate when packets are sent to clients. This is used by the
-        BroadcastDownsampler to regulate update rates of packets sent to clients. 
+        BroadcastDownsampler to regulate update rates of packets sent to clients.
 
         The predicate callback is invoked before the broadcaster sends a packet to an endpoint. If the predicate returns true,
         the packet will be sent. If it is false, the packet will not be sent to that endpoint.
@@ -3271,7 +3271,7 @@ class PipeBroadcaster(object):
         Set the maximum backlog
 
         PipeBroadcaster provides flow control by optionally tracking how many packets
-        are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a 
+        are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a
         maximum backlog is specified, pipe endpoints exceeding this count will stop sending packets.
 
         Set -1 for no flow control.
@@ -3323,12 +3323,12 @@ class WireBroadcaster(object):
     should only we used with wires that are declared *readonly*, since
     it has no provisions for receiving incoming values from clients.
 
-    WireBroadcaster is initialized by the user, or by default if the 
+    WireBroadcaster is initialized by the user, or by default if the
     service object does not contain an attribute for the wire member. The default
     will automatically instantiate unicast receivers for
     wires marked *readonly*. If default the implementation is not
     not used, the broadcaster must be instantiated manually. It is recommended this
-    be done using an RRServiceObjectInit() function in the service object. 
+    be done using an RRServiceObjectInit() function in the service object.
     This function is called after the wires have been instantiated by the service.
 
     Use OutValue property to broadcast values to all connected clients.
@@ -3356,11 +3356,11 @@ class WireBroadcaster(object):
         """
         Set the OutValue for all connections
 
-        Sets the OutValue for all connections. This will transmit the value 
+        Sets the OutValue for all connections. This will transmit the value
         to all connected clients using packets. The value will become the clients'
         InValue.
 
-        The value will be returned when clients call Wire.PeekInValue() or 
+        The value will be returned when clients call Wire.PeekInValue() or
         Wire.AsyncPeekInValue()
 
         """
@@ -3381,7 +3381,7 @@ class WireBroadcaster(object):
         Set the predicate callback function
 
         A predicate is optionally used to regulate when values are sent to clients. This is used by the
-        BroadcastDownsampler to regulate update rates of values sent to clients. 
+        BroadcastDownsampler to regulate update rates of values sent to clients.
 
         The predicate callback is invoked before the broadcaster sends a value to an endpoint. If the predicate returns true,
         the value will be sent. If it is false, the value will not be sent to that endpoint.
@@ -3428,7 +3428,7 @@ class WireBroadcaster(object):
     def PeekInValueCallback(self):
         """
         Set the PeekInValue callback function for the WireBrodcaster.
-        Overrides the default callback that returns the last set 
+        Overrides the default callback that returns the last set
         OutValue.
 
         :rtype: Callable[[int],T]
@@ -3471,15 +3471,15 @@ class WireUnicastReceiver(object):
     It is recommended that object locks be used to protect from concurrent
     access when unicast receivers are used.
 
-    WireUnicastReceiver is initialized by the user, or by default if the 
+    WireUnicastReceiver is initialized by the user, or by default if the
     service object does not contain an attribute for the wire member. The default
     will automatically instantiate unicast receivers for
     wires marked *writeonly*. If default the implementation is not
     not used, the unicast receiver must be instantiated manually. It is recommended this
-    be done using an RRServiceObjectInit() function in the service object. 
+    be done using an RRServiceObjectInit() function in the service object.
     This function is called after the wires have been instantiated by the service.
 
-    The current InValue is received using the InValue property or TryGetInValue(). 
+    The current InValue is received using the InValue property or TryGetInValue().
     The InValueChanged event hook can be used to monitor for changes to the InValue.
 
     Clients may also use PokeOutValue() or AsyncPokeOutValue() to update the
@@ -3522,7 +3522,7 @@ class WireUnicastReceiver(object):
         """
         Try getting the current InValue, returning true on success or false on failure
 
-        Gets the current InValue, its timestamp, and the client that owns the connection. 
+        Gets the current InValue, its timestamp, and the client that owns the connection.
         Returns True if value is valid, or False if value is invalid. Value will be invalid if no value has
         been received, or the value lifespan has expired.
 
@@ -3545,7 +3545,7 @@ class WireUnicastReceiver(object):
 
            def my_handler(con, value, ts):
               # Handle new value
-              pass              
+              pass
 
            my_wire_connection.WireValueChanged += my_handler
 
@@ -3937,7 +3937,7 @@ class ServiceSubscriptionFilter(object):
     """
     Subscription filter
 
-    The subscription filter is used with RobotRaconteurNode.SubscribeServiceByType() and 
+    The subscription filter is used with RobotRaconteurNode.SubscribeServiceByType() and
     RobotRaconteurNode.SubscribeServiceInfo2() to decide which services should
     be connected. Detected services that match the service type are checked against
     the filter before connecting.
@@ -3955,7 +3955,7 @@ class ServiceSubscriptionFilter(object):
         self.Attributes = dict()
         """(Dict[str,RobotRaconteur.ServiceSubscriptionFilterAttributeGroup] Attributes to match)"""
         self.AttributesMatchOperation = RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroupOperation_AND
-        """(RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation) The operation to use when matching attributes. 
+        """(RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation) The operation to use when matching attributes.
         Default is AND. Can be OR, AND, NOR, and NAND."""
         self.Predicate = None
         """(Callable[[RobotRaconteur.ServiceInfo2],bool]) A user specified predicate function. If nullptr, the predicate is not checked."""
@@ -3993,7 +3993,7 @@ class ServiceInfo2Subscription(object):
     """
     ServiceInfo2Subscription()
 
-    Subscription for information about detected services 
+    Subscription for information about detected services
 
     Created using RobotRaconteurNode.SubscribeServiceInfo2()
 
@@ -4050,7 +4050,7 @@ class ServiceInfo2Subscription(object):
 
            def my_handler(sub, subscription_id, service_info2):
               # Process detected service
-              pass              
+              pass
 
            my_serviceinfo2_sub.ServiceDetected += my_handler
 
@@ -4075,7 +4075,7 @@ class ServiceInfo2Subscription(object):
 
            def my_handler(sub, subscription_id, service_info2):
               # Process lost service
-              pass              
+              pass
 
            my_serviceinfo2_sub.ServiceLost += my_handler
 
@@ -4153,13 +4153,13 @@ class ServiceSubscription(object):
     to be used to create robust connections. The retry delay for connections can be modified using the ConnectRetryDelay property.
 
     The currently connected clients can be retrieved using the GetConnectedClients() function. A single "default client" can be
-    retrieved using the GetDefaultClient() function or TryGetDefaultClient() functions. Listeners for client connect and 
-    disconnect events can be added using the ClientConnectListener and ClientDisconnectListener properties. If 
-    the user wants to claim a client, the ClaimClient() and ReleaseClient() functions will be used. Claimed clients will 
+    retrieved using the GetDefaultClient() function or TryGetDefaultClient() functions. Listeners for client connect and
+    disconnect events can be added using the ClientConnectListener and ClientDisconnectListener properties. If
+    the user wants to claim a client, the ClaimClient() and ReleaseClient() functions will be used. Claimed clients will
     no longer have their lifecycle managed by the subscription.
 
     Subscriptions can be used to create \"pipe\" and \"wire\" subscriptions. These member subscriptions aggregate
-    the packets and values being received from all services. They can also act as a "reverse broadcaster" to 
+    the packets and values being received from all services. They can also act as a "reverse broadcaster" to
     send packets and values to all services that are actively connected. See PipeSubscription and WireSubscription.
     """
 
@@ -4234,7 +4234,7 @@ class ServiceSubscription(object):
         """
         Creates a wire subscription
 
-        Wire subscriptions aggregate the value received from the connected services. It can also act as a 
+        Wire subscriptions aggregate the value received from the connected services. It can also act as a
         "reverse broadcaster" to send values to clients. See WireSubscription.
 
         The optional service path may be an empty string to use the root object in the service. The first level of the
@@ -4257,7 +4257,7 @@ class ServiceSubscription(object):
         """
         Creates a pipe subscription
 
-        Pipe subscriptions aggregate the packets received from the connected services. It can also act as a 
+        Pipe subscriptions aggregate the packets received from the connected services. It can also act as a
         "reverse broadcaster" to send packets to clients. See PipeSubscription.
 
         The optional service path may be an empty string to use the root object in the service. The first level of the
@@ -4286,7 +4286,7 @@ class ServiceSubscription(object):
 
            def my_handler(sub, subscription_id, connected_service):
               # Process lost service
-              pass              
+              pass
 
            my_service_sub.ClientConnected += my_handler
 
@@ -4311,7 +4311,7 @@ class ServiceSubscription(object):
 
            def my_handler(sub, subscription_id, connected_service):
               # Process lost service
-              pass              
+              pass
 
            my_service_sub.ClientDisconnected += my_handler
 
@@ -4337,7 +4337,7 @@ class ServiceSubscription(object):
 
            def my_handler(sub, subscription_id, candidate_urls, exceptions):
               # Process lost service
-              pass              
+              pass
 
            my_service_sub.ClientDisconnected += my_handler
 
@@ -4461,7 +4461,7 @@ class ServiceSubscription(object):
         :type username: str
         :param credentials: Optional credentials for authentication
         :type credentials: Dict[str,Any]
-        :param close_connected: Optional, (default False) Close existing connections        
+        :param close_connected: Optional, (default False) Close existing connections
         """
 
         if username is None:
@@ -4587,7 +4587,7 @@ class WireSubscription(object):
 
         Blocks the current thread until value is received or timeout
 
-        :param timeout: The timeout in seconds 
+        :param timeout: The timeout in seconds
         :type timeout: float
         :return: True if value was received, otherwise False
         :rtype: bool
@@ -4698,7 +4698,7 @@ class WireSubscription(object):
 
            def my_handler(sub, value, ts):
               # Handle new value
-              pass              
+              pass
 
            my_wire_csub.WireValueChanged += my_handler
 
@@ -4870,7 +4870,7 @@ class PipeSubscription(object):
               while pipe_sub.Available > 0:
                   packet = pipe_sub.ReceivePacket()
                   # Handle new packet
-                  pass              
+                  pass
 
            my_pipe_sub.PipePacketReceived+= my_handler
 
@@ -5093,10 +5093,10 @@ class RobotRaconteurNodeSetup(object):
     See Taps for more information on using taps.
 
     The node setup classes optionally initialize LocalTransport,
-    TcpTransport, HardwareTransport, and/or IntraTransport. 
+    TcpTransport, HardwareTransport, and/or IntraTransport.
     Transports for more information.
 
-    The LocalTransport.StartServerAsNodeName() or 
+    The LocalTransport.StartServerAsNodeName() or
     LocalTransport.StartClientAsNodeName() are used to load the NodeID.
     See LocalTransport for more information on this procedure.
 
@@ -5194,7 +5194,7 @@ class ClientNodeSetup(RobotRaconteurNodeSetup):
     Initializes a RobotRaconteurNode instance to default configuration for a client only node
 
     ClientNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
-    RobotRaconteurNode instance that is used only to create outgoing client connections. 
+    RobotRaconteurNode instance that is used only to create outgoing client connections.
 
     See CommandLineOptions for more information on available command line options.
 
@@ -5210,24 +5210,24 @@ class ClientNodeSetup(RobotRaconteurNodeSetup):
     4. Start LocalTransport (default enabled)
 
        1. If `RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT` flag is specified, call
-          LocalTransport.StartServerAsNodeName() with the specified node_name 
+          LocalTransport.StartServerAsNodeName() with the specified node_name
        2. Start LocalTransport discovery listening if specified in flags or on command line (default enabled)
-       3. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
-          specified on command line 
+       3. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if
+          specified on command line
     5. Start TcpTransport (default enabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
        2. Start TcpTranport discovery listening (default enabled)
        3. Load TLS certificate and set if TLS is specified on command line (default disabled)
        4. Process WebSocket origin command line options
     6. Start HardwareTransport (default disabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     7. Start IntraTransport (default enabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     8. Disable timeouts if specified in flags or command line (default timeouts normal)
 
@@ -5252,7 +5252,7 @@ class ServerNodeSetup(RobotRaconteurNodeSetup):
 
     ServerNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
     RobotRaconteurNode instance that is used as a server to accept incoming client connections
-    and to initiate client connections. 
+    and to initiate client connections.
 
     ServerNodeSetup requires a NodeName, and a TCP port if LocalTransport and TcpTransport
     are enabled (default behavior).
@@ -5276,25 +5276,25 @@ class ServerNodeSetup(RobotRaconteurNodeSetup):
           1. If "public" option is set, the transport will listen for all local users (default disabled)
        2. Start the LocalTransport server to listen for incoming connections with the specified NodeName and NodeID
        3. Start LocalTransport discovery announce and listening (default enabled)
-       4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
-          specified on command line 
+       4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if
+          specified on command line
     5. Start TcpTransport (default enabled)
 
-       1. Start the TcpTransport server to listen for incoming connections on specified port 
+       1. Start the TcpTransport server to listen for incoming connections on specified port
           or using the port sharer (default enabled using specified port)
-       2. Disable Message Format Version 4 (default enabled) and/or String Table 
+       2. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
        3. Start TcpTranport discovery announce and listening (default enabled)
        4. Load TLS certificate and set if TLS is specified on command line (default disabled)
        5. Process WebSocket origin command line options
     6. Start HardwareTransport (default disabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     7. Start IntraTransport (default enabled)
 
        1. Enable IntraTransport server to listen for incoming clients (default enabled)
-       2. Disable Message Format Version 4 (default enabled) and/or String Table 
+       2. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     8. Disable timeouts if specified in flags or command line (default timeouts normal)
 
@@ -5346,25 +5346,25 @@ class SecureServerNodeSetup(RobotRaconteurNodeSetup):
          1. If "public" option is set, the transport will listen for all local users (default disabled)
       2. Start the LocalTransport server to listen for incoming connections with the specified NodeName and NodeID
       3. Start LocalTransport discovery announce and listening (default enabled)
-      4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
-         specified on command line 
+      4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if
+         specified on command line
     5. Start TcpTransport (default enabled)
 
-       1. Start the TcpTransport server to listen for incoming connections on specified port 
+       1. Start the TcpTransport server to listen for incoming connections on specified port
           or using the port sharer (default enabled using specified port)
-       2. Disable Message Format Version 4 (default enabled) and/or String Table 
+       2. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
        3. Start TcpTranport discovery announce and listening (default enabled)
        4. Load TLS certificate and set if TLS is specified on command line (default enabled, required)
        5. Process WebSocket origin command line options
     6. Start HardwareTransport (default disabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     7. Start IntraTransport (default enabled)
 
        1. Enable IntraTransport server to listen for incoming clients (default enabled)
-       2. Disable Message Format Version 4 (default enabled) and/or String Table 
+       2. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     8. Disable timeouts if specified in flags or command line (default timeouts normal)
 

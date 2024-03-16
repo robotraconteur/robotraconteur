@@ -7,9 +7,9 @@
       <Nullable>enable</Nullable>
       <PlatformTarget>AnyCpu</PlatformTarget>
     </PropertyGroup>
-  
+
     <ItemGroup>
       <RobotRaconteurGenCSharp Include="experimental.distfiles_test.robdef" />
     </ItemGroup>
-  
+
   </Project>

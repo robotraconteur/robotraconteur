@@ -44,7 +44,7 @@
     - printenv
     - mkdir build
     - cd build
-    - > 
+    - >
       export RR_CMAKE_COMMAND="$RUNCMD $CMAKE
       -DCMAKE_BUILD_TYPE=Release ${STATIC_ARGS}
       $BUILD_FEATURES
@@ -70,14 +70,14 @@
   variables:
     CMAKE: cmake
     BUILD_FEATURES: >-
-      -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+      -DBUILD_GEN=ON -DBUILD_TESTING=ON
       -DBUILD_NET=ON -DBUILD_JAVA=ON
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
     STATIC_ARGS: >-
       -DBoost_USE_STATIC_LIBS=OFF
 
 .linux_build_dev_no_rules:
-  extends: 
+  extends:
   - .linux_build
   variables:
     CONFIG_CMAKE_ARGS: >-
@@ -87,12 +87,12 @@
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
 .linux_build_dev:
-  extends: 
+  extends:
   - .linux_build_dev_no_rules
   - .dev_build
 
 .linux_build_release:
-  extends: 
+  extends:
   - .linux_build
   - .release_build
   variables:
@@ -110,8 +110,8 @@
     - cd build
     - >
       $Env:RR_CMAKE_COMMAND="cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
-      -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
-      -DVCPKG_TARGET_TRIPLET=x64-windows-static-md 
+      -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake
+      -DVCPKG_TARGET_TRIPLET=x64-windows-static-md
       $Env:BUILD_FEATURES
       -DPYTHON3_EXECUTABLE=C:\Python310\python.exe
       $Env:EXTRA_CMAKE_ARGS $Env:CONFIG_CMAKE_ARGS $Env:EXTRA_CMAKE_PYTHON_ARGS
@@ -135,12 +135,12 @@
   variables:
     ARCH: amd64
     BUILD_FEATURES: >-
-      -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+      -DBUILD_GEN=ON -DBUILD_TESTING=ON
       -DBUILD_NET=ON -DBUILD_JAVA=ON
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
-    
+
 .windows_build_dev:
-  extends: 
+  extends:
     - .windows_build
     - .dev_build
   variables:
@@ -151,12 +151,12 @@
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
 .windows_build_release:
-  extends: 
+  extends:
     - .windows_build
     - .release_build
   variables:
     CONFIG_CMAKE_ARGS: ""
-    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF  
+    EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
 
 build_windows_amd64:
   stage: build
@@ -276,14 +276,14 @@ build_debian_bullseye_arm64_release:
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
     OUTNAME: "out-ubuntu_focal_amd64_matlab"
     EXTRA_CMAKE_ARGS: >-
-      -DCMAKE_IGNORE_PATH=/usr 
-      -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake 
+      -DCMAKE_IGNORE_PATH=/usr
+      -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake
       -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/opt/toolchains/gcc-8.cmake
       -DVCPKG_TARGET_TRIPLET=x64-linux-matlab
 
 build_ubuntu_focal_amd64_matlab:
   stage: build
-  extends: 
+  extends:
    - .linux_build_dev
    - .linux_build_matlab
   variables:
@@ -299,10 +299,10 @@ build_freebsd_amd64:
   script:
     - mkdir build
     - cd build
-    - > 
+    - >
       cmake
-      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=OFF      
-      -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=OFF
+      -DBUILD_GEN=ON -DBUILD_TESTING=ON
       -DBUILD_NET=OFF -DBUILD_JAVA=OFF
       -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
@@ -333,31 +333,31 @@ build_freebsd_amd64:
     - export LIBRARY_PATH=/usr/local/opt/icu4c/lib
     - mkdir build
     - cd build
-    - > 
+    - >
       ${RUNCMD} cmake -G Ninja
-      -DCMAKE_OSX_ARCHITECTURES=x86_64 
-      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
-      -DOPENSSL_USE_STATIC_LIBS=ON    
+      -DCMAKE_OSX_ARCHITECTURES=x86_64
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
+      -DOPENSSL_USE_STATIC_LIBS=ON
       ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_MATLAB_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS} ${EXTRA_CMAKE_ARGS}
-      -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl\@3 
-      -DCMAKE_IGNORE_PREFIX_PATH=/opt 
-      -DMatlab_ROOT_DIR=/Applications/MATLAB_R2020a.app 
-      -DMatlab_MEX_EXTENSION=mexmaci64 
-      -DRR_MATLAB_TEST_EXTRA_ARGS=-maci64 
-      -DBOOST_ROOT=/usr/local/Cellar/boost/1.81.0_1 
-      -DCMAKE_SYSTEM_IGNORE_PREFIX_PATH=/opt 
-      -DGTest_DIR=/usr/local/Cellar/googletest/1.12.1/lib/cmake/GTest 
-      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl\@3
+      -DCMAKE_IGNORE_PREFIX_PATH=/opt
+      -DMatlab_ROOT_DIR=/Applications/MATLAB_R2020a.app
+      -DMatlab_MEX_EXTENSION=mexmaci64
+      -DRR_MATLAB_TEST_EXTRA_ARGS=-maci64
+      -DBOOST_ROOT=/usr/local/Cellar/boost/1.81.0_1
+      -DCMAKE_SYSTEM_IGNORE_PREFIX_PATH=/opt
+      -DGTest_DIR=/usr/local/Cellar/googletest/1.12.1/lib/cmake/GTest
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
       -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
-      -DBoost_NO_BOOST_CMAKE=ON 
-      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
-      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
-      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DBoost_NO_BOOST_CMAKE=ON
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
       -DCMAKE_FIND_ROOT_PATH="/usr/local;/Library;/System/Library;/Applications"
-      -DROBOTRACONTEUR_EXTRA_TESTS=ON 
-      -DPYTHON3_EXECUTABLE=/Users/wasonj/python3-intel64/venv/bin/python3-intel64 
-      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib 
-      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12 
+      -DROBOTRACONTEUR_EXTRA_TESTS=ON
+      -DPYTHON3_EXECUTABLE=/Users/wasonj/python3-intel64/venv/bin/python3-intel64
+      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib
+      -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12
       ..
     - ${RUNCMD} cmake --build . --config Release
     - ${RUNCMD} ctest . -C Release --output-on-failure
@@ -377,7 +377,7 @@ build_freebsd_amd64:
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
 
 .osx_build_amd64_dev:
-  extends: 
+  extends:
   - .osx_build_amd64
   - .dev_build
   variables:
@@ -385,7 +385,7 @@ build_freebsd_amd64:
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
 
 .osx_build_amd64_release:
-  extends: 
+  extends:
   - .osx_build_amd64
   - .release_build
   variables:
@@ -442,7 +442,7 @@ code_formatting_ubuntu_focal_amd64:
     - wasontech
     - ubuntu-focal
     - amd64
-  script:    
+  script:
     - ./tools/formatting/run-all-formatting
     - git diff --name-only --exit-code
 clang_tidy_ubuntu_focal_amd64:
@@ -455,9 +455,9 @@ clang_tidy_ubuntu_focal_amd64:
   script:
     - mkdir build
     - cd build
-    - > 
+    - >
       cmake -G Ninja
-      -DCMAKE_BUILD_TYPE=Debug -DBoost_USE_STATIC_LIBS=OFF      
+      -DCMAKE_BUILD_TYPE=Debug -DBoost_USE_STATIC_LIBS=OFF
       -DBUILD_GEN=ON -DBUILD_TESTING=OFF -DCMAKE_CXX_STANDARD=11
       -DCMAKE_CXX_CLANG_TIDY=clang-tidy-14
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
@@ -484,7 +484,7 @@ build_raspbian_buster_armhf:
     - arm64
     - raspi
   stage: build
-  extends: 
+  extends:
     - .linux_build_dev_no_rules
   when: manual
   variables:
@@ -499,25 +499,25 @@ build_raspbian_buster_armhf:
     - export LIBRARY_PATH=/usr/local/opt/icu4c/lib
     - mkdir build
     - cd build
-    - > 
+    - >
       ${RUNCMD} cmake -G Ninja
       -DCMAKE_OSX_ARCHITECTURES=arm64
-      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
-      -DOPENSSL_USE_STATIC_LIBS=ON    
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
+      -DOPENSSL_USE_STATIC_LIBS=ON
       ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_MATLAB_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS} ${EXTRA_CMAKE_ARGS}
       -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
-      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0 
-      -DGTest_DIR=/opt/homebrew/Cellar/googletest/1.12.1/lib/cmake/GTest 
-      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0
+      -DGTest_DIR=/opt/homebrew/Cellar/googletest/1.12.1/lib/cmake/GTest
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
       -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
-      -DBoost_NO_BOOST_CMAKE=ON 
-      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
-      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
-      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DBoost_NO_BOOST_CMAKE=ON
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
       -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
-      -DROBOTRACONTEUR_EXTRA_TESTS=ON 
+      -DROBOTRACONTEUR_EXTRA_TESTS=ON
       -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
-      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib 
+      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib
       -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12
       -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64"
       ..
@@ -538,7 +538,7 @@ build_raspbian_buster_armhf:
     CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON
 
 .osx_build_arm64_dev:
-  extends: 
+  extends:
   - .osx_build_arm64
   - .dev_build
   variables:
@@ -546,7 +546,7 @@ build_raspbian_buster_armhf:
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
 
 .osx_build_arm64_release:
-  extends: 
+  extends:
   - .osx_build_arm64
   - .release_build
   variables:
@@ -582,20 +582,20 @@ build_osx_arm64_release:
       ${RUNCMD} cmake -G Ninja
       -DBUILD_CORE=OFF -DBUILD_GEN=OFF -DBUILD_TESTING=ON
       -DCMAKE_OSX_ARCHITECTURES=arm64
-      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
-      -DOPENSSL_USE_STATIC_LIBS=ON    
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
+      -DOPENSSL_USE_STATIC_LIBS=ON
       ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
       -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
-      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0 
-      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
       -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
-      -DBoost_NO_BOOST_CMAKE=ON 
-      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
-      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
-      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DBoost_NO_BOOST_CMAKE=ON
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
       -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
       -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/$PYVER/bin/python3
-      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/$PYVER/lib/libpython$PYVER.dylib 
+      -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/$PYVER/lib/libpython$PYVER.dylib
       -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/$PYVER/include/python$PYVER
       -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64"
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
@@ -614,17 +614,17 @@ build_osx_arm64_release:
       ${RUNCMD} cmake -G Ninja
       -DCMAKE_OSX_ARCHITECTURES=arm64
       -DBUILD_GEN=OFF -DBUILD_TESTING=OFF
-      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON 
-      -DOPENSSL_USE_STATIC_LIBS=ON    
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
+      -DOPENSSL_USE_STATIC_LIBS=ON
       ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
       -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
-      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0 
-      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+      -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0
+      -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
       -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
-      -DBoost_NO_BOOST_CMAKE=ON 
-      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY 
-      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY 
-      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER 
+      -DBoost_NO_BOOST_CMAKE=ON
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
       -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
       ..
     - ${RUNCMD} cmake --build . --config Release
@@ -636,7 +636,7 @@ build_osx_arm64_release:
     - !reference [.osx_arm64_build_python_ver, script]
     - export PYVER=3.12
     - !reference [.osx_arm64_build_python_ver, script]
-  
+
   artifacts:
     when: always
     name: "${OUTNAME}"
@@ -645,7 +645,7 @@ build_osx_arm64_release:
 
 build_osx_arm64_python_release:
   stage: build
-  extends: 
+  extends:
     - .release_build
     - .osx_arm64_build_python
   tags:
@@ -673,11 +673,11 @@ build_winxp_x86:
       }
     - mkdir build
     - cd build
-    - > 
+    - >
       cmake
       -GNinja
-      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON      
-      -DBUILD_GEN=ON -DBUILD_TESTING=OFF 
+      -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
+      -DBUILD_GEN=ON -DBUILD_TESTING=OFF
       -DBUILD_NET=ON -DBUILD_JAVA=OFF
       -DBUILD_PYTHON=ON -DBUILD_PYTHON_WHEEL=OFF
       -DBUILD_PYTHON3=OFF -DBUILD_PYTHON3_WHEEL=OFF
@@ -726,4 +726,4 @@ build_winxp_x86:
       - ${OUTNAME}/out/*
   variables:
     OUTNAME: "out-winxp_x86"
-  
+

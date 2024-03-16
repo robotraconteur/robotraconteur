@@ -3574,14 +3574,14 @@
         </summary>
         <remarks>
             <para>
-                The candidate connection URLs are the URLs that can be used to connect to the service. 
-                The correct URL to use depends on the transport being used to connect to the service, 
+                The candidate connection URLs are the URLs that can be used to connect to the service.
+                The correct URL to use depends on the transport being used to connect to the service,
                 and the network configuration of the client and service.
             </para>
         </remarks>
         <returns>The candidate connection URLs</returns>
     </member>
-    
+
     <member name="M:RobotRaconteur.ServerContext.PrintCandidateConnectionURLs">
         <summary>
             Print the candidate connection URLs for this service.
@@ -3592,7 +3592,7 @@
             </para>
         </remarks>
     </member>
-    
+
     <member name="M:RobotRaconteur.ServerContext.LogCandidateConnectionURLs(RobotRaconteur.LogLevel)">
         <summary>
             Log the candidate connection URLs for this service.
@@ -4130,7 +4130,7 @@
       <summary>OR Operation</summary>
       <remarks>None</remarks>
     </member>
-  
+
     <member name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.AND">
       <summary>AND Operation</summary>
       <remarks>None</remarks>
@@ -4180,7 +4180,7 @@
       <summary>Delimiter to use to split string attributes (default ",")</summary>
       <remarks>None</remarks>
     </member>
-    
+
 
     <!-- BEGIN GENERATED_MEMBERS -->
     <!-- GENERATED_MEMBERS -->

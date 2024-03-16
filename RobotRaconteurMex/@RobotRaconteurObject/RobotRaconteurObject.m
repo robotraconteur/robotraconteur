@@ -1,44 +1,44 @@
 function c=RobotRaconteurObject(objecttype,stubid)
 %RobotRaconteurObject Robot Raconteur client connection object
-%    Robot Raconteur returns RobotRaconteurObject instances from 
+%    Robot Raconteur returns RobotRaconteurObject instances from
 %    RobotRaconteur.ConnectClient, objref members, and ServiceSubscription.
-%    These instances are "object references", sometimes referred to as 
-%    "object proxies". These instances provide access to client members, 
-%    which access the service. See <a href="matlab:help RobotRaconteur">RobotRaconteur</a> 
-%    for more information on the architecture of Robot Raconteur and how 
+%    These instances are "object references", sometimes referred to as
+%    "object proxies". These instances provide access to client members,
+%    which access the service. See <a href="matlab:help RobotRaconteur">RobotRaconteur</a>
+%    for more information on the architecture of Robot Raconteur and how
 %    object references are used, <a href="matlab:help RobotRaconteurFramework">RobotRaconteurFramework</a>
 %    for an overview of the Robot Raconteur Framework, and
 %    <a href="https://github.com/robotraconteur/RobotRaconteur_MATLAB_Examples">Robot Raconteur Examples</a>
 %    for examples using RobotRaconteurObject.
 %
-%    Robot Raconteur MATLAB dynamically creates object references on demand 
-%    based on the information provided by the service. The "thunk" source 
-%    is uneccesary because of this capability. Two helper functions, "type" 
-%    and "members" returns the Robot Raconteur type of the object and 
+%    Robot Raconteur MATLAB dynamically creates object references on demand
+%    based on the information provided by the service. The "thunk" source
+%    is uneccesary because of this capability. Two helper functions, "type"
+%    and "members" returns the Robot Raconteur type of the object and
 %    prints out the definition of the object type, respectively:
 %
 %        obj=RobotRaconteur.ConnectService('rr+tcp://localhost:2342?service=Create')
 %        type(obj) % Return the object type
 %        members(obj) % Print out the object definition
 %
-%    Note that exceptions are passed transparently to and from MATLAB using 
+%    Note that exceptions are passed transparently to and from MATLAB using
 %    standard error and try/catch notation.
 %
-%    The RobotRaconteurObject class uses "old style" class functions for 
-%    helper functions, and "dot" notation for member access. Examples of a 
+%    The RobotRaconteurObject class uses "old style" class functions for
+%    helper functions, and "dot" notation for member access. Examples of a
 %    helper function and a property member access:
 %
 %       obj_type = type(obj) % Old style class function for helper function
 %       distance_traveled = obj.DistanceTraveled % "dot" style notation to access member
 %
-%    The following list describes the member types and gives a short 
-%    example of the usage. In all examples, obj and webobj are connected 
+%    The following list describes the member types and gives a short
+%    example of the usage. In all examples, obj and webobj are connected
 %    objects. The obj is type "experimental.create2.Create", while
 %    webobj is type "experimental.createwebcam2.WebcamHost".
 %
 %    property
 %
-%      Properties are implemented as standard MATLAB properties. They can 
+%      Properties are implemented as standard MATLAB properties. They can
 %      be accessed using "dot" notation
 %
 %        dist = obj.DistanceTraveled;
@@ -46,7 +46,7 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %
 %    function
 %
-%      Functions are implemented as standard MATLAB functions. They can be 
+%      Functions are implemented as standard MATLAB functions. They can be
 %      accessed using "dot" notation
 %
 %        obj.Drive(int16(200),int16(1000));
@@ -58,11 +58,11 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %
 %    event
 %
-%      In MATLAB, a callback function handle is set to be called when an 
+%      In MATLAB, a callback function handle is set to be called when an
 %      event occurs by using
-%      the "addlistener" helper function. Events are disabled by default. 
+%      the "addlistener" helper function. Events are disabled by default.
 %      To enable events on the object,
-%      run RobotRaconteur.EnableEvents(obj), where obj is the object. The 
+%      run RobotRaconteur.EnableEvents(obj), where obj is the object. The
 %      callback function must have the correct number of arguments matching
 %      the event definition. Because MATLAB is single threaded it is
 %      necessary to call the RobotRaconteur.ProcessRequests() command
@@ -83,7 +83,7 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %
 %    pipe
 %
-%      Pipes have a special syntax that allows connecting 
+%      Pipes have a special syntax that allows connecting
 %      RobotRaconteurPipeEndpoint objects. Replace FrameStream with the
 %      name of the pipe being connected. pe is the connected
 %      RobotRaconteurPipeEndpoint. The -1 can be replaced with a desired
@@ -100,7 +100,7 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %    callback
 %
 %      Callbacks in MATLAB are function handles that have parameters and
-%      return types matching the member definition. (Return from the 
+%      return types matching the member definition. (Return from the
 %      function is ignored if the function member has void return.) "Dot"
 %      notation is used to specify the function handle. Because MATLAB is
 %      single threaded, it is necessary to pump the callbacks using the
@@ -111,9 +111,9 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %
 %    wire
 %
-%      Wires have a special syntax that allows connecting 
+%      Wires have a special syntax that allows connecting
 %      RobotRaconteurWireConnection objects. Replace packets with the name
-%      of the wire being connected. wc is the connected 
+%      of the wire being connected. wc is the connected
 %      RobotRaconteurWireConnection.
 %
 %        wc=obj.frame.Connect()
@@ -123,7 +123,7 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %      See <a href="matlab:help RobotRaconteurWireConnection">RobotRaconteurWireConnection</a>
 %
 %      Wires can also be accessed synchronously using "peek" and "poke"
-%      without forming a connection. This is useful if only the 
+%      without forming a connection. This is useful if only the
 %      instantaneous value is needed instead of constantly updated
 %      streaming data. The following functions are available:
 %
@@ -143,17 +143,17 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %        buf_size = size(buffer); % Use standard "size" function on memory
 %        buffer(:) = mydat1; % Assign entire buffer
 %        mydat2 = buffer(:); % Read entire buffer
-%                   
+%
 %      See <a href="matlab:help RobotRaconteurMemoryClient">RobotRaconteurMemoryClient</a>
 %
 %    Robot Raconteur objects also support some asynchronous capabilities.
 %    See <a href="matlab:help RobotRaconteurAsyncOps">RobotRaconteurAsyncOps</a>
 %
-%    See also RobotRaconteur, RobotRaconteurFramework, 
-%        RobotRaconteurValueTypes, RobotRaconteurAsyncOps, 
+%    See also RobotRaconteur, RobotRaconteurFramework,
+%        RobotRaconteurValueTypes, RobotRaconteurAsyncOps,
 %        RobotRaconteurGenerator, RobotRaconteurPipeEndpoint,
 %        RobotRaconteurWireConnection, RobotRaconteurMemoryClient
-%    
+%
 c=struct;
 c.rrobjecttype=objecttype;
 c.rrstubid=stubid;

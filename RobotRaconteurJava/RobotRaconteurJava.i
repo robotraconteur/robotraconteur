@@ -5,7 +5,7 @@
 %{
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-function"
-#endif    
+#endif
 
 %}
 
@@ -25,7 +25,7 @@
 %apply const unsigned int & { const size_t & };
 #endif
 
-%define RR_PUBLIC_OVERRIDE_METHOD(a) 
+%define RR_PUBLIC_OVERRIDE_METHOD(a)
 %javamethodmodifiers a "public";
 %enddef
 %define RR_PUBLIC_VIRTUAL_METHOD(a)
@@ -74,7 +74,7 @@
 
 //%rename ToString toString;
 
-%rename("add", match$name="push_back") ""; 
+%rename("add", match$name="push_back") "";
 
 %include "DataTypes.i"
 
@@ -92,7 +92,7 @@
 			catch(Exception e) {}
 		}
 	}
-	
+
 	static NativeLoader myLoader=new NativeLoader();
 %}
 
@@ -147,7 +147,7 @@ public:
 	{
 		mlock.lock();
 	}
-	
+
 	bool tryLock(int timeout)
 	{
 		if (timeout==-1)
@@ -157,7 +157,7 @@ public:
 		}
 		return mlock.timed_lock(boost::posix_time::milliseconds(timeout));
 	}
-	
+
 	void unlock()
 	{
 	mlock.unlock();
@@ -174,9 +174,9 @@ namespace RobotRaconteur {
 
 class RRNativeObjectHeapSupport
 	{
-	
+
 	public:
-		
+
 		static void Set_Support(RRNativeObjectHeapSupport* s);
 		virtual void DeleteObject_i(int32_t id)=0;
 		static void DeleteObject(int32_t id);
@@ -184,7 +184,7 @@ class RRNativeObjectHeapSupport
 
 	};
 
-	
+
 }
 
 %include "NodeDirectories.i";

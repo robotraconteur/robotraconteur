@@ -8,17 +8,17 @@ function c=RobotRaconteurGenerator(objecttype,stubid)
 %    transfer limit (typically around 10 MB, unless jumbo messages are enabled).
 %    2. Long running operations that return updates or require periodic input. Generators
 %    are used to implement functionality similar to "actions" in ROS.
-%	 
+%
 %    Generators are a generalization of iterators, where a value is returned every time
 %    the iterator is advanced until there are no more values. Python and Robot Raconteur iterators
 %    add the option of passing a parameter every advance, allowing for simple coroutines. The
 %    generator is advanced by calling the Next() or async_Next() functions. These functions
 %    will either return a value or throw StopIterationException if there are no more values. Next()
 %    and async_Next() may also throw any valid Robot Raconteur exception.
-%	  
+%
 %    Generators can be terminated with either the Close() or Abort() functions. Close() should be
 %    used to cleanly close the generator, and is not considered an error condition. Next(), if called
-%    after close, should throw StopIterationException. Abort() is considered an error condition, and 
+%    after close, should throw StopIterationException. Abort() is considered an error condition, and
 %    will cause any action assosciated with the generator to be aborted as quickly as possible (ie faulting
 %    a robot). If Next() is called after Abort(), OperationAbortedException should be thrown. async_Close()
 %    and async_Abort() are also available for asynchronous operation.

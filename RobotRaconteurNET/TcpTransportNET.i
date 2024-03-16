@@ -61,7 +61,7 @@ public int MaxMessageSize
 	{
 		_SetMaxMessageSize(value);
 	}
-	
+
 }
 
 public int MaxConnectionCount
@@ -74,7 +74,7 @@ public int MaxConnectionCount
 	{
 		_SetMaxConnectionCount(value);
 	}
-	
+
 }
 
 public bool RequireTls
@@ -86,7 +86,7 @@ public bool RequireTls
 	set
 	{
 		_SetRequireTls(value);
-	}	
+	}
 }
 
 public bool IsTlsNodeCertificateLoaded
@@ -95,7 +95,7 @@ public bool IsTlsNodeCertificateLoaded
 	{
 		return _IsTlsNodeCertificateLoaded();
 	}
-	
+
 }
 
 
@@ -107,11 +107,11 @@ public bool IsPortSharerRunning
 	{
 		return _IsPortSharerRunning();
 	}
-	
+
 }
 
 public bool IsTransportConnectionSecure(object obj)
-{ 
+{
 	if (obj==null) throw new NullReferenceException();
 	RobotRaconteur.ServiceStub s=obj as RobotRaconteur.ServiceStub;
 	if (s==null) throw new InvalidOperationException("Object is not a Robot Raconteur reference");
@@ -120,7 +120,7 @@ public bool IsTransportConnectionSecure(object obj)
 }
 
 public bool IsSecurePeerIdentityVerified(object obj)
-{ 
+{
 	if (obj==null) throw new NullReferenceException();
 	RobotRaconteur.ServiceStub s=obj as RobotRaconteur.ServiceStub;
 	if (s==null) throw new InvalidOperationException("Object is not a Robot Raconteur reference");
@@ -129,7 +129,7 @@ public bool IsSecurePeerIdentityVerified(object obj)
 }
 
 public string GetSecurePeerIdentity(object obj)
-{ 
+{
 	if (obj==null) throw new NullReferenceException();
 	RobotRaconteur.ServiceStub s=obj as RobotRaconteur.ServiceStub;
 	if (s==null) throw new InvalidOperationException("Object is not a Robot Raconteur reference");

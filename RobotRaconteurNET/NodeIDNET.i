@@ -1,6 +1,6 @@
 //NodeID
 namespace RobotRaconteur
-{ 
+{
 
 %typemap("cscode") NodeID
 %{
@@ -43,7 +43,7 @@ public NodeID(byte[] bytes) : this(bytes,bytes.Length) {}
 
 %}
 
-class NodeID 
+class NodeID
 {
 public:
 	NodeID();
@@ -52,32 +52,32 @@ public:
 	%csmethodmodifiers ToString "public";
 	virtual std::string ToString(const std::string& format) const;
 	static NodeID NewUniqueID();
-    
+
     %csmethodmodifiers operator== "public virtual";
     %rename(eq) operator==;
 	bool operator== (const NodeID &id2) const;
-    
+
     %rename(ne) operator!=;
 	bool operator != (const NodeID &id2) const;
 	%rename(lt) operator<;
 	bool operator <(const NodeID& id2) const;
-	
+
 	bool IsAnyNode();
 	static NodeID GetAny();
 
-	
+
 	//NodeID(std::boost<uint8_t,16> id);
 	NodeID(const std::string& id);
 	NodeID(const NodeID& id);
 
-	
-	
+
+
 	%rename(ToByteArrayC) ToByteArray;
 	%csmethodmodifiers ToByteArray "private";
 	//std::vector<uint8_t> ToByteArray();
-	
-	
-	
+
+
+
 
 
 };
@@ -88,21 +88,21 @@ public:
 	NodeID (const uint8_t bytes[16], int32_t bytes_len)
 	{
 		if (bytes_len!=16) throw InvalidArgumentException("Invalid NodeID bytes length");
-	
+
 		boost::array<uint8_t,16> b = {};
 		memcpy(&b[0],bytes,16);
-	
+
 		NodeID* n=new NodeID(b);
-		return n;	
+		return n;
 	}
-	
+
 	%apply unsigned char OUTPUT[] {uint8_t bytes[16]}
 	void ToByteArray(uint8_t bytes[16])
 	{
 		boost::array<uint8_t,16> b=$self->ToByteArray();
-		memcpy(bytes,&b[0],16);	
+		memcpy(bytes,&b[0],16);
 	}
-	
+
 
 }
 

@@ -14,7 +14,7 @@
 
 namespace RobotRaconteur
 {
-class NodeID 
+class NodeID
 {
 public:
 	NodeID();
@@ -24,11 +24,11 @@ public:
 	bool operator == (const NodeID &id2) const;
 	bool operator != (const NodeID &id2) const;
 	bool operator <(const NodeID& id2) const;
-	
+
 	bool IsAnyNode();
 	static NodeID GetAny();
 
-	
+
 	NodeID(boost::array<uint8_t,16> id);
 	NodeID(const std::string& id);
 	NodeID(const NodeID& id);

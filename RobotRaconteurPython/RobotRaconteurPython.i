@@ -16,20 +16,20 @@
 %enddef
 %define RR_PUBLIC_VIRTUAL_METHOD(a)
 %enddef
-%define RR_PROPERTY(a) 
+%define RR_PROPERTY(a)
 %rename(_Get ## a) Get ## a; %rename(_Set ## a) Set ## a;
 %enddef
-%define RR_MAKE_METHOD_PRIVATE(a) 
+%define RR_MAKE_METHOD_PRIVATE(a)
 %rename(_ ## a) a;
 %enddef
 
-%define RR_RELEASE_GIL() 
+%define RR_RELEASE_GIL()
 //RR_Py_Exception_GIL()
 // Use SWIG -threads option instead of manually releasing GIL
 %thread;
 RR_Py_Exception()
 %enddef
-%define RR_KEEP_GIL() 
+%define RR_KEEP_GIL()
 %nothread;
 RR_Py_Exception()
 %enddef
@@ -74,7 +74,7 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 
 %include "NodeIDPython.i"
 
-%include "MessagePython.i" 
+%include "MessagePython.i"
 
 %include "AsyncHandlerDirector.i"
 %include "ServiceDefinitionPython.i"
@@ -131,11 +131,11 @@ RobotRaconteur::RobotRaconteurNode::s()->SetThreadPoolFactory(RR_MAKE_SHARED<Rob
 namespace RobotRaconteur
 {
 class RRNativeDirectorSupport
-{	
+{
 public:
-	static void Start();		
-	static void Stop();		
-	static bool IsRunning();	
+	static void Start();
+	static void Stop();
+	static bool IsRunning();
 };
 
 }
@@ -165,6 +165,6 @@ import atexit
 def RobotRaconteur_cleanup():
     RobotRaconteurNode.s.Shutdown()
     RRNativeDirectorSupport.Stop()
-    
+
 RRNativeDirectorSupport.Start()
 %}

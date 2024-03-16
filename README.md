@@ -144,7 +144,7 @@ instructions:
 
 https://github.com/robotraconteur-contrib/robotraconteur_training_sim
 
-The training simulator also contains a simulation for two Universal Robots UR5e robots, with grippers and cameras. 
+The training simulator also contains a simulation for two Universal Robots UR5e robots, with grippers and cameras.
 Example scripts to control the robots are included. See the training simulator readme for instructions.
 
 Next, take a look out the examples for other languages:
@@ -157,7 +157,7 @@ https://github.com/robotraconteur/RobotRaconteur_Java_Examples
 
 https://github.com/robotraconteur/RobotRaconteur_MATLAB_Examples
 
-Robot Raconteur provides a large number of standardized types to use with robots and other devices. See the 
+Robot Raconteur provides a large number of standardized types to use with robots and other devices. See the
 standard robdef repository:
 
 https://github.com/robotraconteur/robotraconteur_standard_robdef
@@ -171,7 +171,7 @@ Also checkout the PyRI Open source teach pendant: https://github.com/pyri-projec
 
 ## Installation
 
-See [docs/common/installation.md](docs/common/installation.md) for installation instructions. 
+See [docs/common/installation.md](docs/common/installation.md) for installation instructions.
 
 The following platforms are supported:
 
@@ -185,12 +185,12 @@ The following platforms are supported:
 
 ## Building
 
-See [docs/common/building.md](docs/common/building.md) for build instructions. 
+See [docs/common/building.md](docs/common/building.md) for build instructions.
 
 ## ROS Support
 
 Robot Raconteur is available in ROS Noetic and ROS Humble using the `robotraconteur` package. These packages are built
-using the `ros-noetic` and `ros2-humble` branches. The `ros2-humble` branch should work with other versions of 
+using the `ros-noetic` and `ros2-humble` branches. The `ros2-humble` branch should work with other versions of
 ROS 2, but swig version 4.0.2 or greater must be installed first.
 
 A Robot Raconteur to ROS 2 bridge is available, allowing access to ROS 2 topics and services from Robot Raconteur:
@@ -225,7 +225,7 @@ Robot Raconteur Core is a ROS Quality Level 2 package. See the [Quality Declarat
 
 ## Contributing
 
-Contributors must sign a Contributor License Agreement (CLA). Please see https://www.wasontech.com/contributors to 
+Contributors must sign a Contributor License Agreement (CLA). Please see https://www.wasontech.com/contributors to
 complete and return a signed agreement. Wason Technology, LLC uses the Harmony CLA (https://www.harmonyagreements.org/).
 
 ## License
@@ -242,6 +242,6 @@ Robot Raconteur is developed by John Wason, PhD, Wason Technology, LLC
 
 This work was supported in part by Subaward No. ARM-TEC-18-01-F-19 and ARM-TEC-19-01-F-24 from the Advanced Robotics for Manufacturing ("ARM") Institute under Agreement Number W911NF-17-3-0004 sponsored by the Office of the Secretary of Defense. ARM Project Management was provided by Christopher Adams. The views and conclusions contained in this document are those of the authors and should not be interpreted as representing the official policies, either expressed or implied, of either ARM or the Office of the Secretary of Defense of the U.S. Government. The U.S. Government is authorized to reproduce and distribute reprints for Government purposes, notwithstanding any copyright notation herein.
 
-This work was supported in part by the New York State Empire State Development Division of Science, Technology and Innovation (NYSTAR) under contract C160142. 
+This work was supported in part by the New York State Empire State Development Division of Science, Technology and Innovation (NYSTAR) under contract C160142.
 
 ![](docs/figures/arm_logo.jpg) ![](docs/figures/nys_logo.jpg)

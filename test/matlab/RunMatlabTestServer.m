@@ -49,7 +49,7 @@ i=0;
 while(1)
   %We need to process the incoming requests manually because MATLAB
   %has poor threading capabilities.  It will timeout in 1 second.
-  RobotRaconteur.ProcessServerRequests(1); 
+  RobotRaconteur.ProcessServerRequests(1);
   %Fire off a few events
   notify(o,'testevent1');
   %Note that parameters are passed using the "RobotRaconteurEventData"
@@ -57,4 +57,4 @@ while(1)
   notify(o,'testevent2',RobotRaconteurEventData({int32(10);int32(i)}))
   i=i+1;
 end
-    
+

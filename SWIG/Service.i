@@ -53,21 +53,21 @@ public:
 	virtual WrappedNamedArrayMemoryDirector* GetNamedArrayMemory(const std::string& name) = 0;
 	%rename (_GetNamedMultiDimArrayMemory) GetNamedMultiDimArrayMemory;
 	virtual WrappedNamedMultiDimArrayMemoryDirector* GetNamedMultiDimArrayMemory(const std::string& name) = 0;
-	
+
 	virtual void MonitorEnter(int32_t timeout)= 0;
 	virtual void MonitorExit() = 0;
-	virtual void ReleaseCastObject() = 0;	
+	virtual void ReleaseCastObject() = 0;
 };
 RR_DIRECTOR_SHARED_PTR_RETURN_DEFAULT(RobotRaconteur::MessageElement)
 
 class WrappedRRObject : public RRObject
 {
-	
+
 public:
 	WrappedRRObject(const std::string& type, WrappedServiceSkelDirector* RR_Director, int32_t id);
 	//virtual boost::string_ref RRType();
 	std::string Type;
-	
+
 	virtual ~WrappedRRObject();
 };
 
@@ -77,10 +77,10 @@ public:
 	boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> Type;
 
 	boost::shared_ptr<WrappedRRObject> castobj;
-			
+
 	virtual boost::shared_ptr<RobotRaconteur::WrappedPipeServer> GetPipe(const std::string& membername);
 	virtual boost::shared_ptr<RobotRaconteur::WrappedWireServer> GetWire(const std::string& membername);
-	
+
 	virtual void WrappedDispatchEvent(const std::string& name, const std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> >& m);
 
 RR_RELEASE_GIL()
@@ -103,37 +103,37 @@ RR_KEEP_GIL()
 class ServerServiceListenerDirector
 {
 public:
-	
+
 	int32_t objectheapid;
-	
+
 	ServerServiceListenerDirector()
 	{
 		objectheapid=0;
 	}
-	
+
 	void OuterCallback(const boost::shared_ptr<ServerContext>& c,ServerServiceListenerEventType code,const boost::shared_ptr<void>& p)
 	{
 		if (code==ServerServiceListenerEventType_ClientConnected || code==ServerServiceListenerEventType_ClientDisconnected)
 		{
 			boost::shared_ptr<uint32_t> p2=boost::static_pointer_cast<uint32_t>(p);
-			
+
 			DIRECTOR_CALL2(Callback(code,*p2));
 		}
 		else
 		{
-			
+
 			DIRECTOR_CALL2(Callback(code,0));
 		}
 	}
 	virtual void Callback(int32_t code, uint32_t endpoint) {};
-	
-	
-	
+
+
+
 	virtual ~ServerServiceListenerDirector()
 	{
-		
+
 	}
-	
+
 };
 }
 
@@ -150,25 +150,25 @@ public:
 	void ReleaseServicePath(const std::string& path, std::vector<uint32_t> endpoints);
 	static boost::shared_ptr<RobotRaconteur::ServerContext> GetCurrentServerContext();
 	virtual void KickUser(const std::string& username);
-	
+
 	RR_MAKE_METHOD_PRIVATE(AddServerServiceListener)
 	RR_MAKE_METHOD_PRIVATE(SetServiceAttributes)
-	
+
 	%extend
 	{
 	void AddServerServiceListener(ServerServiceListenerDirector* listener)
 	{
 		boost::shared_ptr<ServerServiceListenerDirector> listener2=boost::shared_ptr<ServerServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ServerServiceListenerDirector>, RR_BOOST_PLACEHOLDERS(_1), listener->objectheapid));
 		$self->ServerServiceListener.connect(boost::bind(&ServerServiceListenerDirector::OuterCallback,listener2,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
-		
+
 	}
-	
+
 	void SetServiceAttributes(const boost::intrusive_ptr<MessageElement>& attributes)
 	{
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteur::detail::packing::UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementNestedElementList >(),NULL));
-		$self->SetAttributes(mmap->GetStorageContainer());		
-		
-	}	
+		$self->SetAttributes(mmap->GetStorageContainer());
+
+	}
 	}
 
 	void RequestObjectLock(const std::string& servicepath, const std::string& username);
@@ -178,11 +178,11 @@ public:
 	void ReleaseObjectLock(const std::string& servicepath, const std::string& username, bool override_);
 
 	std::string GetObjectLockUsername(const std::string& servicepath);
-	
+
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
-	
+
 	std::vector<std::string> GetExtraImports();
-		
+
 	void AddExtraImport(const std::string& import_);
 
 	bool RemoveExtraImport(const std::string& import_);
@@ -198,22 +198,22 @@ public:
 class AuthenticatedUser
 {
 public:
-    
+
     RR_MAKE_METHOD_PRIVATE(GetUsername)
     const std::string GetUsername();
-    
-    RR_MAKE_METHOD_PRIVATE(GetPrivileges)    
+
+    RR_MAKE_METHOD_PRIVATE(GetPrivileges)
     const std::vector<std::string> GetPrivileges();
-    
-	RR_MAKE_METHOD_PRIVATE(GetProperties)    
+
+	RR_MAKE_METHOD_PRIVATE(GetProperties)
     const std::vector<std::string> GetProperties();
-	
-    RR_MAKE_METHOD_PRIVATE(GetLoginTime)    
+
+    RR_MAKE_METHOD_PRIVATE(GetLoginTime)
     const boost::posix_time::ptime GetLoginTime();
-    
-    RR_MAKE_METHOD_PRIVATE(GetLastAccessTime)    
+
+    RR_MAKE_METHOD_PRIVATE(GetLastAccessTime)
     const boost::posix_time::ptime GetLastAccessTime();
-    
+
 };
 
 %nodefaultctor ServerEndpoint;
@@ -226,14 +226,14 @@ public:
 		{
 			return ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint();
 		}
-	
+
 	}
     static boost::shared_ptr<RobotRaconteur::AuthenticatedUser> GetCurrentAuthenticatedUser();
 };
 
 %nodefaultctor WrappedServiceSkelAsyncAdapter;
 class WrappedServiceSkelAsyncAdapter
-{		
+{
 public:
 	void MakeAsync();
 	bool IsAsync();

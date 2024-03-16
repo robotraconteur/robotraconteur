@@ -7,7 +7,7 @@ inputs:
   arch:
     description: arch
     required: true
-  
+
 runs:
   using: "composite"
   steps:
@@ -57,5 +57,5 @@ runs:
     run: |
       mkdir -p build2/out/wheels/
       cp build2_python_${{ inputs.python_version }}/out/Python3/dist/*.whl build2/out/wheels/
-  
-  
+
+

@@ -5,7 +5,7 @@ Webcam Service
 --------------
 
 The example robot also has webcams that can be accessed using the Python OpenCV libraries. Example
-`SimpleWebcamService.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamService.py>`_ 
+`SimpleWebcamService.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamService.py>`_
 on GitHub is a program that exposes the webcams as a Robot Raconteur
 service. The example is intended to demonstrate the usage of the “objref", “pipe", and “memory" members that were not
 used in the iRobot Create examples.
@@ -100,7 +100,7 @@ to use the memory; instead, a persistent memory object should be used with a per
 Webcam Client
 -------------
 
-Example `SimpleWebcamClient.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient.py>`_ 
+Example `SimpleWebcamClient.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient.py>`_
 on GitHub is a program that will read the webcams and display the images. The
 initialization and connection are similar to the iRobot Create example. The main difference is the use of the “objrefs",
 which are used to get references to the webcams ``c1`` and ``c2``:
@@ -114,7 +114,7 @@ The rest of the program deals with OpenCV related functions to show the images.
 Webcam Client (streaming)
 -------------------------
 
-Example `SimpleWebcamClient_streaming.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient_streaming.py>`_  
+Example `SimpleWebcamClient_streaming.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient_streaming.py>`_
 is a program that provides a “live" view of the
 camera, although depending on the speed of the computer it may be fairly slow because Python is an interpreted language.
 The program connects and retrieves the webcam object reference ``c`` the same way as the previous example, and the

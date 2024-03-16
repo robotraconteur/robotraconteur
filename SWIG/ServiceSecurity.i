@@ -27,25 +27,25 @@ class UserAuthenticator
 {
 	public:
 	RR_MAKE_METHOD_PRIVATE(AuthenticateUser)
-	
+
 	%extend
 	{
-	
+
 	virtual boost::shared_ptr<RobotRaconteur::AuthenticatedUser> AuthenticateUser(const std::string &username, const boost::intrusive_ptr<RobotRaconteur::MessageElement>& credentials, const boost::shared_ptr<RobotRaconteur::ServerContext>& context)
 	{
 		if (!context) throw InvalidArgumentException("Context cannot be null");
 		if (!credentials) throw InvalidArgumentException("Credentials cannot be null");
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > r=rr_cast<RRMap<std::string,RRValue> >(context->GetNode()->UnpackMapType<std::string,RRValue>(credentials->CastData<MessageElementNestedElementList >()));
 		return $self->AuthenticateUser(username,r->GetStorageContainer(),context,RR_SHARED_PTR<RobotRaconteur::ITransportConnection>());
-	}	
 	}
-		
+	}
+
 };
 
 class ServiceSecurityPolicy
 {
 public:
-	ServiceSecurityPolicy(const boost::shared_ptr<RobotRaconteur::UserAuthenticator>& Authenticator, const std::map<std::string, std::string>& Policies);	
+	ServiceSecurityPolicy(const boost::shared_ptr<RobotRaconteur::UserAuthenticator>& Authenticator, const std::map<std::string, std::string>& Policies);
 };
 
 class PasswordFileUserAuthenticator : public UserAuthenticator
@@ -59,13 +59,13 @@ class WrappedUserAuthenticatorDirector
 public:
 	virtual ~WrappedUserAuthenticatorDirector() {}
 	virtual boost::shared_ptr<AuthenticatedUser> AuthenticateUser(const std::string &username, boost::intrusive_ptr<RobotRaconteur::MessageElement> credentials, const boost::shared_ptr<RobotRaconteur::ServerContext>& context) = 0;
-	
+
 };
 
 class WrappedUserAuthenticator : public UserAuthenticator
 {
 public:
 	void SetRRDirector(WrappedUserAuthenticatorDirector* director, int id);
-	
+
 };
 }

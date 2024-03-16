@@ -4,19 +4,19 @@
 	{
 		TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec($1);
 		*(RobotRaconteur::TimeSpec **)&$result = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-	}    
+	}
 }
 
 %typemap(in) boost::posix_time::ptime {
 	{
 		TimeSpec* temp_ptime = *(RobotRaconteur::TimeSpec **)&$input;
-		if (!temp_ptime) 
+		if (!temp_ptime)
 		{
 			SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Attempt to dereference null TimeSpec");
 			return $null;
 		}
 		$1 = TimeSpecToPTime(*temp_ptime);
-	}    
+	}
 }
 
 %typemap(jstype) boost::posix_time::ptime "com.robotraconteur.TimeSpec";
@@ -28,7 +28,7 @@
 }
 
 %typemap(javain) boost::posix_time::ptime "TimeSpec.getCPtr($javainput)"
-    
+
 
 
 %typemap(jstype) boost::posix_time::time_duration "int"
@@ -67,9 +67,9 @@
 %define %rr_intrusive_ptr( TYPE )
 %intrusive_ptr( TYPE );
 
-%typemap(directorin,descriptor="L$packagepath/$typemap(jstype, TYPE);") SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE > 
-%{ 
-//$input = $1 ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >($1) : 0; 
+%typemap(directorin,descriptor="L$packagepath/$typemap(jstype, TYPE);") SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE >
+%{
+//$input = $1 ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >($1) : 0;
   if ($1) {
     intrusive_ptr_add_ref($1.get());
     *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > **)&$input = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >($1.get(), SWIG_intrusive_deleter< TYPE >());
@@ -79,7 +79,7 @@
 %}
 
 %typemap(directorout) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE > (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > * smartarg)
-%{ 
+%{
 //if ($input) {
 //    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartarg = (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *)$input;
 //    $result = *smartarg;
@@ -105,12 +105,12 @@ namespace RobotRaconteur
 	%apply std::string { RobotRaconteur::MessageStringPtr }
 	%apply const std::string& { const RobotRaconteur::MessageStringPtr& }
 
-	%typemap(in, canthrow=1) MessageStringPtr 
+	%typemap(in, canthrow=1) MessageStringPtr
 	%{ if (!$input) {
 		SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
 		return $null;
 	}
-	const char *$1_pstr = (const char *)jenv->GetStringUTFChars($input, 0); 
+	const char *$1_pstr = (const char *)jenv->GetStringUTFChars($input, 0);
     if (!$1_pstr) return $null;
     $1.assign($1_pstr);
     jenv->ReleaseStringUTFChars($input, $1_pstr); %}
@@ -120,12 +120,12 @@ namespace RobotRaconteur
 		SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
 		return $null;
 	}
-	const char *$1_pstr = (const char *)jenv->GetStringUTFChars($input, 0); 
+	const char *$1_pstr = (const char *)jenv->GetStringUTFChars($input, 0);
     if (!$1_pstr) return $null;
 	$*1_ltype $1_str($1_pstr,false);
 	$1 = &$1_str;
 	jenv->ReleaseStringUTFChars($input, $1_pstr); %}
-	%typemap(out) const MessageStringPtr&  %{ std::string temp_ret1 = $1->str().to_string(); $result = jenv->NewStringUTF(temp_ret1.c_str()); %}	
+	%typemap(out) const MessageStringPtr&  %{ std::string temp_ret1 = $1->str().to_string(); $result = jenv->NewStringUTF(temp_ret1.c_str()); %}
 
 }
 

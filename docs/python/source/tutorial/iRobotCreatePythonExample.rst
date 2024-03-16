@@ -12,7 +12,7 @@ Simple service
 
 The first step in using Robot Raconteur is to develop an object that implements the service definition. The following
 example shows a non-Robot Raconteur program that contains a class ``Create_impl`` that
-implements the service definition "experimental.create2" presented in :doc:`ServiceDefinition`. 
+implements the service definition "experimental.create2" presented in :doc:`ServiceDefinition`.
 Table `Members <#createmembers>`__
 lists the members and the functionality that will be implemented.
 
@@ -140,25 +140,25 @@ execute at a time with one thread. If all the functions in the class use the sam
 will be able to access the class. If you are not familiar with multi-threading, it is best to have one global lock for
 all your functions to prevent collisions.
 
-Now that there is a basic object implemented, it is time to expose it as a Robot Raconteur service. The 
+Now that there is a basic object implemented, it is time to expose it as a Robot Raconteur service. The
 following example shows a replacement for the ``main`` function that instead of simply driving the
 robot, exposes the service.
 
 .. code:: python
 
    def main():
-    
-       obj=Create_impl()    
+
+       obj=Create_impl()
        comm_port=sys.argv[1]
        obj.Init(comm_port)
 
        with RR.ServerNodeSetup("experimental.create2.Create",2354):
-              
+
            RRN.RegisterServiceTypeFromFile("experimental.create2")
            RRN.RegisterService("Create","experimental.create2.Create",obj)
-               
+
            raw_input("Server started, press enter to quit...")
-       
+
            obj.Shutdown()
 
    if __name__ == '__main__':
@@ -175,7 +175,7 @@ A Robot Raconteur node requires a few steps to initialize the service:
 #. Register the root object for the service
 
 Each Robot Raconteur node is uniquely identified by a 128-bit UUID “NodeID”. UUIDs are a widely used concept, and are
-statistically guaranteed to be unique when randomly generated 
+statistically guaranteed to be unique when randomly generated
 (See `Wikipedia UUID <https://en.wikipedia.org/wiki/Universally_unique_identifier>`_ for more information on UUIDs.)
 A node also has a name, the “NodeName”. A “NodeName”
 is intended to help clients find relevant services, and is not guaranteed to be unique. For client nodes, the “NodeID”
@@ -281,7 +281,7 @@ is driven a bit to demonstrate how to use a function.
 iRobot Create Service
 ---------------------
 
-The initial service shown above only fills in the ``Drive`` member. The example 
+The initial service shown above only fills in the ``Drive`` member. The example
 `iRobotCreateService.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/iRobotCreateService.py>`_
 on GitHub shows a complete service that fills in all of the members. This is not intended to
 be exhaustive for the full features of the iRobot Create; it is instead intended to be used to demonstrate features of
@@ -357,7 +357,7 @@ following lines, which executes the callback on the client:
 
 The first line retrieves the a function handle to call the client based on the stored endpoint. The second line executes
 this function, which is actually implemented by calling the client with the supplied parameters and then returning the
-result. Note that exceptions are also transmitted transparently by callbacks from the client to the service. 
+result. Note that exceptions are also transmitted transparently by callbacks from the client to the service.
 
 The ``ServerNodeSetup`` class by default will call ``EnableNodeAnnounce``. This initializes the auto-discovery system to
 send out beacon packets so that client nodes can find the service.

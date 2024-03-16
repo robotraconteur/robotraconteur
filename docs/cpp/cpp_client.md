@@ -32,7 +32,7 @@ An asynchronous example:
     using namespace RobotRaconteur;
     std::string url = "rr+tcp://localhost:62222?service=my_service";
     RobotRaconteurNode::s()->AsyncConnectService(
-        url, "", nullptr, nullptr, "", 
+        url, "", nullptr, nullptr, "",
         [](RRObjectPtr c1, RobotRaconteurExceptionPtr err)
         {
             if (err)
@@ -83,7 +83,7 @@ An example of using the event listener:
     std::string url = "rr+tcp://localhost:62222?service=my_service";
     example::my_service::MyObjectPtr c = rr_cast<example::my_service::MyObject>(
         RobotRaconteurNode::s()->ConnectService(
-            url, "", nullptr, 
+            url, "", nullptr,
             [](ClientContextPtr ctx, ClientServiceListenerEventType evt, const boost::shared_ptr<void>& p)
             {
                 switch (evt)
@@ -267,7 +267,7 @@ This results in the following function being generated in the abstract interface
 The function returns a generator that expects a parameter and returns a value every call to `Next()`. An example using the generator function:
 
     // Assume "c" is a connected client object reference with function "addTwoNumbers"
-    
+
     using namespace RobotRaconteur;
     Generator<double,double> gen = c->addManyNumbers(10);
     try
@@ -297,7 +297,7 @@ This results in the following function being generated in the abstract interface
 The function returns a generator that does not expect a parameter and returns a value every call to `Next()`. An example using the generator function:
 
     // Assume "c" is a connected client object reference with function "getSequence"
-    
+
     using namespace RobotRaconteur;
     Generator<double,void> gen = c->getSequence(10,1.23);
     try
@@ -329,10 +329,10 @@ This results in the following function being generated in the abstract interface
 The function returns a generator that expects a parameter and does not return a value every call to `Next()`. An example using the generator function:
 
     // Assume "c" is a connected client object reference with function "sendSequence"
-    
+
     using namespace RobotRaconteur;
     Generator<void,double> gen = c->sendSequence(10);
-    
+
     for (double i : {1.2,3.4,5.6})
     {
         gen->Next(i);
@@ -360,7 +360,7 @@ This event definition results in the following function being generated in the C
 An example of using the event:
 
     // Assume "c" is a connected client object reference with event "somethingHappened"
-    
+
     using namespace RobotRaconteur;
     c->get_somethingHappened().connect(
         [](std::string what, double when)
@@ -384,7 +384,7 @@ The function name is the member name prefixed with `get_`.
 An example using this objref:
 
     // Assume "c" is a connected client object reference with event "somethingHappened"
-    
+
     using namespace RobotRaconteur;
     MyOtherObjectPtr obj2 = c->get_other_object();
     obj2->some_function();
@@ -453,7 +453,7 @@ A get acessor prefixed with `get_` and a set accesor prefixed with `set_` are ge
 The `get_` accessor is used to retrieve the pipe so it can be used. An example of using a pipe client:
 
     // Assume "c" is a connected client object reference with pipe "sensordata"
-    
+
     using namespace RobotRaconteur;
     PipePtr<RRArrayPtr<double>> sensordata = c->get_sensordata();
     PipeEndpointPtr<RRArrayPtr<double>> sensordata_ep = sensordata->Connect(-1);
@@ -465,14 +465,14 @@ The `get_` accessor is used to retrieve the pipe so it can be used. An example o
 Pipes can also be used asynchronously. Retrieving a pipe from the abstract interface never blocks since the pipe client exists locally. An example of using the pipe asynchronously:
 
     // Assume "c" is a connected client object reference with pipe "sensordata"
-    
+
     using namespace RobotRaconteur;
 
     // Retrieve the pipe client. This never blocks.
     PipePtr<RRArrayPtr<double>> sensordata = c->get_sensordata();
 
     //Connect pipe asynchronously
-    sensordata->AsyncConnect(-1, 
+    sensordata->AsyncConnect(-1,
         [](PipeEndpointPtr<RRArrayPtr<double>> sensordata_ep, RobotRaconteurExceptionPtr err)
         {
             if (err)
@@ -534,7 +534,7 @@ The calback member object is a RobotRaconteur::Callback used to set the callback
 An example using the callback client:
 
     // Assume "c" is a connected client object reference with callback "addTwoNumbersOnClient"
-    
+
     using namespace RobotRaconteur;
 
     // Get the callback member object
@@ -568,7 +568,7 @@ A get acessor prefixed with `get_` and a set accesor prefixed with `set_` are ge
 The `get_` accessor is used to retrieve the wire so it can be used. An example of using a wire client in streaming operation:
 
     // Assume "c" is a connected client object reference with wire "currentposition"
-    
+
     using namespace RobotRaconteur;
     WirePtr<RRArrayPtr<double>> currentposition = c->currentposition();
 
@@ -590,7 +590,7 @@ The above example uses a connected wire for streaming data. Sometimes the client
 An example of using peek and poke:
 
     // Assume "c" is a connected client object reference with wire "currentposition"
-    
+
     using namespace RobotRaconteur;
     WirePtr<RRArrayPtr<double>> currentposition = c->currentposition();
 
@@ -625,7 +625,7 @@ A numeric array memory client and a numeric multidimarray memory client will be 
 Example array memory definition:
 
     memory double[] datahistory
-    
+
 
 Results in a single function being generated in the abstract interface:
 
@@ -654,7 +654,7 @@ An example of using the array memory client:
 Example array memory definition:
 
     memory double[*] datahistory2
-    
+
 
 Results in a single function being generated in the abstract interface:
 
@@ -709,7 +709,7 @@ Asynchronous versions of the lock and unlock functions are available. See RobotR
 Client locks are requested using the RobotRaconteur::RobotRaconteurNode::RequestObjectLock() function with the `RobotRaconteurObjectLockFlags_CLIENT_LOCK` flag specified. RobotRaconteur::ObjectLockedException will be thrown if the object is already locked. The lock is released using RobotRaconteur::RobotRaconteurNode::ReleaseObjectLock(). An example of user locks:
 
     using namespace RobotRaconteur;
-    
+
     // Assume "c" is a connected client object reference
 
     RobotRaconteurNode::s()->RequestObjectLock(c, RobotRaconteurObjectLockFlags_CLIENT_LOCK);
@@ -727,7 +727,7 @@ Asynchronous versions of the lock and unlock functions are available. See RobotR
 Monitor locks provide a single-threaded lock on the service object. There is no asynchronous version since it is inherently a threaded concept. Monitor locks are created using the RobotRaconteur::RobotRaconteurNode::MonitorEnter() function, and released using the RobotRaconteurNode::MonitorExit() function. A convenience scoped lock fence is available, RobotRaconteur::RobotRaconteurNode::ScopedMonitorLock. Its use is recommended. An example:
 
     using namespace RobotRaconteur;
-    
+
     // Assume "c" is a connected client object reference
 
     {

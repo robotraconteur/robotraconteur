@@ -22,7 +22,7 @@ class IntraTransport : public Transport
 public:
 	IntraTransport();
 	IntraTransport(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
-	
+
 	virtual std::string GetUrlSchemeString() const;
 	virtual std::vector<std::string> GetServerListenUrls();
 	void Close();
