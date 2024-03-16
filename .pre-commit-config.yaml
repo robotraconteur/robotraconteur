@@ -1,5 +1,26 @@
-exclude: (^generated_src/.*$|^build\d?/.*$|^test/gen/.*$)
+exclude: (^generated_src/.*$|^build\d?/.*$|^test/gen/.*$|rrversion\.txt\.in)
 repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: "v4.5.0"
+  hooks:
+    - id: check-added-large-files
+    - id: check-case-conflict
+    - id: check-merge-conflict
+    - id: check-symlinks
+    # # - id: check-yaml
+    #   exclude: .clang-format
+    # - id: debug-statements
+    # - id: end-of-file-fixer
+    # - id: mixed-line-ending
+    # - id: trailing-whitespace
+    # - id: fix-byte-order-marker
+    # - id: check-executables-have-shebangs
+    # - id: check-json
+    # - id: check-toml
+    # - id: check-xml
+    # - id: detect-private-key
+    # - id: no-commit-to-branch
+    #   args: ['--branch', 'master']
 - repo: https://github.com/pre-commit/mirrors-clang-format
   rev: v14.0.6
   hooks:
@@ -14,3 +35,7 @@ repos:
   rev: b912a5a5bce3c479f4cb52763979cc5a8319eb44
   hooks:
   - id: cmake-format
+# - repo: https://github.com/lsst-ts/pre-commit-xmllint
+#   rev: v1.0.0
+#   hooks:
+#     - id: format-xmllint
