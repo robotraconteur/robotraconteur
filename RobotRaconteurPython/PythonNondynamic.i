@@ -81,6 +81,3 @@
 
 // Transport.i
 %pythonnondynamic RobotRaconteur::Transport;
-
-
-

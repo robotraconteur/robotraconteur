@@ -249,4 +249,3 @@ static void ThrowPythonError()
     	ThrowPythonError();    	
     }
 }
-

@@ -143,4 +143,3 @@ CSHARP_ARRAYS_FIXED(unsigned long long, ulong)
 CSHARP_ARRAYS_FIXED(float, float)
 CSHARP_ARRAYS_FIXED(double, double)
 CSHARP_ARRAYS_FIXED(bool, bool)
-

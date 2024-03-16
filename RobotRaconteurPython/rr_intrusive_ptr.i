@@ -252,4 +252,3 @@ if ($owner) {
 %template() SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE >;
 
 %enddef
-

@@ -265,4 +265,3 @@ INOUT_TYPEMAP(float,              float,                float,    FLOAT_PTR)
 INOUT_TYPEMAP(double,             double,               double,   DOUBLE_PTR)
 
 #undef INOUT_TYPEMAP
-

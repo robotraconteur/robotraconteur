@@ -245,4 +245,3 @@ This work was supported in part by Subaward No. ARM-TEC-18-01-F-19 and ARM-TEC-1
 This work was supported in part by the New York State Empire State Development Division of Science, Technology and Innovation (NYSTAR) under contract C160142. 
 
 ![](docs/figures/arm_logo.jpg) ![](docs/figures/nys_logo.jpg)
-

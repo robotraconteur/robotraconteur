@@ -393,4 +393,3 @@ This function will now be called by the service when the service calls this clie
 
 After the setup the robot is driven a bit and then pauses to allow the user to try out the functionality. The
 ``RobotRaconteurNode`` is shutdown automatically when the program exits.
-

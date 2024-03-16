@@ -421,4 +421,3 @@ JAVA_ARRAYS_TYPEMAPS(double, double, jdouble, Double, "[D")     /* double[ANY] *
 #else
 %{ free($1); %}
 #endif
-

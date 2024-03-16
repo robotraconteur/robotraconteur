@@ -1131,4 +1131,3 @@ SWIG_CSBODY_TYPEWRAPPER(internal, protected, internal, SWIGTYPE)
       return ret;
     } %}
 */
-

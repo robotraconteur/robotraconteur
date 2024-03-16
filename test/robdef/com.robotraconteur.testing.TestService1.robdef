@@ -218,4 +218,3 @@ object sub3
 	property double data3
 	function double add(double d)
 end object
-

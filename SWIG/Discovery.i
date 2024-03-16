@@ -95,4 +95,3 @@ RR_KEEP_GIL()
 }
 
 %template(vectornodeinfo2) std::vector<RobotRaconteur::NodeInfo2>;
-

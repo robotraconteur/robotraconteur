@@ -56,6 +56,3 @@ catch
 end
     disp(' ')
 end
-
-
-

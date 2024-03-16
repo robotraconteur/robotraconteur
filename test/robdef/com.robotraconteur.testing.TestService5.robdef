@@ -29,4 +29,3 @@ object asynctestroot
     function double err_func2()
     function double{generator} err_func3()
 end
-

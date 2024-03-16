@@ -361,4 +361,3 @@ classdef LFSRSeqGen < handle
         
     end
 end
-

@@ -231,4 +231,3 @@ The following table contains the currently supported schemes and transports.
 | `rr+usb` | Hardware Transport | `scheme`, `service` `nodeid` and/or `nodename` | | NodeID and/or NodeName used to identify device node. |
 | `rr+pcie` | Hardware Transport | `scheme`, `service` `nodeid` and/or `nodename` | | NodeID and/or NodeName used to identify device node. |
 | `rr+bluetooth` | Hardware Transport | `scheme`, `service` `nodeid` and/or `nodename` | | NodeID and/or NodeName used to identify device node. |
-

@@ -33,4 +33,3 @@ classdef ServiceTest2_test_sequence_gen < handle
         end
     end
 end
-

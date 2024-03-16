@@ -149,4 +149,3 @@ An example using ServiceInfo2 subscription:
     );
 
     // Continue with program, or spin to watch services come and go
-

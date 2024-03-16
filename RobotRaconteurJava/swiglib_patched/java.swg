@@ -1519,4 +1519,3 @@ SWIG_PROXY_CONSTRUCTOR(true, true, SWIGTYPE)
 
 // Default enum handling
 %include <enumtypesafe.swg>
-

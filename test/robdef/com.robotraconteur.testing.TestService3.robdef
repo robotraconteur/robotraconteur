@@ -260,4 +260,3 @@ object obj5
 	memory int32[] m3 [nolockread]
 	
 end
-
