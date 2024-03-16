@@ -3,12 +3,12 @@ name: ROS CI
 on:
   push:
     branches:
-      - ros-**
-      - ros2-**
+    - ros-**
+    - ros2-**
   pull_request:
     branches:
-      - ros-**
-      - ros2-**
+    - ros-**
+    - ros2-**
 
   workflow_dispatch:
 

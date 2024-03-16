@@ -24,8 +24,8 @@ jobs:
         release: R2020b
     - name: pip
       run: |
-       python3 -m pip install --upgrade pyopenssl
-       python3 -m pip install pygithub
+        python3 -m pip install --upgrade pyopenssl
+        python3 -m pip install pygithub
     - name: build matlab toolbox
       env:
         BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}

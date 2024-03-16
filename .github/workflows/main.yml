@@ -3,20 +3,20 @@ name: CI
 on:
   push:
     branches-ignore:
-      - ros-**
-      - ros2-**
+    - ros-**
+    - ros2-**
     tags:
-      - v*
-      - '!*ros*'
+    - v*
+    - '!*ros*'
   pull_request:
     branches-ignore:
-      - ros-**
-      - ros2-**
+    - ros-**
+    - ros2-**
   release:
     types:
-      - created
+    - created
   schedule:
-    - cron: '0 5 * * *'
+  - cron: '0 5 * * *'
 
   workflow_dispatch:
 
@@ -307,12 +307,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - arch: x64
-            vcpkg_triplet: x64-windows-static-md-release
-            cmake_arch: x64
-          - arch: x86
-            vcpkg_triplet: x86-windows-static-md-release
-            cmake_arch: Win32
+        - arch: x64
+          vcpkg_triplet: x64-windows-static-md-release
+          cmake_arch: x64
+        - arch: x86
+          vcpkg_triplet: x86-windows-static-md-release
+          cmake_arch: Win32
     steps:
     - uses: actions/checkout@v3
       with:
@@ -673,11 +673,11 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: matlab out tar
       run: >
-         export RR_VER=`cat build2/rrversion.txt`
-         && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz
-         --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
-         --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
-         build2/out/Matlab robotraconteur/LICENSE.txt
+        export RR_VER=`cat build2/rrversion.txt`
+        && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz
+        --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
+        --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
+        build2/out/Matlab robotraconteur/LICENSE.txt
     - name: move out
       run: |
         cp robotraconteur/LICENSE.txt build2/out/
@@ -1219,230 +1219,230 @@ jobs:
   vcpkg-test-win:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: vcpkg build
-        uses: johnwason/vcpkg-action@v6
-        id: vcpkg
-        with:
-          pkgs: robotraconteur
-          triplet: x64-windows-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
-          cache-key: vcpkg-test-win
-          token: ${{ github.token }}
-          github-binarycache: true
-      - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
-      - name: build-disttest-cpp
-        working-directory: test/dist/cpp
-        run: |
-          cmake -G "NMake Makefiles" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
-          cmake --build build --config Release -j 4
-      - name: run-build-disttest-cpp
-        working-directory: test/dist/cpp/build
-        run: |
-          .\disttest_cpp.exe
+    - uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v6
+      id: vcpkg
+      with:
+        pkgs: robotraconteur
+        triplet: x64-windows-release
+        extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
+        cache-key: vcpkg-test-win
+        token: ${{ github.token }}
+        github-binarycache: true
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+    - name: build-disttest-cpp
+      working-directory: test/dist/cpp
+      run: |
+        cmake -G "NMake Makefiles" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+        cmake --build build --config Release -j 4
+    - name: run-build-disttest-cpp
+      working-directory: test/dist/cpp/build
+      run: |
+        .\disttest_cpp.exe
 
   vcpkg-test-linux:
     runs-on: ubuntu-latest
     env:
       VCPKG_MAX_CONCURRENCY: 2
     steps:
-      - uses: actions/checkout@v2
-      - name: apt update
-        run: sudo apt update
-      - name: apt
-        run: >
-          sudo apt-get install zlib1g zlib1g-dev libssl-dev libusb-1.0-0
-          libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-          git cmake g++ make curl libgtest-dev -qq
-      - name: vcpkg build
-        uses: johnwason/vcpkg-action@v6
-        id: vcpkg
-        with:
-          pkgs: robotraconteur
-          triplet: x64-linux-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
-          cache-key: vcpkg-test-linux
-          token: ${{ github.token }}
-          github-binarycache: true
-      - name: build-disttest-cpp
-        working-directory: test/dist/cpp
-        run: |
-          cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
-          cmake --build build --config Release -j 4
-      - name: run-build-disttest-cpp
-        working-directory: test/dist/cpp/build
-        run: |
-          ./disttest_cpp
+    - uses: actions/checkout@v2
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make curl libgtest-dev -qq
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v6
+      id: vcpkg
+      with:
+        pkgs: robotraconteur
+        triplet: x64-linux-release
+        extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
+        cache-key: vcpkg-test-linux
+        token: ${{ github.token }}
+        github-binarycache: true
+    - name: build-disttest-cpp
+      working-directory: test/dist/cpp
+      run: |
+        cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+        cmake --build build --config Release -j 4
+    - name: run-build-disttest-cpp
+      working-directory: test/dist/cpp/build
+      run: |
+        ./disttest_cpp
       # Archive all logs
-      - name: Archive all logs
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: logs
-          path: |
-            **/*.log
+    - name: Archive all logs
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: logs
+        path: |
+          **/*.log
 
   vcpkg-test-osx:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: vcpkg build
-        uses: johnwason/vcpkg-action@v6
-        id: vcpkg
-        with:
-          pkgs: robotraconteur
-          triplet: x64-osx-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
-          cache-key: vcpkg-test-osx
-          token: ${{ github.token }}
-          github-binarycache: true
-      - name: build-disttest-cpp
-        working-directory: test/dist/cpp
-        run: |
-          cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -S . -B build
-          cmake --build build --config Release -j 4
-      - name: run-build-disttest-cpp
-        working-directory: test/dist/cpp/build
-        run: |
-          ./disttest_cpp
+    - uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v6
+      id: vcpkg
+      with:
+        pkgs: robotraconteur
+        triplet: x64-osx-release
+        extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
+        cache-key: vcpkg-test-osx
+        token: ${{ github.token }}
+        github-binarycache: true
+    - name: build-disttest-cpp
+      working-directory: test/dist/cpp
+      run: |
+        cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -S . -B build
+        cmake --build build --config Release -j 4
+    - name: run-build-disttest-cpp
+      working-directory: test/dist/cpp/build
+      run: |
+        ./disttest_cpp
 
   distfiles-test-win:
     needs:
-      - build-dist
+    - build-dist
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         config:
-          - arch: x64
-            wheel_arch: win_amd64
-          - arch: x86
-            wheel_arch: win32
+        - arch: x64
+          wheel_arch: win_amd64
+        - arch: x86
+          wheel_arch: win32
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: robotraconteur
-      - name: Download distfiles
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/distfiles
-          name: distfiles
-      - name: .net test
-        uses: ./robotraconteur/test/dist/net/action/win
-        with:
-          arch: ${{ matrix.config.arch }}
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: 3.7
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp37-cp37m-${{ matrix.config.wheel_arch }}.whl
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: 3.8
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp38-cp38-${{ matrix.config.wheel_arch }}.whl
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: 3.9
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp39-cp39-${{ matrix.config.wheel_arch }}.whl
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: "3.10"
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp310-cp310-${{ matrix.config.wheel_arch }}.whl
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: "3.11"
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp311-cp311-${{ matrix.config.wheel_arch }}.whl
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: Download distfiles
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/distfiles
+        name: distfiles
+    - name: .net test
+      uses: ./robotraconteur/test/dist/net/action/win
+      with:
+        arch: ${{ matrix.config.arch }}
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: 3.7
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp37-cp37m-${{ matrix.config.wheel_arch }}.whl
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: 3.8
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp38-cp38-${{ matrix.config.wheel_arch }}.whl
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: 3.9
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp39-cp39-${{ matrix.config.wheel_arch }}.whl
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: "3.10"
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp310-cp310-${{ matrix.config.wheel_arch }}.whl
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: "3.11"
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp311-cp311-${{ matrix.config.wheel_arch }}.whl
   distfiles-test-linux:
     needs:
-      - build-dist
+    - build-dist
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: robotraconteur
-      - name: apt
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libboost-all-dev libssl-dev zlib1g-dev -y
-      - name: Download distfiles
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/distfiles
-          name: distfiles
-      - name: Download distfiles out-ubuntu
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/out-ubuntu
-          name: out-ubuntu-22.04
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: 3.7
-          wheel_filename: RobotRaconteur-*-cp37-cp37m-manylinux*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: 3.8
-          wheel_filename: RobotRaconteur-*-cp38-cp38-manylinux*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: 3.9
-          wheel_filename: RobotRaconteur-*-cp39-cp39-manylinux*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: "3.10"
-          wheel_filename: RobotRaconteur-*-cp310-cp310-manylinux*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: "3.11"
-          wheel_filename: RobotRaconteur-*-cp311-cp311-manylinux*x86_64.whl
-      - name: .net test
-        uses: ./robotraconteur/test/dist/net/action/linux
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: apt
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-all-dev libssl-dev zlib1g-dev -y
+    - name: Download distfiles
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/distfiles
+        name: distfiles
+    - name: Download distfiles out-ubuntu
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/out-ubuntu
+        name: out-ubuntu-22.04
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: 3.7
+        wheel_filename: RobotRaconteur-*-cp37-cp37m-manylinux*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: 3.8
+        wheel_filename: RobotRaconteur-*-cp38-cp38-manylinux*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: 3.9
+        wheel_filename: RobotRaconteur-*-cp39-cp39-manylinux*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: "3.10"
+        wheel_filename: RobotRaconteur-*-cp310-cp310-manylinux*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: "3.11"
+        wheel_filename: RobotRaconteur-*-cp311-cp311-manylinux*x86_64.whl
+    - name: .net test
+      uses: ./robotraconteur/test/dist/net/action/linux
 
   distfiles-test-osx:
     needs:
-      - build-dist
+    - build-dist
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: robotraconteur
-      - name: Download distfiles
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/distfiles
-          name: distfiles
-      - name: Download distfiles out-osx
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/out-osx
-          name: out-osx
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: 3.7
-          wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: 3.8
-          wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: 3.9
-          wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: "3.10"
-          wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: "3.11"
-          wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
-      - name: .net test
-        uses: ./robotraconteur/test/dist/net/action/osx
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: Download distfiles
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/distfiles
+        name: distfiles
+    - name: Download distfiles out-osx
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/out-osx
+        name: out-osx
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: 3.7
+        wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: 3.8
+        wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: 3.9
+        wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.10"
+        wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.11"
+        wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
+    - name: .net test
+      uses: ./robotraconteur/test/dist/net/action/osx
 
   companion-build-ubuntu:
     runs-on: ${{ matrix.config.runs_on }}
@@ -1503,8 +1503,7 @@ jobs:
         sudo cmake --build . --target install
     - name: install eigen
       if: ${{ matrix.config.os != 'ubuntu-16.04' }}
-      run:
-        sudo apt-get install libeigen3-dev -y
+      run: sudo apt-get install libeigen3-dev -y
     - name: install eigen
       if: ${{ matrix.config.os == 'ubuntu-16.04' }}
       run: |

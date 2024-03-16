@@ -3,7 +3,7 @@ name: After publish release
 on:
   release:
     types:
-      - published
+    - published
   workflow_dispatch:
     inputs:
       tag_name:
