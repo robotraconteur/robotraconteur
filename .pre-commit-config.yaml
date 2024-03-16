@@ -7,8 +7,9 @@ repos:
     - id: check-case-conflict
     - id: check-merge-conflict
     - id: check-symlinks
-    # # - id: check-yaml
-    #   exclude: .clang-format
+    - id: check-yaml
+      exclude: .clang-format
+      args: ['--unsafe']
     - id: debug-statements
     - id: end-of-file-fixer
     - id: mixed-line-ending
