@@ -7,6 +7,7 @@ on:
       - ros2-**
     tags:
       - v*
+      - '!*ros*'
   pull_request:
     branches-ignore:
       - ros-**
