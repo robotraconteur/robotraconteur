@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file Service.h
  *
  * @author John Wason, PhD

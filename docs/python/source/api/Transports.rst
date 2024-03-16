@@ -142,5 +142,3 @@ BrowserWebSocketTransport Class
 		Default: Async io disabled
 
 		:rtype: bool
-
-

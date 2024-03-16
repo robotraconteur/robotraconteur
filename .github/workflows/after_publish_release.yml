@@ -56,5 +56,3 @@ jobs:
         ref: refs/heads/master
         token: ${{ secrets.BOT_GITHUB_TOKEN }}
         inputs: '{ "formula": "robotraconteur", "source_repository": "${{ github.repository }}", "tag_name": "${{ github.event.release.tag_name || github.event.inputs.tag_name }}" }'
-
-

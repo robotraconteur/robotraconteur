@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file Error.h
  *
  * @author John Wason, PhD

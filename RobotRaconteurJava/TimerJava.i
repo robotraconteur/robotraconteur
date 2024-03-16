@@ -54,5 +54,3 @@ WallTimer(const boost::posix_time::time_duration& period, bool oneshot, const bo
 	return new WallTimer(period,boost::bind(&TimerHandlerFunc,RR_BOOST_PLACEHOLDERS(_1),sphandler),oneshot,node);
 }
 }
-
-

@@ -69,4 +69,3 @@ NodeID Class
    .. automethod:: __eq__
    .. automethod:: __ne__
    .. automethod:: __str__
-

@@ -57,4 +57,3 @@ while(1)
   notify(o,'testevent2',RobotRaconteurEventData({int32(10);int32(i)}))
   i=i+1;
 end
-

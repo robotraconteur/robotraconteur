@@ -32,5 +32,3 @@ Callback Member
       :type endpoint: int
       :return: A proxy function that will be executed on the client
       :rtype: Callable
-
-

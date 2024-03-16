@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file ServiceDefinition.h
  *
  * @author John Wason, PhD

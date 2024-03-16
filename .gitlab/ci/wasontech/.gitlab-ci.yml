@@ -726,4 +726,3 @@ build_winxp_x86:
       - ${OUTNAME}/out/*
   variables:
     OUTNAME: "out-winxp_x86"
-
