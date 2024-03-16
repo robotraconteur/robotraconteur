@@ -241,7 +241,7 @@ class ROBOTRACONTEUR_CORE_API PasswordFileUserAuthenticator : public UserAuthent
     static std::string MD5Hash(boost::string_ref text);
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for ServiceSecurityPolicy shared_ptr */
 using ServiceSecurityPolicyPtr = RR_SHARED_PTR<ServiceSecurityPolicy>;
 /** @brief Convenience alias for AuthenticatedUser shared_ptr */

@@ -1770,7 +1770,7 @@ MessageElementNestedElementList::MessageElementNestedElementList(
     TypeName = type_name_;
     Type = type_;
 }
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#ifndef ROBOTRACONTEUR_NO_CXX11
 MessageElementNestedElementList::MessageElementNestedElementList(
     DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> >&& elements_)
     : Elements(std::move(elements_))
@@ -1811,7 +1811,7 @@ ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> Create
 {
     return new MessageElementNestedElementList(type_, type_name_, elements_);
 }
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#ifndef ROBOTRACONTEUR_NO_CXX11
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<MessageElementNestedElementList> CreateMessageElementNestedElementList(
     DataTypes type_, MessageStringRef type_name_, std::vector<RR_INTRUSIVE_PTR<MessageElement> >&& elements_)
 {

@@ -177,7 +177,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> t11;
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.teststruct3";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using teststruct3Ptr = RR_INTRUSIVE_PTR<teststruct3>;
 #endif
 
@@ -367,7 +367,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<RobotRaconteur::rr_boo
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.testroot3";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using testroot3Ptr = RR_SHARED_PTR<testroot3>;
 #endif
 
@@ -382,7 +382,7 @@ virtual void set_d1(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >& v
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj1";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using obj1Ptr = RR_SHARED_PTR<obj1>;
 #endif
 
@@ -394,7 +394,7 @@ public:
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj2";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using obj2Ptr = RR_SHARED_PTR<obj2>;
 #endif
 
@@ -406,7 +406,7 @@ public:
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj3";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using obj3Ptr = RR_SHARED_PTR<obj3>;
 #endif
 
@@ -418,7 +418,7 @@ public:
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj4";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using obj4Ptr = RR_SHARED_PTR<obj4>;
 #endif
 
@@ -461,7 +461,7 @@ virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<int32_t > > get_m3()=0;
 RR_OVIRTUAL std::string RRType() RR_OVERRIDE  {return "com.robotraconteur.testing.TestService3.obj5";  }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using obj5Ptr = RR_SHARED_PTR<obj5>;
 #endif
 
@@ -470,7 +470,7 @@ class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3_
     public:
     test_exception4(const std::string& message, const std::string& sub_name = "", const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException("com.robotraconteur.testing.TestService3.test_exception4",message,sub_name,param_) {}
 };
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using test_exception4Ptr = RR_SHARED_PTR<test_exception4>;
 #endif
 }

@@ -220,7 +220,7 @@ class CallbackServer : public Callback<T>, public CallbackServerBase
     RR_OVIRTUAL void Shutdown() RR_OVERRIDE {}
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for Callback shared_ptr */
 template <typename T>
 using CallbackPtr = RR_SHARED_PTR<Callback<T> >;

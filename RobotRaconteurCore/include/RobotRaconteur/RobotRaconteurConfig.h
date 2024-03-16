@@ -25,8 +25,8 @@
 
 #ifndef ROBOTRACONTEUR_VERSION
 // Boost Style Version Number
-#define ROBOTRACONTEUR_VERSION 100100
-#define ROBOTRACONTEUR_VERSION_TEXT "1.1.0"
+#define ROBOTRACONTEUR_VERSION 100101
+#define ROBOTRACONTEUR_VERSION_TEXT "1.1.1"
 #endif
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ == 7)
@@ -114,7 +114,7 @@
 #endif
 
 // Use Boost ASIO move detection
-#if __cplusplus >= 201103L
+#ifndef ROBOTRACONTEUR_NO_CXX11
 #define RR_MOVE_ARG(type) type&&
 #define RR_MOVE(x) std::move(x)
 #define RR_FORWARD(type, x) std::forward<type>(x)
@@ -163,9 +163,13 @@
 #define RR_BOOST_PLACEHOLDERS(arg) boost::placeholders::arg
 #endif
 
+#if defined(ROBOTRACONTEUR_NO_CXX11) && (__cplusplus < 201103L || defined(BOOST_NO_CXX11_TEMPLATE_ALIASES))
+#define ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
+#endif
+
 #define RR_UNUSED(var_) ((void)(var_))
 
-#ifndef BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
+#if !defined(ROBOTRACONTEUR_NO_CXX11) && !defined(BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX)
 #define RR_MEMBER_ARRAY_INIT(x) , x({})
 #define RR_MEMBER_ARRAY_INIT2(x) : x({})
 #else
@@ -173,7 +177,7 @@
 #define RR_MEMBER_ARRAY_INIT2(x)
 #endif
 
-#if __cplusplus >= 201103L
+#ifndef ROBOTRACONTEUR_NO_CXX11
 #define RR_OVERRIDE override
 #define RR_OVIRTUAL
 #else

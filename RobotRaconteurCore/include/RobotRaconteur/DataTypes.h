@@ -296,7 +296,7 @@ class ROBOTRACONTEUR_CORE_API MessageStringPtr
     MessageStringPtr(boost::string_ref str, bool is_static = false);
     MessageStringPtr(const MessageStringPtr& str_ptr);
     MessageStringPtr(const MessageStringRef& str_ref);
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#ifndef ROBOTRACONTEUR_NO_CXX11
     MessageStringPtr(std::string&& str);
 #endif
     // WARNING: ONLY USE WITH STRING LITERALS OR STATIC STRINGS!
@@ -2906,7 +2906,7 @@ bool try_convert_string_to_number(const U& arg, T& result)
 
 } // namespace detail
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for RRObject shared_ptr */
 using RRObjectPtr = RR_SHARED_PTR<RRObject>;
 /** @brief Convenience alias for RRObject const shared_ptr */
