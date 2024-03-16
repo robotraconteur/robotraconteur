@@ -15,9 +15,9 @@ repos:
     - id: trailing-whitespace
     - id: fix-byte-order-marker
     # - id: check-executables-have-shebangs
-    # - id: check-json
-    # - id: check-toml
-    # - id: check-xml
+    - id: check-json
+    - id: check-toml
+    - id: check-xml
     # - id: detect-private-key
     # - id: no-commit-to-branch
     #   args: ['--branch', 'master']
