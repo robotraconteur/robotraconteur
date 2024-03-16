@@ -175,7 +175,7 @@ class ROBOTRACONTEUR_CORE_API BroadcastDownsamplerStep
     ~BroadcastDownsamplerStep();
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for BroadcastDownsampler shared_ptr */
 using BroadcastDownsamplerPtr = RR_SHARED_PTR<BroadcastDownsampler>;
 #endif

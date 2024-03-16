@@ -1285,7 +1285,7 @@ class PipeBroadcaster : public PipeBroadcasterBase
             boost::bind(&PipeBroadcaster::PacketAckReceivedBase, shared_from_this(), cep, RR_BOOST_PLACEHOLDERS(_2)));
     }
 };
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for PipeEndpointBase shared_ptr */
 using PipeEndpointBasePtr = RR_SHARED_PTR<PipeEndpointBase>;
 /** @brief Convenience alias for PipeEndpoint shared_ptr */

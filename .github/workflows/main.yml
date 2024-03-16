@@ -1103,12 +1103,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
-    - run: python -m pip install pre-commit
-    - uses: actions/cache@v3
-      with:
-        path: ~/.cache/pre-commit
-        key: pre-commit-3|/usr/bin/python3|${{ hashFiles('.pre-commit-config.yaml') }}
-    - run: pre-commit run --show-diff-on-failure --color=always --all-files
+    - uses: actions/setup-python@v3
+    - uses: pre-commit/action@v3.0.1
   clang-tidy:
     runs-on: ubuntu-20.04
     steps:
@@ -1136,7 +1132,7 @@ jobs:
     - name: configure
       working-directory: build2
       run: >
-        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF 
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF -DCMAKE_CXX_STANDARD=11
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON -DCMAKE_CXX_CLANG_TIDY=clang-tidy-14
         -DCMAKE_BUILD_TYPE=Debug
         ../robotraconteur
@@ -1447,4 +1443,195 @@ jobs:
       - name: .net test
         uses: ./robotraconteur/test/dist/net/action/osx
           
-        
+  companion-build-ubuntu:
+    runs-on: ${{ matrix.config.runs_on }}
+    container: ${{ matrix.config.container }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - os: ubuntu-22.04
+          runs_on: ubuntu-22.04
+          container: ""
+        - os: ubuntu-16.04
+          runs_on: ubuntu-latest
+          container: ubuntu:xenial
+        - os: debian-10
+          runs_on: ubuntu-latest
+          container: debian:buster-slim
+        cxx_standard:
+        - ""
+        - "-DCMAKE_CXX_STANDARD=11"
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+    - name: install git
+      if: ${{ matrix.config.container != '' }}
+      run: |
+        apt-get update
+        apt-get install git -y
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur
+    - name: clone robotraconteur_companion
+      run: git clone --recursive https://github.com/robotraconteur/robotraconteur_companion.git
+    - name: install sudo and tzdata
+      if: ${{ matrix.config.container != '' }}
+      run: |
+        apt install sudo tzdata python3 -y
+        ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+        dpkg-reconfigure --frontend noninteractive tzdata
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install 
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
+        git cmake g++ make libboost-all-dev autoconf 
+        automake libtool bison libpcre3-dev curl libgtest-dev
+        libyaml-cpp-dev -qq
+    - name: install gtest
+      if: ${{ matrix.config.os == 'ubuntu-16.04' || matrix.config.os == 'ubuntu-18.04' }}
+      run: |
+        git clone https://github.com/google/googletest
+        cd googletest
+        git checkout release-1.8.1
+        cmake -DCMAKE_CXX_FLAGS="-fPIC" .
+        cmake --build .
+        sudo cmake --build . --target install
+    - name: install eigen
+      if: ${{ matrix.config.os != 'ubuntu-16.04' }}
+      run:
+        sudo apt-get install libeigen3-dev -y
+    - name: install eigen
+      if: ${{ matrix.config.os == 'ubuntu-16.04' }}
+      run: |
+        git clone https://gitlab.com/libeigen/eigen.git
+        cd eigen
+        git checkout 3.3.7
+        mkdir build
+        cd build
+        cmake ..
+        sudo make install        
+    - name: build-swig
+      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
+      uses: johnwason/swig-build-action@v1
+      with:
+        cache-key: ${{ matrix.config.os }}
+    - name: apt-swig
+      if: ${{ matrix.config.os == 'ubuntu-22.04' || matrix.config.os == 'debian-11' }}
+      run: sudo apt-get install swig -qq -y
+    - name: cache-build
+      id: cache-build
+      uses: hendrikmuhs/ccache-action@v1.2.11
+      with:
+        key: ${{ runner.os }}-${{ matrix.config.os }}-build-companion-ccache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
+    - name: mkdir build2
+      run: |
+        mkdir -p build2
+        mkdir -p build2_companion
+    - name: configure
+      working-directory: build2
+      run: >
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF 
+        -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
+        ../robotraconteur
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -- -j 4
+    - name: configure-companion
+      working-directory: build2_companion
+      run: >
+        cmake -G "Unix Makefiles"
+        -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
+        -DRobotRaconteur_DIR=$GITHUB_WORKSPACE/build2  -DBUILD_TESTING=ON
+        -DROBOTRACONTEUR_GEN_EXECUTABLE=$GITHUB_WORKSPACE/build2/out/bin/RobotRaconteurGen
+        -DEigen3_DIR=/usr/lib/cmake/eigen3
+        ../robotraconteur_companion
+    - name: build-companion
+      working-directory: build2_companion
+      run: |
+        cmake --build . --config Release -- -j 4
+    - name: test-companion
+      working-directory: build2_companion
+      run: |
+        ctest -C Release --output-on-failure
+      
+  companion-build-win:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: robotraconteur
+    - uses: actions/checkout@v3
+      with:
+        repository: robotraconteur/robotraconteur_companion
+        submodules: recursive
+        path: robotraconteur_companion
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v6
+      id: vcpkg
+      with:
+        pkgs: ${{ env.VCPKG_PKGS }} yaml-cpp eigen3
+        triplet: x64-windows-static-md-release
+        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
+        cache-key: ${{ runner.os }}-x64-build-companion
+        token: ${{ github.token }}
+        github-binarycache: true
+    - name: choco
+      run: |
+        choco install swig -r
+    - name: cache-build
+      id: cache-build
+      uses: mikehardy/buildcache-action@v1
+      with:
+        cache_key: ${{ runner.os }}-x64-build-companion-buildcache
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+    - name: configure
+      run: >
+        cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=OFF
+        -DBoost_USE_STATIC_LIBS=ON 
+        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache 
+        -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        -DCMAKE_BUILD_TYPE=Release
+        -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -j 4
+    - name: configure-companion
+      run: >
+        cmake -G "Ninja" -DBUILD_TESTING=ON
+        -DBoost_USE_STATIC_LIBS=ON 
+        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache 
+        -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        -DCMAKE_BUILD_TYPE=Release
+        -DRobotRaconteur_DIR=${{ github.workspace }}/build2
+        -DROBOTRACONTEUR_GEN_EXECUTABLE=${{ github.workspace }}/build2/out/bin/RobotRaconteurGen
+        -S robotraconteur_companion -B build2_companion
+    - name: build-companion
+      working-directory: build2_companion
+      run: |
+        cmake --build . --config Release -j 4
+    - name: test-companion
+      working-directory: build2_companion
+      run: |
+        ctest -C Release --output-on-failure

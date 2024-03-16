@@ -1370,7 +1370,7 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
            << std::endl;
 
         w2 << "};" << std::endl << std::endl;
-        w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << std::endl;
+        w2 << "#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES" << std::endl;
         w2 << "using " << fix_name((*e)->Name) << "Ptr = RR_INTRUSIVE_PTR<" << fix_name((*e)->Name) << ">;"
            << std::endl;
         w2 << "#endif" << std::endl << std::endl;
@@ -1452,7 +1452,7 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
            << std::endl;
 
         w2 << "};" << std::endl << std::endl;
-        w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << std::endl;
+        w2 << "#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES" << std::endl;
         w2 << "using " << fix_name((*e)->Name) << "Ptr = RR_SHARED_PTR<" << fix_name((*e)->Name) << ">;" << std::endl;
         w2 << "#endif" << std::endl << std::endl;
     }
@@ -1470,7 +1470,7 @@ void CPPServiceLangGen::GenerateInterfaceHeaderFile(ServiceDefinition* d,
               "param_ = RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>()) : RobotRaconteur::RobotRaconteurRemoteException(\""
            << d->Name << "." << e->Name << "\",message,sub_name,param_) {}" << std::endl;
         w2 << "};" << std::endl;
-        w2 << "#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES" << std::endl;
+        w2 << "#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES" << std::endl;
         w2 << "using " << fix_name(e->Name) << "Ptr = RR_SHARED_PTR<" << fix_name(e->Name) << ">;" << std::endl;
         w2 << "#endif" << std::endl;
     }

@@ -1271,7 +1271,7 @@ class OperationCancelledException : public RobotRaconteurException
                                 const RR_INTRUSIVE_PTR<RRValue>& param_ = RR_INTRUSIVE_PTR<RRValue>());
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for ConnectionException shared_ptr */
 using ConnectionExceptionPtr = RR_SHARED_PTR<ConnectionException>();
 /** @brief Convenience alias for ConnectionException const shared_ptr */
@@ -1464,7 +1464,7 @@ using OperationCancelledExceptionConstPtr = RR_SHARED_PTR<const OperationCacnell
 
 #endif // GENERATING_DOCUMENTATION
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for RobotRaconteurException shared_ptr */
 using RobotRaconteurExceptionPtr = RR_SHARED_PTR<RobotRaconteurException>;
 /** @brief Convenience alias for RobotRaconteurException const shared_ptr */
