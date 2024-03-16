@@ -458,7 +458,7 @@ clang_tidy_ubuntu_focal_amd64:
     - > 
       cmake -G Ninja
       -DCMAKE_BUILD_TYPE=Debug -DBoost_USE_STATIC_LIBS=OFF      
-      -DBUILD_GEN=ON -DBUILD_TESTING=OFF
+      -DBUILD_GEN=ON -DBUILD_TESTING=OFF -DCMAKE_CXX_STANDARD=11
       -DCMAKE_CXX_CLANG_TIDY=clang-tidy-14
       -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
       ..

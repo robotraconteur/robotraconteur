@@ -2982,7 +2982,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     }
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for RobotRaconteurNode shared_ptr */
 using RobotRaconteurNodePtr = RR_SHARED_PTR<RobotRaconteurNode>;
 #endif

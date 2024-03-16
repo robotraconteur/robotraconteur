@@ -724,7 +724,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
     boost::mutex closed_lock;
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 /** @brief Convenience alias for TcpTransport shared_ptr */
 using TcpTransportPtr = RR_SHARED_PTR<TcpTransport>;
 #endif

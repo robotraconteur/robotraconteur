@@ -9,7 +9,7 @@ repos:
   rev: v2.0.4
   hooks:
   - id: autopep8
-    args: ["--ignore=E402", "-i"]
+    args: ["--ignore=E402", "-i", "--max-line-length=120"]
 - repo: https://github.com/Kr4is/cmake-format-precommit
   rev: b912a5a5bce3c479f4cb52763979cc5a8319eb44
   hooks:

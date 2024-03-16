@@ -113,7 +113,7 @@ class ROBOTRACONTEUR_CORE_API Endpoint : private boost::noncopyable
     RR_WEAK_PTR<RobotRaconteurNode> node;
 };
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 using EndpointPtr = RR_SHARED_PTR<Endpoint>;
 using EndpointConstPtr = RR_SHARED_PTR<const Endpoint>;
 #endif

@@ -1007,7 +1007,7 @@ RR_SHARED_PTR<RangeGenerator<T> > CreateRangeGenerator(const T& range)
     return RR_MAKE_SHARED<RangeGenerator<T> >(range);
 }
 
-#ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES
+#ifndef ROBOTRACONTEUR_NO_CXX11_TEMPLATE_ALIASES
 template <typename Return, typename Param>
 using GeneratorPtr = RR_SHARED_PTR<Generator<Return, Param> >;
 template <typename Return, typename Param>

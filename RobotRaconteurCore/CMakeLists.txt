@@ -372,6 +372,24 @@ if(MSVC)
     target_compile_options(RobotRaconteurCore PRIVATE "/wd4251" "/wd4275" "/bigobj")
 endif()
 
+if(DEFINED CMAKE_CXX_STANDARD)
+    if(CMAKE_CXX_STANDARD GREATER 11 OR CMAKE_CXX_STANDARD EQUAL 11)
+        if(NOT CMAKE_CXX_STANDARD EQUAL 98)
+            set(ROBOTRACONTEUR_USE_CXX11 TRUE)
+        endif()
+    endif()
+endif()
+
+if(DEFINED MSVC_VERSION)
+    if(MSVC_VERSION GREATER_EQUAL 1900)
+        set(ROBOTRACONTEUR_USE_CXX11 TRUE)
+    endif()
+endif()
+
+if(NOT ROBOTRACONTEUR_USE_CXX11)
+    target_compile_definitions(RobotRaconteurCore PUBLIC ROBOTRACONTEUR_NO_CXX11)
+endif()
+
 target_include_directories(
     RobotRaconteurCore PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
                               $<INSTALL_INTERFACE:include/> # <prefix>/include/
