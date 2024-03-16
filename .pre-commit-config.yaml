@@ -10,18 +10,22 @@ repos:
     - id: check-yaml
       exclude: .clang-format
       args: ['--unsafe']
+    - id: check-ast
+    - id: check-docstring-first
     - id: debug-statements
     - id: end-of-file-fixer
     - id: mixed-line-ending
     - id: trailing-whitespace
     - id: fix-byte-order-marker
     - id: check-executables-have-shebangs
+    - id: check-shebang-scripts-are-executable
     - id: check-json
     - id: check-toml
     - id: check-xml
     - id: detect-private-key
     - id: no-commit-to-branch
       args: ['--branch', 'master']
+    - id: forbid-submodules
 - repo: https://github.com/pre-commit/mirrors-clang-format
   rev: v14.0.6
   hooks:
