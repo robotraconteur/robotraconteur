@@ -9,10 +9,10 @@ source:
 
 requirements:
   run:
-    - numpy
+  - numpy
   host:
-    - boost-cpp
-    - numpy
+  - boost-cpp
+  - numpy
 
 build:
   cxxflags: -fexceptions -fPIC -DBOOST_SP_DISABLE_THREADS=1 -O2

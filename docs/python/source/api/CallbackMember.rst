@@ -6,7 +6,7 @@ Callback Member
 
    "callback" member type interface
 
-   The Callback class implements the "callback" member type. Callbacks are declared in service definition 
+   The Callback class implements the "callback" member type. Callbacks are declared in service definition
    files using the "callback" keyword within object declarations. They provide functionality similar to the
    "function" member, but the direction is reversed, allowing the service to call a function on a specified
    client. The desired client is specified using the Robot Raconteur endpoint identifier. Clients must
@@ -20,7 +20,7 @@ Callback Member
    This class is instantiated by the node. It should not be instantiated by the user.
 
    .. attribute:: Function
-      
+
       Specifies the function that will be called for the callback. This is only available for the client
 
    .. method:: GetFunction(endpoint)
@@ -32,5 +32,3 @@ Callback Member
       :type endpoint: int
       :return: A proxy function that will be executed on the client
       :rtype: Callable
-
-       

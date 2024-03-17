@@ -22,14 +22,14 @@
 class ClientServiceListenerDirector
 {
 public:
-	
+
 	int32_t objectheapid;
-	
+
 	ClientServiceListenerDirector()
 	{
 		objectheapid=0;
 	}
-	
+
 	void OuterCallback(const boost::shared_ptr<RobotRaconteur::ClientContext>& c,ClientServiceListenerEventType code,const boost::shared_ptr<void>& p)
 	{
 		if (code == ClientServiceListenerEventType_ServicePathReleased)
@@ -38,18 +38,18 @@ public:
 			DIRECTOR_CALL2(Callback2(code,p1));
 		}
 		else
-		{		
+		{
 			DIRECTOR_CALL2(Callback(code));
 		}
 	}
 	virtual void Callback(int32_t code) {};
 	virtual void Callback2(int32_t code, const std::string& p) {};
-		
+
 	virtual ~ClientServiceListenerDirector()
 	{
-		
+
 	}
-	
+
 };
 }
 
@@ -70,15 +70,15 @@ class RobotRaconteurNode
 public:
 
 	uint32_t RegisterTransport(const boost::shared_ptr<Transport>& transport);
-	
+
 	RR_PROPERTY(RequestTimeout)
 	uint32_t GetRequestTimeout();
 	void SetRequestTimeout(uint32_t timeout);
-	
+
 	RR_PROPERTY(TransportInactivityTimeout)
 	uint32_t GetTransportInactivityTimeout();
 	void SetTransportInactivityTimeout(uint32_t timeout);
-	
+
 	RR_PROPERTY(EndpointInactivityTimeout)
 	uint32_t GetEndpointInactivityTimeout();
 	void SetEndpointInactivityTimeout(uint32_t timeout);
@@ -86,17 +86,17 @@ public:
 	RR_PROPERTY(MemoryMaxTransferSize)
 	uint32_t GetMemoryMaxTransferSize();
 	void SetMemoryMaxTransferSize(uint32_t size);
-	
+
 	RR_PROPERTY(NodeDiscoveryMaxCacheCount)
 	uint32_t GetNodeDiscoveryMaxCacheCount();
 	void SetNodeDiscoveryMaxCacheCount(uint32_t count);
 
 	void UnregisterServiceType(const std::string& type);
-	
+
 RR_RELEASE_GIL()
-	
+
 	RR_MAKE_METHOD_PRIVATE(ConnectService);
-	
+
 %extend {
 	boost::shared_ptr<RobotRaconteur::WrappedServiceStub> ConnectService(const std::string& url, const std::string& username="", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(), ClientServiceListenerDirector* listener=0, const std::string& objecttype="")
 	{
@@ -105,7 +105,7 @@ RR_RELEASE_GIL()
 		{
 			listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ClientServiceListenerDirector>,RR_BOOST_PLACEHOLDERS(_1),listener->objectheapid));
 		}
-	
+
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList>(credentials)));
 		boost::shared_ptr<WrappedServiceStub> stub;
@@ -115,23 +115,23 @@ RR_RELEASE_GIL()
 		}
 		else
 		{
-			
+
 			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,boost::bind(&ClientServiceListenerDirector::OuterCallback,listenerptr,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)),objecttype));
 		}
-		
+
 		return stub;
 
 	}
 
 	boost::shared_ptr<RobotRaconteur::WrappedServiceStub> ConnectService(const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(), ClientServiceListenerDirector* listener=0, const std::string& objecttype="")
 	{
-	
+
 		boost::shared_ptr<ClientServiceListenerDirector> listenerptr;
 		if (listener)
 		{
 			listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ClientServiceListenerDirector>,RR_BOOST_PLACEHOLDERS(_1),listener->objectheapid));
 		}
-	
+
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
 		boost::shared_ptr<WrappedServiceStub> stub;
@@ -141,7 +141,7 @@ RR_RELEASE_GIL()
 		}
 		else
 		{
-			
+
 			stub=rr_cast<WrappedServiceStub>($self->ConnectService(url,username,credentials2,boost::bind(&ClientServiceListenerDirector::OuterCallback,listenerptr,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)),objecttype));
 		}
 		return stub;
@@ -156,12 +156,12 @@ RR_KEEP_GIL()
 %extend {
 	void AsyncConnectService(const std::string& url, const std::string& username, const boost::intrusive_ptr<MessageElementData>& credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout, AsyncStubReturnDirector* handler, int32_t id)
 	{
-		
+
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
-	
+
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
-		
+
 		if (listener==0)
 		{
 			$self->AsyncConnectService(url,username,credentials2,RR_NULL_FN,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
@@ -170,17 +170,17 @@ RR_KEEP_GIL()
 		{
 			boost::shared_ptr<ClientServiceListenerDirector> listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener);
 			$self->AsyncConnectService(url,username,credentials2,boost::bind(&ClientServiceListenerDirector::OuterCallback,listenerptr,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)),objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
-		}		
+		}
 	}
 
 	void AsyncConnectService(const std::vector<std::string>& url, const std::string& username, const boost::intrusive_ptr<MessageElementData>& credentials, ClientServiceListenerDirector* listener, const std::string& objecttype, int32_t timeout,  AsyncStubReturnDirector* handler, int32_t id)
 	{
-	
+
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
-	
+
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >($self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
-		
+
 		if (listener==0)
 		{
 			$self->AsyncConnectService(url,username,credentials2,RR_NULL_FN,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
@@ -222,7 +222,7 @@ RR_KEEP_GIL()
 	RR_MAKE_METHOD_PRIVATE(RegisterServiceTypes)
 	RR_MAKE_METHOD_PRIVATE(GetServiceType)
 	RR_MAKE_METHOD_PRIVATE(GetPulledServiceType)
-	
+
 %extend
 {
 
@@ -247,7 +247,7 @@ RR_KEEP_GIL()
 
 	void RegisterServiceTypes(const std::vector<std::string>& defs_str)
 	{
-		
+
 		std::vector<boost::shared_ptr<ServiceDefinition> > defs;
 		std::vector<boost::shared_ptr<ServiceDefinition> > defs2;
 		BOOST_FOREACH(const std::string& def_str, defs_str)
@@ -262,7 +262,7 @@ RR_KEEP_GIL()
 		{
 			if ((*e)!="RobotRaconteurServiceIndex")
 			defs2.push_back($self->GetServiceType(*e)->ServiceDef());
-		}		
+		}
 
 		VerifyServiceDefinitions(defs2);
 
@@ -273,7 +273,7 @@ RR_KEEP_GIL()
 	}
 
 #endif
-	
+
 	void RegisterServiceType(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def)
 	{
 #ifdef SWIGPYTHON
@@ -324,20 +324,20 @@ RR_KEEP_GIL()
 	}
 }
 
-	bool IsServiceTypeRegistered(const std::string& servicename);	
+	bool IsServiceTypeRegistered(const std::string& servicename);
 
 	RR_MAKE_METHOD_PRIVATE(GetRegisteredServiceTypes)
 	std::vector<std::string> GetRegisteredServiceTypes();
-	
+
 	RR_MAKE_METHOD_PRIVATE(GetPulledServiceTypes)
 	std::vector<std::string> GetPulledServiceTypes(const boost::shared_ptr<RRObject>& obj);
-	
+
 	RR_MAKE_METHOD_PRIVATE(sp)
 	%rename sp _get_s;
 	static boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> sp();
 
 RR_RELEASE_GIL()
-	
+
 	RR_MAKE_METHOD_PRIVATE(Shutdown)
 	void Shutdown();
 
@@ -369,7 +369,7 @@ RR_RELEASE_GIL()
 		$self->MonitorExit(obj);
 	}
 }
-		
+
 	RR_MAKE_METHOD_PRIVATE(NowUTC)
 	boost::posix_time::ptime NowUTC();
 
@@ -386,7 +386,7 @@ RR_RELEASE_GIL()
 	TimeSpec NodeSyncTimeSpec();
 
 
-	
+
 RR_KEEP_GIL()
 
 	RR_MAKE_METHOD_PRIVATE(AsyncRequestObjectLock)
@@ -405,14 +405,14 @@ RR_KEEP_GIL()
 		return $self->AsyncReleaseObjectLock(obj,boost::bind(&AsyncStringReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 	}
 }
-	
+
 	RR_MAKE_METHOD_PRIVATE(GetServiceAttributes)
 	RR_MAKE_METHOD_PRIVATE(GetServiceNodeID)
 	RR_MAKE_METHOD_PRIVATE(GetServiceNodeName)
 	RR_MAKE_METHOD_PRIVATE(GetServiceName)
 	RR_MAKE_METHOD_PRIVATE(GetObjectServicePath)
 	RR_MAKE_METHOD_PRIVATE(GetObjectType)
-	
+
 %extend
 {
 	boost::intrusive_ptr<MessageElement> GetServiceAttributes(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
@@ -424,28 +424,28 @@ RR_KEEP_GIL()
 		}
 
 	NodeID GetServiceNodeID(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
-	{		
-		return $self->GetServiceNodeID(obj);		
+	{
+		return $self->GetServiceNodeID(obj);
 	}
 
 	std::string GetServiceNodeName(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
-	{		
-		return $self->GetServiceNodeName(obj);		
+	{
+		return $self->GetServiceNodeName(obj);
 	}
 
 	std::string GetServiceName(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
-	{		
-		return $self->GetServiceName(obj);		
+	{
+		return $self->GetServiceName(obj);
 	}
 
 	std::string GetObjectServicePath(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
-	{		
-		return $self->GetObjectServicePath(obj);		
+	{
+		return $self->GetObjectServicePath(obj);
 	}
 
 	std::string GetObjectType(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj)
-	{		
-		return $self->GetObjectType(obj);		
+	{
+		return $self->GetObjectType(obj);
 	}
 
 }
@@ -458,20 +458,20 @@ RR_KEEP_GIL()
 
 	RR_MAKE_METHOD_PRIVATE(NodeID)
 	RR_MAKE_METHOD_PRIVATE(SetNodeID)
-	
+
 	const RobotRaconteur::NodeID NodeID();
 	void SetNodeID(const RobotRaconteur::NodeID id);
-	
+
 	RR_MAKE_METHOD_PRIVATE(NodeName)
 	RR_MAKE_METHOD_PRIVATE(SetNodeName)
-	
+
 	const std::string NodeName();
 	void SetNodeName(const std::string& name);
-	
+
 	RR_PROPERTY(ThreadPoolCount)
 	int32_t GetThreadPoolCount();
 	void SetThreadPoolCount(int32_t count);
-	
+
 RR_RELEASE_GIL()
 
 	RR_MAKE_METHOD_PRIVATE(FindObjectType)
@@ -508,7 +508,7 @@ RR_KEEP_GIL()
 		RR_SHARED_PTR<AsyncVoidReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncVoidReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
 		$self->SetExceptionHandler(boost::bind(&WrappedExceptionHandler,RR_BOOST_PLACEHOLDERS(_1),sphandler));
 	}
-	
+
 	void ClearExceptionHandler()
 	{
 		$self->SetExceptionHandler(RR_NULL_FN);
@@ -523,9 +523,9 @@ RR_KEEP_GIL()
 
 	RR_MAKE_METHOD_PRIVATE(CreateTimer)
 
-%extend {	
+%extend {
 	boost::shared_ptr<RobotRaconteur::Timer> CreateTimer(const boost::posix_time::time_duration& period, bool oneshot, AsyncTimerEventReturnDirector* handler, int32_t id)
-	{		
+	{
 		boost::shared_ptr<AsyncTimerEventReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncTimerEventReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
 		return $self->CreateTimer(period,boost::bind(&TimerHandlerFunc,RR_BOOST_PLACEHOLDERS(_1),sphandler),oneshot);
 	}
@@ -537,7 +537,7 @@ RR_KEEP_GIL()
 
 
 	RR_MAKE_METHOD_PRIVATE(PostToThreadPool)
-	
+
 %extend
 {
 	void PostToThreadPool(AsyncVoidNoErrReturnDirector* handler, int32_t id)
@@ -568,5 +568,5 @@ RR_KEEP_GIL()
 	void SetNodeDirectories(const NodeDirectories& dir);
 
 };
-	
+
 }

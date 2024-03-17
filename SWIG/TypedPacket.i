@@ -9,6 +9,6 @@ namespace RobotRaconteur
 		boost::intrusive_ptr<RobotRaconteur::MessageElement> packet;
 		boost::shared_ptr<RobotRaconteur::TypeDefinition> type;
 		boost::shared_ptr<RobotRaconteur::WrappedServiceStub> stub;
-        uint32_t client;	
+        uint32_t client;
 	};
 }

@@ -30,21 +30,21 @@ class TcpTransport : public Transport
 public:
 
 	TcpTransport();
-	
+
 	TcpTransport(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
-	
+
 	RR_PROPERTY(DefaultReceiveTimeout)
-	int32_t GetDefaultReceiveTimeout();	
+	int32_t GetDefaultReceiveTimeout();
 	void SetDefaultReceiveTimeout(int32_t milliseconds);
-	
+
 	RR_PROPERTY(DefaultConnectTimeout)
 	int32_t GetDefaultConnectTimeout();
 	void SetDefaultConnectTimeout(int32_t milliseconds);
-	
+
 	RR_PROPERTY(DefaultHeartbeatPeriod)
-	int32_t GetDefaultHeartbeatPeriod();	
+	int32_t GetDefaultHeartbeatPeriod();
 	void SetDefaultHeartbeatPeriod(int32_t milliseconds);
-	
+
 	virtual std::string GetUrlSchemeString() const;
 	virtual std::vector<std::string> GetServerListenUrls();
 	virtual int32_t GetListenPort();
@@ -58,48 +58,48 @@ public:
 	RR_PROPERTY(NodeAnnouncePeriod)
 	int32_t GetNodeAnnouncePeriod();
 	void SetNodeAnnouncePeriod(int32_t millis);
-	
+
 	RR_PROPERTY(MaxMessageSize)
-	int32_t GetMaxMessageSize();	
+	int32_t GetMaxMessageSize();
 	void SetMaxMessageSize(int32_t size);
-	
+
 	RR_PROPERTY(MaxConnectionCount)
-	int32_t GetMaxConnectionCount();	
+	int32_t GetMaxConnectionCount();
 	void SetMaxConnectionCount(int32_t count);
-	
+
 	RR_PROPERTY(RequireTls)
-	virtual bool GetRequireTls();	
+	virtual bool GetRequireTls();
 	virtual void SetRequireTls(bool require_tls);
-	
+
 	virtual void LoadTlsNodeCertificate();
-	RR_MAKE_METHOD_PRIVATE(IsTlsNodeCertificateLoaded)	
+	RR_MAKE_METHOD_PRIVATE(IsTlsNodeCertificateLoaded)
 	virtual bool IsTlsNodeCertificateLoaded();
-	
-	
+
+
 	virtual bool IsTransportConnectionSecure(uint32_t endpoint);
-	RR_MAKE_METHOD_PRIVATE(IsTransportConnectionSecure)	
+	RR_MAKE_METHOD_PRIVATE(IsTransportConnectionSecure)
 	virtual bool IsTransportConnectionSecure(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
-		
+
 	virtual bool IsSecurePeerIdentityVerified(uint32_t endpoint);
-	RR_MAKE_METHOD_PRIVATE(IsSecurePeerIdentityVerified)	
+	RR_MAKE_METHOD_PRIVATE(IsSecurePeerIdentityVerified)
 	virtual bool IsSecurePeerIdentityVerified(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
-	
+
 	virtual std::string GetSecurePeerIdentity(uint32_t endpoint);
-	RR_MAKE_METHOD_PRIVATE(GetSecurePeerIdentity)	
+	RR_MAKE_METHOD_PRIVATE(GetSecurePeerIdentity)
 	virtual std::string GetSecurePeerIdentity(const boost::shared_ptr<RobotRaconteur::RRObject>& obj);
-	
+
 	virtual void StartServerUsingPortSharer();
-	RR_MAKE_METHOD_PRIVATE(IsPortSharerRunning)	
+	RR_MAKE_METHOD_PRIVATE(IsPortSharerRunning)
 	virtual bool IsPortSharerRunning();
-	
+
 	RR_PROPERTY(AcceptWebSockets)
-	virtual bool GetAcceptWebSockets();	
+	virtual bool GetAcceptWebSockets();
 	virtual void SetAcceptWebSockets(bool value);
 
 	virtual std::vector<std::string> GetWebSocketAllowedOrigins();
 	virtual void AddWebSocketAllowedOrigin(const std::string& origin);
 	virtual void RemoveWebSocketAllowedOrigin(const std::string& origin);
-	
+
 	RR_PROPERTY(DisableMessage4)
 	virtual bool GetDisableMessage4();
 	virtual void SetDisableMessage4(bool d);
@@ -125,6 +125,6 @@ public:
 		return o;
 	}
 }
-	
+
 };
 }

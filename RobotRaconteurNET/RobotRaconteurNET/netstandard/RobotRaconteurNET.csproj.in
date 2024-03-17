@@ -20,7 +20,7 @@
     <OutputPath>bin\$(Configuration)</OutputPath>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
-  
+
   <PropertyGroup>
 	<RRSourceDir>@CMAKE_CURRENT_SOURCE_DIR@\RobotRaconteurNET\</RRSourceDir>
 	<RRBinDir>@CMAKE_CURRENT_BINARY_DIR@\RobotRaconteurNET\</RRBinDir>
@@ -28,7 +28,7 @@
 	<PointerSize>@CMAKE_SIZEOF_VOID_P@</PointerSize>
 	<RRErrorDir>@CMAKE_CURRENT_BINARY_DIR@</RRErrorDir>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Compile Include="$(RRErrorDir)\Error.cs" Link="Error.cs" />
     <Compile Include="$(RRSwigDir)\RobotRaconteurNET_SWIG.cs" Link="RobotRaconteurNET_SWIG.cs" />

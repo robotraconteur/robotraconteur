@@ -11,7 +11,7 @@
   <url type="website">http://robotraconteur.com</url>
 
   <author email="wason@wasontech.com">John Wason</author>
-  
+
   <buildtool_depend>cmake</buildtool_depend>
   <buildtool_depend condition="$ROS_VERSION == 1">catkin</buildtool_depend>
   <depend>boost</depend>
@@ -24,8 +24,8 @@
   <depend>python3-numpy</depend>
   <depend>python3-setuptools</depend>
   <test_depend>gtest</test_depend>
-    
-  <export>    
+
+  <export>
     <build_type>cmake</build_type>
   </export>
 </package>

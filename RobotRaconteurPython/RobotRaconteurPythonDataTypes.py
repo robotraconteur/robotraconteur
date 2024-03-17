@@ -23,8 +23,8 @@ if sys.version_info[0] >= 3:
 
 class EventHook(object):
     """
-    EventHook is used to implement multiple listener events in 
-    Robot Raconteur Python. Callback functions are registered with the 
+    EventHook is used to implement multiple listener events in
+    Robot Raconteur Python. Callback functions are registered with the
     EventHook and are all notified when the event is fired.
     """
     __slots__ = "__handlers"
@@ -93,7 +93,7 @@ VarValue = RobotRaconteurVarValue
 
 class ArrayMemory(object):
     """
-    The ``ArrayMemory`` is designed to represent a large array that is read in smaller 
+    The ``ArrayMemory`` is designed to represent a large array that is read in smaller
     pieces. It is used with the \"memory\" member to allow for random access to an array.
     """
     __slots__ = ["memory"]
@@ -155,11 +155,11 @@ class ArrayMemory(object):
 
 class MultiDimArrayMemory(object):
     """
-    The ``MultiDimArrayMemory`` is designed to represent a large 
-    multi-dimensional array that is read in smaller pieces. It is used with the 
-    \"memory\" member to allow for random access to an multi-dimensional array.  It works with 
-    numpy.ndarray.  For the ``memorypos``, ``bufferpos``, and ``count`` parameters in the 
-    functions, a list is used to represent the dimensions.  The dimensions are column-major 
+    The ``MultiDimArrayMemory`` is designed to represent a large
+    multi-dimensional array that is read in smaller pieces. It is used with the
+    \"memory\" member to allow for random access to an multi-dimensional array.  It works with
+    numpy.ndarray.  For the ``memorypos``, ``bufferpos``, and ``count`` parameters in the
+    functions, a list is used to represent the dimensions.  The dimensions are column-major
     as is numpy.ndarray.
     """
     __slots__ = ["memory"]

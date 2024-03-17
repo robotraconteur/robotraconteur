@@ -1,10 +1,10 @@
-﻿#This is the standard test service for RobotRaconteur
+#This is the standard test service for RobotRaconteur
 #It is not meant to be exhaustive, rather it tests the
 #most common operations.
 
 #Each of the members defined has a specified behavior.
 #Refer to the reference implementation for details
-#on these behaviors.  New implementations of 
+#on these behaviors.  New implementations of
 #Robot Raconteur should test against the reference
 #client and server to determine compatibilty.
 
@@ -27,9 +27,9 @@ struct teststruct1
 	field teststruct2{string} dstruct2
 	field teststruct2{list} lstruct3
 	field double[*] multidimarray
-	
+
 	field varvalue var3
-	
+
 end struct
 
 struct teststruct2
@@ -97,7 +97,7 @@ object testroot
 	property double[]{string} is_d4
 	property double[*]{int32} is_d5
 	property double[*]{string} is_d6
-	
+
 	property string{int32} is_str1
 	property string{string} is_str2
 
@@ -109,10 +109,10 @@ object testroot
 	property double{list} list_d1
 	property double[]{list} list_d3
 	property double[*]{list} list_d5
-	
+
 	property string{list} list_str1
 	property teststruct2{list} list_struct1
-	
+
 	#varvalue
 	property varvalue var1
 	property varvalue{int32} var2
@@ -127,7 +127,7 @@ object testroot
 	#Throw an error to test error transmission
 	property double errtest
 	property teststruct1 nulltest
-	
+
 	#functions
 	function void func1()
 	function void func2(double d1, double d2)
@@ -137,7 +137,7 @@ object testroot
 	function void func_errtest1()
 	function void func_errtest2()
 	function void func_errtest3()
-	
+
 	#events
 
 	event ev1()
@@ -162,7 +162,7 @@ object testroot
 	#option pipe p2 unreliable
 	pipe teststruct2 p2
 	function void pipe_check_error()
-	
+
 	pipe double broadcastpipe
 
 	#callbacks
@@ -179,7 +179,7 @@ object testroot
 	wire double[] w1
 	wire teststruct2 w2
 	wire int32[*] w3
-	
+
 	wire double broadcastwire
 
 	#memory
@@ -196,13 +196,13 @@ object sub1
 
 	objref sub2 o2_1
 	objref sub2{int32} o2_2
-	objref sub2{string} o2_3	
+	objref sub2{string} o2_3
 
 	property string s_ind
 	property int32 i_ind
 
 end object
-	
+
 object sub2
 
 	property string s_ind
@@ -218,4 +218,3 @@ object sub3
 	property double data3
 	function double add(double d)
 end object
-

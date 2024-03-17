@@ -76,7 +76,7 @@ The "default implementation" for `MyObject` results in the following declaration
         virtual double get_my_property();
         virtual void set_my_property(double value);
 
-        virtual void my_function();        
+        virtual void my_function();
     };
 
 and implementation:
@@ -88,7 +88,7 @@ and implementation:
     {
         rrvar_my_property=0.0;
     }
-    
+
     double MyObject_default_impl::get_my_property()
     {
         boost::mutex::scoped_lock lock(this_lock);
@@ -133,7 +133,7 @@ The following is an example implementation of `MyObject` that uses the default i
                 p = rrvar_my_property;
             }
             std::cout << "my_property is currently: " << p << std::endl;
-        }  
+        }
     };
 
 This implementation does a bounds check on `my_property`, and implements `my_function` to print the current value to the terminal on the service side. Note the use of `this_lock` to protect `rrvar_my_property`. This is necessary because member calls on service objects come from the thread pool. Multiple threads may call members concurrently, which can lead to data corruption. Use `this_lock` to protect data that can be corrupted by concurrent calls. See \ref cpp_threading_and_async for more information on the thread pool.
@@ -185,7 +185,7 @@ An example that improves `MyObjectImpl` to implement `IRRServiceObject`:
                 p = rrvar_my_property;
             }
             std::cout << "my_property is currently: " << p << std::endl;
-        }  
+        }
     };
 
 ### Property Members {#cpp_service_property}
@@ -273,7 +273,7 @@ An implementation of `MyObject` and the generator returned by `count_to_100()`:
     class CountTo100Generator : public virtual SyncGenerator<int32_t,void>
     {
     protected:
-        int32_t count = 0;        
+        int32_t count = 0;
         bool aborted = false;
         bool closed = false;
         boost::mutex this_lock;
@@ -316,7 +316,7 @@ An implementation of `MyObject` and the generator returned by `count_to_100()`:
             boost::mutex::scoped_lock lock(this_lock);
             // Abort the generator
             aborted = true;
-        }    
+        }
     };
 
     class MyObjectImpl : public virtual MyObject_default_impl
@@ -367,7 +367,7 @@ This objref definition results in an accessor function in the abstract interface
 
     class MyOtherObjectImpl : public virtual MyOtherObject
     {
-        // TODO: Implement the other object 
+        // TODO: Implement the other object
     };
 
     // In the object owning the other_object member:
@@ -421,7 +421,7 @@ An example, assuming that the `sensordata` pipe is in `MyObject`, and using `IRR
         {
             boost::mutex::scoped_lock lock(this_lock);
 
-            // Test to make sure that rrvar_sensordata has been initialized            
+            // Test to make sure that rrvar_sensordata has been initialized
             if (rrvar_sensordata)
             {
                 // Send the packet, don't wait for send completion
@@ -493,7 +493,7 @@ An implementation of `addTwoNumbersOnClient()` that will call the last client to
                 }
             }
             return cb(a,b);
-        }        
+        }
     };
 
 The above example will invoke the callback on the last function to call `other_function()`. The choice of client which client to use depends completely on the purpose of the callback. The callback can be invoked on any connected client. If the client has not specified a callback for use, a RobotRaconteur::InvalidOperationException is thrown.
@@ -659,7 +659,7 @@ Monitor locks are used to request a thread-exclusive lock. Service objects that 
 
     using namespace RobotRaconteur;
 
-    class MyObjectImpl : public virtual MyObjectDefaultImpl, 
+    class MyObjectImpl : public virtual MyObjectDefaultImpl,
         public virtual IRobotRaconteurMonitorObject
     {
     public:
@@ -700,7 +700,7 @@ Service attributes are provided by services to help with discovery. The attribut
 An example of using attributes for a service with root object type `MyRobot`:
 
     MyRobotPtr robot = boost::make_shared<MyRobot>();
-    std::map<std::string,RRValuePtr> attributes = 
+    std::map<std::string,RRValuePtr> attributes =
     {
         { "description", stringToRRArray("My awesome robot!") },
         { "location", stringToRRArray("Robotics lab") }
@@ -711,4 +711,4 @@ An example of using attributes for a service with root object type `MyRobot`:
 
 ## Releasing Objects {#cpp_service_release_path}
 
-When service objects are returned from objref members, the service takes ownership of the object. If the service needs to release the object, it must be done explicitly using the RobotRaconteur::RobotRaconteurNode::ReleaseServicePath() function. This function takes the "service path" of the object to be released. See \ref service_paths for more information on service paths. The service path of an object can be determined using RobotRaconteur::IRRServiceObject, or using the function RobotRaconteur::ServerContext::GetCurrentServicePath(). When the service path is released, all connected clients are notified using an event. If the service path contains sensitive data such as a session token, the RobotRaconteur::ServerContext::ReleaseServicePath(boost::string_ref path, const std::vector<uint32_t>& endpoints) overload should be used. This version will only notify the clients specified in the `endpoints` parameter. 
+When service objects are returned from objref members, the service takes ownership of the object. If the service needs to release the object, it must be done explicitly using the RobotRaconteur::RobotRaconteurNode::ReleaseServicePath() function. This function takes the "service path" of the object to be released. See \ref service_paths for more information on service paths. The service path of an object can be determined using RobotRaconteur::IRRServiceObject, or using the function RobotRaconteur::ServerContext::GetCurrentServicePath(). When the service path is released, all connected clients are notified using an event. If the service path contains sensitive data such as a session token, the RobotRaconteur::ServerContext::ReleaseServicePath(boost::string_ref path, const std::vector<uint32_t>& endpoints) overload should be used. This version will only notify the clients specified in the `endpoints` parameter.

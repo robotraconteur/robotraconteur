@@ -26,10 +26,10 @@ are transmitted between client and service. They are always passed by
    object Create
    	constant int16 DRIVE_STRAIGHT 32767
    	constant int16 SPIN_CLOCKWISE -1
-   	constant int16 SPIN_COUNTERCLOCKWISE 1 
+   	constant int16 SPIN_COUNTERCLOCKWISE 1
 
    	function void Drive(int16 velocity, int16 radius)
-   	
+
    	function void StartStreaming()
    	function void StopStreaming()
 
@@ -40,8 +40,8 @@ are transmitted between client and service. They are always passed by
    	event Bump()
 
    	wire SensorPacket packets [readonly]
-   	
-   	callback uint8[] play_callback(int32 DistanceTraveled, int32 AngleTraveled)		
+
+   	callback uint8[] play_callback(int32 DistanceTraveled, int32 AngleTraveled)
    end
 
 The first line in the service definition contains the keyword
@@ -72,7 +72,7 @@ Value types can be *primitives*, *structures*, *pods*, *namedarrays*,
 *maps*, *multidimensional arrays*, or *enums*.
 
 Primitives
-   | 
+   |
    | Primitives consist of scalar numbers, single dimensional number
      arrays, and strings. Table `1 <#primitives>`__ contains the
      primitives that are available for use. Primitive numerical types
@@ -86,7 +86,7 @@ Primitives
      always arrays so the brackets are not valid. The ``void`` type is
      only used for functions that do not have a return value.
 
-   | 
+   |
 
    .. container::
       :name: primitives
@@ -94,27 +94,27 @@ Primitives
       .. table:: Robot Raconteur Primitives
 
          ======= ============= =======================================
-         Type    Bytes/Element Description                             
+         Type    Bytes/Element Description
          ======= ============= =======================================
-         void    0             Void                                    
-         double  8             Double precision floating point         
-         single  4             Single precision floating point         
-         int8    1             Signed 8-bit integer                    
-         uint8   1             Unsigned 8-bit integer                  
-         int16   2             Signed 16-bit integer                   
-         uint16  2             Unsigned 16-bit integer                 
-         int32   4             Signed 32-bit integer                   
-         uint32  4             Unsigned 32-bit integer                 
-         int64   8             Signed 64-bit integer                   
-         uint64  8             Unsigned 64-bit integer                 
-         string  1             UTF-8 string                            
-         cdouble 16            Complex double precision floating point 
-         csingle 8             Complex single precision floating point 
-         bool    1             Logical boolean                         
+         void    0             Void
+         double  8             Double precision floating point
+         single  4             Single precision floating point
+         int8    1             Signed 8-bit integer
+         uint8   1             Unsigned 8-bit integer
+         int16   2             Signed 16-bit integer
+         uint16  2             Unsigned 16-bit integer
+         int32   4             Signed 32-bit integer
+         uint32  4             Unsigned 32-bit integer
+         int64   8             Signed 64-bit integer
+         uint64  8             Unsigned 64-bit integer
+         string  1             UTF-8 string
+         cdouble 16            Complex double precision floating point
+         csingle 8             Complex single precision floating point
+         bool    1             Logical boolean
          ======= ============= =======================================
 
 Structures
-   | 
+   |
    | Structures are collections of value types; structures can contain
      primitives, other structures, maps, or multidimensional arrays.
      Example "experimental.create2" shows the
@@ -129,13 +129,13 @@ Structures
      the structure.
 
 Pods
-   | 
+   |
    | Pods (short for “plain-old-data”) are similar to structures, but
      are more restricted to ensure they always have the same size. All data
      stored in pods are stored contiguously (c-style), while structs use
      pointers to the data. Pods can only contain pods, arrays of pods
      (fixed or max length), namedarrays, and namedarrays arrays (fixed
-     or max length). Only types with fixed or maximum size may be used; 
+     or max length). Only types with fixed or maximum size may be used;
      strings,
      structs, lists, and maps may not be stored in pods. A pod is
      started with the keyword ``pod`` followed by the pod name. It is
@@ -148,7 +148,7 @@ Pods
      used with arrays and multi-dim arrays.
 
 Namedarrays
-   | 
+   |
    | Namedarrays are a union type designed to store numeric arrays that
      also have specific meanings attached to each entry. An example is a
      3D vector. The vector can either be viewed as a 3x1 array, or as a
@@ -170,7 +170,7 @@ Namedarrays
      arrays.
 
 Maps
-   | 
+   |
    | Maps can either be keyed by ``int32`` or ``string``. In other
      languages they would be called “Dictionary", “Hashtable", or “Map".
      The data is a value type (but not another map). They are created
@@ -182,7 +182,7 @@ Maps
      dimension of keying.
 
 Lists
-   | 
+   |
    | Lists follow similar rules to maps. They are created with curly
      braces. For example,
    | ``string{list}`` would be a list of strings. ``SensorPacket{list}``
@@ -191,7 +191,7 @@ Lists
      dimension of lists.
 
 Multidimensional Arrays
-   | 
+   |
    | The multidimensional arrays allow for the transmission of real or
      complex matrices of any dimension. They are defined by putting a
      “*" inside the brackets of an array. For example, ``double[*]``
@@ -219,7 +219,7 @@ Enums
       end
 
 varvalue
-   | 
+   |
    | In certain situations it may be desirable to put in a “wildcard"
      value type. The varvalue type allows this. Use with caution!
 
@@ -239,7 +239,7 @@ Callbacks, Wires, and Memories . They are defined between ``object`` and
 ``end``.
 
 Properties (Keyword: ``property``)
-   | 
+   |
    | Properties are similar to class variables (field). They can be
      written to (set) or read from (get). A property can take on any
      value type. A property is defined within an object with the keyword
@@ -253,7 +253,7 @@ Properties (Keyword: ``property``)
    and/or ``perclient``. See :doc:`MemberModifiers`.
 
 Functions (Keyword: ``function``)
-   | 
+   |
    | Functions take zero or more value type parameters, and return a
      single value type. The parameters of the functions must all have
      unique names. The return value of the function may be ``void`` if
@@ -307,7 +307,7 @@ Functions (Keyword: ``function``)
    Functions can use the ``urgent`` modifier. See See :doc:`MemberModifiers`.
 
 Events (Keyword: ``event``)
-   | 
+   |
    | Events provide a way for the service to notify clients that an
      event has occurred. When an event is fired, every client reference
      receives the event. How the event is handled is language-specific.
@@ -322,7 +322,7 @@ Events (Keyword: ``event``)
    Events can use the ``urgent`` modifier. See :doc:`MemberModifiers`.
 
 Object References (Keyword: ``objref``)
-   | 
+   |
    | A service consists of any number of objects. The *root object* is
      the object first referenced when connection to a service. The other
      object references are obtained through the ``objref`` members.
@@ -342,7 +342,7 @@ Object References (Keyword: ``objref``)
    definition “dot" the name of the object.
 
 Pipes (Keyword: ``pipe``)
-   | 
+   |
    | Pipes provide full-duplex first-in, first-out (FIFO) connections
      between the client and service. Pipes are unique to each client,
      and are indexed so that the same member can handle multiple
@@ -370,7 +370,7 @@ Pipes (Keyword: ``pipe``)
    ``unreliable``. See :doc:`MemberModifiers`.
 
 Callbacks (Keyword: ``callback``)
-   | 
+   |
    | Callbacks are essentially “reverse functions", meaning that they
      allow a service to call a function on a client. Because a service
      can have multiple clients connected, the service must specify which
@@ -380,7 +380,7 @@ Callbacks (Keyword: ``callback``)
    ``callback double addTwoNumbersOnClient(int32 a, double b)``
 
 Wires (Keyword: ``wire``)
-   | 
+   |
    | Wires are very similar to pipes, however rather than providing a
      stream of packets the wire is used when only the “most recent"
      value is of interest. It is similar in concept to a “port" in
@@ -391,10 +391,10 @@ Wires (Keyword: ``wire``)
      timestamp of when it is sent (from the sender’s clock). Wires are
      full duplex like pipes meaning it has two-way communication, but
      unlike pipes they are not indexed so there is only one connection
-     per client object reference, per connection. The wire allows for a 
+     per client object reference, per connection. The wire allows for a
      “WireConnection"
      pair to be created with one “WireConnection" on the client and the
-     other “WireConnection" on the service. The “WireConnection" is used 
+     other “WireConnection" on the service. The “WireConnection" is used
      by setting the
      “OutValue" to the current value. This sends the new value to the
      opposite “WireConnection", which updates its “InValue". The same
@@ -419,11 +419,11 @@ Wires (Keyword: ``wire``)
 
    ``wire double[2] currentposition``
 
-   Wires can use modifiers ``readonly`` or ``writeonly``. 
+   Wires can use modifiers ``readonly`` or ``writeonly``.
    See :doc:`MemberModifiers`.
 
 Memories (Keyword: ``memory``)
-   | 
+   |
    | Memories represent a random-access segment of numeric primitive
      arrays, numeric primitive multi-dim arrays, pod arrays, pod
      multi-dim arrays, namedarrays arrays, and namedarrays multi-dim
@@ -488,5 +488,5 @@ When naming things like service definitions, objects, structures, and
 members, certain rules must be followed. The name must consist of
 letters, numbers, and underscores (_). Names must start with a letter
 and may not start with any uppercase/lowercase combination of
-"RobotRaconteur", "RR", "get\_", "set\_", or "_async\_". Service 
+"RobotRaconteur", "RR", "get\_", "set\_", or "_async\_". Service
 names may not end with “_signed".

@@ -14,4 +14,3 @@ do
  echo ${second}
  @CMAKE_COMMAND@ -E compare_files ${first} ${second}
 done
-

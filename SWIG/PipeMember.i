@@ -61,9 +61,9 @@ RR_KEEP_GIL()
 RR_RELEASE_GIL()
 
 	boost::intrusive_ptr<MessageElement> ReceivePacketWait(int32_t timeout = RR_TIMEOUT_INFINITE);
-	boost::intrusive_ptr<MessageElement> PeekNextPacketWait(int32_t timeout = RR_TIMEOUT_INFINITE);	
+	boost::intrusive_ptr<MessageElement> PeekNextPacketWait(int32_t timeout = RR_TIMEOUT_INFINITE);
 	WrappedTryReceivePacketWaitResult TryReceivePacketWait(int32_t timeout = RR_TIMEOUT_INFINITE, bool peek = false);
-	
+
 	virtual void Close();
 RR_KEEP_GIL()
 	virtual int32_t GetIndex();
@@ -75,10 +75,10 @@ RR_KEEP_GIL()
 	//WrappedPipeEndpointDirector* RR_Director;
 	//WrappedPipeEndpointDirector* GetRRDirector();
 	void SetRRDirector(WrappedPipeEndpointDirector* director, int32_t id);
-	
+
 	bool IsUnreliable();
 	MemberDefinition_Direction Direction();
-	
+
 	virtual void AsyncSendPacket(const boost::intrusive_ptr<RobotRaconteur::MessageElement>& packet, AsyncUInt32ReturnDirector* handler, int32_t id);
 	void AsyncClose(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
@@ -88,20 +88,20 @@ RR_KEEP_GIL()
 };
 
 %nodefaultctor WrappedPipeClient;
-class WrappedPipeClient 
+class WrappedPipeClient
 {
-public:	
+public:
 
 RR_RELEASE_GIL()
 
 	virtual boost::shared_ptr<RobotRaconteur::WrappedPipeEndpoint> Connect(int32_t index);
-	
+
 RR_KEEP_GIL()
-	
+
 	void AsyncConnect(int32_t index, int32_t timeout, AsyncPipeEndpointReturnDirector* handler, int32_t id);
 	std::string GetMemberName();
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
-	
+
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
 
 	MemberDefinition_Direction Direction();
@@ -115,10 +115,10 @@ public:
 };
 
 %nodefaultctor WrappedPipeServer;
-class WrappedPipeServer 
+class WrappedPipeServer
 {
-public:	
-		
+public:
+
 	std::string GetMemberName();
 	boost::shared_ptr<RobotRaconteur::TypeDefinition> Type;
 	void SetWrappedPipeConnectCallback(WrappedPipeServerConnectDirector* director, int32_t id);
@@ -130,7 +130,7 @@ public:
 class WrappedPipeBroadcasterPredicateDirector
 {
 public:
-	virtual bool Predicate(uint32_t client_endpoint, int32_t index) = 0;		
+	virtual bool Predicate(uint32_t client_endpoint, int32_t index) = 0;
 	virtual ~WrappedPipeBroadcasterPredicateDirector() {}
 };
 
@@ -144,7 +144,7 @@ RR_RELEASE_GIL()
 	void SendPacket(const boost::intrusive_ptr<MessageElement>& packet);
 RR_KEEP_GIL()
 
-	void AsyncSendPacket(const boost::intrusive_ptr<MessageElement>& packet, AsyncVoidNoErrReturnDirector* handler, int32_t id);	
+	void AsyncSendPacket(const boost::intrusive_ptr<MessageElement>& packet, AsyncVoidNoErrReturnDirector* handler, int32_t id);
 
 	size_t GetActivePipeEndpointCount();
 
@@ -156,6 +156,3 @@ RR_KEEP_GIL()
 };
 
 }
-
-
-

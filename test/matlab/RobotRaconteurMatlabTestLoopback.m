@@ -30,5 +30,5 @@ catch e
     end
     pause(2)
     clear lib
-    quit(1)    
+    quit(1)
 end

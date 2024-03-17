@@ -46,7 +46,7 @@
 		Default: 10 MB
 
 		:rtype: int
-		""")	
+		""")
 	DisableMessage4 = property(lambda self: self._GetDisableMessage4(), lambda self, val: self._SetDisableMessage4(val),
 		doc = """
 		Set disable Message Format Version 4
@@ -68,7 +68,7 @@
 
 		:rtype: bool
 		""")
-		
+
 	DisableAsyncMessageIO = property(lambda self: self._GetDisableAsyncMessageIO(), lambda self, val: self._SetDisableAsyncMessageIO(val),
 		doc = """
 		Set if async message io is disabled
@@ -76,7 +76,7 @@
 		Async message io has better memory handling, at the
 		expense of slightly higher latency.
 
-        Async message io is not well supported 
+        Async message io is not well supported
         by this transport. Enabling async message io
         is not recommended.
 

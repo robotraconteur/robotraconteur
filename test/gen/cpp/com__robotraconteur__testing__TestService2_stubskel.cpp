@@ -61,6 +61,7 @@ std::string out(
 "	function double add_val(double v)\n"
 "\n"
 "end object\n"
+"\n"
 );
 return out;
 }

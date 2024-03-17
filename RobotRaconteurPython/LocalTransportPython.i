@@ -3,7 +3,7 @@
 %extend RobotRaconteur::LocalTransport
 {
 %pythoncode
-%{	
+%{
 	MaxMessageSize = property(lambda self: self._GetMaxMessageSize(), lambda self, size: self._SetMaxMessageSize(size),
 		doc = """
 		Set the maximum serialized message size

@@ -10,16 +10,16 @@ classdef RobotRaconteur
     %   The Robot Raconteur Matlab Toolbox contains the MATLAB implementation
     %   of the Robot Raconteur framework. The toolbox can be installed
     %   using the Add-On manager, by downloading from the MATLAB file
-    %   exchange, or by downloading from the Robot Raconteur GitHub 
+    %   exchange, or by downloading from the Robot Raconteur GitHub
     %   Releases page. The prefered method to install is using the
-    %   integrated Add-Ons manager. Click Add-Ons -> Search for 
+    %   integrated Add-Ons manager. Click Add-Ons -> Search for
     %   "Robot Raconteur" -> select "Robot Raconteur Matlab" ->
     %   click "Add from Github". Robot Raconteur will be automatically
     %   installed and added to the MATLAB path.
     %
     %   Introduction
     %
-    %   See the following files for introductory material for Robot 
+    %   See the following files for introductory material for Robot
     %   Raconteur Matlab:
     %
     %   <a href="matlab:help RobotRaconteurFramework">RobotRaconteurFramework</a>
@@ -61,10 +61,10 @@ classdef RobotRaconteur
     %     RobotRaconteurValueTypes, RobotRaconteurObject,
     %     RobotRaconteurGenerator, RobotRaconteurPipeEndpoint,
     %     RobotRaconteurWireConnection, RobotRaconteurMemoryClient,
-    %     RobotRaconteurServiceInfo2Subscription, 
+    %     RobotRaconteurServiceInfo2Subscription,
     %     RobotRaconteurServiceSubscription, RobotRaconteurPipeSubscription,
-    %     RobotRaconteurWireSubscription, 
-    
+    %     RobotRaconteurWireSubscription,
+
     methods
         function a=RobotRaconteur(c)
            valid_commands = {'ConnectService', 'DisconnectService', ...
@@ -89,19 +89,19 @@ classdef RobotRaconteur
            valid_commands2 = join(valid_commands, ', ');
            error(strcat('Valid commands are ', valid_commands2{1}));
         end
-    end    
-		
+    end
+
     methods(Static=true)
-        
+
         function ret=Connect(url,username,credentials)
         % Connect Deprecated, use ConnectService
 			if(nargin ==1)
-				ret=RobotRaconteurMex('Connect',url); 
+				ret=RobotRaconteurMex('Connect',url);
 			else
-				ret=RobotRaconteurMex('Connect',url,username,credentials); 
+				ret=RobotRaconteurMex('Connect',url,username,credentials);
 		    end
         end
-		
+
 		function obj=ConnectService(url,username,credentials)
         % RobotRaconteur.ConnectService Connect to a Robot Raconteur service.
         %    obj = ConnectService(url) Connect to a service at URL.
@@ -114,7 +114,7 @@ classdef RobotRaconteur
         %    for the transport to connect to the remote node, optional node
         %    information including NodeID and/or NodeName, and the name of
         %    the service. Example URLs:
-        %    
+        %
         %        rr+tcp://localhost:2354/?service=Create
         %        rr+tcp://localhost:2355/?service=Webcam
         %
@@ -127,14 +127,14 @@ classdef RobotRaconteur
         %
         %    Clients may also pass a username and credentials when
         %    connecting to authenticate with the service. The username is a
-        %    string, while credentials is a containers.Map with string 
+        %    string, while credentials is a containers.Map with string
         %    keys. See examples for an authenticated connect example.
         %
         %    Client connections will be closed when MATLAB exits, or can be
         %    disconnected using RobotRaconteur.DisconnectService
         %
         %    Examples:
-        %    
+        %
         %       % Connect to a service without authentication
         %       url = 'rr+tcp://localhost:2355?service=Webcam'
         %       c = RobotRaconteur.ConnectService(url)
@@ -150,19 +150,19 @@ classdef RobotRaconteur
         %       c = RobotRaconteur.ConnectService(url, username, password)
         %
         %    See also RobotRaconteur.DisconnectService
-        
+
 			if nargin ==1
-				obj=RobotRaconteurMex('Connect',url); 
+				obj=RobotRaconteurMex('Connect',url);
 			else
-				obj=RobotRaconteurMex('Connect',url,username,credentials); 
+				obj=RobotRaconteurMex('Connect',url,username,credentials);
 		    end
         end
-        
+
         function Disconnect(objref)
         % Disconnect Deprecated, use DisconnectService
            disconnect(objref);
         end
-        
+
 		function DisconnectService(objref)
         % RobotRaconteur.DisconnectService Disconnect a Robot Raconteur
         % service.
@@ -170,7 +170,7 @@ classdef RobotRaconteur
         %    connected service.
         %
         %    Example:
-        %        
+        %
         %       url = 'rr+tcp://localhost:2355?service=Webcam'
         %       c = RobotRaconteur.ConnectService(url)
         %
@@ -178,10 +178,10 @@ classdef RobotRaconteur
         %       RobotRaconteur.DisconnectService(c)
         %
         %    See also RobotRaconteur.ConnectService
-        
+
            disconnect(objref);
         end
-		
+
         function EnableEvents(obj)
         % RobotRaconteur.EnableEvents Enable events for a Robot Raconteur
         % client object
@@ -197,8 +197,8 @@ classdef RobotRaconteur
         %
         %       url = 'rr+tcp://localhost:2355?service=Webcam'
         %       c = RobotRaconteur.ConnectService(url)
-        %     
-        %       % Enable receiveng events 
+        %
+        %       % Enable receiveng events
         %       RobotRaconteur.EnableEvents(obj)
         %
         %       function Bump()
@@ -213,16 +213,16 @@ classdef RobotRaconteur
         %       for i=1:100
         %           %Process any pending events or callbacks
         %           RobotRaconteur.ProcessRequests();
-        %           pause(.1); 
+        %           pause(.1);
         %       end
         %
         %   See also RobotRaconteur.ConnectService
         %   RobotRaconteur.DisableEvents RobotRaconteurObject/addlistener
         %   RobotRaconteur.ProcessRequests
-        
+
            enableevents(obj);
         end
-        
+
         function DisableEvents(obj)
         % RobotRaconteur.DisableEvents Disable events for a Robot Raconteur
         % client object
@@ -235,19 +235,19 @@ classdef RobotRaconteur
         %
         % See also RobotRaconteur.EnableEvents
         % RobotRaconteur.ProcessRequests
-        
+
            disableevents(obj);
         end
-        
+
         function s=FindService(name)
         % FindService Deprecated, use RobotRaconteur.FindServiceByType
-           s=RobotRaconteurMex('FindService',name); 
+           s=RobotRaconteurMex('FindService',name);
         end
-        
+
 		function s=FindServiceByType(typename)
         % RobotRaconteur.FindServiceByType Use discovery to find
         % services by the type of the root object
-        %     discovered_services = FindServiceByType(typename) Find a 
+        %     discovered_services = FindServiceByType(typename) Find a
         %     service with a root object that is typename or implements
         %     typename.
         %
@@ -267,18 +267,18 @@ classdef RobotRaconteur
         %     ConnectionURL to ConnectService to create a connection.
         %
         %     Example:
-        %     
+        %
         %       % If the MATLAB toolbox was just loaded, update the detected
         %       % nodes
         %       RobotRaconter.UpdateDetectedNodes();
-        %     
+        %
         %       % Find the available webcames
         %       services =
         %       RobotRaconteur.FindServiceByType('experimental.createwebcam2.WebcamHost');
         %
         %       % Make sure a service was detected
         %       assert(length(services) > 0, 'No services detected')
-        %    
+        %
         %       % Connect to the first detected service
         %       c = RobotRaconteur.ConnectService(services{1}.ConnectionURL);
         %
@@ -289,10 +289,10 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.ConnectService
         %   RobotRaconteur.FindNodeByID RobotRaconteur.FindNodeByName
-        
-           s=RobotRaconteurMex('FindService',typename); 
+
+           s=RobotRaconteurMex('FindService',typename);
         end
-		
+
 		function s=FindNodeByID(nodeid)
         % RobotRaconteur.FindNodeByID Use discovery to find a
         % node with a specified NodeID
@@ -315,17 +315,17 @@ classdef RobotRaconteur
         %       % If the MATLAB toolbox was just loaded, update the detected
         %       % nodes
         %       RobotRaconter.UpdateDetectedNodes();
-        %     
+        %
         %       % Find the available nodes
         %       nodes =
         %       RobotRaconteur.FindNodeByID('e1d5d1a9-906d-4d3c-95cb-e035fce95464');
         %
         %    See also RobotRaconteur.FindNodeByName
         %    RobotRaconteur.FindServiceByType
-        
-           s=RobotRaconteurMex('FindNodeByID',nodeid); 
+
+           s=RobotRaconteurMex('FindNodeByID',nodeid);
         end
-		
+
 		function s=FindNodeByName(name)
         % RobotRaconteur.FindNodeByName Use discovery to find a
         % node with a specified NodeName
@@ -348,16 +348,16 @@ classdef RobotRaconteur
         %       % If the MATLAB toolbox was just loaded, update the detected
         %       % nodes
         %       RobotRaconter.UpdateDetectedNodes();
-        %     
+        %
         %       % Find the available nodes
         %       nodes =
         %       RobotRaconteur.FindNodeByName('experimental.createwebcam2');
         %
         %     See also RobotRaconteur.FindNodeByID
         %     RobotRaconteur.FindServiceByType
-           s=RobotRaconteurMex('FindNodeByName',name); 
+           s=RobotRaconteurMex('FindNodeByName',name);
         end
-		
+
 		function UpdateDetectedNodes()
         % RobotRaconteur.UpdateDetectedNodes() Update the detected node
         % cache
@@ -371,7 +371,7 @@ classdef RobotRaconteur
         %   cache.
         %
         %   Example:
-        %   
+        %
         %       RobotRaconteur.UpdateDiscoveredNodes()
         %       nodes = GetDetectedNodes()
         %
@@ -380,7 +380,7 @@ classdef RobotRaconteur
         %   RobotRaconteur.GetDetectedNodes
 			RobotRaconteurMex('UpdateDetectedNodes');
 		end
-		
+
 		function s=GetDetectedNodes()
         % RobotRaconteur.GetDetectedNodes Get the NodeIDs of the nodes
         % currently in the detected nodes cache
@@ -409,18 +409,18 @@ classdef RobotRaconteur
         %
         %    See also RobotRaconteur.UpdateDetectedNodes
         %    RobotRaconteur.FindNodeByID
-        
+
 			s=RobotRaconteurMex('GetDetectedNodes');
 		end
-		
+
         function ProcessRequests()
         % RobotRaconteur.ProcessRequests Process events, callbacks, and
         % asynchronous handlers
         %
         %    MATLAB is a single threaded environment. This means that
-        %    events coming from the service, callback requests, and 
-        %    asynchronous operations, cannot be handled in the background. 
-        %    MATLAB must use the main thread to process what would normally 
+        %    events coming from the service, callback requests, and
+        %    asynchronous operations, cannot be handled in the background.
+        %    MATLAB must use the main thread to process what would normally
         %    be background operations. (See "Cooperative Multitasking" for
         %    more information.) For Robot Raconteur clients, call
         %    RobotRaconteur.ProcessRequests repeatedly to process these
@@ -431,15 +431,15 @@ classdef RobotRaconteur
         %
         %    See also RobotRaconteur.EnableEvents
         %    RobotRaconteurObject/addlistener
-        
+
            RobotRaconteurMex('ProcessRequests');
         end
-        
+
         function RequestObjectLock(obj,type)
         % RobotRaconteur.RequestObjectLock(obj,type) Request an
-        % exclusive access lock to a service object. 
-        %   RobotRaconteur.RequestObjectLock(obj,type) Called by clients to 
-        %   request an exclusive lock on a service object and all 
+        % exclusive access lock to a service object.
+        %   RobotRaconteur.RequestObjectLock(obj,type) Called by clients to
+        %   request an exclusive lock on a service object and all
         %   subobjects (objrefs) in the service. The exclusive
         %   access lock will prevent other users ("User" lock) or client
         %   connections ("Session" lock) lock from interacting with objects.
@@ -453,7 +453,7 @@ classdef RobotRaconteur
         %       url = 'rr+tcp://localhost:2354/?service=Create'
         %       c = RobotRaconteur.ConnectService(url)
         %
-        %       % Request exclusive access to the robot from this client 
+        %       % Request exclusive access to the robot from this client
         %       % connection
         %       RobotRaconteur.RequestObjectLock(c, 'Client')
         %
@@ -465,7 +465,7 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.ReleaseObjectLock
         %   RobotRaconteur.ConnectService
-        
+
             if (nargin==1)
                 type='User';
             end
@@ -477,7 +477,7 @@ classdef RobotRaconteur
                 error('Unknown command')
             end
         end
-        
+
         function ReleaseObjectLock(obj)
         % RobotRaconteur.ReleaseObjectLock(obj) Release a lock previously
         % created with RobotRaconteur.RequestObjectLock
@@ -493,20 +493,20 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.RequestObjectLock
         %   RobotRaconteur.ConnectService
-        
+
             lockop(obj,'ReleaseUserLock');
         end
-        
+
         function MonitorEnter(obj)
-        % RobotRaconteur.MonitorEnter Creates a monitor lock on a 
+        % RobotRaconteur.MonitorEnter Creates a monitor lock on a
         % specified object.
-        %   RobotRaconteur.MonitorEnter(obj) Monitor locks are 
-        %   intendended for short operations that require 
-        %   guarding to prevent races, corruption, or other concurrency 
-        %   problems. Monitors emulate a single thread locking the service 
+        %   RobotRaconteur.MonitorEnter(obj) Monitor locks are
+        %   intendended for short operations that require
+        %   guarding to prevent races, corruption, or other concurrency
+        %   problems. Monitors emulate a single thread locking the service
         %   object.
         %
-        %   obj must be a object returned by RobotRaconteur.ConnectClient 
+        %   obj must be a object returned by RobotRaconteur.ConnectClient
         %   or an objref.
         %
         %   Example:
@@ -525,15 +525,15 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.MonitorExit
         %   RobotRaconteur.ConnectService
-        
-           lockop(obj,'MonitorEnter'); 
+
+           lockop(obj,'MonitorEnter');
         end
-        
+
         function MonitorExit(obj)
         % RobotRaconteur.MonitorExit Release a monitor lock
         % created with RobotRaconteur.MonitorEnter
-        %   RobotRaconteur.MonitorExit(obj)  Releases a previously created 
-        %   monitor lock. Locks are also released when client connections 
+        %   RobotRaconteur.MonitorExit(obj)  Releases a previously created
+        %   monitor lock. Locks are also released when client connections
         %   are closed, or when MATLAB is closed.
         %
         %   obj must be an object reference previously locked with
@@ -543,11 +543,11 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.MonitorEnter
         %   RobotRaconteur.ConnectService
-            lockop(obj,'MonitorExit'); 
+            lockop(obj,'MonitorExit');
         end
-        
+
         function types=GetPulledServiceTypes(obj)
-        % RobotRaconteur.GetPulledServiceTypes Get the names of 
+        % RobotRaconteur.GetPulledServiceTypes Get the names of
         % the service definitions pulled by the client
         %    types=RobotRaconteur.GetPulledServiceTypes(obj)
         %    Robot Raconteur uses service definitions, also referred to as
@@ -576,10 +576,10 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.GetPulledServiceType
         %   RobotRaconteur.ConnectService
-        
+
            types=getpulledservicetypes(obj);
         end
-        
+
         function robdef_text=GetPulledServiceType(obj,name)
         % types=RobotRaconteur.GetPulledServiceType(obj) Get a service
         %    definition pulled by the client
@@ -605,7 +605,7 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.GetPulledServiceTypes
         %   RobotRaconteur.ConnectService
-        
+
            robdef_text=getpulledservicetype(obj,name);
         end
 
@@ -619,17 +619,17 @@ classdef RobotRaconteur
         %
         %    Example:
         %
-        %    my_struct = RobotRaconteur.CreateStructure('experimental.my_definition.MyStructure'); 
-            
-            
+        %    my_struct = RobotRaconteur.CreateStructure('experimental.my_definition.MyStructure');
+
+
                empty_structure=createstructure(obj,structure_type);
             end
-        
+
 		function t=nowUTC()
         % RobotRaconteur.nowUTC The current time in UTC time zone.
-        %   t = RobotRaconteur.nowUTC Uses the internal node clock to get 
-        %   the current time in UTC.  While this will normally use the 
-        %   system clock, this may use simulation time in certain 
+        %   t = RobotRaconteur.nowUTC Uses the internal node clock to get
+        %   the current time in UTC.  While this will normally use the
+        %   system clock, this may use simulation time in certain
         %   circumstances
         %
         %   Example:
@@ -640,7 +640,7 @@ classdef RobotRaconteur
 			ts=RobotRaconteurMex('NowUTC');
 			t=datenum(datevec(ts,'yyyymmddTHHMMSS.FFF'));
 		end
-		
+
 		function t=clockUTC()
         % clockUTC Deprecated, use nowUTC
 			ts=RobotRaconteurMex('NowUTC');
@@ -651,7 +651,7 @@ classdef RobotRaconteur
 			ts=RobotRaconteurMex('NowNodeTime');
 			t=datenum(datevec(ts,'yyyymmddTHHMMSS.FFF'));
 		end
-		
+
 		function t=NodeSyncTimeUTC()
 			ts=RobotRaconteurMex('NodeSyncTimeUTC');
 			t=datenum(datevec(ts,'yyyymmddTHHMMSS.FFF'));
@@ -659,8 +659,8 @@ classdef RobotRaconteur
 
 		function Sleep(duration)
         % RobotRaconteur.Sleep Sleeps for a specified duration.
-        %   RobotRaconteur.Sleep(duration) Normally will sleep based on 
-        %   the system clock, but in certain circumstances will 
+        %   RobotRaconteur.Sleep(duration) Normally will sleep based on
+        %   the system clock, but in certain circumstances will
         %   use simulation time. duration is the length of time to sleep
         %   in seconds.
         %
@@ -673,10 +673,10 @@ classdef RobotRaconteur
         %       RobotRaconteur.Sleep(0.5)
         %
         %   See also sleep RobotRaconteur.Rate
-        
+
 			RobotRaconteurMex('Sleep',double(duration));
 		end
-		
+
 		function r=CreateRate(frequency)
         % r = RobotRaconteur.CreateRate Create a Rate with the specified
         % frequency
@@ -689,7 +689,7 @@ classdef RobotRaconteur
         %
         %   Example:
         %
-        %       % Create the rate with a frequency of 10 Hz       
+        %       % Create the rate with a frequency of 10 Hz
         %       r = RobotRacontur.CreateRate(10)
         %
         %       while true
@@ -700,20 +700,20 @@ classdef RobotRaconteur
         %           disp('loop!')
         %
         %  See also RobotRaconteurRate RobotRaconteur.Sleep
-        
+
 			r=RobotRaconteurRate(frequency);
 		end
-		
+
 		function subscription=SubscribeServiceByType(service_types,filter)
-        % RobotRaconteur.SubscribeServiceByType Subscribe to listen for 
+        % RobotRaconteur.SubscribeServiceByType Subscribe to listen for
         % available services and automatically connect.
-        %   subscription = SubscribeServiceByType(service_types,filter) A 
-        %   ServiceSubscription will track the availability of service 
+        %   subscription = SubscribeServiceByType(service_types,filter) A
+        %   ServiceSubscription will track the availability of service
         %   types and create connections when available.
         %
         %   service_types is a string or a cell array of strings of the
         %   service types, for example 'experimental.create2.Create'.
-        %   
+        %
         %   filter is a struct containing the following fields:
         %
         %       'ServiceNames':     A cell array of strings containing the
@@ -721,13 +721,13 @@ classdef RobotRaconteur
         %       'TransportSchemes': A cell array of strings containing
         %                           allowed transport schemes
         %       'MaxConnections':   The number of maximum connections allowed
-        %       'Predicate':        A callback function to check if a 
+        %       'Predicate':        A callback function to check if a
         %                           service should be connected
         %
-        %   The returned ServiceSubscription object has a number of 
-        %   functions available, including accessing object, pipe 
+        %   The returned ServiceSubscription object has a number of
+        %   functions available, including accessing object, pipe
         %   subscriptions, and wire subscriptions. See
-        %   <a href="matlab:help RobotRaconteurServiceSubscription">RobotRaconteurServiceSubscription</a> 
+        %   <a href="matlab:help RobotRaconteurServiceSubscription">RobotRaconteurServiceSubscription</a>
         %   for more information.
         %
         %   Example:
@@ -735,11 +735,11 @@ classdef RobotRaconteur
         %       %Subscribe to the service
         %       service_type = 'experimental.create2.Create'
         %       sub = RobotRaconteur.SubscribeServiceByType(service_type);
-        %       
+        %
         %       % Get the default client, waiting 5 seconds for the client
         %       % to be connected
         %       c = sub.GetDefaultClientWait(5);
-        %       
+        %
         %       % Client c is now available for use
         %       c.Drive(int16(100),int16(5000));
         %
@@ -750,24 +750,24 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.SubscribeService
         %   RobotRaconteur.SubscribeServiceInfo2 RobotRaconteurServiceInfo2Subscription
-        
+
             if(nargin ==1)
-				subscription=RobotRaconteurMex('SubscribeServiceByType',service_types); 
+				subscription=RobotRaconteurMex('SubscribeServiceByType',service_types);
             else
-				subscription=RobotRaconteurMex('SubscribeServiceByType',service_types,filter); 
+				subscription=RobotRaconteurMex('SubscribeServiceByType',service_types,filter);
             end
         end
-		
+
         function ret=SubscribeServiceInfo2(service_types,filter)
-        % RobotRaconteur.SubscribeServiceInfo2 Subscribe to listen for 
+        % RobotRaconteur.SubscribeServiceInfo2 Subscribe to listen for
         % available services and return connection info and metadata.
-        %   subscription = SubscribeServiceInfoByType(service_types,filter) 
-        %   A ServiceInfo2Subscription will track the availability of 
+        %   subscription = SubscribeServiceInfoByType(service_types,filter)
+        %   A ServiceInfo2Subscription will track the availability of
         %   service types and provide connection information and metadata.
         %
         %   service_types is a string or a cell array of strings of the
         %   service types, for example 'experimental.create2.Create'.
-        %   
+        %
         %   filter is a struct containing the following fields:
         %
         %       'ServiceNames':     A cell array of strings containing the
@@ -775,7 +775,7 @@ classdef RobotRaconteur
         %       'TransportSchemes': A cell array of strings containing
         %                           allowed transport schemes
         %       'MaxConnections':   The number of maximum connections allowed
-        %       'Predicate':        A callback function to check if a 
+        %       'Predicate':        A callback function to check if a
         %                           service should be connected
         %
         %   The returned ServiceInfo2Subscription object allows the user
@@ -786,10 +786,10 @@ classdef RobotRaconteur
         %       %Subscribe to the service info
         %       service_type = 'experimental.create2.Create'
         %       sub = RobotRaconteur.SubscribeServiceInfo2(service_type);
-        %       
+        %
         %       % Wait a few seconds for discovery to take place
         %       sleep(5)
-        %       
+        %
         %       % Print out information about the first detected service
         %       % The return from GetDetectedServiceInfo2 has the same
         %       % format as RobotRaconteur.FindServiceByType
@@ -800,16 +800,16 @@ classdef RobotRaconteur
         %
         %   See also RobotRaconteur.FindServiceByType
         %   RobotRaconteur.SubscribeService RobotRaconteurServiceInfo2Subscription
-        
+
             if(nargin ==1)
-				ret=RobotRaconteurMex('SubscribeServiceInfo2',service_types); 
+				ret=RobotRaconteurMex('SubscribeServiceInfo2',service_types);
             else
-				ret=RobotRaconteurMex('SubscribeServiceInfo2',service_types,filter); 
+				ret=RobotRaconteurMex('SubscribeServiceInfo2',service_types,filter);
             end
 		end
-		
+
 		function subscription=SubscribeService(url,username,credentials)
-        % RobotRaconteur.SubscribeService Subscribe to a service using one 
+        % RobotRaconteur.SubscribeService Subscribe to a service using one
         % or more URL. Used to create robust connections to services
         %    subscription = SubscribeService(url,username,credentials) is
         %    used to create a subscription to a single service at a given
@@ -818,16 +818,16 @@ classdef RobotRaconteur
         %    is lost. Wire and pipe subscriptions can be used to create
         %    robust connections to specific members. Use
         %    subscription.GetDefaultClient() or
-        %    subscription.GetDefaultClientWait(t) to retrieve the client 
+        %    subscription.GetDefaultClientWait(t) to retrieve the client
         %    object for use. Do not save this object, since it may cange if
         %    the subscription needs to create a new connection.
         %
         %    The arguments for RobotRaconteur.SubscribeService are the same
         %    as RobotRaconteur.ConnectService.
         %
-        %    The returned ServiceSubscription object has a number of 
-        %    functions available, including accessing object, pipe 
-        %    subscriptions, and wire subscriptions. See 
+        %    The returned ServiceSubscription object has a number of
+        %    functions available, including accessing object, pipe
+        %    subscriptions, and wire subscriptions. See
         %    <a href="matlab:help RobotRaconteurServiceSubscription">RobotRaconteurServiceSubscription</a> for more information.
         %
         %    Example:
@@ -835,11 +835,11 @@ classdef RobotRaconteur
         %       %Subscribe to the service
         %       url = 'rr+tcp://localhost:2354/?service=Create'
         %       sub = RobotRaconteur.SubscribeService(url);
-        %       
+        %
         %       % Get the default client, waiting 5 seconds for the client
         %       % to be connected
         %       c = sub.GetDefaultClientWait(5);
-        %       
+        %
         %       % Client c is now available for use
         %       c.Drive(int16(100),int16(5000));
         %
@@ -850,72 +850,72 @@ classdef RobotRaconteur
         %
         %    See also RobotRaconteur.ConnectService, RobotRaconteur.SubscribeServiceByType,
         %        RobotRaconteurServiceSubscription
-        %    
-        
+        %
+
 			if nargin ==1
-				subscription=RobotRaconteurMex('SubscribeService',url); 
+				subscription=RobotRaconteurMex('SubscribeService',url);
 			else
-				subscription=RobotRaconteurMex('SubscribeService',url,username,credentials); 
+				subscription=RobotRaconteurMex('SubscribeService',url,username,credentials);
 		    end
         end
-        
+
 		%Server Functions
-		
+
 		function n=GetServiceType(servicename)
         % Expert use only
 			n=RobotRaconteurMex('GetServiceType',servicename);
 		end
-		
+
 		function n=GetRegisteredServiceTypes()
         % Expert use only
 			n=RobotRaconteurMex('GetRegisteredServiceTypes');
 		end
-		
+
 		function RegisterServiceType(typestring)
         % Expert use only
 			RobotRaconteurMex('RegisterServiceType',typestring);
 		end
-		
+
 		function StartLocalClient(nodeid)
         % Expert use only
-			RobotRaconteurMex('StartLocalClient',nodeid);			
+			RobotRaconteurMex('StartLocalClient',nodeid);
         end
-		
+
 		function StartLocalServer(nodeid)
         % Expert use only
-			RobotRaconteurMex('StartLocalServer',nodeid);			
+			RobotRaconteurMex('StartLocalServer',nodeid);
         end
-        
+
         function StartTcpServer(port)
         % Expert use only
-           RobotRaconteurMex('StartTcpServer',int32(port)); 
+           RobotRaconteurMex('StartTcpServer',int32(port));
         end
-		
+
 		function StartTcpServerUsingPortSharer()
         % Expert use only
 			RobotRaconteurMex('StartTcpServerUsingPortSharer');
 		end
-		
+
 		function port=GetTcpListenPort()
         % Expert use only
 			port=RobotRaconteurMex('GetTcpListenPort');
 		end
-		
+
 		function ret=IsTcpPortSharerRunning()
         % Expert use only
 			ret=RobotRaconteurMex('IsTcpPortSharerRunning');
 		end
-		
+
 		function LoadTlsNodeCertificate()
         % Expert use only
 			RobotRaconteurMex('LoadTlsNodeCertificate');
 		end
-		
+
 		function ret=IsTlsNodeCertificateLoaded()
         % Expert use only
 			ret=RobotRaconteurMex('IsTlsNodeCertificateLoaded');
 		end
-						
+
 		function RegisterService(name, type, obj, security)
         % Expert use only
 			if (nargin==3)
@@ -924,13 +924,13 @@ classdef RobotRaconteur
 				RobotRaconteurMex('RegisterService', name, type, obj, security);
 			end
 		end
-		
+
 		function CloseService(name)
         % Expert use only
 			RobotRaconteurMex('CloseService', name);
-		
+
 		end
-		
+
 		function ProcessServerRequests(timeout)
         % Expert use only
 			if (nargin==0)
@@ -941,19 +941,19 @@ classdef RobotRaconteur
 				end
 				RobotRaconteurMex('ProcessServerRequests',timeout);
 			end
-		
+
 		end
-		
+
         function Shutdown()
         % RobotRaconteur.Shutdown Shuts down the Robot Raconteur node.
         %     The Robot Raconteur node is shut down on MATLAB exit or when
         %     the mex file is unloaded, so it is not normally necessary to
         %     call shutdown. Do not call unless specifically instructed.
-        
+
            RobotRaconteurMex('Shutdown');
            clear RobotRaconteurMex
         end
-		
+
 		function timeout=getRequestTimeout()
         % RobotRaconteur.getRequestTimeout Get the request timeout
         % in seconds
@@ -965,10 +965,10 @@ classdef RobotRaconteur
         %   seconds
         %
         %   Users do not normally need to adjust the request timeout
-        
+
 			timeout=RobotRaconteurMex('GetRequestTimeout');
 		end
-		
+
 		function setRequestTimeout(timeout)
         % RobotRaconteur.setRequestTimeout Set the request timeout
         % in seconds
@@ -980,15 +980,15 @@ classdef RobotRaconteur
         %   seconds.
         %
         %   Users do not normally need to adjust the request timeout
-        
+
 			RobotRaconteurMex('SetRequestTimeout',timeout);
 		end
-		
+
 		function timeout=getTransportTimeout()
         % Expert use only
 			timeout=RobotRaconteurMex('GetTransportTimeout');
 		end
-		
+
 		function setTransportTimeout(timeout)
         % Expert use only
 			RobotRaconteurMex('SetTransportTimeout',timeout);
@@ -1001,7 +1001,7 @@ classdef RobotRaconteur
         %     Available log levels are 'DISABLE', 'FATAL', 'ERROR',
         %     'WARNING', 'INFO', 'DEBUG', and 'TRACE'.
         %
-        %     Logs by default are sent to stderr on the system terminal. 
+        %     Logs by default are sent to stderr on the system terminal.
         %     If using Windows or a terminal is not available, use
         %     RobotRaconteur.OpenLogFile to save the log to a file.
         %
@@ -1018,7 +1018,7 @@ classdef RobotRaconteur
         %     'WARNING', 'INFO', 'DEBUG', and 'TRACE'. Use this function to
         %     change the log level.
         %
-        %     Logs by default are sent to stderr on the system terminal. 
+        %     Logs by default are sent to stderr on the system terminal.
         %     If using Windows or a terminal is not available, use
         %     RobotRaconteur.OpenLogFile to save the log to a file.
         %
@@ -1030,7 +1030,7 @@ classdef RobotRaconteur
         %     RobotRaconteur.OpenLogFile
 			RobotRaconteurMex('SetLogLevel',level);
 		end
-		
+
 		function OpenLogFile(filename)
         % RobotRaconteur.OpenLogFile Open a log file and direct log
         % messages to file instead of stderr
@@ -1049,7 +1049,7 @@ classdef RobotRaconteur
         %       RobotRaconteur.SetLogLevel('DEBUG');
         %
         %   See also RobotRaconteur.CloseLogFile RobotRaconteur.SetLogLevel
-        
+
 			RobotRaconteurMex('OpenLogFile',filename);
 		end
 
@@ -1065,10 +1065,9 @@ classdef RobotRaconteur
         %       % Do some activity that needs to be logged
         %
         %       RobotRaconteur.CloseLogFile()
-        
+
 			RobotRaconteurMex('CloseLogFile');
 		end
 	end
-    
-end
 
+end

@@ -11,7 +11,7 @@
 			stub=self._FindObjRef(name)
 		else:
 			stub=self._FindObjRef(name,str(index))
-		
+
 		return stub
 %}
 }

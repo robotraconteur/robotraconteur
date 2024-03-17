@@ -25,20 +25,20 @@ The asynchronous equivalent would be:
 
    def connect_handler(c,err):
        if (err is not None):
-           # If "err" is not None it means that an exception occurred.  
+           # If "err" is not None it means that an exception occurred.
            # "err" contains the exception object
            print "An error occured! " + str(err)
            return
        print "Got the connection!"
        # Now "c" is ready for use
-       
+
    # Start the connect process with a 5 second timeout
    c=RRN.AsyncConnectService('rr+tcp://localhost:2354?service=Create',None,None,None,connect_handler,5)
    # Do other tasks while connection is being created
 
 The form of “Async" functions is normally the same as synchronous functions but with “Async" prepended and two extra
 parameters: the handler function and the timeout. The handler function will take zero, one, or two arguments depending
-on the return arguments. The handler function can be any free module function or a bound instance method. The last 
+on the return arguments. The handler function can be any free module function or a bound instance method. The last
 argument is the timeout, which is
 in seconds. (Note: other language bindings use milliseconds for the timeout). The default for most is
 RR_TIMEOUT_INFINITE which means the function will never timeout. This is not recommended as it can cause a deadlock.
