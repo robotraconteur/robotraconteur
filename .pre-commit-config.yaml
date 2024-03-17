@@ -51,3 +51,11 @@ repos:
 #   hooks:
 #   - id: format-xml
 #     exclude: ^.*\.svg$
+- repo: local
+  hooks:
+  - id: dos2unix
+    name: dos2unix
+    entry: dos2unix
+    args: ["-n", "-o"]
+    files: '\.(c|cpp|h|hpp|java|cs|i|m|cmake|txt|css|js|ts|html|md|txt|py|yaml|yml|csproj|rst|py\.in|csproj\.in)$'
+    language: system
