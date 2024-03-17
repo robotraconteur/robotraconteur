@@ -1105,6 +1105,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v3
+    - name: apt
+      run: |
+        sudo apt update
+        sudo apt install -y dos2unix
     - uses: pre-commit/action@v3.0.1
   clang-tidy:
     runs-on: ubuntu-20.04
