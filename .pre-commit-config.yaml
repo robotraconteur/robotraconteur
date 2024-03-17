@@ -46,3 +46,8 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2', '--preserve-quotes']
     exclude: ^\.clang.*$
+# - repo: https://github.com/efrecon/pre-commit-hook-lxml
+#   rev: v0.1.1
+#   hooks:
+#   - id: format-xml
+#     exclude: ^.*\.svg$
