@@ -443,8 +443,7 @@ code_formatting_ubuntu_focal_amd64:
   - ubuntu-focal
   - amd64
   script:
-  - ./tools/formatting/run-all-formatting
-  - git diff --name-only --exit-code
+  - python3 -m pre_commit run --all
 clang_tidy_ubuntu_focal_amd64:
   stage: build
   when: manual
@@ -473,7 +472,7 @@ run_code_formatting:
   - amd64
   script:
   - export GIT_SSL_CAINFO="$CI_SERVER_TLS_CA_FILE"
-  - ./tools/formatting/run-all-formatting
+  - python3 -m pre_commit run --all
   - git diff-index --quiet HEAD || git -c "user.name=John Wason" -c "user.email=wason@wasontech.com" commit -a -m "Code formatting"
   - git push "https://code_formatting:$CODE_FORMATTING_TOKEN@$CI_SERVER_HOST:$CI_SERVER_PORT/$CI_PROJECT_PATH.git" HEAD:$CI_COMMIT_BRANCH
 
