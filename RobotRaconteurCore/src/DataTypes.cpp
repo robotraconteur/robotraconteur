@@ -22,6 +22,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include <boost/range/algorithm.hpp>
+#include <boost/regex.hpp>
 
 namespace RobotRaconteur
 {
@@ -547,6 +548,7 @@ ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
             in.read(in2_c.data(), 2);
             if (in.fail())
             {
+                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(), "Invalid encoded index: " << index);
                 throw InvalidArgumentException("Invalid encoded index");
             }
             in2_c[2] = 0;
@@ -556,6 +558,7 @@ ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
             in2 >> std::hex >> v;
             if (in2.fail() || !in2.eof())
             {
+                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(), "Invalid encoded index: " << index);
                 throw InvalidArgumentException("Invalid encoded index");
             }
             out.put((char)v);
@@ -762,6 +765,103 @@ std::ostream& operator<<(std::ostream& out, const MessageStringRef& str)
 {
     out << str.str();
     return out;
+}
+
+ServicePathSegment::ServicePathSegment() {}
+
+ServicePathSegment::ServicePathSegment(const std::string& name, const boost::optional<std::string>& index)
+: name(name), index(index)
+{
+}
+
+bool operator==(const ServicePathSegment& lhs, const ServicePathSegment& rhs)
+{
+    if (lhs.name != rhs.name)
+    {
+        return false;
+    }
+    if (lhs.index && rhs.index)
+    {
+        return *lhs.index == *rhs.index;
+    }
+    if (!lhs.index && !rhs.index)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool operator!=(const ServicePathSegment& lhs, const ServicePathSegment& rhs)
+{
+    return !(lhs == rhs);
+}
+
+std::string EncodeServicePathIndex(const std::string& index)
+{
+    return detail::encode_index(index);
+}
+
+std::string DecodeServicePathIndex(const std::string& index)
+{
+    return detail::decode_index(index);
+}
+
+std::vector<ServicePathSegment> ParseServicePath(const std::string& path)
+{
+    static boost::regex segment_regex("^([a-zA-Z0-9_]+)(?:\\[([a-zA-Z0-9_%]+)\\])?$");
+    std::vector<ServicePathSegment> segments;
+    std::vector<std::string> segments1;
+    boost::split(segments1, path, boost::is_any_of("."));
+    for (auto segment : segments1)
+    {
+        boost::smatch match;
+        if (boost::regex_match(segment, match, segment_regex))
+        {
+            if (match[2].matched)
+            {
+                segments.push_back(ServicePathSegment(match[1], DecodeServicePathIndex(match[2])));
+            }
+            else
+            {
+                segments.push_back(ServicePathSegment(match[1], boost::optional<std::string>()));
+            }
+        }
+        else
+        {
+            ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(), "Invalid service path segment: " << segment);
+            throw InvalidArgumentException("Invalid service path segment");
+        }
+    }
+    return segments;
+}
+
+std::string BuildServicePath(const std::vector<ServicePathSegment>& segments)
+{
+    static boost::regex segment_name_regex("^[a-zA-Z](?:\\w*[a-zA-Z0-9])?$");
+    std::vector<std::string> segments1;
+    bool first=true;
+    BOOST_FOREACH(const ServicePathSegment& segment, segments)
+    {
+        if (!boost::regex_match(segment.name, segment_name_regex))
+        {
+            if (!(first && segment.name == "*"))
+            {
+                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(), "Invalid service path segment name: " << segment.name);
+                throw InvalidArgumentException("Invalid service path segment name");
+            }
+        }
+
+        first=false;
+        if (segment.index)
+        {
+            segments1.push_back(segment.name + "[" + EncodeServicePathIndex(*segment.index) + "]");
+        }
+        else
+        {
+            segments1.push_back(segment.name);
+        }
+    }
+    return boost::join(segments1, ".");
 }
 
 } // namespace RobotRaconteur
