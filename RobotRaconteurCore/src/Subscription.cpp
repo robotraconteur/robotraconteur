@@ -3488,7 +3488,7 @@ bool SubObjectSubscription::TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>&
 
 static void SubObjectSubscription_AsyncGetDefaultClientBase2(RR_SHARED_PTR<RRObject> client, RR_SHARED_PTR<RobotRaconteurException> err,
     boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler, 
-    RR_WEAK_PTR<RobotRaconteurNode> node, int32_t timeout, boost::string_ref servicepath, boost::string_ref objecttype)
+    RR_WEAK_PTR<RobotRaconteurNode> node, int32_t timeout, const std::string& servicepath, const std::string& objecttype)
 {
     if (err)
     {
@@ -3500,24 +3500,24 @@ static void SubObjectSubscription_AsyncGetDefaultClientBase2(RR_SHARED_PTR<RRObj
         RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
         if (!client)
         {
-            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "", "ServiceSubscription client cast failed");
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
             detail::InvokeHandlerWithException(node, handler, RR_MAKE_SHARED<InvalidOperationException>("Internal error: ServiceStub cast failed"));
             return;
         }
 
         RR_SHARED_PTR<ClientContext> c = s->GetContext();
-        std::string service_path1 = servicepath.to_string();
+        std::string service_path1 = servicepath;
 
         if (boost::starts_with(service_path1, "*."))
         {
             boost::replace_first(service_path1, "*", s->GetContext()->GetServiceName());
         }
 
-        s->AsyncFindObjRef(service_path1, objecttype, boost::bind(handler, RR_BOOST_PLACEHOLDERS(_1), RR_SHARED_PTR<RobotRaconteurException>()), timeout);
+        c->AsyncFindObjRef(service_path1, objecttype, boost::bind(handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), timeout);
     }
     catch (std::exception& exp)
     {
-        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "", "ServiceSubscription FindObjRef failed: " << exp.what());
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription FindObjRef failed: " << exp.what());
         detail::InvokeHandlerWithException(node, handler, exp);
         return;    
     }
