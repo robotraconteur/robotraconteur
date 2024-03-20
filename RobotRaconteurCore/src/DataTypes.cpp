@@ -510,6 +510,7 @@ namespace detail
 ROBOTRACONTEUR_CORE_API std::string encode_index(boost::string_ref index)
 {
     std::stringstream out;
+    out << std::setfill('0');
 
     for (size_t i = 0; i < index.length(); i++)
     {
