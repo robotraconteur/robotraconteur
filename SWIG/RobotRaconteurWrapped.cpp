@@ -4084,6 +4084,14 @@ void WrappedServiceSubscription::UpdateServiceByType(const std::vector<std::stri
     subscription->UpdateServiceByType(service_types, filter2);
 }
 
+RR_SHARED_PTR<WrappedSubObjectSubscription> WrappedServiceSubscription::SubscribeSubObject(const std::string& service_path, const std::string& objecttype)
+{
+    RR_SHARED_PTR<SubObjectSubscription> o = subscription->SubscribeSubObject(service_path, objecttype);
+    RR_SHARED_PTR<WrappedSubObjectSubscription> o2 = RR_MAKE_SHARED<WrappedSubObjectSubscription>(o);
+    return o2;
+
+}
+
 WrappedWireSubscription::WrappedWireSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent,
                                                  const std::string& membername, const std::string& servicepath)
     : WireSubscriptionBase(parent, membername, servicepath)
@@ -4300,6 +4308,55 @@ RR_SHARED_PTR<WrappedServiceStub> WrappedPipeSubscription_send_iterator::GetStub
 }
 
 WrappedPipeSubscription_send_iterator::~WrappedPipeSubscription_send_iterator() {}
+
+WrappedSubObjectSubscription::WrappedSubObjectSubscription(const RR_SHARED_PTR<SubObjectSubscription>& subscription)
+{
+    this->subscription = subscription;
+}
+
+RR_SHARED_PTR<WrappedServiceStub> WrappedSubObjectSubscription::GetDefaultClient()
+{
+    return rr_cast<WrappedServiceStub>(subscription->GetDefaultClient<RRObject>());
+}
+
+WrappedServiceSubscription_TryDefaultClientRes WrappedSubObjectSubscription::TryGetDefaultClient()
+{
+    WrappedServiceSubscription_TryDefaultClientRes o;
+    o.res = subscription->TryGetDefaultClient<WrappedServiceStub>(o.client);
+    return o;
+}
+
+RR_SHARED_PTR<WrappedServiceStub> WrappedSubObjectSubscription::GetDefaultClientWait(int32_t timeout)
+{
+    return rr_cast<WrappedServiceStub>(subscription->GetDefaultClientWait<RRObject>(timeout));
+}
+
+WrappedServiceSubscription_TryDefaultClientRes WrappedSubObjectSubscription::TryGetDefaultClientWait(int32_t timeout)
+{
+    WrappedServiceSubscription_TryDefaultClientRes o;
+    o.res = subscription->TryGetDefaultClientWait<WrappedServiceStub>(o.client, timeout);
+    return o;
+}
+
+void WrappedSubObjectSubscription::AsyncGetDefaultClient(int32_t timeout, AsyncStubReturnDirector* handler, int32_t id)
+{
+    boost::shared_ptr<AsyncStubReturnDirector> sphandler(
+        handler, boost::bind(&ReleaseDirector<AsyncStubReturnDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
+    subscription->AsyncGetDefaultClient<RRObject>(
+        boost::bind(&AsyncStubReturn_handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), sphandler),
+        timeout);
+}
+
+void WrappedSubObjectSubscription::Close()
+{
+    subscription->Close();
+}
+
+RR_SHARED_PTR<RobotRaconteurNode> WrappedSubObjectSubscription::GetNode()
+{
+    return subscription->GetNode();
+}
+
 
 std::vector<ServiceSubscriptionClientID> WrappedServiceInfo2SubscriptionServicesToVector(
     std::map<ServiceSubscriptionClientID, ServiceInfo2Wrapped>& infos)

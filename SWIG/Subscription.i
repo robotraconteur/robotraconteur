@@ -20,6 +20,7 @@
 %shared_ptr(RobotRaconteur::WrappedServiceSubscription);
 %shared_ptr(RobotRaconteur::WrappedPipeSubscription);
 %shared_ptr(RobotRaconteur::WrappedWireSubscription);
+%shared_ptr(RobotRaconteur::WrappedSubObjectSubscription);
 
 %rename (WrappedServiceSubscriptionClientID) ServiceSubscriptionClientID;
 
@@ -233,6 +234,8 @@ namespace RobotRaconteur
 		void UpdateServiceURL(const std::string& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "", bool close_connected = false);
 		void UpdateServiceByType(const std::vector<std::string>& service_types, const boost::shared_ptr<WrappedServiceSubscriptionFilter>& filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>());
 
+		boost::shared_ptr<RobotRaconteur::WrappedSubObjectSubscription> SubscribeSubObject(const std::string& service_path, const std::string& objecttype);
+
 	};
 
 	class WrappedWireSubscriptionDirector
@@ -320,6 +323,26 @@ namespace RobotRaconteur
 		boost::shared_ptr<TypeDefinition> GetType();
 		boost::shared_ptr<WrappedServiceStub> GetStub();
 		virtual ~WrappedPipeSubscription_send_iterator();
+	};
+
+	%nodefaultctor WrappedSubObjectSubscription;
+	class WrappedSubObjectSubscription
+	{
+	public:
+
+		boost::shared_ptr<RobotRaconteur::WrappedServiceStub> GetDefaultClient();
+
+		WrappedServiceSubscription_TryDefaultClientRes TryGetDefaultClient();
+
+		boost::shared_ptr<RobotRaconteur::WrappedServiceStub> GetDefaultClientWait(int32_t timeout = -1);
+
+		WrappedServiceSubscription_TryDefaultClientRes TryGetDefaultClientWait(int32_t timeout = -1);
+
+		void AsyncGetDefaultClient(int32_t timeout, AsyncStubReturnDirector* handler, int32_t id);
+
+		void Close();
+
+		boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> GetNode();
 	};
 
 	std::vector<ServiceSubscriptionClientID> WrappedServiceInfo2SubscriptionServicesToVector(std::map<ServiceSubscriptionClientID, ServiceInfo2Wrapped >& infos);

@@ -1930,6 +1930,7 @@ class WrappedServiceSubscriptionDirector
 
 class WrappedWireSubscription;
 class WrappedPipeSubscription;
+class WrappedSubObjectSubscription;
 
 class WrappedServiceSubscription_TryDefaultClientRes
 {
@@ -1989,6 +1990,8 @@ class WrappedServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<WrappedServ
     void UpdateServiceByType(const std::vector<std::string>& service_types,
                              const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter =
                                  RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
+
+    RR_SHARED_PTR<WrappedSubObjectSubscription> SubscribeSubObject(const std::string& service_path, const std::string& objecttype);
 
   protected:
     RR_SHARED_PTR<ServiceSubscription> subscription;
@@ -2106,6 +2109,29 @@ class WrappedPipeSubscription_send_iterator
     RR_SHARED_PTR<TypeDefinition> GetType();
     RR_SHARED_PTR<WrappedServiceStub> GetStub();
     virtual ~WrappedPipeSubscription_send_iterator();
+};
+
+class WrappedSubObjectSubscription
+{
+  protected:
+    RR_SHARED_PTR<SubObjectSubscription> subscription;
+
+  public:
+    WrappedSubObjectSubscription(const RR_SHARED_PTR<SubObjectSubscription>& subscription);
+
+    RR_SHARED_PTR<WrappedServiceStub> GetDefaultClient();
+
+    WrappedServiceSubscription_TryDefaultClientRes TryGetDefaultClient();
+
+    RR_SHARED_PTR<WrappedServiceStub> GetDefaultClientWait(int32_t timeout = -1);
+
+    WrappedServiceSubscription_TryDefaultClientRes TryGetDefaultClientWait(int32_t timeout = -1);
+
+    void AsyncGetDefaultClient(int32_t timeout, AsyncStubReturnDirector* handler, int32_t id);
+
+    void Close();
+
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 };
 
 std::vector<ServiceSubscriptionClientID> WrappedServiceSubscriptionClientsToVector(
