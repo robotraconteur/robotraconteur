@@ -57,6 +57,7 @@ class PipeEndpoint;
 class ROBOTRACONTEUR_CORE_API PipeSubscriptionBase;
 template <typename T>
 class PipeSubscription;
+class ROBOTRACONTEUR_CORE_API SubObjectSubscription;
 
 /**
  * @brief Subscription filter node information
@@ -582,6 +583,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
     friend class WireSubscriptionBase;
     friend class PipeSubscriptionBase;
     friend class detail::ServiceSubscription_custom_member_subscribers;
+    friend class SubObjectSubscription;
 
     typedef boost::signals2::connection event_connection;
 
@@ -760,7 +762,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * for RobotRaconteurNode::SubscribeService()
      *
      * Clients using GetDefaultClient() should not store a reference to the client. It should instead
-     * call GetDefaultClient() right before using the client to make sure the most recenty connection
+     * call GetDefaultClient() right before using the client to make sure the most recently connection
      * is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
      * of pipes and wires can be managed automatically.
      *
@@ -928,6 +930,24 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
     void UpdateServiceByType(
         const std::vector<std::string>& service_types,
         const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
+
+    /**
+     * @brief Creates a sub object subscription
+     * 
+     * Sub objects are objects within a service that are not the root object. Sub objects are typically
+     * referenced using objref members, however they can also be referenced using a service path.
+     * The SubObjectSubscription class is used to automatically access sub objects of the default client.
+     * 
+     * The service path is broken up into segments using periods. See the Robot Raconter
+     * documentation for more information. The BuildServicePath() function can be used to assist
+     * building service paths. The first level of the* service path may be "*" to match any service name. 
+     * For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
+     * 
+     * @param servicepath The service path of the sub object
+     * @param objecttype Optional object type to use for the sub object
+     * @return RR_SHARED_PTR<SubObjectSubscription> The sub object subscription
+     */
+    RR_SHARED_PTR<SubObjectSubscription> SubscribeSubObject(boost::string_ref servicepath, boost::string_ref objecttype = "");
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
@@ -1503,6 +1523,177 @@ class PipeSubscription : public PipeSubscriptionBase
     RR_OVIRTUAL bool isempty_PipePacketReceived() RR_OVERRIDE { return pipe_packet_received.empty(); }
 };
 
+/**
+ * @brief Subscription for sub objects of the default client
+ * 
+ * SubObjectSubscription is used to access sub objects of the default client. Sub objects are objects within a service
+ * that are not the root object. Sub objects are typically referenced using objref members, however they can also be
+ * referenced using a service path. The SubObjectSubscription class is used to automatically access sub objects of the
+ * default client.
+ * 
+ * Use ServiceSubscription::SubscribeSubObject() to create a SubObjectSubscription.
+ * 
+ * This class should not be used to access Pipe or Wire members. Use the ServiceSubscription::SubscribePipe() and
+ * ServiceSubscription::SubscribeWire() functions to access Pipe and Wire members.
+ * 
+ */
+class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FROM_THIS<SubObjectSubscription>,
+                                                     private boost::noncopyable
+{
+
+  public:
+    friend class ServiceSubscription;
+
+    virtual ~SubObjectSubscription() {}
+
+    /**
+     * @brief Get the "default client" sub object
+     * 
+     * The sub object is retrieved from the default client. The default client is the first client
+     * that connected to the service. If no clients are currently connected, an exception is thrown.
+     * 
+     * Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+     * each time the client is needed.
+     * 
+     * @tparam T The type of the sub object
+     * @return RR_SHARED_PTR<T> The sub object
+     */
+    template <typename T>
+    RR_SHARED_PTR<T> GetDefaultClient()
+    {
+        return rr_cast<T>(GetDefaultClientBase());
+    }
+
+    /**
+     * @brief Try getting the "default client" sub object
+     * 
+     * Same as GetDefaultClient(), but returns a bool for success or failure instead of throwing
+     * an exception on failure.
+     * 
+     * @tparam T The type of the sub object
+     * @param client_out [out] The sub object
+     * @return true The sub object was retrieved successfully
+     * @return false The sub object could not be retrieved
+     */
+    template <typename T>
+    bool TryGetDefaultClient(RR_SHARED_PTR<T>& client_out)
+    {
+        RR_SHARED_PTR<RRObject> c;
+        if (!TryGetDefaultClientBase(c))
+        {
+            return false;
+        }
+        RR_SHARED_PTR<T> c1 = RR_DYNAMIC_POINTER_CAST<T>(c);
+        if (!c1)
+            return false;
+
+        client_out = c1;
+        return true;
+    }
+
+    /**
+     * @brief Get the "default client" sub object, waiting for a specified timeout
+     * 
+     The sub object is retrieved from the default client. The default client is the first client
+     * that connected to the service. If no clients are currently connected, an exception is thrown.
+     * 
+     * Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+     * each time the client is needed.
+     * 
+     * This function blocks the current thread until the client is retrieved or the timeout is reached.
+     * 
+     * @tparam T The type of the sub object
+     * @param timeout The timeout in milliseconds
+     * @return RR_SHARED_PTR<T> The sub object
+     */
+    template <typename T>
+    RR_SHARED_PTR<T> GetDefaultClientWait(int32_t timeout = RR_TIMEOUT_INFINITE)
+    {
+        return rr_cast<T>(GetDefaultClientWaitBase(timeout));
+    }
+
+    /**
+     * @brief Try getting the "default client" sub object, waiting for a specified timeout
+     * 
+     * Same as GetDefaultClientWait(), but returns a bool for success or failure instead of throwing
+     * an exception on failure.
+     * 
+     * @tparam T The type of the sub object
+     * @param client_out [out] The sub object
+     * @param timeout The timeout in milliseconds
+     * @return true The sub object was retrieved successfully
+     * @return false The sub object could not be retrieved
+     */
+    template <typename T>
+    bool TryGetDefaultClientWait(RR_SHARED_PTR<T>& client_out, int32_t timeout = RR_TIMEOUT_INFINITE)
+    {
+        RR_SHARED_PTR<RRObject> c;
+        if (!TryGetDefaultClientWaitBase(c, timeout))
+        {
+            return false;
+        }
+        RR_SHARED_PTR<T> c1 = RR_DYNAMIC_POINTER_CAST<T>(c);
+        if (!c1)
+            return false;
+
+        client_out = c1;
+        return true;
+    }
+
+    /**
+     * @brief Asynchronously get the "default client" sub object
+     * 
+     * Asynchronous version of GetDefaultClient()
+     * 
+     * The handler function is called when the client is retrieved or an error occurs.
+     * 
+     * @tparam T The type of the sub object
+     * @param handler The handler function
+     * @param timeout The timeout in milliseconds
+     */
+    template <typename T>
+    void AsyncGetDefaultClient(
+        boost::function<void(const RR_SHARED_PTR<T>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE)
+    {
+        AsyncGetDefaultClientBase(boost::bind(&detail::AsyncGetDefaultClient_handler_adapter<T>, handler,
+                                              RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+                                  timeout);
+    }
+    
+    void Init();
+
+    /**
+     * @brief Closes the sub object subscription
+     *
+     * Sub object subscriptions are automatically closed when the parent ServiceSubscription is closed
+     * or when the node is shut down.
+     *
+     */
+    void Close();
+
+    SubObjectSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref servicepath, boost::string_ref objecttype);
+
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
+  protected:    
+
+    RR_SHARED_PTR<RRObject> GetDefaultClientBase();
+    bool TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out);
+
+    RR_SHARED_PTR<RRObject> GetDefaultClientWaitBase(int32_t timeout = RR_TIMEOUT_INFINITE);
+    bool TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>& client_out, int32_t timeout = RR_TIMEOUT_INFINITE);
+
+    void AsyncGetDefaultClientBase(
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE);
+
+    RR_WEAK_PTR<ServiceSubscription> parent;
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+    std::string servicepath;
+    std::string objecttype;
+};
+
 namespace detail
 {
 class ROBOTRACONTEUR_CORE_API WireSubscription_send_iterator
@@ -1564,7 +1755,8 @@ using PipeSubscriptionPtr = RR_SHARED_PTR<PipeSubscription<T> >;
 /** @brief Convenience alias for WireSubscription shared_ptr */
 template <typename T>
 using WireSubscriptionPtr = RR_SHARED_PTR<WireSubscription<T> >;
-
+/** @brief Convenience alias for SubObjectSubscription shared_ptr */
+using SubObjectSubscriptionPtr = RR_SHARED_PTR<SubObjectSubscription>;
 #endif
 
 } // namespace RobotRaconteur
