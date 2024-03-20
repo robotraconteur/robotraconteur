@@ -784,11 +784,7 @@ bool operator==(const ServicePathSegment& lhs, const ServicePathSegment& rhs)
     {
         return *lhs.index == *rhs.index;
     }
-    if (!lhs.index && !rhs.index)
-    {
-        return true;
-    }
-    return false;
+    return (!lhs.index && !rhs.index);
 }
 
 bool operator!=(const ServicePathSegment& lhs, const ServicePathSegment& rhs)
