@@ -812,7 +812,7 @@ std::vector<ServicePathSegment> ParseServicePath(const std::string& path)
     std::vector<ServicePathSegment> segments;
     std::vector<std::string> segments1;
     boost::split(segments1, path, boost::is_any_of("."));
-    for (auto segment : segments1)
+    BOOST_FOREACH (const std::string& segment, segments1)
     {
         boost::smatch match;
         if (boost::regex_match(segment, match, segment_regex))
