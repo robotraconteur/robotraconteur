@@ -92,6 +92,32 @@ public:
 
 namespace RobotRaconteur
 {
+struct ServicePathSegment
+{
+    ServicePathSegment();
+    ServicePathSegment(const std::string& name);
+	ServicePathSegment(const std::string& name, const std::string& index);
+
+	std::string name;
+    boost::optional<std::string> index;
+};
+}
+
+%template(ServicePathSegments) std::vector<RobotRaconteur::ServicePathSegment>;
+
+namespace RobotRaconteur
+{
+std::string EncodeServicePathIndex(const std::string& index);
+
+std::string DecodeServicePathIndex(const std::string& index);
+
+std::vector<ServicePathSegment> ParseServicePath(const std::string& path);
+
+std::string BuildServicePath(const std::vector<RobotRaconteur::ServicePathSegment>& segments);
+}
+
+namespace RobotRaconteur
+{
 namespace detail
 {
 class MultiDimArray_CalculateCopyIndicesIter

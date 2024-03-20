@@ -1785,3 +1785,67 @@ AND, OR, NOR, or NAND logic. Other groups can be nested, to allow for complex co
    :param node: (optional) The node that will use the transport. Default is the singleton node
    :type node: RobotRaconteur.RobotRaconteurNode
 """
+
+%feature("docstring") RobotRaconteur::ServicePathSegment """
+Service path segment containing a name and an optional index
+"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::name """The name of the segment"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::index """The index of the segment"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::ServicePathSegment() """
+Construct a new ServicePathSegment
+"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::ServicePathSegment(const std::string& name) """
+Construct a new ServicePathSegment with a name
+
+:param name: The name of the segment
+:type name: str
+"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::ServicePathSegment(const std::string& name, const std::string& index) """
+Construct a new ServicePathSegment with a name and an index
+
+:param name: The name of the segment
+:type name: str
+:param index: The index of the segment
+:type index: str
+"""
+
+%feature("docstring") RobotRaconteur::EncodeServicePathIndex(const std::string& index) """
+Encode a service path index for use in a Robot Raconteur service path
+
+:param index: The index to encode
+:type index: str
+:return: The encoded index
+:rtype: str
+"""
+
+%feature("docstring") RobotRaconteur::DecodeServicePathIndex(const std::string& index) """
+Decode a service path index from a Robot Raconteur service path
+
+:param index: The index to decode
+:type index: str
+:return: The decoded index
+:rtype: str
+"""
+
+%feature("docstring") RobotRaconteur::ParseServicePath(const std::string& path) """
+Split a service path into segments
+
+:param path: The path to split
+:type path: str
+:return: The segments of the path
+:rtype: List[RobotRaconteur.ServicePathSegment]
+"""
+
+%feature("docstring") RobotRaconteur::BuildServicePath(const std::vector<RobotRaconteur::ServicePathSegment>& segments) """
+Join service path segments into a path
+
+:param segments: The segments to join
+:type segments: List[RobotRaconteur.ServicePathSegment]
+:return: The joined path
+:rtype: str
+"""
