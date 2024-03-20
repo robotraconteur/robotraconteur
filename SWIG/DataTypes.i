@@ -90,6 +90,26 @@ public:
 %apply uint32_t& OUTPUT {uint32_t& indexb};
 %apply uint32_t& OUTPUT {uint32_t& len};
 
+struct ServicePathSegment
+{
+    ServicePathSegment();
+    ServicePathSegment(const std::string& name);
+	ServicePathSegment(const std::string& name, const std::string& index);
+
+	std::string name;
+    boost::optional<std::string> index;
+};
+
+%template(ServicePathSegments) std::vector<RobotRaconteur::ServicePathSegment>;
+
+std::string EncodeServicePathIndex(const std::string& index);
+
+std::string DecodeServicePathIndex(const std::string& index);
+
+std::vector<ServicePathSegment> ParseServicePath(const std::string& path);
+
+std::string BuildServicePath(const std::vector<ServicePathSegment>& segments);
+
 namespace RobotRaconteur
 {
 namespace detail
