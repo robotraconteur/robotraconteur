@@ -2867,13 +2867,14 @@ BufferSequence buffers_truncate(const BufferSequence& b, size_t count)
 
 /***
  * @brief Service path segment containing a name and an optional index
-*/
+ */
 struct ROBOTRACONTEUR_CORE_API ServicePathSegment
 {
 
     ServicePathSegment();
 
-    ServicePathSegment(const std::string& name, const boost::optional<std::string>& index = boost::optional<std::string>());
+    ServicePathSegment(const std::string& name,
+                       const boost::optional<std::string>& index = boost::optional<std::string>());
 
     /** @brief The name of the service path segment */
     std::string name;
@@ -2887,15 +2888,15 @@ ROBOTRACONTEUR_CORE_API bool operator!=(const ServicePathSegment& lhs, const Ser
 
 /**
  * @brief Encode a service path index for use in a Robot Raconteur service path
- * 
+ *
  * @param index The index to encode
- * @return std::string The encoded index 
+ * @return std::string The encoded index
  */
 ROBOTRACONTEUR_CORE_API std::string EncodeServicePathIndex(const std::string& index);
 
 /**
  * @brief Decode a service path index from a Robot Raconteur service path
- * 
+ *
  * @param index The index to decode
  * @return std::string The decoded index
  */
@@ -2903,7 +2904,7 @@ ROBOTRACONTEUR_CORE_API std::string DecodeServicePathIndex(const std::string& in
 
 /**
  * @brief Parse a Robot Raconteur service path into segments
- * 
+ *
  * @param path The service path to parse
  * @return std::vector<ServicePathSegment> The parsed service path segments
  */
@@ -2911,7 +2912,7 @@ ROBOTRACONTEUR_CORE_API std::vector<ServicePathSegment> ParseServicePath(const s
 
 /**
  * @brief Build a Robot Raconteur service path from segments
- * 
+ *
  * @param segments The segments to build the service path from
  * @return std::string The built service path
  */

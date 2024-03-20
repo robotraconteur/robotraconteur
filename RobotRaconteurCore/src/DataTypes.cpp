@@ -548,7 +548,8 @@ ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
             in.read(in2_c.data(), 2);
             if (in.fail())
             {
-                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(), "Invalid encoded index: " << index);
+                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(),
+                                         "Invalid encoded index: " << index);
                 throw InvalidArgumentException("Invalid encoded index");
             }
             in2_c[2] = 0;
@@ -558,7 +559,8 @@ ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
             in2 >> std::hex >> v;
             if (in2.fail() || !in2.eof())
             {
-                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(), "Invalid encoded index: " << index);
+                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(),
+                                         "Invalid encoded index: " << index);
                 throw InvalidArgumentException("Invalid encoded index");
             }
             out.put((char)v);
@@ -770,9 +772,8 @@ std::ostream& operator<<(std::ostream& out, const MessageStringRef& str)
 ServicePathSegment::ServicePathSegment() {}
 
 ServicePathSegment::ServicePathSegment(const std::string& name, const boost::optional<std::string>& index)
-: name(name), index(index)
-{
-}
+    : name(name), index(index)
+{}
 
 bool operator==(const ServicePathSegment& lhs, const ServicePathSegment& rhs)
 {
@@ -787,20 +788,11 @@ bool operator==(const ServicePathSegment& lhs, const ServicePathSegment& rhs)
     return (!lhs.index && !rhs.index);
 }
 
-bool operator!=(const ServicePathSegment& lhs, const ServicePathSegment& rhs)
-{
-    return !(lhs == rhs);
-}
+bool operator!=(const ServicePathSegment& lhs, const ServicePathSegment& rhs) { return !(lhs == rhs); }
 
-std::string EncodeServicePathIndex(const std::string& index)
-{
-    return detail::encode_index(index);
-}
+std::string EncodeServicePathIndex(const std::string& index) { return detail::encode_index(index); }
 
-std::string DecodeServicePathIndex(const std::string& index)
-{
-    return detail::decode_index(index);
-}
+std::string DecodeServicePathIndex(const std::string& index) { return detail::decode_index(index); }
 
 std::vector<ServicePathSegment> ParseServicePath(const std::string& path)
 {
@@ -824,7 +816,8 @@ std::vector<ServicePathSegment> ParseServicePath(const std::string& path)
         }
         else
         {
-            ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(), "Invalid service path segment: " << segment);
+            ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(),
+                                     "Invalid service path segment: " << segment);
             throw InvalidArgumentException("Invalid service path segment");
         }
     }
@@ -835,19 +828,20 @@ std::string BuildServicePath(const std::vector<ServicePathSegment>& segments)
 {
     static boost::regex segment_name_regex("^[a-zA-Z](?:\\w*[a-zA-Z0-9])?$");
     std::vector<std::string> segments1;
-    bool first=true;
-    BOOST_FOREACH(const ServicePathSegment& segment, segments)
+    bool first = true;
+    BOOST_FOREACH (const ServicePathSegment& segment, segments)
     {
         if (!boost::regex_match(segment.name, segment_name_regex))
         {
             if (!(first && segment.name == "*"))
             {
-                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(), "Invalid service path segment name: " << segment.name);
+                ROBOTRACONTEUR_LOG_DEBUG(RobotRaconteur::RobotRaconteurNode::weak_sp(),
+                                         "Invalid service path segment name: " << segment.name);
                 throw InvalidArgumentException("Invalid service path segment name");
             }
         }
 
-        first=false;
+        first = false;
         if (segment.index)
         {
             segments1.push_back(segment.name + "[" + EncodeServicePathIndex(*segment.index) + "]");
