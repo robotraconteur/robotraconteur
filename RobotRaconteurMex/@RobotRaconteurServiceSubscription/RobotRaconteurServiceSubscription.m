@@ -32,6 +32,8 @@ function c=RobotRaconteurServiceSubscription(objecttype,stubid)
 %    service_sub.SubscribePipe(pipe_name, service_path) - Subscribe to a pipe, returning a RobotRaconteurPipeSubscription.
 %                                                         The pipe_name is the name of the wire member in the object.
 %                                                         The service_path is optional and by default is the root object.
+%    service_sub.SubscribeSubObject(service_path)       - Subscribe to a sub object based on service path, returning a
+%                                                         RobotRaconteurSubObjectSubscription.
 %    service_sub.ClaimClient(client_obj) - Claim a client returned by GetConnectedClients() or GetDefaultObject(). The claimed
 %                                          client will no longer have its lifecycle managed by the subscription.
 %    service_sub.ReleaseClient(client_obj) - Release a client previously claimed using ClaimClient()
@@ -46,7 +48,7 @@ function c=RobotRaconteurServiceSubscription(objecttype,stubid)
 %
 %
 %    See also RobotRaconteur.SubscribeService, RobotRaconteur.SubscribeServiceByType, RobotRaconteurServiceSubscription,
-%        RobotRaconteurWireSubscription, RobotRaconteurPipeSubscription
+%        RobotRaconteurWireSubscription, RobotRaconteurPipeSubscription, RobotRaconteurSubObjectSubscription
 
 c=struct;
 c.rrobjecttype=objecttype;

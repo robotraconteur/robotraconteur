@@ -423,6 +423,19 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                 }
                 plhs[0] = o->subsref(prhs[3]);
             }
+            else if (stubtype == RR_MEX_SUBOBJECT_SUBSCRIPTION)
+            {
+                boost::shared_ptr<MexSubObjectSubscription> o;
+                {
+                    boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+                    std::map<int32_t, RR_SHARED_PTR<MexSubObjectSubscription> >::iterator e1 =
+                        subobjectsubscriptions.find(stubid);
+                    if (e1 == subobjectsubscriptions.end())
+                        throw InvalidArgumentException("Cannot find SubObjectSubscription");
+                    o = e1->second;
+                }
+                plhs[0] = o->subsref(prhs[3]);
+            }
             else if (stubtype == RR_MEX_GENERATOR_CLIENT)
             {
                 boost::shared_ptr<MexGeneratorClient> o;
@@ -542,6 +555,19 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                         pipesubscriptions.find(stubid);
                     if (e1 == pipesubscriptions.end())
                         throw InvalidArgumentException("Cannot find PipeSubscription");
+                    o = e1->second;
+                }
+                o->subsasgn(prhs[3], prhs[4]);
+            }
+            else if (stubtype == RR_MEX_SUBOBJECT_SUBSCRIPTION)
+            {
+                boost::shared_ptr<MexSubObjectSubscription> o;
+                {
+                    boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+                    std::map<int32_t, RR_SHARED_PTR<MexSubObjectSubscription> >::iterator e1 =
+                        subobjectsubscriptions.find(stubid);
+                    if (e1 == subobjectsubscriptions.end())
+                        throw InvalidArgumentException("Cannot find SubObjectSubscription");
                     o = e1->second;
                 }
                 o->subsasgn(prhs[3], prhs[4]);
@@ -8112,6 +8138,41 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
         return matlabret[0];
     }
 
+    if (membername == "SubscribeSubObject")
+    {
+        size_t n_args = mxGetNumberOfElements(cell_args);
+        if (n_args != 1)
+            throw InvalidArgumentException("SubscribeSubObject expects one argument");
+
+        std::string service_path = mxToString(mxGetCell(cell_args, 0));
+
+        boost::shared_ptr<SubObjectSubscription> sub1 = subscription->SubscribeSubObject(service_path);
+        boost::shared_ptr<MexSubObjectSubscription> sub2 = boost::make_shared<MexSubObjectSubscription>();
+        sub2->Init(sub1);
+
+        boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+        subobjectsubscriptions_count++;
+        sub2->subobjectsubscriptionid = subobjectsubscriptions_count;
+        subobjectsubscriptions.insert(std::make_pair(sub2->subobjectsubscriptionid, sub2));
+
+        mxArray* matlabret[1];
+        mxArray* rhs[2];
+
+        rhs[0] = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+        rhs[1] = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+
+        ((int32_t*)mxGetData(rhs[0]))[0] = RR_MEX_SUBOBJECT_SUBSCRIPTION;
+        ((int32_t*)mxGetData(rhs[1]))[0] = sub2->subobjectsubscriptionid;
+
+        int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurSubObjectSubscription");
+        if (merror)
+        {
+            throw InternalErrorException("Internal error");
+        }
+
+        return matlabret[0];
+    }
+
     if (membername == "ClaimClient")
     {
         if (mxGetNumberOfElements(cell_args) != 1)
@@ -8732,6 +8793,138 @@ void MexPipeSubscription::subsasgn(const mxArray* S, const mxArray* value)
         return false;
     }
 }*/
+
+// MexSubObjectSubscription
+
+MexSubObjectSubscription::MexSubObjectSubscription() { subobjectsubscriptionid = 0; }
+void MexSubObjectSubscription::Init(const boost::shared_ptr<SubObjectSubscription>& subscription)
+{
+    this->subscription = subscription;
+}
+
+mxArray* MexSubObjectSubscription::subsref(const mxArray* S)
+{
+    if (!mxIsStruct(S))
+        throw InvalidArgumentException("RobotRaconteurMex error");
+
+    int c1 = (int)mxGetNumberOfElements(S);
+
+    if (c1 == 0)
+        throw InvalidArgumentException("RobotRaconteur object expects 'dot' notation");
+
+    std::string type = mxToString(mxGetField(S, 0, "type"));
+    if (type != ".")
+        throw InvalidArgumentException("RobotRaconteur object expects 'dot' notation");
+
+    std::string membername = mxToString(mxGetField(S, 0, "subs"));
+
+    if (c1 != 2)
+        throw InvalidArgumentException("ServiceSubscription expects a function request");
+
+    std::string type2 = mxToString(mxGetField(S, 1, "type"));
+    if (type2 != "()")
+        throw InvalidArgumentException("ServiceSubscription expects a function request");
+
+    if (!mxIsChar(mxGetField(S, 0, "subs")))
+        throw InvalidArgumentException("RobotRaconteur object expects 'dot' notation");
+
+    mxArray* cell_args = mxGetField(S, 1, "subs");
+
+    if (membername == "Close")
+    {
+        if (mxGetNumberOfElements(cell_args) != 0)
+            throw InvalidArgumentException("Close expects zero arguments");
+        Close();
+        return mxCreateNumericMatrix(1, 0, mxDOUBLE_CLASS, mxREAL);
+    }
+
+    if (membername == "GetDefaultClient")
+    {
+        if (mxGetNumberOfElements(cell_args) != 0)
+            throw InvalidArgumentException("GetDefaultClient expects zero arguments");
+
+        RR_SHARED_PTR<MexServiceStub> stub = subscription->GetDefaultClient<MexServiceStub>();
+
+        mxArray* mxStub = NULL;
+
+        if (stub->stubptr != NULL)
+        {
+            mxStub = stub->stubptr.get();
+        }
+        else
+        {
+            boost::recursive_mutex::scoped_lock lock(stubs_lock);
+            stubcount++;
+            int stubid = stubcount;
+            stub->stubid = stubid;
+            mxArray* mxstub1 = MatlabObjectFromMexStub(stub);
+            stubs.insert(std::make_pair(stubid, stub));
+            mxStub = mxDuplicateArray(mxstub1);
+        }
+
+        return mxStub;
+    }
+
+    if (membername == "GetDefaultClientWait")
+    {
+        int32_t timeout = 0;
+        if (mxGetNumberOfElements(cell_args) == 0)
+        {
+            timeout = RR_TIMEOUT_INFINITE;
+        }
+        else if (mxGetNumberOfElements(cell_args) == 1)
+        {
+            timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, 0));
+        }
+        else
+        {
+            throw InvalidArgumentException("GetDefaultClientWait expects zero or one arguments");
+        }
+
+        RR_SHARED_PTR<MexServiceStub> stub = subscription->GetDefaultClientWait<MexServiceStub>(timeout);
+
+        mxArray* mxStub = NULL;
+
+        if (stub->stubptr != NULL)
+        {
+            mxStub = stub->stubptr.get();
+        }
+        else
+        {
+            boost::recursive_mutex::scoped_lock lock(stubs_lock);
+            stubcount++;
+            int stubid = stubcount;
+            stub->stubid = stubid;
+            mxArray* mxstub1 = MatlabObjectFromMexStub(stub);
+            stubs.insert(std::make_pair(stubid, stub));
+            mxStub = mxDuplicateArray(mxstub1);
+        }
+
+        return mxStub;
+    }
+
+    throw InvalidArgumentException("Unknown function for SubObjectSubscription");
+}
+
+void MexSubObjectSubscription::subsasgn(const mxArray* S, const mxArray* value)
+{
+    RR_UNUSED(S);
+    RR_UNUSED(value);
+    throw InvalidArgumentException("Unknown function");
+}
+
+void MexSubObjectSubscription::Close()
+{
+    {
+        boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+        if (subobjectsubscriptionid != 0)
+        {
+            subobjectsubscriptions.erase(subobjectsubscriptionid);
+        }
+    }
+
+    subscription->Close();
+}
 
 static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(const mxArray* filter)
 {
@@ -10139,6 +10332,8 @@ int32_t wiresubscriptions_count = 0;
 std::map<int32_t, boost::shared_ptr<MexWireSubscription> > wiresubscriptions;
 int32_t pipesubscriptions_count = 0;
 std::map<int32_t, boost::shared_ptr<MexPipeSubscription> > pipesubscriptions;
+int32_t subobjectsubscriptions_count = 0;
+std::map<int32_t, boost::shared_ptr<MexSubObjectSubscription> > subobjectsubscriptions;
 
 std::map<int, boost::weak_ptr<MexServiceSkel> > skels;
 boost::mutex skels_lock;

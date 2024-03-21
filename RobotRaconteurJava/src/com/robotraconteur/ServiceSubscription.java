@@ -300,6 +300,22 @@ public class ServiceSubscription
         return new PipeSubscription<T>(s1);
     }
 
+    public SubObjectSubscription subscribeSubObject(String servicepath)
+    {
+        return subscribeSubObject(servicepath, null);
+    }
+
+    public SubObjectSubscription subscribeSubObject(String servicepath, String objecttype)
+    {
+        if (objecttype == null)
+        {
+            objecttype = "";
+        }
+
+        WrappedSubObjectSubscription s = _subscription.subscribeSubObject(servicepath, objecttype);
+        return new SubObjectSubscription(this, s);
+    }
+
     public <T> T getDefaultClient()
     {
         WrappedServiceStub s = _subscription.getDefaultClient();

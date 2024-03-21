@@ -4276,6 +4276,28 @@ class ServiceSubscription(object):
         s = self._subscription.SubscribePipe(pipe_name, service_path)
         return PipeSubscription(s)
 
+    def SubscribeSubObject(self, service_path):
+        """
+        Creates a sub object subscription.
+
+        Sub objects are objects within a service that are not the root object. Sub objects are typically
+        referenced using objref members, however they can also be referenced using a service path.
+        The SubObjectSubscription class is used to automatically access sub objects of the default client.
+
+        The service path is broken up into segments using periods. See the Robot Raconter
+        documentation for more information. The BuildServicePath() function can be used to assist
+        building service paths. The first level of the* service path may be "*" to match any service name.
+        For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
+
+        :param service_path: The service path of the object
+        :type service_path: str
+        :return: The sub object subscription
+        :rtype: SubObjectSubscription
+        """
+
+        s = self._subscription.SubscribeSubObject(service_path)
+        return SubObjectSubscription(self, s)
+
     @property
     def ClientConnected(self):
         """
@@ -4885,6 +4907,105 @@ class PipeSubscription(object):
     def PipePacketReceived(self, evt):
         if (evt is not self._PipePacketReceived):
             raise RuntimeError("Invalid operation")
+
+    def GetNode(self):
+        return self._subscription.GetNode()
+
+
+class SubObjectSubscription(object):
+    """
+    Subscription for sub objects of the default client.
+
+    SubObjectSubscription is used to access sub objects of the default client. Sub objects are objects within a service
+    that are not the root object. Sub objects are typically referenced using objref members, however they can also be
+    referenced using a service path. The SubObjectSubscription class is used to automatically access sub objects of the
+    default client.
+
+    Use ServiceSubscription.SubscribeSubObject() to create a SubObjectSubscription.
+
+    This class should not be used to access Pipe or Wire members. Use the ServiceSubscription.SubscribePipe() and
+    ServiceSubscription.SubscribeWire() functions to access Pipe and Wire members.
+    """
+
+    def __init__(self, parent, subscription):
+        self._parent = parent
+        self._subscription = subscription
+
+    def GetDefaultClient(self):
+        """
+        Get the "default client" sub object.
+
+        The sub object is retrieved from the default client. The default client is the first client
+        that connected to the service. If no clients are currently connected, an exception is thrown.
+
+        Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+        each time the client is needed.
+
+        :return: The sub object
+        :rtype: T
+        """
+        return self._parent._GetClientStub(self._subscription.GetDefaultClient())
+
+    def TryGetDefaultClient(self):
+        """
+        Try getting the "default client" sub object.
+
+        Same as GetDefaultClient(), but returns a bool success instead of throwing
+        exceptions on failure.
+
+        :return: Success and client (if successful) as a tuple
+        :rtype: Tuple[bool,T]
+        """
+        res = self._subscription.TryGetDefaultClient()
+        if not res.res:
+            return False, None
+        return True, self._parent._GetClientStub(res.client)
+
+    def GetDefaultClientWait(self, timeout=-1):
+        """
+        Get the "default client" sub object, waiting with timeout if not connected
+
+        The sub object is retrieved from the default client. The default client is the first client
+        that connected to the service. If no clients are currently connected, an exception is thrown.
+
+        Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+        each time the client is needed.
+
+        :param timeout: Timeout in seconds, or -1 for infinite
+        :type timeout: float
+        :return: The sub object
+        """
+        return self._parent._GetClientStub(self._subscription.GetDefaultClientWait(adjust_timeout(timeout)))
+
+    def TryGetDefaultClientWait(self, timeout=-1):
+        """
+        Try getting the "default client" sub object, waiting with timeout if not connected
+
+        Same as GetDefaultClientWait(), but returns a bool success instead of throwing
+        exceptions on failure.
+
+        :return: Success and client (if successful) as a tuple
+        :rtype: Tuple[bool,T]
+        """
+        res = self._subscription.TryGetDefaultClientWait(adjust_timeout(timeout))
+        if not res.res:
+            return False, None
+        return True, self._parent._GetClientStub(res.client)
+
+    def AsyncGetDefaultClient(self, handler, timeout=-1):
+        """
+        Asynchronously get the default client, with optional timeout
+
+        Same as GetDefaultClientWait(), but returns asynchronously.
+
+        If ``handler`` is None, returns an awaitable future.
+
+        :param handler: The handler to call when default client is available, or times out
+        :type handler: Callable[[bool,object],None]
+        :param timeout: Timeout in seconds, or -1 for infinite
+        :type timeout: float
+        """
+        return async_call(self._subscription.AsyncGetDefaultClient, (adjust_timeout(timeout),), AsyncStubReturnDirectorImpl, handler)
 
     def GetNode(self):
         return self._subscription.GetNode()
