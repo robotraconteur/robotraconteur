@@ -3345,6 +3345,133 @@ ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex
     return ServiceSubscriptionFilterAttribute(name, r);
 }
 
+template <typename T>
+static void IdentifierToRegex_case_insensitive_uuid_match(const T& uuid_segment, std::ostream& o)
+{
+#if BOOST_VERSION >= 106000
+    BOOST_FOREACH (char c, uuid_segment)
+#else
+    std::string uuid_segment_str = uuid_segment.str();
+    BOOST_FOREACH (char c, uuid_segment_str)
+#endif
+    {
+        if (boost::is_alpha()(c))
+        {
+            o << '[' << static_cast<char>(std::tolower(c)) << static_cast<char>(std::toupper(c)) << ']';
+        }
+        else
+        {
+            o << c;
+        }
+    }
+}
+
+template <typename T>
+static bool IdentifierToRegex_uuid_all_zero(const T& uuid_segment)
+{
+#if BOOST_VERSION >= 106000
+    BOOST_FOREACH (char c, uuid_segment)
+#else
+    std::string uuid_segment_str = uuid_segment.str();
+    BOOST_FOREACH (char c, uuid_segment_str)
+#endif
+    {
+        if (c != '0')
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+static boost::regex IdentifierToRegex(boost::string_ref name, boost::string_ref uuid_string)
+{
+    if (name.empty() && uuid_string.empty())
+    {
+        throw InvalidArgumentException("Name and UUID string cannot both be empty");
+    }
+
+    const std::string name_regex_str =
+        "(?:[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)*";
+    const std::string uuid_regex_str =
+        "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?";
+
+    std::stringstream ident_o;
+    static boost::regex name_regex(name_regex_str);
+    if (!name.empty())
+    {
+        if (!boost::regex_match(name.begin(), name.end(), name_regex))
+        {
+            throw InvalidArgumentException("Invalid identifier name");
+        }
+
+        ident_o << name;
+    }
+    else
+    {
+        ident_o << "(?:" << name_regex_str << "\\|)?";
+    }
+
+    static boost::regex uuid_regex(uuid_regex_str);
+    bool zero_uuid = true;
+    if (!uuid_string.empty())
+    {
+        boost::match_results<boost::string_ref::const_iterator> uuid_match;
+        if (!boost::regex_match(uuid_string.begin(), uuid_string.end(), uuid_match, uuid_regex))
+        {
+            throw InvalidArgumentException("Invalid identifier UUID");
+        }
+
+        zero_uuid = IdentifierToRegex_uuid_all_zero(uuid_match[1]) && IdentifierToRegex_uuid_all_zero(uuid_match[2]) &&
+                    IdentifierToRegex_uuid_all_zero(uuid_match[3]) && IdentifierToRegex_uuid_all_zero(uuid_match[4]) &&
+                    IdentifierToRegex_uuid_all_zero(uuid_match[5]);
+
+        if (!zero_uuid)
+        {
+            if (!name.empty())
+            {
+                ident_o << "\\|";
+            }
+            ident_o << "\\{?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[1], ident_o);
+            ident_o << "-?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[2], ident_o);
+            ident_o << "-?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[3], ident_o);
+            ident_o << "-?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[4], ident_o);
+            ident_o << "-?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[5], ident_o);
+            ident_o << "\\}?";
+        }
+    }
+
+    if (zero_uuid)
+    {
+        if (name.empty())
+        {
+            throw InvalidArgumentException("Name and UUID string cannot both be empty");
+        }
+        ident_o << "(?:\\|" << uuid_regex_str << ")?";
+    }
+    std::cout << "ident in: " << name << " " << uuid_string << std::endl;
+    std::cout << ident_o.str() << std::endl;
+    return boost::regex(ident_o.str());
+}
+
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeIdentifier(boost::string_ref identifier_name,
+                                                                                      boost::string_ref uuid_string)
+{
+    return ServiceSubscriptionFilterAttribute(IdentifierToRegex(identifier_name, uuid_string));
+}
+
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeIdentifier(boost::string_ref name,
+                                                                                      boost::string_ref identifier_name,
+                                                                                      boost::string_ref uuid_string)
+{
+    return ServiceSubscriptionFilterAttribute(name, IdentifierToRegex(identifier_name, uuid_string));
+}
+
 // SubObjectSubscription
 
 void SubObjectSubscription::Init() {}

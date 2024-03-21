@@ -111,6 +111,50 @@ TEST(RobotRaconteurMisc, BuildServicePathTest)
     EXPECT_EQ(boost::to_lower_copy(path2), boost::to_lower_copy(path2_str));
 }
 
+TEST(RobotRaconteurMisc, CreateIdentifierAttributeFilterTest)
+{
+    ServiceSubscriptionFilterAttribute attr1 = CreateServiceSubscriptionFilterAttributeIdentifier("identifier_1", "");
+    EXPECT_TRUE(attr1.IsMatch("identifier_1"));
+    EXPECT_FALSE(attr1.IsMatch("identifier_2"));
+    EXPECT_TRUE(attr1.IsMatch("identifier_1|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_FALSE(attr1.IsMatch("identifier_2|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+
+    ServiceSubscriptionFilterAttribute attr2 =
+        CreateServiceSubscriptionFilterAttributeIdentifier("", "cbfea7a4-0361-4aad-95bb-d4dcd967047a");
+    EXPECT_FALSE(attr2.IsMatch("identifier_1"));
+    EXPECT_FALSE(attr2.IsMatch("identifier_2"));
+    EXPECT_TRUE(attr2.IsMatch("identifier_1|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_TRUE(attr2.IsMatch("identifier_2|{cbfea7a4-0361-4aAD-95bb-d4dcd967047a}"));
+    EXPECT_TRUE(attr2.IsMatch("identifier_2|cbfea7a403614aAD95bbd4dcd967047a"));
+    EXPECT_FALSE(attr2.IsMatch("identifier_2|{cbfea7a4-0361-1aad-95bb-d4dcd967047a}"));
+
+    ServiceSubscriptionFilterAttribute attr3 =
+        CreateServiceSubscriptionFilterAttributeIdentifier("identifier_1", "{00000000-0000-0000-0000-000000000000}");
+    EXPECT_TRUE(attr3.IsMatch("identifier_1"));
+    EXPECT_FALSE(attr3.IsMatch("identifier_2"));
+    EXPECT_TRUE(attr3.IsMatch("identifier_1|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_FALSE(attr3.IsMatch("identifier_2|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+
+    ServiceSubscriptionFilterAttribute attr4 =
+        CreateServiceSubscriptionFilterAttributeIdentifier("identifier_1", "cbfea7a4-0361-4aad-95bb-d4dcd967047a");
+
+    EXPECT_FALSE(attr4.IsMatch("identifier_1"));
+    EXPECT_FALSE(attr4.IsMatch("identifier_2"));
+    EXPECT_TRUE(attr4.IsMatch("identifier_1|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_FALSE(attr4.IsMatch("identifier_2|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+
+    ServiceSubscriptionFilterAttribute attr5 = CreateServiceSubscriptionFilterAttributeIdentifier(
+        "identifier_1.with.do_ts", "cbfea7a4-0361-4aad-95bb-d4dcd967047a");
+    EXPECT_FALSE(attr5.IsMatch("identifier_1.with.do_ts"));
+    EXPECT_FALSE(attr5.IsMatch("identifier_2.WIT_H.dot4s"));
+    EXPECT_FALSE(attr5.IsMatch("identifier_1"));
+    EXPECT_FALSE(attr5.IsMatch("identifier_2"));
+    EXPECT_TRUE(attr5.IsMatch("identifier_1.with.do_ts|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_TRUE(attr5.IsMatch("identifier_1.with.do_ts|{cbfea7a4-0361-4AAD95bb-d4dcd967047a}"));
+    EXPECT_FALSE(attr5.IsMatch("identifier_2.WIT_H.dot4s|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_FALSE(attr5.IsMatch("identifier_1.with.do_ts|cbfea7a4-0361-41ad-95bb-d4dcd967047a"));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
