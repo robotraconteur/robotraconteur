@@ -3486,7 +3486,7 @@ bool SubObjectSubscription::TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>&
     }
 }
 
-static void SubObjectSubscription_AsyncGetDefaultClientBase2(RR_SHARED_PTR<RRObject> client, RR_SHARED_PTR<RobotRaconteurException> err,
+static void SubObjectSubscription_AsyncGetDefaultClientBase2(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err,
     boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler, 
     RR_WEAK_PTR<RobotRaconteurNode> node, int32_t timeout, const std::string& servicepath, const std::string& objecttype)
 {
