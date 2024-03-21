@@ -8145,9 +8145,8 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
             throw InvalidArgumentException("SubscribeSubObject expects one argument");
 
         std::string service_path = mxToString(mxGetCell(cell_args, 0));
-       
-        boost::shared_ptr<SubObjectSubscription> sub1 =
-            subscription->SubscribeSubObject(service_path);
+
+        boost::shared_ptr<SubObjectSubscription> sub1 = subscription->SubscribeSubObject(service_path);
         boost::shared_ptr<MexSubObjectSubscription> sub2 = boost::make_shared<MexSubObjectSubscription>();
         sub2->Init(sub1);
 
@@ -8797,10 +8796,7 @@ void MexPipeSubscription::subsasgn(const mxArray* S, const mxArray* value)
 
 // MexSubObjectSubscription
 
-MexSubObjectSubscription::MexSubObjectSubscription()
-{
-    subobjectsubscriptionid = 0;
-}
+MexSubObjectSubscription::MexSubObjectSubscription() { subobjectsubscriptionid = 0; }
 void MexSubObjectSubscription::Init(const boost::shared_ptr<SubObjectSubscription>& subscription)
 {
     this->subscription = subscription;
@@ -8908,7 +8904,6 @@ mxArray* MexSubObjectSubscription::subsref(const mxArray* S)
     }
 
     throw InvalidArgumentException("Unknown function for SubObjectSubscription");
-
 }
 
 void MexSubObjectSubscription::subsasgn(const mxArray* S, const mxArray* value)

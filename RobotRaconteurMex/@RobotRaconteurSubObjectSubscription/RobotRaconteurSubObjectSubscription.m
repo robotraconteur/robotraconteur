@@ -8,9 +8,9 @@ function c=RobotRaconteurSubObjectSubscription(objecttype,stubid)
 % Sub objects are objects within a service that are not the root object. Sub objects are typically
 % referenced using objref members, however they can also be referenced using a service path.
 % The SubObjectSubscription class is used to automatically access sub objects of the default client.
-% 
+%
 % The service path is broken up into segments using periods. See the Robot Raconter
-% documentation for more information. The first level of the* service path may be "*" to match any service name. 
+% documentation for more information. The first level of the* service path may be "*" to match any service name.
 % For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
 %
 %    The following functions are available:

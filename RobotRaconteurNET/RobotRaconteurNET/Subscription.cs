@@ -634,7 +634,7 @@ public class ServiceSubscription
     /// <para>
     /// The service path is broken up into segments using periods. See the Robot Raconter
     /// documentation for more information. The BuildServicePath() function can be used to assist
-    /// building service paths. The first level of the* service path may be "*" to match any service name. 
+    /// building service paths. The first level of the* service path may be "*" to match any service name.
     /// For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
     /// </para>
     /// </remarks>
@@ -1380,18 +1380,17 @@ public partial class PipeSubscription<T>
     public event Action<PipeSubscription<T>> PipePacketReceived;
 }
 
-
 /// <summary>
 /// Subscription for sub objects of the default client.
 /// </summary>
 /// <remarks>
-/// <para>SubObjectSubscription is used to access sub objects of the default client. Sub objects are objects within a service
-/// that are not the root object. Sub objects are typically referenced using objref members, however they can also be
-/// referenced using a service path. The SubObjectSubscription class is used to automatically access sub objects of the
-/// default client.</para>
-/// 
+/// <para>SubObjectSubscription is used to access sub objects of the default client. Sub objects are objects within a
+/// service that are not the root object. Sub objects are typically referenced using objref members, however they can
+/// also be referenced using a service path. The SubObjectSubscription class is used to automatically access sub objects
+/// of the default client.</para>
+///
 /// <para>Use ServiceSubscription.SubscribeSubObject() to create a SubObjectSubscription.</para>
-/// 
+///
 /// <para>This class should not be used to access Pipe or Wire members. Use the ServiceSubscription.SubscribePipe() and
 /// ServiceSubscription.SubscribeWire() functions to access Pipe and Wire members.</para>
 /// </remarks>
@@ -1406,7 +1405,6 @@ public class SubObjectSubscription
         _parent = parent;
     }
 
-    
     /// <summary>
     /// Closes the sub object subscription.
     /// </summary>
@@ -1424,7 +1422,7 @@ public class SubObjectSubscription
     /// <remarks>
     /// <para>The sub object is retrieved from the default client. The default client is the first client
     /// that connected to the service. If no clients are currently connected, an exception is thrown.</para>
-    /// 
+    ///
     /// <para>Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
     /// each time the client is needed.</para>
     /// </remarks>
@@ -1463,10 +1461,10 @@ public class SubObjectSubscription
     /// <remarks>
     /// <para>The sub object is retrieved from the default client. The default client is the first client
     /// that connected to the service. If no clients are currently connected, an exception is thrown.</para>
-    /// 
+    ///
     /// <para>Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
     /// each time the client is needed.</para>
-    /// 
+    ///
     /// <para>This function blocks the current thread until the client is retrieved or the timeout is reached.</para>
     /// </remarks>
     /// <param name="timeout">The timeout in milliseconds.</param>
@@ -1501,21 +1499,21 @@ public class SubObjectSubscription
         return true;
     }
 
-     /// <summary>
-     /// Asynchronously get the "default client" sub object.
-     /// </summary>
-     /// <remarks>
-     /// <para>Asynchronous version of GetDefaultClient(). The task completes when the 
-     /// client is retrieved or an error occurs.</para>
-     /// </remarks>
-     /// <param name="timeout">The timeout in milliseconds.</param>    
+    /// <summary>
+    /// Asynchronously get the "default client" sub object.
+    /// </summary>
+    /// <remarks>
+    /// <para>Asynchronous version of GetDefaultClient(). The task completes when the
+    /// client is retrieved or an error occurs.</para>
+    /// </remarks>
+    /// <param name="timeout">The timeout in milliseconds.</param>
     public async Task<object> AsyncGetDefaultClient(int timeout = -1)
     {
         AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(null);
         int id = RRObjectHeap.AddObject(h);
         _subscription.AsyncGetDefaultClient(timeout, h, id);
         return await h.Task;
-    }       
+    }
 }
 
 public partial class RobotRaconteurNode

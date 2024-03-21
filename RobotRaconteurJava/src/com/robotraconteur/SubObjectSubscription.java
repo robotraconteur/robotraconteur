@@ -1,6 +1,7 @@
 package com.robotraconteur;
 
-public class SubObjectSubscription {
+public class SubObjectSubscription
+{
     WrappedSubObjectSubscription _subscription;
     ServiceSubscription _parent;
 
@@ -43,5 +44,4 @@ public class SubObjectSubscription {
     {
         asyncGetDefaultClient(handler, -1);
     }
-    
 }

@@ -313,7 +313,7 @@ public class ServiceSubscription
         }
 
         WrappedSubObjectSubscription s = _subscription.subscribeSubObject(servicepath, objecttype);
-        return new SubObjectSubscription(this,s);
+        return new SubObjectSubscription(this, s);
     }
 
     public <T> T getDefaultClient()

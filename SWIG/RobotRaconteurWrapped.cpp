@@ -4084,12 +4084,12 @@ void WrappedServiceSubscription::UpdateServiceByType(const std::vector<std::stri
     subscription->UpdateServiceByType(service_types, filter2);
 }
 
-RR_SHARED_PTR<WrappedSubObjectSubscription> WrappedServiceSubscription::SubscribeSubObject(const std::string& service_path, const std::string& objecttype)
+RR_SHARED_PTR<WrappedSubObjectSubscription> WrappedServiceSubscription::SubscribeSubObject(
+    const std::string& service_path, const std::string& objecttype)
 {
     RR_SHARED_PTR<SubObjectSubscription> o = subscription->SubscribeSubObject(service_path, objecttype);
     RR_SHARED_PTR<WrappedSubObjectSubscription> o2 = RR_MAKE_SHARED<WrappedSubObjectSubscription>(o);
     return o2;
-
 }
 
 WrappedWireSubscription::WrappedWireSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent,
@@ -4347,16 +4347,9 @@ void WrappedSubObjectSubscription::AsyncGetDefaultClient(int32_t timeout, AsyncS
         timeout);
 }
 
-void WrappedSubObjectSubscription::Close()
-{
-    subscription->Close();
-}
+void WrappedSubObjectSubscription::Close() { subscription->Close(); }
 
-RR_SHARED_PTR<RobotRaconteurNode> WrappedSubObjectSubscription::GetNode()
-{
-    return subscription->GetNode();
-}
-
+RR_SHARED_PTR<RobotRaconteurNode> WrappedSubObjectSubscription::GetNode() { return subscription->GetNode(); }
 
 std::vector<ServiceSubscriptionClientID> WrappedServiceInfo2SubscriptionServicesToVector(
     std::map<ServiceSubscriptionClientID, ServiceInfo2Wrapped>& infos)

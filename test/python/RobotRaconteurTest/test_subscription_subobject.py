@@ -25,6 +25,7 @@ object testobj3
 end
 """
 
+
 class _testobj3_impl():
 
     def __init__(self, index=None):
@@ -35,10 +36,11 @@ class _testobj3_impl():
         self._service_path = service_path
 
     def add_two_numbers(self, a, b):
-        return a+b
+        return a + b
 
     def getf_service_path(self):
         return self._service_path
+
 
 class _testobj2_impl():
 
@@ -50,29 +52,31 @@ class _testobj2_impl():
 
     def getf_service_path(self):
         return self._service_path
-    
+
     def get_subobj3_1(self):
         return _testobj3_impl(), "experimental.subobject_sub_test.testobj3"
-    
+
     def get_subobj3_2(self, ind):
         return _testobj3_impl(ind), "experimental.subobject_sub_test.testobj3"
-    
+
     def get_subobj3_3(self, ind):
         return _testobj3_impl(ind), "experimental.subobject_sub_test.testobj3"
-    
+
+
 class _testobj_impl():
-    
-        def __init__(self):
-            self._service_path = None
-    
-        def RRServiceObjectInit(self, ctx, service_path):
-            self._service_path = service_path
-    
-        def getf_service_path(self):
-            return self._service_path
-    
-        def get_subobj2(self):
-            return _testobj2_impl(), "experimental.subobject_sub_test.testobj2"
+
+    def __init__(self):
+        self._service_path = None
+
+    def RRServiceObjectInit(self, ctx, service_path):
+        self._service_path = service_path
+
+    def getf_service_path(self):
+        return self._service_path
+
+    def get_subobj2(self):
+        return _testobj2_impl(), "experimental.subobject_sub_test.testobj2"
+
 
 class _testservice_impl():
 
@@ -98,6 +102,7 @@ class _testservice_impl():
         self._node_setup = None
         self._node = None
 
+
 intra_server_flags = RR.RobotRaconteurNodeSetupFlags_ENABLE_INTRA_TRANSPORT \
     | RR.RobotRaconteurNodeSetupFlags_INTRA_TRANSPORT_START_SERVER \
     | RR.RobotRaconteurNodeSetupFlags_ENABLE_NODE_ANNOUNCE \
@@ -122,7 +127,7 @@ def test_subscription_subobject():
 
     client_node_setup = RR.RobotRaconteurNodeSetup(
         "", 0, flags=intra_client_flags, node=client_node)
-    
+
     server1 = _testservice_impl("server1", test_servers["server1"])
 
     with client_node_setup, server1:
@@ -136,7 +141,7 @@ def test_subscription_subobject():
         sub2 = sub.SubscribeSubObject("*.subobj2")
         c2 = sub2.GetDefaultClient()
         assert c2.getf_service_path() == "test_service.subobj2"
-        
+
         c3 = sub2.GetDefaultClientWait(1)
         assert c3.getf_service_path() == "test_service.subobj2"
 
@@ -147,6 +152,7 @@ def test_subscription_subobject():
         assert res and c5.getf_service_path() == "test_service.subobj2"
 
         evt = threading.Event()
+
         def handler(c, exp):
             try:
                 if exp is not None:
@@ -172,7 +178,3 @@ def test_subscription_subobject():
         sub5 = sub.SubscribeSubObject("*.subobj2.subobj3_3[someobj]")
         c8 = sub5.GetDefaultClient()
         assert c8.getf_service_path() == "test_service.subobj2.subobj3_3[someobj]"
-
-        
-
-

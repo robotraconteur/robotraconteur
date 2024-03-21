@@ -4275,7 +4275,7 @@ class ServiceSubscription(object):
             service_path = ""
         s = self._subscription.SubscribePipe(pipe_name, service_path)
         return PipeSubscription(s)
-    
+
     def SubscribeSubObject(self, service_path):
         """
         Creates a sub object subscription.
@@ -4286,7 +4286,7 @@ class ServiceSubscription(object):
 
         The service path is broken up into segments using periods. See the Robot Raconter
         documentation for more information. The BuildServicePath() function can be used to assist
-        building service paths. The first level of the* service path may be "*" to match any service name. 
+        building service paths. The first level of the* service path may be "*" to match any service name.
         For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
 
         :param service_path: The service path of the object
@@ -4911,6 +4911,7 @@ class PipeSubscription(object):
     def GetNode(self):
         return self._subscription.GetNode()
 
+
 class SubObjectSubscription(object):
     """
     Subscription for sub objects of the default client.
@@ -4944,7 +4945,7 @@ class SubObjectSubscription(object):
         :rtype: T
         """
         return self._parent._GetClientStub(self._subscription.GetDefaultClient())
-    
+
     def TryGetDefaultClient(self):
         """
         Try getting the "default client" sub object.
@@ -4959,7 +4960,7 @@ class SubObjectSubscription(object):
         if not res.res:
             return False, None
         return True, self._parent._GetClientStub(res.client)
-    
+
     def GetDefaultClientWait(self, timeout=-1):
         """
         Get the "default client" sub object, waiting with timeout if not connected
@@ -4975,7 +4976,7 @@ class SubObjectSubscription(object):
         :return: The sub object
         """
         return self._parent._GetClientStub(self._subscription.GetDefaultClientWait(adjust_timeout(timeout)))
-    
+
     def TryGetDefaultClientWait(self, timeout=-1):
         """
         Try getting the "default client" sub object, waiting with timeout if not connected
@@ -4990,7 +4991,7 @@ class SubObjectSubscription(object):
         if not res.res:
             return False, None
         return True, self._parent._GetClientStub(res.client)
-    
+
     def AsyncGetDefaultClient(self, handler, timeout=-1):
         """
         Asynchronously get the default client, with optional timeout
@@ -5005,9 +5006,10 @@ class SubObjectSubscription(object):
         :type timeout: float
         """
         return async_call(self._subscription.AsyncGetDefaultClient, (adjust_timeout(timeout),), AsyncStubReturnDirectorImpl, handler)
-    
+
     def GetNode(self):
         return self._subscription.GetNode()
+
 
 class WrappedServiceSubscriptionFilterPredicateDirectorPython(RobotRaconteurPython.WrappedServiceSubscriptionFilterPredicateDirector):
     def __init__(self, f):

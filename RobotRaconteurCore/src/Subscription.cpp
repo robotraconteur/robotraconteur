@@ -1759,9 +1759,11 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
     t->Start();
 }
 
-RR_SHARED_PTR<SubObjectSubscription> ServiceSubscription::SubscribeSubObject(boost::string_ref servicepath, boost::string_ref objecttype)
+RR_SHARED_PTR<SubObjectSubscription> ServiceSubscription::SubscribeSubObject(boost::string_ref servicepath,
+                                                                             boost::string_ref objecttype)
 {
-    RR_SHARED_PTR<SubObjectSubscription> o = RR_MAKE_SHARED<SubObjectSubscription>(shared_from_this(), servicepath.to_string(), objecttype.to_string());
+    RR_SHARED_PTR<SubObjectSubscription> o =
+        RR_MAKE_SHARED<SubObjectSubscription>(shared_from_this(), servicepath.to_string(), objecttype.to_string());
     o->Init();
     return o;
 }
@@ -3345,17 +3347,12 @@ ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex
 
 // SubObjectSubscription
 
-void SubObjectSubscription::Init()
-{
+void SubObjectSubscription::Init() {}
 
-}
+void SubObjectSubscription::Close() {}
 
-void SubObjectSubscription::Close()
-{
-
-}
-
-SubObjectSubscription::SubObjectSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref servicepath, boost::string_ref objecttype)
+SubObjectSubscription::SubObjectSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent,
+                                             boost::string_ref servicepath, boost::string_ref objecttype)
 {
     this->parent = parent;
     this->node = parent->GetNode();
@@ -3393,7 +3390,7 @@ RR_SHARED_PTR<RRObject> SubObjectSubscription::GetDefaultClientBase()
     }
 
     RR_SHARED_PTR<ClientContext> c = s->GetContext();
-    return c->FindObjRef(service_path1, objecttype);    
+    return c->FindObjRef(service_path1, objecttype);
 }
 bool SubObjectSubscription::TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out)
 {
@@ -3422,7 +3419,8 @@ bool SubObjectSubscription::TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& cli
     }
     catch (std::exception& exp2)
     {
-        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription FindObjRef failed: " << exp2.what());
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                           "ServiceSubscription FindObjRef failed: " << exp2.what());
         return false;
     }
 }
@@ -3449,7 +3447,7 @@ RR_SHARED_PTR<RRObject> SubObjectSubscription::GetDefaultClientWaitBase(int32_t 
     }
 
     RR_SHARED_PTR<ClientContext> c = s->GetContext();
-    return c->FindObjRef(service_path1, objecttype);    
+    return c->FindObjRef(service_path1, objecttype);
 }
 
 bool SubObjectSubscription::TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>& client_out, int32_t timeout)
@@ -3481,14 +3479,17 @@ bool SubObjectSubscription::TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>&
     }
     catch (std::exception& exp)
     {
-        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription FindObjRef failed: " << exp.what());
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                           "ServiceSubscription FindObjRef failed: " << exp.what());
         return false;
     }
 }
 
-static void SubObjectSubscription_AsyncGetDefaultClientBase2(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err,
-    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler, 
-    RR_WEAK_PTR<RobotRaconteurNode> node, int32_t timeout, const std::string& servicepath, const std::string& objecttype)
+static void SubObjectSubscription_AsyncGetDefaultClientBase2(
+    const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err,
+    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+    RR_WEAK_PTR<RobotRaconteurNode> node, int32_t timeout, const std::string& servicepath,
+    const std::string& objecttype)
 {
     if (err)
     {
@@ -3501,7 +3502,8 @@ static void SubObjectSubscription_AsyncGetDefaultClientBase2(const RR_SHARED_PTR
         if (!client)
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
-            detail::InvokeHandlerWithException(node, handler, RR_MAKE_SHARED<InvalidOperationException>("Internal error: ServiceStub cast failed"));
+            detail::InvokeHandlerWithException(
+                node, handler, RR_MAKE_SHARED<InvalidOperationException>("Internal error: ServiceStub cast failed"));
             return;
         }
 
@@ -3513,15 +3515,16 @@ static void SubObjectSubscription_AsyncGetDefaultClientBase2(const RR_SHARED_PTR
             boost::replace_first(service_path1, "*", s->GetContext()->GetServiceName());
         }
 
-        c->AsyncFindObjRef(service_path1, objecttype, boost::bind(handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), timeout);
+        c->AsyncFindObjRef(service_path1, objecttype,
+                           boost::bind(handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), timeout);
     }
     catch (std::exception& exp)
     {
-        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription FindObjRef failed: " << exp.what());
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                           "ServiceSubscription FindObjRef failed: " << exp.what());
         detail::InvokeHandlerWithException(node, handler, exp);
-        return;    
+        return;
     }
-
 }
 
 void SubObjectSubscription::AsyncGetDefaultClientBase(
@@ -3534,8 +3537,10 @@ void SubObjectSubscription::AsyncGetDefaultClientBase(
         throw InvalidOperationException("ServiceSubscription has been released");
     }
 
-    p->AsyncGetDefaultClientBase(boost::bind(&SubObjectSubscription_AsyncGetDefaultClientBase2, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), handler, node, timeout, servicepath, objecttype), timeout);
+    p->AsyncGetDefaultClientBase(boost::bind(&SubObjectSubscription_AsyncGetDefaultClientBase2,
+                                             RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), handler, node,
+                                             timeout, servicepath, objecttype),
+                                 timeout);
 }
-
 
 } // namespace RobotRaconteur

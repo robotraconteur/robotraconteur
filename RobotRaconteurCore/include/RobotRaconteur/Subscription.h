@@ -933,21 +933,22 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
 
     /**
      * @brief Creates a sub object subscription
-     * 
+     *
      * Sub objects are objects within a service that are not the root object. Sub objects are typically
      * referenced using objref members, however they can also be referenced using a service path.
      * The SubObjectSubscription class is used to automatically access sub objects of the default client.
-     * 
+     *
      * The service path is broken up into segments using periods. See the Robot Raconter
      * documentation for more information. The BuildServicePath() function can be used to assist
-     * building service paths. The first level of the* service path may be "*" to match any service name. 
+     * building service paths. The first level of the* service path may be "*" to match any service name.
      * For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
-     * 
+     *
      * @param servicepath The service path of the sub object
      * @param objecttype Optional object type to use for the sub object
      * @return RR_SHARED_PTR<SubObjectSubscription> The sub object subscription
      */
-    RR_SHARED_PTR<SubObjectSubscription> SubscribeSubObject(boost::string_ref servicepath, boost::string_ref objecttype = "");
+    RR_SHARED_PTR<SubObjectSubscription> SubscribeSubObject(boost::string_ref servicepath,
+                                                            boost::string_ref objecttype = "");
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
@@ -1525,20 +1526,20 @@ class PipeSubscription : public PipeSubscriptionBase
 
 /**
  * @brief Subscription for sub objects of the default client
- * 
+ *
  * SubObjectSubscription is used to access sub objects of the default client. Sub objects are objects within a service
  * that are not the root object. Sub objects are typically referenced using objref members, however they can also be
  * referenced using a service path. The SubObjectSubscription class is used to automatically access sub objects of the
  * default client.
- * 
+ *
  * Use ServiceSubscription::SubscribeSubObject() to create a SubObjectSubscription.
- * 
+ *
  * This class should not be used to access Pipe or Wire members. Use the ServiceSubscription::SubscribePipe() and
  * ServiceSubscription::SubscribeWire() functions to access Pipe and Wire members.
- * 
+ *
  */
 class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FROM_THIS<SubObjectSubscription>,
-                                                     private boost::noncopyable
+                                                      private boost::noncopyable
 {
 
   public:
@@ -1548,13 +1549,13 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
 
     /**
      * @brief Get the "default client" sub object
-     * 
+     *
      * The sub object is retrieved from the default client. The default client is the first client
      * that connected to the service. If no clients are currently connected, an exception is thrown.
-     * 
+     *
      * Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
      * each time the client is needed.
-     * 
+     *
      * @tparam T The type of the sub object
      * @return RR_SHARED_PTR<T> The sub object
      */
@@ -1566,10 +1567,10 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
 
     /**
      * @brief Try getting the "default client" sub object
-     * 
+     *
      * Same as GetDefaultClient(), but returns a bool for success or failure instead of throwing
      * an exception on failure.
-     * 
+     *
      * @tparam T The type of the sub object
      * @param client_out [out] The sub object
      * @return true The sub object was retrieved successfully
@@ -1593,15 +1594,15 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
 
     /**
      * @brief Get the "default client" sub object, waiting for a specified timeout
-     * 
+     *
      The sub object is retrieved from the default client. The default client is the first client
      * that connected to the service. If no clients are currently connected, an exception is thrown.
-     * 
+     *
      * Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
      * each time the client is needed.
-     * 
+     *
      * This function blocks the current thread until the client is retrieved or the timeout is reached.
-     * 
+     *
      * @tparam T The type of the sub object
      * @param timeout The timeout in milliseconds
      * @return RR_SHARED_PTR<T> The sub object
@@ -1614,10 +1615,10 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
 
     /**
      * @brief Try getting the "default client" sub object, waiting for a specified timeout
-     * 
+     *
      * Same as GetDefaultClientWait(), but returns a bool for success or failure instead of throwing
      * an exception on failure.
-     * 
+     *
      * @tparam T The type of the sub object
      * @param client_out [out] The sub object
      * @param timeout The timeout in milliseconds
@@ -1642,11 +1643,11 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
 
     /**
      * @brief Asynchronously get the "default client" sub object
-     * 
+     *
      * Asynchronous version of GetDefaultClient()
-     * 
+     *
      * The handler function is called when the client is retrieved or an error occurs.
-     * 
+     *
      * @tparam T The type of the sub object
      * @param handler The handler function
      * @param timeout The timeout in milliseconds
@@ -1660,7 +1661,7 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
                                               RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
                                   timeout);
     }
-    
+
     void Init();
 
     /**
@@ -1672,12 +1673,12 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
      */
     void Close();
 
-    SubObjectSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref servicepath, boost::string_ref objecttype);
+    SubObjectSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref servicepath,
+                          boost::string_ref objecttype);
 
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
-  protected:    
-
+  protected:
     RR_SHARED_PTR<RRObject> GetDefaultClientBase();
     bool TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out);
 

@@ -1991,7 +1991,8 @@ class WrappedServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<WrappedServ
                              const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter =
                                  RR_SHARED_PTR<WrappedServiceSubscriptionFilter>());
 
-    RR_SHARED_PTR<WrappedSubObjectSubscription> SubscribeSubObject(const std::string& service_path, const std::string& objecttype="");
+    RR_SHARED_PTR<WrappedSubObjectSubscription> SubscribeSubObject(const std::string& service_path,
+                                                                   const std::string& objecttype = "");
 
   protected:
     RR_SHARED_PTR<ServiceSubscription> subscription;
