@@ -3348,7 +3348,12 @@ ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex
 template <typename T>
 static void IdentifierToRegex_case_insensitive_uuid_match(const T& uuid_segment, std::ostream& o)
 {
+#if BOOST_VERSION >= 106000
     BOOST_FOREACH (char c, uuid_segment)
+#else
+    std::string uuid_segment_str = uuid_segment.str();
+    BOOST_FOREACH (char c, uuid_segment_str)
+#endif
     {
         if (boost::is_alpha()(c))
         {
@@ -3364,7 +3369,12 @@ static void IdentifierToRegex_case_insensitive_uuid_match(const T& uuid_segment,
 template <typename T>
 static bool IdentifierToRegex_uuid_all_zero(const T& uuid_segment)
 {
+#if BOOST_VERSION >= 106000
     BOOST_FOREACH (char c, uuid_segment)
+#else
+    std::string uuid_segment_str = uuid_segment.str();
+    BOOST_FOREACH (char c, uuid_segment_str)
+#endif
     {
         if (c != '0')
         {
