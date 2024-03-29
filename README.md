@@ -2,16 +2,16 @@
 
 # Robot Raconteur Core Library and Wrappers
 
-![CI Build Status](https://github.com/robotraconteur/robotraconteur/workflows/CI/badge.svg)
+[![CI](https://github.com/robotraconteur/robotraconteur/actions/workflows/main.yml/badge.svg)](https://github.com/robotraconteur/robotraconteur/actions/workflows/main.yml)
 ![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)
-![Python](https://img.shields.io/badge/python-2.7+|3.5+-blue.svg)
-![pypi](https://img.shields.io/pypi/v/robotraconteur)
+![Python](https://img.shields.io/badge/python-2.7+|3.5+-blue.svg?style=flat&logo=python&logoColor=ffdd54)
+![pypi](https://img.shields.io/pypi/v/robotraconteur?style=flat&logo=pypi)
 ![C++](https://img.shields.io/badge/C++-98+-blue.svg?style=flat&logo=c%2B%2B)
-![C\#](https://img.shields.io/badge/C%23-4.5|netstandard2.0-blue.svg?style=flat&logo=c-sharp)
-![nuget](https://img.shields.io/nuget/v/robotraconteurnet)
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat&logo=java)
+![C\#](https://img.shields.io/badge/C%23-4.5|netstandard2.0-blue.svg?style=flat&logo=csharp)
+![nuget](https://img.shields.io/nuget/v/robotraconteurnet?style=flat&logo=nuget)
+![Java](https://img.shields.io/badge/Java-8+-blue.svg?style=flat&logo=openjdk)
 [![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
-![conda](https://img.shields.io/conda/vn/robotraconteur/robotraconteur?label=conda)
+![conda](https://img.shields.io/conda/vn/conda-forge/robotraconteur?label=conda&logo=anaconda)
 
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
