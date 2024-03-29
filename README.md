@@ -12,6 +12,9 @@
 ![Java](https://img.shields.io/badge/Java-8+-blue.svg?style=flat&logo=openjdk)
 [![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
 ![conda](https://img.shields.io/conda/vn/conda-forge/robotraconteur?label=conda&logo=anaconda)
+![ros-humble](https://img.shields.io/ros/v/noetic/robotraconteur?styple=flat&logo=ros)
+![ros-humble](https://img.shields.io/ros/v/humble/robotraconteur?styple=flat&logo=ros)
+![ros-humble](https://img.shields.io/ros/v/iron/robotraconteur?styple=flat&logo=ros)
 
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
