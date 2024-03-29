@@ -29,7 +29,13 @@ A communication framework for robotics, automation, and the Internet of Things
 
 [http://robotraconteur.com](http://robotraconteur.com)
 
-[J. Wason, "Robot Raconteur® version 0.8: An Updated Communication System for Robotics, Automation, Building Control, and the Internet of Things", in Proc. IEEE Conference on Automation Science and Engineering, 2016, pp. 595-602.](https://s3.amazonaws.com/robotraconteurpublicfiles/docs/RobotRaconteur_CASE2016.pdf)
+[J. Wason and J. T. Wen, "Robot Raconteur® Updates on an Open Source Interoperable Middleware for Robotics", in Proc. IEEE Conference on Automation Science and Engineering, 2023, pp. 1-8.](https://files2.wasontech.com/RobotRaconteur_CASE2023.pdf)
+
+[H. He, B. Aksoy, G. Saunders, J. Wason, and J. T. Wen, "Plug-and-play software architecture for coordinating multiple industrial robots and sensors from multiple vendors", in Proc. IEEE Conference on Automation Science and Engineering, 2023, pp. 1-8.](https://files2.wasontech.com/RobotRaconteur_CASE2023_plugandplay.pdf)
+
+[J. Wason, "Robot Raconteur® version 0.8: An Updated Communication System for Robotics, Automation, Building Control, and the Internet of Things", in Proc. IEEE Conference on Automation Science and Engineering, 2016, pp. 595-602.](https://files2.wasontech.com/RobotRaconteur_CASE2016.pdf)
+
+[J. Wason and J. T. Wen, "Robot Raconteur: A Communication Architecture and Library for Robotic and Automation Systems", in Proc. IEEE Conference on Automation Science and Engineering, 2011, pp. 761-766.](https://files2.wasontech.com/RobotRaconteur_CASE2011.pdf)
 
 ## Contents
 
