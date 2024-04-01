@@ -1788,7 +1788,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager
     RR_SHARED_PTR<ServiceSubscription> CreateSubscription(const ServiceSubscriptionManagerDetails& details);
 
     void UpdateSubscription(detail::ServiceSubscriptionManager_subscription& sub,
-                            const ServiceSubscriptionManagerDetails& details);
+                            const ServiceSubscriptionManagerDetails& details, bool close = false);
 };
 
 namespace detail

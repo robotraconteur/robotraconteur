@@ -3759,7 +3759,7 @@ RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::CreateSubscriptio
     RR_SHARED_PTR<RobotRaconteurNode> n = GetNode();
     RR_SHARED_PTR<detail::Discovery> d = n->m_Discovery;
     RR_SHARED_PTR<ServiceSubscription> sub;
-    if ((details.urls.empty() && details.service_types.empty()) || details.enabled == false)
+    if ((details.urls.empty() && details.service_types.empty()) || !details.enabled)
     {
         // Creating an uninitialized subscription with no URLs or service types
         sub = RR_MAKE_SHARED<ServiceSubscription>(d);
@@ -3779,7 +3779,7 @@ RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::CreateSubscriptio
 }
 
 void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionManager_subscription& sub,
-                                                    const ServiceSubscriptionManagerDetails& details)
+                                                    const ServiceSubscriptionManagerDetails& details, bool close)
 {
     // CALL LOCKED!
     switch (details.connection_method)
@@ -3810,16 +3810,19 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
         sub.details.enabled = false;
     }
 
-    bool sub_running;
+    bool sub_running = false;
     {
         boost::mutex::scoped_lock lock(sub.subscription->this_lock);
         sub_running = !sub.subscription->use_service_url ||
-                      (sub.subscription->use_service_url && sub.subscription->service_url.size() > 0);
+                      (sub.subscription->use_service_url && !sub.subscription->service_url.empty());
     }
 
     if (sub_running && !sub.details.enabled)
     {
-        sub.subscription->SoftClose();
+        if (close)
+        {
+            sub.subscription->SoftClose();
+        }
         return;
     }
 
@@ -3902,6 +3905,7 @@ void ServiceSubscriptionManager::RemoveSubscription(const boost::string_ref& nam
 
         subscriptions.erase(e);
     }
+    if (close)
     {
         sub->Close();
     }
@@ -3932,7 +3936,7 @@ void ServiceSubscriptionManager::DisableSubscription(const boost::string_ref& na
     }
 
     e->second.details.enabled = false;
-    UpdateSubscription(e->second, e->second.details);
+    UpdateSubscription(e->second, e->second.details, close);
 }
 
 RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::GetSubscription(const boost::string_ref& name,
@@ -3944,6 +3948,13 @@ RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::GetSubscription(c
     if (e != subscriptions.end())
     {
         return e->second.subscription;
+    }
+
+    if (!force_create)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                           "ServiceSubscriptionManager subscription not found: " << name);
+        throw InvalidArgumentException("Subscription not found");
     }
 
     ServiceSubscriptionManagerDetails details;
