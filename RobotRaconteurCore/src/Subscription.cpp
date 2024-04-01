@@ -687,6 +687,48 @@ void ServiceSubscription::Close()
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription closed");
 }
 
+void ServiceSubscription::SoftClose()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+
+    service_url.clear();
+    service_url_username.clear();
+    service_url_credentials.reset();
+    use_service_url = true;
+    service_types.clear();
+    filter.reset();
+
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (n)
+    {
+
+        BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client>& c, clients | boost::adaptors::map_values)
+        {
+            c->claimed.data() = false;
+            if (c->retry_timer)
+            {
+                c->retry_timer->Cancel();
+                c->retry_timer.reset();
+            }
+            RR_SHARED_PTR<RRObject> c2 = c->client.lock();
+            if (!c2)
+                continue;
+            try
+            {
+                n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
+            }
+            catch (std::exception&)
+            {}
+        }
+    }
+
+    clients.clear();
+
+    RR_SHARED_PTR<detail::Discovery> d = parent.lock();
+
+    ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription soft closed");
+}
+
 RR_SHARED_PTR<RobotRaconteurNode> ServiceSubscription::GetNode()
 {
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
@@ -3668,6 +3710,304 @@ void SubObjectSubscription::AsyncGetDefaultClientBase(
                                              RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), handler, node,
                                              timeout, servicepath, objecttype),
                                  timeout);
+}
+
+// ServiceSubscriptionManager
+
+ServiceSubscriptionManagerDetails::ServiceSubscriptionManagerDetails()
+{
+    connection_method = ServiceSubscriptionManager_CONNECTION_METHOD_URL;
+    enabled = false;
+}
+
+ServiceSubscriptionManagerDetails::ServiceSubscriptionManagerDetails(
+    const boost::string_ref& name, ServiceSubscriptionManager_CONNECTION_METHOD connection_method,
+    const std::vector<std::string>& urls, const boost::string_ref& url_username,
+    const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& url_credentials,
+    const std::vector<std::string>& service_types, const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter, bool enabled)
+    : name(RR_MOVE(name.to_string())), connection_method(connection_method), urls(urls),
+      url_username(RR_MOVE(url_username.to_string())), url_credentials(url_credentials), service_types(service_types),
+      filter(filter), enabled(enabled)
+{}
+
+ServiceSubscriptionManager::ServiceSubscriptionManager(const RR_SHARED_PTR<RobotRaconteurNode>& node)
+{
+    this->node = node;
+}
+
+ServiceSubscriptionManager::~ServiceSubscriptionManager() {}
+
+RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::CreateSubscription(
+    const ServiceSubscriptionManagerDetails& details)
+{
+    // CALL LOCKED!
+    switch (details.connection_method)
+    {
+    case ServiceSubscriptionManager_CONNECTION_METHOD_URL:
+        break;
+    case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE:
+        if (details.service_types.empty())
+        {
+            throw InvalidArgumentException(
+                "Service types must be specified for ServiceSubscriptionManager connection method type");
+        }
+        break;
+    default:
+        throw InvalidArgumentException("Invalid connection method");
+    }
+
+    RR_SHARED_PTR<RobotRaconteurNode> n = GetNode();
+    RR_SHARED_PTR<detail::Discovery> d = n->m_Discovery;
+    RR_SHARED_PTR<ServiceSubscription> sub;
+    if ((details.urls.empty() && details.service_types.empty()) || details.enabled == false)
+    {
+        // Creating an uninitialized subscription with no URLs or service types
+        sub = RR_MAKE_SHARED<ServiceSubscription>(d);
+    }
+    else
+    {
+        if (details.connection_method == ServiceSubscriptionManager_CONNECTION_METHOD_TYPE)
+        {
+            d->SubscribeServiceByType(details.service_types, details.filter);
+        }
+        else
+        {
+            d->SubscribeService(details.urls, details.url_username, details.url_credentials);
+        }
+    }
+    return sub;
+}
+
+void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionManager_subscription& sub,
+                                                    const ServiceSubscriptionManagerDetails& details)
+{
+    // CALL LOCKED!
+    switch (details.connection_method)
+    {
+    case ServiceSubscriptionManager_CONNECTION_METHOD_URL:
+        break;
+    case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
+        if (details.service_types.empty())
+        {
+            throw InvalidArgumentException(
+                "Service types must be specified for ServiceSubscriptionManager connection method type");
+        }
+    }
+    break;
+    default:
+        throw InvalidArgumentException("Invalid connection method");
+    }
+
+    RR_SHARED_PTR<RobotRaconteurNode> n = GetNode();
+    RR_SHARED_PTR<detail::Discovery> d = n->m_Discovery;
+
+    ServiceSubscriptionManagerDetails old_details = sub.details;
+    sub.details = details;
+
+    if (sub.details.enabled &&
+        (sub.details.connection_method == ServiceSubscriptionManager_CONNECTION_METHOD_URL && sub.details.urls.empty()))
+    {
+        sub.details.enabled = false;
+    }
+
+    bool sub_running;
+    {
+        boost::mutex::scoped_lock lock(sub.subscription->this_lock);
+        sub_running = !sub.subscription->use_service_url ||
+                      (sub.subscription->use_service_url && sub.subscription->service_url.size() > 0);
+    }
+
+    if (sub_running && !sub.details.enabled)
+    {
+        sub.subscription->SoftClose();
+        return;
+    }
+
+    if ((old_details.connection_method != sub.details.connection_method) && sub_running)
+    {
+        sub.subscription->SoftClose();
+
+        switch (sub.details.connection_method)
+        {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_URL: {
+            sub.subscription->InitServiceURL(sub.details.urls, sub.details.url_username, sub.details.url_credentials);
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
+            sub.subscription->Init(sub.details.service_types, sub.details.filter);
+            break;
+        }
+        default:
+            throw InvalidArgumentException("Invalid connection method");
+        }
+    }
+    else
+    {
+        switch (sub.details.connection_method)
+        {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_URL: {
+            sub.subscription->UpdateServiceURL(sub.details.urls, sub.details.url_username, sub.details.url_credentials);
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
+            sub.subscription->UpdateServiceByType(sub.details.service_types, sub.details.filter);
+            break;
+        }
+        default:
+            throw InvalidArgumentException("Invalid connection method");
+        }
+    }
+
+    RR_SHARED_PTR<ThreadPool> tp;
+    if (n->TryGetThreadPool(tp))
+    {
+        tp->TryPost(boost::bind(&detail::Discovery::DoUpdateAllDetectedServices, d, sub.subscription));
+    }
+}
+
+void ServiceSubscriptionManager::Init(const std::vector<ServiceSubscriptionManagerDetails>& details)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    BOOST_FOREACH (const ServiceSubscriptionManagerDetails& e, details)
+    {
+        RR_SHARED_PTR<ServiceSubscription> sub = CreateSubscription(e);
+        detail::ServiceSubscriptionManager_subscription s;
+        s.subscription = sub;
+        s.details = e;
+        subscriptions.insert(std::make_pair(e.name, s));
+    }
+}
+
+void ServiceSubscriptionManager::AddSubscription(const ServiceSubscriptionManagerDetails& details)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    RR_SHARED_PTR<ServiceSubscription> sub = CreateSubscription(details);
+    detail::ServiceSubscriptionManager_subscription s;
+    s.subscription = sub;
+    s.details = details;
+    subscriptions.insert(std::make_pair(details.name, s));
+}
+
+void ServiceSubscriptionManager::RemoveSubscription(const boost::string_ref& name, bool close)
+{
+    RR_SHARED_PTR<ServiceSubscription> sub;
+    {
+        boost::mutex::scoped_lock lock(this_lock);
+        boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+            subscriptions.find(name.to_string());
+        if (e == subscriptions.end() || !e->second.subscription)
+        {
+            return;
+        }
+
+        subscriptions.erase(e);
+    }
+    {
+        sub->Close();
+    }
+}
+
+void ServiceSubscriptionManager::EnableSubscription(const boost::string_ref& name)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+        subscriptions.find(name.to_string());
+    if (e == subscriptions.end() || !e->second.subscription)
+    {
+        return;
+    }
+
+    e->second.details.enabled = true;
+    UpdateSubscription(e->second, e->second.details);
+}
+
+void ServiceSubscriptionManager::DisableSubscription(const boost::string_ref& name, bool close)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+        subscriptions.find(name.to_string());
+    if (e == subscriptions.end() || !e->second.subscription)
+    {
+        return;
+    }
+
+    e->second.details.enabled = false;
+    UpdateSubscription(e->second, e->second.details);
+}
+
+RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::GetSubscription(const boost::string_ref& name,
+                                                                               bool force_create)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+        subscriptions.find(name.to_string());
+    if (e != subscriptions.end())
+    {
+        return e->second.subscription;
+    }
+
+    ServiceSubscriptionManagerDetails details;
+    details.name = name.to_string();
+    details.connection_method = ServiceSubscriptionManager_CONNECTION_METHOD_URL;
+    details.enabled = false;
+
+    RR_SHARED_PTR<ServiceSubscription> sub = CreateSubscription(details);
+    detail::ServiceSubscriptionManager_subscription s;
+    s.subscription = sub;
+    s.details = details;
+    subscriptions.insert(std::make_pair(details.name, s));
+    return sub;
+}
+
+bool ServiceSubscriptionManager::IsConnected(const boost::string_ref& name)
+{
+    RR_SHARED_PTR<ServiceSubscription> sub = GetSubscription(name, false);
+    if (!sub)
+    {
+        return false;
+    }
+
+    RR_SHARED_PTR<RRObject> client;
+    return sub->TryGetDefaultClient(client);
+}
+
+bool ServiceSubscriptionManager::IsEnabled(const boost::string_ref& name)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+        subscriptions.find(name.to_string());
+    if (e == subscriptions.end() || !e->second.subscription)
+    {
+        return false;
+    }
+
+    return e->second.details.enabled;
+}
+
+void ServiceSubscriptionManager::Close(bool close_subscriptions)
+{
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription> subscriptions2;
+    {
+        boost::mutex::scoped_lock lock(this_lock);
+        subscriptions2.swap(subscriptions);
+    }
+    if (close_subscriptions)
+    {
+        BOOST_FOREACH (detail::ServiceSubscriptionManager_subscription& e, subscriptions2 | boost::adaptors::map_values)
+        {
+            e.subscription->Close();
+        }
+    }
+
+    subscriptions2.clear();
+}
+
+RR_SHARED_PTR<RobotRaconteurNode> ServiceSubscriptionManager::GetNode()
+{
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+        throw InvalidOperationException("Node has been released");
+    return n;
 }
 
 } // namespace RobotRaconteur

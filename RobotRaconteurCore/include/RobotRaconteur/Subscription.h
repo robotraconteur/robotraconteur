@@ -42,6 +42,7 @@ class PipeSubscription_connection;
 class WireSubscription_send_iterator;
 class PipeSubscription_send_iterator;
 class ServiceSubscription_custom_member_subscribers;
+class ServiceSubscriptionManager_subscription;
 } // namespace detail
 
 class ROBOTRACONTEUR_CORE_API WireConnectionBase;
@@ -58,6 +59,7 @@ class ROBOTRACONTEUR_CORE_API PipeSubscriptionBase;
 template <typename T>
 class PipeSubscription;
 class ROBOTRACONTEUR_CORE_API SubObjectSubscription;
+class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager;
 
 /**
  * @brief Subscription filter node information
@@ -449,6 +451,7 @@ class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription : public IServiceSubscrip
 {
   public:
     friend class detail::Discovery;
+    friend class ServiceSubscriptionManager;
 
     typedef boost::signals2::connection event_connection;
 
@@ -603,6 +606,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
     friend class PipeSubscriptionBase;
     friend class detail::ServiceSubscription_custom_member_subscribers;
     friend class SubObjectSubscription;
+    friend class ServiceSubscriptionManager;
 
     typedef boost::signals2::connection event_connection;
 
@@ -1052,6 +1056,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
     void AsyncGetDefaultClientBase(
         boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
+
+    void SoftClose();
 };
 
 /**
@@ -1712,6 +1718,77 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
     RR_WEAK_PTR<RobotRaconteurNode> node;
     std::string servicepath;
     std::string objecttype;
+};
+
+enum ServiceSubscriptionManager_CONNECTION_METHOD
+{
+    ServiceSubscriptionManager_CONNECTION_METHOD_URL,
+    ServiceSubscriptionManager_CONNECTION_METHOD_TYPE
+};
+
+struct ROBOTRACONTEUR_CORE_API ServiceSubscriptionManagerDetails
+{
+    std::string name;
+    ServiceSubscriptionManager_CONNECTION_METHOD connection_method;
+    std::vector<std::string> urls;
+    std::string url_username;
+    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > url_credentials;
+    std::vector<std::string> service_types;
+    RR_SHARED_PTR<ServiceSubscriptionFilter> filter;
+    bool enabled;
+
+    ServiceSubscriptionManagerDetails();
+
+    ServiceSubscriptionManagerDetails(
+        const boost::string_ref& name,
+        ServiceSubscriptionManager_CONNECTION_METHOD connection_method =
+            ServiceSubscriptionManager_CONNECTION_METHOD_URL,
+        const std::vector<std::string>& urls = std::vector<std::string>(), const boost::string_ref& url_username = "",
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& url_credentials =
+            RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(),
+        const std::vector<std::string>& service_types = std::vector<std::string>(),
+        const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter = RR_SHARED_PTR<ServiceSubscriptionFilter>(),
+        bool enabled = false);
+};
+
+class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager
+{
+  public:
+    ServiceSubscriptionManager(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
+
+    virtual ~ServiceSubscriptionManager();
+
+    void Init(const std::vector<ServiceSubscriptionManagerDetails>& details);
+
+    void AddSubscription(const ServiceSubscriptionManagerDetails& details);
+
+    void RemoveSubscription(const boost::string_ref& name, bool close = true);
+
+    void EnableSubscription(const boost::string_ref& name);
+
+    void DisableSubscription(const boost::string_ref& name, bool close = true);
+
+    RR_SHARED_PTR<ServiceSubscription> GetSubscription(const boost::string_ref& name, bool force_create = true);
+
+    bool IsConnected(const boost::string_ref& name);
+
+    bool IsEnabled(const boost::string_ref& name);
+
+    void Close(bool close_subscriptions = true);
+
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
+  protected:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+
+    boost::mutex this_lock;
+
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription> subscriptions;
+
+    RR_SHARED_PTR<ServiceSubscription> CreateSubscription(const ServiceSubscriptionManagerDetails& details);
+
+    void UpdateSubscription(detail::ServiceSubscriptionManager_subscription& sub,
+                            const ServiceSubscriptionManagerDetails& details);
 };
 
 namespace detail
