@@ -2192,6 +2192,9 @@ struct WrappedServiceSubscriptionManagerDetails
 
 class WrappedServiceSubscriptionManager
 {
+    void _Init(const std::vector<WrappedServiceSubscriptionManagerDetails>& details,
+               const RR_SHARED_PTR<RobotRaconteurNode>& node);
+
   public:
     WrappedServiceSubscriptionManager();
 

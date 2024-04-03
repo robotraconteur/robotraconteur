@@ -4493,21 +4493,30 @@ static void WrappedSubscriptionManager_convert_details(const RR_SHARED_PTR<Robot
 }
 
 WrappedServiceSubscriptionManager::WrappedServiceSubscriptionManager()
-    : WrappedServiceSubscriptionManager(std::vector<WrappedServiceSubscriptionManagerDetails>(),
-                                        RobotRaconteurNode::sp())
-{}
+
+{
+    _Init(std::vector<WrappedServiceSubscriptionManagerDetails>(), RobotRaconteurNode::sp());
+}
 
 WrappedServiceSubscriptionManager::WrappedServiceSubscriptionManager(const boost::shared_ptr<RobotRaconteurNode>& node)
-    : WrappedServiceSubscriptionManager(std::vector<WrappedServiceSubscriptionManagerDetails>(), node)
-{}
+{
+    _Init(std::vector<WrappedServiceSubscriptionManagerDetails>(), node);
+}
 
 WrappedServiceSubscriptionManager::WrappedServiceSubscriptionManager(
     const std::vector<WrappedServiceSubscriptionManagerDetails>& details)
-    : WrappedServiceSubscriptionManager(details, RobotRaconteurNode::sp())
-{}
+{
+    _Init(details, RobotRaconteurNode::sp());
+}
 
 WrappedServiceSubscriptionManager::WrappedServiceSubscriptionManager(
     const std::vector<WrappedServiceSubscriptionManagerDetails>& details, const RR_SHARED_PTR<RobotRaconteurNode>& node)
+{
+    _Init(details, node);
+}
+
+void WrappedServiceSubscriptionManager::_Init(const std::vector<WrappedServiceSubscriptionManagerDetails>& details,
+                                              const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
 
     std::vector<ServiceSubscriptionManagerDetails> details2;
