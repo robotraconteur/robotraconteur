@@ -21,6 +21,7 @@
 %shared_ptr(RobotRaconteur::WrappedPipeSubscription);
 %shared_ptr(RobotRaconteur::WrappedWireSubscription);
 %shared_ptr(RobotRaconteur::WrappedSubObjectSubscription);
+%shared_ptr(RobotRaconteur::WrappedServiceSubscriptionManager)
 
 %rename (WrappedServiceSubscriptionClientID) ServiceSubscriptionClientID;
 
@@ -28,6 +29,7 @@
 %template(map_subscriptionclients) std::map<RobotRaconteur::ServiceSubscriptionClientID, boost::shared_ptr<RobotRaconteur::WrappedServiceStub> >;
 %template(vectorptr_wrappedservicesubscriptionnode) std::vector<boost::shared_ptr<RobotRaconteur::WrappedServiceSubscriptionFilterNode> >;
 %template(vectorptr_subscriptionclientid) std::vector<RobotRaconteur::ServiceSubscriptionClientID>;
+%template(vector_wrappedservicesubscriptionmanagerdetails) std::vector<RobotRaconteur::WrappedServiceSubscriptionManagerDetails>;
 
 %feature("director") RobotRaconteur::WrappedServiceInfo2SubscriptionDirector;
 %feature("director") RobotRaconteur::WrappedServiceSubscriptionDirector;
@@ -361,5 +363,69 @@ namespace RobotRaconteur
 	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(const boost::shared_ptr<RobotRaconteurNode>& node, const std::vector<std::string>& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
 
 	boost::shared_ptr<WrappedServiceSubscription> WrappedSubscribeService(const boost::shared_ptr<RobotRaconteurNode>& node, const std::string& url, const std::string& username = "", boost::intrusive_ptr<MessageElementData> credentials=boost::intrusive_ptr<MessageElementData>(),  const std::string& objecttype = "");
+
+	enum ServiceSubscriptionManager_CONNECTION_METHOD
+	{
+		ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT,
+		ServiceSubscriptionManager_CONNECTION_METHOD_URL,
+		ServiceSubscriptionManager_CONNECTION_METHOD_TYPE
+	};
+
+	struct WrappedServiceSubscriptionManagerDetails
+	{
+		std::string Name;
+		ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod;
+		std::vector<std::string> Urls;
+		std::string UrlUsername;
+		boost::intrusive_ptr<MessageElementData> UrlCredentials;
+		std::vector<std::string> ServiceTypes;
+		boost::shared_ptr<WrappedServiceSubscriptionFilter> Filter;
+		bool Enabled;
+
+		WrappedServiceSubscriptionManagerDetails();
+
+		WrappedServiceSubscriptionManagerDetails(
+			const std::string& Name = "",
+			ServiceSubscriptionManager_CONNECTION_METHOD Connection_method =
+				ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT,
+			const std::vector<std::string>& Urls = std::vector<std::string>(), const std::string& UrlUsername = "",
+			const boost::intrusive_ptr<MessageElementData>& UrlCredentials =
+				boost::intrusive_ptr<MessageElementData>(),
+			const std::vector<std::string>& ServiceTypes = std::vector<std::string>(),
+			const boost::shared_ptr<WrappedServiceSubscriptionFilter>& Filter = boost::shared_ptr<WrappedServiceSubscriptionFilter>(),
+			bool Enabled = false);
+	};
+
+	class WrappedServiceSubscriptionManager
+	{
+	public:
+
+		WrappedServiceSubscriptionManager();
+
+		WrappedServiceSubscriptionManager(const boost::shared_ptr<RobotRaconteurNode>& node);
+
+		WrappedServiceSubscriptionManager(const std::vector<WrappedServiceSubscriptionManagerDetails>& details);
+
+		WrappedServiceSubscriptionManager(const std::vector<WrappedServiceSubscriptionManagerDetails>& details,
+								const boost::shared_ptr<RobotRaconteurNode>& node);
+
+		void AddSubscription(const WrappedServiceSubscriptionManagerDetails& details);
+
+		void RemoveSubscription(const std::string& name, bool close = true);
+
+		void EnableSubscription(const std::string& name);
+
+		void DisableSubscription(const std::string& name, bool close = true);
+
+		boost::shared_ptr<WrappedServiceSubscription> GetSubscription(const std::string& name, bool force_create = true);
+
+		bool IsConnected(const std::string& name);
+
+		bool IsEnabled(const std::string& name);
+
+		void Close(bool close_subscriptions = true);
+
+		boost::shared_ptr<RobotRaconteurNode> GetNode();
+	};
 
 }

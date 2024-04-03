@@ -2163,6 +2163,72 @@ RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(
 static RR_SHARED_PTR<ServiceSubscriptionFilter> WrappedSubscribeService_LoadFilter(
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter);
 
+// ServiceSubscriptionManager
+
+struct WrappedServiceSubscriptionManagerDetails
+{
+    std::string Name;
+    ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod;
+    std::vector<std::string> Urls;
+    std::string UrlUsername;
+    RR_INTRUSIVE_PTR<MessageElementData> UrlCredentials;
+    std::vector<std::string> ServiceTypes;
+    RR_SHARED_PTR<WrappedServiceSubscriptionFilter> Filter;
+    bool Enabled;
+
+    WrappedServiceSubscriptionManagerDetails();
+
+    WrappedServiceSubscriptionManagerDetails(
+        const std::string& Name,
+        ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod =
+            ServiceSubscriptionManager_CONNECTION_METHOD_URL,
+        const std::vector<std::string>& Urls = std::vector<std::string>(), const std::string& UrlUsername = "",
+        const RR_INTRUSIVE_PTR<MessageElementData>& UrlCredentials = RR_INTRUSIVE_PTR<MessageElementData>(),
+        const std::vector<std::string>& ServiceTypes = std::vector<std::string>(),
+        const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& Filter =
+            RR_SHARED_PTR<WrappedServiceSubscriptionFilter>(),
+        bool Enabled = true);
+};
+
+class WrappedServiceSubscriptionManager
+{
+    void _Init(const std::vector<WrappedServiceSubscriptionManagerDetails>& details,
+               const RR_SHARED_PTR<RobotRaconteurNode>& node);
+
+  public:
+    WrappedServiceSubscriptionManager();
+
+    WrappedServiceSubscriptionManager(const boost::shared_ptr<RobotRaconteurNode>& node);
+
+    WrappedServiceSubscriptionManager(const std::vector<WrappedServiceSubscriptionManagerDetails>& details);
+
+    WrappedServiceSubscriptionManager(const std::vector<WrappedServiceSubscriptionManagerDetails>& details,
+                                      const boost::shared_ptr<RobotRaconteurNode>& node);
+
+    void AddSubscription(const WrappedServiceSubscriptionManagerDetails& details);
+
+    void RemoveSubscription(const std::string& name, bool close = true);
+
+    void EnableSubscription(const std::string& name);
+
+    void DisableSubscription(const std::string& name, bool close = true);
+
+    RR_SHARED_PTR<WrappedServiceSubscription> GetSubscription(const std::string& name, bool force_create = true);
+
+    bool IsConnected(const std::string& name);
+
+    bool IsEnabled(const std::string& name);
+
+    void Close(bool close_subscriptions = true);
+
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
+  protected:
+    RR_SHARED_PTR<ServiceSubscriptionManager> subscription_manager;
+    boost::unordered_map<std::string, RR_SHARED_PTR<WrappedServiceSubscription> > subscriptions;
+    boost::mutex this_lock;
+};
+
 class UserLogRecordHandlerDirector
 {
   public:
