@@ -854,6 +854,7 @@ void ServiceSubscription::Init(const std::vector<std::string>& service_types,
     this->active = true;
     this->service_types = service_types;
     this->filter = filter;
+    this->use_service_url = false;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
         node, Subscription, -1,
@@ -3716,18 +3717,18 @@ void SubObjectSubscription::AsyncGetDefaultClientBase(
 
 ServiceSubscriptionManagerDetails::ServiceSubscriptionManagerDetails()
 {
-    connection_method = ServiceSubscriptionManager_CONNECTION_METHOD_URL;
-    enabled = false;
+    ConnectionMethod = ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT;
+    Enabled = false;
 }
 
 ServiceSubscriptionManagerDetails::ServiceSubscriptionManagerDetails(
-    const boost::string_ref& name, ServiceSubscriptionManager_CONNECTION_METHOD connection_method,
-    const std::vector<std::string>& urls, const boost::string_ref& url_username,
-    const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& url_credentials,
-    const std::vector<std::string>& service_types, const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter, bool enabled)
-    : name(RR_MOVE(name.to_string())), connection_method(connection_method), urls(urls),
-      url_username(RR_MOVE(url_username.to_string())), url_credentials(url_credentials), service_types(service_types),
-      filter(filter), enabled(enabled)
+    const boost::string_ref& Name, ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod,
+    const std::vector<std::string>& Urls, const boost::string_ref& UrlUsername,
+    const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& UrlCredentials, const std::vector<std::string>& ServiceTypes,
+    const RR_SHARED_PTR<ServiceSubscriptionFilter>& Filter, bool Enabled)
+    : Name(RR_MOVE(Name.to_string())), ConnectionMethod(ConnectionMethod), Urls(Urls),
+      UrlUsername(RR_MOVE(UrlUsername.to_string())), UrlCredentials(UrlCredentials), ServiceTypes(ServiceTypes),
+      Filter(Filter), Enabled(Enabled)
 {}
 
 ServiceSubscriptionManager::ServiceSubscriptionManager(const RR_SHARED_PTR<RobotRaconteurNode>& node)
@@ -3741,12 +3742,13 @@ RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::CreateSubscriptio
     const ServiceSubscriptionManagerDetails& details)
 {
     // CALL LOCKED!
-    switch (details.connection_method)
+    switch (details.ConnectionMethod)
     {
+    case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT:
     case ServiceSubscriptionManager_CONNECTION_METHOD_URL:
         break;
     case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE:
-        if (details.service_types.empty())
+        if (details.ServiceTypes.empty())
         {
             throw InvalidArgumentException(
                 "Service types must be specified for ServiceSubscriptionManager connection method type");
@@ -3759,20 +3761,36 @@ RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::CreateSubscriptio
     RR_SHARED_PTR<RobotRaconteurNode> n = GetNode();
     RR_SHARED_PTR<detail::Discovery> d = n->m_Discovery;
     RR_SHARED_PTR<ServiceSubscription> sub;
-    if ((details.urls.empty() && details.service_types.empty()) || !details.enabled)
+    if ((details.Urls.empty() && details.ServiceTypes.empty()) || !details.Enabled)
     {
         // Creating an uninitialized subscription with no URLs or service types
         sub = RR_MAKE_SHARED<ServiceSubscription>(d);
     }
     else
     {
-        if (details.connection_method == ServiceSubscriptionManager_CONNECTION_METHOD_TYPE)
+        switch (details.ConnectionMethod)
         {
-            d->SubscribeServiceByType(details.service_types, details.filter);
+        case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT: {
+            if (!details.Urls.empty())
+            {
+                sub = d->SubscribeService(details.Urls, details.UrlUsername, details.UrlCredentials);
+            }
+            else
+            {
+                sub = d->SubscribeServiceByType(details.ServiceTypes, details.Filter);
+            }
+            break;
         }
-        else
-        {
-            d->SubscribeService(details.urls, details.url_username, details.url_credentials);
+        case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
+            sub = d->SubscribeServiceByType(details.ServiceTypes, details.Filter);
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_URL: {
+            sub = d->SubscribeService(details.Urls, details.UrlUsername, details.UrlCredentials);
+            break;
+        }
+        default:
+            throw InvalidArgumentException("Invalid connection method");
         }
     }
     return sub;
@@ -3782,12 +3800,19 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
                                                     const ServiceSubscriptionManagerDetails& details, bool close)
 {
     // CALL LOCKED!
-    switch (details.connection_method)
+
+    if (details.Name.empty())
     {
+        throw InvalidArgumentException("Subscription name must be specified");
+    }
+
+    switch (details.ConnectionMethod)
+    {
+    case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT:
     case ServiceSubscriptionManager_CONNECTION_METHOD_URL:
         break;
     case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
-        if (details.service_types.empty())
+        if (details.ServiceTypes.empty())
         {
             throw InvalidArgumentException(
                 "Service types must be specified for ServiceSubscriptionManager connection method type");
@@ -3804,10 +3829,17 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
     ServiceSubscriptionManagerDetails old_details = sub.details;
     sub.details = details;
 
-    if (sub.details.enabled &&
-        (sub.details.connection_method == ServiceSubscriptionManager_CONNECTION_METHOD_URL && sub.details.urls.empty()))
+    if (sub.details.Enabled && ((sub.details.ConnectionMethod == ServiceSubscriptionManager_CONNECTION_METHOD_URL) &&
+                                sub.details.Urls.empty()))
     {
-        sub.details.enabled = false;
+        sub.details.Enabled = false;
+    }
+
+    if (sub.details.Enabled &&
+        ((sub.details.ConnectionMethod == ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT) &&
+         (sub.details.Urls.empty() && sub.details.ServiceTypes.empty())))
+    {
+        sub.details.Enabled = false;
     }
 
     bool sub_running = false;
@@ -3817,7 +3849,7 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
                       (sub.subscription->use_service_url && !sub.subscription->service_url.empty());
     }
 
-    if (sub_running && !sub.details.enabled)
+    if (sub_running && !sub.details.Enabled)
     {
         if (close)
         {
@@ -3826,18 +3858,35 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
         return;
     }
 
-    if ((old_details.connection_method != sub.details.connection_method) && sub_running)
+    if (((old_details.ConnectionMethod != sub.details.ConnectionMethod) ||
+         (old_details.ConnectionMethod == ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT ||
+          sub.details.ConnectionMethod == ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT)) ||
+        !sub_running)
     {
-        sub.subscription->SoftClose();
-
-        switch (sub.details.connection_method)
+        if (sub_running)
         {
+            sub.subscription->SoftClose();
+        }
+
+        switch (sub.details.ConnectionMethod)
+        {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT: {
+            if (!sub.details.Urls.empty())
+            {
+                sub.subscription->InitServiceURL(sub.details.Urls, sub.details.UrlUsername, sub.details.UrlCredentials);
+            }
+            else
+            {
+                sub.subscription->Init(sub.details.ServiceTypes, sub.details.Filter);
+            }
+            break;
+        }
         case ServiceSubscriptionManager_CONNECTION_METHOD_URL: {
-            sub.subscription->InitServiceURL(sub.details.urls, sub.details.url_username, sub.details.url_credentials);
+            sub.subscription->InitServiceURL(sub.details.Urls, sub.details.UrlUsername, sub.details.UrlCredentials);
             break;
         }
         case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
-            sub.subscription->Init(sub.details.service_types, sub.details.filter);
+            sub.subscription->Init(sub.details.ServiceTypes, sub.details.Filter);
             break;
         }
         default:
@@ -3846,14 +3895,26 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
     }
     else
     {
-        switch (sub.details.connection_method)
+        switch (sub.details.ConnectionMethod)
         {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT: {
+            if (!sub.details.Urls.empty())
+            {
+                sub.subscription->UpdateServiceURL(sub.details.Urls, sub.details.UrlUsername,
+                                                   sub.details.UrlCredentials);
+            }
+            else
+            {
+                sub.subscription->UpdateServiceByType(sub.details.ServiceTypes, sub.details.Filter);
+            }
+            break;
+        }
         case ServiceSubscriptionManager_CONNECTION_METHOD_URL: {
-            sub.subscription->UpdateServiceURL(sub.details.urls, sub.details.url_username, sub.details.url_credentials);
+            sub.subscription->UpdateServiceURL(sub.details.Urls, sub.details.UrlUsername, sub.details.UrlCredentials);
             break;
         }
         case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
-            sub.subscription->UpdateServiceByType(sub.details.service_types, sub.details.filter);
+            sub.subscription->UpdateServiceByType(sub.details.ServiceTypes, sub.details.Filter);
             break;
         }
         default:
@@ -3877,7 +3938,7 @@ void ServiceSubscriptionManager::Init(const std::vector<ServiceSubscriptionManag
         detail::ServiceSubscriptionManager_subscription s;
         s.subscription = sub;
         s.details = e;
-        subscriptions.insert(std::make_pair(e.name, s));
+        subscriptions.insert(std::make_pair(e.Name, s));
     }
 }
 
@@ -3888,7 +3949,7 @@ void ServiceSubscriptionManager::AddSubscription(const ServiceSubscriptionManage
     detail::ServiceSubscriptionManager_subscription s;
     s.subscription = sub;
     s.details = details;
-    subscriptions.insert(std::make_pair(details.name, s));
+    subscriptions.insert(std::make_pair(details.Name, s));
 }
 
 void ServiceSubscriptionManager::RemoveSubscription(const boost::string_ref& name, bool close)
@@ -3903,11 +3964,20 @@ void ServiceSubscriptionManager::RemoveSubscription(const boost::string_ref& nam
             return;
         }
 
+        sub = e->second.subscription;
         subscriptions.erase(e);
     }
-    if (close)
+    if (close && sub)
     {
-        sub->Close();
+        try
+        {
+            sub->Close();
+        }
+        catch (std::exception& exp)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                               "ServiceSubscriptionManager close failed: " << exp.what());
+        }
     }
 }
 
@@ -3921,7 +3991,7 @@ void ServiceSubscriptionManager::EnableSubscription(const boost::string_ref& nam
         return;
     }
 
-    e->second.details.enabled = true;
+    e->second.details.Enabled = true;
     UpdateSubscription(e->second, e->second.details);
 }
 
@@ -3935,7 +4005,7 @@ void ServiceSubscriptionManager::DisableSubscription(const boost::string_ref& na
         return;
     }
 
-    e->second.details.enabled = false;
+    e->second.details.Enabled = false;
     UpdateSubscription(e->second, e->second.details, close);
 }
 
@@ -3958,15 +4028,15 @@ RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::GetSubscription(c
     }
 
     ServiceSubscriptionManagerDetails details;
-    details.name = name.to_string();
-    details.connection_method = ServiceSubscriptionManager_CONNECTION_METHOD_URL;
-    details.enabled = false;
+    details.Name = name.to_string();
+    details.ConnectionMethod = ServiceSubscriptionManager_CONNECTION_METHOD_URL;
+    details.Enabled = false;
 
     RR_SHARED_PTR<ServiceSubscription> sub = CreateSubscription(details);
     detail::ServiceSubscriptionManager_subscription s;
     s.subscription = sub;
     s.details = details;
-    subscriptions.insert(std::make_pair(details.name, s));
+    subscriptions.insert(std::make_pair(details.Name, s));
     return sub;
 }
 
@@ -3992,7 +4062,7 @@ bool ServiceSubscriptionManager::IsEnabled(const boost::string_ref& name)
         return false;
     }
 
-    return e->second.details.enabled;
+    return e->second.details.Enabled;
 }
 
 void ServiceSubscriptionManager::Close(bool close_subscriptions)
@@ -4006,7 +4076,18 @@ void ServiceSubscriptionManager::Close(bool close_subscriptions)
     {
         BOOST_FOREACH (detail::ServiceSubscriptionManager_subscription& e, subscriptions2 | boost::adaptors::map_values)
         {
-            e.subscription->Close();
+            if (e.subscription)
+            {
+                try
+                {
+                    e.subscription->Close();
+                }
+                catch (std::exception& exp)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                                       "ServiceSubscriptionManager close failed: " << exp.what());
+                }
+            }
         }
     }
 

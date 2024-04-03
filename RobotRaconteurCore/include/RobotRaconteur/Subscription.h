@@ -1722,33 +1722,34 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
 
 enum ServiceSubscriptionManager_CONNECTION_METHOD
 {
+    ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT,
     ServiceSubscriptionManager_CONNECTION_METHOD_URL,
     ServiceSubscriptionManager_CONNECTION_METHOD_TYPE
 };
 
 struct ROBOTRACONTEUR_CORE_API ServiceSubscriptionManagerDetails
 {
-    std::string name;
-    ServiceSubscriptionManager_CONNECTION_METHOD connection_method;
-    std::vector<std::string> urls;
-    std::string url_username;
-    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > url_credentials;
-    std::vector<std::string> service_types;
-    RR_SHARED_PTR<ServiceSubscriptionFilter> filter;
-    bool enabled;
+    std::string Name;
+    ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod;
+    std::vector<std::string> Urls;
+    std::string UrlUsername;
+    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > UrlCredentials;
+    std::vector<std::string> ServiceTypes;
+    RR_SHARED_PTR<ServiceSubscriptionFilter> Filter;
+    bool Enabled;
 
     ServiceSubscriptionManagerDetails();
 
     ServiceSubscriptionManagerDetails(
-        const boost::string_ref& name,
-        ServiceSubscriptionManager_CONNECTION_METHOD connection_method =
-            ServiceSubscriptionManager_CONNECTION_METHOD_URL,
-        const std::vector<std::string>& urls = std::vector<std::string>(), const boost::string_ref& url_username = "",
-        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& url_credentials =
+        const boost::string_ref& Name,
+        ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod =
+            ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT,
+        const std::vector<std::string>& Urls = std::vector<std::string>(), const boost::string_ref& UrlUsername = "",
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& UrlCredentials =
             RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(),
-        const std::vector<std::string>& service_types = std::vector<std::string>(),
-        const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter = RR_SHARED_PTR<ServiceSubscriptionFilter>(),
-        bool enabled = false);
+        const std::vector<std::string>& ServiceTypes = std::vector<std::string>(),
+        const RR_SHARED_PTR<ServiceSubscriptionFilter>& Filter = RR_SHARED_PTR<ServiceSubscriptionFilter>(),
+        bool Enabled = true);
 };
 
 class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager
