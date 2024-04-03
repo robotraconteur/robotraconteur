@@ -377,9 +377,9 @@ namespace RobotRaconteur
 		ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod;
 		std::vector<std::string> Urls;
 		std::string UrlUsername;
-		RR_INTRUSIVE_PTR<MessageElementData> UrlCredentials;
+		boost::intrusive_ptr<MessageElementData> UrlCredentials;
 		std::vector<std::string> ServiceTypes;
-		RR_SHARED_PTR<WrappedServiceSubscriptionFilter> Filter;
+		boost::shared_ptr<WrappedServiceSubscriptionFilter> Filter;
 		bool Enabled;
 
 		WrappedServiceSubscriptionManagerDetails();

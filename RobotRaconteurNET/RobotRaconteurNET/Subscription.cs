@@ -1516,6 +1516,141 @@ public class SubObjectSubscription
     }
 }
 
+public class ServiceSubscriptionManagerDetails
+{
+    public string Name;
+    public ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod =
+        ServiceSubscriptionManager_CONNECTION_METHOD.CONNECTION_METHOD_DEFAULT;
+    public string[] Urls;
+    public string UrlUsername;
+    public Dictionary<string, object> UrlCredentials;
+    public string[] ServiceTypes;
+    public ServiceSubscriptionFilter Filter;
+    public bool Enabled = true;
+}
+
+public class ServiceSubscriptionManager
+{
+    internal WrappedServiceSubscriptionManager _subscription_manager;
+
+    internal Dictionary<string, ServiceSubscription> _subscriptions = new Dictionary<string, ServiceSubscription>();
+
+    internal WrappedServiceSubscriptionManagerDetails
+    _ServiceSubscriptionManager_LoadDetails(ServiceSubscriptionManagerDetails details)
+    {
+        var details2 = new WrappedServiceSubscriptionManagerDetails();
+        details2.Name = details.Name;
+        details2.ConnectionMethod = (ServiceSubscriptionManager_CONNECTION_METHOD)details.ConnectionMethod;
+        if (details.Urls != null)
+        {
+            foreach (var s in details.Urls)
+            {
+                details2.Urls.Add(s);
+            }
+        }
+        details2.UrlUsername = details.UrlUsername;
+        if (details.UrlCredentials != null)
+        {
+            details2.UrlCredentials =
+                (MessageElementData)RobotRaconteurNode.s.PackMapType<string, object>(details.UrlCredentials);
+        }
+        if (details.ServiceTypes != null)
+        {
+            foreach (var s in details.ServiceTypes)
+            {
+                details2.ServiceTypes.Add(s);
+            }
+        }
+        if (details.Filter != null)
+        {
+            details2.Filter = RobotRaconteurNode.s.SubscribeService_LoadFilter(details.Filter);
+        }
+        details2.Enabled = details.Enabled;
+        return details2;
+    }
+
+    public ServiceSubscriptionManager(ServiceSubscriptionManagerDetails[] details = null)
+    {
+        var details2 = new vector_wrappedservicesubscriptionmanagerdetails();
+        if (details != null)
+        {
+            foreach (var d in details)
+            {
+                details2.Add(_ServiceSubscriptionManager_LoadDetails(d));
+            }
+        }
+
+        _subscription_manager = new WrappedServiceSubscriptionManager(details2);
+    }
+
+    public void AddSubscription(ServiceSubscriptionManagerDetails details)
+    {
+        _subscription_manager.AddSubscription(_ServiceSubscriptionManager_LoadDetails(details));
+    }
+
+    public void RemoveSubscription(string name, bool close = true)
+    {
+        lock (this)
+        {
+            _subscription_manager.RemoveSubscription(name, close);
+            if (close)
+            {
+                _subscriptions.Remove(name);
+            }
+        }
+    }
+
+    public void EnableSubscription(string name)
+    {
+        _subscription_manager.EnableSubscription(name);
+    }
+
+    public void DisableSubscription(string name, bool close = true)
+    {
+        _subscription_manager.DisableSubscription(name, close);
+    }
+
+    public ServiceSubscription GetSubscription(string name, bool force_create = false)
+    {
+        lock (this)
+        {
+            if (_subscriptions.ContainsKey(name))
+            {
+                return _subscriptions[name];
+            }
+
+            var s = _subscription_manager.GetSubscription(name, force_create);
+            if (s == null)
+            {
+                return null;
+            }
+
+            var s2 = new ServiceSubscription(s);
+            _subscriptions[name] = s2;
+            return s2;
+        }
+    }
+
+    public bool IsConnected(string name)
+    {
+        return _subscription_manager.IsConnected(name);
+    }
+
+    public bool IsEnabled(string name)
+    {
+        return _subscription_manager.IsEnabled(name);
+    }
+
+    public void Close(bool close_subscriptions = true)
+    {
+        _subscription_manager.Close(close_subscriptions);
+        lock (this)
+        {
+            _subscriptions.Clear();
+        }
+    }
+}
+
 public partial class RobotRaconteurNode
 {
 
