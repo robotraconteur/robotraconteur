@@ -1720,26 +1720,62 @@ class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FR
     std::string objecttype;
 };
 
+/**
+ * @brief Connection method for ServiceSubscriptionManager subscription
+ *
+ * Select between using URLs or service types for subscription
+ *
+ */
 enum ServiceSubscriptionManager_CONNECTION_METHOD
 {
+    /** @brief Implicitly select between URL and service types */
     ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT,
+    /** @brief Use URLs types for subscription */
     ServiceSubscriptionManager_CONNECTION_METHOD_URL,
+    /** @brief Use service types for subscription */
     ServiceSubscriptionManager_CONNECTION_METHOD_TYPE
 };
 
+/**
+ * @brief ServiceSubscriptionManager subscription connection information
+ *
+ * Contains the connection information for a ServiceSubscriptionManager subscription
+ * and the local name of the subscription
+ */
 struct ROBOTRACONTEUR_CORE_API ServiceSubscriptionManagerDetails
 {
+    /** @brief The local name of the subscription */
     std::string Name;
+    /** @brief The connection method to use, URL or service type */
     ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod;
+    /** @brief The URLs to use for subscription */
     std::vector<std::string> Urls;
+    /** @brief The username to use for URLs (optional)*/
     std::string UrlUsername;
+    /** @brief The credentials to use for URLs (optional)*/
     RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > UrlCredentials;
+    /** @brief The service types to use for subscription */
     std::vector<std::string> ServiceTypes;
+    /** @brief The filter to use for subscription when service type is used (optional) */
     RR_SHARED_PTR<ServiceSubscriptionFilter> Filter;
+    /** @brief If the subscription is enabled */
     bool Enabled;
 
+    /** @brief Construct a new ServiceSubscriptionManagerDetails object */
     ServiceSubscriptionManagerDetails();
 
+    /**
+     * @brief Construct a new ServiceSubscriptionManagerDetails object with parameters
+     *
+     * @param Name The local name of the subscription
+     * @param ConnectionMethod The connection method to use, URL or service type
+     * @param Urls The URLs to use for subscription
+     * @param UrlUsername The username to use for URLs (optional)
+     * @param UrlCredentials The credentials to use for URLs (optional)
+     * @param ServiceTypes The service types to use for subscription
+     * @param Filter The filter to use for subscription when service type is used (optional)
+     * @param Enabled If the subscription is enabled
+     */
     ServiceSubscriptionManagerDetails(
         const boost::string_ref& Name,
         ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod =
@@ -1752,31 +1788,101 @@ struct ROBOTRACONTEUR_CORE_API ServiceSubscriptionManagerDetails
         bool Enabled = true);
 };
 
+/**
+ * @brief Class to manage multiple subscriptions to services
+ *
+ * ServiceSubscriptionManager is used to manage multiple subscriptions to services. Subscriptions
+ * are created using information contained in ServiceSubscriptionManagerDetails structures. The subscriptions
+ * can connect using URLs or service types. The subscriptions can be enabled or disabled, and can be
+ * closed.
+ *
+ */
 class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager
 {
   public:
+    /**
+     * @brief Construct a new ServiceSubscriptionManager object
+     *
+     * @param node (optional) The node to use for the subscription manager
+     */
     ServiceSubscriptionManager(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
 
     virtual ~ServiceSubscriptionManager();
 
+    /**
+     * @brief Initialize the subscription manager with a list of subscriptions
+     *
+     * @param details The list of subscriptions to initialize
+     */
     void Init(const std::vector<ServiceSubscriptionManagerDetails>& details);
 
+    /**
+     * @brief Add a subscription to the manager
+     *
+     * @param details The subscription to add
+     */
     void AddSubscription(const ServiceSubscriptionManagerDetails& details);
 
+    /**
+     * @brief Remove a subscription from the manager
+     *
+     * @param name The local name of the subscription to remove
+     * @param close (optional) If true, close the subscription
+     */
     void RemoveSubscription(const boost::string_ref& name, bool close = true);
 
+    /**
+     * @brief Enable a subscription
+     *
+     * @param name The local name of the subscription to enable
+     */
     void EnableSubscription(const boost::string_ref& name);
 
+    /**
+     * @brief Disable a subscription
+     *
+     * @param name The local name of the subscription to disable
+     * @param close (optional) If true, close subscription if connected
+     */
     void DisableSubscription(const boost::string_ref& name, bool close = true);
 
+    /**
+     * @brief Get a subscription by name
+     *
+     * @param name The local name of the subscription
+     * @param force_create (optional) If true, create the subscription if it does not exist
+     * @return RR_SHARED_PTR<ServiceSubscription> The subscription
+     */
     RR_SHARED_PTR<ServiceSubscription> GetSubscription(const boost::string_ref& name, bool force_create = true);
 
+    /**
+     * @brief Get if a subscription is connected
+     *
+     * @param name The local name of the subscription
+     * @return bool True if the subscription is connected
+     */
     bool IsConnected(const boost::string_ref& name);
 
+    /**
+     * @brief Get if a subscription is enabled
+     *
+     * @param name The local name of the subscription
+     * @return bool True if the subscription is enabled
+     */
     bool IsEnabled(const boost::string_ref& name);
 
+    /**
+     * @brief Close the subscription manager
+     *
+     * @param close_subscriptions (optional) If true, close all subscriptions
+     */
     void Close(bool close_subscriptions = true);
 
+    /**
+     * @brief Get the node used by the subscription manager
+     *
+     * @return RR_SHARED_PTR<RobotRaconteurNode> The node
+     */
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
   protected:
