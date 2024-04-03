@@ -1611,7 +1611,7 @@ import java.util.*;
 
   }
 
-  private WrappedServiceSubscriptionFilter subscribeService_LoadFilter(ServiceSubscriptionFilter filter)
+  WrappedServiceSubscriptionFilter subscribeService_LoadFilter(ServiceSubscriptionFilter filter)
   {
 	WrappedServiceSubscriptionFilter filter2=null;
 
