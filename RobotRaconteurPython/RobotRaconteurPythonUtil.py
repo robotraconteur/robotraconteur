@@ -5120,6 +5120,109 @@ def SubscribeService(node, *args):
     return ServiceSubscription(sub1)
 
 
+class ServiceSubscriptionManagerDetails(object):
+    def __init__(self,
+                 Name=None,
+                 ConnectionMethod=None,
+                 Urls=None,
+                 UrlUsername=None,
+                 UrlCredentials=None,
+                 ServiceTypes=None,
+                 Filter=None,
+                 Enabled=True
+                 ):
+        self.Name = Name
+        self.ConnectionMethod = ConnectionMethod
+        self.Urls = Urls
+        self.UrlUsername = UrlUsername
+        self.UrlCredentials = UrlCredentials
+        self.ServiceTypes = ServiceTypes
+        self.Filter = Filter
+        self.Enabled = Enabled
+
+
+def _ServiceSubscriptionManager_LoadDetails(node, details):
+    if details is None:
+        return None
+    details2 = RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails()
+    if details.Name is not None:
+        details2.Name = details.Name
+    if details.ConnectionMethod is not None:
+        details2.ConnectionMethod = details.ConnectionMethod
+    if details.Urls is not None:
+        for s in details.Urls:
+            details2.Urls.append(s)
+    if details.UrlUsername is not None:
+        details2.UrlUsername = details.UrlUsername
+    if details.UrlCredentials is not None:
+        details2.UrlCredentials = PackMessageElement(
+            details.UrlCredentials, "varvalue{string}", None, node).GetData()
+    if details.ServiceTypes is not None:
+        if isinstance(details.ServiceTypes, str):
+            details2.ServiceTypes.append(details.ServiceTypes)
+        else:
+            for s in details.ServiceTypes:
+                details2.ServiceTypes.append(s)
+    if details.Filter is not None:
+        details2.Filter = _SubscribeService_LoadFilter(node, details.Filter)
+    details2.Enabled = details.Enabled
+    return details2
+
+
+class ServiceSubscriptionManager(object):
+    def __init__(self, details=None, node=None):
+        if node is None:
+            node = RobotRaconteurPython.RobotRaconteurNode.s
+
+        details2 = RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails()
+        if details is not None:
+            for d in details:
+                details2.append(_ServiceSubscriptionManager_LoadDetails(node, d))
+
+        self._subscription_manager = RobotRaconteurPython.WrappedServiceSubscriptionManager(details2, node)
+
+        self._subscriptions = {}
+        self._lock = threading.Lock()
+
+    def AddSubscription(self, details):
+        details2 = _ServiceSubscriptionManager_LoadDetails(self._subscription_manager.GetNode(), details)
+        self._subscription_manager.AddSubscription(details2)
+
+    def RemoveSubscription(self, name, close=True):
+        with self._lock:
+            self._subscription_manager.RemoveSubscription(name)
+            if close:
+                del self._subscriptions[name]
+
+    def EnableSubscription(self, name):
+        self._subscription_manager.EnableSubscription(name)
+
+    def DisableSubscription(self, name, close=True):
+        self._subscription_manager.DisableSubscription(name, close)
+
+    def GetSubscription(self, name, force_create=False):
+        with self._lock:
+            sub = self._subscriptions.get(name, None)
+            if sub is None:
+                sub1 = self._subscription_manager.GetSubscription(name, force_create)
+                if sub1 is None:
+                    return None
+                sub = ServiceSubscription(sub1)
+                self._subscriptions[name] = sub
+            return sub
+
+    def IsConnected(self, name):
+        return self._subscription_manager.IsConnected(name)
+
+    def IsEnabled(self, name):
+        return self._subscription_manager.IsEnabled(name)
+
+    def Close(self, close_subscriptions=True):
+        self._subscription_manager.Close(close_subscriptions)
+        with self._lock:
+            self._subscriptions.clear()
+
+
 class WrappedUserAuthenticatorDirectorPython(RobotRaconteurPython.WrappedUserAuthenticatorDirector):
     def __init__(self, target):
         super(WrappedUserAuthenticatorDirectorPython, self).__init__()
