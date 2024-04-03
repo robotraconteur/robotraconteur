@@ -5121,6 +5121,15 @@ def SubscribeService(node, *args):
 
 
 class ServiceSubscriptionManagerDetails(object):
+    """
+    ServiceSubscriptionManager subscription connection information
+
+    Contains the connection information for a ServiceSubscriptionManager subscription
+    and the local name of the subscription
+    """
+    __slots__ = ["Name", "ConnectionMethod", "Urls", "UrlUsername",
+                 "UrlCredentials", "ServiceTypes", "Filter", "Enabled"]
+
     def __init__(self,
                  Name=None,
                  ConnectionMethod=None,
@@ -5132,13 +5141,21 @@ class ServiceSubscriptionManagerDetails(object):
                  Enabled=True
                  ):
         self.Name = Name
+        """(str) The local name of the subscription"""
         self.ConnectionMethod = ConnectionMethod
+        """(ServiceSubscriptionManager_CONNECTION_METHOD) The connection method used to connect to the service"""
         self.Urls = Urls
+        """(List[str]) The URLs used to connect to the service"""
         self.UrlUsername = UrlUsername
+        """(str) The username used to connect to the service"""
         self.UrlCredentials = UrlCredentials
+        """(Dict[str,Any]) The credentials used to connect to the service"""
         self.ServiceTypes = ServiceTypes
+        """(List[str]) The service types used to connect to the service"""
         self.Filter = Filter
+        """(ServiceSubscriptionFilter) The filter used to connect to the service"""
         self.Enabled = Enabled
+        """(bool) True if the subscription is enabled"""
 
 
 def _ServiceSubscriptionManager_LoadDetails(node, details):
@@ -5170,6 +5187,20 @@ def _ServiceSubscriptionManager_LoadDetails(node, details):
 
 
 class ServiceSubscriptionManager(object):
+    """
+    Class to manage multiple subscriptions to services
+
+    ServiceSubscriptionManager is used to manage multiple subscriptions to services. Subscriptions
+    are created using information contained in ServiceSubscriptionManagerDetails structures. The subscriptions
+    can connect using URLs or service types. The subscriptions can be enabled or disabled, and can be
+    closed.
+
+    :param details: (optional) A list of ServiceSubscriptionManagerDetails structures
+    :type details: List[ServiceSubscriptionManagerDetails]
+    :param node: (optional) The RobotRaconteurNode to use
+    :type node: RobotRaconteur.RobotRaconteurNode
+    """
+
     def __init__(self, details=None, node=None):
         if node is None:
             node = RobotRaconteurPython.RobotRaconteurNode.s
@@ -5185,22 +5216,58 @@ class ServiceSubscriptionManager(object):
         self._lock = threading.Lock()
 
     def AddSubscription(self, details):
+        """
+        Add a subscription to the manager
+
+        :param details: The subscription to add
+        :type details: ServiceSubscriptionManagerDetails
+        """
         details2 = _ServiceSubscriptionManager_LoadDetails(self._subscription_manager.GetNode(), details)
         self._subscription_manager.AddSubscription(details2)
 
     def RemoveSubscription(self, name, close=True):
+        """
+        Remove a subscription from the manager
+
+        :param name: The name of the subscription to remove
+        :type name: str
+        :param close: (default True) Close the subscription
+        :type close: bool
+        """
         with self._lock:
             self._subscription_manager.RemoveSubscription(name)
             if close:
                 del self._subscriptions[name]
 
     def EnableSubscription(self, name):
+        """
+        Enable a subscription
+
+        :param name: The name of the subscription to enable
+        :type name: str
+        """
         self._subscription_manager.EnableSubscription(name)
 
     def DisableSubscription(self, name, close=True):
+        """
+        Disable a subscription
+
+        :param name: The name of the subscription to disable
+        :type name: str
+        """
         self._subscription_manager.DisableSubscription(name, close)
 
     def GetSubscription(self, name, force_create=False):
+        """
+        Get a subscription by name
+
+        :param name: The name of the subscription to get
+        :type name: str
+        :param force_create: (default False) Create the subscription if it does not exist
+        :type force_create: bool
+        :return: The subscription
+        :rtype: ServiceSubscription
+        """
         with self._lock:
             sub = self._subscriptions.get(name, None)
             if sub is None:
@@ -5212,12 +5279,34 @@ class ServiceSubscriptionManager(object):
             return sub
 
     def IsConnected(self, name):
+        """
+        Check if a subscription is connected
+
+        :param name: The name of the subscription to check
+        :type name: str
+        :return: True if the subscription is connected
+        :rtype: bool
+        """
         return self._subscription_manager.IsConnected(name)
 
     def IsEnabled(self, name):
+        """
+        Get if a subscription is enabled
+
+        :param name: The name of the subscription to check
+        :type name: str
+        :return: True if the subscription is enabled
+        :rtype: bool
+        """
         return self._subscription_manager.IsEnabled(name)
 
     def Close(self, close_subscriptions=True):
+        """
+        Close the subscription manager
+
+        :param close_subscriptions: (default True) Close all subscriptions
+        :type close_subscriptions: bool
+        """
         self._subscription_manager.Close(close_subscriptions)
         with self._lock:
             self._subscriptions.clear()
