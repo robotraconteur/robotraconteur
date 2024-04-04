@@ -487,6 +487,7 @@ void ClientContext::AsyncFindObjRef2(
 
                             for (size_t i = 0; i < missingdefs.size(); i++)
                             {
+                                di2.at(i)->SetNode(GetNode());
                                 boost::mutex::scoped_lock lock(pulled_service_types_lock);
                                 pulled_service_types.insert(std::make_pair(di2.at(i)->GetServiceName(), di2.at(i)));
                             }
@@ -1850,19 +1851,26 @@ void ClientContext::AsyncConnectService4(
 
                     for (size_t i = 0; i < missingdefs.size(); i++)
                     {
+                        di2.at(i)->SetNode(GetNode());
                         boost::mutex::scoped_lock lock(pulled_service_types_lock);
                         pulled_service_types.insert(std::make_pair(di2.at(i)->GetServiceName(), di2.at(i)));
                     }
                 }
-
-                m_ServiceDef = GetPulledServiceType(d->defs.at(0)->Name);
+                try
+                {
+                    m_ServiceDef = GetPulledServiceType(SplitQualifiedName(type).get<0>());
+                }
+                catch (std::exception&)
+                {
+                    throw ServiceException("Could not find correct pulled service factory for remote service");
+                }
             }
             else
             {
                 try
                 {
 
-                    m_ServiceDef = GetNode()->GetServiceType(d->defs.at(0)->Name);
+                    m_ServiceDef = GetNode()->GetServiceType(SplitQualifiedName(type).get<0>());
                 }
                 catch (std::exception&)
                 {
@@ -2096,6 +2104,7 @@ void ClientContext::AsyncConnectService7(
 
                 for (size_t i = 0; i < pulleddefs_str.size(); i++)
                 {
+                    di2.at(i)->SetNode(GetNode());
                     boost::mutex::scoped_lock lock(pulled_service_types_lock);
                     pulled_service_types.insert(std::make_pair(di2.at(i)->GetServiceName(), di2.at(i)));
                 }

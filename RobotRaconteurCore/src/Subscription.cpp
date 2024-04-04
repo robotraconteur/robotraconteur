@@ -861,6 +861,24 @@ void ServiceSubscription::Init(const std::vector<std::string>& service_types,
         "ServiceSubscription initialized for service types: " << boost::join(service_types, ", "));
 }
 
+std::string ServiceSubscription_ConnectServiceType(RR_WEAK_PTR<RobotRaconteurNode> node,
+                                                   const std::string& service_type_in)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+    {
+        return service_type_in;
+    }
+
+    // If we are using a dynamic service factory, we don't want to specify the service type
+
+    if (n->GetDynamicServiceFactory())
+    {
+        return "";
+    }
+    return service_type_in;
+}
+
 void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, boost::string_ref username,
                                          const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,
                                          boost::string_ref objecttype)
@@ -924,7 +942,7 @@ void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, bo
         n->AsyncConnectService(url, c2->username, c2->credentials,
                                boost::bind(&ServiceSubscription::ClientEvent, weak_this, RR_BOOST_PLACEHOLDERS(_1),
                                            RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
-                               objecttype,
+                               ServiceSubscription_ConnectServiceType(node, objecttype.to_string()),
                                boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, url),
                                boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
@@ -1016,7 +1034,7 @@ void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorag
                                        boost::bind(&ServiceSubscription::ClientEvent, weak_this,
                                                    RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
                                                    RR_BOOST_PLACEHOLDERS(_3), c2),
-                                       client_service_type,
+                                       ServiceSubscription_ConnectServiceType(node, client_service_type),
                                        boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                                    RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, urls),
                                        boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
@@ -1217,7 +1235,7 @@ void ServiceSubscription::ConnectRetry2(const RR_SHARED_PTR<detail::ServiceSubsc
         n->AsyncConnectService(c2->urls, c2->username, c2->credentials,
                                boost::bind(&ServiceSubscription::ClientEvent, weak_this, RR_BOOST_PLACEHOLDERS(_1),
                                            RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
-                               c2->service_type,
+                               ServiceSubscription_ConnectServiceType(node, c2->service_type),
                                boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, c2->urls),
                                boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
