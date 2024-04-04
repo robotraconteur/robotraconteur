@@ -1870,7 +1870,7 @@ void ClientContext::AsyncConnectService4(
                 try
                 {
 
-                    m_ServiceDef = GetPulledServiceType(SplitQualifiedName(type).get<0>());
+                    m_ServiceDef = GetNode()->GetServiceType(SplitQualifiedName(type).get<0>());
                 }
                 catch (std::exception&)
                 {
