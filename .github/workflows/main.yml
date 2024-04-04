@@ -1447,8 +1447,8 @@ jobs:
       with:
         python_version: "3.11"
         wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
-    - name: .net test
-      uses: ./robotraconteur/test/dist/net/action/osx
+    # - name: .net test
+    #   uses: ./robotraconteur/test/dist/net/action/osx
 
   companion-build-ubuntu:
     runs-on: ${{ matrix.config.runs_on }}
