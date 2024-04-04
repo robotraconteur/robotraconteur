@@ -3497,8 +3497,7 @@ static boost::regex IdentifierToRegex(boost::string_ref name, boost::string_ref 
         }
         ident_o << "(?:\\|" << uuid_regex_str << ")?";
     }
-    std::cout << "ident in: " << name << " " << uuid_string << std::endl;
-    std::cout << ident_o.str() << std::endl;
+
     return boost::regex(ident_o.str());
 }
 
