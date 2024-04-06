@@ -147,4 +147,38 @@ public class ServiceSubscriptionManager
             _subscriptions.clear();
         }
     }
+
+    public String[] getSubscriptionNames()
+    {
+        vectorstring s = _subscription_manager.getSubscriptionNames();
+        String[] s2 = new String[s.size()];
+        for (int i = 0; i < s.size(); i++)
+        {
+            s2[i] = s.get(i);
+        }
+        return s2;
+    }
+
+    public ServiceSubscriptionManagerDetails[] getSubscriptionDetails()
+    {
+        vector_wrappedservicesubscriptionmanagerdetails details = _subscription_manager.getSubscriptionDetails();
+        ServiceSubscriptionManagerDetails[] details2 = new ServiceSubscriptionManagerDetails[details.size()];
+        for (int i = 0; i < details.size(); i++)
+        {
+            details2[i] = new ServiceSubscriptionManagerDetails();
+            WrappedServiceSubscriptionManagerDetails details3 = details.get(i);
+            details2[i].Name = details3.getName();
+            details2[i].ConnectionMethod = details3.getConnectionMethod();
+            if (details3.getUrls() != null)
+            {
+                details2[i].Urls = details3.getUrls().toArray(new String[0]);
+            }
+            if (details3.getServiceTypes() != null)
+            {
+                details2[i].ServiceTypes = details3.getServiceTypes().toArray(new String[0]);
+            }
+            details2[i].Enabled = details3.getEnabled();
+        }
+        return details2;
+    }
 }

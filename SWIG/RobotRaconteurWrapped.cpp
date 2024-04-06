@@ -4492,6 +4492,17 @@ static void WrappedSubscriptionManager_convert_details(const RR_SHARED_PTR<Robot
     out.Enabled = in.Enabled;
 }
 
+static void WrappedSubscriptionManager_convert_details(const RR_SHARED_PTR<RobotRaconteurNode>& node,
+                                                       const ServiceSubscriptionManagerDetails& in,
+                                                       WrappedServiceSubscriptionManagerDetails& out)
+{
+    out.Name = in.Name;
+    out.ConnectionMethod = in.ConnectionMethod;
+    out.Urls = in.Urls;
+    out.ServiceTypes = in.ServiceTypes;
+    out.Enabled = in.Enabled;
+}
+
 WrappedServiceSubscriptionManager::WrappedServiceSubscriptionManager()
 
 {
@@ -4605,6 +4616,24 @@ void WrappedServiceSubscriptionManager::Close(bool close_subscriptions)
     subscription_manager->Close(close_subscriptions);
     boost::mutex::scoped_lock lock(this_lock);
     subscriptions.clear();
+}
+
+std::vector<std::string> WrappedServiceSubscriptionManager::GetSubscriptionNames()
+{
+    return subscription_manager->GetSubscriptionNames();
+}
+
+std::vector<WrappedServiceSubscriptionManagerDetails> WrappedServiceSubscriptionManager::GetSubscriptionDetails()
+{
+    std::vector<ServiceSubscriptionManagerDetails> details = subscription_manager->GetSubscriptionDetails();
+    std::vector<WrappedServiceSubscriptionManagerDetails> details2;
+    BOOST_FOREACH (const ServiceSubscriptionManagerDetails& d, details)
+    {
+        WrappedServiceSubscriptionManagerDetails d2;
+        WrappedSubscriptionManager_convert_details(GetNode(), d, d2);
+        details2.push_back(d2);
+    }
+    return details2;
 }
 
 RR_SHARED_PTR<RobotRaconteurNode> WrappedServiceSubscriptionManager::GetNode()

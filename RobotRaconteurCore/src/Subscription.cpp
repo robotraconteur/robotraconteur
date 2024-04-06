@@ -4156,4 +4156,24 @@ RR_SHARED_PTR<RobotRaconteurNode> ServiceSubscriptionManager::GetNode()
     return n;
 }
 
+std::vector<std::string> ServiceSubscriptionManager::GetSubscriptionNames()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    std::vector<std::string> o;
+    boost::copy(subscriptions | boost::adaptors::map_keys, std::back_inserter(o));
+    return o;
+}
+
+std::vector<ServiceSubscriptionManagerDetails> ServiceSubscriptionManager::GetSubscriptionDetails()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    std::vector<ServiceSubscriptionManagerDetails> o;
+    BOOST_FOREACH (const detail::ServiceSubscriptionManager_subscription& s,
+                   subscriptions | boost::adaptors::map_values)
+    {
+        o.push_back(s.details);
+    }
+    return o;
+}
+
 } // namespace RobotRaconteur

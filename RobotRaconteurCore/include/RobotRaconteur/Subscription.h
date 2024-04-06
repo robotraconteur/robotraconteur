@@ -1891,6 +1891,20 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager
     void Close(bool close_subscriptions = true);
 
     /**
+     * @brief Get the names of all subscriptions
+     *
+     * @return std::vector<std::string> The list of subscription names
+     */
+    std::vector<std::string> GetSubscriptionNames();
+
+    /**
+     * @brief Get the details of all subscriptions
+     *
+     * @return std::vector<ServiceSubscriptionManagerDetails> The list of subscription details
+     */
+    std::vector<ServiceSubscriptionManagerDetails> GetSubscriptionDetails();
+
+    /**
      * @brief Get the node used by the subscription manager
      *
      * @return RR_SHARED_PTR<RobotRaconteurNode> The node
