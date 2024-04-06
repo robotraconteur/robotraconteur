@@ -3519,6 +3519,43 @@ static boost::regex IdentifierToRegex(boost::string_ref name, boost::string_ref 
     return boost::regex(ident_o.str());
 }
 
+static boost::regex IdentifierToRegex(boost::string_ref combined_string)
+{
+    const std::string name_regex_str =
+        "(?:[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)*";
+    const std::string uuid_regex_str =
+        "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?";
+
+    const std::string combined_regex_str = "(" + name_regex_str + ")\\|(" + uuid_regex_str + ")";
+
+    if (combined_string.empty())
+    {
+        return IdentifierToRegex("", "");
+    }
+
+    static boost::regex combined_regex(combined_regex_str);
+    boost::match_results<boost::string_ref::const_iterator> combined_match;
+    if (boost::regex_match(combined_string.begin(), combined_string.end(), combined_match, combined_regex))
+    {
+        std::string name_sub = combined_match[1];
+        std::string uuid_sub = combined_match[2];
+        return IdentifierToRegex(name_sub, uuid_sub);
+    }
+
+    if (boost::regex_match(combined_string.begin(), combined_string.end(), boost::regex(uuid_regex_str)))
+    {
+        return IdentifierToRegex("", combined_string);
+    }
+
+    return IdentifierToRegex(combined_string, "");
+}
+
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeCombinedIdentifier(
+    boost::string_ref combined_identifier)
+{
+    return ServiceSubscriptionFilterAttribute(IdentifierToRegex(combined_identifier));
+}
+
 ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeIdentifier(boost::string_ref identifier_name,
                                                                                       boost::string_ref uuid_string)
 {

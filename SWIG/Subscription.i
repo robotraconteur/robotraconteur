@@ -70,6 +70,8 @@ namespace RobotRaconteur
 	CreateServiceSubscriptionFilterAttributeIdentifier(const std::string& identifier_name, const std::string& uuid_string);
 	ServiceSubscriptionFilterAttribute
 	CreateServiceSubscriptionFilterAttributeIdentifier(const std::string& name, const std::string& identifier_name, const std::string& uuid_string);
+	ServiceSubscriptionFilterAttribute
+	CreateServiceSubscriptionFilterAttributeCombinedIdentifier(const std::string& combined_identifier);
 }
 
 %template(vector_subscriptionattribute)  std::vector<RobotRaconteur::ServiceSubscriptionFilterAttribute>;

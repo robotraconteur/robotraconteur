@@ -854,4 +854,42 @@ std::string BuildServicePath(const std::vector<ServicePathSegment>& segments)
     return boost::join(segments1, ".");
 }
 
+bool IsStringName(boost::string_ref str)
+{
+    const std::string name_regex_str = "(?:[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)";
+    static boost::regex name_regex(name_regex_str);
+    return boost::regex_match(str.begin(), str.end(), name_regex);
+}
+bool IsStringScopedName(boost::string_ref str)
+{
+    const std::string name_regex_str =
+        "(?:[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)*";
+    static boost::regex name_regex(name_regex_str);
+    return boost::regex_match(str.begin(), str.end(), name_regex);
+}
+bool IsStringUUID(boost::string_ref str)
+{
+    const std::string uuid_regex_str =
+        "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?";
+    static boost::regex uuid_regex(uuid_regex_str);
+    return boost::regex_match(str.begin(), str.end(), uuid_regex);
+}
+bool IsStringIdentifier(boost::string_ref str)
+{
+    const std::string name_regex_str =
+        "(?:[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)*";
+    const std::string uuid_regex_str =
+        "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?";
+
+    const std::string combined_regex_str = "(" + name_regex_str + ")\\|(" + uuid_regex_str + ")?";
+
+    static boost::regex combined_regex(combined_regex_str);
+    if (boost::regex_match(str.begin(), str.end(), combined_regex))
+    {
+        return true;
+    }
+
+    return (IsStringName(str) || IsStringUUID(str));
+}
+
 } // namespace RobotRaconteur

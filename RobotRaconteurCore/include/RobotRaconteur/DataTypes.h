@@ -2918,6 +2918,35 @@ ROBOTRACONTEUR_CORE_API std::vector<ServicePathSegment> ParseServicePath(const s
  */
 ROBOTRACONTEUR_CORE_API std::string BuildServicePath(const std::vector<ServicePathSegment>& segments);
 
+/**
+ * @brief Test if a string is a valid Robot Raconteur name
+ *
+ * @param str The string to test
+ * @return true The string is a valid Robot Raconteur name
+ */
+ROBOTRACONTEUR_CORE_API bool IsStringName(boost::string_ref str);
+/**
+ * @brief Test if a string is a valid Robot Raconteur scoped name
+ *
+ * @param str The string to test
+ * @return true The string is a valid Robot Raconteur scoped name
+ */
+ROBOTRACONTEUR_CORE_API bool IsStringScopedName(boost::string_ref str);
+/**
+ * @brief Test if a string is a UUID
+ *
+ * @param str The string to test
+ * @return true The string is a UUID
+ */
+ROBOTRACONTEUR_CORE_API bool IsStringUUID(boost::string_ref str);
+/**
+ * @brief Test if a string is a Robot Raconteur identifier
+ *
+ * @param str The string to test
+ * @return true The string is a Robot Raconteur identifier
+ */
+ROBOTRACONTEUR_CORE_API bool IsStringIdentifier(boost::string_ref str);
+
 namespace detail
 {
 ROBOTRACONTEUR_CORE_API std::string encode_index(boost::string_ref index);
