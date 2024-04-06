@@ -108,6 +108,9 @@ def test_sub_manager_subscribe_by_type():
         c = sub.GetDefaultClientWait(5)
         assert c.add_two_numbers(1, 2) == 3
 
+        print(sub_manager.SubscriptionNames)
+        print(sub_manager.SubscriptionDetails)
+
         sub_manager.Close()
 
 

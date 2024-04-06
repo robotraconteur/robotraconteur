@@ -427,6 +427,10 @@ namespace RobotRaconteur
 
 		void Close(bool close_subscriptions = true);
 
+		std::vector<std::string> GetSubscriptionNames();
+
+    	std::vector<WrappedServiceSubscriptionManagerDetails> GetSubscriptionDetails();
+
 		boost::shared_ptr<RobotRaconteurNode> GetNode();
 	};
 

@@ -5311,6 +5311,33 @@ class ServiceSubscriptionManager(object):
         with self._lock:
             self._subscriptions.clear()
 
+    @property
+    def SubscriptionNames(self):
+        """
+        Get the names of all subscriptions
+
+        :rtype: List[str]
+        """
+        return list(self._subscription_manager.GetSubscriptionNames())
+
+    @property
+    def SubscriptionDetails(self):
+        """
+        Get the details of all subscriptions
+
+        :rtype: List[ServiceSubscriptionManagerDetails]
+        """
+        details = []
+        for d in self._subscription_manager.GetSubscriptionDetails():
+            d2 = ServiceSubscriptionManagerDetails()
+            d2.Name = d.Name
+            d2.ConnectionMethod = d.ConnectionMethod
+            d2.Urls = list(d.Urls)
+            d2.ServiceTypes = list(d.ServiceTypes)
+            d2.Enabled = d.Enabled
+            details.append(d2)
+        return details
+
 
 class WrappedUserAuthenticatorDirectorPython(RobotRaconteurPython.WrappedUserAuthenticatorDirector):
     def __init__(self, target):

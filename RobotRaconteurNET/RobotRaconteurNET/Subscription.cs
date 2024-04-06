@@ -1748,6 +1748,41 @@ public class ServiceSubscriptionManager
             _subscriptions.Clear();
         }
     }
+
+    /// <summary>
+    /// Get the local names of all subscriptions
+    /// </summary>
+    /// <remarks>None</remarks>
+    public string[] SubscriptionNames
+    {
+        get {
+            return _subscription_manager.GetSubscriptionNames().ToArray();
+        }
+    }
+
+    /// <summary>
+    /// Get the details of all subscriptions
+    /// </summary>
+    /// <remarks>None</remarks>
+    public ServiceSubscriptionManagerDetails[] SubscriptionDetails
+    {
+        get {
+            var details = new List<ServiceSubscriptionManagerDetails>();
+            var details2 = _subscription_manager.GetSubscriptionDetails();
+            foreach (var d in details2)
+            {
+                var d2 = new ServiceSubscriptionManagerDetails();
+                d2.Name = d.Name;
+                d2.ConnectionMethod = (ServiceSubscriptionManager_CONNECTION_METHOD)d.ConnectionMethod;
+                d2.Urls = d.Urls.ToArray();
+                d2.UrlUsername = d.UrlUsername;
+                d2.ServiceTypes = d.ServiceTypes.ToArray();
+                d2.Enabled = d.Enabled;
+                details.Add(d2);
+            }
+            return details.ToArray();
+        }
+    }
 }
 
 public partial class RobotRaconteurNode

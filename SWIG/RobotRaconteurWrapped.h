@@ -2221,6 +2221,10 @@ class WrappedServiceSubscriptionManager
 
     void Close(bool close_subscriptions = true);
 
+    std::vector<std::string> GetSubscriptionNames();
+
+    std::vector<WrappedServiceSubscriptionManagerDetails> GetSubscriptionDetails();
+
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
   protected:
