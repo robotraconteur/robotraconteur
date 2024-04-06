@@ -209,6 +209,18 @@ CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref regex_value);
  */
 ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute
 CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref name, boost::string_ref regex_value);
+
+/**
+ * @brief Create a ServiceSubscriptionFilterAttribute from a combined identifier string
+ *
+ * The identifier may be a name, UUID, or a combination of both using a "|" to separate the name and UUID.
+ *
+ * @param value The identifier as a string
+ * @return ServiceSubscriptionFilterAttribute The created attribute
+ */
+ROBOTRACONTEUR_CORE_API
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeCombinedIdentifier(
+    boost::string_ref combined_identifier);
 /**
  * @brief Create a ServiceSubscriptionFilterAttribute from an identifier
  *

@@ -114,6 +114,14 @@ std::string DecodeServicePathIndex(const std::string& index);
 std::vector<ServicePathSegment> ParseServicePath(const std::string& path);
 
 std::string BuildServicePath(const std::vector<RobotRaconteur::ServicePathSegment>& segments);
+
+bool IsStringName(boost::string_ref str);
+
+bool IsStringScopedName(boost::string_ref str);
+
+bool IsStringUUID(boost::string_ref str);
+
+bool IsStringIdentifier(boost::string_ref str);
 }
 
 namespace RobotRaconteur
