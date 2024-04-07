@@ -1019,7 +1019,7 @@ jobs:
       run: |
         make -C emsdk
         make -C cpython
-        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest"
+        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
         make
     - name: remove apt swig
       run: sudo apt remove '^swig.*' -y -qq || true
@@ -1042,7 +1042,7 @@ jobs:
         # mkdir -p /tmp/ccache
         ln -s $GITHUB_WORKSPACE/rr_src /rr_src
         pyodide build-recipes-no-deps RobotRaconteur
-        pyodide build-recipes RobotRaconteur numpy pytest --install
+        pyodide build-recipes RobotRaconteur numpy pytest Jinja2 micropip pyyaml --install
     - name: test
       working-directory: src
       run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
