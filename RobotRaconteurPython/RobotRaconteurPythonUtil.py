@@ -42,6 +42,15 @@ import numpy
 if (sys.version_info > (3, 5)):
     import asyncio
 
+_traceback_requested = str(os.environ.get('ROBOTRACONTEUR_PYTHON_TRACEBACK_PRINT_EXC', "0")
+                           ).lower() in ("1", "true", "yes", "on")
+
+
+def _print_exc_traceback(exc):
+    if _traceback_requested:
+        print("RobotRaconteurPython async caught exception::", file=sys.stderr)
+        traceback.print_exception(exc, file=sys.stderr)
+
 
 def SplitQualifiedName(name):
     pos = name.rfind('.')
@@ -2430,6 +2439,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                 if err is not None:
                     async_adapter.End(
                         RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    _print_exc_traceback(err)
                     return
                 if (ret is None):
                     m = RobotRaconteurPython.MessageElement()
@@ -2469,6 +2479,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                 if err is not None:
                     async_adapter.End(
                         RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    _print_exc_traceback(err)
                     return
                 async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
                 return
@@ -2501,6 +2512,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         if err is not None:
                             async_adapter.End(
                                 RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                            _print_exc_traceback(err)
                             return
                         async_adapter.End(
                             None, RobotRaconteurPython.HandlerErrorInfo())
@@ -2510,6 +2522,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         if err is not None:
                             async_adapter.End(
                                 RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                            _print_exc_traceback(err)
                             return
                         if (ret is None):
                             m = RobotRaconteurPython.MessageElement()
@@ -3787,6 +3800,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
                     if err is not None:
                         async_adapter.End(
                             RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                        _print_exc_traceback(err)
                         return
                     async_adapter.End(
                         None, RobotRaconteurPython.HandlerErrorInfo())
@@ -3796,6 +3810,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
                     if err is not None:
                         async_adapter.End(
                             RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                        _print_exc_traceback(err)
                         return
                     if (ret is None):
                         m = RobotRaconteurPython.MessageElement()
@@ -3840,6 +3855,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
                 if err is not None:
                     async_adapter.End(
                         RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    _print_exc_traceback(err)
                     return
                 async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
                 return
@@ -3858,6 +3874,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
                 if err is not None:
                     async_adapter.End(
                         RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    _print_exc_traceback(err)
                     return
                 async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
                 return
