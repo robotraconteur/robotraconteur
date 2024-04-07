@@ -3819,6 +3819,20 @@ RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::CreateSubscriptio
     {
         // Creating an uninitialized subscription with no URLs or service types
         sub = RR_MAKE_SHARED<ServiceSubscription>(d);
+        switch (details.ConnectionMethod)
+        {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT:
+            if (!details.Urls.empty())
+            {
+                sub->use_service_url = true;
+            }
+            break;
+        case ServiceSubscriptionManager_CONNECTION_METHOD_URL:
+            sub->use_service_url = true;
+            break;
+        default:
+            break;
+        }
     }
     else
     {
