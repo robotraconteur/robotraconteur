@@ -37,6 +37,7 @@ void WallTimer::node_shutdown(RobotRaconteurNode* node)
         }
         if (e->second->node.lock().get() == node)
         {
+            ROBOTRACONTEUR_LOG_TRACE(e->second->node, "Shutting down WallTimer: " << e->second->em_timer);
             emscripten_clear_timeout(e->second->em_timer);
             e = em_timers.erase(e);
             continue;
@@ -99,6 +100,7 @@ void WallTimer::timer_handler1()
         }
     }
 
+    ROBOTRACONTEUR_LOG_TRACE(node, "WallTimer event: " << em_timer);
     try
     {
         if (h)
@@ -165,6 +167,8 @@ void WallTimer::Start()
     {
         em_timer.data() = emscripten_set_interval(&timer_handler, period.total_milliseconds(), this);
     }
+    ROBOTRACONTEUR_LOG_TRACE(node, "WallTimer started: " << em_timer << " period: " << period.total_milliseconds()
+                                                         << " oneshot: " << oneshot);
     em_timers.insert(std::make_pair(this, shared_from_this()));
     running = true;
 }
@@ -181,6 +185,7 @@ void WallTimer::TryStop()
 
 void WallTimer::Stop()
 {
+    ROBOTRACONTEUR_LOG_TRACE(node, "WallTimer stop requested: " << em_timer);
     em_timers.erase(this);
 
     if (!running)
@@ -202,6 +207,7 @@ void WallTimer::Stop()
     }
     catch (std::exception&)
     {}
+    ROBOTRACONTEUR_LOG_TRACE(node, "WallTimer stopped: " << em_timer);
     running = false;
 
     TimerEvent ev;

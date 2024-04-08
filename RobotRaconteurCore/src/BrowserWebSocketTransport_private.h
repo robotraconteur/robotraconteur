@@ -101,5 +101,7 @@ class BrowserWebSocketTransportConnection : public detail::ASIOStreamBaseTranspo
     RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE;
 
     RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE;
+
+    void invalidate_websocket();
 };
 } // namespace RobotRaconteur
