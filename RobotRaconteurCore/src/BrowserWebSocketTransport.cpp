@@ -300,6 +300,8 @@ EM_BOOL websocket_open_callback_func(int eventType, const EmscriptenWebSocketOpe
 
     RR_SHARED_PTR<BrowserWebSocketTransportConnection> t = e->second;
 
+    ROBOTRACONTEUR_LOG_TRACE_COMPONENT(t->node, Transport, t->GetLocalEndpoint(), "WebSocket open callback");
+
     try
     {
         t->AsyncConnect1();
@@ -326,8 +328,18 @@ EM_BOOL websocket_message_callback_func(int eventType, const EmscriptenWebSocket
 
     if (websocketEvent->isText)
     {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(t->node, Transport, t->GetLocalEndpoint(),
+                                           "WebSocket text message received, closing with error");
         BrowserWebSocketTransportConnection::active_transports.erase(e);
-        t->Close();
+        try
+        {
+            t->Close();
+        }
+        catch (std::exception& exp)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(t->node, Transport, t->GetLocalEndpoint(),
+                                               "Error closing websocket: " << exp.what());
+        }
         return EM_TRUE;
     }
 
@@ -348,9 +360,19 @@ EM_BOOL websocket_error_callback_func(int eventType, const EmscriptenWebSocketEr
 
     RR_SHARED_PTR<BrowserWebSocketTransportConnection> t = e->second;
 
-    BrowserWebSocketTransportConnection::active_transports.erase(e);
+    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(t->node, Transport, t->GetLocalEndpoint(), "WebSocket error callback");
 
-    t->Close();
+    BrowserWebSocketTransportConnection::active_transports.erase(e);
+    t->invalidate_websocket();
+    try
+    {
+        t->Close();
+    }
+    catch (std::exception& exp)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(t->node, Transport, t->GetLocalEndpoint(),
+                                           "Error closing websocket: " << exp.what());
+    }
 
     return EM_TRUE;
 }
@@ -367,9 +389,21 @@ EM_BOOL websocket_close_callback_func(int eventType, const EmscriptenWebSocketCl
 
     RR_SHARED_PTR<BrowserWebSocketTransportConnection> t = e->second;
 
+    ROBOTRACONTEUR_LOG_TRACE_COMPONENT(t->node, Transport, t->GetLocalEndpoint(),
+                                       "WebSocket close callback: " << websocketEvent->code);
+
     BrowserWebSocketTransportConnection::active_transports.erase(e);
 
-    t->Close();
+    t->invalidate_websocket();
+    try
+    {
+        t->Close();
+    }
+    catch (std::exception& exp)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(t->node, Transport, t->GetLocalEndpoint(),
+                                           "Error closing websocket: " << exp.what());
+    }
 
     return EM_TRUE;
 }
@@ -483,7 +517,25 @@ void BrowserWebSocketTransportConnection::Close()
         active_connect_handler.clear();
         try
         {
-            active_connect_handler1(RR_MAKE_SHARED<ConnectionException>("WebSocket connection failed"));
+            RobotRaconteurNode::TryPostToThreadPool(
+                node, boost::bind(active_connect_handler1,
+                                  RR_MAKE_SHARED<ConnectionException>("WebSocket connection failed")));
+        }
+        catch (std::exception& exp)
+        {
+            RobotRaconteurNode::TryHandleException(node, &exp);
+        }
+    }
+
+    if (active_read_handler)
+    {
+        boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)> active_read_handler1 =
+            active_read_handler;
+        active_read_handler.clear();
+        try
+        {
+            boost::system::error_code ec2(boost::asio::error::operation_aborted);
+            RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(active_read_handler1, ec2, 0));
         }
         catch (std::exception& exp)
         {
@@ -495,7 +547,11 @@ void BrowserWebSocketTransportConnection::Close()
         return;
     closing = true;
 
-    emscripten_websocket_close(socket, 0, "transport closed");
+    if (socket >= 0)
+    {
+        emscripten_websocket_close(socket, 1000, "transport closed");
+        invalidate_websocket();
+    }
 
     try
     {
@@ -539,6 +595,12 @@ void BrowserWebSocketTransportConnection::async_write_some(
         l = max_message_size;
     }
 
+    if (socket <= 0)
+    {
+        boost::system::error_code ec2(boost::asio::error::operation_aborted);
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, ec2, 0));
+        return;
+    }
     emscripten_websocket_send_binary(socket, (void*)b1.data(), l);
 
     boost::system::error_code ec;
@@ -549,6 +611,13 @@ void BrowserWebSocketTransportConnection::async_read_some(
     mutable_buffers& b,
     const boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)>& handler)
 {
+    if (socket <= 0)
+    {
+        boost::system::error_code ec2(boost::asio::error::operation_aborted);
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, ec2, 0));
+        return;
+    }
+
     while (!recv_buf.empty() && recv_buf.front().buffer.size() == 0)
     {
         recv_buf.pop_front();
@@ -591,6 +660,12 @@ void BrowserWebSocketTransportConnection::websocket_message_received(const void*
         boost::function<void(const boost::system::error_code& error, size_t bytes_transferred)> active_read_handler1 =
             active_read_handler;
         active_read_handler.clear();
+        if (socket <= 0)
+        {
+            boost::system::error_code ec2(boost::asio::error::operation_aborted);
+            RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(active_read_handler1, ec2, 0));
+            return;
+        }
         size_t l = boost::asio::buffer_copy(active_read_buffers, buffer);
         buffer += l;
         boost::system::error_code ec;
@@ -638,6 +713,12 @@ RR_SHARED_PTR<ITransportConnection> BrowserWebSocketTransport::CreateTransportCo
     boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e)
 {
     throw std::runtime_error("Invalid for single thread browser transport");
+}
+
+void BrowserWebSocketTransportConnection::invalidate_websocket()
+{
+    emscripten_websocket_delete(socket);
+    socket = -1;
 }
 
 } // namespace RobotRaconteur
