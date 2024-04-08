@@ -48,7 +48,7 @@ _traceback_requested = str(os.environ.get('ROBOTRACONTEUR_PYTHON_TRACEBACK_PRINT
 
 def _print_exc_traceback(exc):
     if _traceback_requested:
-        print("RobotRaconteurPython async caught exception::", file=sys.stderr)
+        print("RobotRaconteurPython async caught exception:", file=sys.stderr)
         traceback.print_exception(exc, file=sys.stderr)
 
 
