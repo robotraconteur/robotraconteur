@@ -35,6 +35,8 @@
 
 %include <pybuffer.i>
 
+RR_KEEP_GIL()
+
 %pybuffer_binary(const uint8_t* bytes, size_t bytes_len);
 %inline {
 boost::intrusive_ptr<RobotRaconteur::Message> MessageFromBytes(const uint8_t* bytes, size_t bytes_len)
@@ -130,3 +132,5 @@ PyObject* MessageElementToBytes(const boost::intrusive_ptr<RobotRaconteur::Messa
 }
 
 }
+
+RR_RELEASE_GIL()
