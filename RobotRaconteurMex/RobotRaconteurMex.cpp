@@ -69,20 +69,71 @@ void rr_free_mxDestroyArray()
     rr_mxDestroyArray_vec.clear();
 }
 
+bool checkMxIsString(const mxArray* str) { return mxIsChar(str) || mxIsClass(str, "string"); }
+
+mxArray* convertMxStringToChar(const mxArray* str)
+{
+    mxArray* charArray = NULL;
+    mxArray* rhs[1] = {(mxArray*)str};
+    if (mexCallMATLAB(1, &charArray, 1, rhs, "char") != 0)
+    {
+        throw DataTypeException("Failed to convert MATLAB string to char array");
+    }
+    return charArray;
+}
+
 std::string mxToString(const mxArray* str)
 {
-    if (!mxIsChar(str))
+    if (mxIsChar(str))
     {
-        if (mxIsClass(str, "string"))
-        {
-            throw InvalidArgumentException("New style MATLAB strings are not supported by Robot Raconteur");
-        }
-        throw InvalidArgumentException("Character array (old-style MATLAB string) expected");
+        if (mxGetNumberOfElements(str) == 0)
+            return "";
+
+        char* str1 = mxArrayToString(str);
+        std::string str2(str1);
+        mxFree(str1);
+        return str2;
     }
-    char* str1 = mxArrayToString(str);
-    std::string str2(str1);
-    mxFree(str1);
-    return str2;
+
+    if (mxIsClass(str, "string"))
+    {
+        mxArray* charArray = convertMxStringToChar(str);
+        std::string str2 = mxToString(charArray);
+        mxDestroyArray(charArray);
+        return str2;
+    }
+    throw InvalidArgumentException("Expected string");
+}
+
+RR_INTRUSIVE_PTR<RRArray<char> > mxToStringRRArray(const mxArray* str)
+{
+    if (mxIsChar(str))
+    {
+        if (mxGetNumberOfElements(str) == 0)
+            return AllocateRRArray<char>(0);
+        if (mxGetNumberOfDimensions(str) != 2)
+            throw DataTypeException("1xN string expected ");
+        const mwSize* pm_dims = mxGetDimensions(str);
+        if (mxGetNumberOfElements(str) > 0)
+        {
+            if (pm_dims[0] != 1 && pm_dims[0] != 0)
+                throw DataTypeException("1xN string expected");
+        }
+
+        char* str1 = mxArrayToString(str);
+        RR_INTRUSIVE_PTR<RRArray<char> > str2 = AttachRRArrayCopy<char>(str1, mxGetNumberOfElements(str));
+        mxFree(str1);
+        return str2;
+    }
+
+    if (mxIsClass(str, "string"))
+    {
+        mxArray* charArray = convertMxStringToChar(str);
+        RR_INTRUSIVE_PTR<RRArray<char> > str2 = mxToStringRRArray(charArray);
+        mxDestroyArray(charArray);
+        return str2;
+    }
+    throw InvalidArgumentException("Expected string");
 }
 
 void mxToVectorString(const mxArray* in, std::vector<std::string>& vec, const std::string& error_message)
@@ -90,7 +141,7 @@ void mxToVectorString(const mxArray* in, std::vector<std::string>& vec, const st
     if (!in)
         return;
 
-    if (mxIsChar(in))
+    if (checkMxIsString(in))
     {
         vec.push_back(mxToString(in));
         return;
@@ -1174,7 +1225,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                 int32_t p1 = ((int32_t*)mxGetData(prhs[1]))[0];
                 port = p1;
             }
-            else if (mxIsChar(prhs[1]))
+            else if (checkMxIsString(prhs[1]))
             {
                 std::string p1 = mxToString(prhs[1]);
                 try
@@ -2149,7 +2200,7 @@ class PackMxArrayToMessageElementImpl
                 if (key == NULL || data == NULL)
                     throw DataTypeException("Cell contents must be key value pair");
 
-                if (mxIsChar(key))
+                if (checkMxIsString(key))
                 {
                     push_field_level("[\"" + mxToString(key) + "\"]", tdef2);
                 }
@@ -2178,7 +2229,7 @@ class PackMxArrayToMessageElementImpl
                 else
                 {
                     std::string elemkey;
-                    if (!mxIsChar(key))
+                    if (!checkMxIsString(key))
                         throw DataTypeException("Key must be string");
                     elemkey = mxToString(key);
                     me->ElementName = elemkey;
@@ -2330,20 +2381,11 @@ class PackMxArrayToMessageElementImpl
 
         if (tdef->Type == DataTypes_string_t)
         {
-            if (!mxIsChar(pm))
+            // TODO: Handle new style strings
+            if (!checkMxIsString(pm))
                 throw DataTypeException("String expected");
-            if (mxGetNumberOfDimensions(pm) != 2)
-                throw DataTypeException("1xN string expected ");
-            const mwSize* pm_dims = mxGetDimensions(pm);
-            if (mxGetNumberOfElements(pm) > 0)
-            {
-                if (pm_dims[0] != 1)
-                    throw DataTypeException("1xN string expected");
-            }
 
-            const uint16_t* str_utf16 = (const uint16_t*)mxGetData(pm);
-            std::string str_utf8 = boost::locale::conv::utf_to_utf<char>(str_utf16, str_utf16 + pm_dims[1]);
-            RR_INTRUSIVE_PTR<RRArray<char> > str = stringToRRArray(str_utf8);
+            RR_INTRUSIVE_PTR<RRArray<char> > str = mxToStringRRArray(pm);
             return CreateMessageElement(tdef->Name, str);
         }
 
@@ -4778,7 +4820,7 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 if (argc != 1)
                     throw InvalidArgumentException("ObjRef " + odef->Name + " is indexed by string");
                 mxArray* index = mxGetCell(cell_args, 0);
-                if (!mxIsChar(index))
+                if (!checkMxIsString(index))
                     throw InvalidArgumentException("ObjRef " + odef->Name + " is indexed by int32");
 
                 std::string iindex = mxToString(index);
@@ -5493,7 +5535,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
             else if (narg == 1)
             {
                 mxArray* arg = mxGetCell(subs, 0);
-                if (mxIsChar(arg))
+                if (checkMxIsString(arg))
                 {
                     std::string strarg = mxToString(arg);
                     if (strarg != ":")
@@ -5520,7 +5562,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
                         throw InvalidArgumentException("Invalid memory read/write request for named array");
 
                     mxArray* arg = mxGetCell(subs, 1);
-                    if (mxIsChar(arg))
+                    if (checkMxIsString(arg))
                     {
                         std::string strarg = mxToString(arg);
                         if (strarg != ":")
@@ -8978,7 +9020,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
                 mxArray* data = mxGetCell(values, i);
 
                 std::string attribute_name = mxToString(key);
-                if (mxIsChar(data))
+                if (checkMxIsString(data))
                 {
                     attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(mxToString(data)));
                 }
@@ -8999,7 +9041,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
                     mxArray* group_attr = mxGetField(data, 0, "Attributes");
                     if (!group_attr)
                         throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
-                    if (mxIsChar(group_attr))
+                    if (checkMxIsString(group_attr))
                     {
                         attribute_group.Attributes.push_back(
                             ServiceSubscriptionFilterAttribute(mxToString(group_attr)));
