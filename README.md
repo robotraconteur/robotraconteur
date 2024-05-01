@@ -81,6 +81,9 @@ Before running the example, make sure to install the required packages:
 python -m pip install robotraconteur reynard-the-robot
 ```
 
+On Linux, use `python3` instead of `python` to run the Python 3 interpreter. Use `python3` in the rest
+of the examples as well.
+
 `reynard_quickstart_service.py`
 
 ```python

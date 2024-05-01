@@ -8,6 +8,9 @@ examples, make sure to install the required packages:
 python -m pip install robotraconteur reynard-the-robot
 ```
 
+On Linux, use `python3` instead of `python` to run the Python 3 interpreter. Use `python3` in the rest
+of the examples as well.
+
 To run the MATLAB example, make sure to install the MATLAB Robot Raconteur Add-On. It can be installed using
 the Add-On Explorer in MATLAB and searching for "Robot Raconteur".
 
