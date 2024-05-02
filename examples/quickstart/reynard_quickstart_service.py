@@ -34,7 +34,7 @@ class ReynardQuickstartImpl(object):
             self.reynard.teleport(x, y)
 
 
-with RR.ServerNodeSetup("experimental.minimal_create2", 53222):
+with RR.ServerNodeSetup("experimental.reynard_quickstart", 53222):
     # Register the service type
     RRN.RegisterServiceType(reynard_quickstart_interface)
 
