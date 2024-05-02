@@ -71,73 +71,119 @@ See [https://github.com/robotraconteur/robotraconteur/wiki/Documentation](https:
 
 ## Quick Start
 
-A simple service will initialize Robot Raconteur and register an object as a service. This example service creates a simple service that contains a single function to drive an iRobot Create through a serial port. This is a minimal subset of the full example in the documentation.
+The Quick Start example demonstrates the basic functionality of Robot Raconteur be creating a service,
+and then calling the service using a client. This example uses the "Reynard the Robot" Python package,
+which provides a simple cartoon robot.
 
-`minimalcreateservice.py`
+Before running the example, make sure to install the required packages:
 
-    import RobotRaconteur as RR
-    RRN=RR.RobotRaconteurNode.s
-    import threading
-    import serial
-    import struct
+```bash
+python -m pip install robotraconteur reynard-the-robot
+```
 
-    minimal_create_interface="""
-    service experimental.minimal_create
+On Linux, use `python3` instead of `python` to run the Python 3 interpreter. Use `python3` in the rest
+of the examples as well.
 
-    object create_obj
-        function void Drive(int16 velocity, int16 radius)
-    end object
-    """
+`reynard_quickstart_service.py`
 
-    class create_impl(object):
-        def __init__(self, port):
-            self._lock=threading.Lock()
-            self._serial=serial.Serial(port=port,baudrate=57600)
-            dat=struct.pack(">4B",128,132,150, 0)
-            self._serial.write(dat)
+```python
+import RobotRaconteur as RR
+RRN = RR.RobotRaconteurNode.s
 
-        def Drive(self, velocity, radius):
-            with self._lock:
-                dat=struct.pack(">B2h",137,velocity,radius)
-                self._serial.write(dat)
+import threading
+import reynard_the_robot
 
-    with RR.ServerNodeSetup("experimental.minimal_create", 52222):
-        #Register the service type
-        RRN.RegisterServiceType(minimal_create_interface)
+# Define the service definition for the quickstart service
+reynard_quickstart_interface = """
+service experimental.reynard_quickstart
 
-        create_inst=create_impl("/dev/ttyUSB0")
+object ReynardQuickstart
+    function void say(string text)
+    function void teleport(double x, double y)
+end
+"""
 
-        #Register the service
-        RRN.RegisterService("Create","experimental.minimal_create.create_obj",create_inst)
+# Implement the quickstart service
 
-        #Wait for program exit to quit
-        input("Press enter to quit")
+
+class ReynardQuickstartImpl(object):
+    def __init__(self):
+        self.reynard = reynard_the_robot.Reynard()
+        self.reynard.start()
+        self._lock = threading.Lock()
+
+    def say(self, text):
+        with self._lock:
+            self.reynard.say(text)
+
+    def teleport(self, x, y):
+        with self._lock:
+            self.reynard.teleport(x, y)
+
+
+with RR.ServerNodeSetup("experimental.minimal_create2", 53222):
+    # Register the service type
+    RRN.RegisterServiceType(reynard_quickstart_interface)
+
+    reynard_inst = ReynardQuickstartImpl()
+
+    # Register the service
+    RRN.RegisterService("reynard", "experimental.reynard_quickstart.ReynardQuickstart", reynard_inst)
+
+    # Wait for program exit to quit
+    input("Press enter to quit")
+```
+
+To run the service, execute the following command:
+
+```bash
+python reynard_quickstart_service.py
+```
+
+And open a browser to [http://localhost:29201](http://localhost:29201) to view the Reynard user interface.
 
 This service can now be called by a connecting client. Because of the magic of Robot Raconteur, it is only necessary to connect to the service to utilize its members. In Python and MATLAB there is no boilerplate code, and in the other languages the boilerplate code is generated automatically.
 
-`minimalcreateclient.py`
+`reynard_quickstart_client.py`
 
-    from RobotRaconteur.Client import *
-    import time
+```python
+from RobotRaconteur.Client import *
 
-    #RRN is imported from RobotRaconteur.Client
-    #Connect to the service.
-    obj=RRN.ConnectService('rr+tcp://localhost:52222/?service=Create')
+# RRN is imported from RobotRaconteur.Client
+# Connect to the service.
+obj = RRN.ConnectService('rr+tcp://localhost:53222/?service=reynard')
 
-    #The "Create" object reference is now available for use
-    #Drive for a bit
-    obj.Drive(100,5000)
-    time.sleep(1)
-    obj.Drive(0,5000)
+# Call the say function
+obj.say("Hello from Reynard!")
 
-In MATLAB, this client is even simpler.
+# Call the teleport function
+obj.teleport(100, 200)
+```
 
-`minimalcreateclient.m`
+To run the client, execute the following command:
 
-    o=RobotRaconteur.Connect('rr+tcp://localhost:52222/?service=Create');
-    o.Drive(int16(100),int16(5000));
-    pause(1);
-    o.Drive(int16(0),int16(0));
+```bash
+python reynard_quickstart_client.py
+```
+
+The MATLAB Add-On for Robot Raconteur can be installed using the Add-On Explorer in MATLAB and searching for "Robot Raconteur".
+
+In MATLAB, the example client is even simpler.
+
+`reynard_quickstart_client.m`
+
+```matlab
+% Connect to the service
+o = RobotRaconteur.ConnectService('rr+tcp://localhost:53222/?service=reynard');
+
+% Call the say function
+o.say("Hello from MATLAB!");
+
+% Call the teleport function
+o.teleport(-150,200);
+```
+
+The quickstart file can be found in the [examples/quickstart](examples/quickstart) directory.
 
 ## Getting Started
 

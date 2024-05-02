@@ -41,12 +41,14 @@ jobs:
         cmake --build . --config Release --target RobotRaconteurCore_doc
         cmake --build . --config Release --target RobotRaconteurNET_doc
         cmake --build . --config Release --target RobotRaconteurPython3_doc
+        cmake --build . --config Release --target RobotRaconteurGettingStarted_doc
     - name: move docs
       run: |
         mkdir -p doc/doc/core/latest/
         mv build2/docs/python3 doc/doc/core/latest/python
         mv build2/docs/net doc/doc/core/latest/net
         mv build2/docs/cpp/html doc/doc/core/latest/cpp
+        mv build2/docs/getting_started doc/doc/core/latest/getting_started
     - name: archive docs
       uses: actions/upload-pages-artifact@v1
       with:
