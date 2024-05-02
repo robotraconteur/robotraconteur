@@ -1291,7 +1291,7 @@ jobs:
           **/*.log
 
   vcpkg-test-osx:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v2
     - name: vcpkg build
@@ -1412,7 +1412,7 @@ jobs:
   distfiles-test-osx:
     needs:
     - build-dist
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v2
       with:
