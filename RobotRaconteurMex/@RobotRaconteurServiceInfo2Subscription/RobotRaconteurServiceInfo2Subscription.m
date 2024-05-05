@@ -1,5 +1,5 @@
 function c=RobotRaconteurServiceInfo2Subscription(objecttype,stubid)
-%RobotRaconteurServiceInfo2Subscription Subscription for information about detected services 
+%RobotRaconteurServiceInfo2Subscription Subscription for information about detected services
 %
 %    Created using RobotRaconteur.SubscribeServiceInfo2(). An example to find robot services:
 %

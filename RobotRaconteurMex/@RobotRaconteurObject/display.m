@@ -21,7 +21,7 @@ try
             p1=textscan(line,'%s');
             p=p1{1};
             if (strcmp(p{1},'property'))
-               S=substruct('.',p{3});               
+               S=substruct('.',p{3});
                s.(p{3})=subsref(c,S);
             end
             if (strcmp(p{1},'wire'))
@@ -56,6 +56,3 @@ catch
 end
     disp(' ')
 end
-
-
-

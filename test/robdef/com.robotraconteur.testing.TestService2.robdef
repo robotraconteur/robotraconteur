@@ -1,4 +1,4 @@
-﻿service com.robotraconteur.testing.TestService2
+service com.robotraconteur.testing.TestService2
 
 option version 0.8
 

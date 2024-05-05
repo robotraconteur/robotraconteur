@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2020 Wason Technology, LLC
+// Copyright 2011-2020 Wason Technology, LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,12 +64,12 @@ namespace RobotRaconteur
         /// The error code
         /// </summary>
         public MessageErrorType ErrorCode=MessageErrorType.None;
-        
+
         /// <summary>
         /// The error name
         /// </summary>
         public string Error = "";
-        
+
         /// <summary>
         /// An optional error sub-name
         /// </summary>
@@ -120,7 +120,7 @@ namespace RobotRaconteur
                 {
                     try
                     {
-                        param2 = (MessageElementData)RobotRaconteurNode.s.PackVarType(rr_exp.ErrorParam);                        
+                        param2 = (MessageElementData)RobotRaconteurNode.s.PackVarType(rr_exp.ErrorParam);
                     }
                     catch (Exception)
                     {
@@ -142,7 +142,7 @@ namespace RobotRaconteur
                     try
                     {
                         param2 = (MessageElementData)RobotRaconteurNode.s.PackVarType(param3);
-                        
+
                     }
                     catch (Exception)
                     {
@@ -150,12 +150,12 @@ namespace RobotRaconteur
                     }
                 }
             }
-            
+
 			using (param2)
             {
 
 			@RR_ERRORS_CATCH@
-			
+
             if (rr_exp != null)
             {
                 RobotRaconteurException r=rr_exp;
@@ -166,11 +166,11 @@ namespace RobotRaconteur
                 {
                     entry.AddElement("errorsubname",r.ErrorSubName);
                 }
-                
+
                 if (param2 != null)
                 {
                     entry.AddElement("errorparam",param2);
-                }     
+                }
 
             }
             else
@@ -178,7 +178,7 @@ namespace RobotRaconteur
                 entry.Error = MessageErrorType.RemoteError;
                 entry.AddElement("errorname", exception.GetType().ToString());
                 entry.AddElement("errorstring", exception.Message);
-                
+
             }
             }
         }
@@ -222,7 +222,7 @@ namespace RobotRaconteur
                     try
                     {
                         param2 = MessageElementUtil.NewMessageElement("errorparam", RobotRaconteurNode.s.PackVarType(param3));
-                        
+
                     }
                     catch (Exception)
                     {
@@ -230,12 +230,12 @@ namespace RobotRaconteur
                     }
                 }
             }
-            
+
 			using (param2)
             {
 
 			@RR_ERRORS_CATCH2@
-			
+
             if (rr_exp != null)
             {
                 RobotRaconteurException r=rr_exp;
@@ -246,7 +246,7 @@ namespace RobotRaconteur
                 {
                     error_info.errorsubname = r.ErrorSubName;
                 }
-                
+
                 if (param2 != null)
                 {
                     error_info.param_ = param2;
@@ -262,7 +262,7 @@ namespace RobotRaconteur
                 error_info.errormessage = exception.Message;
 
                 return error_info;
-                
+
             }
             }
         }

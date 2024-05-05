@@ -2865,6 +2865,88 @@ BufferSequence buffers_truncate(const BufferSequence& b, size_t count)
     return o;
 }
 
+/***
+ * @brief Service path segment containing a name and an optional index
+ */
+struct ROBOTRACONTEUR_CORE_API ServicePathSegment
+{
+
+    ServicePathSegment();
+
+    ServicePathSegment(const std::string& name,
+                       const boost::optional<std::string>& index = boost::optional<std::string>());
+
+    /** @brief The name of the service path segment */
+    std::string name;
+    /** @brief The index of the service path segment or empty if the segment has no index */
+    boost::optional<std::string> index;
+};
+
+ROBOTRACONTEUR_CORE_API bool operator==(const ServicePathSegment& lhs, const ServicePathSegment& rhs);
+
+ROBOTRACONTEUR_CORE_API bool operator!=(const ServicePathSegment& lhs, const ServicePathSegment& rhs);
+
+/**
+ * @brief Encode a service path index for use in a Robot Raconteur service path
+ *
+ * @param index The index to encode
+ * @return std::string The encoded index
+ */
+ROBOTRACONTEUR_CORE_API std::string EncodeServicePathIndex(const std::string& index);
+
+/**
+ * @brief Decode a service path index from a Robot Raconteur service path
+ *
+ * @param index The index to decode
+ * @return std::string The decoded index
+ */
+ROBOTRACONTEUR_CORE_API std::string DecodeServicePathIndex(const std::string& index);
+
+/**
+ * @brief Parse a Robot Raconteur service path into segments
+ *
+ * @param path The service path to parse
+ * @return std::vector<ServicePathSegment> The parsed service path segments
+ */
+ROBOTRACONTEUR_CORE_API std::vector<ServicePathSegment> ParseServicePath(const std::string& path);
+
+/**
+ * @brief Build a Robot Raconteur service path from segments
+ *
+ * @param segments The segments to build the service path from
+ * @return std::string The built service path
+ */
+ROBOTRACONTEUR_CORE_API std::string BuildServicePath(const std::vector<ServicePathSegment>& segments);
+
+/**
+ * @brief Test if a string is a valid Robot Raconteur name
+ *
+ * @param str The string to test
+ * @return true The string is a valid Robot Raconteur name
+ */
+ROBOTRACONTEUR_CORE_API bool IsStringName(boost::string_ref str);
+/**
+ * @brief Test if a string is a valid Robot Raconteur scoped name
+ *
+ * @param str The string to test
+ * @return true The string is a valid Robot Raconteur scoped name
+ */
+ROBOTRACONTEUR_CORE_API bool IsStringScopedName(boost::string_ref str);
+/**
+ * @brief Test if a string is a UUID
+ *
+ * @param str The string to test
+ * @return true The string is a UUID
+ */
+ROBOTRACONTEUR_CORE_API bool IsStringUUID(boost::string_ref str);
+/**
+ * @brief Test if a string is a Robot Raconteur identifier
+ *
+ * @param str The string to test
+ * @return true The string is a Robot Raconteur identifier
+ */
+ROBOTRACONTEUR_CORE_API bool IsStringIdentifier(boost::string_ref str);
+
 namespace detail
 {
 ROBOTRACONTEUR_CORE_API std::string encode_index(boost::string_ref index);

@@ -26,13 +26,13 @@ import java.util.*;
 //Typemap start
 
 	private static RobotRaconteurNode csharp_s=null;
-	
+
 	public static RobotRaconteurNode s()
 	{
 		if (csharp_s == null)
 		{
 			csharp_s = _get_s();
-			 
+
 		}
 
 		return csharp_s;
@@ -83,15 +83,15 @@ import java.util.*;
 					{
 						servicetypes.put(servicename,factory);
 					}
-					
+
 				}
-				
+
 			}
 			catch (Exception e)
 			{
-				
-			}	*/		
-			
+
+			}	*/
+
 			try
 			{
 				ServiceFactory f= servicetypes.get(servicename);
@@ -113,7 +113,7 @@ import java.util.*;
 
 
 
-	
+
 
 
 	public Object connectService(String url, String username, java.util.HashMap<String, Object> credentials)
@@ -135,7 +135,7 @@ import java.util.*;
 	{
 		return connectService(url, username, credentials, listener, null);
 	}
-	
+
 	public final Object connectService(String url, String username, Map<String, Object> credentials, Action3<ServiceStub, ClientServiceListenerEventType, Object> listener, String objecttype)
 	{
 		MessageElementData credentials2 = null;
@@ -153,22 +153,22 @@ import java.util.*;
 		ClientServiceListenerDirectorJava listener2 = null;
 		if (listener != null)
 		{
-			
-			
+
+
 			listener2 = new ClientServiceListenerDirectorJava(listener);
 			listener2.setObjectheapid(RRObjectHeap.addObject(listener2));
 		}
 
 		if (objecttype==null) objecttype="";
-		
+
 		WrappedServiceStub s = _ConnectService(url, username, credentials2, listener2, objecttype);
 		ServiceStub s2 = getServiceType(s.getRR_objecttype().getServiceDefinition().getName()).createStub(s);
 		if (listener2 != null)
 		{
 			listener2.stub = s2;
 
-			
-			
+
+
 		}
 		return s2;
 		}
@@ -194,12 +194,12 @@ import java.util.*;
 	{
 		return connectService(url, null, null, null, null);
 	}
-	
+
 	public final Object connectService(String[] url, String username, java.util.HashMap<String, Object> credentials, Action3<ServiceStub, ClientServiceListenerEventType, Object> listener)
 	{
 		return connectService(url, username, credentials, listener, null);
 	}
-	
+
 	public final Object connectService(String[] url, String username, java.util.HashMap<String, Object> credentials, Action3<ServiceStub, ClientServiceListenerEventType, Object> listener, String objecttype)
 	{
 		MessageElementData credentials2 = null;
@@ -217,7 +217,7 @@ import java.util.*;
 		ClientServiceListenerDirectorJava listener2 = null;
 		if (listener != null)
 		{
-			
+
 			listener2 = new ClientServiceListenerDirectorJava(listener);
 			listener2.setObjectheapid(RRObjectHeap.addObject(listener2));
 		}
@@ -229,15 +229,15 @@ import java.util.*;
 		}
 
 		if (objecttype==null) objecttype="";
-		
+
 		WrappedServiceStub s = _ConnectService(url2, username, credentials2, listener2, objecttype);
 		ServiceStub s2 = getServiceType(s.getRR_objecttype().getServiceDefinition().getName()).createStub(s);
 		if (listener2 != null)
 		{
 			listener2.stub = s2;
-		
-			
-			
+
+
+
 		}
 		return s2;
 		}
@@ -272,31 +272,31 @@ import java.util.*;
 	public final NodeID getServiceNodeID(Object obj)
 	{
 		ServiceStub stub = (ServiceStub)obj;
-		return _GetServiceNodeID(stub.rr_innerstub);		
+		return _GetServiceNodeID(stub.rr_innerstub);
 	}
 
 	public final String getServiceNodeName(Object obj)
 	{
 		ServiceStub stub = (ServiceStub)obj;
-		return _GetServiceNodeName(stub.rr_innerstub);		
+		return _GetServiceNodeName(stub.rr_innerstub);
 	}
 
 	public final String getServiceName(Object obj)
 	{
 		ServiceStub stub = (ServiceStub)obj;
-		return _GetServiceName(stub.rr_innerstub);		
+		return _GetServiceName(stub.rr_innerstub);
 	}
 
 	public final String getObjectServicePath(Object obj)
 	{
 		ServiceStub stub = (ServiceStub)obj;
-		return _GetObjectServicePath(stub.rr_innerstub);		
+		return _GetObjectServicePath(stub.rr_innerstub);
 	}
 
 	public final String getObjectType(Object obj)
 	{
 		ServiceStub stub = (ServiceStub)obj;
-		return _GetObjectType(stub.rr_innerstub);		
+		return _GetObjectType(stub.rr_innerstub);
 	}
 
 	public final MessageElementData packStructure(Object s)
@@ -326,7 +326,7 @@ import java.util.*;
 		{
 			c=c.getComponentType();
 		}
-		
+
 		String servicename = RobotRaconteurNode.splitQualifiedName(getTypeString(c))[0];
 
 		ServiceFactory f = getServiceType(servicename);
@@ -359,7 +359,7 @@ import java.util.*;
 		{
 			if (l!=null) l.delete();
 		}
-		
+
 	}
 
 	private final <T> MessageElement packContainerValue(String name, Object data, Class<?> T_class)
@@ -383,12 +383,12 @@ import java.util.*;
 		{
 			return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
 		}
-		
+
 		if (T_class == NamedMultiDimArray.class)
 		{
 			return MessageElementUtil.newMessageElementDispose(name, packStructure(data));
 		}
-		
+
 		boolean is_array = T_class.isArray();
 		if (is_array)
 		{
@@ -422,14 +422,14 @@ import java.util.*;
 			m.setElementNumber(number);
 			m.setElementFlags((short)( m.getElementFlags() & ~RobotRaconteurJava.getMessageElementFlags_ELEMENT_NAME_STR()));
 			m.setElementFlags((short)( m.getElementFlags() | RobotRaconteurJava.getMessageElementFlags_ELEMENT_NUMBER()));
-						
+
 			return m;
-			
+
 		}
 		catch(RuntimeException e)
 		{
 			if (m!=null) m.delete();
-			throw e;		
+			throw e;
 		}
 	}
 
@@ -451,17 +451,17 @@ import java.util.*;
             case DataTypes_uint64_t:
             case DataTypes_cdouble_t:
             case DataTypes_csingle_t:
-            case DataTypes_bool_t:            			
-                return (T)e.getData();                
+            case DataTypes_bool_t:
+                return (T)e.getData();
             case DataTypes_string_t:
                 return (T)e.getData();
-			case DataTypes_multidimarray_t:                
+			case DataTypes_multidimarray_t:
 				return (T)unpackMultiDimArrayDispose((MessageElementNestedElementList)e.getData());
 			case DataTypes_pod_t:
 			{
 				vectorptr_messageelement m = new vectorptr_messageelement();
 				try
-				{			
+				{
 					m.add(e);
 					return (T)unpackStructureDispose(new MessageElementNestedElementList(DataTypes.DataTypes_pod_array_t,e.getElementTypeName(),m));
 				}
@@ -479,7 +479,7 @@ import java.util.*;
 			default:
                     throw new DataTypeException("Invalid container data type");
 		}
-	
+
 	}
 
 	public final <Tkey, Tvalue> Object packMapType(Object data, Class<?> Tkey_class, Class<?> Tvalue_class)
@@ -488,18 +488,18 @@ import java.util.*;
 		{
 			return null;
 		}
-		
+
 		if (Tkey_class == Integer.class)
 		{
 			vectorptr_messageelement m = new vectorptr_messageelement();
 			try
 			{
 			java.util.HashMap<Tkey, Tvalue> ddata = (java.util.HashMap<Tkey, Tvalue>)data;
-						
+
 			for (java.util.Map.Entry<Tkey, Tvalue> d : ddata.entrySet())
 			{
 				MessageElementUtil.addMessageElementDispose(m,packContainerValue((Integer)d.getKey(), d.getValue(), Tvalue_class));
-			}	
+			}
 
 			return new MessageElementNestedElementList(DataTypes.DataTypes_vector_t,"",m);
 			}
@@ -516,12 +516,12 @@ import java.util.*;
 			try
 			{
 			java.util.HashMap<Tkey, Tvalue> ddata = (java.util.HashMap<Tkey, Tvalue>)data;
-						
+
 			for (java.util.Map.Entry<Tkey, Tvalue> d : ddata.entrySet())
 			{
-				MessageElementUtil.addMessageElementDispose(m,packContainerValue((String)d.getKey(), d.getValue(), Tvalue_class));					
+				MessageElementUtil.addMessageElementDispose(m,packContainerValue((String)d.getKey(), d.getValue(), Tvalue_class));
 			}
-			
+
 			return new MessageElementNestedElementList(DataTypes.DataTypes_dictionary_t,"",m);
 			}
 			finally
@@ -554,8 +554,8 @@ import java.util.*;
 			{
 				MessageElement e=m.get(i);
 				try
-				{									
-					o.put(MessageElementUtil.getMessageElementNumber(e), (Tvalue)unpackContainerValue(e));				
+				{
+					o.put(MessageElementUtil.getMessageElementNumber(e), (Tvalue)unpackContainerValue(e));
 				}
 				finally
 				{
@@ -581,7 +581,7 @@ import java.util.*;
 			{
 				MessageElement e=m.get(i);
 				try
-				{					
+				{
 					o.put(e.getElementName(), (Tvalue)unpackContainerValue(e));
 				}
 				finally
@@ -602,9 +602,9 @@ import java.util.*;
 		}
 
 	}
-	
+
 	//List types
-	
+
 	public final <Tkey, Tvalue> Object unpackMapTypeDispose(Object data)
 	{
 		try
@@ -622,7 +622,7 @@ import java.util.*;
 			}
 		}
 	}
-	
+
 	public final <Tvalue> Object packListType(Object data,Class<?> Tvalue_class)
 	{
 		if (data == null)
@@ -630,7 +630,7 @@ import java.util.*;
 			return null;
 		}
 		DataTypes stype;
-				
+
 		vectorptr_messageelement m = new vectorptr_messageelement();
 		try
 		{
@@ -640,9 +640,9 @@ import java.util.*;
 		for (Tvalue d : ddata)
 		{
 			MessageElementUtil.addMessageElementDispose(m,packContainerValue(count, d, Tvalue_class));
-					
+
 			count++;
-		}						
+		}
 
 		return new MessageElementNestedElementList(DataTypes.DataTypes_list_t,"",m);
 		}
@@ -650,7 +650,7 @@ import java.util.*;
 		{
 			m.delete();
 		}
-		
+
 	}
 
 
@@ -661,11 +661,11 @@ import java.util.*;
 			return null;
 		}
 
-		
+
 			java.util.List<Tvalue> o = new java.util.ArrayList<Tvalue>();
 
 			MessageElementNestedElementList cdata = (MessageElementNestedElementList)data;
-			
+
 			vectorptr_messageelement m=cdata.getElements();
 			try
 			{
@@ -676,7 +676,7 @@ import java.util.*;
 					throw new DataTypeException("Error in list format");
 				try
 				{
-					o.add((Tvalue)unpackContainerValue(e));				
+					o.add((Tvalue)unpackContainerValue(e));
 				}
 				finally
 				{
@@ -689,8 +689,8 @@ import java.util.*;
 			{
 				if (m!=null) m.delete();
 			}
-	}	
-	
+	}
+
 	public final <Tvalue> Object unpackListTypeDispose(Object data)
 	{
 		try
@@ -707,14 +707,14 @@ import java.util.*;
 			}
 			}
 		}
-	
-	
-	}
-	
 
-	/** 
+
+	}
+
+
+	/**
 	 Packs a varvalue data.  This can handle any type supported by the node
-	 
+
 	 @param data The data to be packed
 	 @return The packed data for use with MessageElement.Data
 	*/
@@ -724,7 +724,7 @@ import java.util.*;
 		{
 			return null;
 		}
-		
+
 		if (data instanceof java.util.Map<?, ?>)
 		{
 			Map<?,?> datamap=(Map<?,?>)(data);
@@ -749,12 +749,12 @@ import java.util.*;
 			}
 			}
 		}
-		
+
 		if (data instanceof java.util.List<?>)
 		{
 			return packListType(data, Object.class);
 		}
-				
+
 		if (data instanceof MultiDimArray)
 		{
 			return packMultiDimArray((MultiDimArray)data);
@@ -769,17 +769,17 @@ import java.util.*;
 		{
 			return packStructure(data);
 		}
-		
+
 		if (data instanceof RRStructure || data instanceof RRPod || data instanceof RRPod[])
 		{
 			return packStructure(data);
 		}
-		
+
 		if (data instanceof RRNamedArray || data instanceof RRNamedArray[])
 		{
 			return packStructure(data);
 		}
-		
+
 		if (data instanceof String)
 		{
 			return data;
@@ -792,15 +792,15 @@ import java.util.*;
 			|| data instanceof CSingle || data instanceof CSingle[] || data instanceof Boolean || data instanceof boolean[]
 			 )
 		{
-			return data;	
-		}		
-		
+			return data;
+		}
+
 		throw new DataTypeException("Could not pack varvalue");
 	}
 
-	/** 
-	 Unpacks a varvalue from a MessageElement.  This can unpack any type supported by the node 
-	 
+	/**
+	 Unpacks a varvalue from a MessageElement.  This can unpack any type supported by the node
+
 	 @param me The message element containing the data
 	 @return The unpacked data
 	*/
@@ -827,17 +827,17 @@ import java.util.*;
             case DataTypes_uint64_t:
             case DataTypes_cdouble_t:
             case DataTypes_csingle_t:
-            case DataTypes_bool_t:                           
-                return me.getData();                
+            case DataTypes_bool_t:
+                return me.getData();
             case DataTypes_string_t:
                 return me.getData();
-			case DataTypes_multidimarray_t:                
-				return unpackMultiDimArrayDispose((MessageElementNestedElementList)me.getData());            
+			case DataTypes_multidimarray_t:
+				return unpackMultiDimArrayDispose((MessageElementNestedElementList)me.getData());
 			case DataTypes_pod_t:
 			{
 				vectorptr_messageelement m = new vectorptr_messageelement();
 				try
-				{			
+				{
 					m.add(me);
 					return (Object)unpackStructureDispose(new MessageElementNestedElementList(DataTypes.DataTypes_pod_array_t,me.getElementTypeName(),m));
 				}
@@ -860,10 +860,10 @@ import java.util.*;
 				return this.<Object>unpackListType(me.getData());
 			default:
                 throw new DataTypeException("Invalid varvalue data type");
-			
+
 		}
 	}
-	
+
 	public final Object unpackVarTypeDispose(MessageElement me)
 	{
 		try
@@ -875,17 +875,17 @@ import java.util.*;
 			if (me!=null)
 			{
 				me.delete();
-			
+
 			}
 		}
-	
+
 	}
-	
-	
-	
-	/** 
+
+
+
+	/**
 	 Packs a MultiDimArray into a MessageElementNestedElementList
-	 
+
 	 @param array The array to be packed
 	 @return A packed array for use with MessageElement.Data
 	*/
@@ -898,9 +898,9 @@ import java.util.*;
 		vectorptr_messageelement l = new vectorptr_messageelement();
 		try
 		{
-		MessageElementUtil.addMessageElementDispose(l,"dims", new UnsignedInts(array.dims));		
+		MessageElementUtil.addMessageElementDispose(l,"dims", new UnsignedInts(array.dims));
 		MessageElementUtil.addMessageElementDispose(l,"array", array.array);
-		
+
 		return new MessageElementNestedElementList(DataTypes.DataTypes_multidimarray_t,"",l);
 		}
 		finally
@@ -911,9 +911,9 @@ import java.util.*;
 
 	}
 
-	/** 
+	/**
 	 Unpacks a MessageElementNestedElementList and returns unpacked multidim array
-	 
+
 	 @param marray The MessageElementNestedElementList to unpack
 	 @return The unpacked multidim array
 	*/
@@ -923,11 +923,11 @@ import java.util.*;
 		{
 			return null;
 		}
-		
+
 		vectorptr_messageelement marrayElements=marray.getElements();
 		try
 		{
-		MultiDimArray m = new MultiDimArray();		
+		MultiDimArray m = new MultiDimArray();
 		m.dims = (MessageElementUtil.<UnsignedInts>findElementAndCast(marrayElements, "dims")).value;
 		m.array = (MessageElementUtil.<Object>findElementAndCast(marrayElements, "array"));
 		return m;
@@ -950,9 +950,9 @@ import java.util.*;
 		{
 			if (marray!=null) marray.delete();
 		}
-	
+
 	}
-	
+
 	public final String requestObjectLock(Object obj, RobotRaconteurObjectLockFlags flags)
 	{
 		if (!(obj instanceof ServiceStub))
@@ -985,7 +985,7 @@ import java.util.*;
 	{
 		asyncRequestObjectLock(obj,flags,handler,-1);
 	}
-	
+
 	public final void asyncRequestObjectLock(Object obj, RobotRaconteurObjectLockFlags flags, Action2<String,RuntimeException> handler, int timeout)
 	{
 		if (!(obj instanceof ServiceStub))
@@ -1003,7 +1003,7 @@ import java.util.*;
 	{
 		asyncReleaseObjectLock(obj,handler,-1);
 	}
-	
+
 	public final void asyncReleaseObjectLock(Object obj, Action2<String,RuntimeException> handler, int timeout)
 	{
 		if (!(obj instanceof ServiceStub))
@@ -1016,7 +1016,7 @@ import java.util.*;
 		int id=RRObjectHeap.addObject(h);
 		_AsyncReleaseObjectLock(s.rr_innerstub, timeout,h,id);
 	}
-	
+
 	public void monitorEnter(Object obj)
 	{
 		monitorEnter(obj, -1);
@@ -1057,7 +1057,7 @@ import java.util.*;
 		for (int j=0; j<i.size(); j++)
 		{
 			ServiceInfo2Wrapped i2=i.get(j);
-			ServiceInfo2 i3 = new ServiceInfo2(i2);			
+			ServiceInfo2 i3 = new ServiceInfo2(i2);
 			o.add(i3);
 		}
 
@@ -1077,13 +1077,13 @@ import java.util.*;
 		for (int j=0; j<i.size(); j++)
 		{
 			WrappedNodeInfo2 i2=i.get(j);
-			NodeInfo2 i3 = new NodeInfo2(i2);			
+			NodeInfo2 i3 = new NodeInfo2(i2);
 			o.add(i3);
 		}
 
 		return o.toArray(new NodeInfo2[0]);
 	}
-	
+
 	public final NodeInfo2[] findNodeByName(String name, String[] transportschemes)
 	{
 		vectorstring s = new vectorstring();
@@ -1097,7 +1097,7 @@ import java.util.*;
 		for (int j=0; j<i.size(); j++)
 		{
 			WrappedNodeInfo2 i2=i.get(j);
-			NodeInfo2 i3 = new NodeInfo2(i2);			
+			NodeInfo2 i3 = new NodeInfo2(i2);
 			o.add(i3);
 		}
 
@@ -1122,15 +1122,15 @@ import java.util.*;
     public TimeSpec nowUTC()
   {
 	  return _NowUTC();
-	  	  
+
   }
 
 	public TimeSpec nowNodeTime()
   {
 	  return _NowNodeTime();
-	  	  
+
   }
-    
+
 	public TimeSpec nodeSyncTimeUTC()
 	{
 		return _NodeSyncTimeUTC();
@@ -1145,7 +1145,7 @@ import java.util.*;
 	{
 		return _NowTimeSpec();
 	}
-  
+
   public final Object findObjRefTyped(Object obj, String objref, String objecttype)
 	{
 		if (!(obj instanceof ServiceStub))
@@ -1156,7 +1156,7 @@ import java.util.*;
 
 		return s.findObjRefTyped(objref,objecttype);
 	}
-	
+
 	public final Object findObjRefTyped(Object obj, String objref, String index, String objecttype)
 	{
 		if (!(obj instanceof ServiceStub))
@@ -1167,21 +1167,21 @@ import java.util.*;
 
 		return s.findObjRefTyped(objref,index,objecttype);
 	}
-	
+
 	//Typemap end
-	
+
 	public final void shutdown()
 	{
 		this._Shutdown();
 		RRNativeObjectHeapSupport.set_Support(null);
 	}
-	
-		
+
+
 	public final void asyncConnectService(String url, String username, Map<String, Object> credentials, Action3<ServiceStub, ClientServiceListenerEventType, Object> listener, String objecttype, Action2<Object,RuntimeException> handler)
   {
 	  asyncConnectService(url,username,credentials,listener,objecttype,handler,-1);
   }
-  
+
   	public final void asyncConnectService(String url, String username, Map<String, Object> credentials, Action3<ServiceStub, ClientServiceListenerEventType, Object> listener, String objecttype, Action2<Object,RuntimeException> handler, int timeout)
 	{
 		MessageElementData credentials2 = null;
@@ -1195,21 +1195,21 @@ import java.util.*;
 			{
 				credentials2 = (MessageElementData)packVarType(credentials);
 			}
-	
+
 			ClientServiceListenerDirectorJava listener2 = null;
 			if (listener != null)
 			{
-				
-				
+
+
 				listener2 = new ClientServiceListenerDirectorJava(listener);
 				listener2.setObjectheapid(RRObjectHeap.addObject(listener2));
 			}
-	
+
 			if (objecttype==null) objecttype="";
-			
+
 			AsyncStubReturnDirectorImpl<Object> h=new AsyncStubReturnDirectorImpl<Object>(handler);
 			int id1=RRObjectHeap.addObject(h);
-			
+
 			_AsyncConnectService(url, username, credentials2, listener2, objecttype,timeout,h,id1);
 		}
 		finally
@@ -1223,7 +1223,7 @@ import java.util.*;
     {
   	  asyncConnectService(url,username,credentials,listener,objecttype,handler,-1);
     }
-  	
+
   	public final void asyncConnectService(String[] url, String username, Map<String, Object> credentials, Action3<ServiceStub, ClientServiceListenerEventType, Object> listener, String objecttype, Action2<Object,RuntimeException> handler, int timeout)
 	{
 		MessageElementData credentials2 = null;
@@ -1237,21 +1237,21 @@ import java.util.*;
 			{
 				credentials2 = (MessageElementData)packVarType(credentials);
 			}
-	
+
 			ClientServiceListenerDirectorJava listener2 = null;
 			if (listener != null)
 			{
-				
-				
+
+
 				listener2 = new ClientServiceListenerDirectorJava(listener);
 				listener2.setObjectheapid(RRObjectHeap.addObject(listener2));
 			}
-	
+
 			if (objecttype==null) objecttype="";
-			
+
 			AsyncStubReturnDirectorImpl<Object> h=new AsyncStubReturnDirectorImpl<Object>(handler);
 			int id1=RRObjectHeap.addObject(h);
-			
+
 			vectorstring url1=new vectorstring();
 			for (int i=0; i<url.length; i++)
 			{
@@ -1273,38 +1273,38 @@ import java.util.*;
         int id = RRObjectHeap.addObject(h);
         _AsyncDisconnectService(stub.rr_innerstub,h,id);
   	}
-	
+
 	private class AsyncServiceInfo2DirectorImpl extends AsyncServiceInfo2VectorReturnDirector
   {
 	  protected Action1<ServiceInfo2[]> handler_func;
-	  
+
 	  public AsyncServiceInfo2DirectorImpl(Action1<ServiceInfo2[]> handler_func)
 	  {
 		  this.handler_func=handler_func;
 	  }
-	  
+
 	  @Override
 	  public void handler(vectorserviceinfo2wrapped i)
 	  {
 		  try
 		  {
-		 		  
+
 		  java.util.ArrayList<ServiceInfo2> o=new java.util.ArrayList<ServiceInfo2>();
 		  ServiceInfo2[] o2=new ServiceInfo2[0];
 		  try
-		  {			  			  
+		  {
 			  for (int ii=0; ii!=i.size(); ii++)
 			  {
 				  o.add(new ServiceInfo2(i.get(ii)));
 			  }
-			  
+
 			  o2=o.toArray(new ServiceInfo2[0]);
 		  }
 		  catch (Exception e)
 		  {
 			  handler_func.action(new ServiceInfo2[0]);
 		  }
-		  
+
 		  handler_func.action(o2);
 		  }
 		  catch (Exception e)
@@ -1315,43 +1315,43 @@ import java.util.*;
 			merr.delete();
 		}
 	  }
-	  
-	  
+
+
   }
 
   private class AsyncNodeInfo2DirectorImpl extends AsyncNodeInfo2VectorReturnDirector
   {
 	  protected Action1<NodeInfo2[]> handler_func;
-	  
+
 	  public AsyncNodeInfo2DirectorImpl(Action1<NodeInfo2[]> handler_func)
 	  {
 		  this.handler_func=handler_func;
 	  }
-	  
+
 	  @Override
 	  public void handler(vectornodeinfo2 i)
 	  {
 		  try
 		  {
-		 		  
+
 		  java.util.ArrayList<NodeInfo2> o=new java.util.ArrayList<NodeInfo2>();
 		  NodeInfo2[] o2=new NodeInfo2[0];
 		  try
-		  {			  
-			  
+		  {
+
 			  for (int ii=0; ii!=i.size(); ii++)
 			  {
 				  o.add(new NodeInfo2(i.get(ii)));
 			  }
-			  
+
 			  o2=o.toArray(new NodeInfo2[0]);
 		  }
 		  catch (Exception e)
 		  {
 			  handler_func.action(new NodeInfo2[0]);
 		  }
-		  
-		  handler_func.action(o2);	
+
+		  handler_func.action(o2);
 		  }
 		  catch (Exception e)
 			{
@@ -1361,16 +1361,16 @@ import java.util.*;
 				merr.delete();
 			}
 	  }
-	  
-	  
+
+
     }
 
     public final void asyncFindServiceByType(String servicetype, String[] transportschemes, Action1<ServiceInfo2[]> handler)
 	{
 	  asyncFindServiceByType(servicetype,transportschemes,handler,-1);
-	  
+
 	}
-  
+
     public final void asyncFindServiceByType(String servicetype, String[] transportschemes, Action1<ServiceInfo2[]> handler, int timeout)
 	{
 		vectorstring s = new vectorstring();
@@ -1378,21 +1378,21 @@ import java.util.*;
 		{
 			s.add(s2);
 		}
-		
+
 		AsyncServiceInfo2DirectorImpl h=new AsyncServiceInfo2DirectorImpl(handler);
 		int id1=RRObjectHeap.addObject(h);
-		
+
 		RobotRaconteurJava.asyncWrappedFindServiceByType(this,servicetype, s, timeout, h, id1);
 
-		
+
 	}
 
     public final void asyncFindNodeByID(NodeID id, String[] transportschemes, Action1<NodeInfo2[]> handler)
 	{
     	asyncFindNodeByID(id,transportschemes,handler,-1);
-    	
+
 	}
-    
+
 	public final void asyncFindNodeByID(NodeID id, String[] transportschemes, Action1<NodeInfo2[]> handler, int timeout)
 	{
 		vectorstring s = new vectorstring();
@@ -1402,17 +1402,17 @@ import java.util.*;
 		}
 		AsyncNodeInfo2DirectorImpl h=new AsyncNodeInfo2DirectorImpl(handler);
 		int id1=RRObjectHeap.addObject(h);
-		
+
 		RobotRaconteurJava.asyncWrappedFindNodeByID(this,id, s,timeout,h,id1);
 
-		
+
 	}
-	
+
 	public final void asyncFindNodeByName(String name, String[] transportschemes, Action1<NodeInfo2[]> handler)
 	{
-		asyncFindNodeByName(name,transportschemes,handler,-1);		
+		asyncFindNodeByName(name,transportschemes,handler,-1);
 	}
-	
+
 	public final void asyncFindNodeByName(String name, String[] transportschemes, Action1<NodeInfo2[]> handler, int timeout)
 	{
 		vectorstring s = new vectorstring();
@@ -1422,11 +1422,11 @@ import java.util.*;
 		}
 		AsyncNodeInfo2DirectorImpl h=new AsyncNodeInfo2DirectorImpl(handler);
 		int id1=RRObjectHeap.addObject(h);
-		
+
 		RobotRaconteurJava.asyncWrappedFindNodeByName(this, name, s,timeout,h,id1);
-		
+
 	}
-	
+
 	public final void updateDetectedNodes(String[] schemes)
 	{
 		vectorstring schemes1=new vectorstring();
@@ -1435,17 +1435,17 @@ import java.util.*;
 	}
 
 	public final void asyncUpdateDetectedNodes(String[] schemes, Action handler)
-  	{		
+  	{
 		asyncUpdateDetectedNodes(schemes, handler, 5000);
 	}
 
 	public final void asyncUpdateDetectedNodes(String[] schemes, Action handler, int timeout)
-  	{  		
+  	{
 		vectorstring schemes1=new vectorstring();
 		for(String s : schemes) schemes1.add(s);
         AsyncVoidNoErrReturnDirectorImpl h = new AsyncVoidNoErrReturnDirectorImpl(handler);
         int id = RRObjectHeap.addObject(h);
-		RobotRaconteurJava.asyncWrappedUpdateDetectedNodes(this, schemes1, timeout,h,id);       
+		RobotRaconteurJava.asyncWrappedUpdateDetectedNodes(this, schemes1, timeout,h,id);
   	}
 
 	public final NodeID[] getDetectedNodes()
@@ -1456,7 +1456,7 @@ import java.util.*;
         {
             o[i] = new NodeID(o1.get(i));
         }
-        return o;        
+        return o;
 	}
 
 	public final NodeInfo2 getDetectedNodeCacheInfo(NodeID nodeid)
@@ -1468,12 +1468,12 @@ import java.util.*;
   {
 	asyncFindObjRefTyped(obj,objref,objecttype,handler,-1);
   }
-	
+
   public void asyncFindObjRefTyped(Object obj, String objref, String objecttype, Action2<Object,RuntimeException> handler, int timeout)
   {
       if (!(obj instanceof ServiceStub)) throw new RuntimeException("Only service stubs can have objref");
       ServiceStub s = (ServiceStub)obj;
-      
+
       s.asyncFindObjRefTyped(objref, objecttype, handler, timeout);
   }
 
@@ -1481,7 +1481,7 @@ import java.util.*;
   {
 	asyncFindObjRefTyped(obj,objref,index,objecttype,handler,-1);
   }
-  
+
   public void asyncFindObjRefTyped(Object obj, String objref, String index, String objecttype, Action2<Object,RuntimeException> handler, int timeout)
   {
       if (!(obj instanceof ServiceStub)) throw new RuntimeException("Only service stubs can have objref");
@@ -1510,12 +1510,12 @@ import java.util.*;
   {
 	asyncFindObjectType(obj,objref,handler,-1);
   }
-  
+
   public void asyncFindObjectType(Object obj, String objref, Action2<String,RuntimeException> handler, int timeout)
   {
       if (!(obj instanceof ServiceStub)) throw new RuntimeException("Only service stubs can have objref");
       ServiceStub s = (ServiceStub)obj;
-      
+
       AsyncStringReturnDirectorImpl h = new AsyncStringReturnDirectorImpl(handler);
       int id2 = RRObjectHeap.addObject(h);
       _AsyncFindObjectType(s.rr_innerstub, objref,timeout,h,id2);
@@ -1525,7 +1525,7 @@ import java.util.*;
   {
 	asyncFindObjectType(obj,objref,index,handler,-1);
   }
-  
+
   public void asyncFindObjectType(Object obj, String objref, String index, Action2<String, RuntimeException> handler, int timeout)
   {
       if (!(obj instanceof ServiceStub)) throw new RuntimeException("Only service stubs can have objref");
@@ -1535,7 +1535,7 @@ import java.util.*;
       int id2 = RRObjectHeap.addObject(h);
       _AsyncFindObjectType(s.rr_innerstub, objref, index, timeout, h, id2);
   }
-	
+
   public void setExceptionHandler(Action1<RuntimeException> handler)
   {
 	if (handler == null)
@@ -1547,7 +1547,7 @@ import java.util.*;
       int id1 = RRObjectHeap.addObject(h);
       _SetExceptionHandler(h,id1);
   }
-  
+
   public static final int RR_TIMEOUT_INFINITE=-1;
 
   public final static String[] splitQualifiedName(String name)
@@ -1556,7 +1556,7 @@ import java.util.*;
 	if (ind==-1) throw new RuntimeException("Name is not qualified");
 	return new String[] {name.substring(0,ind),name.substring(ind+1)};
   }
-  
+
   public final static String getTypeString(Class type)
   {
 	return type.getName().replaceAll("_\\.",".").replaceAll("_$","");
@@ -1566,14 +1566,14 @@ import java.util.*;
   {
 	return createTimer(period, handler,false);
   }
-  
+
   public final Timer createTimer(int period, Action1<TimerEvent> handler, boolean oneshot)
 	{
 		AsyncTimerEventReturnDirectorImpl t = new AsyncTimerEventReturnDirectorImpl(handler);
 		int id = RRObjectHeap.addObject(t);
 		return _CreateTimer(period, oneshot, t, id);
 	}
-  
+
   public RobotRaconteurException downCastException(RobotRaconteurException exp)
   {
       if (exp==null) return exp;
@@ -1584,15 +1584,15 @@ import java.util.*;
       return getServiceType(stype[0]).downCastException(exp);
 
   }
-  
+
   public void postToThreadPool(Action target)
   {
 	AsyncVoidNoErrReturnDirectorImpl h=new AsyncVoidNoErrReturnDirectorImpl(target);
 	int id = RRObjectHeap.addObject(h);
 	_PostToThreadPool(h,id);
-  
+
   }
-  
+
   static class WrappedServiceSubscriptionFilterPredicateDirectorJava extends WrappedServiceSubscriptionFilterPredicateDirector
   {
 	Func1<ServiceInfo2, Boolean> _f;
@@ -1601,7 +1601,7 @@ import java.util.*;
 	{
 		_f = f;
 	}
-	
+
 	@Override
 	public boolean predicate(ServiceInfo2Wrapped info)
 	{
@@ -1611,7 +1611,7 @@ import java.util.*;
 
   }
 
-  private WrappedServiceSubscriptionFilter subscribeService_LoadFilter(ServiceSubscriptionFilter filter)
+  WrappedServiceSubscriptionFilter subscribeService_LoadFilter(ServiceSubscriptionFilter filter)
   {
 	WrappedServiceSubscriptionFilter filter2=null;
 
@@ -1626,7 +1626,7 @@ import java.util.*;
 				filter2.getServiceNames().add(filter.ServiceNames[i]);
 			}
 		}
-		
+
 		if (filter.TransportSchemes != null)
 		{
 			for (int i=0; i<filter.TransportSchemes.length; i++)
@@ -1647,16 +1647,16 @@ import java.util.*;
 				WrappedServiceSubscriptionFilterNode n2=new WrappedServiceSubscriptionFilterNode();
 
 				if (n1.NodeID != null) n2.setNodeID(n1.NodeID);
-				
+
 				if (n1.NodeName != null) n2.setNodeName(n1.NodeName);
-				
+
 				if (n1.Username != null) n2.setUsername(n1.Username);
 
 				if (n1.Credentials != null)
 				{
 					n2.setCredentials((MessageElementData)packMapType(n1.Credentials, String.class, Object.class));
 				}
-				nodes2.add(n2);			
+				nodes2.add(n2);
 			}
 
 			filter2.setNodes(nodes2);
@@ -1679,10 +1679,10 @@ import java.util.*;
   {
 	return subscribeServiceByType(service_types, null);
   }
-    
+
   public ServiceSubscription subscribeServiceByType(String[] service_types, ServiceSubscriptionFilter filter)
   {
-	
+
 	WrappedServiceSubscriptionFilter filter2=subscribeService_LoadFilter(filter);
 
 	vectorstring service_types2 = new vectorstring();
@@ -1690,7 +1690,7 @@ import java.util.*;
 	{
 		service_types2.add(service_types[i]);
 	}
-		
+
 	WrappedServiceSubscription sub1=RobotRaconteurJava.wrappedSubscribeServiceByType(this, service_types2, filter2);
 	return new ServiceSubscription(sub1);
 
@@ -1703,7 +1703,7 @@ import java.util.*;
 
   public ServiceInfo2Subscription subscribeServiceInfo2(String[] service_types, ServiceSubscriptionFilter filter)
   {
-	
+
 	WrappedServiceSubscriptionFilter filter2=subscribeService_LoadFilter(filter);
 
 	vectorstring service_types2 = new vectorstring();
@@ -1711,7 +1711,7 @@ import java.util.*;
 	{
 		service_types2.add(service_types[i]);
 	}
-		
+
 	WrappedServiceInfo2Subscription sub1=RobotRaconteurJava.wrappedSubscribeServiceInfo2(this, service_types2, filter2);
 	return new ServiceInfo2Subscription(sub1);
 
@@ -1756,16 +1756,16 @@ import java.util.*;
 			{
 				credentials2 = (MessageElementData)packVarType(credentials);
 			}
-	
+
 			if (objecttype==null) objecttype="";
-			
+
 			vectorstring url1=new vectorstring();
 			for (int i=0; i<url.length; i++)
 			{
 				url1.add(url[i]);
 			}
 			WrappedServiceSubscription sub1 = RobotRaconteurJava.wrappedSubscribeService(this, url1, username, credentials2, objecttype);
-			return new ServiceSubscription(sub1); 
+			return new ServiceSubscription(sub1);
 		}
 		finally
 		{
@@ -1774,8 +1774,8 @@ import java.util.*;
 
 	}
   //End code typemap
-  
-  
+
+
 %}
 
 %include "RobotRaconteurNode.i"

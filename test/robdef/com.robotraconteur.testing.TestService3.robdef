@@ -30,7 +30,7 @@ constant int32 int32hexconst2 -0x7264c17
 constant int32[] int32hexconst_array { 0x8274ec, -0x0001, +0xABCDEF, 0xabcdef, 0x012345, 0x6789 }
 constant double[] doubleconst_array {1.5847, 3.14, -548e3, 3452.67e2, 485e-21}
 constant struct structconst {field1: strconst, field2: int32const_array}
-constant struct structconst2 {field3: structconst, field4: int32const}    
+constant struct structconst2 {field3: structconst, field4: int32const}
 
 exception test_exception4
 
@@ -49,7 +49,7 @@ end
 
 namedarray transform
     field quaternion rotation
-    field vector3 translation	
+    field vector3 translation
 end
 
 namedarray pixel
@@ -114,7 +114,7 @@ struct teststruct3
 	field varvalue t9
 	field varvalue t10
 	field varvalue t11
-	
+
 end
 
 object testroot3
@@ -123,35 +123,35 @@ object testroot3
 
     property int32 readme [readonly]
 	property int32 writeme [writeonly]
-	
+
 	pipe int32 unreliable1 [unreliable,readonly]
-	
+
     wire int32 peekwire [readonly]
     wire int32 \
 	pokewire [writeonly]
 	property int32 unknown_modifier [unknown, unknown_3(23, 45.8e-5, unknown_modifier_hello)]
-	
+
 	memory double[] readmem [readonly]
-	
+
 	objref obj4 o4
-	
+
 	property testenum1 testenum1_prop
-	
+
 	property testpod1 testpod1_prop
 	function void testpod1_func1(testpod1 s)
 	function testpod1 testpod1_func2()
-	
+
 	property teststruct3 teststruct3_prop
-	
+
 	memory testpod2[] pod_m1
 	memory testpod2[*] pod_m2
-	
-	function double{generator} gen_func1() 
-	function uint8[]{generator} gen_func2(string name) 
-	function void gen_func3(string name, uint8[]{generator} in) 
-	function uint8[]{generator} gen_func4(uint8[]{generator} in) 
+
+	function double{generator} gen_func1()
+	function uint8[]{generator} gen_func2(string name)
+	function void gen_func3(string name, uint8[]{generator} in)
+	function uint8[]{generator} gen_func4(uint8[]{generator} in)
 	function teststruct2{generator} gen_func5(teststruct2{generator} in)
-	
+
 	#extra tests for fixed length arrays
 	property double[6]{list} d1
 	property double[6-]{list} d2
@@ -159,7 +159,7 @@ object testroot3
 	property double[6-]{int32} d4
 	property double[3,3]{list} d5
 	property double[3,3]{int32} d6
-	
+
 	#Test pipe and wire verification
 	pipe int32[3] p1
 	pipe int32[3-] p2
@@ -167,17 +167,17 @@ object testroot3
 	wire int32[6] w1
 	wire int32[6-] w2
 	wire int32[3,2] w3
-	
+
 	#namedarray test
 	property vector3 testnamedarray1
 	property transform testnamedarray2
 	property transform[10-] testnamedarray3
 	property transform[*] testnamedarray4
 	property transform[3,2] testnamedarray5
-	
+
 	memory transform[] namedarray_m1
 	memory transform[*] namedarray_m2
-	
+
 	#new primitive types test
 	property cdouble c1
 	property cdouble[] c2
@@ -191,29 +191,29 @@ object testroot3
 	property csingle{list} c10
 	property csingle[]{list} c11
 	property csingle[*]{list} c12
-	
+
 	property bool b1
 	property bool[] b2
 	property bool[*] b3
 	property bool{list} b4
 	property bool[]{list} b5
 	property bool[*]{list} b6
-			
+
 	memory cdouble[] c_m1
 	memory cdouble[*] c_m2
 	memory cdouble[] c_m3
 	memory cdouble[*] c_m4
 	memory bool[] c_m5
 	memory bool[*] c_m6
-	
+
 	objref obj5 nolock_test
 
-	function void test_exception_params1()	
+	function void test_exception_params1()
 	function void test_exception_params2()
 
 	function testenum1{generator} enum_generator1()
 	function testenum1{generator} enum_generator2(int32 a, int32 b, testenum1{generator} enum_gen)
-	
+
 end
 
 object obj1
@@ -245,19 +245,18 @@ object obj5
 	property double p1
 	property double p2 [nolock]
 	property double p3 [nolockread]
-	
+
 	function int32 f1()
 	function int32 f2() [nolock]
-		
+
 	pipe int32 q1 [readonly]
 	pipe int32 q2 [readonly,nolock]
-	
+
 	wire int32 w1 [readonly]
 	wire int32 w2 [readonly,nolock]
-	
+
 	memory int32[] m1
 	memory int32[] m2 [nolock]
 	memory int32[] m3 [nolockread]
-	
-end
 
+end

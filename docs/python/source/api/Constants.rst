@@ -6,7 +6,7 @@ Constants
 DataTypes Enum
 ==============
 
-.. data:: RobotRaconteur.DataTypes_void_t  
+.. data:: RobotRaconteur.DataTypes_void_t
    :value: 0
 
    void or null type
@@ -344,17 +344,17 @@ MessageEntryType Enum
 
    Get endpoint capability request
 
-.. data:: RobotRaconteur.MessageEntryType_EndpointCheckCapabilityRet       
+.. data:: RobotRaconteur.MessageEntryType_EndpointCheckCapabilityRet
    :value: 502
 
    Get endpoint capabalitiy response
 
-.. data:: RobotRaconteur.MessageEntryType_ServiceCheckCapabilityReq        
+.. data:: RobotRaconteur.MessageEntryType_ServiceCheckCapabilityReq
    :value: 1101
 
    Get service capability request
 
-.. data:: RobotRaconteur.MessageEntryType_ServiceCheckCapabilityRet        
+.. data:: RobotRaconteur.MessageEntryType_ServiceCheckCapabilityRet
    :value: 1102
 
    Get service capability response
@@ -622,7 +622,7 @@ MessageErrorType Enum
 
    specified endpoint not found
 
-.. data:: RobotRaconteur.MessageErrorType_EndpointCommunicationFatalError  
+.. data:: RobotRaconteur.MessageErrorType_EndpointCommunicationFatalError
    :value: 6
 
    communication with specified endpoint failed
@@ -702,7 +702,7 @@ MessageErrorType Enum
 
    internal error
 
-.. data:: RobotRaconteur.MessageErrorType_SystemResourcePermissionDenied   
+.. data:: RobotRaconteur.MessageErrorType_SystemResourcePermissionDenied
    :value: 22
 
    permission denied to a system resource
@@ -835,7 +835,7 @@ MessageErrorType Enum
 ClientServiceListenerEventType Enum
 ===================================
 
-.. data:: RobotRaconteur.ClientServiceListenerEventType_ClientClosed       
+.. data:: RobotRaconteur.ClientServiceListenerEventType_ClientClosed
    :value: 1
 
    client has been closed
@@ -862,17 +862,17 @@ ClientServiceListenerEventType Enum
 ServerServiceListenerEventType Enum
 ===================================
 
-.. data:: RobotRaconteur.ServerServiceListenerEventType_ServiceClosed      
+.. data:: RobotRaconteur.ServerServiceListenerEventType_ServiceClosed
    :value: 1
 
    service has been closed
 
-.. data:: RobotRaconteur.ServerServiceListenerEventType_ClientConnected    
+.. data:: RobotRaconteur.ServerServiceListenerEventType_ClientConnected
    :value: 2
 
    client has connected
 
-.. data:: RobotRaconteur.ServerServiceListenerEventType_ClientDisconnected 
+.. data:: RobotRaconteur.ServerServiceListenerEventType_ClientDisconnected
    :value: 3
 
    client has disconnected
@@ -898,17 +898,17 @@ MemberDefinition Enum
 .. data:: RobotRaconteur.MemberDefinition_NoLock_none
    :value: 0
 
-   member cannot be accessed by other users/sessions when object is locked 
+   member cannot be accessed by other users/sessions when object is locked
 
 .. data:: RobotRaconteur.MemberDefinition_NoLock_all
    :value: 1
 
-   member can be accessed by other users/sessions when object is locked    
+   member can be accessed by other users/sessions when object is locked
 
 .. data:: RobotRaconteur.MemberDefinition_NoLock_read
    :value: 2
 
-   member can be read by other users/sessions when object is locked        
+   member can be read by other users/sessions when object is locked
 
 Misc Constants
 ==============
@@ -939,5 +939,5 @@ RobotRaconteurObjectLockFlags Enum
 
    Client level lock
 
-	Only the current client connection will have access 
+	Only the current client connection will have access
 	to the locked object

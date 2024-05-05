@@ -51,7 +51,7 @@ class MultiDimArrayMemoryBase
 RR_RELEASE_GIL()
 public:
 	virtual std::vector<uint64_t> Dimensions()=0;
-	virtual uint64_t DimCount()=0;	
+	virtual uint64_t DimCount()=0;
 	virtual DataTypes ElementTypeID()=0;
 RR_KEEP_GIL()
 };
@@ -170,7 +170,7 @@ public:
 
 class WrappedPodMultiDimArrayMemoryDirector
 {
-public:		
+public:
 	virtual ~WrappedPodMultiDimArrayMemoryDirector() {}
 	virtual std::vector<uint64_t> Dimensions() = 0;
 	virtual uint64_t DimCount() = 0;
@@ -237,7 +237,7 @@ public:
 
 class WrappedNamedMultiDimArrayMemoryDirector
 {
-public:		
+public:
 	virtual ~WrappedNamedMultiDimArrayMemoryDirector() {}
 	virtual std::vector<uint64_t> Dimensions() = 0;
 	virtual uint64_t DimCount() = 0;

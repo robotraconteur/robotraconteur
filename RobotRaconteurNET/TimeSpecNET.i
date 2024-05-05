@@ -16,7 +16,7 @@ public:
 
 public:
 
-   
+
     %rename(eq) operator== ;
     %csmethodmodifiers operator== "public virtual";
     %rename(ne) operator!=;
@@ -26,7 +26,7 @@ public:
     %rename(lt) operator<;
     %rename(ge) operator>=;
     %rename(le) operator<=;
-    
+
 
 	bool operator == (const TimeSpec &t2);
 

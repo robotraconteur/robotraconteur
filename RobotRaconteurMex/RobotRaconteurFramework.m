@@ -4,7 +4,7 @@
 %    introduction to important framework concepts.
 %
 %    <a href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/python/#Tutorial">Robot Raconteur Tutorial</a> - Tutorial part of Robot Raconteur Python documentation
-%    
+%
 %    Framework:
 %      <a href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html">Introduction</a>
 %      <a href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html">Service Definitions</a>

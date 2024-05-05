@@ -12,7 +12,7 @@ public class com__robotraconteur__testing__TestService2Factory : ServiceFactory
 {
     public override string DefString()
 {
-    const string s="service com.robotraconteur.testing.TestService2\n\noption version 0.8\n\nexception testexception3\n\nstruct ostruct2\nfield double[] a1\nend struct\n\n\nobject baseobj\nproperty double d1\nproperty double[] d2\n\nfunction double func3(double d1, double d2)\n\nevent ev1()\n\nobjref subobj o5\n\npipe double[] p1\n\ncallback void cb2(double d1, double d2)\n\nwire double[] w1\n\nmemory double[] m1\n\n\nend object\n\nobject subobj\n\nfunction double add_val(double v)\n\nend object\n";
+    const string s="service com.robotraconteur.testing.TestService2\n\noption version 0.8\n\nexception testexception3\n\nstruct ostruct2\nfield double[] a1\nend struct\n\n\nobject baseobj\nproperty double d1\nproperty double[] d2\n\nfunction double func3(double d1, double d2)\n\nevent ev1()\n\nobjref subobj o5\n\npipe double[] p1\n\ncallback void cb2(double d1, double d2)\n\nwire double[] w1\n\nmemory double[] m1\n\n\nend object\n\nobject subobj\n\nfunction double add_val(double v)\n\nend object\n\n";
     return s;
     }
     public override string GetServiceName() {return "com.robotraconteur.testing.TestService2";}

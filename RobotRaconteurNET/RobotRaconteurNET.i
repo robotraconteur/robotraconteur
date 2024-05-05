@@ -9,16 +9,16 @@
 
 //%apply void *VOID_INT_PTR { void * }
 
-%define RR_PUBLIC_OVERRIDE_METHOD(a) 
+%define RR_PUBLIC_OVERRIDE_METHOD(a)
 %csmethodmodifiers a "public override";
 %enddef
-%define RR_PUBLIC_VIRTUAL_METHOD(a) 
+%define RR_PUBLIC_VIRTUAL_METHOD(a)
 %csmethodmodifiers a "public virtual";
 %enddef
-%define RR_PROPERTY(a) 
+%define RR_PROPERTY(a)
 %rename(_Get ## a) Get ## a; %rename(_Set ## a) Set ## a; %csmethodmodifiers Get ## a "private"; %csmethodmodifiers Set ## a "private";
 %enddef
-%define RR_MAKE_METHOD_PRIVATE(a) 
+%define RR_MAKE_METHOD_PRIVATE(a)
 %csmethodmodifiers a "private"; %csmethodmodifiers _ ## a "private"; %rename(_ ## a) a;
 %enddef
 
@@ -122,9 +122,9 @@ namespace RobotRaconteur {
 
 class RRNativeObjectHeapSupport
 	{
-	
+
 	public:
-		
+
 		static void Set_Support(RRNativeObjectHeapSupport* s);
 		virtual void DeleteObject_i(int32_t id)=0;
 		static void DeleteObject(int32_t id);
@@ -133,5 +133,3 @@ class RRNativeObjectHeapSupport
 	};
 
 };
-
-

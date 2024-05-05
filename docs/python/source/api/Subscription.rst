@@ -43,3 +43,21 @@ PipeSubscription Class
 
 .. autoclass:: RobotRaconteur.PipeSubscription
    :members:
+
+SubObjectSubscription Class
+======================
+
+.. autoclass:: RobotRaconteur.SubObjectSubscription
+   :members:
+
+ServiceSubscriptionManager Class
+================================
+
+.. autoclass:: RobotRaconteur.ServiceSubscriptionManager
+   :members:
+
+ServiceSubscriptionManagerDetails Class
+=======================================
+
+.. autoclass:: RobotRaconteur.ServiceSubscriptionManagerDetails
+   :members:

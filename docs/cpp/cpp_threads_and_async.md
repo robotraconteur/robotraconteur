@@ -53,7 +53,7 @@ A pseudocode example of using a lambda function with `AsyncSomeFunction1`, assum
                 // Do some work
                 boost::mutex::scoped_lock lock(this_lock);
                 this_->do_some_work(ret);
-                
+
             });
         }
 

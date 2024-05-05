@@ -22,7 +22,7 @@ class LocalTransport : public Transport
 public:
 	LocalTransport();
 	LocalTransport(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
-	
+
 	static bool IsLocalTransportSupported();
 	virtual std::string GetUrlSchemeString() const;
 	virtual std::vector<std::string> GetServerListenUrls();
@@ -30,9 +30,9 @@ public:
 	virtual void StartServerAsNodeName(const std::string& name, bool public_ = false);
 	virtual void StartServerAsNodeID(const NodeID& nodeid, bool public_ = false);
 	void Close();
-	
+
 	RR_PROPERTY(MaxMessageSize)
-	int32_t GetMaxMessageSize();	
+	int32_t GetMaxMessageSize();
 	void SetMaxMessageSize(int32_t size);
 
 	RR_PROPERTY(DisableMessage4)

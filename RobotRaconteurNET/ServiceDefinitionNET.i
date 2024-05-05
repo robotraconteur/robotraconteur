@@ -15,7 +15,7 @@ public MemberDefinition Member
 	get { return MemberDefinitionUtil.SwigCast(_GetMember()); }
 	set {_SetMember(value); }
 
-}	
+}
 %}
 
 %typemap("cscode") MemberDefinitionUtil %{

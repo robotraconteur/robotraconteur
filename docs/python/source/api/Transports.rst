@@ -32,23 +32,23 @@ BrowserWebSocketTransport Class
 .. class:: RobotRaconteur.BrowserWebSocketTransport(Node=none)
 
    Transport for creating client connections inside a web browser using WebSockets
-   
+
    Robot Raconteur can be compiled to run inside a web browser using Emscripten and WebAssembly (WASM).
    While inside a web browser, the only connection method currently available to connection to
    a Robot Raconteur service is using WebSockets. The BrowserWebSocketTransport class implements
    the WebSocket transport for the web browser. Currently only the client side is implemented.
-   
+
    See \\ref robotraconteur_url for more information on URLs.
-   
+
    Currently the url connections schemes ``rr+ws``, ``rr+wss`` and ``rr+tcp`` are supported.
    ``rr+tcp`` are treated as ``rr+ws`` connections.
-    
+
    The BrowserWebSocketTransport is automatically registered when the ``RobotRaconteur.Client``
    module is used. If the ``RobotRaconteur.Client`` module is not used, the
    BrowserWebSocketTransport must be manually registered with the node using
    RobotRaconteurNode.RegisterTransport(). NodeSetup is not currently
    available in the web browser.
-    
+
    Note that for services to accept a WebSocket connection, the service must
    have the WebSocket \"origin\" configured correctly. The origin is the base
    URL of the web page that is hosting the web page that is connecting to the
@@ -59,10 +59,10 @@ BrowserWebSocketTransport Class
    the ``--robotraconteur-tcp-ws-add-origin`` command line option if a node setup class is used.
    If a local file is used to host the web page, the origin is ``null`` and no origin
    checking is performed.
-    
+
    See TcpTransport.AddWebSocketAllowedOrigin() for more information on configuring
    the WebSocket origin and the default origins that are automatically configured.
-   
+
    :param node: (optional) The node that will use the transport. Default is the singleton node
    :type node: RobotRaconteur.RobotRaconteurNode
 
@@ -135,12 +135,10 @@ BrowserWebSocketTransport Class
 		Async message io has better memory handling, at the
 		expense of slightly higher latency.
 
-      Async message io is not well supported 
+      Async message io is not well supported
       by this transport. Enabling async message io
       is not recommended.
 
 		Default: Async io disabled
 
 		:rtype: bool
-
-       

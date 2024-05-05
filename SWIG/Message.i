@@ -144,11 +144,11 @@ public:
 	DataTypes Type;
 	MessageStringPtr TypeName;
 	std::vector<boost::intrusive_ptr<MessageElement> > Elements;
-	
+
 	MessageElementNestedElementList(DataTypes type_, const std::string& type_name_, const std::vector<boost::intrusive_ptr<MessageElement> > &elements_);
 
 	virtual MessageStringPtr GetTypeString();
-	virtual DataTypes GetTypeID();		
+	virtual DataTypes GetTypeID();
 	//virtual boost::string_ref RRType();
 };
 
@@ -165,7 +165,7 @@ public:
 	{
 		return boost::dynamic_pointer_cast<RRBaseArray>(m);
 	}
-		
+
 	static boost::intrusive_ptr<RobotRaconteur::MessageElementNestedElementList> ToMessageElementNestedElementList(const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& m)
 	{
 		return boost::dynamic_pointer_cast<MessageElementNestedElementList>(m);
@@ -177,71 +177,71 @@ public:
 	{
 		return RRArrayToString(rr_cast<RRArray<char> >(rrarray));
 	}
-	
+
 	static void RRBaseArrayToDoubles(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, double* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_double_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(double));
 	}
-	
+
 	static void RRBaseArrayToFloats(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, float* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_single_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(float));
 	}
-	
+
 	static void RRBaseArrayToBytes(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int8_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int8_t && rrarray->GetTypeID()!=DataTypes_uint8_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int8_t));
-		
+
 	}
-	
+
 	static void RRBaseArrayToBytes(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint8_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint8_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
-		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint8_t));		
+		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint8_t));
 	}
-	
+
 	static void RRBaseArrayToShorts(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int16_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int16_t && rrarray->GetTypeID()!=DataTypes_uint16_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int16_t));
 	}
-	
+
 	static void RRBaseArrayToShorts(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint16_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint16_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint16_t));
 	}
-	
+
 	static void RRBaseArrayToInts(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int32_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int32_t && rrarray->GetTypeID()!=DataTypes_uint32_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int32_t));
 	}
-	
+
 	static void RRBaseArrayToInts(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint32_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint32_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint32_t));
 	}
-	
+
 	static void RRBaseArrayToLongs(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int64_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int64_t && rrarray->GetTypeID()!=DataTypes_uint64_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int64_t));
 	}
-	
+
 #ifndef SWIGJAVA
 	static void RRBaseArrayToLongs(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint64_t* array_out, int32_t len)
 	{
@@ -256,93 +256,93 @@ public:
 		if (rrarray->size()!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(double));
 	}
-	
+
 	static void RRBaseArrayComplexToFloats(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, float* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_csingle_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(float));
 	}
-	
+
 	static void RRBaseArrayBoolToBytes(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint8_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint8_t));
 	}
-	
+
 	static void RRBaseArrayBoolToBytes(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int8_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int8_t));
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> stringToRRBaseArray(const std::string& str)
 	{
 		return stringToRRArray(str);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> DoublesToRRBaseArray(double* array_in, int32_t len)
 	{
 		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> FloatsToRRBaseArray(float* array_in, int32_t len)
 	{
 		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  BytesToRRBaseArray( int8_t* array_in, int32_t len, RobotRaconteur::DataTypes type)
 	{
 		if (type == DataTypes_int8_t) return AttachRRArrayCopy(array_in,len);
 		if (type == DataTypes_uint8_t) return AttachRRArrayCopy((uint8_t*)array_in,len);
 		throw DataTypeException("Invalid data type");
-				
+
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  BytesToRRBaseArray( uint8_t* array_in, int32_t len)
 	{
-		return AttachRRArrayCopy(array_in,len);				
+		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  ShortsToRRBaseArray( int16_t* array_in, int32_t len, RobotRaconteur::DataTypes type)
 	{
 		if (type == DataTypes_int16_t) return AttachRRArrayCopy(array_in,len);
 		if (type == DataTypes_uint16_t) return AttachRRArrayCopy((uint16_t*)array_in,len);
-		throw DataTypeException("Invalid data type");				
+		throw DataTypeException("Invalid data type");
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  ShortsToRRBaseArray( uint16_t* array_in, int32_t len)
 	{
-		return AttachRRArrayCopy(array_in,len);						
+		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  IntsToRRBaseArray( int32_t* array_in, int32_t len, RobotRaconteur::DataTypes type)
 	{
 		if (type == DataTypes_int32_t) return AttachRRArrayCopy(array_in,len);
 		if (type == DataTypes_uint32_t) return AttachRRArrayCopy((uint32_t*)array_in,len);
 		throw DataTypeException("Invalid data type");
-				
+
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  IntsToRRBaseArray( uint32_t* array_in, int32_t len)
 	{
-		return AttachRRArrayCopy(array_in,len);				
+		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  LongsToRRBaseArray( int64_t* array_in, int32_t len, RobotRaconteur::DataTypes type)
 	{
 		if (type == DataTypes_int64_t) return AttachRRArrayCopy(array_in,len);
 		if (type == DataTypes_uint64_t) return AttachRRArrayCopy((uint64_t*)array_in,len);
 		throw DataTypeException("Invalid data type");
-				
+
 	}
 #ifndef SWIGJAVA
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  LongsToRRBaseArray( uint64_t* array_in, int32_t len)
 	{
-		return AttachRRArrayCopy(array_in,len);		
-				
+		return AttachRRArrayCopy(array_in,len);
+
 	}
 #endif
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> DoublesToComplexRRBaseArray(double* array_in, int32_t len)
@@ -350,91 +350,91 @@ public:
 		if (len %2 != 0) throw InvalidArgumentException("Array must be even length");
 		return AttachRRArrayCopy((cdouble*)array_in,len/2);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> FloatsToComplexRRBaseArray(float* array_in, int32_t len)
 	{
 		if (len %2 != 0) throw InvalidArgumentException("Array must be even length");
 		return AttachRRArrayCopy((cfloat*)array_in,len/2);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> BytesToBoolRRBaseArray(uint8_t* array_in, int32_t len)
 	{
 		return AttachRRArrayCopy((rr_bool*)array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> BytesToBoolRRBaseArray(int8_t* array_in, int32_t len)
 	{
 		return AttachRRArrayCopy((rr_bool*)array_in,len);
 	}
-			
+
 	static void DoublesToRRBaseArray(double* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_double_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(double));
 	}
-	
+
 	static void FloatsToRRBaseArray(float* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_single_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(float));
 	}
-	
+
 	static  void BytesToRRBaseArray( int8_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int8_t && rrarray->GetTypeID()!=DataTypes_uint8_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(int8_t));
-				
+
 	}
-	
+
 	static  void BytesToRRBaseArray( uint8_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint8_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
-		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint8_t));				
+		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint8_t));
 	}
-	
-	
+
+
 	static  void ShortsToRRBaseArray( int16_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int16_t && rrarray->GetTypeID()!=DataTypes_uint16_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(int16_t));
-				
+
 	}
-	
+
 	static  void ShortsToRRBaseArray( uint16_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint16_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint16_t));
-				
+
 	}
-	
+
 	static void  IntsToRRBaseArray( int32_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int32_t && rrarray->GetTypeID()!=DataTypes_uint32_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(int32_t));
-				
+
 	}
-	
+
 	static void  IntsToRRBaseArray( uint32_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint32_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint32_t));
-				
+
 	}
-	
+
 	static void LongsToRRBaseArray( int64_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int64_t && rrarray->GetTypeID()!=DataTypes_uint64_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(int64_t));
-				
+
 	}
 #ifndef SWIGJAVA
 	static void LongsToRRBaseArray( uint64_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
@@ -442,7 +442,7 @@ public:
 		if (rrarray->GetTypeID()!=DataTypes_uint64_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint64_t));
-				
+
 	}
 #endif
 	static void DoublesToComplexRRBaseArray(double* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
@@ -451,28 +451,28 @@ public:
 		if (rrarray->size()!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(double));
 	}
-	
+
 	static void FloatsToComplexRRBaseArray(float* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_csingle_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(float));
 	}
-	
+
 	static  void BytesToBoolRRBaseArray( int8_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
-		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(int8_t));				
+		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(int8_t));
 	}
-	
+
 	static  void BytesToBoolRRBaseArray( uint8_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
-		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(uint8_t));				
+		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(uint8_t));
 	}
-	
+
 #endif
 };
 

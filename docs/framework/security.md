@@ -79,7 +79,7 @@ For TLS to be activated, a certificate must be acquired installed for the server
 
 Once the TLS certificate has been installed, the client may use the following secure transport options:
 
-* `rrs+tcp` - Secure TLS/TCP connection 
+* `rrs+tcp` - Secure TLS/TCP connection
 * `rrs+ws` - HTTP WebSocket connection *with message data encrypted using TLS*
 * `rr+wss` - HTTPS WebSocket connection *without message data encryption*
 * `rrs+wss` - HTTPS WebSocket connection *with message data encrypted*

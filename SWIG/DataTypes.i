@@ -38,13 +38,13 @@ bool IsTypeNumeric(DataTypes type);
 %nodefaultctor RRObject;
 class RRObject
 {
-    
+
 };
 
 %nodefaultctor RRValue;
 class RRValue
 {
-    
+
 };
 
 class  MessageElementData : public RRValue
@@ -71,14 +71,14 @@ boost::intrusive_ptr<RobotRaconteur::RRBaseArray> AllocateRRArrayByType(DataType
 class RRMultiDimArrayUntyped
 {
 public:
-	
+
 	boost::intrusive_ptr<RRBaseArray > Dims;
 
 	boost::intrusive_ptr<RRBaseArray> Array;
-	
+
 
 };
-    
+
 }
 
 //MultiDimArray helpers
@@ -89,6 +89,40 @@ public:
 %apply uint32_t& OUTPUT {uint32_t& indexa};
 %apply uint32_t& OUTPUT {uint32_t& indexb};
 %apply uint32_t& OUTPUT {uint32_t& len};
+
+namespace RobotRaconteur
+{
+struct ServicePathSegment
+{
+    ServicePathSegment();
+    ServicePathSegment(const std::string& name);
+	ServicePathSegment(const std::string& name, const std::string& index);
+
+	std::string name;
+    boost::optional<std::string> index;
+};
+}
+
+%template(ServicePathSegments) std::vector<RobotRaconteur::ServicePathSegment>;
+
+namespace RobotRaconteur
+{
+std::string EncodeServicePathIndex(const std::string& index);
+
+std::string DecodeServicePathIndex(const std::string& index);
+
+std::vector<ServicePathSegment> ParseServicePath(const std::string& path);
+
+std::string BuildServicePath(const std::vector<RobotRaconteur::ServicePathSegment>& segments);
+
+bool IsStringName(boost::string_ref str);
+
+bool IsStringScopedName(boost::string_ref str);
+
+bool IsStringUUID(boost::string_ref str);
+
+bool IsStringIdentifier(boost::string_ref str);
+}
 
 namespace RobotRaconteur
 {

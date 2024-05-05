@@ -11,7 +11,7 @@ public int MaxMessageSize
 	{
 		_SetMaxMessageSize(value);
 	}
-	
+
 }
 
 public bool DisableMessage4

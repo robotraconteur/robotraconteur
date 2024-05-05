@@ -26,8 +26,8 @@ shows the contents of a simple password file. The MD5 hash for the password can 
 
 .. code::
 
-  myusername 34819d7beeabb9260a5c854bc85b3e44 objectlock 
-  anotherusername 1910ea24600608b01b5efd7d4ea6a840 objectlock 
+  myusername 34819d7beeabb9260a5c854bc85b3e44 objectlock
+  anotherusername 1910ea24600608b01b5efd7d4ea6a840 objectlock
   superuser f1bc69265be1165f64296bcb7ca180d5 objectlock,objectlockoverride``
 
 The ``PasswordFileUserAuthenticator`` can now be initialized:
