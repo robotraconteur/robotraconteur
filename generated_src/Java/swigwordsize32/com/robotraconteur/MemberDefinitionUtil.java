@@ -37,7 +37,7 @@ public class MemberDefinitionUtil {
   }
 
 
-public static MemberDefinition swigCast(MemberDefinition i) 
+public static MemberDefinition swigCast(MemberDefinition i)
 {
 	MemberDefinition o=null;
 	o=toProperty(i);
@@ -57,7 +57,7 @@ public static MemberDefinition swigCast(MemberDefinition i)
 	o=toMemory(i);
 	if (o!=null) return (MemoryDefinition)o;
 	throw new RuntimeException (new Exception("Invalid MemberDefinition"));
-	
+
 }
 
 

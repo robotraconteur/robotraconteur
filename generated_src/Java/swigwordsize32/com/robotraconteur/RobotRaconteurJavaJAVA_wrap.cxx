@@ -752,7 +752,7 @@ namespace Swig {
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-function"
-#endif    
+#endif
 
 
 
@@ -1804,6 +1804,60 @@ struct SWIG_null_deleter {
 #define SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW
 #define SWIG_NO_NULL_DELETER_SWIG_POINTER_OWN
 
+SWIGINTERN std::vector< RobotRaconteur::ServicePathSegment > *new_std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg___SWIG_2(jint count,RobotRaconteur::ServicePathSegment const &value){
+        if (count < 0)
+          throw std::out_of_range("vector count must be positive");
+        return new std::vector< RobotRaconteur::ServicePathSegment >(static_cast<std::vector< RobotRaconteur::ServicePathSegment >::size_type>(count), value);
+      }
+SWIGINTERN jint std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doSize(std::vector< RobotRaconteur::ServicePathSegment > const *self){
+        return SWIG_VectorSize(self->size());
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doAdd__SWIG_0(std::vector< RobotRaconteur::ServicePathSegment > *self,std::vector< RobotRaconteur::ServicePathSegment >::value_type const &x){
+        self->push_back(x);
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doAdd__SWIG_1(std::vector< RobotRaconteur::ServicePathSegment > *self,jint index,std::vector< RobotRaconteur::ServicePathSegment >::value_type const &x){
+        jint size = static_cast<jint>(self->size());
+        if (0 <= index && index <= size) {
+          self->insert(self->begin() + index, x);
+        } else {
+          throw std::out_of_range("vector index out of range");
+        }
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServicePathSegment >::value_type std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doRemove(std::vector< RobotRaconteur::ServicePathSegment > *self,jint index){
+        jint size = static_cast<jint>(self->size());
+        if (0 <= index && index < size) {
+          RobotRaconteur::ServicePathSegment const old_value = (*self)[index];
+          self->erase(self->begin() + index);
+          return old_value;
+        } else {
+          throw std::out_of_range("vector index out of range");
+        }
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServicePathSegment >::value_type const &std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doGet(std::vector< RobotRaconteur::ServicePathSegment > *self,jint index){
+        jint size = static_cast<jint>(self->size());
+        if (index >= 0 && index < size)
+          return (*self)[index];
+        else
+          throw std::out_of_range("vector index out of range");
+      }
+SWIGINTERN std::vector< RobotRaconteur::ServicePathSegment >::value_type std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doSet(std::vector< RobotRaconteur::ServicePathSegment > *self,jint index,std::vector< RobotRaconteur::ServicePathSegment >::value_type const &val){
+        jint size = static_cast<jint>(self->size());
+        if (index >= 0 && index < size) {
+          RobotRaconteur::ServicePathSegment const old_value = (*self)[index];
+          (*self)[index] = val;
+          return old_value;
+        }
+        else
+          throw std::out_of_range("vector index out of range");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doRemoveRange(std::vector< RobotRaconteur::ServicePathSegment > *self,jint fromIndex,jint toIndex){
+        jint size = static_cast<jint>(self->size());
+        if (0 <= fromIndex && fromIndex <= toIndex && toIndex <= size) {
+          self->erase(self->begin() + fromIndex, self->begin() + toIndex);
+        } else {
+          throw std::out_of_range("vector index out of range");
+        }
+      }
 SWIGINTERN std::vector< boost::shared_ptr< RobotRaconteur::TypeDefinition > > *new_std_vector_Sl_boost_shared_ptr_Sl_RobotRaconteur_TypeDefinition_Sg__Sg___SWIG_2(jint count,boost::shared_ptr< RobotRaconteur::TypeDefinition > const &value){
         if (count < 0)
           throw std::out_of_range("vector count must be positive");
@@ -2397,43 +2451,43 @@ SWIGINTERN void RobotRaconteur_ExceptionDefinition_SetService(RobotRaconteur::Ex
 class MemberDefinitionUtil
 {
 public:
-static boost::shared_ptr<RobotRaconteur::PropertyDefinition> ToProperty(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
-{ 
+static boost::shared_ptr<RobotRaconteur::PropertyDefinition> ToProperty(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t)
+{
 return boost::dynamic_pointer_cast<RobotRaconteur::PropertyDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::FunctionDefinition> ToFunction(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
-{ 
+static boost::shared_ptr<RobotRaconteur::FunctionDefinition> ToFunction(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t)
+{
 return boost::dynamic_pointer_cast<RobotRaconteur::FunctionDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::ObjRefDefinition> ToObjRef(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
-{ 
+static boost::shared_ptr<RobotRaconteur::ObjRefDefinition> ToObjRef(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t)
+{
 return boost::dynamic_pointer_cast<RobotRaconteur::ObjRefDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::EventDefinition> ToEvent(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
-{ 
+static boost::shared_ptr<RobotRaconteur::EventDefinition> ToEvent(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t)
+{
 return boost::dynamic_pointer_cast<RobotRaconteur::EventDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::PipeDefinition> ToPipe(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
-{ 
+static boost::shared_ptr<RobotRaconteur::PipeDefinition> ToPipe(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t)
+{
 return boost::dynamic_pointer_cast<RobotRaconteur::PipeDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::CallbackDefinition> ToCallback(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
-{ 
+static boost::shared_ptr<RobotRaconteur::CallbackDefinition> ToCallback(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t)
+{
 return boost::dynamic_pointer_cast<RobotRaconteur::CallbackDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::WireDefinition> ToWire(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
-{ 
+static boost::shared_ptr<RobotRaconteur::WireDefinition> ToWire(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t)
+{
 return boost::dynamic_pointer_cast<RobotRaconteur::WireDefinition>(t);
 }
 
-static boost::shared_ptr<RobotRaconteur::MemoryDefinition> ToMemory(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t) 
-{ 
+static boost::shared_ptr<RobotRaconteur::MemoryDefinition> ToMemory(const boost::shared_ptr<RobotRaconteur::MemberDefinition>& t)
+{
 return boost::dynamic_pointer_cast<RobotRaconteur::MemoryDefinition>(t);
 }
 
@@ -2556,7 +2610,7 @@ public:
 	{
 		return boost::dynamic_pointer_cast<RRBaseArray>(m);
 	}
-		
+
 	static boost::intrusive_ptr<RobotRaconteur::MessageElementNestedElementList> ToMessageElementNestedElementList(const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& m)
 	{
 		return boost::dynamic_pointer_cast<MessageElementNestedElementList>(m);
@@ -2568,71 +2622,71 @@ public:
 	{
 		return RRArrayToString(rr_cast<RRArray<char> >(rrarray));
 	}
-	
+
 	static void RRBaseArrayToDoubles(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, double* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_double_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(double));
 	}
-	
+
 	static void RRBaseArrayToFloats(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, float* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_single_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(float));
 	}
-	
+
 	static void RRBaseArrayToBytes(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int8_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int8_t && rrarray->GetTypeID()!=DataTypes_uint8_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int8_t));
-		
+
 	}
-	
+
 	static void RRBaseArrayToBytes(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint8_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint8_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
-		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint8_t));		
+		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint8_t));
 	}
-	
+
 	static void RRBaseArrayToShorts(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int16_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int16_t && rrarray->GetTypeID()!=DataTypes_uint16_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int16_t));
 	}
-	
+
 	static void RRBaseArrayToShorts(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint16_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint16_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint16_t));
 	}
-	
+
 	static void RRBaseArrayToInts(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int32_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int32_t && rrarray->GetTypeID()!=DataTypes_uint32_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int32_t));
 	}
-	
+
 	static void RRBaseArrayToInts(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint32_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint32_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint32_t));
 	}
-	
+
 	static void RRBaseArrayToLongs(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int64_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int64_t && rrarray->GetTypeID()!=DataTypes_uint64_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int64_t));
 	}
-	
+
 
 
 
@@ -2647,87 +2701,87 @@ public:
 		if (rrarray->size()!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(double));
 	}
-	
+
 	static void RRBaseArrayComplexToFloats(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, float* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_csingle_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(float));
 	}
-	
+
 	static void RRBaseArrayBoolToBytes(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, uint8_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(uint8_t));
 	}
-	
+
 	static void RRBaseArrayBoolToBytes(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, int8_t* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(int8_t));
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> stringToRRBaseArray(const std::string& str)
 	{
 		return stringToRRArray(str);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> DoublesToRRBaseArray(double* array_in, int32_t len)
 	{
 		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> FloatsToRRBaseArray(float* array_in, int32_t len)
 	{
 		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  BytesToRRBaseArray( int8_t* array_in, int32_t len, RobotRaconteur::DataTypes type)
 	{
 		if (type == DataTypes_int8_t) return AttachRRArrayCopy(array_in,len);
 		if (type == DataTypes_uint8_t) return AttachRRArrayCopy((uint8_t*)array_in,len);
 		throw DataTypeException("Invalid data type");
-				
+
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  BytesToRRBaseArray( uint8_t* array_in, int32_t len)
 	{
-		return AttachRRArrayCopy(array_in,len);				
+		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  ShortsToRRBaseArray( int16_t* array_in, int32_t len, RobotRaconteur::DataTypes type)
 	{
 		if (type == DataTypes_int16_t) return AttachRRArrayCopy(array_in,len);
 		if (type == DataTypes_uint16_t) return AttachRRArrayCopy((uint16_t*)array_in,len);
-		throw DataTypeException("Invalid data type");				
+		throw DataTypeException("Invalid data type");
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  ShortsToRRBaseArray( uint16_t* array_in, int32_t len)
 	{
-		return AttachRRArrayCopy(array_in,len);						
+		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  IntsToRRBaseArray( int32_t* array_in, int32_t len, RobotRaconteur::DataTypes type)
 	{
 		if (type == DataTypes_int32_t) return AttachRRArrayCopy(array_in,len);
 		if (type == DataTypes_uint32_t) return AttachRRArrayCopy((uint32_t*)array_in,len);
 		throw DataTypeException("Invalid data type");
-				
+
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  IntsToRRBaseArray( uint32_t* array_in, int32_t len)
 	{
-		return AttachRRArrayCopy(array_in,len);				
+		return AttachRRArrayCopy(array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray>  LongsToRRBaseArray( int64_t* array_in, int32_t len, RobotRaconteur::DataTypes type)
 	{
 		if (type == DataTypes_int64_t) return AttachRRArrayCopy(array_in,len);
 		if (type == DataTypes_uint64_t) return AttachRRArrayCopy((uint64_t*)array_in,len);
 		throw DataTypeException("Invalid data type");
-				
+
 	}
 
 
@@ -2741,91 +2795,91 @@ public:
 		if (len %2 != 0) throw InvalidArgumentException("Array must be even length");
 		return AttachRRArrayCopy((cdouble*)array_in,len/2);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> FloatsToComplexRRBaseArray(float* array_in, int32_t len)
 	{
 		if (len %2 != 0) throw InvalidArgumentException("Array must be even length");
 		return AttachRRArrayCopy((cfloat*)array_in,len/2);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> BytesToBoolRRBaseArray(uint8_t* array_in, int32_t len)
 	{
 		return AttachRRArrayCopy((rr_bool*)array_in,len);
 	}
-	
+
 	static boost::intrusive_ptr<RobotRaconteur::RRBaseArray> BytesToBoolRRBaseArray(int8_t* array_in, int32_t len)
 	{
 		return AttachRRArrayCopy((rr_bool*)array_in,len);
 	}
-			
+
 	static void DoublesToRRBaseArray(double* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_double_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(double));
 	}
-	
+
 	static void FloatsToRRBaseArray(float* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_single_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(float));
 	}
-	
+
 	static  void BytesToRRBaseArray( int8_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int8_t && rrarray->GetTypeID()!=DataTypes_uint8_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(int8_t));
-				
+
 	}
-	
+
 	static  void BytesToRRBaseArray( uint8_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint8_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
-		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint8_t));				
+		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint8_t));
 	}
-	
-	
+
+
 	static  void ShortsToRRBaseArray( int16_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int16_t && rrarray->GetTypeID()!=DataTypes_uint16_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(int16_t));
-				
+
 	}
-	
+
 	static  void ShortsToRRBaseArray( uint16_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint16_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint16_t));
-				
+
 	}
-	
+
 	static void  IntsToRRBaseArray( int32_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int32_t && rrarray->GetTypeID()!=DataTypes_uint32_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(int32_t));
-				
+
 	}
-	
+
 	static void  IntsToRRBaseArray( uint32_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_uint32_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(uint32_t));
-				
+
 	}
-	
+
 	static void LongsToRRBaseArray( int64_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_int64_t && rrarray->GetTypeID()!=DataTypes_uint64_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(int64_t));
-				
+
 	}
 
 
@@ -2842,28 +2896,28 @@ public:
 		if (rrarray->size()!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(double));
 	}
-	
+
 	static void FloatsToComplexRRBaseArray(float* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_csingle_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(float));
 	}
-	
+
 	static  void BytesToBoolRRBaseArray( int8_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
-		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(int8_t));				
+		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(int8_t));
 	}
-	
+
 	static  void BytesToBoolRRBaseArray( uint8_t* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_bool_t) throw InvalidArgumentException("RRArray error");
 		if (rrarray->size()!=len) throw InvalidArgumentException("RRArray error");
-		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(uint8_t));				
+		memcpy((rr_bool*)rrarray->void_ptr(),array_in,len*sizeof(uint8_t));
 	}
-	
+
 
 };
 
@@ -2906,48 +2960,48 @@ SWIGINTERN boost::shared_ptr< RobotRaconteur::WrappedServiceStub > RobotRaconteu
 class ServerServiceListenerDirector
 {
 public:
-	
+
 	int32_t objectheapid;
-	
+
 	ServerServiceListenerDirector()
 	{
 		objectheapid=0;
 	}
-	
+
 	void OuterCallback(const boost::shared_ptr<ServerContext>& c,ServerServiceListenerEventType code,const boost::shared_ptr<void>& p)
 	{
 		if (code==ServerServiceListenerEventType_ClientConnected || code==ServerServiceListenerEventType_ClientDisconnected)
 		{
 			boost::shared_ptr<uint32_t> p2=boost::static_pointer_cast<uint32_t>(p);
-			
+
 			DIRECTOR_CALL2(Callback(code,*p2));
 		}
 		else
 		{
-			
+
 			DIRECTOR_CALL2(Callback(code,0));
 		}
 	}
 	virtual void Callback(int32_t code, uint32_t endpoint) {};
-	
-	
-	
+
+
+
 	virtual ~ServerServiceListenerDirector()
 	{
-		
+
 	}
-	
+
 };
 
 SWIGINTERN void RobotRaconteur_ServerContext_AddServerServiceListener(RobotRaconteur::ServerContext *self,ServerServiceListenerDirector *listener){
 		boost::shared_ptr<ServerServiceListenerDirector> listener2=boost::shared_ptr<ServerServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ServerServiceListenerDirector>, RR_BOOST_PLACEHOLDERS(_1), listener->objectheapid));
 		self->ServerServiceListener.connect(boost::bind(&ServerServiceListenerDirector::OuterCallback,listener2,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
-		
+
 	}
 SWIGINTERN void RobotRaconteur_ServerContext_SetServiceAttributes(RobotRaconteur::ServerContext *self,boost::intrusive_ptr< RobotRaconteur::MessageElement > const &attributes){
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > mmap=rr_cast<RRMap<std::string,RRValue> >(RobotRaconteur::detail::packing::UnpackMapType<std::string,RRValue>(attributes->CastData<MessageElementNestedElementList >(),NULL));
-		self->SetAttributes(mmap->GetStorageContainer());		
-		
+		self->SetAttributes(mmap->GetStorageContainer());
+
 	}
 SWIGINTERN uint32_t RobotRaconteur_ServerEndpoint_GetCurrentEndpoint(){
 			return ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint();
@@ -3230,6 +3284,60 @@ SWIGINTERN void std_vector_Sl_RobotRaconteur_ServiceSubscriptionClientID_Sg__doR
           throw std::out_of_range("vector index out of range");
         }
       }
+SWIGINTERN std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *new_std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg___SWIG_2(jint count,RobotRaconteur::WrappedServiceSubscriptionManagerDetails const &value){
+        if (count < 0)
+          throw std::out_of_range("vector count must be positive");
+        return new std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >(static_cast<std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::size_type>(count), value);
+      }
+SWIGINTERN jint std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doSize(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const *self){
+        return SWIG_VectorSize(self->size());
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doAdd__SWIG_0(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *self,std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type const &x){
+        self->push_back(x);
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doAdd__SWIG_1(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *self,jint index,std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type const &x){
+        jint size = static_cast<jint>(self->size());
+        if (0 <= index && index <= size) {
+          self->insert(self->begin() + index, x);
+        } else {
+          throw std::out_of_range("vector index out of range");
+        }
+      }
+SWIGINTERN std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doRemove(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *self,jint index){
+        jint size = static_cast<jint>(self->size());
+        if (0 <= index && index < size) {
+          RobotRaconteur::WrappedServiceSubscriptionManagerDetails const old_value = (*self)[index];
+          self->erase(self->begin() + index);
+          return old_value;
+        } else {
+          throw std::out_of_range("vector index out of range");
+        }
+      }
+SWIGINTERN std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type const &std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doGet(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *self,jint index){
+        jint size = static_cast<jint>(self->size());
+        if (index >= 0 && index < size)
+          return (*self)[index];
+        else
+          throw std::out_of_range("vector index out of range");
+      }
+SWIGINTERN std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doSet(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *self,jint index,std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type const &val){
+        jint size = static_cast<jint>(self->size());
+        if (index >= 0 && index < size) {
+          RobotRaconteur::WrappedServiceSubscriptionManagerDetails const old_value = (*self)[index];
+          (*self)[index] = val;
+          return old_value;
+        }
+        else
+          throw std::out_of_range("vector index out of range");
+      }
+SWIGINTERN void std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doRemoveRange(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *self,jint fromIndex,jint toIndex){
+        jint size = static_cast<jint>(self->size());
+        if (0 <= fromIndex && fromIndex <= toIndex && toIndex <= size) {
+          self->erase(self->begin() + fromIndex, self->begin() + toIndex);
+        } else {
+          throw std::out_of_range("vector index out of range");
+        }
+      }
 SWIGINTERN std::vector< RobotRaconteur::ServiceSubscriptionFilterAttribute > *new_std_vector_Sl_RobotRaconteur_ServiceSubscriptionFilterAttribute_Sg___SWIG_2(jint count,RobotRaconteur::ServiceSubscriptionFilterAttribute const &value){
         if (count < 0)
           throw std::out_of_range("vector count must be positive");
@@ -3376,7 +3484,7 @@ public:
 	{
 		mlock.lock();
 	}
-	
+
 	bool tryLock(int timeout)
 	{
 		if (timeout==-1)
@@ -3386,7 +3494,7 @@ public:
 		}
 		return mlock.timed_lock(boost::posix_time::milliseconds(timeout));
 	}
-	
+
 	void unlock()
 	{
 	mlock.unlock();
@@ -3400,14 +3508,14 @@ public:
 class ClientServiceListenerDirector
 {
 public:
-	
+
 	int32_t objectheapid;
-	
+
 	ClientServiceListenerDirector()
 	{
 		objectheapid=0;
 	}
-	
+
 	void OuterCallback(const boost::shared_ptr<RobotRaconteur::ClientContext>& c,ClientServiceListenerEventType code,const boost::shared_ptr<void>& p)
 	{
 		if (code == ClientServiceListenerEventType_ServicePathReleased)
@@ -3416,18 +3524,18 @@ public:
 			DIRECTOR_CALL2(Callback2(code,p1));
 		}
 		else
-		{		
+		{
 			DIRECTOR_CALL2(Callback(code));
 		}
 	}
 	virtual void Callback(int32_t code) {};
 	virtual void Callback2(int32_t code, const std::string& p) {};
-		
+
 	virtual ~ClientServiceListenerDirector()
 	{
-		
+
 	}
-	
+
 };
 
 SWIGINTERN boost::shared_ptr< RobotRaconteur::WrappedServiceStub > RobotRaconteur_RobotRaconteurNode_ConnectService__SWIG_0(RobotRaconteur::RobotRaconteurNode *self,std::string const &url,std::string const &username="",boost::intrusive_ptr< RobotRaconteur::MessageElementData > credentials=boost::intrusive_ptr< RobotRaconteur::MessageElementData >(),ClientServiceListenerDirector *listener=0,std::string const &objecttype=""){
@@ -3436,7 +3544,7 @@ SWIGINTERN boost::shared_ptr< RobotRaconteur::WrappedServiceStub > RobotRaconteu
 		{
 			listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ClientServiceListenerDirector>,RR_BOOST_PLACEHOLDERS(_1),listener->objectheapid));
 		}
-	
+
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >(self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList>(credentials)));
 		boost::shared_ptr<WrappedServiceStub> stub;
@@ -3446,21 +3554,21 @@ SWIGINTERN boost::shared_ptr< RobotRaconteur::WrappedServiceStub > RobotRaconteu
 		}
 		else
 		{
-			
+
 			stub=rr_cast<WrappedServiceStub>(self->ConnectService(url,username,credentials2,boost::bind(&ClientServiceListenerDirector::OuterCallback,listenerptr,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)),objecttype));
 		}
-		
+
 		return stub;
 
 	}
 SWIGINTERN boost::shared_ptr< RobotRaconteur::WrappedServiceStub > RobotRaconteur_RobotRaconteurNode_ConnectService__SWIG_5(RobotRaconteur::RobotRaconteurNode *self,std::vector< std::string > const &url,std::string const &username="",boost::intrusive_ptr< RobotRaconteur::MessageElementData > credentials=boost::intrusive_ptr< RobotRaconteur::MessageElementData >(),ClientServiceListenerDirector *listener=0,std::string const &objecttype=""){
-	
+
 		boost::shared_ptr<ClientServiceListenerDirector> listenerptr;
 		if (listener)
 		{
 			listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ClientServiceListenerDirector>,RR_BOOST_PLACEHOLDERS(_1),listener->objectheapid));
 		}
-	
+
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >(self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
 		boost::shared_ptr<WrappedServiceStub> stub;
@@ -3470,19 +3578,19 @@ SWIGINTERN boost::shared_ptr< RobotRaconteur::WrappedServiceStub > RobotRaconteu
 		}
 		else
 		{
-			
+
 			stub=rr_cast<WrappedServiceStub>(self->ConnectService(url,username,credentials2,boost::bind(&ClientServiceListenerDirector::OuterCallback,listenerptr,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)),objecttype));
 		}
 		return stub;
 
 	}
 SWIGINTERN void RobotRaconteur_RobotRaconteurNode_AsyncConnectService__SWIG_0(RobotRaconteur::RobotRaconteurNode *self,std::string const &url,std::string const &username,boost::intrusive_ptr< RobotRaconteur::MessageElementData > const &credentials,ClientServiceListenerDirector *listener,std::string const &objecttype,int32_t timeout,RobotRaconteur::AsyncStubReturnDirector *handler,int32_t id){
-		
+
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
-	
+
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >(self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
-		
+
 		if (listener==0)
 		{
 			self->AsyncConnectService(url,username,credentials2,RR_NULL_FN,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
@@ -3491,15 +3599,15 @@ SWIGINTERN void RobotRaconteur_RobotRaconteurNode_AsyncConnectService__SWIG_0(Ro
 		{
 			boost::shared_ptr<ClientServiceListenerDirector> listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener);
 			self->AsyncConnectService(url,username,credentials2,boost::bind(&ClientServiceListenerDirector::OuterCallback,listenerptr,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)),objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
-		}		
+		}
 	}
 SWIGINTERN void RobotRaconteur_RobotRaconteurNode_AsyncConnectService__SWIG_1(RobotRaconteur::RobotRaconteurNode *self,std::vector< std::string > const &url,std::string const &username,boost::intrusive_ptr< RobotRaconteur::MessageElementData > const &credentials,ClientServiceListenerDirector *listener,std::string const &objecttype,int32_t timeout,RobotRaconteur::AsyncStubReturnDirector *handler,int32_t id){
-	
+
 		boost::shared_ptr<AsyncStubReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStubReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
-	
+
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > credentials2;
 		if (credentials) credentials2=rr_cast<RRMap<std::string,RRValue> >(self->UnpackMapType<std::string,RRValue>(rr_cast<MessageElementNestedElementList >(credentials)));
-		
+
 		if (listener==0)
 		{
 			self->AsyncConnectService(url,username,credentials2,RR_NULL_FN,objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
@@ -3583,20 +3691,20 @@ SWIGINTERN boost::intrusive_ptr< RobotRaconteur::MessageElement > RobotRaconteur
 			boost::intrusive_ptr<MessageElementNestedElementList > mmap=self->PackMapType<std::string,RRValue>(map);
 			return CreateMessageElement("value",mmap);
 		}
-SWIGINTERN RobotRaconteur::NodeID RobotRaconteur_RobotRaconteurNode_GetServiceNodeID(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){		
-		return self->GetServiceNodeID(obj);		
+SWIGINTERN RobotRaconteur::NodeID RobotRaconteur_RobotRaconteurNode_GetServiceNodeID(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){
+		return self->GetServiceNodeID(obj);
 	}
-SWIGINTERN std::string RobotRaconteur_RobotRaconteurNode_GetServiceNodeName(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){		
-		return self->GetServiceNodeName(obj);		
+SWIGINTERN std::string RobotRaconteur_RobotRaconteurNode_GetServiceNodeName(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){
+		return self->GetServiceNodeName(obj);
 	}
-SWIGINTERN std::string RobotRaconteur_RobotRaconteurNode_GetServiceName(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){		
-		return self->GetServiceName(obj);		
+SWIGINTERN std::string RobotRaconteur_RobotRaconteurNode_GetServiceName(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){
+		return self->GetServiceName(obj);
 	}
-SWIGINTERN std::string RobotRaconteur_RobotRaconteurNode_GetObjectServicePath(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){		
-		return self->GetObjectServicePath(obj);		
+SWIGINTERN std::string RobotRaconteur_RobotRaconteurNode_GetObjectServicePath(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){
+		return self->GetObjectServicePath(obj);
 	}
-SWIGINTERN std::string RobotRaconteur_RobotRaconteurNode_GetObjectType(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){		
-		return self->GetObjectType(obj);		
+SWIGINTERN std::string RobotRaconteur_RobotRaconteurNode_GetObjectType(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj){
+		return self->GetObjectType(obj);
 	}
 SWIGINTERN void RobotRaconteur_RobotRaconteurNode_AsyncFindObjectType__SWIG_0(RobotRaconteur::RobotRaconteurNode *self,boost::shared_ptr< RobotRaconteur::WrappedServiceStub > const &obj,std::string const &n,int32_t timeout,RobotRaconteur::AsyncStringReturnDirector *handler,int32_t id){
 		boost::shared_ptr<AsyncStringReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncStringReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
@@ -3613,7 +3721,7 @@ SWIGINTERN void RobotRaconteur_RobotRaconteurNode_SetExceptionHandler(RobotRacon
 SWIGINTERN void RobotRaconteur_RobotRaconteurNode_ClearExceptionHandler(RobotRaconteur::RobotRaconteurNode *self){
 		self->SetExceptionHandler(RR_NULL_FN);
 	}
-SWIGINTERN boost::shared_ptr< RobotRaconteur::Timer > RobotRaconteur_RobotRaconteurNode_CreateTimer(RobotRaconteur::RobotRaconteurNode *self,boost::posix_time::time_duration const &period,bool oneshot,RobotRaconteur::AsyncTimerEventReturnDirector *handler,int32_t id){		
+SWIGINTERN boost::shared_ptr< RobotRaconteur::Timer > RobotRaconteur_RobotRaconteurNode_CreateTimer(RobotRaconteur::RobotRaconteurNode *self,boost::posix_time::time_duration const &period,bool oneshot,RobotRaconteur::AsyncTimerEventReturnDirector *handler,int32_t id){
 		boost::shared_ptr<AsyncTimerEventReturnDirector> sphandler(handler,boost::bind(&ReleaseDirector<AsyncTimerEventReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),id));
 		return self->CreateTimer(period,boost::bind(&TimerHandlerFunc,RR_BOOST_PLACEHOLDERS(_1),sphandler),oneshot);
 	}
@@ -3650,7 +3758,7 @@ void SwigDirector_AsyncRequestDirector::handler(boost::intrusive_ptr< RobotRacon
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jret = ret ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(ret) : 0; 
+    //jret = ret ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(ret) : 0;
     if (ret) {
       intrusive_ptr_add_ref((&ret)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElement > **)&jret = new boost::shared_ptr< RobotRaconteur::MessageElement >((&ret)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElement >());
@@ -4420,7 +4528,7 @@ void SwigDirector_WrappedWireConnectionDirector::WireValueChanged(boost::intrusi
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jvalue = value ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(value) : 0; 
+    //jvalue = value ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(value) : 0;
     if (value) {
       intrusive_ptr_add_ref((&value)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElement > **)&jvalue = new boost::shared_ptr< RobotRaconteur::MessageElement >((&value)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElement >());
@@ -4599,7 +4707,7 @@ void SwigDirector_AsyncWirePeekReturnDirector::handler(boost::intrusive_ptr< Rob
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jvalue = value ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(value) : 0; 
+    //jvalue = value ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(value) : 0;
     if (value) {
       intrusive_ptr_add_ref((&value)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElement > **)&jvalue = new boost::shared_ptr< RobotRaconteur::MessageElement >((&value)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElement >());
@@ -4835,7 +4943,7 @@ void SwigDirector_WrappedWireServerPokeValueDirector::PokeValue(boost::intrusive
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jvalue = value ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(value) : 0; 
+    //jvalue = value ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(value) : 0;
     if (value) {
       intrusive_ptr_add_ref((&value)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElement > **)&jvalue = new boost::shared_ptr< RobotRaconteur::MessageElement >((&value)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElement >());
@@ -4983,7 +5091,7 @@ void SwigDirector_WrappedPodArrayMemoryClientBuffer::UnpackReadResult(boost::int
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jres = res ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(res) : 0; 
+    //jres = res ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(res) : 0;
     if (res) {
       intrusive_ptr_add_ref((&res)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jres = new boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList >((&res)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElementNestedElementList >());
@@ -5235,7 +5343,7 @@ void SwigDirector_WrappedPodMultiDimArrayMemoryClientBuffer::UnpackReadResult(bo
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jres = res ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(res) : 0; 
+    //jres = res ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(res) : 0;
     if (res) {
       intrusive_ptr_add_ref((&res)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jres = new boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList >((&res)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElementNestedElementList >());
@@ -5438,7 +5546,7 @@ void SwigDirector_WrappedArrayMemoryDirector::Read(uint64_t memorypos, boost::in
     }
     Swig::LocalRefGuard memorypos_refguard(jenv, jmemorypos);
     
-    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::RRBaseArray >(buffer) : 0; 
+    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::RRBaseArray >(buffer) : 0;
     if (buffer) {
       intrusive_ptr_add_ref((&buffer)->get());
       *(boost::shared_ptr< RobotRaconteur::RRBaseArray > **)&jbuffer = new boost::shared_ptr< RobotRaconteur::RRBaseArray >((&buffer)->get(), SWIG_intrusive_deleter< RobotRaconteur::RRBaseArray >());
@@ -5531,7 +5639,7 @@ void SwigDirector_WrappedArrayMemoryDirector::Write(uint64_t memorypos, boost::i
     }
     Swig::LocalRefGuard memorypos_refguard(jenv, jmemorypos);
     
-    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::RRBaseArray >(buffer) : 0; 
+    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::RRBaseArray >(buffer) : 0;
     if (buffer) {
       intrusive_ptr_add_ref((&buffer)->get());
       *(boost::shared_ptr< RobotRaconteur::RRBaseArray > **)&jbuffer = new boost::shared_ptr< RobotRaconteur::RRBaseArray >((&buffer)->get(), SWIG_intrusive_deleter< RobotRaconteur::RRBaseArray >());
@@ -6012,7 +6120,7 @@ void SwigDirector_WrappedPodArrayMemoryDirector::Write(uint64_t memorypos, boost
     }
     Swig::LocalRefGuard memorypos_refguard(jenv, jmemorypos);
     
-    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0; 
+    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0;
     if (buffer) {
       intrusive_ptr_add_ref((&buffer)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jbuffer = new boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList >((&buffer)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElementNestedElementList >());
@@ -6266,7 +6374,7 @@ void SwigDirector_WrappedPodMultiDimArrayMemoryDirector::Write(std::vector< uint
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
     *(std::vector< uint64_t > **)&jmemorypos = (std::vector< uint64_t > *) &memorypos; 
     
-    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0; 
+    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0;
     if (buffer) {
       intrusive_ptr_add_ref((&buffer)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jbuffer = new boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList >((&buffer)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElementNestedElementList >());
@@ -6350,7 +6458,7 @@ void SwigDirector_WrappedNamedArrayMemoryClientBuffer::UnpackReadResult(boost::i
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jres = res ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(res) : 0; 
+    //jres = res ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(res) : 0;
     if (res) {
       intrusive_ptr_add_ref((&res)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jres = new boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList >((&res)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElementNestedElementList >());
@@ -6602,7 +6710,7 @@ void SwigDirector_WrappedNamedMultiDimArrayMemoryClientBuffer::UnpackReadResult(
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jres = res ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(res) : 0; 
+    //jres = res ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(res) : 0;
     if (res) {
       intrusive_ptr_add_ref((&res)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jres = new boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList >((&res)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElementNestedElementList >());
@@ -6903,7 +7011,7 @@ void SwigDirector_WrappedNamedArrayMemoryDirector::Write(uint64_t memorypos, boo
     }
     Swig::LocalRefGuard memorypos_refguard(jenv, jmemorypos);
     
-    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0; 
+    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0;
     if (buffer) {
       intrusive_ptr_add_ref((&buffer)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jbuffer = new boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList >((&buffer)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElementNestedElementList >());
@@ -7157,7 +7265,7 @@ void SwigDirector_WrappedNamedMultiDimArrayMemoryDirector::Write(std::vector< ui
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
     *(std::vector< uint64_t > **)&jmemorypos = (std::vector< uint64_t > *) &memorypos; 
     
-    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0; 
+    //jbuffer = buffer ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElementNestedElementList >(buffer) : 0;
     if (buffer) {
       intrusive_ptr_add_ref((&buffer)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList > **)&jbuffer = new boost::shared_ptr< RobotRaconteur::MessageElementNestedElementList >((&buffer)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElementNestedElementList >());
@@ -7322,7 +7430,7 @@ boost::intrusive_ptr< RobotRaconteur::MessageElement > SwigDirector_WrappedGener
   }
   swigjobj = swig_get_self(jenv);
   if (swigjobj && jenv->IsSameObject(swigjobj, NULL) == JNI_FALSE) {
-    //jm = m ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(m) : 0; 
+    //jm = m ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(m) : 0;
     if (m) {
       intrusive_ptr_add_ref((&m)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElement > **)&jm = new boost::shared_ptr< RobotRaconteur::MessageElement >((&m)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElement >());
@@ -7749,7 +7857,7 @@ void SwigDirector_WrappedServiceSkelDirector::CallSetProperty(std::string const 
     jname = jenv->NewStringUTF((&name)->c_str());
     Swig::LocalRefGuard name_refguard(jenv, jname); 
     
-    //jm = m ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(m) : 0; 
+    //jm = m ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(m) : 0;
     if (m) {
       intrusive_ptr_add_ref((&m)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElement > **)&jm = new boost::shared_ptr< RobotRaconteur::MessageElement >((&m)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElement >());
@@ -8281,7 +8389,7 @@ boost::shared_ptr< RobotRaconteur::AuthenticatedUser > SwigDirector_WrappedUserA
     jusername = jenv->NewStringUTF((&username)->c_str());
     Swig::LocalRefGuard username_refguard(jenv, jusername); 
     
-    //jcredentials = credentials ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(credentials) : 0; 
+    //jcredentials = credentials ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< RobotRaconteur::MessageElement >(credentials) : 0;
     if (credentials) {
       intrusive_ptr_add_ref((&credentials)->get());
       *(boost::shared_ptr< RobotRaconteur::MessageElement > **)&jcredentials = new boost::shared_ptr< RobotRaconteur::MessageElement >((&credentials)->get(), SWIG_intrusive_deleter< RobotRaconteur::MessageElement >());
@@ -16661,6 +16769,1484 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1RR
       return ;
     }
   }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1ServicePathSegment_1_1SWIG_10(JNIEnv *jenv, jclass jcls) {
+  jlong jresult = 0 ;
+  RobotRaconteur::ServicePathSegment *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  {
+    try
+    {
+      result = (RobotRaconteur::ServicePathSegment *)new RobotRaconteur::ServicePathSegment();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::ServicePathSegment **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1ServicePathSegment_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jstring jarg1) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServicePathSegment *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  {
+    try
+    {
+      result = (RobotRaconteur::ServicePathSegment *)new RobotRaconteur::ServicePathSegment((std::string const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::ServicePathSegment **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1ServicePathSegment_1_1SWIG_12(JNIEnv *jenv, jclass jcls, jstring jarg1, jstring jarg2) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  RobotRaconteur::ServicePathSegment *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      result = (RobotRaconteur::ServicePathSegment *)new RobotRaconteur::ServicePathSegment((std::string const &)*arg1,(std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::ServicePathSegment **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegment_1name_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  RobotRaconteur::ServicePathSegment *arg1 = (RobotRaconteur::ServicePathSegment *) 0 ;
+  std::string *arg2 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::ServicePathSegment **)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return ;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return ;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if (arg1) (arg1)->name = *arg2;
+}
+
+
+SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegment_1name_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jstring jresult = 0 ;
+  RobotRaconteur::ServicePathSegment *arg1 = (RobotRaconteur::ServicePathSegment *) 0 ;
+  std::string *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::ServicePathSegment **)&jarg1; 
+  result = (std::string *) & ((arg1)->name);
+  jresult = jenv->NewStringUTF(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegment_1index_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+  RobotRaconteur::ServicePathSegment *arg1 = (RobotRaconteur::ServicePathSegment *) 0 ;
+  boost::optional< std::string > *arg2 = (boost::optional< std::string > *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::ServicePathSegment **)&jarg1; 
+  arg2 = *(boost::optional< std::string > **)&jarg2; 
+  if (arg1) (arg1)->index = *arg2;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegment_1index_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::ServicePathSegment *arg1 = (RobotRaconteur::ServicePathSegment *) 0 ;
+  boost::optional< std::string > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::ServicePathSegment **)&jarg1; 
+  result = (boost::optional< std::string > *)& ((arg1)->index);
+  *(boost::optional< std::string > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1ServicePathSegment(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  RobotRaconteur::ServicePathSegment *arg1 = (RobotRaconteur::ServicePathSegment *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(RobotRaconteur::ServicePathSegment **)&jarg1; 
+  {
+    try
+    {
+      delete arg1;
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1ServicePathSegments_1_1SWIG_10(JNIEnv *jenv, jclass jcls) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  {
+    try
+    {
+      result = (std::vector< RobotRaconteur::ServicePathSegment > *)new std::vector< RobotRaconteur::ServicePathSegment >();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::ServicePathSegment > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1ServicePathSegments_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1;
+  if (!arg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::ServicePathSegment > const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      result = (std::vector< RobotRaconteur::ServicePathSegment > *)new std::vector< RobotRaconteur::ServicePathSegment >((std::vector< RobotRaconteur::ServicePathSegment > const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::ServicePathSegment > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1capacity(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment >::size_type result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  {
+    try
+    {
+      result = ((std::vector< RobotRaconteur::ServicePathSegment > const *)arg1)->capacity();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jlong)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1reserve(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment >::size_type arg2 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  arg2 = (std::vector< RobotRaconteur::ServicePathSegment >::size_type)jarg2; 
+  {
+    try
+    {
+      try {
+        (arg1)->reserve(arg2);
+      } catch(std::length_error &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return ;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1isEmpty(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jboolean jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  {
+    try
+    {
+      result = (bool)((std::vector< RobotRaconteur::ServicePathSegment > const *)arg1)->empty();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jboolean)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1clear(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  {
+    try
+    {
+      (arg1)->clear();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1ServicePathSegments_1_1SWIG_12(JNIEnv *jenv, jclass jcls, jint jarg1, jlong jarg2, jobject jarg2_) {
+  jlong jresult = 0 ;
+  jint arg1 ;
+  RobotRaconteur::ServicePathSegment *arg2 = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg2_;
+  arg1 = jarg1; 
+  arg2 = *(RobotRaconteur::ServicePathSegment **)&jarg2;
+  if (!arg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "RobotRaconteur::ServicePathSegment const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      try {
+        result = (std::vector< RobotRaconteur::ServicePathSegment > *)new_std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg___SWIG_2(arg1,(RobotRaconteur::ServicePathSegment const &)*arg2);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::ServicePathSegment > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1doSize(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jint jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  jint result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  {
+    try
+    {
+      try {
+        result = std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doSize((std::vector< RobotRaconteur::ServicePathSegment > const *)arg1);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1doAdd_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_) {
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment >::value_type *arg2 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg2_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  arg2 = *(std::vector< RobotRaconteur::ServicePathSegment >::value_type **)&jarg2;
+  if (!arg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::ServicePathSegment >::value_type const & reference is null");
+    return ;
+  } 
+  {
+    try
+    {
+      std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doAdd__SWIG_0(arg1,(RobotRaconteur::ServicePathSegment const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1doAdd_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jlong jarg3, jobject jarg3_) {
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  jint arg2 ;
+  std::vector< RobotRaconteur::ServicePathSegment >::value_type *arg3 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg3_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  arg2 = jarg2; 
+  arg3 = *(std::vector< RobotRaconteur::ServicePathSegment >::value_type **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::ServicePathSegment >::value_type const & reference is null");
+    return ;
+  } 
+  {
+    try
+    {
+      try {
+        std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doAdd__SWIG_1(arg1,arg2,(RobotRaconteur::ServicePathSegment const &)*arg3);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return ;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1doRemove(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  jint arg2 ;
+  std::vector< RobotRaconteur::ServicePathSegment >::value_type result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  arg2 = jarg2; 
+  {
+    try
+    {
+      try {
+        result = std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doRemove(arg1,arg2);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::ServicePathSegment >::value_type **)&jresult = new std::vector< RobotRaconteur::ServicePathSegment >::value_type((const std::vector< RobotRaconteur::ServicePathSegment >::value_type &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1doGet(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  jint arg2 ;
+  std::vector< RobotRaconteur::ServicePathSegment >::value_type *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  arg2 = jarg2; 
+  {
+    try
+    {
+      try {
+        result = (std::vector< RobotRaconteur::ServicePathSegment >::value_type *) &std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doGet(arg1,arg2);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::ServicePathSegment >::value_type **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1doSet(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jlong jarg3, jobject jarg3_) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  jint arg2 ;
+  std::vector< RobotRaconteur::ServicePathSegment >::value_type *arg3 = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment >::value_type result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg3_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  arg2 = jarg2; 
+  arg3 = *(std::vector< RobotRaconteur::ServicePathSegment >::value_type **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::ServicePathSegment >::value_type const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      try {
+        result = std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doSet(arg1,arg2,(RobotRaconteur::ServicePathSegment const &)*arg3);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::ServicePathSegment >::value_type **)&jresult = new std::vector< RobotRaconteur::ServicePathSegment >::value_type((const std::vector< RobotRaconteur::ServicePathSegment >::value_type &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServicePathSegments_1doRemoveRange(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jint jarg3) {
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  jint arg2 ;
+  jint arg3 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  arg2 = jarg2; 
+  arg3 = jarg3; 
+  {
+    try
+    {
+      try {
+        std_vector_Sl_RobotRaconteur_ServicePathSegment_Sg__doRemoveRange(arg1,arg2,arg3);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return ;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1ServicePathSegments(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = (std::vector< RobotRaconteur::ServicePathSegment > *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1; 
+  {
+    try
+    {
+      delete arg1;
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_encodeServicePathIndex(JNIEnv *jenv, jclass jcls, jstring jarg1) {
+  jstring jresult = 0 ;
+  std::string *arg1 = 0 ;
+  std::string result;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  {
+    try
+    {
+      result = RobotRaconteur::EncodeServicePathIndex((std::string const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = jenv->NewStringUTF((&result)->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_decodeServicePathIndex(JNIEnv *jenv, jclass jcls, jstring jarg1) {
+  jstring jresult = 0 ;
+  std::string *arg1 = 0 ;
+  std::string result;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  {
+    try
+    {
+      result = RobotRaconteur::DecodeServicePathIndex((std::string const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = jenv->NewStringUTF((&result)->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_parseServicePath(JNIEnv *jenv, jclass jcls, jstring jarg1) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > result;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  {
+    try
+    {
+      result = RobotRaconteur::ParseServicePath((std::string const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::ServicePathSegment > **)&jresult = new std::vector< RobotRaconteur::ServicePathSegment >((const std::vector< RobotRaconteur::ServicePathSegment > &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_buildServicePath(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jstring jresult = 0 ;
+  std::vector< RobotRaconteur::ServicePathSegment > *arg1 = 0 ;
+  std::string result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::ServicePathSegment > **)&jarg1;
+  if (!arg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::ServicePathSegment > const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      result = RobotRaconteur::BuildServicePath((std::vector< RobotRaconteur::ServicePathSegment > const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = jenv->NewStringUTF((&result)->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_isStringName(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  jboolean jresult = 0 ;
+  boost::string_ref arg1 ;
+  boost::string_ref *argp1 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  argp1 = *(boost::string_ref **)&jarg1; 
+  if (!argp1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Attempt to dereference null boost::string_ref");
+    return 0;
+  }
+  arg1 = *argp1; 
+  {
+    try
+    {
+      result = (bool)RobotRaconteur::IsStringName(arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jboolean)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_isStringScopedName(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  jboolean jresult = 0 ;
+  boost::string_ref arg1 ;
+  boost::string_ref *argp1 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  argp1 = *(boost::string_ref **)&jarg1; 
+  if (!argp1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Attempt to dereference null boost::string_ref");
+    return 0;
+  }
+  arg1 = *argp1; 
+  {
+    try
+    {
+      result = (bool)RobotRaconteur::IsStringScopedName(arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jboolean)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_isStringUUID(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  jboolean jresult = 0 ;
+  boost::string_ref arg1 ;
+  boost::string_ref *argp1 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  argp1 = *(boost::string_ref **)&jarg1; 
+  if (!argp1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Attempt to dereference null boost::string_ref");
+    return 0;
+  }
+  arg1 = *argp1; 
+  {
+    try
+    {
+      result = (bool)RobotRaconteur::IsStringUUID(arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jboolean)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_isStringIdentifier(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  jboolean jresult = 0 ;
+  boost::string_ref arg1 ;
+  boost::string_ref *argp1 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  argp1 = *(boost::string_ref **)&jarg1; 
+  if (!argp1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Attempt to dereference null boost::string_ref");
+    return 0;
+  }
+  arg1 = *argp1; 
+  {
+    try
+    {
+      result = (bool)RobotRaconteur::IsStringIdentifier(arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jboolean)result; 
+  return jresult;
 }
 
 
@@ -35233,7 +36819,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1Node
 }
 
 
-SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_NodeID_1toString(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_NodeID_1toString_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jstring jresult = 0 ;
   RobotRaconteur::NodeID *arg1 = (RobotRaconteur::NodeID *) 0 ;
   std::string result;
@@ -35246,6 +36832,64 @@ SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_NodeID_
     try
     {
       result = ((RobotRaconteur::NodeID const *)arg1)->ToString();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = jenv->NewStringUTF((&result)->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_NodeID_1toString_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  jstring jresult = 0 ;
+  RobotRaconteur::NodeID *arg1 = (RobotRaconteur::NodeID *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::NodeID **)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      result = ((RobotRaconteur::NodeID const *)arg1)->ToString((std::string const &)*arg2);
     }
     catch (RobotRaconteur::RobotRaconteurException& e)
     {
@@ -37960,7 +39604,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageHea
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -38006,7 +39650,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageHea
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -38130,7 +39774,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageHea
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -38730,7 +40374,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageEnt
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -38776,7 +40420,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageEnt
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -38936,7 +40580,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageEnt
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -39508,7 +41152,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageEle
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -39668,7 +41312,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageEle
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -39752,7 +41396,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageEle
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -40375,7 +42019,7 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_MessageEle
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
     return ;
   }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0);
   if (!arg2_pstr) return ;
   RobotRaconteur::MessageStringPtr arg2_str(arg2_pstr,false);
   arg2 = &arg2_str;
@@ -49625,7 +51269,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_TimerEven
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -49645,7 +51289,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_TimerEven
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -49665,7 +51309,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_TimerEven
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -49685,7 +51329,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_TimerEven
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -50037,6 +51681,53 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_Timer_1sto
 }
 
 
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_Timer_1tryStop(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  RobotRaconteur::Timer *arg1 = (RobotRaconteur::Timer *) 0 ;
+  boost::shared_ptr< RobotRaconteur::Timer > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::Timer > **)&jarg1;
+  arg1 = (RobotRaconteur::Timer *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      (arg1)->TryStop();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
 SWIGEXPORT jint JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_Timer_1getPeriod(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jint jresult = 0 ;
   RobotRaconteur::Timer *arg1 = (RobotRaconteur::Timer *) 0 ;
@@ -50301,6 +51992,53 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WallTimer_
     try
     {
       (arg1)->Stop();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WallTimer_1tryStop(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  RobotRaconteur::WallTimer *arg1 = (RobotRaconteur::WallTimer *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WallTimer > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WallTimer > **)&jarg1;
+  arg1 = (RobotRaconteur::WallTimer *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      (arg1)->TryStop();
     }
     catch (RobotRaconteur::RobotRaconteurException& e)
     {
@@ -73193,6 +74931,200 @@ SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_Server
 }
 
 
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServerContext_1getCandidateConnectionURLs(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::ServerContext *arg1 = (RobotRaconteur::ServerContext *) 0 ;
+  boost::shared_ptr< RobotRaconteur::ServerContext > *smartarg1 = 0 ;
+  std::vector< std::string > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::ServerContext > **)&jarg1;
+  arg1 = (RobotRaconteur::ServerContext *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->GetCandidateConnectionURLs();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< std::string > **)&jresult = new std::vector< std::string >((const std::vector< std::string > &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServerContext_1printCandidateConnectionURLs(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  RobotRaconteur::ServerContext *arg1 = (RobotRaconteur::ServerContext *) 0 ;
+  boost::shared_ptr< RobotRaconteur::ServerContext > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::ServerContext > **)&jarg1;
+  arg1 = (RobotRaconteur::ServerContext *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      (arg1)->PrintCandidateConnectionURLs();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServerContext_1logCandidateConnectionURLs_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  RobotRaconteur::ServerContext *arg1 = (RobotRaconteur::ServerContext *) 0 ;
+  RobotRaconteur::RobotRaconteur_LogLevel arg2 ;
+  boost::shared_ptr< RobotRaconteur::ServerContext > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::ServerContext > **)&jarg1;
+  arg1 = (RobotRaconteur::ServerContext *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (RobotRaconteur::RobotRaconteur_LogLevel)jarg2; 
+  {
+    try
+    {
+      (arg1)->LogCandidateConnectionURLs(arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServerContext_1logCandidateConnectionURLs_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  RobotRaconteur::ServerContext *arg1 = (RobotRaconteur::ServerContext *) 0 ;
+  boost::shared_ptr< RobotRaconteur::ServerContext > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::ServerContext > **)&jarg1;
+  arg1 = (RobotRaconteur::ServerContext *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      (arg1)->LogCandidateConnectionURLs();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
 SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1ServerContext(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   RobotRaconteur::ServerContext *arg1 = (RobotRaconteur::ServerContext *) 0 ;
   boost::shared_ptr< RobotRaconteur::ServerContext > *smartarg1 = 0 ;
@@ -73442,7 +75374,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_Authentic
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -73498,7 +75430,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_Authentic
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -81060,6 +82992,783 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1ve
 }
 
 
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1vector_1wrappedservicesubscriptionmanagerdetails_1_1SWIG_10(JNIEnv *jenv, jclass jcls) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  {
+    try
+    {
+      result = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *)new std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1vector_1wrappedservicesubscriptionmanagerdetails_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1;
+  if (!arg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      result = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *)new std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >((std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1capacity(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::size_type result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  {
+    try
+    {
+      result = ((std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const *)arg1)->capacity();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jlong)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1reserve(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::size_type arg2 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  arg2 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::size_type)jarg2; 
+  {
+    try
+    {
+      try {
+        (arg1)->reserve(arg2);
+      } catch(std::length_error &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return ;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1isEmpty(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jboolean jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  {
+    try
+    {
+      result = (bool)((std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const *)arg1)->empty();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jboolean)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1clear(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  {
+    try
+    {
+      (arg1)->clear();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1vector_1wrappedservicesubscriptionmanagerdetails_1_1SWIG_12(JNIEnv *jenv, jclass jcls, jint jarg1, jlong jarg2, jobject jarg2_) {
+  jlong jresult = 0 ;
+  jint arg1 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg2 = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg2_;
+  arg1 = jarg1; 
+  arg2 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg2;
+  if (!arg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "RobotRaconteur::WrappedServiceSubscriptionManagerDetails const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      try {
+        result = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *)new_std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg___SWIG_2(arg1,(RobotRaconteur::WrappedServiceSubscriptionManagerDetails const &)*arg2);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1doSize(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jint jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  jint result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  {
+    try
+    {
+      try {
+        result = std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doSize((std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const *)arg1);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1doAdd_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_) {
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type *arg2 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg2_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  arg2 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type **)&jarg2;
+  if (!arg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type const & reference is null");
+    return ;
+  } 
+  {
+    try
+    {
+      std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doAdd__SWIG_0(arg1,(RobotRaconteur::WrappedServiceSubscriptionManagerDetails const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1doAdd_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jlong jarg3, jobject jarg3_) {
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  jint arg2 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type *arg3 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg3_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  arg2 = jarg2; 
+  arg3 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type const & reference is null");
+    return ;
+  } 
+  {
+    try
+    {
+      try {
+        std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doAdd__SWIG_1(arg1,arg2,(RobotRaconteur::WrappedServiceSubscriptionManagerDetails const &)*arg3);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return ;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1doRemove(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  jint arg2 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  arg2 = jarg2; 
+  {
+    try
+    {
+      try {
+        result = std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doRemove(arg1,arg2);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type **)&jresult = new std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type((const std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1doGet(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  jint arg2 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  arg2 = jarg2; 
+  {
+    try
+    {
+      try {
+        result = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type *) &std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doGet(arg1,arg2);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1doSet(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jlong jarg3, jobject jarg3_) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  jint arg2 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type *arg3 = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg3_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  arg2 = jarg2; 
+  arg3 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      try {
+        result = std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doSet(arg1,arg2,(RobotRaconteur::WrappedServiceSubscriptionManagerDetails const &)*arg3);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return 0;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type **)&jresult = new std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type((const std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >::value_type &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_vector_1wrappedservicesubscriptionmanagerdetails_1doRemoveRange(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jint jarg3) {
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  jint arg2 ;
+  jint arg3 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  arg2 = jarg2; 
+  arg3 = jarg3; 
+  {
+    try
+    {
+      try {
+        std_vector_Sl_RobotRaconteur_WrappedServiceSubscriptionManagerDetails_Sg__doRemoveRange(arg1,arg2,arg3);
+      } catch(std::out_of_range &_e) {
+        SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, (&_e)->what());
+        return ;
+      }
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1vector_1wrappedservicesubscriptionmanagerdetails(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = (std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1; 
+  {
+    try
+    {
+      delete arg1;
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
 SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_ServiceSubscriptionFilterAttribute_1Name_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
   RobotRaconteur::ServiceSubscriptionFilterAttribute *arg1 = (RobotRaconteur::ServiceSubscriptionFilterAttribute *) 0 ;
   std::string *arg2 = 0 ;
@@ -81644,6 +84353,201 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_createSer
     try
     {
       result = RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex((std::string const &)*arg1,(std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::ServiceSubscriptionFilterAttribute **)&jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute((const RobotRaconteur::ServiceSubscriptionFilterAttribute &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_createServiceSubscriptionFilterAttributeIdentifier_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jstring jarg1, jstring jarg2) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      result = RobotRaconteur::CreateServiceSubscriptionFilterAttributeIdentifier((std::string const &)*arg1,(std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::ServiceSubscriptionFilterAttribute **)&jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute((const RobotRaconteur::ServiceSubscriptionFilterAttribute &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_createServiceSubscriptionFilterAttributeIdentifier_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jstring jarg1, jstring jarg2, jstring jarg3) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  {
+    try
+    {
+      result = RobotRaconteur::CreateServiceSubscriptionFilterAttributeIdentifier((std::string const &)*arg1,(std::string const &)*arg2,(std::string const &)*arg3);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::ServiceSubscriptionFilterAttribute **)&jresult = new RobotRaconteur::ServiceSubscriptionFilterAttribute((const RobotRaconteur::ServiceSubscriptionFilterAttribute &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_createServiceSubscriptionFilterAttributeCombinedIdentifier(JNIEnv *jenv, jclass jcls, jstring jarg1) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  SwigValueWrapper< RobotRaconteur::ServiceSubscriptionFilterAttribute > result;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  {
+    try
+    {
+      result = RobotRaconteur::CreateServiceSubscriptionFilterAttributeCombinedIdentifier((std::string const &)*arg1);
     }
     catch (RobotRaconteur::RobotRaconteurException& e)
     {
@@ -88627,6 +91531,138 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSer
 }
 
 
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscription_1subscribeSubObject_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2, jstring jarg3) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscription *arg1 = (RobotRaconteur::WrappedServiceSubscription *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  {
+    try
+    {
+      result = (arg1)->SubscribeSubObject((std::string const &)*arg2,(std::string const &)*arg3);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription >(result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscription_1subscribeSubObject_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscription *arg1 = (RobotRaconteur::WrappedServiceSubscription *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      result = (arg1)->SubscribeSubObject((std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription >(result) : 0; 
+  return jresult;
+}
+
+
 SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1WrappedServiceSubscription(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   RobotRaconteur::WrappedServiceSubscription *arg1 = (RobotRaconteur::WrappedServiceSubscription *) 0 ;
   boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > *smartarg1 = 0 ;
@@ -91047,6 +94083,514 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1Wr
 }
 
 
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1getDefaultClient(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceStub > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->GetDefaultClient();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::WrappedServiceStub > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::WrappedServiceStub >(result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1tryGetDefaultClient(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->TryGetDefaultClient();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes **)&jresult = new RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes((const RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1getDefaultClientWait_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  int32_t arg2 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceStub > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (int32_t)jarg2; 
+  {
+    try
+    {
+      result = (arg1)->GetDefaultClientWait(arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::WrappedServiceStub > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::WrappedServiceStub >(result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1getDefaultClientWait_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceStub > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->GetDefaultClientWait();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::WrappedServiceStub > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::WrappedServiceStub >(result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1tryGetDefaultClientWait_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  int32_t arg2 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (int32_t)jarg2; 
+  {
+    try
+    {
+      result = (arg1)->TryGetDefaultClientWait(arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes **)&jresult = new RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes((const RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1tryGetDefaultClientWait_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->TryGetDefaultClientWait();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes **)&jresult = new RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes((const RobotRaconteur::WrappedServiceSubscription_TryDefaultClientRes &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1asyncGetDefaultClient(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jlong jarg3, jobject jarg3_, jint jarg4) {
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  int32_t arg2 ;
+  RobotRaconteur::AsyncStubReturnDirector *arg3 = (RobotRaconteur::AsyncStubReturnDirector *) 0 ;
+  int32_t arg4 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg3_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = (int32_t)jarg2; 
+  arg3 = *(RobotRaconteur::AsyncStubReturnDirector **)&jarg3; 
+  arg4 = (int32_t)jarg4; 
+  {
+    try
+    {
+      (arg1)->AsyncGetDefaultClient(arg2,arg3,arg4);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1close(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      (arg1)->Close();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedSubObjectSubscription_1getNode(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->GetNode();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::RobotRaconteurNode >(result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1WrappedSubObjectSubscription(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  RobotRaconteur::WrappedSubObjectSubscription *arg1 = (RobotRaconteur::WrappedSubObjectSubscription *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedSubObjectSubscription > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedSubObjectSubscription > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedSubObjectSubscription *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      (void)arg1; delete smartarg1;
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
 SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_wrappedServiceInfo2SubscriptionServicesToVector(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jlong jresult = 0 ;
   std::map< RobotRaconteur::ServiceSubscriptionClientID,RobotRaconteur::ServiceInfo2Wrapped,std::less< RobotRaconteur::ServiceSubscriptionClientID > > *arg1 = 0 ;
@@ -91969,6 +95513,2089 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_wrappedSu
 }
 
 
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1Name_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  std::string *arg2 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return ;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return ;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if (arg1) (arg1)->Name = *arg2;
+}
+
+
+SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1Name_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jstring jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  std::string *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  result = (std::string *) & ((arg1)->Name);
+  jresult = jenv->NewStringUTF(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1ConnectionMethod_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD arg2 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  arg2 = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD)jarg2; 
+  if (arg1) (arg1)->ConnectionMethod = arg2;
+}
+
+
+SWIGEXPORT jint JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1ConnectionMethod_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jint jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  result = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD) ((arg1)->ConnectionMethod);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1Urls_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  std::vector< std::string > *arg2 = (std::vector< std::string > *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg2_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  arg2 = *(std::vector< std::string > **)&jarg2; 
+  if (arg1) (arg1)->Urls = *arg2;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1Urls_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  std::vector< std::string > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  result = (std::vector< std::string > *)& ((arg1)->Urls);
+  *(std::vector< std::string > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1UrlUsername_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  std::string *arg2 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return ;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return ;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if (arg1) (arg1)->UrlUsername = *arg2;
+}
+
+
+SWIGEXPORT jstring JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1UrlUsername_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jstring jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  std::string *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  result = (std::string *) & ((arg1)->UrlUsername);
+  jresult = jenv->NewStringUTF(result->c_str()); 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1UrlCredentials_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > *arg2 = 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > tempnull2 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > temp2 ;
+  boost::shared_ptr< RobotRaconteur::MessageElementData > *smartarg2 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg2_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  
+  // intrusive_ptr by reference
+  if ( jarg2 ) {
+    smartarg2 = *(boost::shared_ptr<  RobotRaconteur::MessageElementData >**)&jarg2;
+    temp2 = boost::intrusive_ptr<  RobotRaconteur::MessageElementData >(smartarg2->get(), true);
+    arg2 = &temp2;
+  } else {
+    arg2 = &tempnull2;
+  }
+  
+  if (arg1) (arg1)->UrlCredentials = *arg2;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1UrlCredentials_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  result = (boost::intrusive_ptr< RobotRaconteur::MessageElementData > *) & ((arg1)->UrlCredentials);
+  
+  if (*result) {
+    intrusive_ptr_add_ref(result->get());
+    *(boost::shared_ptr<  RobotRaconteur::MessageElementData > **)&jresult = new boost::shared_ptr<  RobotRaconteur::MessageElementData >(result->get(), SWIG_intrusive_deleter<  RobotRaconteur::MessageElementData >());
+  } else {
+    *(boost::shared_ptr<  RobotRaconteur::MessageElementData > **)&jresult = 0;
+  }
+  
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1ServiceTypes_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  std::vector< std::string > *arg2 = (std::vector< std::string > *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg2_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  arg2 = *(std::vector< std::string > **)&jarg2; 
+  if (arg1) (arg1)->ServiceTypes = *arg2;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1ServiceTypes_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  std::vector< std::string > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  result = (std::vector< std::string > *)& ((arg1)->ServiceTypes);
+  *(std::vector< std::string > **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1Filter_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > tempnull2 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg2_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  arg2 = jarg2 ? *(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > **)&jarg2 : &tempnull2; 
+  if (arg1) (arg1)->Filter = *arg2;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1Filter_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  result = (boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *) & ((arg1)->Filter);
+  *(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > **)&jresult = *result ? new boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter >(*result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1Enabled_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jboolean jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  bool arg2 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  arg2 = jarg2 ? true : false; 
+  if (arg1) (arg1)->Enabled = arg2;
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManagerDetails_1Enabled_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jboolean jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  result = (bool) ((arg1)->Enabled);
+  jresult = (jboolean)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_10(JNIEnv *jenv, jclass jcls) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jstring jarg1, jint jarg2, jlong jarg3, jobject jarg3_, jstring jarg4, jlong jarg5, jobject jarg5_, jlong jarg6, jobject jarg6_, jlong jarg7, jobject jarg7_, jboolean jarg8) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD arg2 ;
+  std::vector< std::string > *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > *arg5 = 0 ;
+  std::vector< std::string > *arg6 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *arg7 = 0 ;
+  bool arg8 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > tempnull5 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > temp5 ;
+  boost::shared_ptr< RobotRaconteur::MessageElementData > *smartarg5 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > tempnull7 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg3_;
+  (void)jarg5_;
+  (void)jarg6_;
+  (void)jarg7_;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD)jarg2; 
+  arg3 = *(std::vector< std::string > **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  
+  // intrusive_ptr by reference
+  if ( jarg5 ) {
+    smartarg5 = *(boost::shared_ptr<  RobotRaconteur::MessageElementData >**)&jarg5;
+    temp5 = boost::intrusive_ptr<  RobotRaconteur::MessageElementData >(smartarg5->get(), true);
+    arg5 = &temp5;
+  } else {
+    arg5 = &tempnull5;
+  }
+  
+  arg6 = *(std::vector< std::string > **)&jarg6;
+  if (!arg6) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  arg7 = jarg7 ? *(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > **)&jarg7 : &tempnull7; 
+  arg8 = jarg8 ? true : false; 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails((std::string const &)*arg1,arg2,(std::vector< std::string > const &)*arg3,(std::string const &)*arg4,(boost::intrusive_ptr< RobotRaconteur::MessageElementData > const &)*arg5,(std::vector< std::string > const &)*arg6,(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > const &)*arg7,arg8);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_12(JNIEnv *jenv, jclass jcls, jstring jarg1, jint jarg2, jlong jarg3, jobject jarg3_, jstring jarg4, jlong jarg5, jobject jarg5_, jlong jarg6, jobject jarg6_, jlong jarg7, jobject jarg7_) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD arg2 ;
+  std::vector< std::string > *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > *arg5 = 0 ;
+  std::vector< std::string > *arg6 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > *arg7 = 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > tempnull5 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > temp5 ;
+  boost::shared_ptr< RobotRaconteur::MessageElementData > *smartarg5 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > tempnull7 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg3_;
+  (void)jarg5_;
+  (void)jarg6_;
+  (void)jarg7_;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD)jarg2; 
+  arg3 = *(std::vector< std::string > **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  
+  // intrusive_ptr by reference
+  if ( jarg5 ) {
+    smartarg5 = *(boost::shared_ptr<  RobotRaconteur::MessageElementData >**)&jarg5;
+    temp5 = boost::intrusive_ptr<  RobotRaconteur::MessageElementData >(smartarg5->get(), true);
+    arg5 = &temp5;
+  } else {
+    arg5 = &tempnull5;
+  }
+  
+  arg6 = *(std::vector< std::string > **)&jarg6;
+  if (!arg6) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  arg7 = jarg7 ? *(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > **)&jarg7 : &tempnull7; 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails((std::string const &)*arg1,arg2,(std::vector< std::string > const &)*arg3,(std::string const &)*arg4,(boost::intrusive_ptr< RobotRaconteur::MessageElementData > const &)*arg5,(std::vector< std::string > const &)*arg6,(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionFilter > const &)*arg7);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_13(JNIEnv *jenv, jclass jcls, jstring jarg1, jint jarg2, jlong jarg3, jobject jarg3_, jstring jarg4, jlong jarg5, jobject jarg5_, jlong jarg6, jobject jarg6_) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD arg2 ;
+  std::vector< std::string > *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > *arg5 = 0 ;
+  std::vector< std::string > *arg6 = 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > tempnull5 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > temp5 ;
+  boost::shared_ptr< RobotRaconteur::MessageElementData > *smartarg5 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg3_;
+  (void)jarg5_;
+  (void)jarg6_;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD)jarg2; 
+  arg3 = *(std::vector< std::string > **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  
+  // intrusive_ptr by reference
+  if ( jarg5 ) {
+    smartarg5 = *(boost::shared_ptr<  RobotRaconteur::MessageElementData >**)&jarg5;
+    temp5 = boost::intrusive_ptr<  RobotRaconteur::MessageElementData >(smartarg5->get(), true);
+    arg5 = &temp5;
+  } else {
+    arg5 = &tempnull5;
+  }
+  
+  arg6 = *(std::vector< std::string > **)&jarg6;
+  if (!arg6) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails((std::string const &)*arg1,arg2,(std::vector< std::string > const &)*arg3,(std::string const &)*arg4,(boost::intrusive_ptr< RobotRaconteur::MessageElementData > const &)*arg5,(std::vector< std::string > const &)*arg6);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_14(JNIEnv *jenv, jclass jcls, jstring jarg1, jint jarg2, jlong jarg3, jobject jarg3_, jstring jarg4, jlong jarg5, jobject jarg5_) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD arg2 ;
+  std::vector< std::string > *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > *arg5 = 0 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > tempnull5 ;
+  boost::intrusive_ptr< RobotRaconteur::MessageElementData > temp5 ;
+  boost::shared_ptr< RobotRaconteur::MessageElementData > *smartarg5 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg3_;
+  (void)jarg5_;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD)jarg2; 
+  arg3 = *(std::vector< std::string > **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  
+  // intrusive_ptr by reference
+  if ( jarg5 ) {
+    smartarg5 = *(boost::shared_ptr<  RobotRaconteur::MessageElementData >**)&jarg5;
+    temp5 = boost::intrusive_ptr<  RobotRaconteur::MessageElementData >(smartarg5->get(), true);
+    arg5 = &temp5;
+  } else {
+    arg5 = &tempnull5;
+  }
+  
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails((std::string const &)*arg1,arg2,(std::vector< std::string > const &)*arg3,(std::string const &)*arg4,(boost::intrusive_ptr< RobotRaconteur::MessageElementData > const &)*arg5);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_15(JNIEnv *jenv, jclass jcls, jstring jarg1, jint jarg2, jlong jarg3, jobject jarg3_, jstring jarg4) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD arg2 ;
+  std::vector< std::string > *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg3_;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD)jarg2; 
+  arg3 = *(std::vector< std::string > **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails((std::string const &)*arg1,arg2,(std::vector< std::string > const &)*arg3,(std::string const &)*arg4);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_16(JNIEnv *jenv, jclass jcls, jstring jarg1, jint jarg2, jlong jarg3, jobject jarg3_) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD arg2 ;
+  std::vector< std::string > *arg3 = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg3_;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD)jarg2; 
+  arg3 = *(std::vector< std::string > **)&jarg3;
+  if (!arg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< std::string > const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails((std::string const &)*arg1,arg2,(std::vector< std::string > const &)*arg3);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_17(JNIEnv *jenv, jclass jcls, jstring jarg1, jint jarg2) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD arg2 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  arg2 = (RobotRaconteur::ServiceSubscriptionManager_CONNECTION_METHOD)jarg2; 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails((std::string const &)*arg1,arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManagerDetails_1_1SWIG_18(JNIEnv *jenv, jclass jcls, jstring jarg1) {
+  jlong jresult = 0 ;
+  std::string *arg1 = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  if(!jarg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg1_pstr = (const char *)jenv->GetStringUTFChars(jarg1, 0); 
+  if (!arg1_pstr) return 0;
+  std::string arg1_str(arg1_pstr);
+  arg1 = &arg1_str;
+  jenv->ReleaseStringUTFChars(jarg1, arg1_pstr); 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *)new RobotRaconteur::WrappedServiceSubscriptionManagerDetails((std::string const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1WrappedServiceSubscriptionManagerDetails(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManagerDetails *) 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg1; 
+  {
+    try
+    {
+      delete arg1;
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManager_1_1SWIG_10(JNIEnv *jenv, jclass jcls) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManager *)new RobotRaconteur::WrappedServiceSubscriptionManager();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  
+  *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jresult = result ? new boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager >(result SWIG_NO_NULL_DELETER_1) : 0;
+  
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManager_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > *arg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > tempnull1 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = jarg1 ? *(boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > **)&jarg1 : &tempnull1; 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManager *)new RobotRaconteur::WrappedServiceSubscriptionManager((boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  
+  *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jresult = result ? new boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager >(result SWIG_NO_NULL_DELETER_1) : 0;
+  
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManager_1_1SWIG_12(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1;
+  if (!arg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const & reference is null");
+    return 0;
+  } 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManager *)new RobotRaconteur::WrappedServiceSubscriptionManager((std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const &)*arg1);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  
+  *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jresult = result ? new boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager >(result SWIG_NO_NULL_DELETER_1) : 0;
+  
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_new_1WrappedServiceSubscriptionManager_1_1SWIG_13(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_) {
+  jlong jresult = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > *arg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > tempnull2 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *result = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg2_;
+  arg1 = *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jarg1;
+  if (!arg1) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const & reference is null");
+    return 0;
+  } 
+  arg2 = jarg2 ? *(boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > **)&jarg2 : &tempnull2; 
+  {
+    try
+    {
+      result = (RobotRaconteur::WrappedServiceSubscriptionManager *)new RobotRaconteur::WrappedServiceSubscriptionManager((std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > const &)*arg1,(boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  
+  *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jresult = result ? new boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager >(result SWIG_NO_NULL_DELETER_1) : 0;
+  
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1addSubscription(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManagerDetails *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  (void)jarg2_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = *(RobotRaconteur::WrappedServiceSubscriptionManagerDetails **)&jarg2;
+  if (!arg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "RobotRaconteur::WrappedServiceSubscriptionManagerDetails const & reference is null");
+    return ;
+  } 
+  {
+    try
+    {
+      (arg1)->AddSubscription((RobotRaconteur::WrappedServiceSubscriptionManagerDetails const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1removeSubscription_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2, jboolean jarg3) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  bool arg3 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return ;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return ;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  arg3 = jarg3 ? true : false; 
+  {
+    try
+    {
+      (arg1)->RemoveSubscription((std::string const &)*arg2,arg3);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1removeSubscription_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return ;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return ;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      (arg1)->RemoveSubscription((std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1enableSubscription(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return ;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return ;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      (arg1)->EnableSubscription((std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1disableSubscription_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2, jboolean jarg3) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  bool arg3 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return ;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return ;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  arg3 = jarg3 ? true : false; 
+  {
+    try
+    {
+      (arg1)->DisableSubscription((std::string const &)*arg2,arg3);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1disableSubscription_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return ;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return ;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      (arg1)->DisableSubscription((std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1getSubscription_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2, jboolean jarg3) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  bool arg3 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  arg3 = jarg3 ? true : false; 
+  {
+    try
+    {
+      result = (arg1)->GetSubscription((std::string const &)*arg2,arg3);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription >(result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1getSubscription_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      result = (arg1)->GetSubscription((std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::WrappedServiceSubscription >(result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1isConnected(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  jboolean jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      result = (bool)(arg1)->IsConnected((std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jboolean)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1isEnabled(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  jboolean jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  {
+    try
+    {
+      result = (bool)(arg1)->IsEnabled((std::string const &)*arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  jresult = (jboolean)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1close_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jboolean jarg2) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  bool arg2 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  arg2 = jarg2 ? true : false; 
+  {
+    try
+    {
+      (arg1)->Close(arg2);
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1close_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      (arg1)->Close();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1getSubscriptionNames(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  std::vector< std::string > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->GetSubscriptionNames();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< std::string > **)&jresult = new std::vector< std::string >((const std::vector< std::string > &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1getSubscriptionDetails(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->GetSubscriptionDetails();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > **)&jresult = new std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails >((const std::vector< RobotRaconteur::WrappedServiceSubscriptionManagerDetails > &)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_WrappedServiceSubscriptionManager_1getNode(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jlong jresult = 0 ;
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      result = (arg1)->GetNode();
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return 0;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return 0;
+    }
+  }
+  *(boost::shared_ptr< RobotRaconteur::RobotRaconteurNode > **)&jresult = result ? new boost::shared_ptr< RobotRaconteur::RobotRaconteurNode >(result) : 0; 
+  return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_delete_1WrappedServiceSubscriptionManager(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  RobotRaconteur::WrappedServiceSubscriptionManager *arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *) 0 ;
+  boost::shared_ptr< RobotRaconteur::WrappedServiceSubscriptionManager > *smartarg1 = 0 ;
+  
+  (void)jenv;
+  (void)jcls;
+  
+  smartarg1 = *(boost::shared_ptr<  RobotRaconteur::WrappedServiceSubscriptionManager > **)&jarg1;
+  arg1 = (RobotRaconteur::WrappedServiceSubscriptionManager *)(smartarg1 ? smartarg1->get() : 0); 
+  {
+    try
+    {
+      (void)arg1; delete smartarg1;
+    }
+    catch (RobotRaconteur::RobotRaconteurException& e)
+    {
+      jclass clazz2;
+      jmethodID mid2;
+      jthrowable jexp;
+      jlong error_info_ptr=0;
+      RobotRaconteur::HandlerErrorInfo error_info(e);
+      clazz2=jenv->FindClass("com/robotraconteur/RobotRaconteurExceptionUtil");
+      if (!clazz2) goto rrerrfail;
+      mid2 = jenv->GetStaticMethodID(clazz2, "errorInfoToException" ,"(J)Ljava/lang/RuntimeException;");
+      if (!mid2) goto rrerrfail;
+      error_info_ptr=(jlong)&error_info;
+      jexp=(jthrowable)jenv->CallStaticObjectMethod(clazz2,mid2,error_info_ptr);
+      jenv->Throw(jexp);
+      return ;
+      
+    rrerrfail:
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+      
+      
+    }
+    catch (std::exception& e) {
+      jclass clazz = jenv->FindClass( "java/lang/RuntimeException");
+      jenv->ThrowNew(clazz, e.what());
+      return ;
+    }
+  }
+}
+
+
 SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_RRLogRecord_1getNode(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jlong jresult = 0 ;
   RobotRaconteur::RRLogRecord *arg1 = (RobotRaconteur::RRLogRecord *) 0 ;
@@ -92340,13 +97967,13 @@ SWIGEXPORT void JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_RRLogRecor
   {
     {
       TimeSpec* temp_ptime = *(RobotRaconteur::TimeSpec **)&jarg2;
-      if (!temp_ptime) 
+      if (!temp_ptime)
       {
         SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Attempt to dereference null TimeSpec");
         return ;
       }
       arg2 = TimeSpecToPTime(*temp_ptime);
-    }    
+    }
   }
   if (arg1) (arg1)->Time = arg2;
 }
@@ -92366,7 +97993,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_RRLogReco
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -99735,7 +105362,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_RobotRaco
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -99842,7 +105469,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_RobotRaco
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }
@@ -99898,7 +105525,7 @@ SWIGEXPORT jlong JNICALL Java_com_robotraconteur_RobotRaconteurJavaJNI_RobotRaco
     {
       TimeSpec timespec_result1 = RobotRaconteur::ptimeToTimeSpec(result);
       *(RobotRaconteur::TimeSpec **)&jresult = new RobotRaconteur::TimeSpec((const RobotRaconteur::TimeSpec &)timespec_result1);
-    }    
+    }
   }
   return jresult;
 }

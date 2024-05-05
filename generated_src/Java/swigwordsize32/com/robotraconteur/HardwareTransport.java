@@ -54,7 +54,7 @@ static {
 	}
 	}
 	catch (Exception e) {}
-		
+
 }
 
   public HardwareTransport() {

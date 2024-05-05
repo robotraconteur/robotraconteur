@@ -56,12 +56,12 @@ public void AddServerServiceListener(ServerServiceListenerDelegate listener)
 {
   ServerServiceListenerDirectorJava d = new ServerServiceListenerDirectorJava(this, listener);
   d.objectheapid = RRObjectHeap.addObject(d);
-  
+
   _AddServerServiceListener(d);
 }*/
 
 public void releaseServicePath(String path)
-{	
+{
 	_ReleaseServicePath(path);
 }
 
@@ -72,7 +72,7 @@ public void releaseServicePath(String path, long[] endpoints)
 	{
 		o.add(endpoints[i]);
 	}
-	
+
 	_ReleaseServicePath(path,o);
 }
 
@@ -137,6 +137,22 @@ public void releaseServicePath(String path, long[] endpoints)
 
   public boolean removeExtraImport(String import_) {
     return RobotRaconteurJavaJNI.ServerContext_removeExtraImport(swigCPtr, this, import_);
+  }
+
+  public vectorstring getCandidateConnectionURLs() {
+    return new vectorstring(RobotRaconteurJavaJNI.ServerContext_getCandidateConnectionURLs(swigCPtr, this), true);
+  }
+
+  public void printCandidateConnectionURLs() {
+    RobotRaconteurJavaJNI.ServerContext_printCandidateConnectionURLs(swigCPtr, this);
+  }
+
+  public void logCandidateConnectionURLs(LogLevel level) {
+    RobotRaconteurJavaJNI.ServerContext_logCandidateConnectionURLs__SWIG_0(swigCPtr, this, level.swigValue());
+  }
+
+  public void logCandidateConnectionURLs() {
+    RobotRaconteurJavaJNI.ServerContext_logCandidateConnectionURLs__SWIG_1(swigCPtr, this);
   }
 
 }

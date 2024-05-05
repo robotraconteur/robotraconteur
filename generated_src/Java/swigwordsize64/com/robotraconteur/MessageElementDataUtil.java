@@ -36,7 +36,7 @@ public class MessageElementDataUtil {
     }
   }
 
-public static Object rRBaseArrayToArray(RRBaseArray a) 
+public static Object rRBaseArrayToArray(RRBaseArray a)
   {
 	if (a==null) return null;
 	switch (a.getTypeID())
@@ -60,7 +60,7 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	        return r;
 		}
 	    case DataTypes_uint8_t:
-	    
+
 	    {
 	        byte[] r=new byte[(int)a.size()];
 	        rRBaseArrayToBytes(a,r,r.length);
@@ -134,17 +134,17 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 	    		o3[j] = o2[j] != 0;
 	    	}
 	    	return o3;
-	    }	    
+	    }
 	    default:
 	    	break;
-	
+
 	}
-	  
+
 	throw new RuntimeException(new DataTypeException("Unknown RRArray type"));
-  
+
   }
-  
-  public static RRBaseArray arrayToRRBaseArray(Object a) 
+
+  public static RRBaseArray arrayToRRBaseArray(Object a)
   {
 	  if (a==null) return null;
 	  if (a instanceof double[]) return doublesToRRBaseArray((double[])a,((double[])a).length);
@@ -185,16 +185,16 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 		  byte[] b1=new byte[a1.length];
 		  for (int j = 0; j<a1.length; j++)
           {
-              b1[j] = (byte) (a1[j] ? 1 : 0);              
+              b1[j] = (byte) (a1[j] ? 1 : 0);
           }
 		  return bytesToBoolRRBaseArray(b1,b1.length);
 	  }
-	  	  
+
 	  throw new RuntimeException(new DataTypeException("Unknown Array type"));
-	  
+
   }
-  
-  public static void arrayToRRBaseArray(Object a, RRBaseArray rra) 
+
+  public static void arrayToRRBaseArray(Object a, RRBaseArray rra)
   {
 	  if (a instanceof double[]) {doublesToRRBaseArray((double[])a,((double[])a).length,rra); return; }
 	  if (a instanceof float[]) {floatsToRRBaseArray((float[])a,((float[])a).length,rra); return;}
@@ -236,11 +236,11 @@ public static Object rRBaseArrayToArray(RRBaseArray a)
 		  byte[] b1=new byte[a1.length];
 		  for (int j = 0; j<a1.length; j++)
           {
-              b1[j] = (byte) (a1[j] ? 1 : 0);              
+              b1[j] = (byte) (a1[j] ? 1 : 0);
           }
 		  bytesToBoolRRBaseArray(b1,b1.length,rra);
 		  return;
-	  }	  
+	  }
 	  throw new RuntimeException(new DataTypeException("Unknown Array type"));
   }
 

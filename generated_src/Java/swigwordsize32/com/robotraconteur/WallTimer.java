@@ -46,19 +46,19 @@ public class WallTimer extends Timer {
 	public WallTimer(int period, Action1<TimerEvent> handler, boolean oneshot)
 	{
              this(period,oneshot,null,attachHandler(handler));
-        
-            
 
-            
+
+
+
         }
 
 	public WallTimer(int period, Action1<TimerEvent> handler, boolean oneshot, RobotRaconteurNode node)
 	{
             this(period,oneshot,node,attachHandler(handler));
-        
-            
 
-            
+
+
+
         }
 
         private static WallTimer_initstruct attachHandler(Action1<TimerEvent> handler)
@@ -76,6 +76,10 @@ public class WallTimer extends Timer {
 
   public void stop() {
     RobotRaconteurJavaJNI.WallTimer_stop(swigCPtr, this);
+  }
+
+  public void tryStop() {
+    RobotRaconteurJavaJNI.WallTimer_tryStop(swigCPtr, this);
   }
 
   public int getPeriod() {

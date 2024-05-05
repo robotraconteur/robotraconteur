@@ -47,7 +47,7 @@ for (int i=0; i<o1.size(); i++)
 {
 	ByteBuffer b=ByteBuffer.allocate(2);
 	b.putShort(o1.get(i));
-	
+
 	o2[i]=b.array()[1];
 }
 return o2;
@@ -64,10 +64,10 @@ public NodeID(byte[] id)
 		bb.rewind();
 		id2.set(i, bb.getShort());
 	}
-	
+
 	swigCMemOwn=true;
 	swigCPtr=RobotRaconteurJavaJNI.new_NodeID__SWIG_1(vector_uint8_t.getCPtr(id2),id2);
-		
+
 }*/
 
 
@@ -77,7 +77,11 @@ public NodeID(byte[] id)
   }
 
   public  String toString() {
-    return RobotRaconteurJavaJNI.NodeID_toString(swigCPtr, this);
+    return RobotRaconteurJavaJNI.NodeID_toString__SWIG_0(swigCPtr, this);
+  }
+
+  public  String toString(String format) {
+    return RobotRaconteurJavaJNI.NodeID_toString__SWIG_1(swigCPtr, this, format);
   }
 
   public static NodeID newUniqueID() {

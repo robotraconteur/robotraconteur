@@ -36,7 +36,7 @@ public class MessageElement extends RRValue {
     super.delete();
   }
 
-public MessageElement(String name, Object data) 
+public MessageElement(String name, Object data)
   {
 	  this();
       setElementName(name);
@@ -77,8 +77,8 @@ public MessageElement(String name, Object data)
 			  {
 				ra.delete();
 			  }
-			  
-              
+
+
           }
 		  if (a!=null)
 		  {
@@ -88,7 +88,7 @@ public MessageElement(String name, Object data)
 		  }
 		  }
           throw new RuntimeException(new DataTypeException("Unknown RRArray type"));
-              
+
       }
       a = MessageElementDataUtil.toMessageElementNestedElementList(val);
       if (a != null) return a;
@@ -98,7 +98,7 @@ public MessageElement(String name, Object data)
 	{
 		if (val!=null)	val.delete();
 	}
-      
+
   }
 
   private void setData(Object dat)
@@ -137,7 +137,7 @@ public MessageElement(String name, Object data)
 		  }
           return;
       }
-	  
+
       if (dat instanceof String)
       {
 		  RRBaseArray rb=null;
@@ -161,12 +161,12 @@ public MessageElement(String name, Object data)
 
       String datatype = dat.getClass().toString();
       DataTypes elementtype = DataTypeUtil.typeIDFromString(datatype);
-      
+
 
       throw new RuntimeException(new DataTypeException("Invalid MessageElement data type"));
 
   }
-  
+
   public <T> T castData()
 	{
 		if (getData() == null)
@@ -182,7 +182,7 @@ public MessageElement(String name, Object data)
 		throw new DataTypeException("Could not cast data");
 		}
 	}
-  
+
 
   public void setElementSize(long value) {
     RobotRaconteurJavaJNI.MessageElement_ElementSize_set(swigCPtr, this, value);

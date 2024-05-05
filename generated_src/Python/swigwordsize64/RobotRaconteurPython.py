@@ -1441,6 +1441,205 @@ class RRMultiDimArrayUntyped(object):
 # Register RRMultiDimArrayUntyped in _RobotRaconteurPython:
 _RobotRaconteurPython.RRMultiDimArrayUntyped_swigregister(RRMultiDimArrayUntyped)
 
+class ServicePathSegment(object):
+    r"""
+
+    Service path segment containing a name and an optional index
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        r"""
+
+        Construct a new ServicePathSegment with a name and an index
+
+        :param name: The name of the segment
+        :type name: str
+        :param index: The index of the segment
+        :type index: str
+
+        """
+        _RobotRaconteurPython.ServicePathSegment_swiginit(self, _RobotRaconteurPython.new_ServicePathSegment(*args))
+    name = property(_RobotRaconteurPython.ServicePathSegment_name_get, _RobotRaconteurPython.ServicePathSegment_name_set, doc=r"""The name of the segment""")
+    index = property(_RobotRaconteurPython.ServicePathSegment_index_get, _RobotRaconteurPython.ServicePathSegment_index_set, doc=r"""The index of the segment""")
+    __swig_destroy__ = _RobotRaconteurPython.delete_ServicePathSegment
+
+# Register ServicePathSegment in _RobotRaconteurPython:
+_RobotRaconteurPython.ServicePathSegment_swigregister(ServicePathSegment)
+
+class ServicePathSegments(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _RobotRaconteurPython.ServicePathSegments_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _RobotRaconteurPython.ServicePathSegments___nonzero__(self)
+
+    def __bool__(self):
+        return _RobotRaconteurPython.ServicePathSegments___bool__(self)
+
+    def __len__(self):
+        return _RobotRaconteurPython.ServicePathSegments___len__(self)
+
+    def __getslice__(self, i, j):
+        return _RobotRaconteurPython.ServicePathSegments___getslice__(self, i, j)
+
+    def __setslice__(self, *args):
+        return _RobotRaconteurPython.ServicePathSegments___setslice__(self, *args)
+
+    def __delslice__(self, i, j):
+        return _RobotRaconteurPython.ServicePathSegments___delslice__(self, i, j)
+
+    def __delitem__(self, *args):
+        return _RobotRaconteurPython.ServicePathSegments___delitem__(self, *args)
+
+    def __getitem__(self, *args):
+        return _RobotRaconteurPython.ServicePathSegments___getitem__(self, *args)
+
+    def __setitem__(self, *args):
+        return _RobotRaconteurPython.ServicePathSegments___setitem__(self, *args)
+
+    def pop(self):
+        return _RobotRaconteurPython.ServicePathSegments_pop(self)
+
+    def append(self, x):
+        return _RobotRaconteurPython.ServicePathSegments_append(self, x)
+
+    def empty(self):
+        return _RobotRaconteurPython.ServicePathSegments_empty(self)
+
+    def size(self):
+        return _RobotRaconteurPython.ServicePathSegments_size(self)
+
+    def swap(self, v):
+        return _RobotRaconteurPython.ServicePathSegments_swap(self, v)
+
+    def begin(self):
+        return _RobotRaconteurPython.ServicePathSegments_begin(self)
+
+    def end(self):
+        return _RobotRaconteurPython.ServicePathSegments_end(self)
+
+    def rbegin(self):
+        return _RobotRaconteurPython.ServicePathSegments_rbegin(self)
+
+    def rend(self):
+        return _RobotRaconteurPython.ServicePathSegments_rend(self)
+
+    def clear(self):
+        return _RobotRaconteurPython.ServicePathSegments_clear(self)
+
+    def get_allocator(self):
+        return _RobotRaconteurPython.ServicePathSegments_get_allocator(self)
+
+    def pop_back(self):
+        return _RobotRaconteurPython.ServicePathSegments_pop_back(self)
+
+    def erase(self, *args):
+        return _RobotRaconteurPython.ServicePathSegments_erase(self, *args)
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.ServicePathSegments_swiginit(self, _RobotRaconteurPython.new_ServicePathSegments(*args))
+
+    def push_back(self, x):
+        return _RobotRaconteurPython.ServicePathSegments_push_back(self, x)
+
+    def front(self):
+        return _RobotRaconteurPython.ServicePathSegments_front(self)
+
+    def back(self):
+        return _RobotRaconteurPython.ServicePathSegments_back(self)
+
+    def assign(self, n, x):
+        return _RobotRaconteurPython.ServicePathSegments_assign(self, n, x)
+
+    def resize(self, *args):
+        return _RobotRaconteurPython.ServicePathSegments_resize(self, *args)
+
+    def insert(self, *args):
+        return _RobotRaconteurPython.ServicePathSegments_insert(self, *args)
+
+    def reserve(self, n):
+        return _RobotRaconteurPython.ServicePathSegments_reserve(self, n)
+
+    def capacity(self):
+        return _RobotRaconteurPython.ServicePathSegments_capacity(self)
+    __swig_destroy__ = _RobotRaconteurPython.delete_ServicePathSegments
+
+# Register ServicePathSegments in _RobotRaconteurPython:
+_RobotRaconteurPython.ServicePathSegments_swigregister(ServicePathSegments)
+
+
+def EncodeServicePathIndex(index):
+    r"""
+
+    Encode a service path index for use in a Robot Raconteur service path
+
+    :param index: The index to encode
+    :type index: str
+    :return: The encoded index
+    :rtype: str
+
+    """
+    return _RobotRaconteurPython.EncodeServicePathIndex(index)
+
+def DecodeServicePathIndex(index):
+    r"""
+
+    Decode a service path index from a Robot Raconteur service path
+
+    :param index: The index to decode
+    :type index: str
+    :return: The decoded index
+    :rtype: str
+
+    """
+    return _RobotRaconteurPython.DecodeServicePathIndex(index)
+
+def ParseServicePath(path):
+    r"""
+
+    Split a service path into segments
+
+    :param path: The path to split
+    :type path: str
+    :return: The segments of the path
+    :rtype: List[RobotRaconteur.ServicePathSegment]
+
+    """
+    return _RobotRaconteurPython.ParseServicePath(path)
+
+def BuildServicePath(segments):
+    r"""
+
+    Join service path segments into a path
+
+    :param segments: The segments to join
+    :type segments: List[RobotRaconteur.ServicePathSegment]
+    :return: The joined path
+    :rtype: str
+
+    """
+    return _RobotRaconteurPython.BuildServicePath(segments)
+
+def IsStringName(str):
+    return _RobotRaconteurPython.IsStringName(str)
+
+def IsStringScopedName(str):
+    return _RobotRaconteurPython.IsStringScopedName(str)
+
+def IsStringUUID(str):
+    return _RobotRaconteurPython.IsStringUUID(str)
+
+def IsStringIdentifier(str):
+    return _RobotRaconteurPython.IsStringIdentifier(str)
 class MultiDimArray_CalculateCopyIndicesIter(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -1468,7 +1667,7 @@ class NodeID(object):
 
     Robot Raconteur uses NodeID and NodeName to uniquely identify a node.
     NodeID is a UUID (Universally Unique ID), while NodeName is a string. The
-    NodeID is expected to be unique, while the NodeName is set by the user 
+    NodeID is expected to be unique, while the NodeName is set by the user
     and may not be unique. The NodeID class represents the UUID NodeID.
 
     A UUID is a 128-bit randomly generated number that is statistically guaranteed
@@ -3983,7 +4182,7 @@ class TcpTransport(Transport):
 
     See \ref robotraconteur_url for more information on URLs.
 
-    The TcpTransport implements transport connections over TCP/IP networks. TCP/IP is the 
+    The TcpTransport implements transport connections over TCP/IP networks. TCP/IP is the
     most common protocol used for Internet and Local Area Network (LAN) communication, including
     Ethernet and WiFi connections. The Transport Control Protocol (TCP) is a reliable stream
     protocol that establishes connections between devices using IP address and port pairs.
@@ -3993,10 +4192,10 @@ class TcpTransport(Transport):
     uses the established connection to pass messages between nodes.
 
     The IP protocol is available in two major versions, IPv4 and IPv6. The most common
-    is IPv4, and its 32 bit address is typically written as four numbers, 
-    ie 172.17.12.174. IPv4 has a number of critical limitations, the greatest being 
-    its 2^32 address limit (approximately 4 billion). This is a problem when there are 
-    tens of billions of internet connected devices already present. IPv6 introduces a 128 
+    is IPv4, and its 32 bit address is typically written as four numbers,
+    ie 172.17.12.174. IPv4 has a number of critical limitations, the greatest being
+    its 2^32 address limit (approximately 4 billion). This is a problem when there are
+    tens of billions of internet connected devices already present. IPv6 introduces a 128
     bit address space, which allows for approximately 3.4x10^38 possible addresses. The major
     advantage for Robot Raconteur is the introduction of "link-local" addresses. These addresses
     begin with "FE80::" and finish with an "EUI-64" address, which is tied to the MAC address
@@ -4025,7 +4224,7 @@ class TcpTransport(Transport):
 
     The different combinations of TLS and HTTPS for websockets are used for different scenarios.
     Robot Raconteur Core can initiate HTTPS connections, but cannot accept them. Accepting
-    HTTPS connections requires a certificate issued by an authority like GoDaddy or Digicert, 
+    HTTPS connections requires a certificate issued by an authority like GoDaddy or Digicert,
     and is typically used with an HTTP server running RobotRaconteurWeb.
 
     TLS certificates for Robot Raconteur nodes are issued by Wason Technology, LLC using
@@ -4036,10 +4235,10 @@ class TcpTransport(Transport):
     and/or broadcast packets. Broadcast packets are sent to all connected devices, while
     multicast is sent to devices that have registered to receive them. Unlike TCP, the packets
     sent to broadcast or multicast are sent to the entire network. This allows for devices
-    to find each other on the network. 
+    to find each other on the network.
 
     For IPv4, the broadcast address 255.255.255.255 on port 48653
-    is used for discovery. By default, IPv4 is disabled in favor of IPv6. IPv6 uses the multicast 
+    is used for discovery. By default, IPv4 is disabled in favor of IPv6. IPv6 uses the multicast
     following multicast addresses:
 
     ========== ========== ===== ========
@@ -4439,7 +4638,7 @@ class LocalTransport(Transport):
     switch to UNIX domain sockets for the LocalTransport on Windows in version 0.9.2.
     Previous versions used Named Pipes, but these were inferior to UNIX sockets. The
     LocalTransport will not function on versions of Windows prior to Windows 10 1803 update
-    due to the lack of support for UNIX sockets. A warning will be issued to the log if 
+    due to the lack of support for UNIX sockets. A warning will be issued to the log if
     the transport is not available, and all connection attempts will fail. All other
     transports will continue to operate normally.
 
@@ -4453,7 +4652,7 @@ class LocalTransport(Transport):
 
     The LocalTransport can be used to dynamically assign NodeIDs to nodes based on a NodeName.
     StartServerAsNodeName() and StartClientAsNodeName() take a NodeName that will identify the
-    node to clients, and manage a system-local NodeID corresponding to that NodeName. The 
+    node to clients, and manage a system-local NodeID corresponding to that NodeName. The
     generated NodeIDs are stored on the local filesystem. If LocalTransport finds a corresponding
     NodeID on the filesystem, it will load and use that NodeID. If it does not, a new random NodeID
     is automatically generated.
@@ -4566,7 +4765,7 @@ class LocalTransport(Transport):
 
         :param nodeid: The NodeID
         :type nodeid: RobotRaconteur.NodeID
-        :param public_: If True, other users can access the server. If False, only 
+        :param public_: If True, other users can access the server. If False, only
          the account owner can access the server.
         :type public_: bool
 
@@ -4979,6 +5178,14 @@ class Timer(object):
         """
         return _RobotRaconteurPython.Timer_Stop(self)
 
+    def TryStop(self):
+        r"""
+
+        Stop the timer without throwing an exception if the timer is not running
+
+        """
+        return _RobotRaconteurPython.Timer_TryStop(self)
+
     def GetPeriod(self):
         r"""
 
@@ -5035,6 +5242,14 @@ class WallTimer(Timer):
 
         """
         return _RobotRaconteurPython.WallTimer_Stop(self)
+
+    def TryStop(self):
+        r"""
+
+        Stop the timer without throwing an exception if the timer is not running
+
+        """
+        return _RobotRaconteurPython.WallTimer_TryStop(self)
 
     def GetPeriod(self):
         r"""
@@ -5207,7 +5422,7 @@ class TimeSpec(object):
 
     TimeSpec(seconds=0,nanoseconds=0)
 
-    Represents. a point in time. Used by "wire" members to 
+    Represents. a point in time. Used by "wire" members to
     timestamp packets
 
     Time is always in UTC
@@ -6847,7 +7062,7 @@ class ServerContext(object):
     The ServerContext manages the services, and dispatches requests and packets to the appropriate
     service object members. Services may expose more than one object. The root object is specified
     when the service is registered. Other objects are specified through ObjRef members. A name
-    for the service is also specified when the service is registered. This name forms the root 
+    for the service is also specified when the service is registered. This name forms the root
     of the service path namespace. Other objects in the service have a unique service path
     based on the ObjRef used to access the object.
 
@@ -6863,13 +7078,13 @@ class ServerContext(object):
     which service should be selected for use. Because the attributes are passed to the clients
     as part of the discovery process, they should be as concise as possible, and should
     not use user defined types. Use ServerContext.SetAttributes() to set the service attributes
-    after registering the service. 
+    after registering the service.
 
     Security for the service is specified using a ServiceSecurityPolicy instance. This policy
     is specified by passing as a parameter to RobotRaconteurNode.RegisterService(), or passing
     the policy to the constructor.
 
-    ServerContext implements authentication and object locking. 
+    ServerContext implements authentication and object locking.
     Server side functions are exposed by ServerContext for authentication, object locking,
     and client management.
 
@@ -6968,7 +7183,7 @@ class ServerContext(object):
 
         This function handles incoming client requests, but may also be used
         by the service directly. Client object locks lock for a specific client connection,
-        while client locks lock for a specific user. The specific client connection is 
+        while client locks lock for a specific user. The specific client connection is
         specified using endpoint.
 
         :param servicepath: The service path to lock
@@ -6988,7 +7203,7 @@ class ServerContext(object):
 
         This function handles incoming client requests, but may also be used
         by the service directly. Client locks can be released by the user that
-        created them if override_ is false, or by any user if override_ is true. 
+        created them if override_ is false, or by any user if override_ is true.
 
         The override_ parameter is set to true for client requests if the client has
         the "objectlockoverride" permission.
@@ -6997,7 +7212,7 @@ class ServerContext(object):
         :type str:
         :param username: The username requsting the lock release
         :type username:
-        :param override_: If False, only the creating username can release the lock. If True, 
+        :param override_: If False, only the creating username can release the lock. If True,
          any username can release the lock
         :type override_: bool
 
@@ -7046,7 +7261,7 @@ class ServerContext(object):
         Clients using dynamic typing will not automatically pull service definitions unless
         imported by the root object or an objref. If new "struct", "po", or "namedarray" types
         are introduced in a new service definition type without a corresponding object, an error will
-        occur. Use AddExtraImport() to add the name of the new service definition to add it to the 
+        occur. Use AddExtraImport() to add the name of the new service definition to add it to the
         list of service definitions the client will pull.
 
         Service definition must have been registered using RobotRaconteurNode::RegisterServiceType()
@@ -7067,10 +7282,43 @@ class ServerContext(object):
         :param import_: The name of the service definition
         :type import_: str
         :return: True The service definition was removed, False The service definition was not found in the extra imports vector
-        :rtype: bool 
+        :rtype: bool
 
         """
         return _RobotRaconteurPython.ServerContext_RemoveExtraImport(self, import_)
+
+    def GetCandidateConnectionURLs(self):
+        r"""
+
+        Get the candidate connection URLs for this service. The candidate connection URLs are
+        the URLs that can be used to connect to the service. The correct URL to use depends on the
+        transport being used to connect to the service, and the network configuration of the client and service.
+
+        :return: The candidate connection URLs
+        :rtype: List[str]
+
+        """
+        return _RobotRaconteurPython.ServerContext_GetCandidateConnectionURLs(self)
+
+    def PrintCandidateConnectionURLs(self):
+        r"""
+
+        Print the candidate connection URLs for this service. See GetCandidateConnectionURLs() for more information.
+
+
+        """
+        return _RobotRaconteurPython.ServerContext_PrintCandidateConnectionURLs(self)
+
+    def LogCandidateConnectionURLs(self, *args):
+        r"""
+
+        Log the candidate connection URLs for this service. See GetCandidateConnectionURLs() for more information.
+
+        :param level: The log level to use. Defaults to RobotRaconteur.LogLevel_Info
+        :type level: RobotRaconteur.LogLevel
+
+        """
+        return _RobotRaconteurPython.ServerContext_LogCandidateConnectionURLs(self, *args)
 
     def AddServerServiceListener(self,listener):
     	"""
@@ -7114,7 +7362,7 @@ class ServerContext(object):
 
     	:param path: The service path to release
     	:type path: str
-    	:param endpoints: (Optional) The client endpoint IDs to notify of the released service path, 
+    	:param endpoints: (Optional) The client endpoint IDs to notify of the released service path,
     	 or None to notify all endpoints
     	:type endpoints: List[int]
     	"""
@@ -7264,11 +7512,11 @@ class ServerEndpoint(object):
         AuthenticatedUser object associated with the ServerEndpoint.
         GetCurrentAuthenticatedUser() returns the AuthenticatedUser
         associated with the current ServerEndpoint during a request
-        or packet event. This is a thread-specific value and only valid during 
+        or packet event. This is a thread-specific value and only valid during
         the initial request or packet event invocation.
 
         Throws PermissionDeniedException or AuthenticationException
-        if there is no AuthenticatedUser set in the current thread. 
+        if there is no AuthenticatedUser set in the current thread.
 
         :return: The AuthenticatedUser
         :rtype: RobotRaconteur.AuthenticatedUser
@@ -7306,11 +7554,11 @@ def ServerEndpoint_GetCurrentAuthenticatedUser():
     AuthenticatedUser object associated with the ServerEndpoint.
     GetCurrentAuthenticatedUser() returns the AuthenticatedUser
     associated with the current ServerEndpoint during a request
-    or packet event. This is a thread-specific value and only valid during 
+    or packet event. This is a thread-specific value and only valid during
     the initial request or packet event invocation.
 
     Throws PermissionDeniedException or AuthenticationException
-    if there is no AuthenticatedUser set in the current thread. 
+    if there is no AuthenticatedUser set in the current thread.
 
     :return: The AuthenticatedUser
     :rtype: RobotRaconteur.AuthenticatedUser
@@ -7457,14 +7705,14 @@ class PasswordFileUserAuthenticator(NativeUserAuthenticator):
     one per line. Each line contains the username, password as md5 hash, and privileges, separated by white spaces.
     An example of authentication string contents:
 
-    .. code-block:: 
+    .. code-block::
 
        user1 79e262a81dd19d40ae008f74eb59edce objectlock
        user2 309825a0951b3cf1f25e27b61cee8243 objectlock
        superuser1 11e5dfc68422e697563a4253ba360615 objectlock,objectlockoverride
 
 
-    The password is md5 hashed. This hash can be generated using the ``--md5passwordhash`` command in the "RobotRaconteurGen" utility. 
+    The password is md5 hashed. This hash can be generated using the ``--md5passwordhash`` command in the "RobotRaconteurGen" utility.
     The privileges are comma separated. Valid privileges are as follows:
 
     ================== =====================================================
@@ -8278,6 +8526,112 @@ class vectorptr_subscriptionclientid(object):
 # Register vectorptr_subscriptionclientid in _RobotRaconteurPython:
 _RobotRaconteurPython.vectorptr_subscriptionclientid_swigregister(vectorptr_subscriptionclientid)
 
+class vector_wrappedservicesubscriptionmanagerdetails(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___nonzero__(self)
+
+    def __bool__(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___bool__(self)
+
+    def __len__(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___len__(self)
+
+    def __getslice__(self, i, j):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___getslice__(self, i, j)
+
+    def __setslice__(self, *args):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___setslice__(self, *args)
+
+    def __delslice__(self, i, j):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___delslice__(self, i, j)
+
+    def __delitem__(self, *args):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___delitem__(self, *args)
+
+    def __getitem__(self, *args):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___getitem__(self, *args)
+
+    def __setitem__(self, *args):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails___setitem__(self, *args)
+
+    def pop(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_pop(self)
+
+    def append(self, x):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_append(self, x)
+
+    def empty(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_empty(self)
+
+    def size(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_size(self)
+
+    def swap(self, v):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_swap(self, v)
+
+    def begin(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_begin(self)
+
+    def end(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_end(self)
+
+    def rbegin(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_rbegin(self)
+
+    def rend(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_rend(self)
+
+    def clear(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_clear(self)
+
+    def get_allocator(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_get_allocator(self)
+
+    def pop_back(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_pop_back(self)
+
+    def erase(self, *args):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_erase(self, *args)
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_swiginit(self, _RobotRaconteurPython.new_vector_wrappedservicesubscriptionmanagerdetails(*args))
+
+    def push_back(self, x):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_push_back(self, x)
+
+    def front(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_front(self)
+
+    def back(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_back(self)
+
+    def assign(self, n, x):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_assign(self, n, x)
+
+    def resize(self, *args):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_resize(self, *args)
+
+    def insert(self, *args):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_insert(self, *args)
+
+    def reserve(self, n):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_reserve(self, n)
+
+    def capacity(self):
+        return _RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_capacity(self)
+    __swig_destroy__ = _RobotRaconteurPython.delete_vector_wrappedservicesubscriptionmanagerdetails
+
+# Register vector_wrappedservicesubscriptionmanagerdetails in _RobotRaconteurPython:
+_RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails_swigregister(vector_wrappedservicesubscriptionmanagerdetails)
+
 class ServiceSubscriptionFilterAttribute(object):
     r"""
 
@@ -8306,6 +8660,12 @@ _RobotRaconteurPython.ServiceSubscriptionFilterAttribute_swigregister(ServiceSub
 
 def CreateServiceSubscriptionFilterAttributeRegex(*args):
     return _RobotRaconteurPython.CreateServiceSubscriptionFilterAttributeRegex(*args)
+
+def CreateServiceSubscriptionFilterAttributeIdentifier(*args):
+    return _RobotRaconteurPython.CreateServiceSubscriptionFilterAttributeIdentifier(*args)
+
+def CreateServiceSubscriptionFilterAttributeCombinedIdentifier(combined_identifier):
+    return _RobotRaconteurPython.CreateServiceSubscriptionFilterAttributeCombinedIdentifier(combined_identifier)
 class vector_subscriptionattribute(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -8893,6 +9253,9 @@ class WrappedServiceSubscription(object):
 
     def UpdateServiceByType(self, *args):
         return _RobotRaconteurPython.WrappedServiceSubscription_UpdateServiceByType(self, *args)
+
+    def SubscribeSubObject(self, *args):
+        return _RobotRaconteurPython.WrappedServiceSubscription_SubscribeSubObject(self, *args)
     __swig_destroy__ = _RobotRaconteurPython.delete_WrappedServiceSubscription
 
 # Register WrappedServiceSubscription in _RobotRaconteurPython:
@@ -9073,6 +9436,38 @@ class WrappedPipeSubscription_send_iterator(object):
 # Register WrappedPipeSubscription_send_iterator in _RobotRaconteurPython:
 _RobotRaconteurPython.WrappedPipeSubscription_send_iterator_swigregister(WrappedPipeSubscription_send_iterator)
 
+class WrappedSubObjectSubscription(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def GetDefaultClient(self):
+        return _RobotRaconteurPython.WrappedSubObjectSubscription_GetDefaultClient(self)
+
+    def TryGetDefaultClient(self):
+        return _RobotRaconteurPython.WrappedSubObjectSubscription_TryGetDefaultClient(self)
+
+    def GetDefaultClientWait(self, timeout=-1):
+        return _RobotRaconteurPython.WrappedSubObjectSubscription_GetDefaultClientWait(self, timeout)
+
+    def TryGetDefaultClientWait(self, timeout=-1):
+        return _RobotRaconteurPython.WrappedSubObjectSubscription_TryGetDefaultClientWait(self, timeout)
+
+    def AsyncGetDefaultClient(self, timeout, handler, id):
+        return _RobotRaconteurPython.WrappedSubObjectSubscription_AsyncGetDefaultClient(self, timeout, handler, id)
+
+    def Close(self):
+        return _RobotRaconteurPython.WrappedSubObjectSubscription_Close(self)
+
+    def GetNode(self):
+        return _RobotRaconteurPython.WrappedSubObjectSubscription_GetNode(self)
+    __swig_destroy__ = _RobotRaconteurPython.delete_WrappedSubObjectSubscription
+
+# Register WrappedSubObjectSubscription in _RobotRaconteurPython:
+_RobotRaconteurPython.WrappedSubObjectSubscription_swigregister(WrappedSubObjectSubscription)
+
 
 def WrappedServiceInfo2SubscriptionServicesToVector(infos):
     return _RobotRaconteurPython.WrappedServiceInfo2SubscriptionServicesToVector(infos)
@@ -9088,6 +9483,72 @@ def WrappedSubscribeServiceByType(*args):
 
 def WrappedSubscribeService(*args):
     return _RobotRaconteurPython.WrappedSubscribeService(*args)
+ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT = _RobotRaconteurPython.ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT
+ServiceSubscriptionManager_CONNECTION_METHOD_URL = _RobotRaconteurPython.ServiceSubscriptionManager_CONNECTION_METHOD_URL
+ServiceSubscriptionManager_CONNECTION_METHOD_TYPE = _RobotRaconteurPython.ServiceSubscriptionManager_CONNECTION_METHOD_TYPE
+class WrappedServiceSubscriptionManagerDetails(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    Name = property(_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_Name_get, _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_Name_set)
+    ConnectionMethod = property(_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_ConnectionMethod_get, _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_ConnectionMethod_set)
+    Urls = property(_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_Urls_get, _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_Urls_set)
+    UrlUsername = property(_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_UrlUsername_get, _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_UrlUsername_set)
+    UrlCredentials = property(_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_UrlCredentials_get, _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_UrlCredentials_set)
+    ServiceTypes = property(_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_ServiceTypes_get, _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_ServiceTypes_set)
+    Filter = property(_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_Filter_get, _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_Filter_set)
+    Enabled = property(_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_Enabled_get, _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_Enabled_set)
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_swiginit(self, _RobotRaconteurPython.new_WrappedServiceSubscriptionManagerDetails(*args))
+    __swig_destroy__ = _RobotRaconteurPython.delete_WrappedServiceSubscriptionManagerDetails
+
+# Register WrappedServiceSubscriptionManagerDetails in _RobotRaconteurPython:
+_RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails_swigregister(WrappedServiceSubscriptionManagerDetails)
+
+class WrappedServiceSubscriptionManager(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _RobotRaconteurPython.WrappedServiceSubscriptionManager_swiginit(self, _RobotRaconteurPython.new_WrappedServiceSubscriptionManager(*args))
+
+    def AddSubscription(self, details):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_AddSubscription(self, details)
+
+    def RemoveSubscription(self, name, close=True):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_RemoveSubscription(self, name, close)
+
+    def EnableSubscription(self, name):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_EnableSubscription(self, name)
+
+    def DisableSubscription(self, name, close=True):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_DisableSubscription(self, name, close)
+
+    def GetSubscription(self, name, force_create=True):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_GetSubscription(self, name, force_create)
+
+    def IsConnected(self, name):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_IsConnected(self, name)
+
+    def IsEnabled(self, name):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_IsEnabled(self, name)
+
+    def Close(self, close_subscriptions=True):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_Close(self, close_subscriptions)
+
+    def GetSubscriptionNames(self):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_GetSubscriptionNames(self)
+
+    def GetSubscriptionDetails(self):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_GetSubscriptionDetails(self)
+
+    def GetNode(self):
+        return _RobotRaconteurPython.WrappedServiceSubscriptionManager_GetNode(self)
+    __swig_destroy__ = _RobotRaconteurPython.delete_WrappedServiceSubscriptionManager
+
+# Register WrappedServiceSubscriptionManager in _RobotRaconteurPython:
+_RobotRaconteurPython.WrappedServiceSubscriptionManager_swigregister(WrappedServiceSubscriptionManager)
+
 @_swig_add_metaclass(_SwigNonDynamicMeta)
 class RRLogRecord(object):
     r"""
@@ -9387,8 +9848,8 @@ class RobotRaconteurNode(object):
     The central node implementation
 
     RobotRaconteurNode implements the current Robot Raconteur instance
-    and acts as the central switchpoint for the instance. The user 
-    registers types, connects clients, registers services, and 
+    and acts as the central switchpoint for the instance. The user
+    registers types, connects clients, registers services, and
     registers transports through this class.
 
     If the current program only needs one instance of RobotRaconteurNode,
@@ -9497,7 +9958,7 @@ class RobotRaconteurNode(object):
 
         Select the "best" URL from a std::vector of candidates
 
-        Service discovery will often return a list of candidate URLs to 
+        Service discovery will often return a list of candidate URLs to
         use to connect to a node. This function uses hueristics to select
         the "best" URL to use. The selection criteria ranks URLs in roughly
         the following order, lower number being better:
@@ -9820,9 +10281,9 @@ class RobotRaconteurNode(object):
         Retrieves the specified environmental variable and sets the log level based
         on one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
 
-        If an invalid value or the variable does not exist, the log level is left unchanged. 
+        If an invalid value or the variable does not exist, the log level is left unchanged.
 
-        :param env_variable_name: The environmental variable to use. Defaults to 
+        :param env_variable_name: The environmental variable to use. Defaults to
          ``ROBOTRACONTEUR_LOG_LEVEL``
         :type env_variable_name: str
         :return: The log level
@@ -9885,8 +10346,8 @@ class RobotRaconteurNode(object):
     	Use discovery to find available services by service type
 
     	Uses discovery to find available services based on a service type. This
-    	service type is the type of the root object, ie 
-    	\"com.robotraconteur.robotics.robot.Robot\". This process will update the detected 
+    	service type is the type of the root object, ie
+    	\"com.robotraconteur.robotics.robot.Robot\". This process will update the detected
     	node cache.
 
     	:param servicetype: The service type to find, ie \"com.robotraconteur.robotics.robot.Robot\"
@@ -9924,13 +10385,13 @@ class RobotRaconteurNode(object):
     	:type timeout: float
     	"""
     	class ServiceInfo2Director(AsyncServiceInfo2VectorReturnDirector):
-    		def __init__(self,handler):			
+    		def __init__(self,handler):
     			super(ServiceInfo2Director,self).__init__()
     			self._handler=handler
 
     		def handler(self,info1):
     			from .RobotRaconteurPythonUtil import ServiceInfo2
-    			ret=[]			
+    			ret=[]
     			for e in info1:
     				ret.append(ServiceInfo2(e))
     			self._handler(ret)
@@ -10015,7 +10476,7 @@ class RobotRaconteurNode(object):
 
     		def handler(self,info1):
     			from .RobotRaconteurPythonUtil import NodeInfo2
-    			ret=[]			
+    			ret=[]
     			for e in info1:
     				ret.append(NodeInfo2(e))
     			self._handler(ret)
@@ -10050,7 +10511,7 @@ class RobotRaconteurNode(object):
 
     		def handler(self,info1):
     			from .RobotRaconteurPythonUtil import NodeInfo2
-    			ret=[]			
+    			ret=[]
     			for e in info1:
     				ret.append(NodeInfo2(e))
     			self._handler(ret)
@@ -10059,7 +10520,7 @@ class RobotRaconteurNode(object):
     		ts2.push_back(t)
 
     	from .RobotRaconteurPythonUtil import async_call, adjust_timeout
-    	return async_call(AsyncWrappedFindNodeByName,(self,name,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,False)	
+    	return async_call(AsyncWrappedFindNodeByName,(self,name,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,False)
 
     def UpdateDetectedNodes(self, schemes):
     	"""
@@ -10108,7 +10569,7 @@ class RobotRaconteurNode(object):
     	information to the parent node, where it is stored. Normally this information
     	will expire after one minute, and needs to be constantly refreshed.
 
-    	This node information is not verified. It is the raw discovery 
+    	This node information is not verified. It is the raw discovery
     	information received by the transports. Verification is done
     	when the node is interrogated for service information.
 
@@ -10158,7 +10619,7 @@ class RobotRaconteurNode(object):
         using the node. It is called automatically by the
         singleton accesors, so the user only needs to call this function
         when not using the singleton. If a custom thread pool is being
-        used, the thread pool factory must be specified before 
+        used, the thread pool factory must be specified before
         calling init.
 
         :param thread_count: The initial number of threads in the thread pool (default 20)
@@ -10255,7 +10716,7 @@ class RobotRaconteurNode(object):
 
         Synchronously disconnects a client connection. Client connections
         are automatically closed by Shutdown(), so this function
-        is optional. 
+        is optional.
 
         :param obj: The root object of the service to disconnect
         """
@@ -10302,7 +10763,7 @@ class RobotRaconteurNode(object):
         If passed a string, the string will be parsed as a service definition file
 
         The service types will be verified. All imported types must be included in the list
-        or already have	been registered for verification to succeed. 
+        or already have	been registered for verification to succeed.
 
         :param d: The service types implementing the types to register
         :type d: Union[List[RobotRaconteur.ServiceDefinition],List[str]]
@@ -10334,14 +10795,14 @@ class RobotRaconteurNode(object):
         """
         Register a list of service type from files
 
-        The file names in file_names must point to plain text \"robdef\" files. The 
+        The file names in file_names must point to plain text \"robdef\" files. The
         file names may leave off the \".robdef\" extension.
 
         The path in the environmental variable ``ROBOTRACONTEUR_ROBDEF_PATH`` will
         be searched if a file is not found in the working directory.
 
         The service types will be verified. All imported types must already have
-        been registered or included in the file_names list for verification to 
+        been registered or included in the file_names list for verification to
         succeed.
 
         If auto_import is True, missing service type files will be loaded automatically from
@@ -10370,7 +10831,7 @@ class RobotRaconteurNode(object):
         """
         Return names of registered service types
 
-        :rtype: List[str] 
+        :rtype: List[str]
         """
         return self._GetRegisteredServiceTypes()
 
@@ -10379,7 +10840,7 @@ class RobotRaconteurNode(object):
         Get the names of service types pulled by a client
 
         Clients pull service definitions from services and create
-        instances of ServiceFactory if a DynamicServiceFactory has 
+        instances of ServiceFactory if a DynamicServiceFactory has
         been configured. GetPulledServiceTypes returns a list of  the
         names of these pulled service types. Use GetPulledServiceType()
         to retrieve the ServiceFactory for a specific type.
@@ -10397,9 +10858,9 @@ class RobotRaconteurNode(object):
         Get a ServiceFactory created from a service type pulled by a client
 
         Clients pull service definitions from services and create
-        instances of ServiceFactory if a DynamicServiceFactory has 
+        instances of ServiceFactory if a DynamicServiceFactory has
         been configured. GetPulledServiceType() returns a
-        generated ServiceFactory. Use GetPulledServiceTypes() to 
+        generated ServiceFactory. Use GetPulledServiceTypes() to
         return a list of available service types.
 
         :param obj: Client object referenece returned by ConnectService() or AsyncConnectService()
@@ -10418,8 +10879,8 @@ class RobotRaconteurNode(object):
 
         :param structtype: The fully qualified type of the structure
         :type structtype: str
-        :param obj: The client connection object reference to be used with this structure.  
-          This is necessary because each client maintains type information.  A client must be provided from 
+        :param obj: The client connection object reference to be used with this structure.
+          This is necessary because each client maintains type information.  A client must be provided from
           which type information can be queried. For services this parameter is unnecessary.
         :return: The new structure instance
         """
@@ -10432,8 +10893,8 @@ class RobotRaconteurNode(object):
 
         :param structtype: The fully qualified type of the structure
         :type structtype: str
-        :param obj: The client connection object reference to be used with this structure.  
-          This is necessary because each client maintains type information.  A client must be provided from 
+        :param obj: The client connection object reference to be used with this structure.
+          This is necessary because each client maintains type information.  A client must be provided from
           which type information can be queried. For services this parameter is unnecessary.
         :return: The constructer for the structure type
         :rtype: Callable[[],<structtype>]
@@ -10449,8 +10910,8 @@ class RobotRaconteurNode(object):
 
         :param type: The fully qualified type of the pod
         :type type: str
-        :param obj: The client connection object reference to be used with this pod type.  
-          This is necessary because each client maintains type information.  A client must be provided from 
+        :param obj: The client connection object reference to be used with this pod type.
+          This is necessary because each client maintains type information.  A client must be provided from
           which type information can be queried. For services this parameter is unnecessary.
         :return: The dtype for the specified podtype
         :rtype: numpy.dtype
@@ -10466,8 +10927,8 @@ class RobotRaconteurNode(object):
 
         :param type: The fully qualified type of the namedarray
         :type type: str
-        :param obj: The client connection object reference to be used with this namedarray type.  
-            This is necessary because each client maintains type information.  A client must be provided from 
+        :param obj: The client connection object reference to be used with this namedarray type.
+            This is necessary because each client maintains type information.  A client must be provided from
             which type information can be queried. For services this parameter is unnecessary.
         :return: The dtype for the specified namedarray
         :rtype: numpy.dtype
@@ -10477,8 +10938,8 @@ class RobotRaconteurNode(object):
 
     def NamedArrayToArray(self,named_array):
         """
-        Converts a namedarray type into a primitive array with the namedarray numeric type. 
-        This function will return an array with one more dimension than the input array, 
+        Converts a namedarray type into a primitive array with the namedarray numeric type.
+        This function will return an array with one more dimension than the input array,
         with the first dimension set to the element count of the named array.
 
         :param namedarray: The namedarray to convert stored in a ``numpy.ndarray``
@@ -10491,10 +10952,10 @@ class RobotRaconteurNode(object):
 
     def ArrayToNamedArray(self,a,named_array_dt):
         """
-        Converts a numeric array into a namedarray. The type of the namedarray is 
+        Converts a numeric array into a namedarray. The type of the namedarray is
         specified using ``dt``, which is returned from GetNamedArrayDType().
-        The input numeric array must have the correct numeric type, and the first dimension 
-        must match the element count of the namedarray. The output array will 
+        The input numeric array must have the correct numeric type, and the first dimension
+        must match the element count of the namedarray. The output array will
         have one fewer dimensions than the input array.
 
         :param a: The numeric array to convert
@@ -10509,7 +10970,7 @@ class RobotRaconteurNode(object):
 
     class ScopedMonitorLock(object):
         """
-        Wrapper for RobotRaconteurNode.MonitorEnter() and 
+        Wrapper for RobotRaconteurNode.MonitorEnter() and
         RobotRaconteurNode.MonitorExit() supporting ``with``
         statement scoping
         """
@@ -10521,7 +10982,7 @@ class RobotRaconteurNode(object):
             Object will be locked once the scoped lock is created.
 
             :param obj: The object to monitor lock
-            :param timeout: The timeout in seconds to acquire the monitor lock, 
+            :param timeout: The timeout in seconds to acquire the monitor lock,
                or -1 for infinite
             :type timeout: float
             """
@@ -10539,7 +11000,7 @@ class RobotRaconteurNode(object):
             """
             Relock the object after calling unlock()
 
-            :param timeou:t The timeout in seconds to acquire the monitor lock, 
+            :param timeou:t The timeout in seconds to acquire the monitor lock,
              or -1 for infinite
             :type timeout: float
             """
@@ -10561,7 +11022,7 @@ class RobotRaconteurNode(object):
 
             The monitor lock is released from the ScopedMonitorLock
             instance. The monitor lock will not be released
-            when the ``with`` block exits. 
+            when the ``with`` block exits.
             """
             self.obj=None
 
@@ -10571,11 +11032,11 @@ class RobotRaconteurNode(object):
 
         Called by clients to request an exclusive lock on a service object and
         all subobjects (\"objrefs\") in the service. The exclusive access lock will
-        prevent other users (\"User\" lock) or client connections  (\"Session\" lock) 
+        prevent other users (\"User\" lock) or client connections  (\"Session\" lock)
         from interacting with the objects.
 
         :param obj: The object to lock. Must be returned by ConnectService or returned by an \"objref\"
-        :param flags: Select either a \"User\" lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or \"Session\" 
+        :param flags: Select either a \"User\" lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or \"Session\"
           lock with RobotRaconteur.RobotRaconteurObjectLockFlags_CLIENT_LOCK
         :return: \"OK\" on success
         :rtype: str
@@ -10609,10 +11070,10 @@ class RobotRaconteurNode(object):
         Monitor locks do not lock any sub-objects (objref)
 
         :param: obj The object to lock
-        :param timeout: The timeout in seconds to acquire the monitor lock, 
+        :param timeout: The timeout in seconds to acquire the monitor lock,
             or -1 for infinite
         """
-        from .RobotRaconteurPythonUtil import adjust_timeout	
+        from .RobotRaconteurPythonUtil import adjust_timeout
         self._MonitorEnter(obj.rrinnerstub,adjust_timeout(timeout))
 
     def MonitorExit(self,obj):
@@ -10636,7 +11097,7 @@ class RobotRaconteurNode(object):
         If ``handler`` is None, returns an awaitable future.
 
         :param obj: The object to lock. Must be returned by ConnectService or returned by an \"objref\"
-        :param flags: Select either a \"User\" lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or \"Session\" 
+        :param flags: Select either a \"User\" lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or \"Session\"
           lock with RobotRaconteur.RobotRaconteurObjectLockFlags_CLIENT_LOCK
         :param handler: Handler to call on completion
         :type handler: Callable[[str,Exception],None]
@@ -10646,9 +11107,9 @@ class RobotRaconteurNode(object):
         from .RobotRaconteurPythonUtil import async_call, adjust_timeout, AsyncStringReturnDirectorImpl
         return async_call(self._AsyncRequestObjectLock,(obj.rrinnerstub,flags,adjust_timeout(timeout)),AsyncStringReturnDirectorImpl,handler)
 
-    def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE): 
+    def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE):
         """
-        Asynchronously release an excluse access lock previously locked 
+        Asynchronously release an excluse access lock previously locked
         with RequestObjectLock() or AsyncRequestObjectLock()
 
         Same as ReleaseObjectLock() but returns asynchronously
@@ -10668,7 +11129,7 @@ class RobotRaconteurNode(object):
         """
         Get the service attributes of a client connection
 
-        Returns the service attributes of a client connected using 
+        Returns the service attributes of a client connected using
         ConnectService()
 
         :param obj: The root object of the client to use to retrieve service attributes
@@ -10767,16 +11228,16 @@ class RobotRaconteurNode(object):
         director.__disown__()
         return self._RegisterService(name,SplitQualifiedName(objecttype)[0],rrobj,securitypolicy)
 
-    NodeID = property(lambda self: self._NodeID(), 
+    NodeID = property(lambda self: self._NodeID(),
         doc = """
         (RobotRaconteur.NodeID) The current NodeID. If one has not been set, one will be automatically generated
-        when read. NodeID cannot be set after it has been configured.	
+        when read. NodeID cannot be set after it has been configured.
         """)
     def SetNodeID(self,nodeid):
         """
         Set the NodeID
 
-        The NodeID must be set before NodeID is called. If an attempt to set 
+        The NodeID must be set before NodeID is called. If an attempt to set
         the NodeID after NodeID has been called, an InvalidOperationException
         will be thrown.
 
@@ -10788,13 +11249,13 @@ class RobotRaconteurNode(object):
         self._SetNodeID(nodeid)
     NodeName =property(lambda self: self._NodeName(),
         doc = """
-        (str) The current NodeName. If one has not been set, it will be the empty string. Cannot be set after it has been configured.	
+        (str) The current NodeName. If one has not been set, it will be the empty string. Cannot be set after it has been configured.
         """)
     def SetNodeName(self,nodename):
         """
         Set the NodeName
 
-        The NodeName must be set before calling NodeName If an attempt to set 
+        The NodeName must be set before calling NodeName If an attempt to set
         the NodeName after NodeName has been called, an InvalidOperationException
         will be thrown.
 
@@ -10862,8 +11323,8 @@ class RobotRaconteurNode(object):
 
         :param servicetype: The name of the service definition
         :type servicetype: str
-        :param obj: The client connection object reference to be used with to retrive service types.  
-                This is necessary because each client maintains type information.  A client must be provided from 
+        :param obj: The client connection object reference to be used with to retrive service types.
+                This is necessary because each client maintains type information.  A client must be provided from
                 which type information can be queried. For services this parameter is unnecessary.
         :rtype: Dict[str,Any]
         """
@@ -10876,13 +11337,13 @@ class RobotRaconteurNode(object):
 
     def GetExceptionType(self, exceptionname, obj=None):
         """
-        Returns a reference to the exception class of fully qualified type ``exceptiontype``. 
+        Returns a reference to the exception class of fully qualified type ``exceptiontype``.
         Note that this is a class reference, not an instance.
 
         :param exceptionname: The fully qualified name of the exception type
         :type exceptionname: str
-        :param obj: The client connection object reference to be used with to retrive service types.  
-                This is necessary because each client maintains type information.  A client must be provided from 
+        :param obj: The client connection object reference to be used with to retrive service types.
+                This is necessary because each client maintains type information.  A client must be provided from
                 which type information can be queried. For services this parameter is unnecessary.
         :return: Exception type
         """
@@ -10893,7 +11354,7 @@ class RobotRaconteurNode(object):
             d=self.GetServiceType(t[0])
         else:
             d=self.GetPulledServiceType(obj,t[0])
-        if (not any(x.Name == t[1] for x in d.Exceptions)): 
+        if (not any(x.Name == t[1] for x in d.Exceptions)):
             raise Exception('Invalid exception type')
         return GetExceptionType(exceptionname)
 
@@ -11045,7 +11506,7 @@ class RobotRaconteurNode(object):
         The current node time
 
         UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
-        of the system clock being updated by the user. For a real-time systems, 
+        of the system clock being updated by the user. For a real-time systems,
     	this is unaccetpable and can lead to system instability. The "node time" used by Robot Raconteur
     	is synchronized to UTC at startup, and is then steadily increasing from that initial time.
     	It will ignore changes to the system clock, and will also ignore corrections like leap
@@ -11083,7 +11544,7 @@ class RobotRaconteurNode(object):
         Shuts down the node. Called automatically by ClientNodeSetup and ServerNodeSetup
 
         Shutdown must be called before program exit to avoid segfaults and other undefined
-        behavior. The singleton node is automatically shut down in Python. The use of 
+        behavior. The singleton node is automatically shut down in Python. The use of
         ClientNodeSetup and ServerNodeSetup is recommended to automate
         the node lifecycle. Calling this function does the following:
         1. Closes all services and releases all service objects
@@ -11168,7 +11629,7 @@ def RobotRaconteurNode_SelectRemoteNodeURL(urls):
 
     Select the "best" URL from a std::vector of candidates
 
-    Service discovery will often return a list of candidate URLs to 
+    Service discovery will often return a list of candidate URLs to
     use to connect to a node. This function uses hueristics to select
     the "best" URL to use. The selection criteria ranks URLs in roughly
     the following order, lower number being better:
@@ -11492,10 +11953,10 @@ class BroadcastDownsampler(object):
     within a sensor or control loop, with the rate set by the specific device producing
     the updates. Some clients may require less frequent data, and may run in to bandwidth
     or processing issues if the data is sent at the full update rate. The BroadcastDownsampler
-    is used to implement broadcaster predicates that will drop packets. 
+    is used to implement broadcaster predicates that will drop packets.
     Clients specify how many packets they want dropped between each packet sent. For instance,
     a downsample of 0 means that no packets are dropped. A downsample of 1 will drop every other
-    packet. A downsample of two will drop 2 packets between sending 1 packet, etc. The 
+    packet. A downsample of two will drop 2 packets between sending 1 packet, etc. The
     downsample level for each client is set using SetClientDownsample(). This should be
     made available to the client using a property member.
 
@@ -11509,8 +11970,8 @@ class BroadcastDownsampler(object):
     broadcasting loop. Use BroadcastDownsamplerStep for automatic
     management in the loop.
 
-    See com.robotraconteur.isoch.IsochDevice for the standard use 
-    of downsampling. 
+    See com.robotraconteur.isoch.IsochDevice for the standard use
+    of downsampling.
 
     """
 
@@ -11527,7 +11988,7 @@ class BroadcastDownsampler(object):
         :param default_downsample: The default downsample for clients
         :type default_downsample: int
         """
-    #This is a shadowed function		
+    #This is a shadowed function
         _RobotRaconteurPython.BroadcastDownsampler_swiginit(self, _RobotRaconteurPython.new_BroadcastDownsampler())
         self._Init(context, default_downsample)
 

@@ -48,6 +48,10 @@ public class Timer {
     RobotRaconteurJavaJNI.Timer_stop(swigCPtr, this);
   }
 
+  public void tryStop() {
+    RobotRaconteurJavaJNI.Timer_tryStop(swigCPtr, this);
+  }
+
   public int getPeriod() {
     int t= RobotRaconteurJavaJNI.Timer_getPeriod(swigCPtr, this);
     return t;

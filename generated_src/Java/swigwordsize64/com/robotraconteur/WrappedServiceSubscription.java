@@ -171,4 +171,14 @@ public class WrappedServiceSubscription {
     RobotRaconteurJavaJNI.WrappedServiceSubscription_updateServiceByType__SWIG_1(swigCPtr, this, vectorstring.getCPtr(service_types), service_types);
   }
 
+  public WrappedSubObjectSubscription subscribeSubObject(String service_path, String objecttype) {
+    long cPtr = RobotRaconteurJavaJNI.WrappedServiceSubscription_subscribeSubObject__SWIG_0(swigCPtr, this, service_path, objecttype);
+    return (cPtr == 0) ? null : new WrappedSubObjectSubscription(cPtr, true);
+  }
+
+  public WrappedSubObjectSubscription subscribeSubObject(String service_path) {
+    long cPtr = RobotRaconteurJavaJNI.WrappedServiceSubscription_subscribeSubObject__SWIG_1(swigCPtr, this, service_path);
+    return (cPtr == 0) ? null : new WrappedSubObjectSubscription(cPtr, true);
+  }
+
 }
