@@ -687,6 +687,48 @@ void ServiceSubscription::Close()
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription closed");
 }
 
+void ServiceSubscription::SoftClose()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+
+    service_url.clear();
+    service_url_username.clear();
+    service_url_credentials.reset();
+    use_service_url = true;
+    service_types.clear();
+    filter.reset();
+
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (n)
+    {
+
+        BOOST_FOREACH (RR_SHARED_PTR<detail::ServiceSubscription_client>& c, clients | boost::adaptors::map_values)
+        {
+            c->claimed.data() = false;
+            if (c->retry_timer)
+            {
+                c->retry_timer->Cancel();
+                c->retry_timer.reset();
+            }
+            RR_SHARED_PTR<RRObject> c2 = c->client.lock();
+            if (!c2)
+                continue;
+            try
+            {
+                n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
+            }
+            catch (std::exception&)
+            {}
+        }
+    }
+
+    clients.clear();
+
+    RR_SHARED_PTR<detail::Discovery> d = parent.lock();
+
+    ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "ServiceSubscription soft closed");
+}
+
 RR_SHARED_PTR<RobotRaconteurNode> ServiceSubscription::GetNode()
 {
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
@@ -812,10 +854,29 @@ void ServiceSubscription::Init(const std::vector<std::string>& service_types,
     this->active = true;
     this->service_types = service_types;
     this->filter = filter;
+    this->use_service_url = false;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
         node, Subscription, -1,
         "ServiceSubscription initialized for service types: " << boost::join(service_types, ", "));
+}
+
+std::string ServiceSubscription_ConnectServiceType(RR_WEAK_PTR<RobotRaconteurNode> node,
+                                                   const std::string& service_type_in)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+    {
+        return service_type_in;
+    }
+
+    // If we are using a dynamic service factory, we don't want to specify the service type
+
+    if (n->GetDynamicServiceFactory())
+    {
+        return "";
+    }
+    return service_type_in;
 }
 
 void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, boost::string_ref username,
@@ -881,7 +942,7 @@ void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, bo
         n->AsyncConnectService(url, c2->username, c2->credentials,
                                boost::bind(&ServiceSubscription::ClientEvent, weak_this, RR_BOOST_PLACEHOLDERS(_1),
                                            RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
-                               objecttype,
+                               ServiceSubscription_ConnectServiceType(node, objecttype.to_string()),
                                boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, url),
                                boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
@@ -973,7 +1034,7 @@ void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorag
                                        boost::bind(&ServiceSubscription::ClientEvent, weak_this,
                                                    RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
                                                    RR_BOOST_PLACEHOLDERS(_3), c2),
-                                       client_service_type,
+                                       ServiceSubscription_ConnectServiceType(node, client_service_type),
                                        boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                                    RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, urls),
                                        boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
@@ -1174,7 +1235,7 @@ void ServiceSubscription::ConnectRetry2(const RR_SHARED_PTR<detail::ServiceSubsc
         n->AsyncConnectService(c2->urls, c2->username, c2->credentials,
                                boost::bind(&ServiceSubscription::ClientEvent, weak_this, RR_BOOST_PLACEHOLDERS(_1),
                                            RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3), c2),
-                               c2->service_type,
+                               ServiceSubscription_ConnectServiceType(node, c2->service_type),
                                boost::bind(&ServiceSubscription::ClientConnected, shared_from_this(),
                                            RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), c2, c2->urls),
                                boost::numeric_cast<int32_t>(n->GetRequestTimeout() * 2));
@@ -1757,6 +1818,15 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
         n->CreateTimer(boost::posix_time::milliseconds(250),
                        boost::bind(&detail::Discovery::DoUpdateAllDetectedServices, d, shared_from_this()));
     t->Start();
+}
+
+RR_SHARED_PTR<SubObjectSubscription> ServiceSubscription::SubscribeSubObject(boost::string_ref servicepath,
+                                                                             boost::string_ref objecttype)
+{
+    RR_SHARED_PTR<SubObjectSubscription> o =
+        RR_MAKE_SHARED<SubObjectSubscription>(shared_from_this(), servicepath.to_string(), objecttype.to_string());
+    o->Init();
+    return o;
 }
 
 // class WireSubscriptionBase
@@ -3334,6 +3404,790 @@ ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeRegex
 {
     boost::regex r(regex_value.begin(), regex_value.end());
     return ServiceSubscriptionFilterAttribute(name, r);
+}
+
+template <typename T>
+static void IdentifierToRegex_case_insensitive_uuid_match(const T& uuid_segment, std::ostream& o)
+{
+#if BOOST_VERSION >= 106000
+    BOOST_FOREACH (char c, uuid_segment)
+#else
+    std::string uuid_segment_str = uuid_segment.str();
+    BOOST_FOREACH (char c, uuid_segment_str)
+#endif
+    {
+        if (boost::is_alpha()(c))
+        {
+            o << '[' << static_cast<char>(std::tolower(c)) << static_cast<char>(std::toupper(c)) << ']';
+        }
+        else
+        {
+            o << c;
+        }
+    }
+}
+
+template <typename T>
+static bool IdentifierToRegex_uuid_all_zero(const T& uuid_segment)
+{
+#if BOOST_VERSION >= 106000
+    BOOST_FOREACH (char c, uuid_segment)
+#else
+    std::string uuid_segment_str = uuid_segment.str();
+    BOOST_FOREACH (char c, uuid_segment_str)
+#endif
+    {
+        if (c != '0')
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+static boost::regex IdentifierToRegex(boost::string_ref name, boost::string_ref uuid_string)
+{
+    if (name.empty() && uuid_string.empty())
+    {
+        throw InvalidArgumentException("Name and UUID string cannot both be empty");
+    }
+
+    const std::string name_regex_str =
+        "(?:[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)*";
+    const std::string uuid_regex_str =
+        "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?";
+
+    std::stringstream ident_o;
+    static boost::regex name_regex(name_regex_str);
+    if (!name.empty())
+    {
+        if (!boost::regex_match(name.begin(), name.end(), name_regex))
+        {
+            throw InvalidArgumentException("Invalid identifier name");
+        }
+
+        ident_o << name;
+    }
+    else
+    {
+        ident_o << "(?:" << name_regex_str << "\\|)?";
+    }
+
+    static boost::regex uuid_regex(uuid_regex_str);
+    bool zero_uuid = true;
+    if (!uuid_string.empty())
+    {
+        boost::match_results<boost::string_ref::const_iterator> uuid_match;
+        if (!boost::regex_match(uuid_string.begin(), uuid_string.end(), uuid_match, uuid_regex))
+        {
+            throw InvalidArgumentException("Invalid identifier UUID");
+        }
+
+        zero_uuid = IdentifierToRegex_uuid_all_zero(uuid_match[1]) && IdentifierToRegex_uuid_all_zero(uuid_match[2]) &&
+                    IdentifierToRegex_uuid_all_zero(uuid_match[3]) && IdentifierToRegex_uuid_all_zero(uuid_match[4]) &&
+                    IdentifierToRegex_uuid_all_zero(uuid_match[5]);
+
+        if (!zero_uuid)
+        {
+            if (!name.empty())
+            {
+                ident_o << "\\|";
+            }
+            ident_o << "\\{?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[1], ident_o);
+            ident_o << "-?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[2], ident_o);
+            ident_o << "-?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[3], ident_o);
+            ident_o << "-?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[4], ident_o);
+            ident_o << "-?";
+            IdentifierToRegex_case_insensitive_uuid_match(uuid_match[5], ident_o);
+            ident_o << "\\}?";
+        }
+    }
+
+    if (zero_uuid)
+    {
+        if (name.empty())
+        {
+            throw InvalidArgumentException("Name and UUID string cannot both be empty");
+        }
+        ident_o << "(?:\\|" << uuid_regex_str << ")?";
+    }
+
+    return boost::regex(ident_o.str());
+}
+
+static boost::regex IdentifierToRegex(boost::string_ref combined_string)
+{
+    const std::string name_regex_str =
+        "(?:[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?)*";
+    const std::string uuid_regex_str =
+        "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?";
+
+    const std::string combined_regex_str = "(" + name_regex_str + ")\\|(" + uuid_regex_str + ")";
+
+    if (combined_string.empty())
+    {
+        return IdentifierToRegex("", "");
+    }
+
+    static boost::regex combined_regex(combined_regex_str);
+    boost::match_results<boost::string_ref::const_iterator> combined_match;
+    if (boost::regex_match(combined_string.begin(), combined_string.end(), combined_match, combined_regex))
+    {
+        std::string name_sub = combined_match[1];
+        std::string uuid_sub = combined_match[2];
+        return IdentifierToRegex(name_sub, uuid_sub);
+    }
+
+    if (boost::regex_match(combined_string.begin(), combined_string.end(), boost::regex(uuid_regex_str)))
+    {
+        return IdentifierToRegex("", combined_string);
+    }
+
+    return IdentifierToRegex(combined_string, "");
+}
+
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeCombinedIdentifier(
+    boost::string_ref combined_identifier)
+{
+    return ServiceSubscriptionFilterAttribute(IdentifierToRegex(combined_identifier));
+}
+
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeIdentifier(boost::string_ref identifier_name,
+                                                                                      boost::string_ref uuid_string)
+{
+    return ServiceSubscriptionFilterAttribute(IdentifierToRegex(identifier_name, uuid_string));
+}
+
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeIdentifier(boost::string_ref name,
+                                                                                      boost::string_ref identifier_name,
+                                                                                      boost::string_ref uuid_string)
+{
+    return ServiceSubscriptionFilterAttribute(name, IdentifierToRegex(identifier_name, uuid_string));
+}
+
+// SubObjectSubscription
+
+void SubObjectSubscription::Init() {}
+
+void SubObjectSubscription::Close() {}
+
+SubObjectSubscription::SubObjectSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent,
+                                             boost::string_ref servicepath, boost::string_ref objecttype)
+{
+    this->parent = parent;
+    this->node = parent->GetNode();
+    this->servicepath = RR_MOVE(servicepath.to_string());
+    this->objecttype = RR_MOVE(objecttype.to_string());
+}
+
+RR_SHARED_PTR<RobotRaconteurNode> SubObjectSubscription::GetNode()
+{
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+        throw InvalidOperationException("Node has been released");
+    return n;
+}
+
+RR_SHARED_PTR<RRObject> SubObjectSubscription::GetDefaultClientBase()
+{
+    RR_SHARED_PTR<ServiceSubscription> p = parent.lock();
+    if (!p)
+        throw InvalidOperationException("ServiceSubscription has been released");
+
+    RR_SHARED_PTR<RRObject> client = p->GetDefaultClientBase();
+    RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
+    if (!s)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
+        throw InvalidArgumentException("Internal error: ServiceStub cast failed");
+    }
+
+    std::string service_path1 = servicepath;
+
+    if (boost::starts_with(service_path1, "*."))
+    {
+        boost::replace_first(service_path1, "*", s->GetContext()->GetServiceName());
+    }
+
+    RR_SHARED_PTR<ClientContext> c = s->GetContext();
+    return c->FindObjRef(service_path1, objecttype);
+}
+bool SubObjectSubscription::TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out)
+{
+    RR_SHARED_PTR<ServiceSubscription> p = parent.lock();
+    if (!p)
+        return false;
+
+    RR_SHARED_PTR<RRObject> client = p->GetDefaultClientBase();
+    RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
+    if (!s)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
+        return false;
+    }
+
+    RR_SHARED_PTR<ClientContext> c = s->GetContext();
+    std::string service_path1 = servicepath;
+    if (boost::starts_with(service_path1, "*."))
+    {
+        boost::replace_first(service_path1, "*", s->GetContext()->GetServiceName());
+    }
+    try
+    {
+        client_out = c->FindObjRef(service_path1, objecttype);
+        return true;
+    }
+    catch (std::exception& exp2)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                           "ServiceSubscription FindObjRef failed: " << exp2.what());
+        return false;
+    }
+}
+
+RR_SHARED_PTR<RRObject> SubObjectSubscription::GetDefaultClientWaitBase(int32_t timeout)
+{
+    RR_SHARED_PTR<ServiceSubscription> p = parent.lock();
+    if (!p)
+        throw InvalidOperationException("ServiceSubscription has been released");
+
+    RR_SHARED_PTR<RRObject> client = p->GetDefaultClientWaitBase(timeout);
+    RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
+    if (!s)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
+        throw InvalidArgumentException("Internal error: ServiceStub cast failed");
+    }
+
+    std::string service_path1 = servicepath;
+
+    if (boost::starts_with(service_path1, "*."))
+    {
+        boost::replace_first(service_path1, "*", s->GetContext()->GetServiceName());
+    }
+
+    RR_SHARED_PTR<ClientContext> c = s->GetContext();
+    return c->FindObjRef(service_path1, objecttype);
+}
+
+bool SubObjectSubscription::TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>& client_out, int32_t timeout)
+{
+    RR_SHARED_PTR<ServiceSubscription> p = parent.lock();
+    if (!p)
+        return false;
+
+    RR_SHARED_PTR<RRObject> client = p->GetDefaultClientWaitBase(timeout);
+    RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
+    if (!s)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
+        return false;
+    }
+
+    RR_SHARED_PTR<ClientContext> c = s->GetContext();
+
+    std::string service_path1 = servicepath;
+
+    if (boost::starts_with(service_path1, "*."))
+    {
+        boost::replace_first(service_path1, "*", s->GetContext()->GetServiceName());
+    }
+    try
+    {
+        client_out = c->FindObjRef(service_path1, objecttype);
+        return true;
+    }
+    catch (std::exception& exp)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                           "ServiceSubscription FindObjRef failed: " << exp.what());
+        return false;
+    }
+}
+
+static void SubObjectSubscription_AsyncGetDefaultClientBase2(
+    const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err,
+    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+    RR_WEAK_PTR<RobotRaconteurNode> node, int32_t timeout, const std::string& servicepath,
+    const std::string& objecttype)
+{
+    if (err)
+    {
+        detail::InvokeHandlerWithException(node, handler, err);
+        return;
+    }
+    try
+    {
+        RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
+        if (!client)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
+            detail::InvokeHandlerWithException(
+                node, handler, RR_MAKE_SHARED<InvalidOperationException>("Internal error: ServiceStub cast failed"));
+            return;
+        }
+
+        RR_SHARED_PTR<ClientContext> c = s->GetContext();
+        std::string service_path1 = servicepath;
+
+        if (boost::starts_with(service_path1, "*."))
+        {
+            boost::replace_first(service_path1, "*", s->GetContext()->GetServiceName());
+        }
+
+        c->AsyncFindObjRef(service_path1, objecttype,
+                           boost::bind(handler, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), timeout);
+    }
+    catch (std::exception& exp)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                           "ServiceSubscription FindObjRef failed: " << exp.what());
+        detail::InvokeHandlerWithException(node, handler, exp);
+        return;
+    }
+}
+
+void SubObjectSubscription::AsyncGetDefaultClientBase(
+    boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+    int32_t timeout)
+{
+    RR_SHARED_PTR<ServiceSubscription> p = parent.lock();
+    if (!p)
+    {
+        throw InvalidOperationException("ServiceSubscription has been released");
+    }
+
+    p->AsyncGetDefaultClientBase(boost::bind(&SubObjectSubscription_AsyncGetDefaultClientBase2,
+                                             RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), handler, node,
+                                             timeout, servicepath, objecttype),
+                                 timeout);
+}
+
+// ServiceSubscriptionManager
+
+ServiceSubscriptionManagerDetails::ServiceSubscriptionManagerDetails()
+{
+    ConnectionMethod = ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT;
+    Enabled = false;
+}
+
+ServiceSubscriptionManagerDetails::ServiceSubscriptionManagerDetails(
+    const boost::string_ref& Name, ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod,
+    const std::vector<std::string>& Urls, const boost::string_ref& UrlUsername,
+    const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& UrlCredentials, const std::vector<std::string>& ServiceTypes,
+    const RR_SHARED_PTR<ServiceSubscriptionFilter>& Filter, bool Enabled)
+    : Name(RR_MOVE(Name.to_string())), ConnectionMethod(ConnectionMethod), Urls(Urls),
+      UrlUsername(RR_MOVE(UrlUsername.to_string())), UrlCredentials(UrlCredentials), ServiceTypes(ServiceTypes),
+      Filter(Filter), Enabled(Enabled)
+{}
+
+ServiceSubscriptionManager::ServiceSubscriptionManager(const RR_SHARED_PTR<RobotRaconteurNode>& node)
+{
+    this->node = node;
+}
+
+ServiceSubscriptionManager::~ServiceSubscriptionManager() {}
+
+RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::CreateSubscription(
+    const ServiceSubscriptionManagerDetails& details)
+{
+    // CALL LOCKED!
+    switch (details.ConnectionMethod)
+    {
+    case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT:
+    case ServiceSubscriptionManager_CONNECTION_METHOD_URL:
+        break;
+    case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE:
+        if (details.ServiceTypes.empty())
+        {
+            throw InvalidArgumentException(
+                "Service types must be specified for ServiceSubscriptionManager connection method type");
+        }
+        break;
+    default:
+        throw InvalidArgumentException("Invalid connection method");
+    }
+
+    RR_SHARED_PTR<RobotRaconteurNode> n = GetNode();
+    RR_SHARED_PTR<detail::Discovery> d = n->m_Discovery;
+    RR_SHARED_PTR<ServiceSubscription> sub;
+    if ((details.Urls.empty() && details.ServiceTypes.empty()) || !details.Enabled)
+    {
+        // Creating an uninitialized subscription with no URLs or service types
+        sub = RR_MAKE_SHARED<ServiceSubscription>(d);
+        switch (details.ConnectionMethod)
+        {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT:
+            if (!details.Urls.empty())
+            {
+                sub->use_service_url = true;
+            }
+            break;
+        case ServiceSubscriptionManager_CONNECTION_METHOD_URL:
+            sub->use_service_url = true;
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        switch (details.ConnectionMethod)
+        {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT: {
+            if (!details.Urls.empty())
+            {
+                sub = d->SubscribeService(details.Urls, details.UrlUsername, details.UrlCredentials);
+            }
+            else
+            {
+                sub = d->SubscribeServiceByType(details.ServiceTypes, details.Filter);
+            }
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
+            sub = d->SubscribeServiceByType(details.ServiceTypes, details.Filter);
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_URL: {
+            sub = d->SubscribeService(details.Urls, details.UrlUsername, details.UrlCredentials);
+            break;
+        }
+        default:
+            throw InvalidArgumentException("Invalid connection method");
+        }
+    }
+    return sub;
+}
+
+void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionManager_subscription& sub,
+                                                    const ServiceSubscriptionManagerDetails& details, bool close)
+{
+    // CALL LOCKED!
+
+    if (details.Name.empty())
+    {
+        throw InvalidArgumentException("Subscription name must be specified");
+    }
+
+    switch (details.ConnectionMethod)
+    {
+    case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT:
+    case ServiceSubscriptionManager_CONNECTION_METHOD_URL:
+        break;
+    case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
+        if (details.ServiceTypes.empty())
+        {
+            throw InvalidArgumentException(
+                "Service types must be specified for ServiceSubscriptionManager connection method type");
+        }
+    }
+    break;
+    default:
+        throw InvalidArgumentException("Invalid connection method");
+    }
+
+    RR_SHARED_PTR<RobotRaconteurNode> n = GetNode();
+    RR_SHARED_PTR<detail::Discovery> d = n->m_Discovery;
+
+    ServiceSubscriptionManagerDetails old_details = sub.details;
+    sub.details = details;
+
+    if (sub.details.Enabled && ((sub.details.ConnectionMethod == ServiceSubscriptionManager_CONNECTION_METHOD_URL) &&
+                                sub.details.Urls.empty()))
+    {
+        sub.details.Enabled = false;
+    }
+
+    if (sub.details.Enabled &&
+        ((sub.details.ConnectionMethod == ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT) &&
+         (sub.details.Urls.empty() && sub.details.ServiceTypes.empty())))
+    {
+        sub.details.Enabled = false;
+    }
+
+    bool sub_running = false;
+    {
+        boost::mutex::scoped_lock lock(sub.subscription->this_lock);
+        sub_running = !sub.subscription->use_service_url ||
+                      (sub.subscription->use_service_url && !sub.subscription->service_url.empty());
+    }
+
+    if (sub_running && !sub.details.Enabled)
+    {
+        if (close)
+        {
+            sub.subscription->SoftClose();
+        }
+        return;
+    }
+
+    if (((old_details.ConnectionMethod != sub.details.ConnectionMethod) ||
+         (old_details.ConnectionMethod == ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT ||
+          sub.details.ConnectionMethod == ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT)) ||
+        !sub_running)
+    {
+        if (sub_running)
+        {
+            sub.subscription->SoftClose();
+        }
+
+        switch (sub.details.ConnectionMethod)
+        {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT: {
+            if (!sub.details.Urls.empty())
+            {
+                sub.subscription->InitServiceURL(sub.details.Urls, sub.details.UrlUsername, sub.details.UrlCredentials);
+            }
+            else
+            {
+                sub.subscription->Init(sub.details.ServiceTypes, sub.details.Filter);
+            }
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_URL: {
+            sub.subscription->InitServiceURL(sub.details.Urls, sub.details.UrlUsername, sub.details.UrlCredentials);
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
+            sub.subscription->Init(sub.details.ServiceTypes, sub.details.Filter);
+            break;
+        }
+        default:
+            throw InvalidArgumentException("Invalid connection method");
+        }
+    }
+    else
+    {
+        switch (sub.details.ConnectionMethod)
+        {
+        case ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT: {
+            if (!sub.details.Urls.empty())
+            {
+                sub.subscription->UpdateServiceURL(sub.details.Urls, sub.details.UrlUsername,
+                                                   sub.details.UrlCredentials);
+            }
+            else
+            {
+                sub.subscription->UpdateServiceByType(sub.details.ServiceTypes, sub.details.Filter);
+            }
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_URL: {
+            sub.subscription->UpdateServiceURL(sub.details.Urls, sub.details.UrlUsername, sub.details.UrlCredentials);
+            break;
+        }
+        case ServiceSubscriptionManager_CONNECTION_METHOD_TYPE: {
+            sub.subscription->UpdateServiceByType(sub.details.ServiceTypes, sub.details.Filter);
+            break;
+        }
+        default:
+            throw InvalidArgumentException("Invalid connection method");
+        }
+    }
+
+    RR_SHARED_PTR<ThreadPool> tp;
+    if (n->TryGetThreadPool(tp))
+    {
+        tp->TryPost(boost::bind(&detail::Discovery::DoUpdateAllDetectedServices, d, sub.subscription));
+    }
+}
+
+void ServiceSubscriptionManager::Init(const std::vector<ServiceSubscriptionManagerDetails>& details)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    BOOST_FOREACH (const ServiceSubscriptionManagerDetails& e, details)
+    {
+        RR_SHARED_PTR<ServiceSubscription> sub = CreateSubscription(e);
+        detail::ServiceSubscriptionManager_subscription s;
+        s.subscription = sub;
+        s.details = e;
+        subscriptions.insert(std::make_pair(e.Name, s));
+    }
+}
+
+void ServiceSubscriptionManager::AddSubscription(const ServiceSubscriptionManagerDetails& details)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    RR_SHARED_PTR<ServiceSubscription> sub = CreateSubscription(details);
+    detail::ServiceSubscriptionManager_subscription s;
+    s.subscription = sub;
+    s.details = details;
+    subscriptions.insert(std::make_pair(details.Name, s));
+}
+
+void ServiceSubscriptionManager::RemoveSubscription(const boost::string_ref& name, bool close)
+{
+    RR_SHARED_PTR<ServiceSubscription> sub;
+    {
+        boost::mutex::scoped_lock lock(this_lock);
+        boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+            subscriptions.find(name.to_string());
+        if (e == subscriptions.end() || !e->second.subscription)
+        {
+            return;
+        }
+
+        sub = e->second.subscription;
+        subscriptions.erase(e);
+    }
+    if (close && sub)
+    {
+        try
+        {
+            sub->Close();
+        }
+        catch (std::exception& exp)
+        {
+            ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                               "ServiceSubscriptionManager close failed: " << exp.what());
+        }
+    }
+}
+
+void ServiceSubscriptionManager::EnableSubscription(const boost::string_ref& name)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+        subscriptions.find(name.to_string());
+    if (e == subscriptions.end() || !e->second.subscription)
+    {
+        return;
+    }
+
+    e->second.details.Enabled = true;
+    UpdateSubscription(e->second, e->second.details);
+}
+
+void ServiceSubscriptionManager::DisableSubscription(const boost::string_ref& name, bool close)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+        subscriptions.find(name.to_string());
+    if (e == subscriptions.end() || !e->second.subscription)
+    {
+        return;
+    }
+
+    e->second.details.Enabled = false;
+    UpdateSubscription(e->second, e->second.details, close);
+}
+
+RR_SHARED_PTR<ServiceSubscription> ServiceSubscriptionManager::GetSubscription(const boost::string_ref& name,
+                                                                               bool force_create)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+        subscriptions.find(name.to_string());
+    if (e != subscriptions.end())
+    {
+        return e->second.subscription;
+    }
+
+    if (!force_create)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                           "ServiceSubscriptionManager subscription not found: " << name);
+        throw InvalidArgumentException("Subscription not found");
+    }
+
+    ServiceSubscriptionManagerDetails details;
+    details.Name = name.to_string();
+    details.ConnectionMethod = ServiceSubscriptionManager_CONNECTION_METHOD_URL;
+    details.Enabled = false;
+
+    RR_SHARED_PTR<ServiceSubscription> sub = CreateSubscription(details);
+    detail::ServiceSubscriptionManager_subscription s;
+    s.subscription = sub;
+    s.details = details;
+    subscriptions.insert(std::make_pair(details.Name, s));
+    return sub;
+}
+
+bool ServiceSubscriptionManager::IsConnected(const boost::string_ref& name)
+{
+    RR_SHARED_PTR<ServiceSubscription> sub = GetSubscription(name, false);
+    if (!sub)
+    {
+        return false;
+    }
+
+    RR_SHARED_PTR<RRObject> client;
+    return sub->TryGetDefaultClient(client);
+}
+
+bool ServiceSubscriptionManager::IsEnabled(const boost::string_ref& name)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription>::iterator e =
+        subscriptions.find(name.to_string());
+    if (e == subscriptions.end() || !e->second.subscription)
+    {
+        return false;
+    }
+
+    return e->second.details.Enabled;
+}
+
+void ServiceSubscriptionManager::Close(bool close_subscriptions)
+{
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription> subscriptions2;
+    {
+        boost::mutex::scoped_lock lock(this_lock);
+        subscriptions2.swap(subscriptions);
+    }
+    if (close_subscriptions)
+    {
+        BOOST_FOREACH (detail::ServiceSubscriptionManager_subscription& e, subscriptions2 | boost::adaptors::map_values)
+        {
+            if (e.subscription)
+            {
+                try
+                {
+                    e.subscription->Close();
+                }
+                catch (std::exception& exp)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1,
+                                                       "ServiceSubscriptionManager close failed: " << exp.what());
+                }
+            }
+        }
+    }
+
+    subscriptions2.clear();
+}
+
+RR_SHARED_PTR<RobotRaconteurNode> ServiceSubscriptionManager::GetNode()
+{
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (!n)
+        throw InvalidOperationException("Node has been released");
+    return n;
+}
+
+std::vector<std::string> ServiceSubscriptionManager::GetSubscriptionNames()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    std::vector<std::string> o;
+    boost::copy(subscriptions | boost::adaptors::map_keys, std::back_inserter(o));
+    return o;
+}
+
+std::vector<ServiceSubscriptionManagerDetails> ServiceSubscriptionManager::GetSubscriptionDetails()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    std::vector<ServiceSubscriptionManagerDetails> o;
+    BOOST_FOREACH (const detail::ServiceSubscriptionManager_subscription& s,
+                   subscriptions | boost::adaptors::map_values)
+    {
+        o.push_back(s.details);
+    }
+    return o;
 }
 
 } // namespace RobotRaconteur

@@ -42,6 +42,7 @@ class PipeSubscription_connection;
 class WireSubscription_send_iterator;
 class PipeSubscription_send_iterator;
 class ServiceSubscription_custom_member_subscribers;
+class ServiceSubscriptionManager_subscription;
 } // namespace detail
 
 class ROBOTRACONTEUR_CORE_API WireConnectionBase;
@@ -57,6 +58,8 @@ class PipeEndpoint;
 class ROBOTRACONTEUR_CORE_API PipeSubscriptionBase;
 template <typename T>
 class PipeSubscription;
+class ROBOTRACONTEUR_CORE_API SubObjectSubscription;
+class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager;
 
 /**
  * @brief Subscription filter node information
@@ -206,6 +209,37 @@ CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref regex_value);
  */
 ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute
 CreateServiceSubscriptionFilterAttributeRegex(boost::string_ref name, boost::string_ref regex_value);
+
+/**
+ * @brief Create a ServiceSubscriptionFilterAttribute from a combined identifier string
+ *
+ * The identifier may be a name, UUID, or a combination of both using a "|" to separate the name and UUID.
+ *
+ * @param value The identifier as a string
+ * @return ServiceSubscriptionFilterAttribute The created attribute
+ */
+ROBOTRACONTEUR_CORE_API
+ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeCombinedIdentifier(
+    boost::string_ref combined_identifier);
+/**
+ * @brief Create a ServiceSubscriptionFilterAttribute from an identifier
+ *
+ * @param identifier_name The identifier name
+ * @param uuid_string The identifier UUID as a string
+ * @return ServiceSubscriptionFilterAttribute The created attribute
+ */
+ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute
+CreateServiceSubscriptionFilterAttributeIdentifier(boost::string_ref identifier_name, boost::string_ref uuid_string);
+/**
+ * @brief Create a ServiceSubscriptionFilterAttribute from an identifier
+ *
+ * @param name The attribute name
+ * @param identifier_name The identifier name
+ * @param uuid_string The identifier UUID as a string
+ * @return ServiceSubscriptionFilterAttribute The created attribute
+ */
+ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterAttribute CreateServiceSubscriptionFilterAttributeIdentifier(
+    boost::string_ref name, boost::string_ref identifier_name, boost::string_ref uuid_string);
 
 /**
  * @brief Comparison operations for ServiceSubscriptionFilterAttributeGroup
@@ -429,6 +463,7 @@ class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription : public IServiceSubscrip
 {
   public:
     friend class detail::Discovery;
+    friend class ServiceSubscriptionManager;
 
     typedef boost::signals2::connection event_connection;
 
@@ -582,6 +617,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
     friend class WireSubscriptionBase;
     friend class PipeSubscriptionBase;
     friend class detail::ServiceSubscription_custom_member_subscribers;
+    friend class SubObjectSubscription;
+    friend class ServiceSubscriptionManager;
 
     typedef boost::signals2::connection event_connection;
 
@@ -760,7 +797,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * for RobotRaconteurNode::SubscribeService()
      *
      * Clients using GetDefaultClient() should not store a reference to the client. It should instead
-     * call GetDefaultClient() right before using the client to make sure the most recenty connection
+     * call GetDefaultClient() right before using the client to make sure the most recently connection
      * is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
      * of pipes and wires can be managed automatically.
      *
@@ -929,6 +966,25 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
         const std::vector<std::string>& service_types,
         const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter = RR_SHARED_PTR<ServiceSubscriptionFilter>());
 
+    /**
+     * @brief Creates a sub object subscription
+     *
+     * Sub objects are objects within a service that are not the root object. Sub objects are typically
+     * referenced using objref members, however they can also be referenced using a service path.
+     * The SubObjectSubscription class is used to automatically access sub objects of the default client.
+     *
+     * The service path is broken up into segments using periods. See the Robot Raconter
+     * documentation for more information. The BuildServicePath() function can be used to assist
+     * building service paths. The first level of the* service path may be "*" to match any service name.
+     * For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
+     *
+     * @param servicepath The service path of the sub object
+     * @param objecttype Optional object type to use for the sub object
+     * @return RR_SHARED_PTR<SubObjectSubscription> The sub object subscription
+     */
+    RR_SHARED_PTR<SubObjectSubscription> SubscribeSubObject(boost::string_ref servicepath,
+                                                            boost::string_ref objecttype = "");
+
     RR_SHARED_PTR<RobotRaconteurNode> GetNode();
 
   protected:
@@ -1012,6 +1068,8 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
     void AsyncGetDefaultClientBase(
         boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
         int32_t timeout = RR_TIMEOUT_INFINITE);
+
+    void SoftClose();
 };
 
 /**
@@ -1503,6 +1561,369 @@ class PipeSubscription : public PipeSubscriptionBase
     RR_OVIRTUAL bool isempty_PipePacketReceived() RR_OVERRIDE { return pipe_packet_received.empty(); }
 };
 
+/**
+ * @brief Subscription for sub objects of the default client
+ *
+ * SubObjectSubscription is used to access sub objects of the default client. Sub objects are objects within a service
+ * that are not the root object. Sub objects are typically referenced using objref members, however they can also be
+ * referenced using a service path. The SubObjectSubscription class is used to automatically access sub objects of the
+ * default client.
+ *
+ * Use ServiceSubscription::SubscribeSubObject() to create a SubObjectSubscription.
+ *
+ * This class should not be used to access Pipe or Wire members. Use the ServiceSubscription::SubscribePipe() and
+ * ServiceSubscription::SubscribeWire() functions to access Pipe and Wire members.
+ *
+ */
+class ROBOTRACONTEUR_CORE_API SubObjectSubscription : public RR_ENABLE_SHARED_FROM_THIS<SubObjectSubscription>,
+                                                      private boost::noncopyable
+{
+
+  public:
+    friend class ServiceSubscription;
+
+    virtual ~SubObjectSubscription() {}
+
+    /**
+     * @brief Get the "default client" sub object
+     *
+     * The sub object is retrieved from the default client. The default client is the first client
+     * that connected to the service. If no clients are currently connected, an exception is thrown.
+     *
+     * Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+     * each time the client is needed.
+     *
+     * @tparam T The type of the sub object
+     * @return RR_SHARED_PTR<T> The sub object
+     */
+    template <typename T>
+    RR_SHARED_PTR<T> GetDefaultClient()
+    {
+        return rr_cast<T>(GetDefaultClientBase());
+    }
+
+    /**
+     * @brief Try getting the "default client" sub object
+     *
+     * Same as GetDefaultClient(), but returns a bool for success or failure instead of throwing
+     * an exception on failure.
+     *
+     * @tparam T The type of the sub object
+     * @param client_out [out] The sub object
+     * @return true The sub object was retrieved successfully
+     * @return false The sub object could not be retrieved
+     */
+    template <typename T>
+    bool TryGetDefaultClient(RR_SHARED_PTR<T>& client_out)
+    {
+        RR_SHARED_PTR<RRObject> c;
+        if (!TryGetDefaultClientBase(c))
+        {
+            return false;
+        }
+        RR_SHARED_PTR<T> c1 = RR_DYNAMIC_POINTER_CAST<T>(c);
+        if (!c1)
+            return false;
+
+        client_out = c1;
+        return true;
+    }
+
+    /**
+     * @brief Get the "default client" sub object, waiting for a specified timeout
+     *
+     The sub object is retrieved from the default client. The default client is the first client
+     * that connected to the service. If no clients are currently connected, an exception is thrown.
+     *
+     * Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+     * each time the client is needed.
+     *
+     * This function blocks the current thread until the client is retrieved or the timeout is reached.
+     *
+     * @tparam T The type of the sub object
+     * @param timeout The timeout in milliseconds
+     * @return RR_SHARED_PTR<T> The sub object
+     */
+    template <typename T>
+    RR_SHARED_PTR<T> GetDefaultClientWait(int32_t timeout = RR_TIMEOUT_INFINITE)
+    {
+        return rr_cast<T>(GetDefaultClientWaitBase(timeout));
+    }
+
+    /**
+     * @brief Try getting the "default client" sub object, waiting for a specified timeout
+     *
+     * Same as GetDefaultClientWait(), but returns a bool for success or failure instead of throwing
+     * an exception on failure.
+     *
+     * @tparam T The type of the sub object
+     * @param client_out [out] The sub object
+     * @param timeout The timeout in milliseconds
+     * @return true The sub object was retrieved successfully
+     * @return false The sub object could not be retrieved
+     */
+    template <typename T>
+    bool TryGetDefaultClientWait(RR_SHARED_PTR<T>& client_out, int32_t timeout = RR_TIMEOUT_INFINITE)
+    {
+        RR_SHARED_PTR<RRObject> c;
+        if (!TryGetDefaultClientWaitBase(c, timeout))
+        {
+            return false;
+        }
+        RR_SHARED_PTR<T> c1 = RR_DYNAMIC_POINTER_CAST<T>(c);
+        if (!c1)
+            return false;
+
+        client_out = c1;
+        return true;
+    }
+
+    /**
+     * @brief Asynchronously get the "default client" sub object
+     *
+     * Asynchronous version of GetDefaultClient()
+     *
+     * The handler function is called when the client is retrieved or an error occurs.
+     *
+     * @tparam T The type of the sub object
+     * @param handler The handler function
+     * @param timeout The timeout in milliseconds
+     */
+    template <typename T>
+    void AsyncGetDefaultClient(
+        boost::function<void(const RR_SHARED_PTR<T>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE)
+    {
+        AsyncGetDefaultClientBase(boost::bind(&detail::AsyncGetDefaultClient_handler_adapter<T>, handler,
+                                              RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+                                  timeout);
+    }
+
+    void Init();
+
+    /**
+     * @brief Closes the sub object subscription
+     *
+     * Sub object subscriptions are automatically closed when the parent ServiceSubscription is closed
+     * or when the node is shut down.
+     *
+     */
+    void Close();
+
+    SubObjectSubscription(const RR_SHARED_PTR<ServiceSubscription>& parent, boost::string_ref servicepath,
+                          boost::string_ref objecttype);
+
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
+  protected:
+    RR_SHARED_PTR<RRObject> GetDefaultClientBase();
+    bool TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& client_out);
+
+    RR_SHARED_PTR<RRObject> GetDefaultClientWaitBase(int32_t timeout = RR_TIMEOUT_INFINITE);
+    bool TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>& client_out, int32_t timeout = RR_TIMEOUT_INFINITE);
+
+    void AsyncGetDefaultClientBase(
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
+        int32_t timeout = RR_TIMEOUT_INFINITE);
+
+    RR_WEAK_PTR<ServiceSubscription> parent;
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+    std::string servicepath;
+    std::string objecttype;
+};
+
+/**
+ * @brief Connection method for ServiceSubscriptionManager subscription
+ *
+ * Select between using URLs or service types for subscription
+ *
+ */
+enum ServiceSubscriptionManager_CONNECTION_METHOD
+{
+    /** @brief Implicitly select between URL and service types */
+    ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT,
+    /** @brief Use URLs types for subscription */
+    ServiceSubscriptionManager_CONNECTION_METHOD_URL,
+    /** @brief Use service types for subscription */
+    ServiceSubscriptionManager_CONNECTION_METHOD_TYPE
+};
+
+/**
+ * @brief ServiceSubscriptionManager subscription connection information
+ *
+ * Contains the connection information for a ServiceSubscriptionManager subscription
+ * and the local name of the subscription
+ */
+struct ROBOTRACONTEUR_CORE_API ServiceSubscriptionManagerDetails
+{
+    /** @brief The local name of the subscription */
+    std::string Name;
+    /** @brief The connection method to use, URL or service type */
+    ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod;
+    /** @brief The URLs to use for subscription */
+    std::vector<std::string> Urls;
+    /** @brief The username to use for URLs (optional)*/
+    std::string UrlUsername;
+    /** @brief The credentials to use for URLs (optional)*/
+    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > UrlCredentials;
+    /** @brief The service types to use for subscription */
+    std::vector<std::string> ServiceTypes;
+    /** @brief The filter to use for subscription when service type is used (optional) */
+    RR_SHARED_PTR<ServiceSubscriptionFilter> Filter;
+    /** @brief If the subscription is enabled */
+    bool Enabled;
+
+    /** @brief Construct a new ServiceSubscriptionManagerDetails object */
+    ServiceSubscriptionManagerDetails();
+
+    /**
+     * @brief Construct a new ServiceSubscriptionManagerDetails object with parameters
+     *
+     * @param Name The local name of the subscription
+     * @param ConnectionMethod The connection method to use, URL or service type
+     * @param Urls The URLs to use for subscription
+     * @param UrlUsername The username to use for URLs (optional)
+     * @param UrlCredentials The credentials to use for URLs (optional)
+     * @param ServiceTypes The service types to use for subscription
+     * @param Filter The filter to use for subscription when service type is used (optional)
+     * @param Enabled If the subscription is enabled
+     */
+    ServiceSubscriptionManagerDetails(
+        const boost::string_ref& Name,
+        ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod =
+            ServiceSubscriptionManager_CONNECTION_METHOD_DEFAULT,
+        const std::vector<std::string>& Urls = std::vector<std::string>(), const boost::string_ref& UrlUsername = "",
+        const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& UrlCredentials =
+            RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(),
+        const std::vector<std::string>& ServiceTypes = std::vector<std::string>(),
+        const RR_SHARED_PTR<ServiceSubscriptionFilter>& Filter = RR_SHARED_PTR<ServiceSubscriptionFilter>(),
+        bool Enabled = true);
+};
+
+/**
+ * @brief Class to manage multiple subscriptions to services
+ *
+ * ServiceSubscriptionManager is used to manage multiple subscriptions to services. Subscriptions
+ * are created using information contained in ServiceSubscriptionManagerDetails structures. The subscriptions
+ * can connect using URLs or service types. The subscriptions can be enabled or disabled, and can be
+ * closed.
+ *
+ */
+class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager
+{
+  public:
+    /**
+     * @brief Construct a new ServiceSubscriptionManager object
+     *
+     * @param node (optional) The node to use for the subscription manager
+     */
+    ServiceSubscriptionManager(const RR_SHARED_PTR<RobotRaconteurNode>& node = RobotRaconteurNode::sp());
+
+    virtual ~ServiceSubscriptionManager();
+
+    /**
+     * @brief Initialize the subscription manager with a list of subscriptions
+     *
+     * @param details The list of subscriptions to initialize
+     */
+    void Init(const std::vector<ServiceSubscriptionManagerDetails>& details);
+
+    /**
+     * @brief Add a subscription to the manager
+     *
+     * @param details The subscription to add
+     */
+    void AddSubscription(const ServiceSubscriptionManagerDetails& details);
+
+    /**
+     * @brief Remove a subscription from the manager
+     *
+     * @param name The local name of the subscription to remove
+     * @param close (optional) If true, close the subscription
+     */
+    void RemoveSubscription(const boost::string_ref& name, bool close = true);
+
+    /**
+     * @brief Enable a subscription
+     *
+     * @param name The local name of the subscription to enable
+     */
+    void EnableSubscription(const boost::string_ref& name);
+
+    /**
+     * @brief Disable a subscription
+     *
+     * @param name The local name of the subscription to disable
+     * @param close (optional) If true, close subscription if connected
+     */
+    void DisableSubscription(const boost::string_ref& name, bool close = true);
+
+    /**
+     * @brief Get a subscription by name
+     *
+     * @param name The local name of the subscription
+     * @param force_create (optional) If true, create the subscription if it does not exist
+     * @return RR_SHARED_PTR<ServiceSubscription> The subscription
+     */
+    RR_SHARED_PTR<ServiceSubscription> GetSubscription(const boost::string_ref& name, bool force_create = true);
+
+    /**
+     * @brief Get if a subscription is connected
+     *
+     * @param name The local name of the subscription
+     * @return bool True if the subscription is connected
+     */
+    bool IsConnected(const boost::string_ref& name);
+
+    /**
+     * @brief Get if a subscription is enabled
+     *
+     * @param name The local name of the subscription
+     * @return bool True if the subscription is enabled
+     */
+    bool IsEnabled(const boost::string_ref& name);
+
+    /**
+     * @brief Close the subscription manager
+     *
+     * @param close_subscriptions (optional) If true, close all subscriptions
+     */
+    void Close(bool close_subscriptions = true);
+
+    /**
+     * @brief Get the names of all subscriptions
+     *
+     * @return std::vector<std::string> The list of subscription names
+     */
+    std::vector<std::string> GetSubscriptionNames();
+
+    /**
+     * @brief Get the details of all subscriptions
+     *
+     * @return std::vector<ServiceSubscriptionManagerDetails> The list of subscription details
+     */
+    std::vector<ServiceSubscriptionManagerDetails> GetSubscriptionDetails();
+
+    /**
+     * @brief Get the node used by the subscription manager
+     *
+     * @return RR_SHARED_PTR<RobotRaconteurNode> The node
+     */
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
+  protected:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+
+    boost::mutex this_lock;
+
+    boost::unordered_map<std::string, detail::ServiceSubscriptionManager_subscription> subscriptions;
+
+    RR_SHARED_PTR<ServiceSubscription> CreateSubscription(const ServiceSubscriptionManagerDetails& details);
+
+    void UpdateSubscription(detail::ServiceSubscriptionManager_subscription& sub,
+                            const ServiceSubscriptionManagerDetails& details, bool close = false);
+};
+
 namespace detail
 {
 class ROBOTRACONTEUR_CORE_API WireSubscription_send_iterator
@@ -1564,7 +1985,8 @@ using PipeSubscriptionPtr = RR_SHARED_PTR<PipeSubscription<T> >;
 /** @brief Convenience alias for WireSubscription shared_ptr */
 template <typename T>
 using WireSubscriptionPtr = RR_SHARED_PTR<WireSubscription<T> >;
-
+/** @brief Convenience alias for SubObjectSubscription shared_ptr */
+using SubObjectSubscriptionPtr = RR_SHARED_PTR<SubObjectSubscription>;
 #endif
 
 } // namespace RobotRaconteur

@@ -31,7 +31,7 @@ you would use a real value instead.
         unsigned long long *INPUT, unsigned long long &INPUT
         float              *INPUT, float              &INPUT
         double             *INPUT, double             &INPUT
-         
+
 To use these, suppose you had a C function like this :
 
         double fadd(double *a, double *b) {
@@ -39,7 +39,7 @@ To use these, suppose you had a C function like this :
         }
 
 You could wrap it with SWIG as follows :
-        
+
         %include <typemaps.i>
         double fadd(double *INPUT, double *INPUT);
 
@@ -113,7 +113,7 @@ used when passing the parameter to a function that takes an output parameter.
         unsigned long long *OUTPUT, unsigned long long &OUTPUT
         float              *OUTPUT, float              &OUTPUT
         double             *OUTPUT, double             &OUTPUT
-         
+
 For example, suppose you were trying to wrap the modf() function in the
 C math library which splits x into integral and fractional parts (and
 returns the integer part in one of its parameters):
@@ -131,7 +131,7 @@ or you can use the %apply directive :
         %apply double *OUTPUT { double *ip };
         double modf(double x, double *ip);
 
-The C# output of the function would be the function return value and the 
+The C# output of the function would be the function return value and the
 value returned in the second output parameter. In C# you would use it like this:
 
     double dptr;
@@ -173,7 +173,7 @@ OUTPUT_TYPEMAP(double,             double,               double,   DOUBLE_PTR)
 #undef OUTPUT_TYPEMAP
 
 %typemap(in) bool *OUTPUT, bool &OUTPUT
-%{ *$input = 0; 
+%{ *$input = 0;
    $1 = ($1_ltype)$input; %}
 
 
@@ -201,7 +201,7 @@ In C#, the 'ref' keyword is used for reference parameters.
         unsigned long long *INOUT, unsigned long long &INOUT
         float              *INOUT, float              &INOUT
         double             *INOUT, double             &INOUT
-         
+
 For example, suppose you were trying to wrap the following function :
 
         void neg(double *x) {
@@ -219,7 +219,7 @@ or you can use the %apply directive :
         %apply double *INOUT { double *x };
         void neg(double *x);
 
-The C# output of the function would be the new value returned by the 
+The C# output of the function would be the new value returned by the
 reference parameter. In C# you would use it like this:
 
 
@@ -227,7 +227,7 @@ reference parameter. In C# you would use it like this:
        neg(ref x);
 
 The implementation of the OUTPUT and INOUT typemaps is different to the scripting
-languages in that the scripting languages will return the output value as part 
+languages in that the scripting languages will return the output value as part
 of the function return value.
 
 */
@@ -265,4 +265,3 @@ INOUT_TYPEMAP(float,              float,                float,    FLOAT_PTR)
 INOUT_TYPEMAP(double,             double,               double,   DOUBLE_PTR)
 
 #undef INOUT_TYPEMAP
-

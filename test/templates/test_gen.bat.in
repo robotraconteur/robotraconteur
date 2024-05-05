@@ -19,4 +19,3 @@ for  %%v in (@ROBOTRACONTEUR_TEST_GEN_FILE_LIST@) do (
 if %cmp_error_level% neq 0 exit /b %cmp_error_level%
 
 exit /b
-

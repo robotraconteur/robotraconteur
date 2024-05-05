@@ -46,7 +46,7 @@ enum RobotRaconteur_LogLevel
 };
 ```
 
-Log levels are set using the `RobotRaconteurNode::SetLogLevel(level)` function. Logging may also be configured using the `RobotRaconteurNode::SetLogLevelFromEnvVariable()` function. This function is called automatically by `NodeSetup`, and by Python and Matlab clients. The environmental variable `ROBOTRACONTEUR_LOG_LEVEL` is used to set the logging level. It can have the following values: `TRACE`, `DEBUG`, 'INFO`, `WARNING`, `ERROR`, `FATAL`. Log levels can also be configured using \ref command_line_options. 
+Log levels are set using the `RobotRaconteurNode::SetLogLevel(level)` function. Logging may also be configured using the `RobotRaconteurNode::SetLogLevelFromEnvVariable()` function. This function is called automatically by `NodeSetup`, and by Python and Matlab clients. The environmental variable `ROBOTRACONTEUR_LOG_LEVEL` is used to set the logging level. It can have the following values: `TRACE`, `DEBUG`, 'INFO`, `WARNING`, `ERROR`, `FATAL`. Log levels can also be configured using \ref command_line_options.
 
 For example, on Linux and Mac OSX, enable debug log level using:
 

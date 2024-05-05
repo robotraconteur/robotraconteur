@@ -134,6 +134,7 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
                      const RR_SHARED_PTR<ServiceSubscriptionFilter>& filter,
                      const RR_SHARED_PTR<IServiceSubscription>& subscription);
 
+  public:
     void DoUpdateAllDetectedServices(const RR_SHARED_PTR<IServiceSubscription>& s);
 };
 

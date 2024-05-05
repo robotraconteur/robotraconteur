@@ -69,20 +69,71 @@ void rr_free_mxDestroyArray()
     rr_mxDestroyArray_vec.clear();
 }
 
+bool checkMxIsString(const mxArray* str) { return mxIsChar(str) || mxIsClass(str, "string"); }
+
+mxArray* convertMxStringToChar(const mxArray* str)
+{
+    mxArray* charArray = NULL;
+    mxArray* rhs[1] = {(mxArray*)str};
+    if (mexCallMATLAB(1, &charArray, 1, rhs, "char") != 0)
+    {
+        throw DataTypeException("Failed to convert MATLAB string to char array");
+    }
+    return charArray;
+}
+
 std::string mxToString(const mxArray* str)
 {
-    if (!mxIsChar(str))
+    if (mxIsChar(str))
     {
-        if (mxIsClass(str, "string"))
-        {
-            throw InvalidArgumentException("New style MATLAB strings are not supported by Robot Raconteur");
-        }
-        throw InvalidArgumentException("Character array (old-style MATLAB string) expected");
+        if (mxGetNumberOfElements(str) == 0)
+            return "";
+
+        char* str1 = mxArrayToString(str);
+        std::string str2(str1);
+        mxFree(str1);
+        return str2;
     }
-    char* str1 = mxArrayToString(str);
-    std::string str2(str1);
-    mxFree(str1);
-    return str2;
+
+    if (mxIsClass(str, "string"))
+    {
+        mxArray* charArray = convertMxStringToChar(str);
+        std::string str2 = mxToString(charArray);
+        mxDestroyArray(charArray);
+        return str2;
+    }
+    throw InvalidArgumentException("Expected string");
+}
+
+RR_INTRUSIVE_PTR<RRArray<char> > mxToStringRRArray(const mxArray* str)
+{
+    if (mxIsChar(str))
+    {
+        if (mxGetNumberOfElements(str) == 0)
+            return AllocateRRArray<char>(0);
+        if (mxGetNumberOfDimensions(str) != 2)
+            throw DataTypeException("1xN string expected ");
+        const mwSize* pm_dims = mxGetDimensions(str);
+        if (mxGetNumberOfElements(str) > 0)
+        {
+            if (pm_dims[0] != 1 && pm_dims[0] != 0)
+                throw DataTypeException("1xN string expected");
+        }
+
+        char* str1 = mxArrayToString(str);
+        RR_INTRUSIVE_PTR<RRArray<char> > str2 = AttachRRArrayCopy<char>(str1, mxGetNumberOfElements(str));
+        mxFree(str1);
+        return str2;
+    }
+
+    if (mxIsClass(str, "string"))
+    {
+        mxArray* charArray = convertMxStringToChar(str);
+        RR_INTRUSIVE_PTR<RRArray<char> > str2 = mxToStringRRArray(charArray);
+        mxDestroyArray(charArray);
+        return str2;
+    }
+    throw InvalidArgumentException("Expected string");
 }
 
 void mxToVectorString(const mxArray* in, std::vector<std::string>& vec, const std::string& error_message)
@@ -90,7 +141,7 @@ void mxToVectorString(const mxArray* in, std::vector<std::string>& vec, const st
     if (!in)
         return;
 
-    if (mxIsChar(in))
+    if (checkMxIsString(in))
     {
         vec.push_back(mxToString(in));
         return;
@@ -423,6 +474,19 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                 }
                 plhs[0] = o->subsref(prhs[3]);
             }
+            else if (stubtype == RR_MEX_SUBOBJECT_SUBSCRIPTION)
+            {
+                boost::shared_ptr<MexSubObjectSubscription> o;
+                {
+                    boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+                    std::map<int32_t, RR_SHARED_PTR<MexSubObjectSubscription> >::iterator e1 =
+                        subobjectsubscriptions.find(stubid);
+                    if (e1 == subobjectsubscriptions.end())
+                        throw InvalidArgumentException("Cannot find SubObjectSubscription");
+                    o = e1->second;
+                }
+                plhs[0] = o->subsref(prhs[3]);
+            }
             else if (stubtype == RR_MEX_GENERATOR_CLIENT)
             {
                 boost::shared_ptr<MexGeneratorClient> o;
@@ -542,6 +606,19 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                         pipesubscriptions.find(stubid);
                     if (e1 == pipesubscriptions.end())
                         throw InvalidArgumentException("Cannot find PipeSubscription");
+                    o = e1->second;
+                }
+                o->subsasgn(prhs[3], prhs[4]);
+            }
+            else if (stubtype == RR_MEX_SUBOBJECT_SUBSCRIPTION)
+            {
+                boost::shared_ptr<MexSubObjectSubscription> o;
+                {
+                    boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+                    std::map<int32_t, RR_SHARED_PTR<MexSubObjectSubscription> >::iterator e1 =
+                        subobjectsubscriptions.find(stubid);
+                    if (e1 == subobjectsubscriptions.end())
+                        throw InvalidArgumentException("Cannot find SubObjectSubscription");
                     o = e1->second;
                 }
                 o->subsasgn(prhs[3], prhs[4]);
@@ -1148,7 +1225,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                 int32_t p1 = ((int32_t*)mxGetData(prhs[1]))[0];
                 port = p1;
             }
-            else if (mxIsChar(prhs[1]))
+            else if (checkMxIsString(prhs[1]))
             {
                 std::string p1 = mxToString(prhs[1]);
                 try
@@ -2123,7 +2200,7 @@ class PackMxArrayToMessageElementImpl
                 if (key == NULL || data == NULL)
                     throw DataTypeException("Cell contents must be key value pair");
 
-                if (mxIsChar(key))
+                if (checkMxIsString(key))
                 {
                     push_field_level("[\"" + mxToString(key) + "\"]", tdef2);
                 }
@@ -2152,7 +2229,7 @@ class PackMxArrayToMessageElementImpl
                 else
                 {
                     std::string elemkey;
-                    if (!mxIsChar(key))
+                    if (!checkMxIsString(key))
                         throw DataTypeException("Key must be string");
                     elemkey = mxToString(key);
                     me->ElementName = elemkey;
@@ -2304,20 +2381,11 @@ class PackMxArrayToMessageElementImpl
 
         if (tdef->Type == DataTypes_string_t)
         {
-            if (!mxIsChar(pm))
+            // TODO: Handle new style strings
+            if (!checkMxIsString(pm))
                 throw DataTypeException("String expected");
-            if (mxGetNumberOfDimensions(pm) != 2)
-                throw DataTypeException("1xN string expected ");
-            const mwSize* pm_dims = mxGetDimensions(pm);
-            if (mxGetNumberOfElements(pm) > 0)
-            {
-                if (pm_dims[0] != 1)
-                    throw DataTypeException("1xN string expected");
-            }
 
-            const uint16_t* str_utf16 = (const uint16_t*)mxGetData(pm);
-            std::string str_utf8 = boost::locale::conv::utf_to_utf<char>(str_utf16, str_utf16 + pm_dims[1]);
-            RR_INTRUSIVE_PTR<RRArray<char> > str = stringToRRArray(str_utf8);
+            RR_INTRUSIVE_PTR<RRArray<char> > str = mxToStringRRArray(pm);
             return CreateMessageElement(tdef->Name, str);
         }
 
@@ -4752,7 +4820,7 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 if (argc != 1)
                     throw InvalidArgumentException("ObjRef " + odef->Name + " is indexed by string");
                 mxArray* index = mxGetCell(cell_args, 0);
-                if (!mxIsChar(index))
+                if (!checkMxIsString(index))
                     throw InvalidArgumentException("ObjRef " + odef->Name + " is indexed by int32");
 
                 std::string iindex = mxToString(index);
@@ -5467,7 +5535,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
             else if (narg == 1)
             {
                 mxArray* arg = mxGetCell(subs, 0);
-                if (mxIsChar(arg))
+                if (checkMxIsString(arg))
                 {
                     std::string strarg = mxToString(arg);
                     if (strarg != ":")
@@ -5494,7 +5562,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
                         throw InvalidArgumentException("Invalid memory read/write request for named array");
 
                     mxArray* arg = mxGetCell(subs, 1);
-                    if (mxIsChar(arg))
+                    if (checkMxIsString(arg))
                     {
                         std::string strarg = mxToString(arg);
                         if (strarg != ":")
@@ -8112,6 +8180,41 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
         return matlabret[0];
     }
 
+    if (membername == "SubscribeSubObject")
+    {
+        size_t n_args = mxGetNumberOfElements(cell_args);
+        if (n_args != 1)
+            throw InvalidArgumentException("SubscribeSubObject expects one argument");
+
+        std::string service_path = mxToString(mxGetCell(cell_args, 0));
+
+        boost::shared_ptr<SubObjectSubscription> sub1 = subscription->SubscribeSubObject(service_path);
+        boost::shared_ptr<MexSubObjectSubscription> sub2 = boost::make_shared<MexSubObjectSubscription>();
+        sub2->Init(sub1);
+
+        boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+        subobjectsubscriptions_count++;
+        sub2->subobjectsubscriptionid = subobjectsubscriptions_count;
+        subobjectsubscriptions.insert(std::make_pair(sub2->subobjectsubscriptionid, sub2));
+
+        mxArray* matlabret[1];
+        mxArray* rhs[2];
+
+        rhs[0] = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+        rhs[1] = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+
+        ((int32_t*)mxGetData(rhs[0]))[0] = RR_MEX_SUBOBJECT_SUBSCRIPTION;
+        ((int32_t*)mxGetData(rhs[1]))[0] = sub2->subobjectsubscriptionid;
+
+        int merror = mexCallMATLAB(1, matlabret, 2, rhs, "RobotRaconteurSubObjectSubscription");
+        if (merror)
+        {
+            throw InternalErrorException("Internal error");
+        }
+
+        return matlabret[0];
+    }
+
     if (membername == "ClaimClient")
     {
         if (mxGetNumberOfElements(cell_args) != 1)
@@ -8733,6 +8836,138 @@ void MexPipeSubscription::subsasgn(const mxArray* S, const mxArray* value)
     }
 }*/
 
+// MexSubObjectSubscription
+
+MexSubObjectSubscription::MexSubObjectSubscription() { subobjectsubscriptionid = 0; }
+void MexSubObjectSubscription::Init(const boost::shared_ptr<SubObjectSubscription>& subscription)
+{
+    this->subscription = subscription;
+}
+
+mxArray* MexSubObjectSubscription::subsref(const mxArray* S)
+{
+    if (!mxIsStruct(S))
+        throw InvalidArgumentException("RobotRaconteurMex error");
+
+    int c1 = (int)mxGetNumberOfElements(S);
+
+    if (c1 == 0)
+        throw InvalidArgumentException("RobotRaconteur object expects 'dot' notation");
+
+    std::string type = mxToString(mxGetField(S, 0, "type"));
+    if (type != ".")
+        throw InvalidArgumentException("RobotRaconteur object expects 'dot' notation");
+
+    std::string membername = mxToString(mxGetField(S, 0, "subs"));
+
+    if (c1 != 2)
+        throw InvalidArgumentException("ServiceSubscription expects a function request");
+
+    std::string type2 = mxToString(mxGetField(S, 1, "type"));
+    if (type2 != "()")
+        throw InvalidArgumentException("ServiceSubscription expects a function request");
+
+    if (!mxIsChar(mxGetField(S, 0, "subs")))
+        throw InvalidArgumentException("RobotRaconteur object expects 'dot' notation");
+
+    mxArray* cell_args = mxGetField(S, 1, "subs");
+
+    if (membername == "Close")
+    {
+        if (mxGetNumberOfElements(cell_args) != 0)
+            throw InvalidArgumentException("Close expects zero arguments");
+        Close();
+        return mxCreateNumericMatrix(1, 0, mxDOUBLE_CLASS, mxREAL);
+    }
+
+    if (membername == "GetDefaultClient")
+    {
+        if (mxGetNumberOfElements(cell_args) != 0)
+            throw InvalidArgumentException("GetDefaultClient expects zero arguments");
+
+        RR_SHARED_PTR<MexServiceStub> stub = subscription->GetDefaultClient<MexServiceStub>();
+
+        mxArray* mxStub = NULL;
+
+        if (stub->stubptr != NULL)
+        {
+            mxStub = stub->stubptr.get();
+        }
+        else
+        {
+            boost::recursive_mutex::scoped_lock lock(stubs_lock);
+            stubcount++;
+            int stubid = stubcount;
+            stub->stubid = stubid;
+            mxArray* mxstub1 = MatlabObjectFromMexStub(stub);
+            stubs.insert(std::make_pair(stubid, stub));
+            mxStub = mxDuplicateArray(mxstub1);
+        }
+
+        return mxStub;
+    }
+
+    if (membername == "GetDefaultClientWait")
+    {
+        int32_t timeout = 0;
+        if (mxGetNumberOfElements(cell_args) == 0)
+        {
+            timeout = RR_TIMEOUT_INFINITE;
+        }
+        else if (mxGetNumberOfElements(cell_args) == 1)
+        {
+            timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, 0));
+        }
+        else
+        {
+            throw InvalidArgumentException("GetDefaultClientWait expects zero or one arguments");
+        }
+
+        RR_SHARED_PTR<MexServiceStub> stub = subscription->GetDefaultClientWait<MexServiceStub>(timeout);
+
+        mxArray* mxStub = NULL;
+
+        if (stub->stubptr != NULL)
+        {
+            mxStub = stub->stubptr.get();
+        }
+        else
+        {
+            boost::recursive_mutex::scoped_lock lock(stubs_lock);
+            stubcount++;
+            int stubid = stubcount;
+            stub->stubid = stubid;
+            mxArray* mxstub1 = MatlabObjectFromMexStub(stub);
+            stubs.insert(std::make_pair(stubid, stub));
+            mxStub = mxDuplicateArray(mxstub1);
+        }
+
+        return mxStub;
+    }
+
+    throw InvalidArgumentException("Unknown function for SubObjectSubscription");
+}
+
+void MexSubObjectSubscription::subsasgn(const mxArray* S, const mxArray* value)
+{
+    RR_UNUSED(S);
+    RR_UNUSED(value);
+    throw InvalidArgumentException("Unknown function");
+}
+
+void MexSubObjectSubscription::Close()
+{
+    {
+        boost::recursive_mutex::scoped_lock lock(servicesubscriptions_lock);
+        if (subobjectsubscriptionid != 0)
+        {
+            subobjectsubscriptions.erase(subobjectsubscriptionid);
+        }
+    }
+
+    subscription->Close();
+}
+
 static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(const mxArray* filter)
 {
     boost::shared_ptr<ServiceSubscriptionFilter> filter2;
@@ -8785,7 +9020,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
                 mxArray* data = mxGetCell(values, i);
 
                 std::string attribute_name = mxToString(key);
-                if (mxIsChar(data))
+                if (checkMxIsString(data))
                 {
                     attribute_group.Attributes.push_back(ServiceSubscriptionFilterAttribute(mxToString(data)));
                 }
@@ -8806,7 +9041,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
                     mxArray* group_attr = mxGetField(data, 0, "Attributes");
                     if (!group_attr)
                         throw DataTypeException("Invalid filter.Attributes specified for SubscribeServiceByType");
-                    if (mxIsChar(group_attr))
+                    if (checkMxIsString(group_attr))
                     {
                         attribute_group.Attributes.push_back(
                             ServiceSubscriptionFilterAttribute(mxToString(group_attr)));
@@ -10139,6 +10374,8 @@ int32_t wiresubscriptions_count = 0;
 std::map<int32_t, boost::shared_ptr<MexWireSubscription> > wiresubscriptions;
 int32_t pipesubscriptions_count = 0;
 std::map<int32_t, boost::shared_ptr<MexPipeSubscription> > pipesubscriptions;
+int32_t subobjectsubscriptions_count = 0;
+std::map<int32_t, boost::shared_ptr<MexSubObjectSubscription> > subobjectsubscriptions;
 
 std::map<int, boost::weak_ptr<MexServiceSkel> > skels;
 boost::mutex skels_lock;

@@ -21,9 +21,9 @@ namespace RobotRaconteur
 {
 
 	class CommandLineConfigParser
-	{		
+	{
 	public:
-				
+
 		CommandLineConfigParser(uint32_t allowed_overrides, const std::string& prefix="robotraconteur-");
 
 		void SetDefaults(const std::string& node_name, uint16_t tcp_port, uint32_t default_flags);
@@ -33,7 +33,7 @@ namespace RobotRaconteur
 		void AddIntOption(const std::string& name, const std::string& descr);
 
 		void ParseCommandLine(const std::vector<std::string>& args);
-		
+
 		std::string GetOptionOrDefaultAsString(const std::string& option);
 		std::string GetOptionOrDefaultAsString(const std::string& option, const std::string& default_value);
 		bool GetOptionOrDefaultAsBool(const std::string& option);
@@ -48,9 +48,9 @@ namespace RobotRaconteur
     class RobotRaconteurNodeSetup
 	{
 	public:
-		//RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types, 
+		//RobotRaconteurNodeSetup(const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::vector<RR_SHARED_PTR<ServiceFactory> >& service_types,
 		//	const std::string& node_name, uint16_t tcp_port, uint32_t flags);
-		
+
 		boost::shared_ptr<RobotRaconteur::LocalTransport> GetLocalTransport();
 		boost::shared_ptr<RobotRaconteur::IntraTransport> GetIntraTransport();
 		boost::shared_ptr<RobotRaconteur::TcpTransport> GetTcpTransport();
@@ -58,10 +58,10 @@ namespace RobotRaconteur
 		boost::shared_ptr<RobotRaconteur::CommandLineConfigParser> GetCommandLineConfig();
 
 		void ReleaseNode();
-		
+
 		virtual ~RobotRaconteurNodeSetup();
 	};
-	
+
 	%extend RobotRaconteurNodeSetup
 	{
 		RobotRaconteurNodeSetup(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
@@ -70,7 +70,7 @@ namespace RobotRaconteur
 				std::vector<RR_SHARED_PTR<ServiceFactory> > s;
 				RobotRaconteurNodeSetup* n = new RobotRaconteurNodeSetup(node, s, node_name, tcp_port, flags);
 				return n;
-			}	
+			}
 
 		RobotRaconteurNodeSetup(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
 			const boost::shared_ptr<RobotRaconteur::CommandLineConfigParser>& config)
@@ -80,8 +80,8 @@ namespace RobotRaconteur
 				return n;
 			}
 
-		RobotRaconteurNodeSetup(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node, 
-			const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides, 
+		RobotRaconteurNodeSetup(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
+			const std::string& node_name, uint16_t tcp_port, uint32_t flags, uint32_t allowed_overrides,
 			const std::vector<std::string>& args)
 			{
 				std::vector<RR_SHARED_PTR<ServiceFactory> > s;

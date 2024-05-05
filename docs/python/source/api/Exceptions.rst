@@ -32,9 +32,9 @@ RobotRaconteurException
    :type errorparam: Any
 
    .. attribute:: errorcode
-      
+
       (int) Predefined error code
-	
+
 	  Error code that specifies the type of error See MessageErrorType constants.
 
    .. attribute:: errorname
@@ -2611,4 +2611,3 @@ Other Exceptions
       (Any) An optional parameter
 
       Use this placeholder if data needs to be passed with the exception
-   

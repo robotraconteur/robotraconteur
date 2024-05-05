@@ -63,6 +63,11 @@ void deadline_timer::expires_at(boost::posix_time::ptime time)
 
 void deadline_timer::async_wait(boost::function<void(boost::system::error_code)> f)
 {
+    // TODO: This is a hack to get around the fact that the node is not known at this point.
+    // TODO: Re-implement deadline_timer to use set_timeout directly
+    static RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode> temp_node =
+        RR_MAKE_SHARED<RobotRaconteur::RobotRaconteurNode>();
+
     if (timer)
     {
         timer->TryStop();
@@ -85,7 +90,8 @@ void deadline_timer::async_wait(boost::function<void(boost::system::error_code)>
             }
             f(ec);
         },
-        true, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode>());
+        true, temp_node);
+    timer->Start();
 }
 
 void deadline_timer::cancel()

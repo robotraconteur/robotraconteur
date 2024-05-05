@@ -34,19 +34,19 @@ return val
 %pythoncode %{
     def __eq__(self, other):
         return RobotRaconteurVersion_eq(self,other)
-    
+
     def __ne___(self, other):
         return RobotRaconteurVersion_ne(self,other)
-    
+
     def __gt__(self, other):
         return RobotRaconteurVersion_gt(self,other)
-    
+
     def __ge__(self, other):
         return RobotRaconteurVersion_ge(self,other)
-    
+
     def __lt__(self, other):
         return RobotRaconteurVersion_lt(self,other)
-    
+
     def __le__(self, other):
         return RobotRaconteurVersion_le(self,other)
 

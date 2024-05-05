@@ -26,7 +26,7 @@
 
 %typemap(out) PyObject* {
    $result = $1;
-} 
+}
 
 %typemap(out) boost::posix_time::ptime {
 	try {
@@ -62,7 +62,7 @@
 
 %typemap(in) boost::posix_time::time_duration (boost::posix_time::time_duration tmpDur, int64_t pyinputval2=0, double pyinputval=0) %{
 
-	
+
 	if (PyInt_Check($input))
 	{
 		pyinputval=boost::lexical_cast<double>(PyInt_AsLong($input));
@@ -70,7 +70,7 @@
 	else if (PyLong_Check($input))
 	{
 		pyinputval=boost::lexical_cast<double>(PyLong_AsLong($input));
-	}	
+	}
 	else if (PyFloat_Check($input))
 	{
 		pyinputval=PyFloat_AsDouble($input);
@@ -80,11 +80,11 @@
 		PyErr_SetString(PyExc_TypeError,"Input must be an Integer, Long, or Float");
 		return NULL;
 	}
-	
+
 	pyinputval2=boost::lexical_cast<int64_t>(pyinputval*1000000.0);
 	tmpDur=boost::posix_time::microseconds(pyinputval2);
 	$1=&tmpDur;
-	
+
 %}
 
 %typemap(in) const boost::posix_time::time_duration& = boost::posix_time::time_duration;
@@ -127,7 +127,7 @@ namespace RobotRaconteur
 
 	%fragment(SWIG_AsPtr_frag(MessageStringPtr),"header",fragment=SWIG_AsVal_frag(std::string)) {
 		SWIGINTERN int
-		SWIG_AsPtr_dec(MessageStringPtr)(SWIG_Object obj, RobotRaconteur::MessageStringPtr **val) 
+		SWIG_AsPtr_dec(MessageStringPtr)(SWIG_Object obj, RobotRaconteur::MessageStringPtr **val)
 		{
 			std::string temp1;
 			int res = SWIG_AsVal(std::string)(obj, &temp1);

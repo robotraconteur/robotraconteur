@@ -94,7 +94,7 @@
 	get {
 		uint val=$imcall;$excode
 		return (DataTypes)val;
-	}	
+	}
 %}
 
 %typemap(cstype) MessageEntryType "MessageEntryType"
@@ -109,7 +109,7 @@
 	get {
 		uint val=$imcall;$excode
 		return (MessageEntryType)val;
-	}	
+	}
 %}
 %typemap(out) MessageEntryType {
 	$result=$1;
@@ -130,7 +130,7 @@
 	get {
 		uint val=$imcall;$excode
 		return (MessageErrorType)val;
-	}	
+	}
 %}
 %typemap(directorin) MessageErrorType "$input = $1;"
 %typemap(csdirectorin) MessageErrorType "(MessageErrorType)$iminput";
@@ -154,7 +154,7 @@
 	get {
 		uint val=$imcall;$excode
 		return (RobotRaconteurObjectLockFlags)val;
-	}	
+	}
 %}
 %typemap(out) RobotRaconteurObjectLockFlags {
 	$result=$1;
@@ -174,9 +174,9 @@
 %define %rr_intrusive_ptr( TYPE )
 %intrusive_ptr( TYPE );
 
-%typemap(directorin) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE > 
-%{ 
-//$input = $1 ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >($1) : 0; 
+%typemap(directorin) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE >
+%{
+//$input = $1 ? new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >($1) : 0;
   if ($1) {
     intrusive_ptr_add_ref($1.get());
     *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > **)&$input = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE >($1.get(), SWIG_intrusive_deleter< TYPE >());
@@ -186,7 +186,7 @@
 %}
 
 %typemap(directorout) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE > (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< TYPE > * smartarg)
-%{ 
+%{
 //if ($input) {
 //    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *smartarg = (SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *)$input;
 //    $result = *smartarg;
@@ -202,7 +202,7 @@
 %typemap(csdirectorin) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr<  TYPE > "($iminput == global::System.IntPtr.Zero) ? null : new $typemap(cstype, TYPE)($iminput, true)"
 
 %typemap(csvarout, excode=SWIGEXCODE) SWIG_SHARED_PTR_QNAMESPACE::intrusive_ptr< TYPE >& %{
-    get {		
+    get {
       global::System.IntPtr cPtr = $imcall;
       $typemap(cstype, TYPE) ret = (cPtr == global::System.IntPtr.Zero) ? null : new $typemap(cstype, TYPE)(cPtr, true);$excode
       return ret;
@@ -220,7 +220,7 @@ namespace RobotRaconteur
 	%apply std::string { RobotRaconteur::MessageStringPtr }
 	%apply const std::string& { const RobotRaconteur::MessageStringPtr& }
 
-	%typemap(in, canthrow=1) MessageStringPtr 
+	%typemap(in, canthrow=1) MessageStringPtr
 	%{ if (!$input) {
 		SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
 		return $null;
@@ -234,7 +234,7 @@ namespace RobotRaconteur
 	}
 	$*1_ltype $1_str($input,false);
 	$1 = &$1_str; %}
-	%typemap(out) const MessageStringPtr&  %{ std::string temp_ret1 = $1->str().to_string(); $result = SWIG_csharp_string_callback(temp_ret1.c_str()); %}	
+	%typemap(out) const MessageStringPtr&  %{ std::string temp_ret1 = $1->str().to_string(); $result = SWIG_csharp_string_callback(temp_ret1.c_str()); %}
 
 
 

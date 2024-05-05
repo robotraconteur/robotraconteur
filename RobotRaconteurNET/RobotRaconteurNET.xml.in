@@ -2560,6 +2560,67 @@
       <remarks>None</remarks>
     </member>
 
+    <member name="T:RobotRaconteur.ServicePathSegment">
+      <summary>Service path segment containing a name and an optional index</summary>
+      <remarks>None</remarks>
+    </member>
+
+    <member name="P:RobotRaconteur.ServicePathSegment.name">
+      <summary>The name of the segment</summary>
+      <remarks>None</remarks>
+    </member>
+
+    <member name="P:RobotRaconteur.ServicePathSegment.index">
+      <summary>The index of the segment</summary>
+      <remarks>None</remarks>
+    </member>
+
+    <member name="M:RobotRaconteur.ServicePathSegment.#ctor">
+      <summary>Construct a new ServicePathSegment</summary>
+      <remarks>None</remarks>
+    </member>
+
+    <member name="M:RobotRaconteur.ServicePathSegment.#ctor(System.String)">
+      <summary>Construct a new ServicePathSegment with a name</summary>
+      <remarks>None</remarks>
+      <param name="name">The name of the segment</param>
+    </member>
+
+    <member name="M:RobotRaconteur.ServicePathSegment.#ctor(System.String,System.String)">
+      <summary>Construct a new ServicePathSegment with a name and an index</summary>
+      <remarks>None</remarks>
+      <param name="name">The name of the segment</param>
+      <param name="index">The index of the segment</param>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNET.EncodeServicePathIndex(System.String)">
+      <summary>Encode a service path index for use in a Robot Raconteur service path</summary>
+      <remarks>None</remarks>
+      <param name="index">The index to encode</param>
+      <returns>The encoded index</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNET.DecodeServicePathIndex(System.String)">
+      <summary>Decode a service path index from a Robot Raconteur service path</summary>
+      <remarks>None</remarks>
+      <param name="index">The index to decode</param>
+      <returns>The decoded index</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNET.ParseServicePath(System.String)">
+      <summary>Split a service path into segments</summary>
+      <remarks>None</remarks>
+      <param name="path">The path to split</param>
+      <returns>The segments of the path</returns>
+    </member>
+
+    <member name="M:RobotRaconteur.RobotRaconteurNET.BuildServicePath(RobotRaconteur.ServicePathSegments)">
+      <summary>Join service path segments into a path</summary>
+      <remarks>None</remarks>
+      <param name="segments">The segments to join</param>
+      <returns>The joined path</returns>
+    </member>
+
     <member name="T:RobotRaconteur.HardwareTransport">
       <summary>
         Transport for USB, Bluetooth, and PCIe hardware devices
@@ -3574,14 +3635,14 @@
         </summary>
         <remarks>
             <para>
-                The candidate connection URLs are the URLs that can be used to connect to the service. 
-                The correct URL to use depends on the transport being used to connect to the service, 
+                The candidate connection URLs are the URLs that can be used to connect to the service.
+                The correct URL to use depends on the transport being used to connect to the service,
                 and the network configuration of the client and service.
             </para>
         </remarks>
         <returns>The candidate connection URLs</returns>
     </member>
-    
+
     <member name="M:RobotRaconteur.ServerContext.PrintCandidateConnectionURLs">
         <summary>
             Print the candidate connection URLs for this service.
@@ -3592,7 +3653,7 @@
             </para>
         </remarks>
     </member>
-    
+
     <member name="M:RobotRaconteur.ServerContext.LogCandidateConnectionURLs(RobotRaconteur.LogLevel)">
         <summary>
             Log the candidate connection URLs for this service.
@@ -4130,7 +4191,7 @@
       <summary>OR Operation</summary>
       <remarks>None</remarks>
     </member>
-  
+
     <member name="F:RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation.AND">
       <summary>AND Operation</summary>
       <remarks>None</remarks>
@@ -4180,7 +4241,7 @@
       <summary>Delimiter to use to split string attributes (default ",")</summary>
       <remarks>None</remarks>
     </member>
-    
+
 
     <!-- BEGIN GENERATED_MEMBERS -->
     <!-- GENERATED_MEMBERS -->

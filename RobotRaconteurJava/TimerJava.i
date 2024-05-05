@@ -14,19 +14,19 @@ struct WallTimer_initstruct
 	public WallTimer(int period, Action1<TimerEvent> handler, boolean oneshot)
 	{
              this(period,oneshot,null,attachHandler(handler));
-        
-            
 
-            
+
+
+
         }
 
 	public WallTimer(int period, Action1<TimerEvent> handler, boolean oneshot, RobotRaconteurNode node)
 	{
             this(period,oneshot,node,attachHandler(handler));
-        
-            
 
-            
+
+
+
         }
 
         private static WallTimer_initstruct attachHandler(Action1<TimerEvent> handler)
@@ -42,7 +42,7 @@ struct WallTimer_initstruct
 %include "Timer.i"
 
 
-	
+
 %extend RobotRaconteur::WallTimer
 {
 
@@ -54,5 +54,3 @@ WallTimer(const boost::posix_time::time_duration& period, bool oneshot, const bo
 	return new WallTimer(period,boost::bind(&TimerHandlerFunc,RR_BOOST_PLACEHOLDERS(_1),sphandler),oneshot,node);
 }
 }
-	
-	

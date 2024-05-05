@@ -3,31 +3,32 @@ name: CI
 on:
   push:
     branches-ignore:
-      - ros-**
-      - ros2-**
+    - ros-**
+    - ros2-**
     tags:
-      - v*
+    - v*
+    - '!*ros*'
   pull_request:
     branches-ignore:
-      - ros-**
-      - ros2-**
+    - ros-**
+    - ros2-**
   release:
     types:
-      - created
+    - created
   schedule:
-    - cron: '0 5 * * *'
+  - cron: '0 5 * * *'
 
   workflow_dispatch:
 
 env:
   VCPKG_PKGS: >-
-    boost-algorithm boost-array boost-asio 
-    boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time 
+    boost-algorithm boost-array boost-asio
+    boost-assign boost-atomic boost-bind boost-config boost-container boost-date-time
     boost-smart-ptr boost-filesystem boost-foreach boost-format boost-function boost-interprocess
     boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
-    boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered 
+    boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered
     boost-utility boost-uuid boost-program-options gtest openssl
-    
+
 
 
 jobs:
@@ -66,7 +67,7 @@ jobs:
     - name: install sudo and tzdata
       if: ${{ matrix.config.container != '' }}
       run: |
-        apt update 
+        apt update
         apt install sudo tzdata python3 -y
         ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
@@ -77,11 +78,11 @@ jobs:
       run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless 
+        sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
-        git cmake g++ make libboost-all-dev autoconf 
-        automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel 
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make libboost-all-dev autoconf
+        automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel
         python3-pytest mono-devel curl libgtest-dev -qq
     - name: apt python2.7
       if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
@@ -121,9 +122,9 @@ jobs:
     - name: configure
       working-directory: build2
       run: >
-        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON 
-        -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3 
-        -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+        -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3
+        -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON -DJAVA_HOME=/usr/lib/jvm/default-java
         -DBUILD_PYTHON_WHEEL=OFF
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
@@ -206,7 +207,7 @@ jobs:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
         retention-days: 2
-  
+
   build-gentoo:
     runs-on: ubuntu-latest
     container: gentoo/stage3:latest
@@ -223,15 +224,15 @@ jobs:
         emerge --sync --quiet
     - name: install-deps
       run: >-
-        emerge --getbinpkg --usepkg  
-        dev-libs/boost dev-libs/openssl 
-        sys-apps/dbus dev-libs/libusb net-wireless/bluez 
-        dev-cpp/gtest dev-lang/python dev-python/numpy 
-        dev-python/pip dev-python/pytest dev-build/cmake 
+        emerge --getbinpkg --usepkg
+        dev-libs/boost dev-libs/openssl
+        sys-apps/dbus dev-libs/libusb net-wireless/bluez
+        dev-cpp/gtest dev-lang/python dev-python/numpy
+        dev-python/pip dev-python/pytest dev-build/cmake
         dev-build/ninja dev-lang/swig
     - name: config
       run: >-
-        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON 
+        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
         -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
     - name: build
       run: >-
@@ -239,7 +240,7 @@ jobs:
     - name: test
       run: >-
         ctest --test-dir build -C Release
-        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" 
+        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback"
         --output-on-failure
 
   build-fedora:
@@ -252,15 +253,15 @@ jobs:
         repository: robotraconteur/robotraconteur
     - name: install-pkgs
       run: >-
-        yum install -y boost-devel cmake ninja-build 
-        gcc gcc-c++ make openssl-devel dbus-devel 
-        libusb1-devel bluez-libs-devel gtest-devel 
-        python3-devel python3-pip python3-numpy 
+        yum install -y boost-devel cmake ninja-build
+        gcc gcc-c++ make openssl-devel dbus-devel
+        libusb1-devel bluez-libs-devel gtest-devel
+        python3-devel python3-pip python3-numpy
         python3-pytest zlib-devel swig
     - name: config
       run: >-
-        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON 
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release 
+        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
@@ -268,8 +269,8 @@ jobs:
     - name: test
       run: >-
         ctest --test-dir build -C Release
-        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" 
-        --output-on-failure 
+        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback"
+        --output-on-failure
 
   build-archlinux:
     runs-on: ubuntu-latest
@@ -288,8 +289,8 @@ jobs:
         python-pytest zlib swig
     - name: config
       run: >-
-        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON 
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release 
+        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
@@ -297,8 +298,8 @@ jobs:
     - name: test
       run: >-
         ctest --test-dir build -C Release
-        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" 
-        --output-on-failure 
+        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback"
+        --output-on-failure
 
   build-win:
     runs-on: windows-2019
@@ -306,12 +307,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - arch: x64
-            vcpkg_triplet: x64-windows-static-md-release
-            cmake_arch: x64
-          - arch: x86
-            vcpkg_triplet: x86-windows-static-md-release
-            cmake_arch: Win32
+        - arch: x64
+          vcpkg_triplet: x64-windows-static-md-release
+          cmake_arch: x64
+        - arch: x86
+          vcpkg_triplet: x86-windows-static-md-release
+          cmake_arch: Win32
     steps:
     - uses: actions/checkout@v3
       with:
@@ -362,18 +363,18 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/v') != true
       run: >
         echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" | Out-File -FilePath $env:GITHUB_ENV 
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" | Out-File -FilePath $env:GITHUB_ENV
         -Encoding utf8 -Append
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: ${{ matrix.config.arch }}
     - name: configure
       run: >
-        cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON 
-        -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON 
-        -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON 
+        cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON
+        -DBUILD_NET=ON -DBoost_USE_STATIC_LIBS=ON -DBUILD_PYTHON=ON
+        -DBUILD_PYTHON_WHEEL=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON -DBUILD_JAVA=ON
         -DPYTHON_EXECUTABLE="C:/python27/python.exe"
-        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}" 
+        -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
         ${{ env.CMAKE_CACHE_ARGS }}
@@ -451,8 +452,8 @@ jobs:
       with:
         name: 'build-artifacts-win-${{ matrix.config.arch }}'
         path: build2/*
-        retention-days: 2  
-  
+        retention-days: 2
+
   build-win-shared:
     runs-on: windows-2019
     steps:
@@ -480,9 +481,9 @@ jobs:
         arch: x64
     - name: configure
       run: >
-        cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON 
+        cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON
         -DBUILD_NET=OFF -DBoost_USE_STATIC_LIBS=OFF -DBUILD_PYTHON=OFF
-        -DBUILD_PYTHON3=OFF  -DBUILD_JAVA=OFF 
+        -DBUILD_PYTHON3=OFF  -DBUILD_JAVA=OFF
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
         ${{ env.CMAKE_CACHE_ARGS }}
         -DCMAKE_BUILD_TYPE=Release
@@ -501,7 +502,7 @@ jobs:
       with:
         name: 'build-artifacts-win-shared'
         path: build2/*
-        retention-days: 2 
+        retention-days: 2
 
   build-osx:
 
@@ -539,9 +540,9 @@ jobs:
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: configure
       run: >
-        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF 
-        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release 
-        -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON 
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF
+        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON
         -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
@@ -551,7 +552,7 @@ jobs:
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
-      run: |        
+      run: |
         cmake --build . --config Release -j 4
     - name: test
       working-directory: build2
@@ -603,8 +604,8 @@ jobs:
       with:
         name: 'build-artifacts-osx'
         path: build2/*
-        retention-days: 2  
-    
+        retention-days: 2
+
   build-matlab:
 
     runs-on: ubuntu-20.04
@@ -620,8 +621,8 @@ jobs:
       run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0 
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev 
+        sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
         git cmake g++ make mono-devel libgtest-dev gcc-8 g++-8 -qq
     - name: Configure default compilers
       run: |
@@ -655,8 +656,8 @@ jobs:
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: configure
       run: >
-        cmake -G "Unix Makefiles" 
-        -DBUILD_GEN=ON  -DBUILD_TESTING=ON 
+        cmake -G "Unix Makefiles"
+        -DBUILD_GEN=ON  -DBUILD_TESTING=ON
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
@@ -672,11 +673,11 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: matlab out tar
       run: >
-         export RR_VER=`cat build2/rrversion.txt` 
-         && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz 
-         --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-glnxa64|" 
-         --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-glnxa64|" 
-         build2/out/Matlab robotraconteur/LICENSE.txt
+        export RR_VER=`cat build2/rrversion.txt`
+        && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz
+        --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
+        --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
+        build2/out/Matlab robotraconteur/LICENSE.txt
     - name: move out
       run: |
         cp robotraconteur/LICENSE.txt build2/out/
@@ -725,7 +726,7 @@ jobs:
       run: |
         ctest . -C Release --output-on-failure
       shell: cmd /C call {0}
-  
+
   build-conda-linux:
     runs-on: ubuntu-20.04
     defaults:
@@ -747,7 +748,7 @@ jobs:
         echo CXXFLAGS="$CXXFLAGS -I$GITHUB_WORKSPACE/bluez/include" >> $GITHUB_ENV
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - name: remove-swig      
+    - name: remove-swig
       run: |
         sudo apt remove '^swig.*' -qq || true
     - name: Install libbluetooth-dev
@@ -762,10 +763,10 @@ jobs:
       run: >
         conda install git cmake boost-cpp python swig numpy pytest pip dbus make zlib openssl libusb compilers gcc_impl_linux-64 gtest gmock
     - name: printenv
-      run: printenv    
+      run: printenv
     - name: configure
       run: >
-        cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON 
+        cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON
         -DCMAKE_BUILD_TYPE:STRING=Release -DPYTHON3_EXECUTABLE=$CONDA_PREFIX/bin/python
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -S robotraconteur -B build2
@@ -837,10 +838,10 @@ jobs:
     - name: apt
       run: >
         sudo apt-get install
-        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
-        git cmake g++ make libboost-all-dev autoconf 
-        automake libtool bison libpcre3-dev default-jdk default-jdk-headless default-jre 
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make libboost-all-dev autoconf
+        automake libtool bison libpcre3-dev default-jdk default-jdk-headless default-jre
         default-jre-headless libgtest-dev swig -qq
     - name: mkdir build2_host
       run: mkdir -p build2_host
@@ -861,21 +862,21 @@ jobs:
       id: setup-ndk
       with:
         ndk-version: r25b
-        add-to-path: false    
+        add-to-path: false
     - name: build_boost
       env:
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       run: |
         git clone --depth=1 https://github.com/johnwason/Boost-for-Android.git boost_android
         cd boost_android
-        ./build-android.sh $ANDROID_NDK_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.82.0 
+        ./build-android.sh $ANDROID_NDK_HOME --arch=${{ matrix.config.android_abi }} --with-libraries=date_time,filesystem,system,regex,chrono,atomic,thread,random,program_options --boost=1.82.0
     - name: build_openssl
       env:
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       run: |
         git clone --branch OpenSSL_1_1_1n https://github.com/openssl/openssl.git
         cd openssl
-        export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH 
+        export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
         ./Configure ${{ matrix.config.openssl_arch }} --prefix=$GITHUB_WORKSPACE/openssl_install_${{ matrix.config.android_abi }}
         make -j4
         make install_sw
@@ -887,26 +888,26 @@ jobs:
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=OFF  -DBUILD_TESTING=OFF
-        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release 
-        -DBUILD_JAVA=ON -DJAVA_HOME=/usr/lib/jvm/default-java 
+        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_JAVA=ON -DJAVA_HOME=/usr/lib/jvm/default-java
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
-        -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake 
+        -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake
         -DANDROID_PLATFORM=android-24
-        -DBUILD_JAVA=ON 
-        -DBOOST_ROOT:PATH=$GITHUB_WORKSPACE/boost_android/build/out/${{ matrix.config.android_abi }}/ 
-        -DBoost_DEBUG=ON 
-        -DBoost_VERBOSE=ON 
-        -DBoost_USE_STATIC_LIBS=ON 
+        -DBUILD_JAVA=ON
+        -DBOOST_ROOT:PATH=$GITHUB_WORKSPACE/boost_android/build/out/${{ matrix.config.android_abi }}/
+        -DBoost_DEBUG=ON
+        -DBoost_VERBOSE=ON
+        -DBoost_USE_STATIC_LIBS=ON
         -DBoost_COMPILER=-clang
-        -DCMAKE_FIND_ROOT_PATH=$GITHUB_WORKSPACE 
-        -DANDROID_ABI=${{ matrix.config.android_abi }} 
-        -DOPENSSL_ROOT_DIR=$GITHUB_WORKSPACE/openssl_install_${{ matrix.config.android_abi }} 
+        -DCMAKE_FIND_ROOT_PATH=$GITHUB_WORKSPACE
+        -DANDROID_ABI=${{ matrix.config.android_abi }}
+        -DOPENSSL_ROOT_DIR=$GITHUB_WORKSPACE/openssl_install_${{ matrix.config.android_abi }}
         -DOPENSSL_USE_STATIC_LIBS=ON
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
-        -DRobotRaconteurGen_EXECUTABLE=$GITHUB_WORKSPACE/build2_host/out/bin/RobotRaconteurGen 
-        -DSWIG_JAVA_EXTRA_ARGS_OVERRIDE=${{ matrix.config.swig_args }} 
-        -DANDROID_JAR=$ANDROID_HOME/platforms/android-24/Android.jar 
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        -DRobotRaconteurGen_EXECUTABLE=$GITHUB_WORKSPACE/build2_host/out/bin/RobotRaconteurGen
+        -DSWIG_JAVA_EXTRA_ARGS_OVERRIDE=${{ matrix.config.swig_args }}
+        -DANDROID_JAR=$ANDROID_HOME/platforms/android-24/Android.jar
         ../robotraconteur
     - name: build
       env:
@@ -951,7 +952,7 @@ jobs:
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
-        -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 
+        -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
         -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_SYSTEM_PROCESSOR=aarch64
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
     - name: build
@@ -1001,7 +1002,7 @@ jobs:
     - name: cp meta.yaml
       run: |
         cp rr_src/tools/build_files/pyodide/meta.yaml src/packages/RobotRaconteur/meta.yaml
-    - name: apt 
+    - name: apt
       run: |
         sudo apt update
         sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev
@@ -1018,11 +1019,11 @@ jobs:
       run: |
         make -C emsdk
         make -C cpython
-        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest"
+        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
         make
     - name: remove apt swig
       run: sudo apt remove '^swig.*' -y -qq || true
-    - name: build-swig      
+    - name: build-swig
       uses: johnwason/swig-build-action@v1.1
       with:
         cache-key: pyodide-swig
@@ -1041,7 +1042,7 @@ jobs:
         # mkdir -p /tmp/ccache
         ln -s $GITHUB_WORKSPACE/rr_src /rr_src
         pyodide build-recipes-no-deps RobotRaconteur
-        pyodide build-recipes RobotRaconteur numpy pytest --install
+        pyodide build-recipes RobotRaconteur numpy pytest Jinja2 micropip pyyaml --install
     - name: test
       working-directory: src
       run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
@@ -1055,8 +1056,8 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: 'pyodide-package-logs'
-        path: src/packages/build-logs/*  
-        
+        path: src/packages/build-logs/*
+
   build-dist:
     needs:
     - build-ubuntu
@@ -1101,9 +1102,15 @@ jobs:
           distfiles/*
   pre-commit:
     runs-on: ubuntu-22.04
+    env:
+      SKIP: no-commit-to-branch
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v3
+    - name: apt
+      run: |
+        sudo apt update
+        sudo apt install -y dos2unix
     - uses: pre-commit/action@v3.0.1
   clang-tidy:
     runs-on: ubuntu-20.04
@@ -1115,10 +1122,10 @@ jobs:
       run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install 
-        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev 
-        git cmake g++ make libboost-all-dev autoconf 
+        sudo apt-get install
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
+        git cmake g++ make libboost-all-dev autoconf
         automake libtool bison libpcre3-dev curl libgtest-dev -qq
     - name: pip
       run: sudo python3 -m pip install autopep8 cmakelang
@@ -1151,10 +1158,10 @@ jobs:
       run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install 
-        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev 
-        git cmake g++ make libboost-all-dev autoconf 
+        sudo apt-get install
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
+        git cmake g++ make libboost-all-dev autoconf
         automake libtool bison libpcre3-dev curl libgtest-dev cppcheck swig -qq
     - name: mkdir build2
       run: mkdir -p build2
@@ -1162,7 +1169,7 @@ jobs:
       working-directory: build2
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON 
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DCMAKE_CXX_CPPCHECK="/usr/bin/cppcheck;--enable=warning;--inconclusive;--force;--inline-suppr;-DBOOST_ASIO_MOVE_ARG(a)=;--error-exitcode=1;--std=c++03;RobotRaconteurCore;RobotRaconteurGen"
         ../robotraconteur
     - name: build
@@ -1178,11 +1185,11 @@ jobs:
       run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install 
-        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev 
-        git cmake g++ make libboost-all-dev autoconf 
-        automake libtool bison libpcre3-dev curl libgtest-dev gcovr swig 
+        sudo apt-get install
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
+        git cmake g++ make libboost-all-dev autoconf
+        automake libtool bison libpcre3-dev curl libgtest-dev gcovr swig
         python3-dev python3-numpy python3-setuptools python3-wheel python3-pytest -qq
     - name: mkdir build
       run: mkdir -p build
@@ -1218,231 +1225,231 @@ jobs:
   vcpkg-test-win:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: vcpkg build
-        uses: johnwason/vcpkg-action@v6
-        id: vcpkg
-        with:
-          pkgs: robotraconteur
-          triplet: x64-windows-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
-          cache-key: vcpkg-test-win
-          token: ${{ github.token }}
-          github-binarycache: true
-      - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
-      - name: build-disttest-cpp
-        working-directory: test/dist/cpp
-        run: |
-          cmake -G "NMake Makefiles" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
-          cmake --build build --config Release -j 4
-      - name: run-build-disttest-cpp
-        working-directory: test/dist/cpp/build
-        run: |
-          .\disttest_cpp.exe
+    - uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v6
+      id: vcpkg
+      with:
+        pkgs: robotraconteur
+        triplet: x64-windows-release
+        extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
+        cache-key: vcpkg-test-win
+        token: ${{ github.token }}
+        github-binarycache: true
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+    - name: build-disttest-cpp
+      working-directory: test/dist/cpp
+      run: |
+        cmake -G "NMake Makefiles" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+        cmake --build build --config Release -j 4
+    - name: run-build-disttest-cpp
+      working-directory: test/dist/cpp/build
+      run: |
+        .\disttest_cpp.exe
 
   vcpkg-test-linux:
     runs-on: ubuntu-latest
     env:
       VCPKG_MAX_CONCURRENCY: 2
     steps:
-      - uses: actions/checkout@v2
-      - name: apt update
-        run: sudo apt update
-      - name: apt
-        run: >
-          sudo apt-get install zlib1g zlib1g-dev libssl-dev libusb-1.0-0
-          libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
-          git cmake g++ make curl libgtest-dev -qq
-      - name: vcpkg build
-        uses: johnwason/vcpkg-action@v6
-        id: vcpkg
-        with:
-          pkgs: robotraconteur
-          triplet: x64-linux-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
-          cache-key: vcpkg-test-linux
-          token: ${{ github.token }}
-          github-binarycache: true
-      - name: build-disttest-cpp
-        working-directory: test/dist/cpp
-        run: |
-          cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
-          cmake --build build --config Release -j 4
-      - name: run-build-disttest-cpp
-        working-directory: test/dist/cpp/build
-        run: |
-          ./disttest_cpp
+    - uses: actions/checkout@v2
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make curl libgtest-dev -qq
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v6
+      id: vcpkg
+      with:
+        pkgs: robotraconteur
+        triplet: x64-linux-release
+        extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
+        cache-key: vcpkg-test-linux
+        token: ${{ github.token }}
+        github-binarycache: true
+    - name: build-disttest-cpp
+      working-directory: test/dist/cpp
+      run: |
+        cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+        cmake --build build --config Release -j 4
+    - name: run-build-disttest-cpp
+      working-directory: test/dist/cpp/build
+      run: |
+        ./disttest_cpp
       # Archive all logs
-      - name: Archive all logs
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: logs
-          path: |
-            **/*.log
+    - name: Archive all logs
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: logs
+        path: |
+          **/*.log
 
   vcpkg-test-osx:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
-      - uses: actions/checkout@v2
-      - name: vcpkg build
-        uses: johnwason/vcpkg-action@v6
-        id: vcpkg
-        with:
-          pkgs: robotraconteur
-          triplet: x64-osx-release
-          extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
-          cache-key: vcpkg-test-osx
-          token: ${{ github.token }}
-          github-binarycache: true
-      - name: build-disttest-cpp
-        working-directory: test/dist/cpp
-        run: |
-          cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -S . -B build
-          cmake --build build --config Release -j 4
-      - name: run-build-disttest-cpp
-        working-directory: test/dist/cpp/build
-        run: |
-          ./disttest_cpp
-      
+    - uses: actions/checkout@v2
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v6
+      id: vcpkg
+      with:
+        pkgs: robotraconteur
+        triplet: x64-osx-release
+        extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
+        cache-key: vcpkg-test-osx
+        token: ${{ github.token }}
+        github-binarycache: true
+    - name: build-disttest-cpp
+      working-directory: test/dist/cpp
+      run: |
+        cmake  ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -S . -B build
+        cmake --build build --config Release -j 4
+    - name: run-build-disttest-cpp
+      working-directory: test/dist/cpp/build
+      run: |
+        ./disttest_cpp
+
   distfiles-test-win:
     needs:
-      - build-dist
+    - build-dist
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         config:
-          - arch: x64
-            wheel_arch: win_amd64
-          - arch: x86
-            wheel_arch: win32
+        - arch: x64
+          wheel_arch: win_amd64
+        - arch: x86
+          wheel_arch: win32
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: robotraconteur
-      - name: Download distfiles
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/distfiles
-          name: distfiles
-      - name: .net test
-        uses: ./robotraconteur/test/dist/net/action/win
-        with:
-          arch: ${{ matrix.config.arch }}
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: 3.7
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp37-cp37m-${{ matrix.config.wheel_arch }}.whl
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: 3.8
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp38-cp38-${{ matrix.config.wheel_arch }}.whl
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: 3.9
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp39-cp39-${{ matrix.config.wheel_arch }}.whl
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: "3.10"
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp310-cp310-${{ matrix.config.wheel_arch }}.whl
-      - uses: ./robotraconteur/test/dist/python/action/win
-        with:
-          python_version: "3.11"
-          arch: ${{ matrix.config.arch }}
-          wheel_filename: RobotRaconteur-*-cp311-cp311-${{ matrix.config.wheel_arch }}.whl
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: Download distfiles
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/distfiles
+        name: distfiles
+    - name: .net test
+      uses: ./robotraconteur/test/dist/net/action/win
+      with:
+        arch: ${{ matrix.config.arch }}
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: 3.7
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp37-cp37m-${{ matrix.config.wheel_arch }}.whl
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: 3.8
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp38-cp38-${{ matrix.config.wheel_arch }}.whl
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: 3.9
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp39-cp39-${{ matrix.config.wheel_arch }}.whl
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: "3.10"
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp310-cp310-${{ matrix.config.wheel_arch }}.whl
+    - uses: ./robotraconteur/test/dist/python/action/win
+      with:
+        python_version: "3.11"
+        arch: ${{ matrix.config.arch }}
+        wheel_filename: RobotRaconteur-*-cp311-cp311-${{ matrix.config.wheel_arch }}.whl
   distfiles-test-linux:
     needs:
-      - build-dist
+    - build-dist
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: robotraconteur
-      - name: apt
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libboost-all-dev libssl-dev zlib1g-dev -y
-      - name: Download distfiles
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/distfiles
-          name: distfiles
-      - name: Download distfiles out-ubuntu
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/out-ubuntu
-          name: out-ubuntu-22.04
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: 3.7
-          wheel_filename: RobotRaconteur-*-cp37-cp37m-manylinux*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: 3.8
-          wheel_filename: RobotRaconteur-*-cp38-cp38-manylinux*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: 3.9
-          wheel_filename: RobotRaconteur-*-cp39-cp39-manylinux*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: "3.10"
-          wheel_filename: RobotRaconteur-*-cp310-cp310-manylinux*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/linux
-        with:
-          python_version: "3.11"
-          wheel_filename: RobotRaconteur-*-cp311-cp311-manylinux*x86_64.whl
-      - name: .net test
-        uses: ./robotraconteur/test/dist/net/action/linux
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: apt
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-all-dev libssl-dev zlib1g-dev -y
+    - name: Download distfiles
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/distfiles
+        name: distfiles
+    - name: Download distfiles out-ubuntu
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/out-ubuntu
+        name: out-ubuntu-22.04
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: 3.7
+        wheel_filename: RobotRaconteur-*-cp37-cp37m-manylinux*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: 3.8
+        wheel_filename: RobotRaconteur-*-cp38-cp38-manylinux*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: 3.9
+        wheel_filename: RobotRaconteur-*-cp39-cp39-manylinux*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: "3.10"
+        wheel_filename: RobotRaconteur-*-cp310-cp310-manylinux*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/linux
+      with:
+        python_version: "3.11"
+        wheel_filename: RobotRaconteur-*-cp311-cp311-manylinux*x86_64.whl
+    - name: .net test
+      uses: ./robotraconteur/test/dist/net/action/linux
 
   distfiles-test-osx:
     needs:
-      - build-dist
-    runs-on: macos-latest
+    - build-dist
+    runs-on: macos-12
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: robotraconteur
-      - name: Download distfiles
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/distfiles
-          name: distfiles
-      - name: Download distfiles out-osx
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts/out-osx
-          name: out-osx
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: 3.7
-          wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: 3.8
-          wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: 3.9
-          wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: "3.10"
-          wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*x86_64.whl
-      - uses: ./robotraconteur/test/dist/python/action/osx
-        with:
-          python_version: "3.11"
-          wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
-      - name: .net test
-        uses: ./robotraconteur/test/dist/net/action/osx
-          
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
+    - name: Download distfiles
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/distfiles
+        name: distfiles
+    - name: Download distfiles out-osx
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/out-osx
+        name: out-osx
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: 3.7
+        wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: 3.8
+        wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: 3.9
+        wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.10"
+        wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.11"
+        wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
+    # - name: .net test
+    #   uses: ./robotraconteur/test/dist/net/action/osx
+
   companion-build-ubuntu:
     runs-on: ${{ matrix.config.runs_on }}
     container: ${{ matrix.config.container }}
@@ -1485,10 +1492,10 @@ jobs:
       run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install 
+        sudo apt-get install
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev 
-        git cmake g++ make libboost-all-dev autoconf 
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make libboost-all-dev autoconf
         automake libtool bison libpcre3-dev curl libgtest-dev
         libyaml-cpp-dev -qq
     - name: install gtest
@@ -1502,8 +1509,7 @@ jobs:
         sudo cmake --build . --target install
     - name: install eigen
       if: ${{ matrix.config.os != 'ubuntu-16.04' }}
-      run:
-        sudo apt-get install libeigen3-dev -y
+      run: sudo apt-get install libeigen3-dev -y
     - name: install eigen
       if: ${{ matrix.config.os == 'ubuntu-16.04' }}
       run: |
@@ -1513,7 +1519,7 @@ jobs:
         mkdir build
         cd build
         cmake ..
-        sudo make install        
+        sudo make install
     - name: build-swig
       if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' }}
       uses: johnwason/swig-build-action@v1
@@ -1540,7 +1546,7 @@ jobs:
     - name: configure
       working-directory: build2
       run: >
-        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF 
+        cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
@@ -1568,7 +1574,7 @@ jobs:
       working-directory: build2_companion
       run: |
         ctest -C Release --output-on-failure
-      
+
   companion-build-win:
     runs-on: windows-2019
     steps:
@@ -1604,9 +1610,9 @@ jobs:
     - name: configure
       run: >
         cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=OFF
-        -DBoost_USE_STATIC_LIBS=ON 
+        -DBoost_USE_STATIC_LIBS=ON
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
-        -DCMAKE_C_COMPILER_LAUNCHER=buildcache 
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache
         -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DCMAKE_BUILD_TYPE=Release
@@ -1618,9 +1624,9 @@ jobs:
     - name: configure-companion
       run: >
         cmake -G "Ninja" -DBUILD_TESTING=ON
-        -DBoost_USE_STATIC_LIBS=ON 
+        -DBoost_USE_STATIC_LIBS=ON
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
-        -DCMAKE_C_COMPILER_LAUNCHER=buildcache 
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache
         -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DCMAKE_BUILD_TYPE=Release

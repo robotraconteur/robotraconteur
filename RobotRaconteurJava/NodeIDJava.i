@@ -1,6 +1,6 @@
 //NodeID
 namespace RobotRaconteur
-{ 
+{
 
 %typemap("javacode") NodeID
 %{
@@ -13,7 +13,7 @@ for (int i=0; i<o1.size(); i++)
 {
 	ByteBuffer b=ByteBuffer.allocate(2);
 	b.putShort(o1.get(i));
-	
+
 	o2[i]=b.array()[1];
 }
 return o2;
@@ -30,21 +30,21 @@ public NodeID(byte[] id)
 		bb.rewind();
 		id2.set(i, bb.getShort());
 	}
-	
+
 	swigCMemOwn=true;
 	swigCPtr=RobotRaconteurJavaJNI.new_NodeID__SWIG_1(vector_uint8_t.getCPtr(id2),id2);
-		
+
 }*/
 
 
 %}
 
-%typemap(javaimports) NodeID 
+%typemap(javaimports) NodeID
 %{
 import java.nio.*;
 %}
 
-class NodeID 
+class NodeID
 {
 public:
 	NodeID();
@@ -52,14 +52,14 @@ public:
 	virtual std::string ToString() const;
 	virtual std::string ToString(const std::string& format) const;
 	static NodeID NewUniqueID();
-    
+
     %rename(equals) operator==;
 	bool operator == (const NodeID &id2) const;
     %rename(ne) operator!=;
 	bool operator != (const NodeID &id2) const;
 	%rename(lt) operator<;
 	bool operator <(const NodeID& id2) const;
-	
+
 	bool IsAnyNode();
 	static NodeID GetAny();
 
@@ -68,12 +68,12 @@ public:
 	NodeID(const std::string& id);
 	NodeID(const NodeID& id);
 
-	
-	
+
+
 	%rename(ToByteArrayC) ToByteArray;
 	%javamethodmodifiers ToByteArray "private";
 	//std::vector<uint8_t> ToByteArray();
-	
+
 };
 
 }

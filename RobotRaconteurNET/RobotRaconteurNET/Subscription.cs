@@ -623,6 +623,31 @@ public class ServiceSubscription
     }
 
     /// <summary>
+    /// Creates a sub object subscription
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Sub objects are objects within a service that are not the root object. Sub objects are typically
+    /// referenced using objref members, however they can also be referenced using a service path.
+    /// The SubObjectSubscription class is used to automatically access sub objects of the default client.
+    /// </para>
+    /// <para>
+    /// The service path is broken up into segments using periods. See the Robot Raconter
+    /// documentation for more information. The BuildServicePath() function can be used to assist
+    /// building service paths. The first level of the* service path may be "*" to match any service name.
+    /// For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
+    /// </para>
+    /// </remarks>
+    /// <param name="servicepath">The service path of the object</param>
+    /// <param name="objecttype">Optional object type to use for the sub object</param>
+    /// <returns>The sub object subscription</returns>
+    public SubObjectSubscription SubscribeSubObject(string servicepath, string objecttype = "")
+    {
+        var s = _subscription.SubscribeSubObject(servicepath, objecttype);
+        return new SubObjectSubscription(this, s);
+    }
+
+    /// <summary>
     /// Get the "default client" connection
     /// </summary>
     /// <remarks>
@@ -1353,6 +1378,411 @@ public partial class PipeSubscription<T>
     /// </summary>
     /// <remarks>None</remarks>
     public event Action<PipeSubscription<T>> PipePacketReceived;
+}
+
+/// <summary>
+/// Subscription for sub objects of the default client.
+/// </summary>
+/// <remarks>
+/// <para>SubObjectSubscription is used to access sub objects of the default client. Sub objects are objects within a
+/// service that are not the root object. Sub objects are typically referenced using objref members, however they can
+/// also be referenced using a service path. The SubObjectSubscription class is used to automatically access sub objects
+/// of the default client.</para>
+///
+/// <para>Use ServiceSubscription.SubscribeSubObject() to create a SubObjectSubscription.</para>
+///
+/// <para>This class should not be used to access Pipe or Wire members. Use the ServiceSubscription.SubscribePipe() and
+/// ServiceSubscription.SubscribeWire() functions to access Pipe and Wire members.</para>
+/// </remarks>
+public class SubObjectSubscription
+{
+    WrappedSubObjectSubscription _subscription;
+    ServiceSubscription _parent;
+
+    internal SubObjectSubscription(ServiceSubscription parent, WrappedSubObjectSubscription subscription)
+    {
+        _subscription = subscription;
+        _parent = parent;
+    }
+
+    /// <summary>
+    /// Closes the sub object subscription.
+    /// </summary>
+    /// <remarks>
+    /// <para>Sub object subscriptions are automatically closed when the parent ServiceSubscription is closed
+    /// or when the node is shut down.</para>
+    /// </remarks>
+    public void Close()
+    {
+        _subscription.Close();
+    }
+    /// <summary>
+    /// Get the "default client" sub object.
+    /// </summary>
+    /// <remarks>
+    /// <para>The sub object is retrieved from the default client. The default client is the first client
+    /// that connected to the service. If no clients are currently connected, an exception is thrown.</para>
+    ///
+    /// <para>Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+    /// each time the client is needed.</para>
+    /// </remarks>
+    /// <returns>The sub object.</returns>
+    public object GetDefaultClient()
+    {
+        var s = _subscription.GetDefaultClient();
+        return _parent.GetClientStub(s);
+    }
+    /// <summary>
+    /// Try getting the "default client" sub object.
+    /// </summary>
+    /// <remarks>
+    /// <para>Same as GetDefaultClient(), but returns a bool for success or failure instead of throwing
+    /// an exception on failure.</para>
+    /// </remarks>
+    /// <param name="obj">The sub object.</param>
+    /// <returns>true if the sub object was retrieved successfully; otherwise, false.</returns>
+    public bool TryGetDefaultClient(out object obj)
+    {
+        var res = _subscription.TryGetDefaultClient();
+        if (!res.res)
+        {
+            obj = null;
+            return false;
+        }
+
+        var s = res.client;
+        obj = _parent.GetClientStub(s);
+        return true;
+    }
+
+    /// <summary>
+    /// Get the "default client" sub object, waiting for a specified timeout.
+    /// </summary>
+    /// <remarks>
+    /// <para>The sub object is retrieved from the default client. The default client is the first client
+    /// that connected to the service. If no clients are currently connected, an exception is thrown.</para>
+    ///
+    /// <para>Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+    /// each time the client is needed.</para>
+    ///
+    /// <para>This function blocks the current thread until the client is retrieved or the timeout is reached.</para>
+    /// </remarks>
+    /// <param name="timeout">The timeout in milliseconds.</param>
+    /// <returns>The sub object.</returns>
+    public object GetDefaultClientWait(int timeout = -1)
+    {
+        var s = _subscription.GetDefaultClientWait(timeout);
+        return _parent.GetClientStub(s);
+    }
+
+    /// <summary>
+    /// Try getting the "default client" sub object, waiting for a specified timeout.
+    /// </summary>
+    /// <remarks>
+    /// <para>Same as GetDefaultClientWait(), but returns a bool for success or failure instead of throwing
+    /// an exception on failure.</para>
+    /// </remarks>
+    /// <param name="obj">The sub object.</param>
+    /// <param name="timeout">The timeout in milliseconds.</param>
+    /// <returns>true if the sub object was retrieved successfully; otherwise, false.</returns>
+    public bool TryGetDefaultClientWait(out object obj, int timeout = -1)
+    {
+        var res = _subscription.TryGetDefaultClientWait(timeout);
+        if (!res.res)
+        {
+            obj = null;
+            return false;
+        }
+
+        var s = res.client;
+        obj = _parent.GetClientStub(s);
+        return true;
+    }
+
+    /// <summary>
+    /// Asynchronously get the "default client" sub object.
+    /// </summary>
+    /// <remarks>
+    /// <para>Asynchronous version of GetDefaultClient(). The task completes when the
+    /// client is retrieved or an error occurs.</para>
+    /// </remarks>
+    /// <param name="timeout">The timeout in milliseconds.</param>
+    public async Task<object> AsyncGetDefaultClient(int timeout = -1)
+    {
+        AsyncStubReturnDirectorImpl<object> h = new AsyncStubReturnDirectorImpl<object>(null);
+        int id = RRObjectHeap.AddObject(h);
+        _subscription.AsyncGetDefaultClient(timeout, h, id);
+        return await h.Task;
+    }
+}
+/// <summary>
+/// ServiceSubscriptionManager subscription connection information
+/// </summary>
+/// <remarks>
+/// Contains the connection information for a ServiceSubscriptionManager subscription
+/// and the local name of the subscription
+/// </remarks>
+public class ServiceSubscriptionManagerDetails
+{
+    /// <summary>
+    /// The local name of the subscription
+    /// </summary>
+    /// <remarks>None</remarks>
+    public string Name;
+    /// <summary>
+    /// The connection method to use, URL or service type
+    /// </summary>
+    /// <remarks>None</remarks>
+    public ServiceSubscriptionManager_CONNECTION_METHOD ConnectionMethod =
+        ServiceSubscriptionManager_CONNECTION_METHOD.CONNECTION_METHOD_DEFAULT;
+    /// <summary>
+    /// The URLs to use for subscription
+    /// </summary>
+    /// <remarks>None</remarks>
+    public string[] Urls;
+    /// <summary>
+    /// The username to use for URLs (optional)
+    /// </summary>
+    /// <remarks>None</remarks>
+    public string UrlUsername;
+    /// <summary>
+    /// The credentials to use for URLs (optional)
+    /// </summary>
+    /// <remarks>None</remarks>
+    public Dictionary<string, object> UrlCredentials;
+    /// <summary>
+    /// The service types to use for subscription
+    /// </summary>
+    /// <remarks>None</remarks>
+    public string[] ServiceTypes;
+    /// <summary>
+    /// The filter to use for subscription when service type is used (optional)
+    /// </summary>
+    /// <remarks>None</remarks>
+    public ServiceSubscriptionFilter Filter;
+    /// <summary>
+    /// If the subscription is enabled
+    /// </summary>
+    /// <remarks>None</remarks>
+    public bool Enabled = true;
+}
+
+/// <summary>
+/// Class to manage multiple subscriptions to services
+/// </summary>
+/// <remarks>
+/// <para> ServiceSubscriptionManager is used to manage multiple subscriptions to services. Subscriptions
+/// are created using information contained in ServiceSubscriptionManagerDetails structures. The subscriptions
+/// can connect using URLs or service types. The subscriptions can be enabled or disabled, and can be
+/// closed.
+/// </para>
+/// </remarks>
+public class ServiceSubscriptionManager
+{
+    internal WrappedServiceSubscriptionManager _subscription_manager;
+
+    internal Dictionary<string, ServiceSubscription> _subscriptions = new Dictionary<string, ServiceSubscription>();
+
+    internal WrappedServiceSubscriptionManagerDetails
+    _ServiceSubscriptionManager_LoadDetails(ServiceSubscriptionManagerDetails details)
+    {
+        var details2 = new WrappedServiceSubscriptionManagerDetails();
+        details2.Name = details.Name;
+        details2.ConnectionMethod = (ServiceSubscriptionManager_CONNECTION_METHOD)details.ConnectionMethod;
+        if (details.Urls != null)
+        {
+            foreach (var s in details.Urls)
+            {
+                details2.Urls.Add(s);
+            }
+        }
+        details2.UrlUsername = details.UrlUsername;
+        if (details.UrlCredentials != null)
+        {
+            details2.UrlCredentials =
+                (MessageElementData)RobotRaconteurNode.s.PackMapType<string, object>(details.UrlCredentials);
+        }
+        if (details.ServiceTypes != null)
+        {
+            foreach (var s in details.ServiceTypes)
+            {
+                details2.ServiceTypes.Add(s);
+            }
+        }
+        if (details.Filter != null)
+        {
+            details2.Filter = RobotRaconteurNode.s.SubscribeService_LoadFilter(details.Filter);
+        }
+        details2.Enabled = details.Enabled;
+        return details2;
+    }
+
+    /// <summary>
+    /// Construct a new ServiceSubscriptionManager object
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="details">(optional) List of subscriptions to initialize</param>
+    public ServiceSubscriptionManager(ServiceSubscriptionManagerDetails[] details = null)
+    {
+        var details2 = new vector_wrappedservicesubscriptionmanagerdetails();
+        if (details != null)
+        {
+            foreach (var d in details)
+            {
+                details2.Add(_ServiceSubscriptionManager_LoadDetails(d));
+            }
+        }
+
+        _subscription_manager = new WrappedServiceSubscriptionManager(details2);
+    }
+
+    /// <summary>
+    /// Add a subscription to the manager
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="details">The subscription details</param>
+    public void AddSubscription(ServiceSubscriptionManagerDetails details)
+    {
+        _subscription_manager.AddSubscription(_ServiceSubscriptionManager_LoadDetails(details));
+    }
+
+    /// <summary>
+    /// Remove a subscription from the manager
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="name">The local name of the subscription to remove</param>
+    /// <param name="close">(optional) If true, close the subscription</param>
+    public void RemoveSubscription(string name, bool close = true)
+    {
+        lock (this)
+        {
+            _subscription_manager.RemoveSubscription(name, close);
+            if (close)
+            {
+                _subscriptions.Remove(name);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Enable a subscription
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="name">The name of the subscription to enable</param>
+    public void EnableSubscription(string name)
+    {
+        _subscription_manager.EnableSubscription(name);
+    }
+
+    /// <summary>
+    /// Disable a subscription
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="name">The name of the subscription to disable</param>
+    /// <param name="close">(optional) If true, close the subscription</param>
+    public void DisableSubscription(string name, bool close = true)
+    {
+        _subscription_manager.DisableSubscription(name, close);
+    }
+
+    /// <summary>
+    /// Get a subscription by name
+    /// </summary>
+    /// <param name="name">The local name of the subscription</param>
+    /// <param name="force_create">(optional) If true, create the subscription if it does not exist</param>
+    /// <remarks>None</remarks>
+    /// <returns>The subscription</returns>
+    public ServiceSubscription GetSubscription(string name, bool force_create = false)
+    {
+        lock (this)
+        {
+            if (_subscriptions.ContainsKey(name))
+            {
+                return _subscriptions[name];
+            }
+
+            var s = _subscription_manager.GetSubscription(name, force_create);
+            if (s == null)
+            {
+                return null;
+            }
+
+            var s2 = new ServiceSubscription(s);
+            _subscriptions[name] = s2;
+            return s2;
+        }
+    }
+
+    /// <summary>
+    /// Get if a subscription is connected
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="name">Teh local name of the subscription</param>
+    /// <returns>True if the subscription is connected</returns>
+    public bool IsConnected(string name)
+    {
+        return _subscription_manager.IsConnected(name);
+    }
+
+    /// <summary>
+    /// Get if a subscription is enabled
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="name">The local name of the subscription</param>
+    /// <returns>True if the subscription is enabled</returns>
+    public bool IsEnabled(string name)
+    {
+        return _subscription_manager.IsEnabled(name);
+    }
+
+    /// <summary>
+    /// Close the subscription manager
+    /// </summary>
+    /// <remarks>None</remarks>
+    /// <param name="close_subscriptions">(optional) If true, close all subscriptions</param>
+    public void Close(bool close_subscriptions = true)
+    {
+        _subscription_manager.Close(close_subscriptions);
+        lock (this)
+        {
+            _subscriptions.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Get the local names of all subscriptions
+    /// </summary>
+    /// <remarks>None</remarks>
+    public string[] SubscriptionNames
+    {
+        get {
+            return _subscription_manager.GetSubscriptionNames().ToArray();
+        }
+    }
+
+    /// <summary>
+    /// Get the details of all subscriptions
+    /// </summary>
+    /// <remarks>None</remarks>
+    public ServiceSubscriptionManagerDetails[] SubscriptionDetails
+    {
+        get {
+            var details = new List<ServiceSubscriptionManagerDetails>();
+            var details2 = _subscription_manager.GetSubscriptionDetails();
+            foreach (var d in details2)
+            {
+                var d2 = new ServiceSubscriptionManagerDetails();
+                d2.Name = d.Name;
+                d2.ConnectionMethod = (ServiceSubscriptionManager_CONNECTION_METHOD)d.ConnectionMethod;
+                d2.Urls = d.Urls.ToArray();
+                d2.UrlUsername = d.UrlUsername;
+                d2.ServiceTypes = d.ServiceTypes.ToArray();
+                d2.Enabled = d.Enabled;
+                details.Add(d2);
+            }
+            return details.ToArray();
+        }
+    }
 }
 
 public partial class RobotRaconteurNode

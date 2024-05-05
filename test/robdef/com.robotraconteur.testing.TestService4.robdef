@@ -78,7 +78,7 @@ end
 
 ## obj1 docstring
 object obj1
-   
+
     ## constant2 docstring
     constant double myconst2  0
 

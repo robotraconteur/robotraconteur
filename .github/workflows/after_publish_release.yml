@@ -3,12 +3,12 @@ name: After publish release
 on:
   release:
     types:
-      - published
+    - published
   workflow_dispatch:
     inputs:
       tag_name:
         description: Tag name of release
-        required: true        
+        required: true
 
 jobs:
   publish-files:
@@ -56,5 +56,3 @@ jobs:
         ref: refs/heads/master
         token: ${{ secrets.BOT_GITHUB_TOKEN }}
         inputs: '{ "formula": "robotraconteur", "source_repository": "${{ github.repository }}", "tag_name": "${{ github.event.release.tag_name || github.event.inputs.tag_name }}" }'
-    
-        

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 from . import RobotRaconteurPython
 from .RobotRaconteurPythonDataTypes import *
@@ -41,6 +41,15 @@ import numpy
 
 if (sys.version_info > (3, 5)):
     import asyncio
+
+_traceback_requested = str(os.environ.get('ROBOTRACONTEUR_PYTHON_TRACEBACK_PRINT_EXC', "0")
+                           ).lower() in ("1", "true", "yes", "on")
+
+
+def _print_exc_traceback(exc):
+    if _traceback_requested:
+        print("RobotRaconteurPython async caught exception:", file=sys.stderr)
+        traceback.print_exception(exc, file=sys.stderr)
 
 
 def SplitQualifiedName(name):
@@ -659,7 +668,7 @@ class PipeEndpoint(object):
     See Pipe for more information on pipe members.
 
     Pipe endpoints are created by clients using the Pipe.Connect() or Pipe.AsyncConnect()
-    functions. Services receive incoming pipe endpoint connection requests through a 
+    functions. Services receive incoming pipe endpoint connection requests through a
     callback function specified using the Pipe.PipeConnectCallback property. Services
     may also use the PipeBroadcaster class to automate managing pipe endpoint lifecycles and
     sending packets to all connected client endpoints.
@@ -670,7 +679,7 @@ class PipeEndpoint(object):
 
     Pipes send reliable packet streams between connected client/service endpoint pairs.
     Packets are sent using the SendPacket() or AsyncSendPacket() functions. Packets
-    are read from the receive queue using the ReceivePacket(), ReceivePacketWait(), 
+    are read from the receive queue using the ReceivePacket(), ReceivePacketWait(),
     TryReceivePacketWait(), TryReceivePacketWait(), or PeekNextPacket(). The endpoint is closed
     using the Close() or AsyncClose() function.
 
@@ -1034,7 +1043,7 @@ class Pipe(object):
     Pipes may be *unreliable*, meaning that packets may arrive out of order or be dropped. Use IsUnreliable to check for
     unreliable pipes. The member modifier `unreliable` is used to specify that a pipe should be unreliable.
 
-    Pipes may be declared *readonly* or *writeonly*. If neither is specified, the pipe is assumed to be full duplex. *readonly* 
+    Pipes may be declared *readonly* or *writeonly*. If neither is specified, the pipe is assumed to be full duplex. *readonly*
     pipes may only send packets from service to client. *writeonly* pipes may only send packets from client to service. Use
     Direction to determine the direction of the pipe.
 
@@ -1138,7 +1147,7 @@ class Pipe(object):
 
         Callback function invoked when a client attempts to connect a pipe endpoint. The callback
         will receive the incoming pipe endpoint as a parameter. The service must maintain a reference to the
-        pipe endpoint, but the pipe will retain ownership of the endpoint until it is closed. 
+        pipe endpoint, but the pipe will retain ownership of the endpoint until it is closed.
 
         The callback may throw an exception to reject incoming connect request.
 
@@ -1187,14 +1196,14 @@ class WireConnection(object):
     wire members. See Wire for more information on wire members.
 
     Wire connections are created by clients using the Wire.Connect() or Wire.AsyncConnect()
-    functions. Services receive incoming wire connection requests through a 
+    functions. Services receive incoming wire connection requests through a
     callback function specified using the Wire.WireConnectCallback property. Services
     may also use the WireBroadcaster class to automate managing wire connection lifecycles and
     sending values to all connected clients, or use WireUnicastReceiver to receive an incoming
     value from the most recently connected client.
 
     Wire connections are used to transmit "most recent" values between clients and services. Connection
-    the wire creates a connection pair, one in the client, and one in the service. Each wire connection 
+    the wire creates a connection pair, one in the client, and one in the service. Each wire connection
     object has an InValue and an OutValue. Setting the OutValue of one will cause the specified value to
     be transmitted to the InValue of the peer. See Wire for more information.
 
@@ -1246,7 +1255,7 @@ class WireConnection(object):
         """
         Close the wire connection
 
-        Close the wire connection. Blocks until close complete. The peer wire connection 
+        Close the wire connection. Blocks until close complete. The peer wire connection
         is destroyed automatically.
         """
         return self.__innerwire.Close()
@@ -1323,7 +1332,7 @@ class WireConnection(object):
         """
         Get if the InValue is valid
 
-        The InValue is valid if a value has been received and 
+        The InValue is valid if a value has been received and
         the value has not expired
 
         :rtype: bool
@@ -1348,7 +1357,7 @@ class WireConnection(object):
         Set whether wire connection should ignore incoming values
 
         Wire connections may optionally desire to ignore incoming values. This is useful if the connection
-        is only being used to send out values, and received values may create a potential memory . If ignore is true, 
+        is only being used to send out values, and received values may create a potential memory . If ignore is true,
         incoming values will be discarded.
 
         :rtype: bool
@@ -1427,7 +1436,7 @@ class WireConnection(object):
 
            def my_handler(con, value, ts):
               # Handle new value
-              pass              
+              pass
 
            my_wire_connection.WireValueChanged += my_handler
 
@@ -1606,8 +1615,8 @@ class Wire(object):
     The Wire class implements the \"wire\" member type. Wires are declared in service definition files
     using the \"wire\" keyword within object declarations. Wires provide "most recent" value streaming
     between clients and services. They work by creating "connection" pairs between the client and service.
-    The wire streams the current value between the wire connection pairs using packets. Wires 
-    are unreliable; only the most recent value is of interest, and any older values 
+    The wire streams the current value between the wire connection pairs using packets. Wires
+    are unreliable; only the most recent value is of interest, and any older values
     will be dropped. Wire connections have an InValue and an OutValue. Users set the OutValue on the
     connection. The new OutValue is transmitted to the peer wire connection, and becomes the peer's
     InValue. The peer can then read the InValue. The client and service have their own InValue
@@ -1624,7 +1633,7 @@ class Wire(object):
 
     Wire clients may also optionally "peek" and "poke" the wire without forming a streaming
     connection. This is useful if the client needs to read the InValue or set the OutValue
-    instantaniously, but does not need continuous updating. PeekInValue() or 
+    instantaniously, but does not need continuous updating. PeekInValue() or
     AsyncPeekInValue() will retrieve the client's current InValue. PokeOutValue() or
     AsyncPokeOutValue() will send a new client OutValue to the service.
     PeekOutValue() or AsyncPeekOutValue() will retrieve the last client OutValue received by
@@ -1633,7 +1642,7 @@ class Wire(object):
     "Peek" and "poke" operations initiated by the client are received on the service using
     callbacks. Use PeekInValueCallback, PeekOutValueCallback,
     and PokeOutValueCallback to configure the callbacks to handle these requests.
-    WireBroadcaster and WireUnicastReceiver configure these callbacks automatically, so 
+    WireBroadcaster and WireUnicastReceiver configure these callbacks automatically, so
     the user does not need to configure the callbacks when these classes are used.
 
     Wires can be declared *readonly* or *writeonly*. If neither is specified, the wire is assumed
@@ -1726,9 +1735,9 @@ class Wire(object):
         Set wire connected callback function
 
         Callback function invoked when a client attempts to connect a the wire. The callback
-        will receive the incoming wire connection as a parameter. The service must maintain a 
-        reference to the wire connection, but the wire will retain ownership of the wire connection 
-        until it is closed. Using  boost::weak_ptr to store the reference to the connection 
+        will receive the incoming wire connection as a parameter. The service must maintain a
+        reference to the wire connection, but the wire will retain ownership of the wire connection
+        until it is closed. Using  boost::weak_ptr to store the reference to the connection
         is recommended.
 
         The callback may throw an exception to reject incoming connect request.
@@ -1754,7 +1763,7 @@ class Wire(object):
         Peek the current InValue
 
         Peeks the current InValue using a "request" instead of a streaming value. Use
-        if only the instantanouse value is required. 
+        if only the instantanouse value is required.
 
         Peek and poke are similar to "property" members. Unlike streaming,
         peek and poke are reliable operations.
@@ -1774,10 +1783,10 @@ class Wire(object):
         Peek the current OutValue
 
         Peeks the current OutValue using a "request" instead of a streaming value. Use
-        if only the instantanouse value is required. 
+        if only the instantanouse value is required.
 
         Peek and poke are similar to "property" members. Unlike streaming,
-        peek and poke are reliable operations. 
+        peek and poke are reliable operations.
 
         Throws ValueNotSetException if OutValue is not valid.
 
@@ -1793,7 +1802,7 @@ class Wire(object):
         """
         Poke the OutValue
 
-        Pokes the OutValue using a "request" instead of a streaming value. Use 
+        Pokes the OutValue using a "request" instead of a streaming value. Use
         to update the OutValue if the value is updated infrequently.
 
         Peek and poke are similar to `property` members. Unlike streaming,
@@ -1927,7 +1936,7 @@ class Wire(object):
 
         PokeOutValueCallback configures the service callback for PokeOutValue() requests.
 
-        The function receives the new out value, the new out value timestamp in the client's clock, 
+        The function receives the new out value, the new out value timestamp in the client's clock,
         and the client endpoint ID.
 
         Note: Callback is configured automatically by WireBroadcaster or
@@ -2296,7 +2305,7 @@ class ServiceInfo2(object):
 
     Contains information about a service found using discovery
 
-    ServiceInfo2 contains information about a service required to 
+    ServiceInfo2 contains information about a service required to
     connect to the service, metadata, and the service attributes
 
     ServiceInfo2 structures are returned by RobotRaconteurNode.FindServiceByType()
@@ -2344,7 +2353,7 @@ class NodeInfo2(object):
         self.NodeName = info.NodeName
         """(str) The NodeName of the detected node"""
         self.ConnectionURL = list(info.ConnectionURL)
-        """(List[str]) Candidate URLs to connect to the node 
+        """(List[str]) Candidate URLs to connect to the node
 
         The URLs for the node typically contain the node transport endpoint
         and the nodeid. A URL service parameter must be appended
@@ -2430,6 +2439,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                 if err is not None:
                     async_adapter.End(
                         RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    _print_exc_traceback(err)
                     return
                 if (ret is None):
                     m = RobotRaconteurPython.MessageElement()
@@ -2469,6 +2479,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                 if err is not None:
                     async_adapter.End(
                         RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    _print_exc_traceback(err)
                     return
                 async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
                 return
@@ -2501,6 +2512,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         if err is not None:
                             async_adapter.End(
                                 RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                            _print_exc_traceback(err)
                             return
                         async_adapter.End(
                             None, RobotRaconteurPython.HandlerErrorInfo())
@@ -2510,6 +2522,7 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         if err is not None:
                             async_adapter.End(
                                 RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                            _print_exc_traceback(err)
                             return
                         if (ret is None):
                             m = RobotRaconteurPython.MessageElement()
@@ -3181,18 +3194,18 @@ class PipeBroadcaster(object):
     no provisions for receiving incoming packets from the client.
 
     PipeBroadcaster is initialized by the user, or by default if the service
-    object has no attribute for *readonly* pipes. If default 
+    object has no attribute for *readonly* pipes. If default
     an attribute is specified for the pipe
-    not used, the broadcaster must be instantiated manually. It is 
+    not used, the broadcaster must be instantiated manually. It is
     recommended this be done using the RRServiceObjectInit() function. If present
-    in the service object, function is called after the pipes have been instantiated 
+    in the service object, function is called after the pipes have been instantiated
     by the service.
 
     Use SendPacket() or AsyncSendPacket() to broadcast packets to all
     connected clients.
 
     PipeBroadcaster provides flow control by optionally tracking how many packets
-    are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a 
+    are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a
     maximum backlog is specified, pipe endpoints exceeding this count will stop sending packets.
     Specify the maximum backlog on construction or the MaxBacklog property.
 
@@ -3250,7 +3263,7 @@ class PipeBroadcaster(object):
         Set the predicate callback function
 
         A predicate is optionally used to regulate when packets are sent to clients. This is used by the
-        BroadcastDownsampler to regulate update rates of packets sent to clients. 
+        BroadcastDownsampler to regulate update rates of packets sent to clients.
 
         The predicate callback is invoked before the broadcaster sends a packet to an endpoint. If the predicate returns true,
         the packet will be sent. If it is false, the packet will not be sent to that endpoint.
@@ -3271,7 +3284,7 @@ class PipeBroadcaster(object):
         Set the maximum backlog
 
         PipeBroadcaster provides flow control by optionally tracking how many packets
-        are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a 
+        are in flight to each client pipe endpoint. (This is accomplished using packet acks.) If a
         maximum backlog is specified, pipe endpoints exceeding this count will stop sending packets.
 
         Set -1 for no flow control.
@@ -3323,12 +3336,12 @@ class WireBroadcaster(object):
     should only we used with wires that are declared *readonly*, since
     it has no provisions for receiving incoming values from clients.
 
-    WireBroadcaster is initialized by the user, or by default if the 
+    WireBroadcaster is initialized by the user, or by default if the
     service object does not contain an attribute for the wire member. The default
     will automatically instantiate unicast receivers for
     wires marked *readonly*. If default the implementation is not
     not used, the broadcaster must be instantiated manually. It is recommended this
-    be done using an RRServiceObjectInit() function in the service object. 
+    be done using an RRServiceObjectInit() function in the service object.
     This function is called after the wires have been instantiated by the service.
 
     Use OutValue property to broadcast values to all connected clients.
@@ -3356,11 +3369,11 @@ class WireBroadcaster(object):
         """
         Set the OutValue for all connections
 
-        Sets the OutValue for all connections. This will transmit the value 
+        Sets the OutValue for all connections. This will transmit the value
         to all connected clients using packets. The value will become the clients'
         InValue.
 
-        The value will be returned when clients call Wire.PeekInValue() or 
+        The value will be returned when clients call Wire.PeekInValue() or
         Wire.AsyncPeekInValue()
 
         """
@@ -3381,7 +3394,7 @@ class WireBroadcaster(object):
         Set the predicate callback function
 
         A predicate is optionally used to regulate when values are sent to clients. This is used by the
-        BroadcastDownsampler to regulate update rates of values sent to clients. 
+        BroadcastDownsampler to regulate update rates of values sent to clients.
 
         The predicate callback is invoked before the broadcaster sends a value to an endpoint. If the predicate returns true,
         the value will be sent. If it is false, the value will not be sent to that endpoint.
@@ -3428,7 +3441,7 @@ class WireBroadcaster(object):
     def PeekInValueCallback(self):
         """
         Set the PeekInValue callback function for the WireBrodcaster.
-        Overrides the default callback that returns the last set 
+        Overrides the default callback that returns the last set
         OutValue.
 
         :rtype: Callable[[int],T]
@@ -3471,15 +3484,15 @@ class WireUnicastReceiver(object):
     It is recommended that object locks be used to protect from concurrent
     access when unicast receivers are used.
 
-    WireUnicastReceiver is initialized by the user, or by default if the 
+    WireUnicastReceiver is initialized by the user, or by default if the
     service object does not contain an attribute for the wire member. The default
     will automatically instantiate unicast receivers for
     wires marked *writeonly*. If default the implementation is not
     not used, the unicast receiver must be instantiated manually. It is recommended this
-    be done using an RRServiceObjectInit() function in the service object. 
+    be done using an RRServiceObjectInit() function in the service object.
     This function is called after the wires have been instantiated by the service.
 
-    The current InValue is received using the InValue property or TryGetInValue(). 
+    The current InValue is received using the InValue property or TryGetInValue().
     The InValueChanged event hook can be used to monitor for changes to the InValue.
 
     Clients may also use PokeOutValue() or AsyncPokeOutValue() to update the
@@ -3522,7 +3535,7 @@ class WireUnicastReceiver(object):
         """
         Try getting the current InValue, returning true on success or false on failure
 
-        Gets the current InValue, its timestamp, and the client that owns the connection. 
+        Gets the current InValue, its timestamp, and the client that owns the connection.
         Returns True if value is valid, or False if value is invalid. Value will be invalid if no value has
         been received, or the value lifespan has expired.
 
@@ -3545,7 +3558,7 @@ class WireUnicastReceiver(object):
 
            def my_handler(con, value, ts):
               # Handle new value
-              pass              
+              pass
 
            my_wire_connection.WireValueChanged += my_handler
 
@@ -3787,6 +3800,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
                     if err is not None:
                         async_adapter.End(
                             RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                        _print_exc_traceback(err)
                         return
                     async_adapter.End(
                         None, RobotRaconteurPython.HandlerErrorInfo())
@@ -3796,6 +3810,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
                     if err is not None:
                         async_adapter.End(
                             RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                        _print_exc_traceback(err)
                         return
                     if (ret is None):
                         m = RobotRaconteurPython.MessageElement()
@@ -3840,6 +3855,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
                 if err is not None:
                     async_adapter.End(
                         RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    _print_exc_traceback(err)
                     return
                 async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
                 return
@@ -3858,6 +3874,7 @@ class WrappedGeneratorServerDirectorPython(RobotRaconteurPython.WrappedGenerator
                 if err is not None:
                     async_adapter.End(
                         RobotRaconteurPythonError.RobotRaconteurExceptionUtil.ExceptionToErrorInfo(err))
+                    _print_exc_traceback(err)
                     return
                 async_adapter.End(RobotRaconteurPython.HandlerErrorInfo())
                 return
@@ -3937,7 +3954,7 @@ class ServiceSubscriptionFilter(object):
     """
     Subscription filter
 
-    The subscription filter is used with RobotRaconteurNode.SubscribeServiceByType() and 
+    The subscription filter is used with RobotRaconteurNode.SubscribeServiceByType() and
     RobotRaconteurNode.SubscribeServiceInfo2() to decide which services should
     be connected. Detected services that match the service type are checked against
     the filter before connecting.
@@ -3955,7 +3972,7 @@ class ServiceSubscriptionFilter(object):
         self.Attributes = dict()
         """(Dict[str,RobotRaconteur.ServiceSubscriptionFilterAttributeGroup] Attributes to match)"""
         self.AttributesMatchOperation = RobotRaconteurPython.ServiceSubscriptionFilterAttributeGroupOperation_AND
-        """(RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation) The operation to use when matching attributes. 
+        """(RobotRaconteur.ServiceSubscriptionFilterAttributeGroupOperation) The operation to use when matching attributes.
         Default is AND. Can be OR, AND, NOR, and NAND."""
         self.Predicate = None
         """(Callable[[RobotRaconteur.ServiceInfo2],bool]) A user specified predicate function. If nullptr, the predicate is not checked."""
@@ -3993,7 +4010,7 @@ class ServiceInfo2Subscription(object):
     """
     ServiceInfo2Subscription()
 
-    Subscription for information about detected services 
+    Subscription for information about detected services
 
     Created using RobotRaconteurNode.SubscribeServiceInfo2()
 
@@ -4050,7 +4067,7 @@ class ServiceInfo2Subscription(object):
 
            def my_handler(sub, subscription_id, service_info2):
               # Process detected service
-              pass              
+              pass
 
            my_serviceinfo2_sub.ServiceDetected += my_handler
 
@@ -4075,7 +4092,7 @@ class ServiceInfo2Subscription(object):
 
            def my_handler(sub, subscription_id, service_info2):
               # Process lost service
-              pass              
+              pass
 
            my_serviceinfo2_sub.ServiceLost += my_handler
 
@@ -4153,13 +4170,13 @@ class ServiceSubscription(object):
     to be used to create robust connections. The retry delay for connections can be modified using the ConnectRetryDelay property.
 
     The currently connected clients can be retrieved using the GetConnectedClients() function. A single "default client" can be
-    retrieved using the GetDefaultClient() function or TryGetDefaultClient() functions. Listeners for client connect and 
-    disconnect events can be added using the ClientConnectListener and ClientDisconnectListener properties. If 
-    the user wants to claim a client, the ClaimClient() and ReleaseClient() functions will be used. Claimed clients will 
+    retrieved using the GetDefaultClient() function or TryGetDefaultClient() functions. Listeners for client connect and
+    disconnect events can be added using the ClientConnectListener and ClientDisconnectListener properties. If
+    the user wants to claim a client, the ClaimClient() and ReleaseClient() functions will be used. Claimed clients will
     no longer have their lifecycle managed by the subscription.
 
     Subscriptions can be used to create \"pipe\" and \"wire\" subscriptions. These member subscriptions aggregate
-    the packets and values being received from all services. They can also act as a "reverse broadcaster" to 
+    the packets and values being received from all services. They can also act as a "reverse broadcaster" to
     send packets and values to all services that are actively connected. See PipeSubscription and WireSubscription.
     """
 
@@ -4234,7 +4251,7 @@ class ServiceSubscription(object):
         """
         Creates a wire subscription
 
-        Wire subscriptions aggregate the value received from the connected services. It can also act as a 
+        Wire subscriptions aggregate the value received from the connected services. It can also act as a
         "reverse broadcaster" to send values to clients. See WireSubscription.
 
         The optional service path may be an empty string to use the root object in the service. The first level of the
@@ -4257,7 +4274,7 @@ class ServiceSubscription(object):
         """
         Creates a pipe subscription
 
-        Pipe subscriptions aggregate the packets received from the connected services. It can also act as a 
+        Pipe subscriptions aggregate the packets received from the connected services. It can also act as a
         "reverse broadcaster" to send packets to clients. See PipeSubscription.
 
         The optional service path may be an empty string to use the root object in the service. The first level of the
@@ -4276,6 +4293,28 @@ class ServiceSubscription(object):
         s = self._subscription.SubscribePipe(pipe_name, service_path)
         return PipeSubscription(s)
 
+    def SubscribeSubObject(self, service_path):
+        """
+        Creates a sub object subscription.
+
+        Sub objects are objects within a service that are not the root object. Sub objects are typically
+        referenced using objref members, however they can also be referenced using a service path.
+        The SubObjectSubscription class is used to automatically access sub objects of the default client.
+
+        The service path is broken up into segments using periods. See the Robot Raconter
+        documentation for more information. The BuildServicePath() function can be used to assist
+        building service paths. The first level of the* service path may be "*" to match any service name.
+        For instance, the service path "*.sub_obj" will match any service name, and use the "sub_obj" objref
+
+        :param service_path: The service path of the object
+        :type service_path: str
+        :return: The sub object subscription
+        :rtype: SubObjectSubscription
+        """
+
+        s = self._subscription.SubscribeSubObject(service_path)
+        return SubObjectSubscription(self, s)
+
     @property
     def ClientConnected(self):
         """
@@ -4286,7 +4325,7 @@ class ServiceSubscription(object):
 
            def my_handler(sub, subscription_id, connected_service):
               # Process lost service
-              pass              
+              pass
 
            my_service_sub.ClientConnected += my_handler
 
@@ -4311,7 +4350,7 @@ class ServiceSubscription(object):
 
            def my_handler(sub, subscription_id, connected_service):
               # Process lost service
-              pass              
+              pass
 
            my_service_sub.ClientDisconnected += my_handler
 
@@ -4337,7 +4376,7 @@ class ServiceSubscription(object):
 
            def my_handler(sub, subscription_id, candidate_urls, exceptions):
               # Process lost service
-              pass              
+              pass
 
            my_service_sub.ClientDisconnected += my_handler
 
@@ -4461,7 +4500,7 @@ class ServiceSubscription(object):
         :type username: str
         :param credentials: Optional credentials for authentication
         :type credentials: Dict[str,Any]
-        :param close_connected: Optional, (default False) Close existing connections        
+        :param close_connected: Optional, (default False) Close existing connections
         """
 
         if username is None:
@@ -4587,7 +4626,7 @@ class WireSubscription(object):
 
         Blocks the current thread until value is received or timeout
 
-        :param timeout: The timeout in seconds 
+        :param timeout: The timeout in seconds
         :type timeout: float
         :return: True if value was received, otherwise False
         :rtype: bool
@@ -4698,7 +4737,7 @@ class WireSubscription(object):
 
            def my_handler(sub, value, ts):
               # Handle new value
-              pass              
+              pass
 
            my_wire_csub.WireValueChanged += my_handler
 
@@ -4870,7 +4909,7 @@ class PipeSubscription(object):
               while pipe_sub.Available > 0:
                   packet = pipe_sub.ReceivePacket()
                   # Handle new packet
-                  pass              
+                  pass
 
            my_pipe_sub.PipePacketReceived+= my_handler
 
@@ -4885,6 +4924,105 @@ class PipeSubscription(object):
     def PipePacketReceived(self, evt):
         if (evt is not self._PipePacketReceived):
             raise RuntimeError("Invalid operation")
+
+    def GetNode(self):
+        return self._subscription.GetNode()
+
+
+class SubObjectSubscription(object):
+    """
+    Subscription for sub objects of the default client.
+
+    SubObjectSubscription is used to access sub objects of the default client. Sub objects are objects within a service
+    that are not the root object. Sub objects are typically referenced using objref members, however they can also be
+    referenced using a service path. The SubObjectSubscription class is used to automatically access sub objects of the
+    default client.
+
+    Use ServiceSubscription.SubscribeSubObject() to create a SubObjectSubscription.
+
+    This class should not be used to access Pipe or Wire members. Use the ServiceSubscription.SubscribePipe() and
+    ServiceSubscription.SubscribeWire() functions to access Pipe and Wire members.
+    """
+
+    def __init__(self, parent, subscription):
+        self._parent = parent
+        self._subscription = subscription
+
+    def GetDefaultClient(self):
+        """
+        Get the "default client" sub object.
+
+        The sub object is retrieved from the default client. The default client is the first client
+        that connected to the service. If no clients are currently connected, an exception is thrown.
+
+        Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+        each time the client is needed.
+
+        :return: The sub object
+        :rtype: T
+        """
+        return self._parent._GetClientStub(self._subscription.GetDefaultClient())
+
+    def TryGetDefaultClient(self):
+        """
+        Try getting the "default client" sub object.
+
+        Same as GetDefaultClient(), but returns a bool success instead of throwing
+        exceptions on failure.
+
+        :return: Success and client (if successful) as a tuple
+        :rtype: Tuple[bool,T]
+        """
+        res = self._subscription.TryGetDefaultClient()
+        if not res.res:
+            return False, None
+        return True, self._parent._GetClientStub(res.client)
+
+    def GetDefaultClientWait(self, timeout=-1):
+        """
+        Get the "default client" sub object, waiting with timeout if not connected
+
+        The sub object is retrieved from the default client. The default client is the first client
+        that connected to the service. If no clients are currently connected, an exception is thrown.
+
+        Clients using GetDefaultClient() should not store a reference to the client. Call GetDefaultClient()
+        each time the client is needed.
+
+        :param timeout: Timeout in seconds, or -1 for infinite
+        :type timeout: float
+        :return: The sub object
+        """
+        return self._parent._GetClientStub(self._subscription.GetDefaultClientWait(adjust_timeout(timeout)))
+
+    def TryGetDefaultClientWait(self, timeout=-1):
+        """
+        Try getting the "default client" sub object, waiting with timeout if not connected
+
+        Same as GetDefaultClientWait(), but returns a bool success instead of throwing
+        exceptions on failure.
+
+        :return: Success and client (if successful) as a tuple
+        :rtype: Tuple[bool,T]
+        """
+        res = self._subscription.TryGetDefaultClientWait(adjust_timeout(timeout))
+        if not res.res:
+            return False, None
+        return True, self._parent._GetClientStub(res.client)
+
+    def AsyncGetDefaultClient(self, handler, timeout=-1):
+        """
+        Asynchronously get the default client, with optional timeout
+
+        Same as GetDefaultClientWait(), but returns asynchronously.
+
+        If ``handler`` is None, returns an awaitable future.
+
+        :param handler: The handler to call when default client is available, or times out
+        :type handler: Callable[[bool,object],None]
+        :param timeout: Timeout in seconds, or -1 for infinite
+        :type timeout: float
+        """
+        return async_call(self._subscription.AsyncGetDefaultClient, (adjust_timeout(timeout),), AsyncStubReturnDirectorImpl, handler)
 
     def GetNode(self):
         return self._subscription.GetNode()
@@ -4999,6 +5137,225 @@ def SubscribeService(node, *args):
     return ServiceSubscription(sub1)
 
 
+class ServiceSubscriptionManagerDetails(object):
+    """
+    ServiceSubscriptionManager subscription connection information
+
+    Contains the connection information for a ServiceSubscriptionManager subscription
+    and the local name of the subscription
+    """
+    __slots__ = ["Name", "ConnectionMethod", "Urls", "UrlUsername",
+                 "UrlCredentials", "ServiceTypes", "Filter", "Enabled"]
+
+    def __init__(self,
+                 Name=None,
+                 ConnectionMethod=None,
+                 Urls=None,
+                 UrlUsername=None,
+                 UrlCredentials=None,
+                 ServiceTypes=None,
+                 Filter=None,
+                 Enabled=True
+                 ):
+        self.Name = Name
+        """(str) The local name of the subscription"""
+        self.ConnectionMethod = ConnectionMethod
+        """(ServiceSubscriptionManager_CONNECTION_METHOD) The connection method used to connect to the service"""
+        self.Urls = Urls
+        """(List[str]) The URLs used to connect to the service"""
+        self.UrlUsername = UrlUsername
+        """(str) The username used to connect to the service"""
+        self.UrlCredentials = UrlCredentials
+        """(Dict[str,Any]) The credentials used to connect to the service"""
+        self.ServiceTypes = ServiceTypes
+        """(List[str]) The service types used to connect to the service"""
+        self.Filter = Filter
+        """(ServiceSubscriptionFilter) The filter used to connect to the service"""
+        self.Enabled = Enabled
+        """(bool) True if the subscription is enabled"""
+
+
+def _ServiceSubscriptionManager_LoadDetails(node, details):
+    if details is None:
+        return None
+    details2 = RobotRaconteurPython.WrappedServiceSubscriptionManagerDetails()
+    if details.Name is not None:
+        details2.Name = details.Name
+    if details.ConnectionMethod is not None:
+        details2.ConnectionMethod = details.ConnectionMethod
+    if details.Urls is not None:
+        for s in details.Urls:
+            details2.Urls.append(s)
+    if details.UrlUsername is not None:
+        details2.UrlUsername = details.UrlUsername
+    if details.UrlCredentials is not None:
+        details2.UrlCredentials = PackMessageElement(
+            details.UrlCredentials, "varvalue{string}", None, node).GetData()
+    if details.ServiceTypes is not None:
+        if isinstance(details.ServiceTypes, str):
+            details2.ServiceTypes.append(details.ServiceTypes)
+        else:
+            for s in details.ServiceTypes:
+                details2.ServiceTypes.append(s)
+    if details.Filter is not None:
+        details2.Filter = _SubscribeService_LoadFilter(node, details.Filter)
+    details2.Enabled = details.Enabled
+    return details2
+
+
+class ServiceSubscriptionManager(object):
+    """
+    Class to manage multiple subscriptions to services
+
+    ServiceSubscriptionManager is used to manage multiple subscriptions to services. Subscriptions
+    are created using information contained in ServiceSubscriptionManagerDetails structures. The subscriptions
+    can connect using URLs or service types. The subscriptions can be enabled or disabled, and can be
+    closed.
+
+    :param details: (optional) A list of ServiceSubscriptionManagerDetails structures
+    :type details: List[ServiceSubscriptionManagerDetails]
+    :param node: (optional) The RobotRaconteurNode to use
+    :type node: RobotRaconteur.RobotRaconteurNode
+    """
+
+    def __init__(self, details=None, node=None):
+        if node is None:
+            node = RobotRaconteurPython.RobotRaconteurNode.s
+
+        details2 = RobotRaconteurPython.vector_wrappedservicesubscriptionmanagerdetails()
+        if details is not None:
+            for d in details:
+                details2.append(_ServiceSubscriptionManager_LoadDetails(node, d))
+
+        self._subscription_manager = RobotRaconteurPython.WrappedServiceSubscriptionManager(details2, node)
+
+        self._subscriptions = {}
+        self._lock = threading.Lock()
+
+    def AddSubscription(self, details):
+        """
+        Add a subscription to the manager
+
+        :param details: The subscription to add
+        :type details: ServiceSubscriptionManagerDetails
+        """
+        details2 = _ServiceSubscriptionManager_LoadDetails(self._subscription_manager.GetNode(), details)
+        self._subscription_manager.AddSubscription(details2)
+
+    def RemoveSubscription(self, name, close=True):
+        """
+        Remove a subscription from the manager
+
+        :param name: The name of the subscription to remove
+        :type name: str
+        :param close: (default True) Close the subscription
+        :type close: bool
+        """
+        with self._lock:
+            self._subscription_manager.RemoveSubscription(name)
+            if close:
+                del self._subscriptions[name]
+
+    def EnableSubscription(self, name):
+        """
+        Enable a subscription
+
+        :param name: The name of the subscription to enable
+        :type name: str
+        """
+        self._subscription_manager.EnableSubscription(name)
+
+    def DisableSubscription(self, name, close=True):
+        """
+        Disable a subscription
+
+        :param name: The name of the subscription to disable
+        :type name: str
+        """
+        self._subscription_manager.DisableSubscription(name, close)
+
+    def GetSubscription(self, name, force_create=False):
+        """
+        Get a subscription by name
+
+        :param name: The name of the subscription to get
+        :type name: str
+        :param force_create: (default False) Create the subscription if it does not exist
+        :type force_create: bool
+        :return: The subscription
+        :rtype: ServiceSubscription
+        """
+        with self._lock:
+            sub = self._subscriptions.get(name, None)
+            if sub is None:
+                sub1 = self._subscription_manager.GetSubscription(name, force_create)
+                if sub1 is None:
+                    return None
+                sub = ServiceSubscription(sub1)
+                self._subscriptions[name] = sub
+            return sub
+
+    def IsConnected(self, name):
+        """
+        Check if a subscription is connected
+
+        :param name: The name of the subscription to check
+        :type name: str
+        :return: True if the subscription is connected
+        :rtype: bool
+        """
+        return self._subscription_manager.IsConnected(name)
+
+    def IsEnabled(self, name):
+        """
+        Get if a subscription is enabled
+
+        :param name: The name of the subscription to check
+        :type name: str
+        :return: True if the subscription is enabled
+        :rtype: bool
+        """
+        return self._subscription_manager.IsEnabled(name)
+
+    def Close(self, close_subscriptions=True):
+        """
+        Close the subscription manager
+
+        :param close_subscriptions: (default True) Close all subscriptions
+        :type close_subscriptions: bool
+        """
+        self._subscription_manager.Close(close_subscriptions)
+        with self._lock:
+            self._subscriptions.clear()
+
+    @property
+    def SubscriptionNames(self):
+        """
+        Get the names of all subscriptions
+
+        :rtype: List[str]
+        """
+        return list(self._subscription_manager.GetSubscriptionNames())
+
+    @property
+    def SubscriptionDetails(self):
+        """
+        Get the details of all subscriptions
+
+        :rtype: List[ServiceSubscriptionManagerDetails]
+        """
+        details = []
+        for d in self._subscription_manager.GetSubscriptionDetails():
+            d2 = ServiceSubscriptionManagerDetails()
+            d2.Name = d.Name
+            d2.ConnectionMethod = d.ConnectionMethod
+            d2.Urls = list(d.Urls)
+            d2.ServiceTypes = list(d.ServiceTypes)
+            d2.Enabled = d.Enabled
+            details.append(d2)
+        return details
+
+
 class WrappedUserAuthenticatorDirectorPython(RobotRaconteurPython.WrappedUserAuthenticatorDirector):
     def __init__(self, target):
         super(WrappedUserAuthenticatorDirectorPython, self).__init__()
@@ -5093,10 +5450,10 @@ class RobotRaconteurNodeSetup(object):
     See Taps for more information on using taps.
 
     The node setup classes optionally initialize LocalTransport,
-    TcpTransport, HardwareTransport, and/or IntraTransport. 
+    TcpTransport, HardwareTransport, and/or IntraTransport.
     Transports for more information.
 
-    The LocalTransport.StartServerAsNodeName() or 
+    The LocalTransport.StartServerAsNodeName() or
     LocalTransport.StartClientAsNodeName() are used to load the NodeID.
     See LocalTransport for more information on this procedure.
 
@@ -5194,7 +5551,7 @@ class ClientNodeSetup(RobotRaconteurNodeSetup):
     Initializes a RobotRaconteurNode instance to default configuration for a client only node
 
     ClientNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
-    RobotRaconteurNode instance that is used only to create outgoing client connections. 
+    RobotRaconteurNode instance that is used only to create outgoing client connections.
 
     See CommandLineOptions for more information on available command line options.
 
@@ -5210,24 +5567,24 @@ class ClientNodeSetup(RobotRaconteurNodeSetup):
     4. Start LocalTransport (default enabled)
 
        1. If `RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_CLIENT` flag is specified, call
-          LocalTransport.StartServerAsNodeName() with the specified node_name 
+          LocalTransport.StartServerAsNodeName() with the specified node_name
        2. Start LocalTransport discovery listening if specified in flags or on command line (default enabled)
-       3. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
-          specified on command line 
+       3. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if
+          specified on command line
     5. Start TcpTransport (default enabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
        2. Start TcpTranport discovery listening (default enabled)
        3. Load TLS certificate and set if TLS is specified on command line (default disabled)
        4. Process WebSocket origin command line options
     6. Start HardwareTransport (default disabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     7. Start IntraTransport (default enabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     8. Disable timeouts if specified in flags or command line (default timeouts normal)
 
@@ -5252,7 +5609,7 @@ class ServerNodeSetup(RobotRaconteurNodeSetup):
 
     ServerNodeSetup is a subclass of RobotRaconteurNodeSetup providing default configuration for a
     RobotRaconteurNode instance that is used as a server to accept incoming client connections
-    and to initiate client connections. 
+    and to initiate client connections.
 
     ServerNodeSetup requires a NodeName, and a TCP port if LocalTransport and TcpTransport
     are enabled (default behavior).
@@ -5276,25 +5633,25 @@ class ServerNodeSetup(RobotRaconteurNodeSetup):
           1. If "public" option is set, the transport will listen for all local users (default disabled)
        2. Start the LocalTransport server to listen for incoming connections with the specified NodeName and NodeID
        3. Start LocalTransport discovery announce and listening (default enabled)
-       4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
-          specified on command line 
+       4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if
+          specified on command line
     5. Start TcpTransport (default enabled)
 
-       1. Start the TcpTransport server to listen for incoming connections on specified port 
+       1. Start the TcpTransport server to listen for incoming connections on specified port
           or using the port sharer (default enabled using specified port)
-       2. Disable Message Format Version 4 (default enabled) and/or String Table 
+       2. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
        3. Start TcpTranport discovery announce and listening (default enabled)
        4. Load TLS certificate and set if TLS is specified on command line (default disabled)
        5. Process WebSocket origin command line options
     6. Start HardwareTransport (default disabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     7. Start IntraTransport (default enabled)
 
        1. Enable IntraTransport server to listen for incoming clients (default enabled)
-       2. Disable Message Format Version 4 (default enabled) and/or String Table 
+       2. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     8. Disable timeouts if specified in flags or command line (default timeouts normal)
 
@@ -5346,25 +5703,25 @@ class SecureServerNodeSetup(RobotRaconteurNodeSetup):
          1. If "public" option is set, the transport will listen for all local users (default disabled)
       2. Start the LocalTransport server to listen for incoming connections with the specified NodeName and NodeID
       3. Start LocalTransport discovery announce and listening (default enabled)
-      4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if 
-         specified on command line 
+      4. Disable Message Format Version 4 (default enabled) and/or String Table (default disabled) if
+         specified on command line
     5. Start TcpTransport (default enabled)
 
-       1. Start the TcpTransport server to listen for incoming connections on specified port 
+       1. Start the TcpTransport server to listen for incoming connections on specified port
           or using the port sharer (default enabled using specified port)
-       2. Disable Message Format Version 4 (default enabled) and/or String Table 
+       2. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
        3. Start TcpTranport discovery announce and listening (default enabled)
        4. Load TLS certificate and set if TLS is specified on command line (default enabled, required)
        5. Process WebSocket origin command line options
     6. Start HardwareTransport (default disabled)
 
-       1. Disable Message Format Version 4 (default enabled) and/or String Table 
+       1. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     7. Start IntraTransport (default enabled)
 
        1. Enable IntraTransport server to listen for incoming clients (default enabled)
-       2. Disable Message Format Version 4 (default enabled) and/or String Table 
+       2. Disable Message Format Version 4 (default enabled) and/or String Table
           (default disabled) if specified in flags or command line
     8. Disable timeouts if specified in flags or command line (default timeouts normal)
 

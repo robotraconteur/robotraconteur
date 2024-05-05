@@ -21,15 +21,15 @@ handler when all the sensors have been queried.
    def read_finished(data, err):
        # "data" now contains a list of data
        # "err" contains a list with each element containing "None" or the exception that occurred for that read
-       
+
        # Store data in global variables
        global global_err, global_data
        global_err=err
        global_data=data
-       
+
        # Notify "main()" that the read is complete
        ev.set()
-       
+
 
    # c_list contains a list of connections created with RobotRaconteur.s.ConnectService
    def start_read(c_list, handler, timeout):
@@ -38,7 +38,7 @@ handler when all the sensors have been queried.
        keys_lock=threading.Lock()
        ret=[None]*N
        err=[None]*N
-       
+
        def h(key, d, erri):
            done=False
            with keys_lock:
@@ -47,12 +47,12 @@ handler when all the sensors have been queried.
                else:
                    ret[key]=d
                keys.remove(key)
-               
+
                if (len(keys)==0): done=True
-               
+
            if (done):
                handler(ret,err)
-               
+
        with keys_lock:
            for i in xrange(N):
                try:
@@ -66,13 +66,13 @@ handler when all the sensors have been queried.
    def main()
 
        # Create all the c_list connections here
-       
+
        # Start the read with a 100 ms timeout
        start_read(c_list,read_finished,0.1)
 
        # Wait for completion
        ev.wait()
-       
+
        # Do something with the results
        print global_data
        print global_err

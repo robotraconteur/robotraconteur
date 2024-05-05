@@ -2,17 +2,17 @@
 Logging and Taps
 ================
 
-Logging is configured using environmental variblase or command line option 
-``--robotraconteur-log-level=`` with the node setup classes, or using the 
+Logging is configured using environmental variblase or command line option
+``--robotraconteur-log-level=`` with the node setup classes, or using the
 RobotRaconteur.SetLogLevel() with the RobotRaconteur.LogLevel_* enum values.
 
-Log output target can be configured using RobotRaconter.RobotRaconturNode.SetLogRecordHandler(). 
-By default the output is sent to ``stderr``. The 
+Log output target can be configured using RobotRaconter.RobotRaconturNode.SetLogRecordHandler().
+By default the output is sent to ``stderr``. The
 RobotRaconteur.RobotRaconteurNode.FileLogRecordHandler can be used to save the log to a file.
 
 Taps are used to record log records and message traffic. The "local tap"
 creates a local socket that a recording program can connect to record the traffic.
-This can be enabled using the ``--robotraconteur-local-tap-enable=true`` and 
+This can be enabled using the ``--robotraconteur-local-tap-enable=true`` and
 ``--robotraconteur-local-tap-name=`` command line options with the node setup classes.
 
 RRLogRecord Class

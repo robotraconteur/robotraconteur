@@ -55,7 +55,7 @@
 	MaxConnectionCount = property(lambda self: self._GetMaxConnectionCount(), lambda self, count: self._SetMaxConnectionCount(count),
 		doc = """
 		Set the maximum number of concurrent connections
-		
+
 		Default: 0 for unlimited
 
 		:rtype: int
@@ -77,7 +77,7 @@
 	AcceptWebSockets = property(lambda self: self._GetAcceptWebSockets(), lambda self, val: self._SetAcceptWebSockets(val),
 		doc = """
 		Set if the transport will accept incoming HTTP websocket connections
-		
+
 		Default: true
 
 		:rtype: bool
@@ -103,7 +103,7 @@
 
 		:rtype: bool
 		""")
-		
+
 	DisableAsyncMessageIO = property(lambda self: self._GetDisableAsyncMessageIO(), lambda self, val: self._SetDisableAsyncMessageIO(val),
 		doc = """
 		Set if async message io is disabled
@@ -115,7 +115,7 @@
 
 		:rtype: bool
 		""")
-		
+
 	NodeAnnouncePeriod = property(lambda self: self._GetNodeAnnouncePeriod()/1000.0, lambda self, timeout: self._SetNodeAnnouncePeriod(timeout*1000),
 		doc = """
 		Set the period between node announce in seconds
@@ -124,9 +124,9 @@
 
 		:rtype: float
 		"""
-	
+
 	)
-	
+
 	def IsTransportConnectionSecure(self,obj):
 		"""
 		Check if specified client or endpoint is using TLS for its transport
@@ -141,7 +141,7 @@
 		if (hasattr(obj,'rrinnerstub')):
 			obj=obj.rrinnerstub
 		return self._IsTransportConnectionSecure(obj)
-		
+
 	def IsSecurePeerIdentityVerified(self,obj):
 		"""
 		Check if specified peer is using TLS and has been
@@ -160,7 +160,7 @@
 		if (hasattr(obj,'rrinnerstub')):
 			obj=obj.rrinnerstub
 		return self._IsSecurePeerIdentityVerified(obj)
-		
+
 	def GetSecurePeerIdentity(self,obj):
 		"""
 		Get the identity of the peer if secured using TLS

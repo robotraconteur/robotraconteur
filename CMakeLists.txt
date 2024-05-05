@@ -130,6 +130,8 @@ if(BUILD_PYTHON
     include(${CMAKE_SOURCE_DIR}/cmake/package_source_swig.cmake)
 endif()
 
+add_subdirectory(docs/getting_started)
+
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
     "cmake/Config.cmake.in" "${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake"

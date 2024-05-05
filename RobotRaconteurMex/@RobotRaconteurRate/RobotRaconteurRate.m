@@ -8,16 +8,16 @@ classdef RobotRaconteurRate < handle
 		function obj=RobotRaconteurRate(frequency)
 			obj.id=RobotRaconteurMex('CreateRate',frequency);
 		end
-		
+
 		function Sleep(obj)
 			% Sleep the calling thread until the current loop period expires
 			RobotRaconteurMex('SleepRate',obj.id);
 		end
-		
+
 		function delete(obj)
 			RobotRaconteurMex('DeleteRate',obj.id);
 		end
-		
+
 	end
 
 

@@ -67,7 +67,7 @@ which makes things a little less clear.) An example object that implements the r
 
         def __init__(self):
             self._lock=threading.RLock()
-        
+
         def RobotRaconteurMonitorEnter(self):
             self._lock.acquire()
 

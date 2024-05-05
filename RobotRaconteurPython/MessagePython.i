@@ -7,7 +7,7 @@
 	a=MessageElementDataUtil.ToMessageElementNestedElementList(val)
 	if (not a is None):
 		return a
-	
+
 %}
 
 %pythoncode %{
@@ -23,17 +23,19 @@
 
 %typemap(directorin) std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > %{
   //std::vector<boost::intrusive_ptr<T> > workaround
-  
+
   $input = SWIG_NewPointerObj((void*)(new $1_ltype((const $1_ltype &)$1)), $&descriptor, SWIG_POINTER_OWN | 0);
 %}
 
 %typemap(directorin) std::vector<boost::intrusive_ptr<RobotRaconteur::MessageElement> > const& %{
   //std::vector<boost::intrusive_ptr<T> > workaround
-  
+
   $input = SWIG_NewPointerObj((void*)(new $1_basetype(*(const $1_ltype)&$1)), $descriptor, SWIG_POINTER_OWN | 0);
 %}
 
 %include <pybuffer.i>
+
+RR_KEEP_GIL()
 
 %pybuffer_binary(const uint8_t* bytes, size_t bytes_len);
 %inline {
@@ -74,7 +76,7 @@ PyObject* MessageToBytes(boost::intrusive_ptr<RobotRaconteur::Message> m, uint32
 	if (m==NULL)
 	{
 		throw std::invalid_argument("m must not be null");
-	}	
+	}
 
 	switch (ver)
 	{
@@ -85,8 +87,8 @@ PyObject* MessageToBytes(boost::intrusive_ptr<RobotRaconteur::Message> m, uint32
 		ArrayBinaryWriter w(buf.get(), 0, len);
 		m->Write(w);
 		return PyByteArray_FromStringAndSize((char*)buf.get(),len);
-	}	
-	case 4:		
+	}
+	case 4:
 	{
 		size_t len = m->ComputeSize4();
 		boost::shared_array<uint8_t> buf(new uint8_t[len]);
@@ -126,7 +128,9 @@ PyObject* MessageElementToBytes(const boost::intrusive_ptr<RobotRaconteur::Messa
 	ArrayBinaryWriter w(buf.get(), 0, len);
 	m->Write(w);
 	return PyByteArray_FromStringAndSize((char*)buf.get(),len);
-	
+
 }
 
 }
+
+RR_RELEASE_GIL()

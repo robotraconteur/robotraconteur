@@ -18,7 +18,7 @@ The subclasses RobotRaconteurNode::ClientNodeSetup, RobotRaconteur::ServerNodeSe
 The class RobotRaconteur::ClientNodeSetup is used when the node is only required to create outgoing client connections. By default it configures the `TcpTransport`, `LocalTransport`, and `IntraTransport` transports and transport discovery. By default the `HardwareTransport` is disabled. It can be enabled using the `--robotraconteur-hardware-enable=true` command line option.
 
 An example of a `main()` function using the `ClientNodeSetup`:
-    
+
     using namespace RobotRaconteur;
     int main(int argc, char* argv)
     {

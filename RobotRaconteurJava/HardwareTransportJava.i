@@ -12,7 +12,7 @@ static {
 	}
 	}
 	catch (Exception e) {}
-		
+
 }
 %}
 

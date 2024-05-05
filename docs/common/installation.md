@@ -41,7 +41,7 @@ The Python wrappers are distributed using PyPi.
 pip install robotraconteur
 ```
 
-#### C\# 
+#### C\#
 
 The C\# library is available on NuGet. Search for "RobotRaconteurNET".
 
@@ -77,7 +77,7 @@ sudo apt-get install python3-robotraconteur
 
 ```
 
-#### C\# 
+#### C\#
 
 The C\# library is available on NuGet. Search for "RobotRaconteurNET".
 
@@ -121,7 +121,7 @@ sudo apt-get install python3-robotraconteur
 
 ```
 
-#### C\# 
+#### C\#
 
 The C\# library is available on NuGet. Search for "RobotRaconteurNET".
 
@@ -166,7 +166,7 @@ The Python wrappers are distributed using PyPi.
 pip install robotraconteur
 ```
 
-#### C\# 
+#### C\#
 
 The C\# library must be built from source.
 

@@ -36,7 +36,7 @@ Each valid Robot Raconteur type has a corresponding C++ data type.  This mapping
 | `T{int32}`           | `RRMapPtr<int32_t,T>`  | Map type, `T` is a template |
 | `T{string}`          | `RRMapPtr<std::string,T>` | Map type, `T` is a template |
 | `T{list}`            | `RRListPtr<T>`         | List type, `T` is a template |
-| `varvalue`           | `RRValuePtr` |       |  
+| `varvalue`           | `RRValuePtr` |       |
 | `varobject`          | `RRObjectPtr` |       |
 
 ## Stack Values and Value Smart Pointers {#cpp_stack_and_pointers}
@@ -219,7 +219,7 @@ Because unions are stack allocated, they cannot be stored in containers or passe
 
 Containers are used to store other values in a map or a list. They can store any valid Robot Raconteur value type, except for other containers. For example, `string{list}{list}` is invalid because it contains a container of a container. (The exception to this rule is if the container is used as a `varvalue`, see below.) The value type is always a `boost::intrusive_ptr` type. Stack allocated scalar types must be "boxed" to convert them to a form that can be stored in containers. See the individual types for more information.
 
-Maps are stored using RobotRaconteur::RRMap. This type must always be stored in a `boost::intrusive_ptr`, optionally using the convenience alias RobotRaconteur::RRMapPtr. RobotRaconteur::RRMap is a template type, taking a key and a value. The key must be either `int32_t` or `std::string`. RobotRaconteur::RRMap is roughly equevalent to `std::map`. It can be allocated using RobotRaconteur::AllocateEmptyRRMap(). 
+Maps are stored using RobotRaconteur::RRMap. This type must always be stored in a `boost::intrusive_ptr`, optionally using the convenience alias RobotRaconteur::RRMapPtr. RobotRaconteur::RRMap is a template type, taking a key and a value. The key must be either `int32_t` or `std::string`. RobotRaconteur::RRMap is roughly equevalent to `std::map`. It can be allocated using RobotRaconteur::AllocateEmptyRRMap().
 
 Lists are stored using RobotRaconteur::RRList. This type must always be stored in a `boost::intrusive_ptr`, optionally using the convenience alias RobotRaconteur::RRListPtr. RobotRaconteur::RRList is a template type with a single value type template parameter.RobotRaconteur::RRMap is roughly equevalent to `std::list`. It can be allocated using RobotRaconteur::AllocateEmptyRRList().
 

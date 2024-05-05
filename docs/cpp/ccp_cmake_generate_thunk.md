@@ -9,7 +9,7 @@
         [MASTER_HEADER_FILENAME <FILENAME>]
         [INCLUDE_DIRS <INCLUDE_DIR1> [<INCLUDE_DIR2> ...]]
         [IMPORTS <ROBDEF_IMPORT_FILE1> [<ROBDEF_IMPORT_FILE2> ...]]
-        [CPP_EXTRA_INCLUDE <CPP_HEADER_FILENAME1> [<CPP_HEADER_FILENAME1> ...]] 
+        [CPP_EXTRA_INCLUDE <CPP_HEADER_FILENAME1> [<CPP_HEADER_FILENAME1> ...]]
         )
 
 Generate thunk source files when building the project. Custom commands are added to call `RobotRaconteurGen` on the specified service definitions. See \ref robotraconteurgen.

@@ -33,7 +33,7 @@ namespace RobotRaconteur
 	%nodefaultctor WrappedGeneratorClient;
 	class WrappedGeneratorClient
 	{
-	public:		
+	public:
 
 	RR_RELEASE_GIL()
 		virtual boost::intrusive_ptr<MessageElement> Next(const boost::intrusive_ptr<MessageElement>& v);
@@ -46,8 +46,8 @@ namespace RobotRaconteur
 		virtual void Close();
 		virtual void AsyncClose(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
 
-		
-		virtual std::vector<boost::intrusive_ptr<MessageElement> > NextAll();	
+
+		virtual std::vector<boost::intrusive_ptr<MessageElement> > NextAll();
 	RR_KEEP_GIL()
 	};
 

@@ -16,12 +16,12 @@ public:
         boost::shared_ptr<RobotRaconteur::ThreadPool> thread_pool=$self->GetThreadPoolFactory()->NewThreadPool($self->shared_from_this());
         thread_pool->SetThreadPoolCount(thread_count);
         $self->SetThreadPool(thread_pool);
-        $self->GetThreadPool();        
+        $self->GetThreadPool();
     }
     #endif
-    
+
     $self->Init();
-    
+
     }
 
 %pythoncode %{
@@ -104,7 +104,7 @@ def AsyncConnectService(self, url, username, credentials, listener, handler, tim
     if (listener is not None):
         listener2=WrappedClientServiceListenerDirector(listener)
         listener2.__disown__()
-    
+
     return async_call(self._AsyncConnectService,(url, username, credentials, listener2, "", adjust_timeout(timeout)), AsyncStubReturnDirectorImpl, handler)
 
 def DisconnectService(self, stub):
@@ -113,7 +113,7 @@ def DisconnectService(self, stub):
 
     Synchronously disconnects a client connection. Client connections
     are automatically closed by Shutdown(), so this function
-    is optional. 
+    is optional.
 
     :param obj: The root object of the service to disconnect
     """
@@ -160,7 +160,7 @@ def RegisterServiceTypes(self, d):
     If passed a string, the string will be parsed as a service definition file
 
     The service types will be verified. All imported types must be included in the list
-    or already have	been registered for verification to succeed. 
+    or already have	been registered for verification to succeed.
 
     :param d: The service types implementing the types to register
     :type d: Union[List[RobotRaconteur.ServiceDefinition],List[str]]
@@ -192,14 +192,14 @@ def RegisterServiceTypesFromFiles(self, file_names, auto_import = False):
     """
     Register a list of service type from files
 
-    The file names in file_names must point to plain text \"robdef\" files. The 
+    The file names in file_names must point to plain text \"robdef\" files. The
     file names may leave off the \".robdef\" extension.
 
     The path in the environmental variable ``ROBOTRACONTEUR_ROBDEF_PATH`` will
     be searched if a file is not found in the working directory.
 
     The service types will be verified. All imported types must already have
-    been registered or included in the file_names list for verification to 
+    been registered or included in the file_names list for verification to
     succeed.
 
     If auto_import is True, missing service type files will be loaded automatically from
@@ -213,7 +213,7 @@ def RegisterServiceTypesFromFiles(self, file_names, auto_import = False):
     from .RobotRaconteurPythonUtil import ReadServiceDefinitionFiles
     d = ReadServiceDefinitionFiles(file_names, auto_import)
     self._RegisterServiceTypes(d)
-    
+
 def GetServiceType(self, name):
     """
     Returns a previously registered service type
@@ -228,16 +228,16 @@ def GetRegisteredServiceTypes(self):
     """
     Return names of registered service types
 
-    :rtype: List[str] 
+    :rtype: List[str]
     """
     return self._GetRegisteredServiceTypes()
-    
+
 def GetPulledServiceTypes(self,obj):
     """
     Get the names of service types pulled by a client
 
     Clients pull service definitions from services and create
-    instances of ServiceFactory if a DynamicServiceFactory has 
+    instances of ServiceFactory if a DynamicServiceFactory has
     been configured. GetPulledServiceTypes returns a list of  the
     names of these pulled service types. Use GetPulledServiceType()
     to retrieve the ServiceFactory for a specific type.
@@ -249,15 +249,15 @@ def GetPulledServiceTypes(self,obj):
     if (hasattr(obj,'rrinnerstub')):
         obj=obj.rrinnerstub
     return self._GetPulledServiceTypes(obj)
-        
+
 def GetPulledServiceType(self,obj,servicetype):
     """
     Get a ServiceFactory created from a service type pulled by a client
 
     Clients pull service definitions from services and create
-    instances of ServiceFactory if a DynamicServiceFactory has 
+    instances of ServiceFactory if a DynamicServiceFactory has
     been configured. GetPulledServiceType() returns a
-    generated ServiceFactory. Use GetPulledServiceTypes() to 
+    generated ServiceFactory. Use GetPulledServiceTypes() to
     return a list of available service types.
 
     :param obj: Client object referenece returned by ConnectService() or AsyncConnectService()
@@ -276,8 +276,8 @@ def NewStructure(self,structtype,obj=None):
 
     :param structtype: The fully qualified type of the structure
     :type structtype: str
-    :param obj: The client connection object reference to be used with this structure.  
-      This is necessary because each client maintains type information.  A client must be provided from 
+    :param obj: The client connection object reference to be used with this structure.
+      This is necessary because each client maintains type information.  A client must be provided from
       which type information can be queried. For services this parameter is unnecessary.
     :return: The new structure instance
     """
@@ -290,8 +290,8 @@ def GetStructureType(self,structtype,obj=None):
 
     :param structtype: The fully qualified type of the structure
     :type structtype: str
-    :param obj: The client connection object reference to be used with this structure.  
-      This is necessary because each client maintains type information.  A client must be provided from 
+    :param obj: The client connection object reference to be used with this structure.
+      This is necessary because each client maintains type information.  A client must be provided from
       which type information can be queried. For services this parameter is unnecessary.
     :return: The constructer for the structure type
     :rtype: Callable[[],<structtype>]
@@ -307,8 +307,8 @@ def GetPodDType(self,podtype,obj=None):
 
     :param type: The fully qualified type of the pod
     :type type: str
-    :param obj: The client connection object reference to be used with this pod type.  
-      This is necessary because each client maintains type information.  A client must be provided from 
+    :param obj: The client connection object reference to be used with this pod type.
+      This is necessary because each client maintains type information.  A client must be provided from
       which type information can be queried. For services this parameter is unnecessary.
     :return: The dtype for the specified podtype
     :rtype: numpy.dtype
@@ -324,21 +324,21 @@ def GetNamedArrayDType(self,namedarraytype,obj=None):
 
     :param type: The fully qualified type of the namedarray
     :type type: str
-    :param obj: The client connection object reference to be used with this namedarray type.  
-        This is necessary because each client maintains type information.  A client must be provided from 
+    :param obj: The client connection object reference to be used with this namedarray type.
+        This is necessary because each client maintains type information.  A client must be provided from
         which type information can be queried. For services this parameter is unnecessary.
     :return: The dtype for the specified namedarray
     :rtype: numpy.dtype
     """
     from .RobotRaconteurPythonUtil import GetNamedArrayDType
     return GetNamedArrayDType(namedarraytype,obj,self)
-    
+
 def NamedArrayToArray(self,named_array):
     """
-    Converts a namedarray type into a primitive array with the namedarray numeric type. 
-    This function will return an array with one more dimension than the input array, 
+    Converts a namedarray type into a primitive array with the namedarray numeric type.
+    This function will return an array with one more dimension than the input array,
     with the first dimension set to the element count of the named array.
-    
+
     :param namedarray: The namedarray to convert stored in a ``numpy.ndarray``
     :type namedarray: numpy.ndarray
     :return: The converted numeric array
@@ -349,10 +349,10 @@ def NamedArrayToArray(self,named_array):
 
 def ArrayToNamedArray(self,a,named_array_dt):
     """
-    Converts a numeric array into a namedarray. The type of the namedarray is 
+    Converts a numeric array into a namedarray. The type of the namedarray is
     specified using ``dt``, which is returned from GetNamedArrayDType().
-    The input numeric array must have the correct numeric type, and the first dimension 
-    must match the element count of the namedarray. The output array will 
+    The input numeric array must have the correct numeric type, and the first dimension
+    must match the element count of the namedarray. The output array will
     have one fewer dimensions than the input array.
 
     :param a: The numeric array to convert
@@ -367,19 +367,19 @@ def ArrayToNamedArray(self,a,named_array_dt):
 
 class ScopedMonitorLock(object):
     """
-    Wrapper for RobotRaconteurNode.MonitorEnter() and 
+    Wrapper for RobotRaconteurNode.MonitorEnter() and
     RobotRaconteurNode.MonitorExit() supporting ``with``
     statement scoping
     """
     def __init__(self,obj,timeout=-1):
         """
         Create a monitor lock for the specified object
- 
+
         Creates a monitor lock by calling RobotRaconteur.MonitorEnter().
         Object will be locked once the scoped lock is created.
 
         :param obj: The object to monitor lock
-        :param timeout: The timeout in seconds to acquire the monitor lock, 
+        :param timeout: The timeout in seconds to acquire the monitor lock,
            or -1 for infinite
         :type timeout: float
         """
@@ -397,7 +397,7 @@ class ScopedMonitorLock(object):
         """
         Relock the object after calling unlock()
 
-        :param timeou:t The timeout in seconds to acquire the monitor lock, 
+        :param timeou:t The timeout in seconds to acquire the monitor lock,
          or -1 for infinite
         :type timeout: float
         """
@@ -419,7 +419,7 @@ class ScopedMonitorLock(object):
 
         The monitor lock is released from the ScopedMonitorLock
         instance. The monitor lock will not be released
-        when the ``with`` block exits. 
+        when the ``with`` block exits.
         """
         self.obj=None
 
@@ -429,17 +429,17 @@ def RequestObjectLock(self,obj,flags):
 
     Called by clients to request an exclusive lock on a service object and
     all subobjects (\"objrefs\") in the service. The exclusive access lock will
-    prevent other users (\"User\" lock) or client connections  (\"Session\" lock) 
+    prevent other users (\"User\" lock) or client connections  (\"Session\" lock)
     from interacting with the objects.
 
     :param obj: The object to lock. Must be returned by ConnectService or returned by an \"objref\"
-    :param flags: Select either a \"User\" lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or \"Session\" 
+    :param flags: Select either a \"User\" lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or \"Session\"
       lock with RobotRaconteur.RobotRaconteurObjectLockFlags_CLIENT_LOCK
     :return: \"OK\" on success
     :rtype: str
     """
     return self._RequestObjectLock(obj.rrinnerstub,flags)
-        
+
 def ReleaseObjectLock(self,obj):
     """
     Release an excluse access lock previously locked with RequestObjectLock()
@@ -453,7 +453,7 @@ def ReleaseObjectLock(self,obj):
     :rtype: str
     """
     return self._ReleaseObjectLock(obj.rrinnerstub)
-        
+
 def MonitorEnter(self,obj,timeout=-1):
     """
     Creates a monitor lock on a specified object
@@ -463,22 +463,22 @@ def MonitorEnter(self,obj,timeout=-1):
     Monitors emulate a single thread locking the service object.
 
     Use of ScopedMonitorLock instead of this function is highly recommended
-    
+
     Monitor locks do not lock any sub-objects (objref)
 
     :param: obj The object to lock
-    :param timeout: The timeout in seconds to acquire the monitor lock, 
+    :param timeout: The timeout in seconds to acquire the monitor lock,
         or -1 for infinite
     """
-    from .RobotRaconteurPythonUtil import adjust_timeout	
+    from .RobotRaconteurPythonUtil import adjust_timeout
     self._MonitorEnter(obj.rrinnerstub,adjust_timeout(timeout))
-            
+
 def MonitorExit(self,obj):
     """
     Releases a monitor lock
 
     Use of ScopedMonitorLock instead of this function is highly recommended
-    
+
 
     :param obj: The object previously locked by MonitorEnter()
     """
@@ -494,7 +494,7 @@ def AsyncRequestObjectLock(self,obj,flags,handler,timeout=RR_TIMEOUT_INFINITE):
     If ``handler`` is None, returns an awaitable future.
 
     :param obj: The object to lock. Must be returned by ConnectService or returned by an \"objref\"
-    :param flags: Select either a \"User\" lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or \"Session\" 
+    :param flags: Select either a \"User\" lock with RobotRaconteur.RobotRaconteurObjectLockFlags_USER_LOCK or \"Session\"
       lock with RobotRaconteur.RobotRaconteurObjectLockFlags_CLIENT_LOCK
     :param handler: Handler to call on completion
     :type handler: Callable[[str,Exception],None]
@@ -503,10 +503,10 @@ def AsyncRequestObjectLock(self,obj,flags,handler,timeout=RR_TIMEOUT_INFINITE):
     """
     from .RobotRaconteurPythonUtil import async_call, adjust_timeout, AsyncStringReturnDirectorImpl
     return async_call(self._AsyncRequestObjectLock,(obj.rrinnerstub,flags,adjust_timeout(timeout)),AsyncStringReturnDirectorImpl,handler)
-                
-def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE): 
+
+def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE):
     """
-    Asynchronously release an excluse access lock previously locked 
+    Asynchronously release an excluse access lock previously locked
     with RequestObjectLock() or AsyncRequestObjectLock()
 
     Same as ReleaseObjectLock() but returns asynchronously
@@ -526,7 +526,7 @@ def GetServiceAttributes(self,obj):
     """
     Get the service attributes of a client connection
 
-    Returns the service attributes of a client connected using 
+    Returns the service attributes of a client connected using
     ConnectService()
 
     :param obj: The root object of the client to use to retrieve service attributes
@@ -625,19 +625,19 @@ def RegisterService(self, name, objecttype, obj, securitypolicy=None):
     director.__disown__()
     return self._RegisterService(name,SplitQualifiedName(objecttype)[0],rrobj,securitypolicy)
 
-NodeID = property(lambda self: self._NodeID(), 
+NodeID = property(lambda self: self._NodeID(),
     doc = """
     (RobotRaconteur.NodeID) The current NodeID. If one has not been set, one will be automatically generated
-    when read. NodeID cannot be set after it has been configured.	
+    when read. NodeID cannot be set after it has been configured.
     """)
 def SetNodeID(self,nodeid):
     """
     Set the NodeID
- 
-    The NodeID must be set before NodeID is called. If an attempt to set 
+
+    The NodeID must be set before NodeID is called. If an attempt to set
     the NodeID after NodeID has been called, an InvalidOperationException
     will be thrown.
-	 
+
     The NodeID must not be all zeros.
 
     :param nodeid: The NodeID
@@ -646,18 +646,18 @@ def SetNodeID(self,nodeid):
     self._SetNodeID(nodeid)
 NodeName =property(lambda self: self._NodeName(),
     doc = """
-    (str) The current NodeName. If one has not been set, it will be the empty string. Cannot be set after it has been configured.	
+    (str) The current NodeName. If one has not been set, it will be the empty string. Cannot be set after it has been configured.
     """)
 def SetNodeName(self,nodename):
     """
     Set the NodeName
 
-    The NodeName must be set before calling NodeName If an attempt to set 
+    The NodeName must be set before calling NodeName If an attempt to set
     the NodeName after NodeName has been called, an InvalidOperationException
     will be thrown.
- 
+
     The NodeName must not be empty, and must conform to the following regex:
- 
+
     ^[a-zA-Z][a-zA-Z0-9_\\.\\-]*$
 
     :param nodename: The NodeName
@@ -668,7 +668,7 @@ ThreadPoolCount = property(lambda self: self._GetThreadPoolCount(), lambda self,
     doc = """
     (int) The size of the native thread pool. May be configured dynamically.
     """)
-    
+
 RequestTimeout = property(lambda self : self._GetRequestTimeout()/1000.0, lambda self,t : self._SetRequestTimeout(t*1000),
     doc = """
     (float) The timeout for requests in seconds
@@ -720,8 +720,8 @@ def GetConstants(self,servicetype, obj=None):
 
     :param servicetype: The name of the service definition
     :type servicetype: str
-    :param obj: The client connection object reference to be used with to retrive service types.  
-            This is necessary because each client maintains type information.  A client must be provided from 
+    :param obj: The client connection object reference to be used with to retrive service types.
+            This is necessary because each client maintains type information.  A client must be provided from
             which type information can be queried. For services this parameter is unnecessary.
     :rtype: Dict[str,Any]
     """
@@ -731,16 +731,16 @@ def GetConstants(self,servicetype, obj=None):
     else:
         d=self.GetPulledServiceType(obj,servicetype)
     return ServiceDefinitionConstants(d,self,obj)
-        
+
 def GetExceptionType(self, exceptionname, obj=None):
     """
-    Returns a reference to the exception class of fully qualified type ``exceptiontype``. 
+    Returns a reference to the exception class of fully qualified type ``exceptiontype``.
     Note that this is a class reference, not an instance.
 
     :param exceptionname: The fully qualified name of the exception type
     :type exceptionname: str
-    :param obj: The client connection object reference to be used with to retrive service types.  
-            This is necessary because each client maintains type information.  A client must be provided from 
+    :param obj: The client connection object reference to be used with to retrive service types.
+            This is necessary because each client maintains type information.  A client must be provided from
             which type information can be queried. For services this parameter is unnecessary.
     :return: Exception type
     """
@@ -751,10 +751,10 @@ def GetExceptionType(self, exceptionname, obj=None):
         d=self.GetServiceType(t[0])
     else:
         d=self.GetPulledServiceType(obj,t[0])
-    if (not any(x.Name == t[1] for x in d.Exceptions)): 
+    if (not any(x.Name == t[1] for x in d.Exceptions)):
         raise Exception('Invalid exception type')
     return GetExceptionType(exceptionname)
-        
+
 def FindObjectType(self,obj,member,ind=None):
     """
     Returns the fully qualified object type that would be returned by an \"objref\" member
@@ -790,7 +790,7 @@ def AsyncFindObjectType(self,obj,member,handler,timeout=RR_TIMEOUT_INFINITE):
     """
     from .RobotRaconteurPythonUtil import async_call, adjust_timeout, AsyncStringReturnDirectorImpl
     return async_call(self._AsyncFindObjectType,(obj.rrinnerstub,member,adjust_timeout(timeout)),AsyncStringReturnDirectorImpl,handler)
-            
+
 def AsyncFindObjectTypeInd(self,obj,member,ind,handler,timeout=RR_TIMEOUT_INFINITE):
     """
     Asynchronously returns an objref as a specific type
@@ -853,13 +853,13 @@ def CreateTimer(self,period,handler,oneshot=False):
     :rtype: RobotRaconteur.Timer
     """
     from .RobotRaconteurPythonUtil import AsyncTimerEventReturnDirectorImpl
-    
+
     handler2=AsyncTimerEventReturnDirectorImpl(handler)
     handler2.__disown__()
     ret= self._CreateTimer(period,oneshot,handler2,0)
-        
+
     return ret
-        
+
 def PostToThreadPool(self, handler):
     """
     Posts a function to be called by the node's native thread pool.
@@ -869,7 +869,7 @@ def PostToThreadPool(self, handler):
     """
     from .RobotRaconteurPythonUtil import async_call, AsyncVoidNoErrReturnDirectorImpl
     return async_call(self._PostToThreadPool,(), AsyncVoidNoErrReturnDirectorImpl,handler,noerror=True)
-    
+
 RobotRaconteurVersion = property(lambda self: self._GetRobotRaconteurVersion(),
     doc = """(str) Returns the Robot Raconteur library version"""
 )
@@ -903,7 +903,7 @@ def NowNodeTime(self):
     The current node time
 
     UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
-    of the system clock being updated by the user. For a real-time systems, 
+    of the system clock being updated by the user. For a real-time systems,
 	this is unaccetpable and can lead to system instability. The "node time" used by Robot Raconteur
 	is synchronized to UTC at startup, and is then steadily increasing from that initial time.
 	It will ignore changes to the system clock, and will also ignore corrections like leap
@@ -941,7 +941,7 @@ def Shutdown(self):
     Shuts down the node. Called automatically by ClientNodeSetup and ServerNodeSetup
 
     Shutdown must be called before program exit to avoid segfaults and other undefined
-    behavior. The singleton node is automatically shut down in Python. The use of 
+    behavior. The singleton node is automatically shut down in Python. The use of
     ClientNodeSetup and ServerNodeSetup is recommended to automate
     the node lifecycle. Calling this function does the following:
     1. Closes all services and releases all service objects
@@ -951,7 +951,7 @@ def Shutdown(self):
     5. Notifies all shutdown listeners
     6. Releases all periodic cleanup task listeners
     7. Shuts down and releases the thread pool
-            
+
     """
     self._Shutdown()
 
