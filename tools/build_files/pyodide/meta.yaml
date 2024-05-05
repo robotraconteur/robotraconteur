@@ -1,6 +1,6 @@
 package:
   name: RobotRaconteur
-  version: 1.1.1
+  version: 1.2.0
 
 source:
   # url: https://github.com/robotraconteur/robotraconteur_pyodide/releases/download/v0.15.1-pyodide/RobotRaconteur-pyodide-0.15.1-post1-Source.tar.gz
@@ -9,10 +9,10 @@ source:
 
 requirements:
   run:
-    - numpy
+  - numpy
   host:
-    - boost-cpp
-    - numpy
+  - boost-cpp
+  - numpy
 
 build:
   cxxflags: -fexceptions -fPIC -DBOOST_SP_DISABLE_THREADS=1 -O2

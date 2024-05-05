@@ -7,5 +7,5 @@ from .RobotRaconteurPythonUtil import PipeEndpoint, Pipe, PipeBroadcaster, \
     ServiceSubscriptionFilter, ServiceSubscriptionFilterNode, RobotRaconteurNodeSetup, \
     ClientNodeSetup, ServerNodeSetup, SecureServerNodeSetup, UserLogRecordHandler, TapFileReader, BroadcastDownsamplerStep, \
     ServiceInfo2, NodeInfo2, ServiceInfo2Subscription, ServiceSubscription, WireSubscription, PipeSubscription, \
-    ServiceSubscriptionClientID
+    ServiceSubscriptionClientID, SubObjectSubscription, ServiceSubscriptionManager, ServiceSubscriptionManagerDetails
 from .RobotRaconteurPythonDataTypes import *

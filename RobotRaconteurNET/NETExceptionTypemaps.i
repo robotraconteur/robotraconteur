@@ -13,7 +13,7 @@ try {
 {
 	RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
 	if (default_node)
-	{			
+	{
 		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
 	}
 	if (robotRaconteurExceptionHelper!=NULL)
@@ -27,12 +27,12 @@ try {
 		SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
 		return $null;
 	}
-	
+
 
 } catch (std::exception& e) {
 	RR_SHARED_PTR<RobotRaconteurNode> default_node = RobotRaconteurNode::weak_sp().lock();
 	if (default_node)
-	{			
+	{
 		ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(default_node, Default, -1, "Exception raised in C++, passing to wrapped language: " << e.what());
 	}
   SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
@@ -73,5 +73,5 @@ public:
 	static boost::intrusive_ptr<MessageEntry> GetError();
 
 };
-	
+
 }

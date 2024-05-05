@@ -25,9 +25,9 @@ namespace RobotRaconteur
 
 struct TimerEvent
 {
-	%immutable stopped; 
+	%immutable stopped;
 	bool stopped;
-	%immutable last_expected; 
+	%immutable last_expected;
 	boost::posix_time::ptime last_expected;
 	%immutable last_real;
 	boost::posix_time::ptime last_real;
@@ -59,7 +59,7 @@ public:
 	virtual void SetPeriod(const boost::posix_time::time_duration& period)=0;
 
 	virtual bool IsRunning()=0;
-	
+
 	virtual ~Timer() {}
 
 };
@@ -67,14 +67,14 @@ public:
 class WallTimer : public Timer
 {
 public:
-	
-	
+
+
 	virtual void Start();
 
 	virtual void Stop();
 
 	virtual void TryStop();
-	
+
 	virtual boost::posix_time::time_duration GetPeriod();
 
 	virtual void SetPeriod(const boost::posix_time::time_duration& period);
@@ -98,13 +98,13 @@ RR_KEEP_GIL()
 class WallRate : public Rate
 {
 public:
-	
+
 	WallRate(double frequency, boost::shared_ptr<RobotRaconteurNode> node=boost::shared_ptr<RobotRaconteurNode>());
-	
+
 RR_RELEASE_GIL()
 	virtual void Sleep();
 RR_KEEP_GIL()
-	
+
 	virtual ~WallRate() {}
 };
 
@@ -120,7 +120,7 @@ public:
 	virtual void Reset();
 RR_RELEASE_GIL()
 	virtual void WaitOne();
-	
+
 	virtual bool WaitOne(int32_t timeout);
 RR_KEEP_GIL()
 };

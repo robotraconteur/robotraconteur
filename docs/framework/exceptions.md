@@ -77,9 +77,9 @@ An optional error parameter may be included in the message. This parameter shoul
 
 ## Common Exceptions
 
-The most common exception to encounter is the `ConnectionException`. This will be thrown when a connection is lost. 
+The most common exception to encounter is the `ConnectionException`. This will be thrown when a connection is lost.
 
-An `EndpointNotFoundException` typically means the service connection has been closed, or the remote node has shut down. 
+An `EndpointNotFoundException` typically means the service connection has been closed, or the remote node has shut down.
 
 `ValueNotSet` exception is encountered when a Wire member has not received a value, or the current value has expired. This often happens when the wire connection is created, but the wire has not had an opportunity to receive a value. Add a delay, check to make sure the value is valid, or use `TryGetInValue` and check the return success to see if the value was ready.
 

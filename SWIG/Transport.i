@@ -19,7 +19,7 @@ namespace RobotRaconteur
 {
 class RobotRaconteurNode;
 
-class Transport 
+class Transport
 {
 public:
 	virtual std::string GetUrlSchemeString() const = 0;

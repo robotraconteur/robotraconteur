@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file Message.h
  *
  * @author John Wason, PhD

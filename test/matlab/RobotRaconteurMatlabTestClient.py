@@ -15,11 +15,11 @@ import time
 
 
 def ev1():
-    print "Event 1"
+    print("Event 1")
 
 
 def ev2(a, b):
-    print "Event2 : " + str(a) + " " + str(b)
+    print("Event2 : " + str(a) + " " + str(b))
 
 
 def main():
@@ -34,19 +34,19 @@ def main():
     c.testevent2 += ev2
 
     c.testfunc1(10, 20)
-    print c.testprop1
+    print(c.testprop1)
     c.testprop1 = 30
-    print c.testfunc2(20)
+    print(c.testfunc2(20))
 
-    print c.testprop2
+    print(c.testprop2)
     s = RRN.NewStructure('example.MatlabTestService.MatlabTestStruct', c)
     s.val1 = 38274
     s.val2 = [1.234, 3.14]
 
     c.testprop2 = s
     c2 = c.testprop2
-    print c2.val1
-    print c2.val2
+    print(c2.val1)
+    print(c2.val2)
 
     time.sleep(2)
 

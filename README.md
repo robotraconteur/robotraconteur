@@ -2,16 +2,19 @@
 
 # Robot Raconteur Core Library and Wrappers
 
-![CI Build Status](https://github.com/robotraconteur/robotraconteur/workflows/CI/badge.svg)
+[![CI](https://github.com/robotraconteur/robotraconteur/actions/workflows/main.yml/badge.svg)](https://github.com/robotraconteur/robotraconteur/actions/workflows/main.yml)
 ![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)
-![Python](https://img.shields.io/badge/python-2.7+|3.5+-blue.svg)
-![pypi](https://img.shields.io/pypi/v/robotraconteur)
+![Python](https://img.shields.io/badge/python-2.7+|3.5+-blue.svg?style=flat&logo=python&logoColor=ffdd54)
+![pypi](https://img.shields.io/pypi/v/robotraconteur?style=flat&logo=pypi)
 ![C++](https://img.shields.io/badge/C++-98+-blue.svg?style=flat&logo=c%2B%2B)
-![C\#](https://img.shields.io/badge/C%23-4.5|netstandard2.0-blue.svg?style=flat&logo=c-sharp)
-![nuget](https://img.shields.io/nuget/v/robotraconteurnet)
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat&logo=java)
+![C\#](https://img.shields.io/badge/C%23-4.5|netstandard2.0-blue.svg?style=flat&logo=csharp)
+![nuget](https://img.shields.io/nuget/v/robotraconteurnet?style=flat&logo=nuget)
+![Java](https://img.shields.io/badge/Java-8+-blue.svg?style=flat&logo=openjdk)
 [![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
-![conda](https://img.shields.io/conda/vn/robotraconteur/robotraconteur?label=conda)
+![conda](https://img.shields.io/conda/vn/conda-forge/robotraconteur?label=conda&logo=anaconda)
+![ros-humble](https://img.shields.io/ros/v/noetic/robotraconteur?styple=flat&logo=ros)
+![ros-humble](https://img.shields.io/ros/v/humble/robotraconteur?styple=flat&logo=ros)
+![ros-humble](https://img.shields.io/ros/v/iron/robotraconteur?styple=flat&logo=ros)
 
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
@@ -29,7 +32,13 @@ A communication framework for robotics, automation, and the Internet of Things
 
 [http://robotraconteur.com](http://robotraconteur.com)
 
-[J. Wason, "Robot Raconteur® version 0.8: An Updated Communication System for Robotics, Automation, Building Control, and the Internet of Things", in Proc. IEEE Conference on Automation Science and Engineering, 2016, pp. 595-602.](https://s3.amazonaws.com/robotraconteurpublicfiles/docs/RobotRaconteur_CASE2016.pdf)
+[J. Wason and J. T. Wen, "Robot Raconteur® Updates on an Open Source Interoperable Middleware for Robotics", in Proc. IEEE Conference on Automation Science and Engineering, 2023, pp. 1-8.](https://files2.wasontech.com/RobotRaconteur_CASE2023.pdf)
+
+[H. He, B. Aksoy, G. Saunders, J. Wason, and J. T. Wen, "Plug-and-play software architecture for coordinating multiple industrial robots and sensors from multiple vendors", in Proc. IEEE Conference on Automation Science and Engineering, 2023, pp. 1-8.](https://files2.wasontech.com/RobotRaconteur_CASE2023_plugandplay.pdf)
+
+[J. Wason, "Robot Raconteur® version 0.8: An Updated Communication System for Robotics, Automation, Building Control, and the Internet of Things", in Proc. IEEE Conference on Automation Science and Engineering, 2016, pp. 595-602.](https://files2.wasontech.com/RobotRaconteur_CASE2016.pdf)
+
+[J. Wason and J. T. Wen, "Robot Raconteur: A Communication Architecture and Library for Robotic and Automation Systems", in Proc. IEEE Conference on Automation Science and Engineering, 2011, pp. 761-766.](https://files2.wasontech.com/RobotRaconteur_CASE2011.pdf)
 
 ## Contents
 
@@ -62,73 +71,119 @@ See [https://github.com/robotraconteur/robotraconteur/wiki/Documentation](https:
 
 ## Quick Start
 
-A simple service will initialize Robot Raconteur and register an object as a service. This example service creates a simple service that contains a single function to drive an iRobot Create through a serial port. This is a minimal subset of the full example in the documentation.
+The Quick Start example demonstrates the basic functionality of Robot Raconteur be creating a service,
+and then calling the service using a client. This example uses the "Reynard the Robot" Python package,
+which provides a simple cartoon robot.
 
-`minimalcreateservice.py`
+Before running the example, make sure to install the required packages:
 
-    import RobotRaconteur as RR
-    RRN=RR.RobotRaconteurNode.s
-    import threading
-    import serial
-    import struct
+```bash
+python -m pip install robotraconteur reynard-the-robot
+```
 
-    minimal_create_interface="""
-    service experimental.minimal_create
+On Linux, use `python3` instead of `python` to run the Python 3 interpreter. Use `python3` in the rest
+of the examples as well.
 
-    object create_obj
-        function void Drive(int16 velocity, int16 radius)
-    end object
-    """
+`reynard_quickstart_service.py`
 
-    class create_impl(object):
-        def __init__(self, port):
-            self._lock=threading.Lock()
-            self._serial=serial.Serial(port=port,baudrate=57600)
-            dat=struct.pack(">4B",128,132,150, 0)
-            self._serial.write(dat)
+```python
+import RobotRaconteur as RR
+RRN = RR.RobotRaconteurNode.s
 
-        def Drive(self, velocity, radius):
-            with self._lock:
-                dat=struct.pack(">B2h",137,velocity,radius)
-                self._serial.write(dat)
+import threading
+import reynard_the_robot
 
-    with RR.ServerNodeSetup("experimental.minimal_create", 52222):
-        #Register the service type
-        RRN.RegisterServiceType(minimal_create_interface)
+# Define the service definition for the quickstart service
+reynard_quickstart_interface = """
+service experimental.reynard_quickstart
 
-        create_inst=create_impl("/dev/ttyUSB0")
+object ReynardQuickstart
+    function void say(string text)
+    function void teleport(double x, double y)
+end
+"""
 
-        #Register the service
-        RRN.RegisterService("Create","experimental.minimal_create.create_obj",create_inst)
+# Implement the quickstart service
 
-        #Wait for program exit to quit
-        input("Press enter to quit")
+
+class ReynardQuickstartImpl(object):
+    def __init__(self):
+        self.reynard = reynard_the_robot.Reynard()
+        self.reynard.start()
+        self._lock = threading.Lock()
+
+    def say(self, text):
+        with self._lock:
+            self.reynard.say(text)
+
+    def teleport(self, x, y):
+        with self._lock:
+            self.reynard.teleport(x, y)
+
+
+with RR.ServerNodeSetup("experimental.minimal_create2", 53222):
+    # Register the service type
+    RRN.RegisterServiceType(reynard_quickstart_interface)
+
+    reynard_inst = ReynardQuickstartImpl()
+
+    # Register the service
+    RRN.RegisterService("reynard", "experimental.reynard_quickstart.ReynardQuickstart", reynard_inst)
+
+    # Wait for program exit to quit
+    input("Press enter to quit")
+```
+
+To run the service, execute the following command:
+
+```bash
+python reynard_quickstart_service.py
+```
+
+And open a browser to [http://localhost:29201](http://localhost:29201) to view the Reynard user interface.
 
 This service can now be called by a connecting client. Because of the magic of Robot Raconteur, it is only necessary to connect to the service to utilize its members. In Python and MATLAB there is no boilerplate code, and in the other languages the boilerplate code is generated automatically.
 
-`minimalcreateclient.py`
+`reynard_quickstart_client.py`
 
-    from RobotRaconteur.Client import *
-    import time
+```python
+from RobotRaconteur.Client import *
 
-    #RRN is imported from RobotRaconteur.Client
-    #Connect to the service.
-    obj=RRN.ConnectService('rr+tcp://localhost:52222/?service=Create')
+# RRN is imported from RobotRaconteur.Client
+# Connect to the service.
+obj = RRN.ConnectService('rr+tcp://localhost:53222/?service=reynard')
 
-    #The "Create" object reference is now available for use
-    #Drive for a bit
-    obj.Drive(100,5000)
-    time.sleep(1)
-    obj.Drive(0,5000)
+# Call the say function
+obj.say("Hello from Reynard!")
 
-In MATLAB, this client is even simpler.
+# Call the teleport function
+obj.teleport(100, 200)
+```
 
-`minimalcreateclient.m`
+To run the client, execute the following command:
 
-    o=RobotRaconteur.Connect('rr+tcp://localhost:52222/?service=Create');
-    o.Drive(int16(100),int16(5000));
-    pause(1);
-    o.Drive(int16(0),int16(0));
+```bash
+python reynard_quickstart_client.py
+```
+
+The MATLAB Add-On for Robot Raconteur can be installed using the Add-On Explorer in MATLAB and searching for "Robot Raconteur".
+
+In MATLAB, the example client is even simpler.
+
+`reynard_quickstart_client.m`
+
+```matlab
+% Connect to the service
+o = RobotRaconteur.ConnectService('rr+tcp://localhost:53222/?service=reynard');
+
+% Call the say function
+o.say("Hello from MATLAB!");
+
+% Call the teleport function
+o.teleport(-150,200);
+```
+
+The quickstart file can be found in the [examples/quickstart](examples/quickstart) directory.
 
 ## Getting Started
 
@@ -144,7 +199,7 @@ instructions:
 
 https://github.com/robotraconteur-contrib/robotraconteur_training_sim
 
-The training simulator also contains a simulation for two Universal Robots UR5e robots, with grippers and cameras. 
+The training simulator also contains a simulation for two Universal Robots UR5e robots, with grippers and cameras.
 Example scripts to control the robots are included. See the training simulator readme for instructions.
 
 Next, take a look out the examples for other languages:
@@ -157,7 +212,7 @@ https://github.com/robotraconteur/RobotRaconteur_Java_Examples
 
 https://github.com/robotraconteur/RobotRaconteur_MATLAB_Examples
 
-Robot Raconteur provides a large number of standardized types to use with robots and other devices. See the 
+Robot Raconteur provides a large number of standardized types to use with robots and other devices. See the
 standard robdef repository:
 
 https://github.com/robotraconteur/robotraconteur_standard_robdef
@@ -171,7 +226,7 @@ Also checkout the PyRI Open source teach pendant: https://github.com/pyri-projec
 
 ## Installation
 
-See [docs/common/installation.md](docs/common/installation.md) for installation instructions. 
+See [docs/common/installation.md](docs/common/installation.md) for installation instructions.
 
 The following platforms are supported:
 
@@ -185,12 +240,12 @@ The following platforms are supported:
 
 ## Building
 
-See [docs/common/building.md](docs/common/building.md) for build instructions. 
+See [docs/common/building.md](docs/common/building.md) for build instructions.
 
 ## ROS Support
 
 Robot Raconteur is available in ROS Noetic and ROS Humble using the `robotraconteur` package. These packages are built
-using the `ros-noetic` and `ros2-humble` branches. The `ros2-humble` branch should work with other versions of 
+using the `ros-noetic` and `ros2-humble` branches. The `ros2-humble` branch should work with other versions of
 ROS 2, but swig version 4.0.2 or greater must be installed first.
 
 A Robot Raconteur to ROS 2 bridge is available, allowing access to ROS 2 topics and services from Robot Raconteur:
@@ -225,7 +280,7 @@ Robot Raconteur Core is a ROS Quality Level 2 package. See the [Quality Declarat
 
 ## Contributing
 
-Contributors must sign a Contributor License Agreement (CLA). Please see https://www.wasontech.com/contributors to 
+Contributors must sign a Contributor License Agreement (CLA). Please see https://www.wasontech.com/contributors to
 complete and return a signed agreement. Wason Technology, LLC uses the Harmony CLA (https://www.harmonyagreements.org/).
 
 ## License
@@ -242,7 +297,6 @@ Robot Raconteur is developed by John Wason, PhD, Wason Technology, LLC
 
 This work was supported in part by Subaward No. ARM-TEC-18-01-F-19 and ARM-TEC-19-01-F-24 from the Advanced Robotics for Manufacturing ("ARM") Institute under Agreement Number W911NF-17-3-0004 sponsored by the Office of the Secretary of Defense. ARM Project Management was provided by Christopher Adams. The views and conclusions contained in this document are those of the authors and should not be interpreted as representing the official policies, either expressed or implied, of either ARM or the Office of the Secretary of Defense of the U.S. Government. The U.S. Government is authorized to reproduce and distribute reprints for Government purposes, notwithstanding any copyright notation herein.
 
-This work was supported in part by the New York State Empire State Development Division of Science, Technology and Innovation (NYSTAR) under contract C160142. 
+This work was supported in part by the New York State Empire State Development Division of Science, Technology and Innovation (NYSTAR) under contract C160142.
 
 ![](docs/figures/arm_logo.jpg) ![](docs/figures/nys_logo.jpg)
-

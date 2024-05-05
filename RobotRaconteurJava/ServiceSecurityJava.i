@@ -32,7 +32,7 @@
 		{
 			IUserAuthenticator t = target;
 			if (t == null) throw new AuthenticationException("Authenticator internal error");
-						
+
 			java.util.Map<String, Object> c2 = (java.util.Map<String, Object>)RobotRaconteurNode.s().<String, Object>unpackMapType(credentials);
 
 			AuthenticatedUser ret = t.authenticateUser(username, c2, context);
@@ -48,7 +48,7 @@
 	 {
 		 Policies2.put(m.getKey(), m.getValue());
 	 }
-	 
+
 	 NativeUserAuthenticator a2;
 	 if (authenticator instanceof NativeUserAuthenticator)
 	{
@@ -62,11 +62,11 @@
 		WrappedUserAuthenticator a3 = new WrappedUserAuthenticator();
 		a3.setRRDirector(n, id);
 		a2=a3;
-		
+
 	}
-	 
+
 	 swigCPtr=RobotRaconteurJavaJNI.new_ServiceSecurityPolicy(NativeUserAuthenticator.getCPtr(a2), a2, map_strstr.getCPtr(Policies2), Policies2);
-	 
+
   }
 %}
 

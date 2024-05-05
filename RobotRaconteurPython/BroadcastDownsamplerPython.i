@@ -9,7 +9,7 @@ def __init__(self,context,default_downsample = 0):
     :param default_downsample: The default downsample for clients
     :type default_downsample: int
     """
-    #This is a shadowed function		
+    #This is a shadowed function
     _RobotRaconteurPython.BroadcastDownsampler_swiginit(self, _RobotRaconteurPython.new_BroadcastDownsampler())
     self._Init(context, default_downsample)
 %}

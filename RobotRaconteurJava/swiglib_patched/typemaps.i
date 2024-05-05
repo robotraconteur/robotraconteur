@@ -31,7 +31,7 @@ you would use a real value instead.
         unsigned long long *INPUT, unsigned long long &INPUT
         float              *INPUT, float              &INPUT
         double             *INPUT, double             &INPUT
-         
+
 To use these, suppose you had a C function like this :
 
         double fadd(double *a, double *b) {
@@ -39,7 +39,7 @@ To use these, suppose you had a C function like this :
         }
 
 You could wrap it with SWIG as follows :
-        
+
         %include <typemaps.i>
         double fadd(double *INPUT, double *INPUT);
 
@@ -129,8 +129,8 @@ INPUT_TYPEMAP(double, jdouble, double, "D");
 }
 
 // OUTPUT typemaps.   These typemaps are used for parameters that
-// are output only.   An array replaces the c pointer or reference parameter. 
-// The output value is returned in this array passed in. 
+// are output only.   An array replaces the c pointer or reference parameter.
+// The output value is returned in this array passed in.
 
 /*
 OUTPUT typemaps
@@ -138,11 +138,11 @@ OUTPUT typemaps
 
 The following typemaps can be applied to turn a pointer or reference into an "output"
 value.  When calling a function, no input value would be given for
-a parameter, but an output value would be returned.  This works by a 
-Java array being passed as a parameter where a c pointer or reference is required. 
-As with any Java function, the array is passed by reference so that 
+a parameter, but an output value would be returned.  This works by a
+Java array being passed as a parameter where a c pointer or reference is required.
+As with any Java function, the array is passed by reference so that
 any modifications to the array will be picked up in the calling function.
-Note that the array passed in MUST have at least one element, but as the 
+Note that the array passed in MUST have at least one element, but as the
 c function does not require any input, the value can be set to anything.
 
         bool               *OUTPUT, bool               &OUTPUT
@@ -158,7 +158,7 @@ c function does not require any input, the value can be set to anything.
         unsigned long long *OUTPUT, unsigned long long &OUTPUT
         float              *OUTPUT, float              &OUTPUT
         double             *OUTPUT, double             &OUTPUT
-         
+
 For example, suppose you were trying to wrap the modf() function in the
 C math library which splits x into integral and fractional parts (and
 returns the integer part in one of its parameters):
@@ -176,7 +176,7 @@ or you can use the %apply directive :
         %apply double *OUTPUT { double *ip };
         double modf(double x, double *ip);
 
-The Java output of the function would be the function return value and the 
+The Java output of the function would be the function return value and the
 value in the single element array. In Java you would use it like this:
 
     double[] ptr = {0.0};
@@ -210,7 +210,7 @@ There are no char *OUTPUT typemaps, however you can apply the signed char * type
     return $null;
   }
   temp = ($*1_ltype)0;
-  $1 = &temp; 
+  $1 = &temp;
 }
 
 %typemap(freearg) TYPE *OUTPUT, TYPE &OUTPUT ""
@@ -275,7 +275,7 @@ OUTPUT_TYPEMAP(double, jdouble, double, Double, "[D", jdoubleArray);
     return $null;
   }
   temp = false;
-  $1 = &temp; 
+  $1 = &temp;
 }
 
 %typemap(directorargout, noblock=1) bool &OUTPUT
@@ -297,9 +297,9 @@ OUTPUT_TYPEMAP(double, jdouble, double, Double, "[D", jdoubleArray);
 /* Use first element in BigInteger array for output */
 /* Overrides the typemap in the OUTPUT_TYPEMAP macro */
 #if defined(SWIGWORDSIZE64)
-%typemap(argout) unsigned long *OUTPUT, unsigned long &OUTPUT { 
+%typemap(argout) unsigned long *OUTPUT, unsigned long &OUTPUT {
 #else
-%typemap(argout) unsigned long long *OUTPUT, unsigned long long &OUTPUT { 
+%typemap(argout) unsigned long long *OUTPUT, unsigned long long &OUTPUT {
 #endif
   jbyteArray ba = JCALL1(NewByteArray, jenv, 9);
   jbyte* bae = JCALL2(GetByteArrayElements, jenv, ba, 0);
@@ -343,7 +343,7 @@ returned as an element in a Java array.
         unsigned long long *INOUT, unsigned long long &INOUT
         float              *INOUT, float              &INOUT
         double             *INOUT, double             &INOUT
-         
+
 For example, suppose you were trying to wrap the following function :
 
         void neg(double *x) {
@@ -362,15 +362,15 @@ or you can use the %apply directive :
         void neg(double *x);
 
 This works similarly to C in that the mapping directly modifies the
-input value - the input must be an array with a minimum of one element. 
-The element in the array is the input and the output is the element in 
+input value - the input must be an array with a minimum of one element.
+The element in the array is the input and the output is the element in
 the array.
 
        double x[] = {5.0};
        neg(x);
 
-The implementation of the OUTPUT and INOUT typemaps is different to other 
-languages in that other languages will return the output value as part 
+The implementation of the OUTPUT and INOUT typemaps is different to other
+languages in that other languages will return the output value as part
 of the function return value. This difference is due to Java being a typed language.
 
 There are no char *INOUT typemaps, however you can apply the signed char * typemaps instead:
@@ -396,7 +396,7 @@ There are no char *INOUT typemaps, however you can apply the signed char * typem
     SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
     return $null;
   }
-  $1 = ($1_ltype) JCALL2(Get##JAVATYPE##ArrayElements, jenv, $input, 0); 
+  $1 = ($1_ltype) JCALL2(Get##JAVATYPE##ArrayElements, jenv, $input, 0);
 }
 
 %typemap(freearg) TYPE *INOUT, TYPE &INOUT ""
@@ -490,9 +490,9 @@ INOUT_TYPEMAP(double, jdouble, double, Double, "[D", jdoubleArray);
 
 /* Override the typemap in the INOUT_TYPEMAP macro for unsigned long long */
 #if defined(SWIGWORDSIZE64)
-%typemap(in) unsigned long *INOUT ($*1_ltype temp), unsigned long &INOUT ($*1_ltype temp) { 
+%typemap(in) unsigned long *INOUT ($*1_ltype temp), unsigned long &INOUT ($*1_ltype temp) {
 #else
-%typemap(in) unsigned long long *INOUT ($*1_ltype temp), unsigned long long &INOUT ($*1_ltype temp) { 
+%typemap(in) unsigned long long *INOUT ($*1_ltype temp), unsigned long long &INOUT ($*1_ltype temp) {
 #endif
   jobject bigint;
   jclass clazz;

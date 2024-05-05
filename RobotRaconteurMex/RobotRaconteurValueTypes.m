@@ -1,9 +1,9 @@
 %RobotRaconteurValueTypes Overview of Robot Raconteur Value Types in MATLAB
 %
-%    Each valid Robot Raconteur type has a corresponding MATLAB data type.  
-%    Scalars, strings, numeric arrays, structures, and multi-dimensional 
-%    arrays map directly to MATLAB data types.  (Multi-dimensional arrays 
-%    do not have special data types in MATLAB due to the native support 
+%    Each valid Robot Raconteur type has a corresponding MATLAB data type.
+%    Scalars, strings, numeric arrays, structures, and multi-dimensional
+%    arrays map directly to MATLAB data types.  (Multi-dimensional arrays
+%    do not have special data types in MATLAB due to the native support
 %    within MATLAB.) The following table shows how data types map between
 %    Robot Raconteur and MATLAB:
 %
@@ -57,18 +57,18 @@
 %
 %    s can now be passed where SensorPacket is expected.
 %
-%    Pods behave exactly like structures, except they may also be indexed, 
+%    Pods behave exactly like structures, except they may also be indexed,
 %    if the pod type is either an array or a multi-dimensional array.
 %
 %    Namedarrays are mapped to their base numeric type and passed as an
-%    array with one additional dimension. This additional dimension 
+%    array with one additional dimension. This additional dimension
 %    represents the named portion of the array, but in a flattened form.
 %
 %    null values are represented using `missing` in MATLAB.
 %
 %    varvalue uses the RobotRaconteurVarValue type to represent a
 %    dynamically typed value. The type can be determined using the
-%    `datatype` property. The value can be accessed using the `data` 
+%    `datatype` property. The value can be accessed using the `data`
 %    property. The datatypes will be in the same format used
 %    for Robot Raconteur service definition types. RobotRaconteurVarValue
 %    can be constructed passing data and datatype as arguments.

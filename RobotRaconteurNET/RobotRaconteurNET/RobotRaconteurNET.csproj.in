@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -46,11 +46,11 @@
 	<RRBinDir>@CMAKE_CURRENT_BINARY_DIR@\RobotRaconteurNET\</RRBinDir>
 	<RRSwigDir>@CMAKE_SWIG_OUTDIR@\</RRSwigDir>
 	<PointerSize>@CMAKE_SIZEOF_VOID_P@</PointerSize>
-  </PropertyGroup> 
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(RRSwigDir)\RobotRaconteurNET_SWIG.cs">
 	    <Link>RobotRaconteurNET_SWIG.cs</Link>
-	</Compile>    
+	</Compile>
 	<Compile Include="Error.cs"/>
 	<Compile Include="AssemblyInfo.cs"/>
     <Compile Include="$(RRSourceDir)\MultiDimArray.cs" >
@@ -64,7 +64,7 @@
 	</Compile>
   <Compile Include="$(RRSourceDir)\ServiceFactory.cs" >
     <Link>ServiceFactory.cs</Link>
-  </Compile>	
+  </Compile>
 	<Compile Include="$(RRSourceDir)\Generator.cs" >
 		<Link>Generator.cs</Link>
 	</Compile>
@@ -97,11 +97,11 @@
 	</Compile>
   </ItemGroup>
   <PropertyGroup>
-    <DocumentationFile>@CMAKE_CURRENT_BINARY_DIR@\xml_doc\RobotRaconteurNET_built_doc.xml 
+    <DocumentationFile>@CMAKE_CURRENT_BINARY_DIR@\xml_doc\RobotRaconteurNET_built_doc.xml
     </DocumentationFile>
    </PropertyGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />  
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

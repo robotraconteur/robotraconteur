@@ -50,6 +50,7 @@ set(RR_MEX_M_DIRS
     @RobotRaconteurWireConnection
     @RobotRaconteurWireSubscription
     @RobotRaconteurPipeSubscription
+    @RobotRaconteurSubObjectSubscription
     @RobotRaconteurServiceSubscription
     @RobotRaconteurServiceInfo2Subscription
     @RobotRaconteurVarValue)

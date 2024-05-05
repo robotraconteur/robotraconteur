@@ -1,13 +1,13 @@
 package com.robotraconteur;
 
-/** 
+/**
  Helper class for working with RobotRaconteurException
 */
 public class RobotRaconteurExceptionUtil
 {
-	/** 
+	/**
 	 Populates an entry with an exception
-	 
+
 	 @param exception The exception to serialize
 	 @param entry The entry to populate
 	*/
@@ -31,7 +31,7 @@ public class RobotRaconteurExceptionUtil
 			{
 				try
 				{
-					param2 = (MessageElementData)RobotRaconteurNode.s().packVarType(rr_exp.errorParam);                        
+					param2 = (MessageElementData)RobotRaconteurNode.s().packVarType(rr_exp.errorParam);
 				}
 				catch (Exception e)
 				{
@@ -39,13 +39,13 @@ public class RobotRaconteurExceptionUtil
 				}
 			}
 		}
-		
+
 		try
 		{
 			@RR_ERRORS_CATCH@
-			
+
 			if (rr_exp != null)
-			{			
+			{
 				RobotRaconteurException r = rr_exp;
 				entry.setError(r.errorCode);
 				entry.addElement("errorname", r.error);
@@ -54,11 +54,11 @@ public class RobotRaconteurExceptionUtil
 				{
 					entry.addElement("errorsubname",r.errorSubName);
 				}
-				
+
 				if (param2 != null)
 				{
 					entry.addElement("errorparam",param2);
-				}    
+				}
 			}
 			else
 			{
@@ -89,9 +89,9 @@ public class RobotRaconteurExceptionUtil
 		return errorCodeToException(MessageErrorType.swigToEnum((int)error_info.getError_code()), error_info.getErrorname(), error_info.getErrormessage(), error_info.getErrorsubname(), error_info.getParam_());
 	}
 
-	/** 
+	/**
 	 Converts a MessageEntry containing an error to the correct exception
-	 
+
 	 @param entry The entry containing an error
 	 @return An populated exception
 	*/
@@ -104,7 +104,7 @@ public class RobotRaconteurExceptionUtil
 
 		Object param2 = null;
 		if (param_ != null)
-		{			
+		{
 			try
 			{
 				param2 = RobotRaconteurNode.s().unpackVarType(param_);
@@ -117,12 +117,12 @@ public class RobotRaconteurExceptionUtil
 			{
 				param_.finalize();
 			}
-			
-			
+
+
 		}
 
 		switch (errorcode)
-		{			
+		{
 			 case MessageErrorType_RemoteError:
 				RobotRaconteurException e1= new RobotRaconteurRemoteException(errorname, errorstring,errorsubname,param2);
 				RobotRaconteurException e2=RobotRaconteurNode.s().downCastException(e1);

@@ -16,7 +16,7 @@ Robot Raconteur uses Service Definitions to define object types, value types, ex
 | `--master-header` | Optional | Generate a master header file. C++ only |
 | `--outfile=` | Optional | Output all generated code to single file. C\# only |
 
-The `RobotRaconteurGen --thunksource` command is used to generate the thunk source for use with C++, Java, and C\#. The desired language is specified using the `--lang=` option. Valid options for `lang=` are `cpp`, `csharp`, and `java`. One or more service definition `*.robdef` files are specified as inputs. The service definitions are verified to make sure that all declared and imported types are valid. If types are used but do not need to be generated, they can be specified with one or more `--import=importedservice.robdef` options. 
+The `RobotRaconteurGen --thunksource` command is used to generate the thunk source for use with C++, Java, and C\#. The desired language is specified using the `--lang=` option. Valid options for `lang=` are `cpp`, `csharp`, and `java`. One or more service definition `*.robdef` files are specified as inputs. The service definitions are verified to make sure that all declared and imported types are valid. If types are used but do not need to be generated, they can be specified with one or more `--import=importedservice.robdef` options.
 
 The `--include-path=` or `-I` option can be used to add search directories for `*.robdef` files. More than one `--include-path` may be specified. The environmental variable `ROBOTRACONTEUR_ROBDEF_PATH` may also be used to specify a search path for `*.robdef` files, with each path separated by a semicolon (;) on Windows, and a colon (:) on other operating systems.
 
@@ -34,7 +34,7 @@ For C\#, all thunk source can be generated as a single file. Use the `--outfile=
 | ---    | ---      |---         |
 | `--include-path=` or `-I` | Optional, one or more | Add search path for `*.robdef` files |
 
-The `RobotRaconteurGen --verify-robdef` command is used to verify one or a group of service definition files without generating thunk source. 
+The `RobotRaconteurGen --verify-robdef` command is used to verify one or a group of service definition files without generating thunk source.
 
 The `--include-path=` or `-I` option can be used to add search directories for `*.robdef` files. More than one `--include-path` may be specified. The environmental variable `ROBOTRACONTEUR_ROBDEF_PATH` may also be used to specify a search path for `*.robdef` files, with each path separated by a semicolon (;) on Windows, and a colon (:) on other operating systems.
 

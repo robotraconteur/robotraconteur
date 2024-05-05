@@ -21,13 +21,13 @@ class HardwareTransport : public Transport
 public:
 	HardwareTransport();
 	HardwareTransport(const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node);
-	
+
 	virtual std::string GetUrlSchemeString() const;
 	virtual std::vector<std::string> GetServerListenUrls();
 	void Close();
-	
+
 	RR_PROPERTY(MaxMessageSize)
-	int32_t GetMaxMessageSize();	
+	int32_t GetMaxMessageSize();
 	void SetMaxMessageSize(int32_t size);
 
 	RR_PROPERTY(DisableMessage4)
@@ -41,6 +41,6 @@ public:
 	RR_PROPERTY(DisableAsyncMessageIO)
 	virtual bool GetDisableAsyncMessageIO();
 	virtual void SetDisableAsyncMessageIO(bool d);
-	
+
 };
 }

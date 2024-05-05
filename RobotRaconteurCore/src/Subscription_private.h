@@ -170,5 +170,13 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
 
     RR_SHARED_PTR<Timer> retry_timer;
 };
+
+class ServiceSubscriptionManager_subscription
+{
+  public:
+    RR_SHARED_PTR<ServiceSubscription> subscription;
+    ServiceSubscriptionManagerDetails details;
+};
+
 } // namespace detail
 } // namespace RobotRaconteur

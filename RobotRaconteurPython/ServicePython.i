@@ -14,7 +14,7 @@
 		s=WrappedServerServiceListenerDirector(listener,self)
 		s.__disown__()
 		self._AddServerServiceListener(s)
-		
+
 	def SetServiceAttributes(self,attributes):
 		"""
 		Set the service attributes
@@ -28,7 +28,7 @@
 		"""
 		from .RobotRaconteurPythonUtil import PackMessageElement
 		self._SetServiceAttributes(PackMessageElement(attributes,"varvalue{string} value",self))
-		
+
 	def ReleaseServicePath(self, path, endpoints=None):
 		"""
 		Release the specified service path and all sub objects
@@ -45,7 +45,7 @@
 
 		:param path: The service path to release
 		:type path: str
-		:param endpoints: (Optional) The client endpoint IDs to notify of the released service path, 
+		:param endpoints: (Optional) The client endpoint IDs to notify of the released service path,
 		 or None to notify all endpoints
 		:type endpoints: List[int]
 		"""

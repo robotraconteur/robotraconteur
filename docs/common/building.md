@@ -45,11 +45,11 @@ mkdir build && cd build
 cmake -DBUILD_GEN=ON -DBUILD_TEST=ON -DBoost_USE_STATIC_LIBS=OFF ..
 make
 ```
-    
+
 ### Mac OSX
 
 Robot Raconteur requires XCode, CMake, Boost Libraries, and OpenSSL.
- 
+
 Use homebrew to install boost and openssl:
 
 ```
@@ -57,7 +57,7 @@ brew install boost
 brew install openssl
 ```
 
-Note that homebrew does not create symlinks, so the CMake OPENSSL_ROOT_DIR must be set to the cellar folder. 
+Note that homebrew does not create symlinks, so the CMake OPENSSL_ROOT_DIR must be set to the cellar folder.
 
 Configure build for XCode using CMake GUI. Open resulting project file and build.
 
@@ -71,7 +71,7 @@ Mac OSX can install using
 
     brew install swig
 
-Ubuntu must build SWIG from source. See 
+Ubuntu must build SWIG from source. See
 https://github.com/swig/swig/wiki/Getting-Started for instructions.
 
 ### MATLAB Mex

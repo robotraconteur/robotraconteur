@@ -4,8 +4,8 @@ Standard Service Definitions and Companion
 The Robot Raconteur project has defined a number of standard service definitions that contain
 numerous structure, pod, namedarray, and object types. These types cover a range
 of common data types, and provide standardized interfaces to devices. These types
-should be used whenever possible so that services will be interoperable. The 
-standard service types are available in the 
+should be used whenever possible so that services will be interoperable. The
+standard service types are available in the
 `robotraconteur_standard_robdef <https://github.com/robotraconteur/robotraconteur_standard_robdef>`_
 GitHub repository.
 

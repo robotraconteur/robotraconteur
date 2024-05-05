@@ -32,7 +32,8 @@ enum RobotRaconteurMexObjectTypes
     RR_MEX_SERVICE_SUBSCRIPTION,
     RR_MEX_WIRE_SUBSCRIPTION,
     RR_MEX_PIPE_SUBSCRIPTION,
-    RR_MEX_GENERATOR_CLIENT
+    RR_MEX_GENERATOR_CLIENT,
+    RR_MEX_SUBOBJECT_SUBSCRIPTION
 };
 
 DataTypes mxClassIDToRRDataType(mxClassID type);
@@ -521,6 +522,24 @@ class MexPipeSubscription
     boost::shared_ptr<PipeSubscription<RR_INTRUSIVE_PTR<MessageElement> > > subscription;
 };
 
+class MexSubObjectSubscription : public RR_ENABLE_SHARED_FROM_THIS<MexSubObjectSubscription>
+{
+  public:
+    MexSubObjectSubscription();
+    void Init(const boost::shared_ptr<SubObjectSubscription>& subscription);
+
+    int subobjectsubscriptionid;
+
+    mxArray* subsref(const mxArray* S);
+    void subsasgn(const mxArray* S, const mxArray* value);
+
+    void Close();
+
+  protected:
+    boost::shared_ptr<SubObjectSubscription> subscription;
+    boost::mutex this_lock;
+};
+
 class MexGeneratorClient : public virtual GeneratorClientBase, public RR_ENABLE_SHARED_FROM_THIS<MexGeneratorClient>
 {
   public:
@@ -658,6 +677,8 @@ extern int32_t wiresubscriptions_count;
 extern std::map<int32_t, boost::shared_ptr<MexWireSubscription> > wiresubscriptions;
 extern int32_t pipesubscriptions_count;
 extern std::map<int32_t, boost::shared_ptr<MexPipeSubscription> > pipesubscriptions;
+extern int32_t subobjectsubscriptions_count;
+extern std::map<int32_t, boost::shared_ptr<MexSubObjectSubscription> > subobjectsubscriptions;
 
 extern mxArray* SubscribeServiceInfo2(const mxArray* service_types, const mxArray* filter);
 extern mxArray* SubscribeServiceByType(const mxArray* service_types, const mxArray* filter);

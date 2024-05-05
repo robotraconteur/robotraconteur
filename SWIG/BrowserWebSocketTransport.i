@@ -26,23 +26,23 @@ class BrowserWebSocketTransport : public Transport
 public:
 
 	BrowserWebSocketTransport();
-	
+
 	BrowserWebSocketTransport(boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> node);
-	
+
 	RR_PROPERTY(DefaultReceiveTimeout)
-	int32_t GetDefaultReceiveTimeout();	
+	int32_t GetDefaultReceiveTimeout();
 	void SetDefaultReceiveTimeout(int32_t milliseconds);
-	
+
 	RR_PROPERTY(DefaultConnectTimeout)
 	int32_t GetDefaultConnectTimeout();
 	void SetDefaultConnectTimeout(int32_t milliseconds);
-	
+
 	RR_PROPERTY(DefaultHeartbeatPeriod)
-	int32_t GetDefaultHeartbeatPeriod();	
+	int32_t GetDefaultHeartbeatPeriod();
 	void SetDefaultHeartbeatPeriod(int32_t milliseconds);
-	
+
 	virtual std::string GetUrlSchemeString() const;
-	
+
 	RR_PROPERTY(DisableMessage4)
 	virtual bool GetDisableMessage4();
 	virtual void SetDisableMessage4(bool d);
@@ -56,11 +56,11 @@ public:
 	virtual void SetDisableAsyncMessageIO(bool d);
 
 	RR_PROPERTY(MaxMessageSize)
-	int32_t GetMaxMessageSize();	
+	int32_t GetMaxMessageSize();
 	void SetMaxMessageSize(int32_t size);
 
     virtual std::string GetUrlSchemeString() const;
 	virtual std::vector<std::string> GetServerListenUrls();
-	
+
 };
 }

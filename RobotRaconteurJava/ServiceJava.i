@@ -19,12 +19,12 @@ public void AddServerServiceListener(ServerServiceListenerDelegate listener)
 {
   ServerServiceListenerDirectorJava d = new ServerServiceListenerDirectorJava(this, listener);
   d.objectheapid = RRObjectHeap.addObject(d);
-  
+
   _AddServerServiceListener(d);
 }*/
 
 public void releaseServicePath(String path)
-{	
+{
 	_ReleaseServicePath(path);
 }
 
@@ -35,7 +35,7 @@ public void releaseServicePath(String path, long[] endpoints)
 	{
 		o.add(endpoints[i]);
 	}
-	
+
 	_ReleaseServicePath(path,o);
 }
 
@@ -51,9 +51,9 @@ import java.util.*;
 
 public String getUsername()
   {
-	return _GetUsername();  
+	return _GetUsername();
   }
-  
+
   public String[] getPrivileges()
   {
 	  vectorstring in=_GetPrivileges();
@@ -64,7 +64,7 @@ public String getUsername()
 	}
 	return o;
   }
-  
+
   public String[] getProperties()
   {
 	  vectorstring in=_GetProperties();
@@ -75,18 +75,18 @@ public String getUsername()
 	}
 	return o;
   }
-  
+
   public TimeSpec getLoginTime()
   {
 	  return _GetLoginTime();
-	  
+
   }
-  
+
   public TimeSpec getLastAccessTime()
   {
 	  return _GetLastAccessTime();
-	  
-	  
+
+
   }
 
 %}

@@ -33,7 +33,7 @@
 
 // DataTypes_ArrayTypes Enum
 %feature("docstring") DataTypes_ArrayTypes_none "type is not an array";
-%feature("docstring") DataTypes_ArrayTypes_array "type is a single dimensional array";      
+%feature("docstring") DataTypes_ArrayTypes_array "type is a single dimensional array";
 %feature("docstring") DataTypes_ArrayTypes_multidimarray "type is a multidimensional array";
 
 
@@ -76,7 +76,7 @@
 %feature("docstring") MessageEntryType_Null "no-op";
 %feature("docstring") MessageEntryType_StreamOp "Stream operation request (transport only)";
 %feature("docstring") MessageEntryType_StreamOpRet "Stream operation response (transport only)";
-%feature("docstring") MessageEntryType_StreamCheckCapability "Stream check capability request (transport only)";    
+%feature("docstring") MessageEntryType_StreamCheckCapability "Stream check capability request (transport only)";
 %feature("docstring") MessageEntryType_StreamCheckCapabilityRet "Stream check capability response (transport only)";
 %feature("docstring") MessageEntryType_GetServiceDesc "Get service definition request";
 %feature("docstring") MessageEntryType_GetServiceDescRet "Get service definition response";
@@ -215,7 +215,7 @@
 
 // MemberDefinition_Direction Enum
 %feature("docstring") MemberDefinition_Direction_both "member supports read and write";
-%feature("docstring") MemberDefinition_Direction_readonly "member is readonly";  
+%feature("docstring") MemberDefinition_Direction_readonly "member is readonly";
 %feature("docstring") MemberDefinition_Direction_writeonly "member is writeonly";
 
 // MemberDefinition_NoLock
@@ -276,8 +276,8 @@
 The central node implementation
 
 RobotRaconteurNode implements the current Robot Raconteur instance
-and acts as the central switchpoint for the instance. The user 
-registers types, connects clients, registers services, and 
+and acts as the central switchpoint for the instance. The user
+registers types, connects clients, registers services, and
 registers transports through this class.
 
 If the current program only needs one instance of RobotRaconteurNode,
@@ -297,7 +297,7 @@ is used, then ``RRN`` is automatically imported. If not used, the following
 is typically used:
 
 .. code-block:: python
-    
+
    import RobotRaconteur as RR
    RRN = RobotRaconteur.s
 
@@ -313,7 +313,7 @@ This function must be called to initialize background tasks before
 using the node. It is called automatically by the
 singleton accesors, so the user only needs to call this function
 when not using the singleton. If a custom thread pool is being
-used, the thread pool factory must be specified before 
+used, the thread pool factory must be specified before
 calling init.
 
 :param thread_count: The initial number of threads in the thread pool (default 20)
@@ -335,7 +335,7 @@ Register a transport for use by the node
 
 Select the \"best\" URL from a std::vector of candidates
 
-Service discovery will often return a list of candidate URLs to 
+Service discovery will often return a list of candidate URLs to
 use to connect to a node. This function uses hueristics to select
 the \"best\" URL to use. The selection criteria ranks URLs in roughly
 the following order, lower number being better:
@@ -406,7 +406,7 @@ circumstances will use simulation time
 Create a Rate object
 
 Rate is used to stabilize periodic loops to a specified frequency
- 
+
 This function will normally return a WallRate instance
 
 :param frequency: Frequency of loop in Hz
@@ -417,7 +417,7 @@ This function will normally return a WallRate instance
 
 %feature("docstring") RobotRaconteur::RobotRaconteurNode::CreateAutoResetEvent() """
 Create an AutoResetEvent object
-		  
+
 Normally the AutoResetEvent will use the system clock for timeouts,
 but in certain circumstances will use simulation time
 
@@ -502,9 +502,9 @@ Set the log level for the node from specified environmental variable
 Retrieves the specified environmental variable and sets the log level based
 on one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
 
-If an invalid value or the variable does not exist, the log level is left unchanged. 
+If an invalid value or the variable does not exist, the log level is left unchanged.
 
-:param env_variable_name: The environmental variable to use. Defaults to 
+:param env_variable_name: The environmental variable to use. Defaults to
  ``ROBOTRACONTEUR_LOG_LEVEL``
 :type env_variable_name: str
 :return: The log level
@@ -723,7 +723,7 @@ Returns default_value if option not specified on command line
 %feature("docstring") RobotRaconteur::TimeSpec """
 TimeSpec(seconds=0,nanoseconds=0)
 
-Represents. a point in time. Used by \"wire\" members to 
+Represents. a point in time. Used by \"wire\" members to
 timestamp packets
 
 Time is always in UTC
@@ -844,7 +844,7 @@ UNIX domain sockets were added to Windows 10 with the 1803 update. Robot Raconte
 switch to UNIX domain sockets for the LocalTransport on Windows in version 0.9.2.
 Previous versions used Named Pipes, but these were inferior to UNIX sockets. The
 LocalTransport will not function on versions of Windows prior to Windows 10 1803 update
-due to the lack of support for UNIX sockets. A warning will be issued to the log if 
+due to the lack of support for UNIX sockets. A warning will be issued to the log if
 the transport is not available, and all connection attempts will fail. All other
 transports will continue to operate normally.
 
@@ -858,7 +858,7 @@ After being initialized the file watchers operate automatically.
 
 The LocalTransport can be used to dynamically assign NodeIDs to nodes based on a NodeName.
 StartServerAsNodeName() and StartClientAsNodeName() take a NodeName that will identify the
-node to clients, and manage a system-local NodeID corresponding to that NodeName. The 
+node to clients, and manage a system-local NodeID corresponding to that NodeName. The
 generated NodeIDs are stored on the local filesystem. If LocalTransport finds a corresponding
 NodeID on the filesystem, it will load and use that NodeID. If it does not, a new random NodeID
 is automatically generated.
@@ -944,7 +944,7 @@ Throws NodeIDAlreadyInUse if another node is using nodeid
 
 :param nodeid: The NodeID
 :type nodeid: RobotRaconteur.NodeID
-:param public_: If True, other users can access the server. If False, only 
+:param public_: If True, other users can access the server. If False, only
  the account owner can access the server.
 :type public_: bool
 """
@@ -957,7 +957,7 @@ be used to construct this class.
 
 See \\ref robotraconteur_url for more information on URLs.
 
-The TcpTransport implements transport connections over TCP/IP networks. TCP/IP is the 
+The TcpTransport implements transport connections over TCP/IP networks. TCP/IP is the
 most common protocol used for Internet and Local Area Network (LAN) communication, including
 Ethernet and WiFi connections. The Transport Control Protocol (TCP) is a reliable stream
 protocol that establishes connections between devices using IP address and port pairs.
@@ -967,10 +967,10 @@ a URL containing the IP address and port of the listening transport. The TcpTran
 uses the established connection to pass messages between nodes.
 
 The IP protocol is available in two major versions, IPv4 and IPv6. The most common
-is IPv4, and its 32 bit address is typically written as four numbers, 
-ie 172.17.12.174. IPv4 has a number of critical limitations, the greatest being 
-its 2^32 address limit (approximately 4 billion). This is a problem when there are 
-tens of billions of internet connected devices already present. IPv6 introduces a 128 
+is IPv4, and its 32 bit address is typically written as four numbers,
+ie 172.17.12.174. IPv4 has a number of critical limitations, the greatest being
+its 2^32 address limit (approximately 4 billion). This is a problem when there are
+tens of billions of internet connected devices already present. IPv6 introduces a 128
 bit address space, which allows for approximately 3.4x10^38 possible addresses. The major
 advantage for Robot Raconteur is the introduction of \"link-local\" addresses. These addresses
 begin with \"FE80::\" and finish with an \"EUI-64\" address, which is tied to the MAC address
@@ -999,7 +999,7 @@ rrs+wss Websocket with RobotRaconteur TLS over HTTPS Client Only
 
 The different combinations of TLS and HTTPS for websockets are used for different scenarios.
 Robot Raconteur Core can initiate HTTPS connections, but cannot accept them. Accepting
-HTTPS connections requires a certificate issued by an authority like GoDaddy or Digicert, 
+HTTPS connections requires a certificate issued by an authority like GoDaddy or Digicert,
 and is typically used with an HTTP server running RobotRaconteurWeb.
 
 TLS certificates for Robot Raconteur nodes are issued by Wason Technology, LLC using
@@ -1010,10 +1010,10 @@ Discovery for the TcpTransport is accomplished using User Defined Protocol (UDP)
 and/or broadcast packets. Broadcast packets are sent to all connected devices, while
 multicast is sent to devices that have registered to receive them. Unlike TCP, the packets
 sent to broadcast or multicast are sent to the entire network. This allows for devices
-to find each other on the network. 
+to find each other on the network.
 
 For IPv4, the broadcast address 255.255.255.255 on port 48653
-is used for discovery. By default, IPv4 is disabled in favor of IPv6. IPv6 uses the multicast 
+is used for discovery. By default, IPv4 is disabled in favor of IPv6. IPv6 uses the multicast
 following multicast addresses:
 
 ========== ========== ===== ========
@@ -1089,7 +1089,7 @@ The last expected callback invocation time
 
 :rtype: datetime.datetime
 """
-	
+
 %feature("docstring") RobotRaconteur::TimerEvent::last_real """
 The real last callback invocation time
 
@@ -1111,10 +1111,10 @@ The current invocation time
 %feature("docstring") RobotRaconteur::Timer """
 
 A timer to invoke a callback
- 
+
 Timers invoke a callback at a specified rate. The timer
 can either be one-short, or repeating.
- 
+
 Use RobotRaconteurNode.CreateTimer() to create timers.
 """
 
@@ -1199,7 +1199,7 @@ NodeID UUID storage and generation
 
 Robot Raconteur uses NodeID and NodeName to uniquely identify a node.
 NodeID is a UUID (Universally Unique ID), while NodeName is a string. The
-NodeID is expected to be unique, while the NodeName is set by the user 
+NodeID is expected to be unique, while the NodeName is set by the user
 and may not be unique. The NodeID class represents the UUID NodeID.
 
 A UUID is a 128-bit randomly generated number that is statistically guaranteed
@@ -1286,7 +1286,7 @@ Services are registered using the RobotRaconteurNode.RegisterService() family of
 The ServerContext manages the services, and dispatches requests and packets to the appropriate
 service object members. Services may expose more than one object. The root object is specified
 when the service is registered. Other objects are specified through ObjRef members. A name
-for the service is also specified when the service is registered. This name forms the root 
+for the service is also specified when the service is registered. This name forms the root
 of the service path namespace. Other objects in the service have a unique service path
 based on the ObjRef used to access the object.
 
@@ -1302,13 +1302,13 @@ clients during service discovery. These attributes are used to help clients dete
 which service should be selected for use. Because the attributes are passed to the clients
 as part of the discovery process, they should be as concise as possible, and should
 not use user defined types. Use ServerContext.SetAttributes() to set the service attributes
-after registering the service. 
+after registering the service.
 
 Security for the service is specified using a ServiceSecurityPolicy instance. This policy
 is specified by passing as a parameter to RobotRaconteurNode.RegisterService(), or passing
 the policy to the constructor.
 
-ServerContext implements authentication and object locking. 
+ServerContext implements authentication and object locking.
 Server side functions are exposed by ServerContext for authentication, object locking,
 and client management.
 
@@ -1370,7 +1370,7 @@ Request a client lock on servicepath for a specific client connection
 
 This function handles incoming client requests, but may also be used
 by the service directly. Client object locks lock for a specific client connection,
-while client locks lock for a specific user. The specific client connection is 
+while client locks lock for a specific user. The specific client connection is
 specified using endpoint.
 
 :param servicepath: The service path to lock
@@ -1386,7 +1386,7 @@ Release a client lock on servicepath
 
 This function handles incoming client requests, but may also be used
 by the service directly. Client locks can be released by the user that
-created them if override_ is false, or by any user if override_ is true. 
+created them if override_ is false, or by any user if override_ is true.
 
 The override_ parameter is set to true for client requests if the client has
 the \"objectlockoverride\" permission.
@@ -1395,7 +1395,7 @@ the \"objectlockoverride\" permission.
 :type str:
 :param username: The username requsting the lock release
 :type username:
-:param override_: If False, only the creating username can release the lock. If True, 
+:param override_: If False, only the creating username can release the lock. If True,
  any username can release the lock
 :type override_: bool
 """
@@ -1428,7 +1428,7 @@ Add an extra service definition import
 Clients using dynamic typing will not automatically pull service definitions unless
 imported by the root object or an objref. If new \"struct\", \"po\", or \"namedarray\" types
 are introduced in a new service definition type without a corresponding object, an error will
-occur. Use AddExtraImport() to add the name of the new service definition to add it to the 
+occur. Use AddExtraImport() to add the name of the new service definition to add it to the
 list of service definitions the client will pull.
 
 Service definition must have been registered using RobotRaconteurNode::RegisterServiceType()
@@ -1445,12 +1445,12 @@ See AddExtraImport()
 :param import_: The name of the service definition
 :type import_: str
 :return: True The service definition was removed, False The service definition was not found in the extra imports vector
-:rtype: bool 
+:rtype: bool
 """
 
 %feature("docstring") RobotRaconteur::ServerContext::GetCandidateConnectionURLs() """
-Get the candidate connection URLs for this service. The candidate connection URLs are 
-the URLs that can be used to connect to the service. The correct URL to use depends on the 
+Get the candidate connection URLs for this service. The candidate connection URLs are
+the URLs that can be used to connect to the service. The correct URL to use depends on the
 transport being used to connect to the service, and the network configuration of the client and service.
 
 :return: The candidate connection URLs
@@ -1504,11 +1504,11 @@ Users that have been authenticated have a corresponding
 AuthenticatedUser object associated with the ServerEndpoint.
 GetCurrentAuthenticatedUser() returns the AuthenticatedUser
 associated with the current ServerEndpoint during a request
-or packet event. This is a thread-specific value and only valid during 
+or packet event. This is a thread-specific value and only valid during
 the initial request or packet event invocation.
 
 Throws PermissionDeniedException or AuthenticationException
-if there is no AuthenticatedUser set in the current thread. 
+if there is no AuthenticatedUser set in the current thread.
 
 :return: The AuthenticatedUser
 :rtype: RobotRaconteur.AuthenticatedUser
@@ -1581,14 +1581,14 @@ The password user authenticator expects a string containing a list of users,
 one per line. Each line contains the username, password as md5 hash, and privileges, separated by white spaces.
 An example of authentication string contents:
 
-.. code-block:: 
+.. code-block::
 
    user1 79e262a81dd19d40ae008f74eb59edce objectlock
    user2 309825a0951b3cf1f25e27b61cee8243 objectlock
    superuser1 11e5dfc68422e697563a4253ba360615 objectlock,objectlockoverride
 
 
-The password is md5 hashed. This hash can be generated using the ``--md5passwordhash`` command in the \"RobotRaconteurGen\" utility. 
+The password is md5 hashed. This hash can be generated using the ``--md5passwordhash`` command in the \"RobotRaconteurGen\" utility.
 The privileges are comma separated. Valid privileges are as follows:
 
 ================== =====================================================
@@ -1660,10 +1660,10 @@ a pipe packet is sent or the wire value is changed. The updates typically happen
 within a sensor or control loop, with the rate set by the specific device producing
 the updates. Some clients may require less frequent data, and may run in to bandwidth
 or processing issues if the data is sent at the full update rate. The BroadcastDownsampler
-is used to implement broadcaster predicates that will drop packets. 
+is used to implement broadcaster predicates that will drop packets.
 Clients specify how many packets they want dropped between each packet sent. For instance,
 a downsample of 0 means that no packets are dropped. A downsample of 1 will drop every other
-packet. A downsample of two will drop 2 packets between sending 1 packet, etc. The 
+packet. A downsample of two will drop 2 packets between sending 1 packet, etc. The
 downsample level for each client is set using SetClientDownsample(). This should be
 made available to the client using a property member.
 
@@ -1677,13 +1677,13 @@ BeginStep() and EndStep() must be called for each iteration of the
 broadcasting loop. Use BroadcastDownsamplerStep for automatic
 management in the loop.
 
-See com.robotraconteur.isoch.IsochDevice for the standard use 
-of downsampling. 
+See com.robotraconteur.isoch.IsochDevice for the standard use
+of downsampling.
 """
 
 %feature("docstring") RobotRaconteur::BroadcastDownsampler::GetClientDownsample(uint32_t ep) """
 Get the downsample for the specified client
- 
+
 :param ep: The endpoint ID of the client
 :type ep: int
 :return: The downsample
@@ -1692,7 +1692,7 @@ Get the downsample for the specified client
 
 %feature("docstring") RobotRaconteur::BroadcastDownsampler::SetClientDownsample(uint32_t ep, uint32_t downsample) """
 Set the downsample for the specified client
- 
+
 :param ep: The endpoint ID of the client
 :type ep: int
 :param downsample: The desired downsample
@@ -1749,25 +1749,25 @@ AND, OR, NOR, or NAND logic. Other groups can be nested, to allow for complex co
 %feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttributeGroup::SplitStringAttribute """(bool) True if string attributes will be split into a list with delimiter (default ',')"""
 %feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttributeGroup::SplitStringDelimiter """(str) The delimiter to use for splitting string attributes (default ',')"""
 
-%feature("docstring") RobotRaconteur::BrowserWebSocketTransport """   
+%feature("docstring") RobotRaconteur::BrowserWebSocketTransport """
    Transport for creating client connections inside a web browser using WebSockets
-   
+
    Robot Raconteur can be compiled to run inside a web browser using Emscripten and WebAssembly (WASM).
    While inside a web browser, the only connection method currently available to connection to
    a Robot Raconteur service is using WebSockets. The BrowserWebSocketTransport class implements
    the WebSocket transport for the web browser. Currently only the client side is implemented.
-   
+
    See \\ref robotraconteur_url for more information on URLs.
-   
+
    Currently the url connections schemes ``rr+ws``, ``rr+wss`` and ``rr+tcp`` are supported.
    ``rr+tcp`` are treated as ``rr+ws`` connections.
-      
+
    The BrowserWebSocketTransport is automatically registered when the ``RobotRaconteur.Client``
    module is used. If the ``RobotRaconteur.Client`` module is not used, the
    BrowserWebSocketTransport must be manually registered with the node using
    RobotRaconteurNode.RegisterTransport(). NodeSetup is not currently
    available in the web browser.
-    
+
    Note that for services to accept a WebSocket connection, the service must
    have the WebSocket \"origin\" configured correctly. The origin is the base
    URL of the web page that is hosting the web page that is connecting to the
@@ -1778,10 +1778,74 @@ AND, OR, NOR, or NAND logic. Other groups can be nested, to allow for complex co
    the ``--robotraconteur-tcp-ws-add-origin`` command line option if a node setup class is used.
    If a local file is used to host the web page, the origin is ``null`` and no origin
    checking is performed.
-    
+
    See TcpTransport.AddWebSocketAllowedOrigin() for more information on configuring
    the WebSocket origin and the default origins that are automatically configured.
-   
+
    :param node: (optional) The node that will use the transport. Default is the singleton node
    :type node: RobotRaconteur.RobotRaconteurNode
+"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment """
+Service path segment containing a name and an optional index
+"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::name """The name of the segment"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::index """The index of the segment"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::ServicePathSegment() """
+Construct a new ServicePathSegment
+"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::ServicePathSegment(const std::string& name) """
+Construct a new ServicePathSegment with a name
+
+:param name: The name of the segment
+:type name: str
+"""
+
+%feature("docstring") RobotRaconteur::ServicePathSegment::ServicePathSegment(const std::string& name, const std::string& index) """
+Construct a new ServicePathSegment with a name and an index
+
+:param name: The name of the segment
+:type name: str
+:param index: The index of the segment
+:type index: str
+"""
+
+%feature("docstring") RobotRaconteur::EncodeServicePathIndex(const std::string& index) """
+Encode a service path index for use in a Robot Raconteur service path
+
+:param index: The index to encode
+:type index: str
+:return: The encoded index
+:rtype: str
+"""
+
+%feature("docstring") RobotRaconteur::DecodeServicePathIndex(const std::string& index) """
+Decode a service path index from a Robot Raconteur service path
+
+:param index: The index to decode
+:type index: str
+:return: The decoded index
+:rtype: str
+"""
+
+%feature("docstring") RobotRaconteur::ParseServicePath(const std::string& path) """
+Split a service path into segments
+
+:param path: The path to split
+:type path: str
+:return: The segments of the path
+:rtype: List[RobotRaconteur.ServicePathSegment]
+"""
+
+%feature("docstring") RobotRaconteur::BuildServicePath(const std::vector<RobotRaconteur::ServicePathSegment>& segments) """
+Join service path segments into a path
+
+:param segments: The segments to join
+:type segments: List[RobotRaconteur.ServicePathSegment]
+:return: The joined path
+:rtype: str
 """

@@ -1,21 +1,21 @@
 classdef RobotRaconteurTestServerLib < handle
     %ROBOTRACONTEURTESTSERVERLIB Summary of this class goes here
     %   Detailed explanation goes here
-    
-        
+
+
     methods
         function obj = RobotRaconteurTestServerLib(libname,hfile)
             loadlibrary(libname,hfile,'alias','robotraconteur_test_server_lib');
         end
-        
+
         function StartServer(obj,nodename)
             if nargin < 2
                 nodename = 'matlab_testprog';
             end
-            
+
             assert(calllib('robotraconteur_test_server_lib','robotraconteur_test_server_lib_start',nodename,strlength(nodename)) >= 0);
         end
-        
+
         function url2=GetServiceURL(obj, servicename)
             url = zeros(1,4096,'int8');
             urlptr = libpointer('int8Ptr',url);
@@ -29,17 +29,17 @@ classdef RobotRaconteurTestServerLib < handle
             url2 = char(urlptr.Value(1:url_len));
             disp(char(url2))
         end
-        
+
         function Shutdown(obj)
            calllib('robotraconteur_test_server_lib','robotraconteur_test_server_lib_shutdown');
         end
-        
+
         function delete(obj)
            try
-               calllib('robotraconteur_test_server_lib','robotraconteur_test_server_lib_shutdown');               
+               calllib('robotraconteur_test_server_lib','robotraconteur_test_server_lib_shutdown');
            catch
            end
-           
+
            try
                unloadlibrary robotraconteur_test_server_lib
            catch
@@ -47,4 +47,3 @@ classdef RobotRaconteurTestServerLib < handle
         end
     end
 end
-

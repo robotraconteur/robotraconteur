@@ -19,7 +19,7 @@ When using `pipe` or `wire` members, it is recommended that RobotRaconteur::Pipe
 An example of using a RobotRaconteur::ServiceSubscription to invoke a function:
 
     ServiceSubscriptionPtr sub = RobotRaconteurNode::s()->SubscribeService("rr+tcp://localhost:62222?service=my_service");
-    
+
     experimental::service_example1::MyObjectPtr obj;
     while (!sub->TryGetDefaultClient(obj))
     {
@@ -42,7 +42,7 @@ Next, an example of using RobotRaconteur::WireSubscription for a client to the f
 
     // Use a Rate to stabilize the loop
     RatePtr rate = RobotRaconteurNode::s()->CreateRate(100);
-    
+
     // Run loop
     while (true)
     {
@@ -59,7 +59,7 @@ Next, an example of using RobotRaconteur::WireSubscription for a client to the f
 
         u_sub->SetOutValueAll(u);
 
-        std::cout << "y=" << y << ", u=" << u << std::endl;    
+        std::cout << "y=" << y << ", u=" << u << std::endl;
     }
 
 The above example uses wires to read and write the output `y` and input `u` of the first order system. Using wire subscriptions means that the user does not need to manually manage the lifecycle of the client connections.
@@ -92,7 +92,7 @@ An example of connecting to a service with a filter:
     // Now use the connected clients
     for (auto c : sub->GetConnectedClients())
     {
-        experimental::service_example1::MyObjectPtr c2 
+        experimental::service_example1::MyObjectPtr c2
             = boost::dynamic_pointer_cast<experimental::service_example1::MyObject>(c.second);
         if (!c2)
             continue;
@@ -125,7 +125,7 @@ An example using ServiceInfo2 subscription:
     {
         for(auto e : detected_services)
         {
-            std::cout << "Name: " << e.second.Name << std::endl;           
+            std::cout << "Name: " << e.second.Name << std::endl;
             std::cout << "ConnectionURL: " << boost::join(e.second.ConnectionURL,", ") << std::endl << std::endl;
         }
     }
@@ -135,7 +135,7 @@ An example using ServiceInfo2 subscription:
         [] (ServiceInfo2SubscriptionPtr subscription, const ServiceSubscriptionClientID& client_id, const ServiceInfo2& service_info)
         {
             std::cout << "Service Detected:"  << std::endl;
-            std::cout << "Name: " << service_info.Name << std::endl;           
+            std::cout << "Name: " << service_info.Name << std::endl;
             std::cout << "ConnectionURL: " << boost::join(service_info.ConnectionURL,", ") << std::endl << std::endl;
         }
     );
@@ -144,9 +144,8 @@ An example using ServiceInfo2 subscription:
         [] (ServiceInfo2SubscriptionPtr subscription, const ServiceSubscriptionClientID& client_id, const ServiceInfo2& service_info)
         {
             std::cout << "Service Lost:"  << std::endl;
-            std::cout << "Name: " << service_info.Name << std::endl;            
+            std::cout << "Name: " << service_info.Name << std::endl;
         }
     );
 
     // Continue with program, or spin to watch services come and go
-

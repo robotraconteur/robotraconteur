@@ -25,7 +25,7 @@ namespace RobotRaconteur
     class RRLogRecord
     {
     public:
-        
+
         RR_PROPERTY(Node)
         %extend
         {

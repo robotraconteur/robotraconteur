@@ -1,6 +1,6 @@
 name: Dist Test
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       ref:
@@ -8,7 +8,7 @@ on:
         required: true
       prerelease:
         description: 'use prerelease versions'
-        required: true        
+        required: true
 
 jobs:
   build-ubuntu:
@@ -55,27 +55,27 @@ jobs:
     - name: apt
       run: >
         sudo apt-get install robotraconteur-dev libboost-all-dev libbluetooth-dev
-        libdbus-1-dev libssl-dev libusb-1.0-0-dev  -q 
+        libdbus-1-dev libssl-dev libusb-1.0-0-dev  -q
     - name: configure
       run: >
         mkdir build && cd build &&
         cmake -G "Unix Makefiles" -DBUILD_CORE=OFF -DBUILD_TEST=ON -DBUILD_TESTING=ON
         ..
     - name: build
-      run: |        
+      run: |
         cd build
         cmake --build . --config Release -j 4
     - name: test cpp
       run: |
         cd build
-        ctest . -C Release --output-on-failure    
+        ctest . -C Release --output-on-failure
 
   build-win:
     runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:
-        arch: [x64,x86]
+        arch: [x64, x86]
 
     steps:
     - uses: actions/checkout@v3
@@ -117,7 +117,7 @@ jobs:
     - name: setup vcpkg
       run: |
         cd ..
-        git clone https://github.com/microsoft/vcpkg.git        
+        git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg
         git checkout 0896cfc
         bootstrap-vcpkg.bat
@@ -145,13 +145,13 @@ jobs:
     - name: configure cpp
       run: >
         mkdir build && cd build &&
-        cmake -G "Visual Studio 16 2019" -A ${{ steps.cmake_arch.outputs.value }} 
+        cmake -G "Visual Studio 16 2019" -A ${{ steps.cmake_arch.outputs.value }}
         -DBUILD_CORE=OFF -DBUILD_TEST=ON -DBUILD_TESTING=ON
         -DCMAKE_TOOLCHAIN_FILE='..\..\vcpkg\scripts\buildsystems\vcpkg.cmake'
         -DVCPKG_TARGET_TRIPLET='${{ matrix.arch }}-windows'
         ..
     - name: build cpp
-      run: |        
+      run: |
         cd build
         cmake --build . --config Release -j 4
     - name: test cpp
@@ -205,7 +205,7 @@ jobs:
         cmake -G "Xcode" -DBUILD_CORE=OFF -DBUILD_TEST=ON -DBUILD_TESTING=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
         ..
     - name: build
-      run: |        
+      run: |
         cd build
         cmake --build . --config Release -j 4
     - name: test cpp

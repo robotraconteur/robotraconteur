@@ -48,7 +48,7 @@ TimeSpec Class
 ==============
 
 .. autoclass:: RobotRaconteur.TimeSpec
-      
+
    .. autoattribute:: seconds
    .. autoattribute:: nanoseconds
    .. automethod:: cleanup_nanosecs()
@@ -69,4 +69,3 @@ NodeID Class
    .. automethod:: __eq__
    .. automethod:: __ne__
    .. automethod:: __str__
-   

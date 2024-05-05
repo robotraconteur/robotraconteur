@@ -15,7 +15,7 @@ public void AddServerServiceListener(ServerServiceListenerDelegate listener)
 {
   ServerServiceListenerDirectorNET d = new ServerServiceListenerDirectorNET(this, listener);
   d.objectheapid = RRObjectHeap.AddObject(d);
-  
+
   _AddServerServiceListener(d);
 }
 
@@ -31,7 +31,7 @@ public void ReleaseServicePath(string path, uint[] endpoints)
 	{
 		o.Add(e);
 	}
-	
+
 	_ReleaseServicePath(path,o);
 }
 

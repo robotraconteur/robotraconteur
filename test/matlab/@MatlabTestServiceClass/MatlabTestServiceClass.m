@@ -9,21 +9,21 @@ classdef MatlabTestServiceClass < handle
        testprop1=int32(10);
        testprop2=[];
     end
-    
+
     methods
         function testfunc1(c,testval1,testval2)
            disp(testval1)
            disp(testval2)
         end
-        
+
         function r=testfunc2(c,testval1)
-           r=testval1+c.testprop1; 
+           r=testval1+c.testprop1;
         end
     end
-    
+
     events
        testevent1;
        testevent2;
     end
-    
+
 end

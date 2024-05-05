@@ -96,6 +96,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSecurityPolicy;
 class ROBOTRACONTEUR_CORE_API ServiceInfo2Subscription;
 class ROBOTRACONTEUR_CORE_API ServiceSubscription;
 class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilter;
+class ROBOTRACONTEUR_CORE_API ServiceSubscriptionManager;
 
 namespace detail
 {
@@ -143,6 +144,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     friend class detail::Discovery;
     friend class Transport;
     friend class ServerContext;
+    friend class ServiceSubscriptionManager;
 
     /**
      * @brief Initialize the node. Called automatically for `s()` and `sp()`

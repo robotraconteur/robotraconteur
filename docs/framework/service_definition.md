@@ -15,10 +15,10 @@ The following example code shows the code contained in the "experimental.create2
     object Create
         constant int16 DRIVE_STRAIGHT 32767
         constant int16 SPIN_CLOCKWISE -1
-        constant int16 SPIN_COUNTERCLOCKWISE 1 
+        constant int16 SPIN_COUNTERCLOCKWISE 1
 
         function void Drive(int16 velocity, int16 radius)
-        
+
         function void StartStreaming()
         function void StopStreaming()
 
@@ -29,7 +29,7 @@ The following example code shows the code contained in the "experimental.create2
         event Bump()
 
         wire SensorPacket packets [readonly]
-        
+
         callback uint8[] play_callback(int32 DistanceTraveled, int32 AngleTraveled)
     end
 
@@ -204,17 +204,17 @@ Pipes provide full-duplex first-in, first-out (FIFO) connections between the cli
 
 Pipes can use modifiers `readonly`, `writeonly`, and `unreliable`. See \ref modifiers. Pipes are normally reliable, with packets guaranteed to arrive in order without loss, as long as the transport connection is active. Pipes marked `unreliable` do not guarantee delivery or order of packets. Pipes marked `readonly` are often used with `PipeBroadcaster` to send packets to all connected clients.
 
-### Callbacks 
+### Callbacks
 
 Keyword: `callback`
 
-Callbacks are essentially `reverse functions`, meaning that they allow a service to call a function on a client. Because a service can have multiple clients connected, the service must specify which client to call.  The syntax is equivalent to the `function`, just replace `function` with `callback`. An example: 
+Callbacks are essentially `reverse functions`, meaning that they allow a service to call a function on a client. Because a service can have multiple clients connected, the service must specify which client to call.  The syntax is equivalent to the `function`, just replace `function` with `callback`. An example:
 
     callback double addTwoNumbersOnClient(int32 a, double b)
 
 Callbacks do not support generators.
 
-### Wires 
+### Wires
 
 Keyword: `wire`
 
@@ -256,7 +256,7 @@ Robot Raconteur will transparently pass exceptions thrown by the receiver to the
 
 To reduce the clutter in a service definition file, the `using` statement can be used to alias an imported type.
 
-    using example.importeddef.obj1 
+    using example.importeddef.obj1
 
 `as` can be used to change the name locally.
 
