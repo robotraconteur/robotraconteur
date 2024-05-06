@@ -46,10 +46,23 @@ Robot as a Robot Raconteur service, use the following command:
 
 Remember to use ``python3`` instead of ``python`` on Linux if necessary.
 
+With the server running, open a web browser to the address `http://localhost:29201 <http://localhost:29201>`_ to
+see Reynard the Robot!
+
+The Robot Raconteur server is now and can be connected to using the Robot Raconteur client libraries. The following
+is an example of a Python client that connects to the Reynard the Robot server:
+
+.. code-block:: python
+
+    from RobotRaconteur.Client import *
+
+    c = RRN.ConnectService('rr+tcp://localhost:29200?service=reynard')
+    c.say("Hello from Robot Raconteur client!")
+
 Reynard the Robot as a Python Package
 =====================================
 
-Run the following script to run Reynard the Robot directly from Python:
+Run the following script to run Reynard the Robot directly from Python as a Python class:
 
 .. code-block:: python
 
