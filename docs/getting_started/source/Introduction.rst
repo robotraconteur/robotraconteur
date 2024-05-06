@@ -293,6 +293,16 @@ Two scenes are included in the simulator:
   * Payloads
   * Calibration target
 
+* Multi Robot Scene
+
+  * Universal Robots UR5e Robot
+  * ABB IRB 1200-5/0.9 Robot
+  * Rethink Robotics Sawyer Robot
+  * Three simulated vacuum grippers
+  * An overhead simulated camera
+  * Payloads
+  * Calibration target
+
 * iRobot Create 1 Scene
 
   * iRobot Create
@@ -302,6 +312,11 @@ Two scenes are included in the simulator:
 .. image:: images/training_sim_ur5e.png
    :alt: Training Simulator UR5e Scene
    :name: TrainingSimUR
+   :width: 400
+
+.. image:: images/training_sim_multi.png
+   :alt: Training Simulator Multi Robot Scene
+   :name: TrainingSimMulti
    :width: 400
 
 .. image:: images/training_sim_create.png
