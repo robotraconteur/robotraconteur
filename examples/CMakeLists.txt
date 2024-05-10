@@ -3,10 +3,16 @@
 # This file is not relevant to using the examples in your project. It is only used to build the examples as part of the
 # main project build.
 
-option(BUILD_EXAMPLES "Build examples" OFF)
-if(BUILD_EXAMPLES)
-    if(NOT ROBOTRACONTEUR_GENERATE_THUNK)
-        include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
-    endif()
-    add_subdirectory(reynard_the_robot/cpp/client)
+cmake_minimum_required(VERSION 3.3)
+project(robotraconteur_examples)
+
+if(NOT ROBOTRACONTEUR_GENERATE_THUNK)
+    include(${CMAKE_CURRENT_LIST_DIR}/../RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
 endif()
+add_subdirectory(reynard_the_robot/cpp/client)
+
+# Add c# build commands
+add_custom_target(reynard_the_robot_csharp_client ALL
+    COMMAND dotnet build  reynard_robotraconteur_client.csproj
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/reynard_the_robot/cs/client
+)
