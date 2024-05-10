@@ -6634,7 +6634,11 @@ void TcpTransportPortSharerClient::client_thread()
                 p1 /= "tcp";
                 p1 /= "portsharer";
                 p1 /= "portsharer.info";
-                p1.normalize();
+#if BOOST_VERSION < 106000
+                p1 = p1.normalize();
+#else
+                p1 = p1.lexically_normal();
+#endif
 
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "Looking for portsharer.info in " << p1);
 
@@ -6658,7 +6662,11 @@ void TcpTransportPortSharerClient::client_thread()
                 p1 /= "tcp";
                 p1 /= "portsharer";
                 p1 /= "portsharer.info";
-                p1.normalize();
+#if BOOST_VERSION < 106000
+                p1 = p1.normalize();
+#else
+                p1 = p1.lexically_normal();
+#endif
 
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1, "Looking for portsharer.info in " << p1);
 
@@ -6672,6 +6680,12 @@ void TcpTransportPortSharerClient::client_thread()
                         fname = fname1->second;
                     }
                 }
+            }
+
+            if (fname.empty())
+            {
+                delay_event->WaitOne(1000);
+                continue;
             }
 
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(

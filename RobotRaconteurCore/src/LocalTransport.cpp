@@ -1879,7 +1879,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
 
             NodeID nodeid(nodeid1->second);
 
-            if (nodename1->second != boost::filesystem::change_extension(dir_itr->path().filename(), ""))
+            if (nodename1->second != dir_itr->path().filename().replace_extension(""))
             {
                 // TODO: Test?
                 continue;
