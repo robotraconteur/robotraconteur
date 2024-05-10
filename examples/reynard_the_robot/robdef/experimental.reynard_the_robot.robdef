@@ -1,0 +1,32 @@
+service experimental.reynard_the_robot
+
+struct ReynardState
+    field double time
+    field double[] robot_position
+    field double[] arm_position
+    field double[] robot_velocity
+    field double[] arm_velocity
+end
+
+object Reynard
+
+    function void teleport(double x, double y)
+
+    function void setf_arm_position(double q1, double q2, double q3)
+
+    function double[] getf_arm_position()
+
+    property double[] robot_position [readonly]
+
+    function void drive_robot(double vel_x, double vel_y, double timeout, bool wait)
+
+    function void drive_arm(double q1, double q2, double q3, double timeout, bool wait)
+
+    function void say(string message)
+
+    property double[] color
+
+    wire ReynardState state [readonly]
+
+    event new_message(string message)
+end
