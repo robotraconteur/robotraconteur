@@ -3,6 +3,7 @@
 #include <RobotRaconteur.h>
 #include "robotraconteur_generated.h"
 
+// Only use the RR alias in cpp files. Do not use it in header files.
 namespace RR = RobotRaconteur;
 
 #define M_PI 3.14159265358979323846
