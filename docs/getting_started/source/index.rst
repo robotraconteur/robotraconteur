@@ -21,6 +21,7 @@ an up-to-date directory of available documentation.
 
    Quickstart
    Introduction
+   MeetReynard
 
 .. toctree::
    :maxdepth: 4
