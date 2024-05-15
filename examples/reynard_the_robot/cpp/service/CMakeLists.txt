@@ -21,8 +21,6 @@ find_package(
     thread
     random
     program_options
-    beast
-    json
     REQUIRED)
 find_package(drekar-launch-process-cpp CONFIG REQUIRED)
     
