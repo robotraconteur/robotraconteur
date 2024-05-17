@@ -25,23 +25,16 @@ Use of these installation methods is recommended since they will automatically i
 `vcpkg` is used to install the Robot Raconteur C++ library. See https://github.com/microsoft/vcpkg for installation instructions.
 
 Note that once built, the `vcpkg` toolchain file must be specified using the `CMAKE_TOOLCHAIN_FILE` CMake variable. See https://github.com/microsoft/vcpkg#quick-start-windows for a quick-start on using `vcpkg` with your project.
-
-To build Robot Raconteur, clone the `vcpkg-robotraconteur` overlay repo in the vcpkg directory:
-
-```
-git clone https://github.com/robotraconteur/vcpkg-robotraconteur.git
-```
-
-and build the library:
+The `robotraconteur` package is available in the vcpkg registry.
 
 ```
-vcpkg --overlay-ports=vcpkg-robotraconteur\ports install robotraconteur
+vcpkg install robotraconteur
 ```
 
 To build x64, use:
 
 ```
-vcpkg --overlay-ports=vcpkg-robotraconteur\ports install robotraconteur:x64-windows
+vcpkg --triplet=x64-windows install robotraconteur
 ```
 
 ### Ubuntu Xenial, Bionic, and Focal

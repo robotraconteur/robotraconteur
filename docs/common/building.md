@@ -2,7 +2,7 @@
 
   - [Building](#building)
     - [Windows](#windows)
-    - [Ubuntu Focal and Jammy](#ubuntu-focal)
+    - [Ubuntu Focal, Jammy, and Noble](#ubuntu-focal-jammy-and-noble)
     - [Ubuntu Bionic](#ubuntu-bionic)
     - [Mac OSX](#mac-osx)
     - [Swig](#swig)
@@ -16,7 +16,7 @@ The software is tested using GitHub Actions continuous integration. See .github/
 
 Building the core library requires Visual Studio 2012 through 2019, Boost 1.72.0, and CMake. Follow the instructions on the Boost website to build Boost. Alternatively, Boost can be built using the [vcpkg](https://github.com/Microsoft/vcpkg) utility.
 
-### Ubuntu Focal and Jammy
+### Ubuntu Focal, Jammy, and Noble
 Install the dependencies:
 
 ```

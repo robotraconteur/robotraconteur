@@ -2,7 +2,7 @@
 
   - [Installation](#installation)
     - [Windows](#windows)
-    - [Ubuntu Xenial, Bionic, Focal, and Jammy](#ubuntu-xenial-bionic-focal-and-jammy)
+    - [Ubuntu Xenial, Bionic, Focal, Jammy, and Noble](#ubuntu-xenial-bionic-focal-jammy-and-noble)
     - [Debian 10 (buster)](#debian-10-buster)
     - [Raspbian 10 (buster)](#raspbian-10-buster)
     - [Mac OSX](#mac-osx)
@@ -14,23 +14,16 @@
 #### C++
 
 `vcpkg` is used to install the Robot Raconteur C++ library. See https://github.com/microsoft/vcpkg for installation instructions.
-
-To build Robot Raconteur, clone the `vcpkg-robotraconteur` overlay repo in the vcpkg directory:
-
-```
-git clone https://github.com/robotraconteur/vcpkg-robotraconteur.git
-```
-
-and build the library:
+The `robotraconteur` package is available in the vcpkg registry.
 
 ```
-vcpkg --overlay-ports=vcpkg-robotraconteur\ports install robotraconteur
+vcpkg install robotraconteur
 ```
 
 To build x64, use:
 
 ```
-vcpkg --overlay-ports=vcpkg-robotraconteur\ports install robotraconteur:x64-windows
+vcpkg --triplet=x64-windows install robotraconteur
 ```
 
 #### Python
@@ -55,7 +48,7 @@ The Java library is available on the releases page on github.
 
 The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
 
-### Ubuntu Xenial, Bionic, Focal, and Jammy
+### Ubuntu Xenial, Bionic, Focal, Jammy, and Noble
 
 A PPA is available for Robot Raconteur. [https://launchpad.net/~robotraconteur/+archive/ubuntu/ppa](https://launchpad.net/~robotraconteur/+archive/ubuntu/ppa)
 
