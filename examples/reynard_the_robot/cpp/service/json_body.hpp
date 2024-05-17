@@ -91,7 +91,7 @@ struct json_body
             if (!body.is_discarded())
                 body = body;
             else
-                ec = std::make_error_code(std::errc::invalid_argument);
+                ec = boost::beast::http::error::partial_message;
         }
 
       private:
