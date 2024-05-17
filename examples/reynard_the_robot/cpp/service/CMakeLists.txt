@@ -23,7 +23,9 @@ find_package(
     program_options
     REQUIRED)
 find_package(drekar-launch-process-cpp CONFIG REQUIRED)
-    
+
+find_package(nlohmann_json CONFIG REQUIRED)
+
 robotraconteur_generate_thunk(
     RR_THUNK_SRCS
     RR_THUNK_HDRS
@@ -36,7 +38,7 @@ robotraconteur_generate_thunk(
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(reynard_robotraconteur_service_http_rest reynard_robotraconteur_service_http_rest.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
-target_link_libraries(reynard_robotraconteur_service_http_rest RobotRaconteurCore drekar-launch-process-cpp)
+target_link_libraries(reynard_robotraconteur_service_http_rest RobotRaconteurCore drekar-launch-process-cpp nlohmann_json::nlohmann_json)
 
 add_executable(reynard_robotraconteur_service_ascii_socket reynard_robotraconteur_service_ascii_socket.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
 target_link_libraries(reynard_robotraconteur_service_ascii_socket RobotRaconteurCore drekar-launch-process-cpp)

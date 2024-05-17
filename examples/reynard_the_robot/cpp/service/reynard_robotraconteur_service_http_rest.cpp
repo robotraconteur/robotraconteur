@@ -8,7 +8,7 @@
 #include <RobotRaconteur.h>
 #include "robotraconteur_generated.h"
 
-#include <boost/json/src.hpp>
+#include <nlohmann/json.hpp>
 #include "json_body.hpp"
 
 #include <boost/beast/core.hpp>
@@ -48,7 +48,7 @@ public:
         this->port = port;
     }
 
-    boost::json::value _get_json(const std::string& path)
+    nlohmann::json _get_json(const std::string& path)
     {
         // Based on https://www.boost.org/doc/libs/1_85_0/libs/beast/example/http/client/body/json_client.cpp
         boost::asio::io_context ioc;
@@ -68,14 +68,14 @@ public:
         boost::beast::http::response<json_body> res;
         boost::beast::http::read(stream, buffer, res);
 
-        boost::json::value ret = res.body();
+        nlohmann::json ret = res.body();
 
         stream.socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both);
 
         return ret;
     }
 
-    boost::json::value _post_json(const std::string& path, const boost::json::value& obj)
+    nlohmann::json _post_json(const std::string& path, const nlohmann::json& obj)
     {
         // Based on https://www.boost.org/doc/libs/1_85_0/libs/beast/example/http/client/body/json_client.cpp
         boost::asio::io_context ioc;
@@ -98,21 +98,11 @@ public:
         boost::beast::flat_buffer buffer;
         boost::beast::http::response<json_body> res;
 
-        boost::json::value ret;
-        try
-        {
-            boost::beast::http::read(stream, buffer, res);
-            ret = res.body();
-        }
-        catch (const boost::system::system_error& e)
-        {
-            if (e.code() != boost::json::error::incomplete)
-            {
-                // incomplete_json is expected if the response is empty
-                throw;
-            }
-        }
-
+        nlohmann::json ret;
+        
+        boost::beast::http::read(stream, buffer, res);
+        ret = res.body();
+        
         stream.socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both);
 
         return ret;
@@ -121,8 +111,8 @@ public:
     RR::RRArrayPtr<double > get_robot_position() override
     {
         auto json_ret = _get_json("/api/state");
-        double x = json_ret.at("x").as_double();
-        double y = json_ret.at("y").as_double();
+        double x = json_ret.at("x").get<double>();
+        double y = json_ret.at("y").get<double>();
 
         auto ret = RR::AllocateRRArray<double>(2);
         ret->at(0) = x * 1.0e-3; // Convert to meters 
@@ -132,9 +122,9 @@ public:
     RR::RRArrayPtr<double > get_color() override
     {
         auto json_ret = _get_json("/api/color");
-        double r = json_ret.at("r").as_double();
-        double g = json_ret.at("g").as_double();
-        double b = json_ret.at("b").as_double();
+        double r = json_ret.at("r").get<double>();
+        double g = json_ret.at("g").get<double>();
+        double b = json_ret.at("b").get<double>();
 
         auto ret = RR::AllocateRRArray<double>(3);
         ret->at(0) = r;
@@ -153,18 +143,20 @@ public:
         double g = value->at(1);
         double b = value->at(2);
 
-        boost::json::value obj = boost::json::object{
+        nlohmann::json obj = {
             {"r", r},
             {"g", g},
             {"b", b}
         };
+
+        _post_json("/api/color", obj);
     }
 
     void teleport(double x, double y) override
     {
         x = x * 1.0e3; // Convert to mm
         y = y * 1.0e3; // Convert to mm
-        boost::json::value obj = boost::json::object{
+        nlohmann::json obj = {
             {"x", x},
             {"y", y}
         };
@@ -177,7 +169,7 @@ public:
         q1 = q1 * (180.0 / M_PI); // Convert to degrees
         q2 = q2 * (180.0 / M_PI); // Convert to degrees
         q3 = q3 * (180.0 / M_PI); // Convert to degrees
-        boost::json::value obj = boost::json::object{
+        nlohmann::json obj = {
             {"q1", q1},
             {"q2", q2},
             {"q3", q3}
@@ -189,9 +181,9 @@ public:
     RR::RRArrayPtr<double > getf_arm_position() override
     {
         auto json_ret = _get_json("/api/state");
-        double q1 = json_ret.at("q1").as_double();
-        double q2 = json_ret.at("q2").as_double();
-        double q3 = json_ret.at("q3").as_double();
+        double q1 = json_ret.at("q1").get<double>();
+        double q2 = json_ret.at("q2").get<double>();
+        double q3 = json_ret.at("q3").get<double>();
 
         auto ret = RR::AllocateRRArray<double>(3);
         ret->at(0) = q1 * (M_PI / 180.0); // Convert to radians
@@ -202,16 +194,13 @@ public:
 
     void drive_robot(double vel_x, double vel_y, double timeout, RobotRaconteur::rr_bool wait) override
     {
-        if (timeout > 0 || wait.value)
-        {
-            throw RR::OperationFailedException("Timeout not supported");
-        }
-
         vel_x = vel_x * 1.0e3; // Convert to mm/s
         vel_y = vel_y * 1.0e3; // Convert to mm/s
-        boost::json::value obj = boost::json::object{
+        nlohmann::json obj = {
             {"vel_x", vel_x},
-            {"vel_y", vel_y}
+            {"vel_y", vel_y},
+            {"timeout", timeout},
+            {"wait", wait.value != 0}
         };
 
         _post_json("/api/drive_robot", obj);
@@ -219,19 +208,16 @@ public:
 
     void drive_arm(double q1, double q2, double q3, double timeout, RobotRaconteur::rr_bool wait) override
     {
-        if (timeout > 0 || wait.value)
-        {
-            throw RR::OperationFailedException("Timeout not supported");
-        }
-
         q1 = q1 * (180.0 / M_PI); // Convert to degrees
         q2 = q2 * (180.0 / M_PI); // Convert to degrees
         q3 = q3 * (180.0 / M_PI); // Convert to degrees
 
-        boost::json::value obj = boost::json::object{
+        nlohmann::json obj = {
             {"q1", q1},
             {"q2", q2},
-            {"q3", q3}
+            {"q3", q3},
+            {"timeout", timeout},
+            {"wait", wait.value != 0}
         };
 
         _post_json("/api/drive_arm", obj);
@@ -239,7 +225,7 @@ public:
 
     void say(const std::string& message) override
     {
-        boost::json::value obj = boost::json::object{
+        nlohmann::json obj = {
             {"message", message}
         };
 
@@ -256,13 +242,20 @@ public:
         {
             auto json_ret = _get_json("/api/state");
             // JSON response only contains the robot position and arm position
-            double x = json_ret.at("x").as_double();
-            double y = json_ret.at("y").as_double();
-            double q1 = json_ret.at("q1").as_double();
-            double q2 = json_ret.at("q2").as_double();
-            double q3 = json_ret.at("q3").as_double();
+            double t = json_ret.at("time").get<double>();
+            double x = json_ret.at("x").get<double>();
+            double y = json_ret.at("y").get<double>();
+            double q1 = json_ret.at("q1").get<double>();
+            double q2 = json_ret.at("q2").get<double>();
+            double q3 = json_ret.at("q3").get<double>();
+            double vel_x = json_ret.at("vel_x").get<double>();
+            double vel_y = json_ret.at("vel_y").get<double>();
+            double vel_q1 = json_ret.at("vel_q1").get<double>();
+            double vel_q2 = json_ret.at("vel_q2").get<double>();
+            double vel_q3 = json_ret.at("vel_q3").get<double>();
             
             experimental::reynard_the_robot::ReynardStatePtr state(new experimental::reynard_the_robot::ReynardState());
+            state->time = t;
             state->robot_position = RR::AllocateRRArray<double>(2);
             state->robot_position->at(0) = x * 1.0e-3; // Convert to meters
             state->robot_position->at(1) = y * 1.0e-3; // Convert to meters
@@ -270,7 +263,13 @@ public:
             state->arm_position->at(0) = q1 * (M_PI / 180.0); // Convert to radians
             state->arm_position->at(1) = q2 * (M_PI / 180.0); // Convert to radians
             state->arm_position->at(2) = q3 * (M_PI / 180.0); // Convert to radians
-            // Velocity is not available in the JSON API
+            state->robot_velocity = RR::AllocateRRArray<double>(2);
+            state->robot_velocity->at(0) = vel_x * 1.0e-3; // Convert to m/s
+            state->robot_velocity->at(1) = vel_y * 1.0e-3; // Convert to m/s
+            state->arm_velocity = RR::AllocateRRArray<double>(3);
+            state->arm_velocity->at(0) = vel_q1 * (M_PI / 180.0); // Convert to rad/s
+            state->arm_velocity->at(1) = vel_q2 * (M_PI / 180.0); // Convert to rad/s
+            state->arm_velocity->at(2) = vel_q3 * (M_PI / 180.0); // Convert to rad/s
 
             if (rrvar_state)
             {
@@ -278,9 +277,9 @@ public:
             }
 
             auto message_json_ret = _get_json("/api/messages");
-            for (auto& message : message_json_ret.as_array())
+            for (auto& message : message_json_ret)
             {
-                std::string message_str = message.at("message").as_string().c_str();
+                std::string message_str = message.get<std::string>();
                 rrvar_new_message(message_str);
             }
         }

@@ -118,7 +118,7 @@ public:
     }
     RR::RRArrayPtr<double > get_color() override
     {
-        auto socket_res = _communicate("COLORGET", "COLORGET");
+        auto socket_res = _communicate("COLORGET", "COLOR");
 
         auto ret = RR::AllocateRRArray<double>(3);
         ret->at(0) = boost::lexical_cast<double>(socket_res[0]);
@@ -175,32 +175,22 @@ public:
 
     void drive_robot(double vel_x, double vel_y, double timeout, RobotRaconteur::rr_bool wait) override
     {
-        if (timeout > 0 || wait.value)
-        {
-            throw RR::OperationFailedException("Timeout not supported");
-        }
-
         vel_x = vel_x * 1.0e3; // Convert to mm/s
         vel_y = vel_y * 1.0e3; // Convert to mm/s
         
         std::stringstream ss;
-        ss << "DRIVE " << vel_x << " " << vel_y;
+        ss << "DRIVE " << vel_x << " " << vel_y << " " << timeout << " " << (wait.value ? "1" : "0");
         _communicate(ss.str(), "OK");
     }
 
     void drive_arm(double q1, double q2, double q3, double timeout, RobotRaconteur::rr_bool wait) override
     {
-        if (timeout > 0 || wait.value)
-        {
-            throw RR::OperationFailedException("Timeout not supported");
-        }
-
         q1 = q1 * (180.0 / M_PI); // Convert to degrees
         q2 = q2 * (180.0 / M_PI); // Convert to degrees
         q3 = q3 * (180.0 / M_PI); // Convert to degrees
 
         std::stringstream ss;
-        ss << "DRIVEARM " << q1 << " " << q2 << " " << q3;
+        ss << "DRIVEARM " << q1 << " " << q2 << " " << q3 << " " << timeout << " " << (wait.value ? "1" : "0");
         _communicate(ss.str(), "OK");
     }
 
@@ -234,6 +224,8 @@ public:
             state->arm_position->at(1) = q2 * (M_PI / 180.0); // Convert to radians
             state->arm_position->at(2) = q3 * (M_PI / 180.0); // Convert to radians
             // Velocity is not available in the ASCII interface
+            state->robot_velocity = RR::AllocateRRArray<double>(0);
+            state->arm_velocity = RR::AllocateRRArray<double>(0);
 
             if (rrvar_state)
             {

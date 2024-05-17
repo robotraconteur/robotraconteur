@@ -13,20 +13,23 @@
 //
 //------------------------------------------------------------------------------
 
+// 2024-05-15 John Wason use nlohmann/json for json parsing
+
 #ifndef BOOST_BEAST_EXAMPLE_JSON_BODY
 #define BOOST_BEAST_EXAMPLE_JSON_BODY
 
+#include <nlohmann/json.hpp>
 // #include <boost/json.hpp>
 // #include <boost/json/stream_parser.hpp>
 // #include <boost/json/monotonic_resource.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/asio/buffer.hpp>
 
-namespace json = boost::json;
+using json = nlohmann::json;
 
 struct json_body
 {
-    using value_type = json::value;
+    using value_type = json;
 
     struct writer
     {
@@ -35,8 +38,7 @@ struct json_body
         writer(boost::beast::http::header<isRequest, Fields> const& h, 
                value_type const& body)
         {
-            // The serializer holds a pointer to the value, so all we need to do is to reset it.
-            serializer.reset(&body);
+            serialized_body = body.dump();            
         }
 
         void
@@ -50,16 +52,11 @@ struct json_body
         get(boost::system::error_code& ec)
         {
             ec = {};
-            // We serialize as much as we can with the buffer. Often that'll suffice
-            const auto len = serializer.read(buffer, sizeof(buffer));
-            return std::make_pair(
-                boost::asio::const_buffer(len.data(), len.size()), 
-                    !serializer.done()); 
+            const_buffers_type output_buffer(serialized_body.data(), serialized_body.size());
+            return std::make_pair(output_buffer, false); 
         }
       private:
-        json::serializer serializer;
-        // half of the probable networking buffer, let's leave some space for headers
-        char buffer[32768]; 
+        std::string serialized_body;
     };
 
     struct reader
@@ -74,13 +71,6 @@ struct json_body
             boost::optional<std::uint64_t> const& content_length,
             boost::system::error_code& ec)
         {
-            
-            // If we know the content-length, we can allocate a monotonic resource to increase the parsing speed.
-            // We're using it rather then a static_resource, so a consumer can modify the resulting value.
-            // It is also only assumption that the parsed json will be smaller than the serialize one,
-            // it might not always be the case.
-            if (content_length)
-                parser.reset(json::make_shared_resource<json::monotonic_resource>(*content_length));
             ec = {};
         }
 
@@ -88,10 +78,9 @@ struct json_body
         std::size_t
         put(ConstBufferSequence const& buffers, boost::system::error_code& ec)
         {
-            ec = {};
-            // The parser just uses the `ec` to indicate errors, so we don't need to do anything.
-            return parser.write_some(
-                static_cast<const char*>(buffers.data()), buffers.size(), ec);
+            std::string buffer(static_cast<const char*>(buffers.data()), buffers.size());
+            body = json::parse(buffer, nullptr, false, true);
+            return buffers.size();
         }
 
         void
@@ -99,14 +88,13 @@ struct json_body
         {
             ec = {};
             // We check manually if the json is complete.
-            if (parser.done())
-                body = parser.release();
+            if (!body.is_discarded())
+                body = body;
             else
-                ec = boost::json::error::incomplete;
+                ec = std::make_error_code(std::errc::invalid_argument);
         }
 
       private:
-        json::stream_parser parser;
         value_type& body;
     };
 };
