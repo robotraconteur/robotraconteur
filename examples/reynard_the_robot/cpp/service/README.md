@@ -5,7 +5,7 @@ communicate with Reynard using HTTP REST or ASCII Socket communication. These ex
 representative of the types of drivers that are used with real industrial robots and devices.
 
 The `reynard_robotraconteur_service_http_rest` example demonstrates a service that uses HTTP REST to communicate
-with Reynard, whilet he `reynard_robotraconteur_service_ascii_socket` example demonstrates a service that 
+with Reynard, while the `reynard_robotraconteur_service_ascii_socket` example demonstrates a service that 
 uses an ASCII Socket.
 
 Instructions are provided for Windows and Ubuntu. These examples will work
