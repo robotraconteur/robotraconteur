@@ -1,4 +1,4 @@
-// C++ example Robot Raconteur service for Reynard the Robot using the ASCII Socket intreface to communicate 
+// C++ example Robot Raconteur service for Reynard the Robot using the ASCII Socket intreface to communicate
 // with the robot.
 
 // Note that Reynard the Robot uses mm and degrees, while Robot Raconteur services are expected
@@ -20,7 +20,7 @@ namespace RR = RobotRaconteur;
 #define M_PI 3.14159265358979323846
 
 // Define the class that implements the service. Use the generated class from the Robot Raconteur service definition
-// in experimental__reynard_the_robot_stubskel.h to extend the Reynard_default_impl class. Override the functions of 
+// in experimental__reynard_the_robot_stubskel.h to extend the Reynard_default_impl class. Override the functions of
 // interest to implement the service. Reynard_default_impl extends the Reynard interface and provides default
 // implementations for the members. Note the functions with "override" keyword are overriding the functions in the
 // Reynard interface.
@@ -35,23 +35,22 @@ namespace RR = RobotRaconteur;
 // library that implements the protocol.
 
 class Reynard_impl : public virtual experimental::reynard_the_robot::Reynard_default_impl,
-    public RR_ENABLE_SHARED_FROM_THIS<Reynard_impl>
+                     public RR_ENABLE_SHARED_FROM_THIS<Reynard_impl>
 {
-protected:
-
+  protected:
     boost::asio::ip::tcp::endpoint reynard_socket_endpoint;
     RR::TimerPtr state_timer;
 
-public:
+  public:
     Reynard_impl(const boost::asio::ip::tcp::endpoint& reynard_socket_endpoint)
     {
         this->reynard_socket_endpoint = reynard_socket_endpoint;
     }
 
-    // _communicate is a simple request and response function that opens a socket, sends a request, and reads a response.
-    // More sophisticated devices may keep the socket open and reuse it for multiple requests. This is more efficient,
-    // but requires more complicated logic. This function is also synchronous, which is less efficient
-    // but simpler for this example.
+    // _communicate is a simple request and response function that opens a socket, sends a request, and reads a
+    // response. More sophisticated devices may keep the socket open and reuse it for multiple requests. This is more
+    // efficient, but requires more complicated logic. This function is also synchronous, which is less efficient but
+    // simpler for this example.
     std::vector<std::string> _communicate(const std::string& text_request, const std::string& expected_response_op)
     {
         // Create and connect a socket stream
@@ -102,12 +101,12 @@ public:
         }
 
         std::vector<std::string> ret(response_args.begin() + 1, response_args.end());
-        
+
         s.close();
         return ret;
     }
 
-    RR::RRArrayPtr<double > get_robot_position() override
+    RR::RRArrayPtr<double> get_robot_position() override
     {
         auto socket_res = _communicate("STATE", "STATE");
 
@@ -116,7 +115,7 @@ public:
         ret->at(1) = boost::lexical_cast<double>(socket_res[1]) * 1.0e-3; // Convert to meters
         return ret;
     }
-    RR::RRArrayPtr<double > get_color() override
+    RR::RRArrayPtr<double> get_color() override
     {
         auto socket_res = _communicate("COLORGET", "COLOR");
 
@@ -126,7 +125,7 @@ public:
         ret->at(2) = boost::lexical_cast<double>(socket_res[2]);
         return ret;
     }
-    void set_color(const RR::RRArrayPtr<double >& value) override
+    void set_color(const RR::RRArrayPtr<double>& value) override
     {
         if (value->size() != 3)
         {
@@ -157,9 +156,9 @@ public:
         _communicate(ss.str(), "OK");
     }
 
-    RR::RRArrayPtr<double > getf_arm_position() override
+    RR::RRArrayPtr<double> getf_arm_position() override
     {
-        
+
         auto socket_res = _communicate("STATE", "STATE");
 
         double q1 = boost::lexical_cast<double>(socket_res[2]);
@@ -177,7 +176,7 @@ public:
     {
         vel_x = vel_x * 1.0e3; // Convert to mm/s
         vel_y = vel_y * 1.0e3; // Convert to mm/s
-        
+
         std::stringstream ss;
         ss << "DRIVE " << vel_x << " " << vel_y << " " << timeout << " " << (wait.value ? "1" : "0");
         _communicate(ss.str(), "OK");
@@ -201,9 +200,8 @@ public:
         _communicate(ss.str(), "OK");
     }
 
-
     void _timer_cb(const RR::TimerEvent& ev)
-    {   
+    {
         try
         {
             auto socket_res = _communicate("STATE", "STATE");
@@ -213,7 +211,7 @@ public:
             double q1 = boost::lexical_cast<double>(socket_res.at(3));
             double q2 = boost::lexical_cast<double>(socket_res.at(4));
             double q3 = boost::lexical_cast<double>(socket_res.at(5));
-            
+
             experimental::reynard_the_robot::ReynardStatePtr state(new experimental::reynard_the_robot::ReynardState());
             state->time = t;
             state->robot_position = RR::AllocateRRArray<double>(2);
@@ -234,24 +232,25 @@ public:
         }
         catch (std::exception& exp)
         {
-            ROBOTRACONTEUR_LOG_WARNING_COMPONENT(RR::RobotRaconteurNode::weak_sp(), UserService, 0, "Error updating state: " << exp.what());
+            ROBOTRACONTEUR_LOG_WARNING_COMPONENT(RR::RobotRaconteurNode::weak_sp(), UserService, 0,
+                                                 "Error updating state: " << exp.what());
         }
-        
     }
 
     void _start()
     {
         RR_WEAK_PTR<Reynard_impl> weak_this = shared_from_this();
-        state_timer = RR::RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(250), [weak_this](const RR::TimerEvent& ev)
-        {
-            RR_SHARED_PTR<Reynard_impl> strong_this = weak_this.lock();
-            if (!strong_this) return;
-            strong_this->_timer_cb(ev);
-        });
+        state_timer = RR::RobotRaconteurNode::s()->CreateTimer(
+            boost::posix_time::milliseconds(250), [weak_this](const RR::TimerEvent& ev) {
+                RR_SHARED_PTR<Reynard_impl> strong_this = weak_this.lock();
+                if (!strong_this)
+                    return;
+                strong_this->_timer_cb(ev);
+            });
         state_timer->Start();
     }
 
-    void _close() 
+    void _close()
     {
         if (state_timer)
         {
@@ -259,9 +258,7 @@ public:
             state_timer.reset();
         }
     }
-
 };
-
 
 int main(int argc, char* argv[])
 {
@@ -271,8 +268,9 @@ int main(int argc, char* argv[])
     int reynard_port = 29202;
     boost::asio::io_context resolve_io_context;
     boost::asio::ip::tcp::resolver resolver(resolve_io_context);
-    boost::asio::ip::tcp::resolver::query resolver_query(boost::asio::ip::tcp::v4(), reynard_host, std::to_string(reynard_port));
-    boost::asio::ip::tcp::resolver::iterator endpoints_iterator= resolver.resolve(resolver_query);
+    boost::asio::ip::tcp::resolver::query resolver_query(boost::asio::ip::tcp::v4(), reynard_host,
+                                                         std::to_string(reynard_port));
+    boost::asio::ip::tcp::resolver::iterator endpoints_iterator = resolver.resolve(resolver_query);
     if (endpoints_iterator == boost::asio::ip::tcp::resolver::iterator())
     {
         std::cerr << "Could not resolve Reynard the Robot host" << std::endl;
@@ -282,7 +280,8 @@ int main(int argc, char* argv[])
     std::cout << "Connecting to Reynard the Robot ASCII socket at " << reynard_endpoint << std::endl;
 
     // Use RobotRaconteur::NodeSetup to initialize Robot Raconteur
-    RR::ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "experimental.reynard_the_robot_cpp_socket", 59201, argc, argv);
+    RR::ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "experimental.reynard_the_robot_cpp_socket", 59201,
+                                   argc, argv);
 
     // Create the Reynard service instance
     auto reynard_obj = RR_MAKE_SHARED<Reynard_impl>(reynard_endpoint);
@@ -299,7 +298,7 @@ int main(int argc, char* argv[])
     std::cout << "Candidate connection urls:" << std::endl;
     ctx->PrintCandidateConnectionURLs();
     std::cout << std::endl;
-    std::cout <<  "Press Ctrl-C to quit" << std::endl;
+    std::cout << "Press Ctrl-C to quit" << std::endl;
 
     // Use drekar_launch_process_cpp package to wait for exit
     drekar_launch_process_cpp::CWaitForExit wait_exit;
@@ -307,5 +306,4 @@ int main(int argc, char* argv[])
 
     // Stop the service timer
     reynard_obj->_close();
-
 }

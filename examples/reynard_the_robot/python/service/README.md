@@ -54,7 +54,7 @@ Open a command prompt and start the Reynard the Robot server:
 python -m reynard_the_robot --disable-robotraconteur
 ```
 
-Open a second command prompt and navigate to the `examples/reynard_the_robot/python/service` directory. 
+Open a second command prompt and navigate to the `examples/reynard_the_robot/python/service` directory.
 Run the following command:
 
 ```cmd
@@ -91,7 +91,7 @@ Open a command prompt and start the Reynard the Robot server:
 python3 -m reynard_the_robot --disable-robotraconteur
 ```
 
-Open a second command prompt and navigate to the `examples/reynard_the_robot/python/service` directory. 
+Open a second command prompt and navigate to the `examples/reynard_the_robot/python/service` directory.
 Run the following command:
 
 ```bash

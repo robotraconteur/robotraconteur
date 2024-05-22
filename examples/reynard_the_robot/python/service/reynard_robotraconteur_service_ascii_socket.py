@@ -20,8 +20,9 @@ import shlex
 # binary serial port interface example. Many devices that use a binary socket interface will provide a client
 # library that implements the protocol.
 
+
 class Reynard_impl:
-    def __init__(self, host = "localhost", port = 29202):
+    def __init__(self, host="localhost", port=29202):
         self._host = host
         self._port = port
         self._state_timer = None
@@ -60,13 +61,13 @@ class Reynard_impl:
     @property
     def robot_position(self):
         st = self._communicate("STATE")
-        return [float(st[1])/1000.0, float(st[2])/1000.0]
-    
+        return [float(st[1]) / 1000.0, float(st[2]) / 1000.0]
+
     @property
     def color(self):
         st = self._communicate("COLORGET")
         return [float(st[0]), float(st[1]), float(st[2])]
-    
+
     @color.setter
     def color(self, value):
         self._communicate(f"COLORSET {value[0]} {value[1]} {value[2]}")
@@ -80,8 +81,7 @@ class Reynard_impl:
     def getf_arm_position(self):
         st = self._communicate("STATE")
         return [np.deg2rad(float(st[3])), np.deg2rad(float(st[4])), np.deg2rad(float(st[5]))]
-        
-    
+
     def drive_robot(self, vel_x, vel_y, timeout=-1, wait=False):
         self._communicate(f"DRIVE {int(vel_x*1000)} {int(vel_y*1000)} {timeout} {int(wait)}")
 
@@ -96,30 +96,32 @@ class Reynard_impl:
             st = self._communicate("STATE")
             state = self._state_type()
             state.time = float(st[0])
-            state.robot_position = 1e-3* np.array([float(st[1]), float(st[2])], dtype=np.float64)
+            state.robot_position = 1e-3 * np.array([float(st[1]), float(st[2])], dtype=np.float64)
             state.arm_position = np.deg2rad(np.array([float(st[3]), float(st[4]), float(st[5])], dtype=np.float64))
             state.robot_velocity = []
             state.arm_velocity = []
-            
+
             if self.state is not None:
                 self.state.OutValue = state
-            
+
         except Exception as e:
             RRN.LogMessage(RR.LogLevel_Warning, "Error in timer callback: " + str(e))
-            
+
+
 def main():
-    
+
     # Set the host and port for the ascii socket interface
     host = "localhost"
     port = 29202
 
     # Use the robdef from a file. In practice, this is usually done using
     # a package resource. See RobotRaconteurCompanion.Util.RobDef.register_service_types_from_resources
-    RRN.RegisterServiceTypesFromFiles([str(Path(__file__).parent.parent.parent / "robdef" / "experimental.reynard_the_robot.robdef")])
+    RRN.RegisterServiceTypesFromFiles(
+        [str(Path(__file__).parent.parent.parent / "robdef" / "experimental.reynard_the_robot.robdef")])
 
     # Create the Reynard service instance
     reynard_obj = Reynard_impl(host, port)
-    
+
     # Use RobotRaconteur.ServerNodeSetup to initialize Robot Raconteur using the default node
     with RR.ServerNodeSetup("experimental.reynard_the_robot_ascii_socket", 59201):
 
@@ -142,6 +144,7 @@ def main():
 
         # Stop the service timer
         reynard_obj._stop()
+
 
 if __name__ == '__main__':
     main()

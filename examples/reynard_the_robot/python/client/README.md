@@ -49,7 +49,7 @@ Open a command prompt and start the Reynard the Robot server:
 python -m reynard_the_robot
 ```
 
-Open a second command prompt and navigate to the `examples/reynard_the_robot/python/client` directory. 
+Open a second command prompt and navigate to the `examples/reynard_the_robot/python/client` directory.
 Run the following command:
 
 ```cmd

@@ -17,6 +17,7 @@ from pathlib import Path
 # Define the class that implements the service. In Python, the thunk code is dynamically handled
 # so there is no need to generate the service definition.
 
+
 class Reynard_impl:
 
     def __init__(self, reynard, node=None):
@@ -40,7 +41,7 @@ class Reynard_impl:
         self._state_timer = self._node.CreateTimer(0.05, self._timer_cb, False)
         self._state_timer.Start()
 
-    def _stop(self):    
+    def _stop(self):
         if self._state_timer is not None:
             self._state_timer.TryStop()
             self._state_timer = None
@@ -110,19 +111,21 @@ class Reynard_impl:
 
         self.state.OutValue = s
 
+
 def main():
-    
+
     # Create a Reynard instance
     reynard = reynard_the_robot.Reynard()
     reynard.start()
 
     # Use the robdef from a file. In practice, this is usually done using
     # a package resource. See RobotRaconteurCompanion.Util.RobDef.register_service_types_from_resources
-    RRN.RegisterServiceTypesFromFiles([str(Path(__file__).parent.parent.parent / "robdef" / "experimental.reynard_the_robot.robdef")])
+    RRN.RegisterServiceTypesFromFiles(
+        [str(Path(__file__).parent.parent.parent / "robdef" / "experimental.reynard_the_robot.robdef")])
 
     # Create the Reynard service instance
     reynard_obj = Reynard_impl(reynard)
-    
+
     # Use RobotRaconteur.ServerNodeSetup to initialize Robot Raconteur using the default node
     with RR.ServerNodeSetup("experimental.reynard_the_robot_python_rest", 59201):
 
@@ -147,6 +150,7 @@ def main():
         reynard_obj._stop()
 
     reynard.stop()
+
 
 if __name__ == '__main__':
     main()

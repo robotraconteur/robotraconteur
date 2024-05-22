@@ -5,7 +5,7 @@ communicate with Reynard using HTTP REST or ASCII Socket communication. These ex
 representative of the types of drivers that are used with real industrial robots and devices.
 
 The `reynard_robotraconteur_service_http_rest` example demonstrates a service that uses HTTP REST to communicate
-with Reynard, while the `reynard_robotraconteur_service_ascii_socket` example demonstrates a service that 
+with Reynard, while the `reynard_robotraconteur_service_ascii_socket` example demonstrates a service that
 uses an ASCII Socket.
 
 Instructions are provided for Windows and Ubuntu. These examples will work
@@ -18,9 +18,9 @@ Check the instructions for the example for additional setup steps.
 
 ### Windows
 
-These instructions assume that a version of Visual Studio C++ is installed on the system. The 
-"Desktop Development with C++" workload must be installed in Visual Studio C++ to build the example. 
-CMake, Ninja, Git, and Python are also required. The easiest way to install all dependencies is to use Chocolatey. 
+These instructions assume that a version of Visual Studio C++ is installed on the system. The
+"Desktop Development with C++" workload must be installed in Visual Studio C++ to build the example.
+CMake, Ninja, Git, and Python are also required. The easiest way to install all dependencies is to use Chocolatey.
 See https://docs.chocolatey.org/en-us/choco/setup for instructions on installing Chocolatey.
 
 Once Chocolatey, run the following in an elevated command prompt to install the required dependencies:

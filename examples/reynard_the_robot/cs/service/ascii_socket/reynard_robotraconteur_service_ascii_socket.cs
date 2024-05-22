@@ -18,7 +18,7 @@ class Reynard_impl : Reynard_default_impl, IDisposable
         var host_entry = Dns.GetHostEntry(host, AddressFamily.InterNetwork);
         _socket_ep = new IPEndPoint(host_entry.AddressList[0], port);
     }
-    
+
     public string[] _communicate(string text_request, string expected_response_op)
     {
         using (var client = new System.Net.Sockets.TcpClient())
@@ -54,7 +54,7 @@ class Reynard_impl : Reynard_default_impl, IDisposable
                     {
                         throw new System.IO.IOException("Unexpected response from robot: " + response);
                     }
-                    return new string[] { };
+                    return new string[] {};
                 }
 
                 if (response_parts[0] != expected_response_op)
@@ -69,36 +69,28 @@ class Reynard_impl : Reynard_default_impl, IDisposable
 
     public override double[] robot_position
     {
-        get
-        {
+        get {
             var socket_res = _communicate("STATE", "STATE");
             var ret = new double[2];
             ret[0] = double.Parse(socket_res[0]) * 1e-3;
             ret[1] = double.Parse(socket_res[1]) * 1e-3;
             return ret;
         }
-        set
-        {
+        set {
             throw new NotImplementedException();
         }
     }
     public override double[] color
     {
-        get
-        {
+        get {
             var socket_res = _communicate("COLORGET", "COLOR");
-            return new double[]
-            {
-                double.Parse(socket_res[0]),
-                double.Parse(socket_res[1]),
-                double.Parse(socket_res[2])
-            };
-
+            return new double[] { double.Parse(socket_res[0]), double.Parse(socket_res[1]),
+                                  double.Parse(socket_res[2]) };
         }
-        set
-        {
-             string text_request = "COLORSET " + value[0].ToString() + " " + value[1].ToString() + " " + value[2].ToString();
-             _communicate(text_request, "OK");
+        set {
+            string text_request =
+                "COLORSET " + value[0].ToString() + " " + value[1].ToString() + " " + value[2].ToString();
+            _communicate(text_request, "OK");
         }
     }
     public override void teleport(double x, double y)
@@ -108,28 +100,29 @@ class Reynard_impl : Reynard_default_impl, IDisposable
     }
     public override void setf_arm_position(double q1, double q2, double q3)
     {
-        string text_request = "SETARM " + (q1 * (180.0 / Math.PI)).ToString() + " " + (q2 * (180.0 / Math.PI)).ToString() + " " + (q3 * (180.0 / Math.PI)).ToString();
+        string text_request = "SETARM " + (q1 * (180.0 / Math.PI)).ToString() + " " +
+                              (q2 * (180.0 / Math.PI)).ToString() + " " + (q3 * (180.0 / Math.PI)).ToString();
         _communicate(text_request, "OK");
     }
     public override double[] getf_arm_position()
     {
         var socket_res = _communicate("STATE", "STATE");
 
-        return new double[]
-        {
-            double.Parse(socket_res[2]) * (Math.PI / 180.0),
-            double.Parse(socket_res[3]) * (Math.PI / 180.0),
-            double.Parse(socket_res[4]) * (Math.PI / 180.0)
-        };
+        return new double[] { double.Parse(socket_res[2]) * (Math.PI / 180.0),
+                              double.Parse(socket_res[3]) * (Math.PI / 180.0),
+                              double.Parse(socket_res[4]) * (Math.PI / 180.0) };
     }
     public override void drive_robot(double vel_x, double vel_y, double timeout, bool wait)
     {
-        string text_request = "DRIVE " + (vel_x * 1e3).ToString() + " " + (vel_y * 1e3).ToString() + " " + timeout.ToString() + " " + (wait ? "1" : "0");
+        string text_request = "DRIVE " + (vel_x * 1e3).ToString() + " " + (vel_y * 1e3).ToString() + " " +
+                              timeout.ToString() + " " + (wait ? "1" : "0");
         _communicate(text_request, "OK");
     }
     public override void drive_arm(double q1, double q2, double q3, double timeout, bool wait)
     {
-        string text_request = "DRIVEARM " + (q1 * (180.0 / Math.PI)).ToString() + " " + (q2 * (180.0 / Math.PI)).ToString() + " " + (q3 * (180.0 / Math.PI)).ToString() + " " + timeout.ToString() + " " + (wait ? "1" : "0");
+        string text_request = "DRIVEARM " + (q1 * (180.0 / Math.PI)).ToString() + " " +
+                              (q2 * (180.0 / Math.PI)).ToString() + " " + (q3 * (180.0 / Math.PI)).ToString() + " " +
+                              timeout.ToString() + " " + (wait ? "1" : "0");
         _communicate(text_request, "OK");
     }
     public override void say(string message)
@@ -142,21 +135,21 @@ class Reynard_impl : Reynard_default_impl, IDisposable
     {
         try
         {
-       var socket_res = _communicate("STATE", "STATE");
+            var socket_res = _communicate("STATE", "STATE");
 
-        var state = new ReynardState()
-        {
-            time = double.Parse(socket_res[0]),
-            robot_position = new double[] { double.Parse(socket_res[1]) * 1e-3, double.Parse(socket_res[2]) * 1e-3 },
-            arm_position = new double[] { double.Parse(socket_res[3]) * (Math.PI / 180.0), double.Parse(socket_res[4]) * (Math.PI / 180.0), double.Parse(socket_res[5]) * (Math.PI / 180.0) },
-            robot_velocity = new double[] { },
-            arm_velocity = new double[] { }
-        };
+            var state =
+                new ReynardState() { time = double.Parse(socket_res[0]),
+                                     robot_position = new double[] { double.Parse(socket_res[1]) * 1e-3,
+                                                                     double.Parse(socket_res[2]) * 1e-3 },
+                                     arm_position = new double[] { double.Parse(socket_res[3]) * (Math.PI / 180.0),
+                                                                   double.Parse(socket_res[4]) * (Math.PI / 180.0),
+                                                                   double.Parse(socket_res[5]) * (Math.PI / 180.0) },
+                                     robot_velocity = new double[] {}, arm_velocity = new double[] {} };
 
-        if (rrvar_state != null)
-        {
-            rrvar_state.OutValue = state;
-        }
+            if (rrvar_state != null)
+            {
+                rrvar_state.OutValue = state;
+            }
         }
         catch (Exception e)
         {
@@ -177,14 +170,13 @@ class Reynard_impl : Reynard_default_impl, IDisposable
     }
 }
 
-
 class Program
 {
     static int Main(string[] args)
     {
         var reynard = new Reynard_impl("localhost", 29202);
-        using (reynard)
-        using (var node_setup = new ServerNodeSetup("experimental.reynard_the_robot_csharp_socket", 59201, args))
+        using (reynard) using (var node_setup =
+                                   new ServerNodeSetup("experimental.reynard_the_robot_csharp_socket", 59201, args))
         {
             var ctx = RobotRaconteurNode.s.RegisterService("reynard", "experimental.reynard_the_robot", reynard);
 
@@ -201,7 +193,6 @@ class Program
             {
                 wait_exit.WaitForExit();
             }
-
         }
 
         return 0;

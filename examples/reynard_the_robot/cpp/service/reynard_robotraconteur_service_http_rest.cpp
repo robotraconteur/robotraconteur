@@ -24,7 +24,7 @@ namespace RR = RobotRaconteur;
 #define M_PI 3.14159265358979323846
 
 // Define the class that implements the service. Use the generated class from the Robot Raconteur service definition
-// in experimental__reynard_the_robot_stubskel.h to extend the Reynard_default_impl class. Override the functions of 
+// in experimental__reynard_the_robot_stubskel.h to extend the Reynard_default_impl class. Override the functions of
 // interest to implement the service. Reynard_default_impl extends the Reynard interface and provides default
 // implementations for the members. Note the functions with "override" keyword are overriding the functions in the
 // Reynard interface.
@@ -33,15 +33,14 @@ namespace RR = RobotRaconteur;
 // but is a common practice.
 
 class Reynard_impl : public virtual experimental::reynard_the_robot::Reynard_default_impl,
-    public RR_ENABLE_SHARED_FROM_THIS<Reynard_impl>
+                     public RR_ENABLE_SHARED_FROM_THIS<Reynard_impl>
 {
-protected:
-
+  protected:
     std::string hostname;
     int32_t port;
     RR::TimerPtr state_timer;
 
-public:
+  public:
     Reynard_impl(const std::string& hostname, int32_t port)
     {
         this->hostname = hostname;
@@ -99,27 +98,27 @@ public:
         boost::beast::http::response<json_body> res;
 
         nlohmann::json ret;
-        
+
         boost::beast::http::read(stream, buffer, res);
         ret = res.body();
-        
+
         stream.socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both);
 
         return ret;
     }
 
-    RR::RRArrayPtr<double > get_robot_position() override
+    RR::RRArrayPtr<double> get_robot_position() override
     {
         auto json_ret = _get_json("/api/state");
         double x = json_ret.at("x").get<double>();
         double y = json_ret.at("y").get<double>();
 
         auto ret = RR::AllocateRRArray<double>(2);
-        ret->at(0) = x * 1.0e-3; // Convert to meters 
+        ret->at(0) = x * 1.0e-3; // Convert to meters
         ret->at(1) = y * 1.0e-3; // Convert to meters
         return ret;
     }
-    RR::RRArrayPtr<double > get_color() override
+    RR::RRArrayPtr<double> get_color() override
     {
         auto json_ret = _get_json("/api/color");
         double r = json_ret.at("r").get<double>();
@@ -132,7 +131,7 @@ public:
         ret->at(2) = b;
         return ret;
     }
-    void set_color(const RR::RRArrayPtr<double >& value) override
+    void set_color(const RR::RRArrayPtr<double>& value) override
     {
         if (value->size() != 3)
         {
@@ -143,11 +142,7 @@ public:
         double g = value->at(1);
         double b = value->at(2);
 
-        nlohmann::json obj = {
-            {"r", r},
-            {"g", g},
-            {"b", b}
-        };
+        nlohmann::json obj = {{"r", r}, {"g", g}, {"b", b}};
 
         _post_json("/api/color", obj);
     }
@@ -156,10 +151,7 @@ public:
     {
         x = x * 1.0e3; // Convert to mm
         y = y * 1.0e3; // Convert to mm
-        nlohmann::json obj = {
-            {"x", x},
-            {"y", y}
-        };
+        nlohmann::json obj = {{"x", x}, {"y", y}};
 
         _post_json("/api/teleport", obj);
     }
@@ -169,16 +161,12 @@ public:
         q1 = q1 * (180.0 / M_PI); // Convert to degrees
         q2 = q2 * (180.0 / M_PI); // Convert to degrees
         q3 = q3 * (180.0 / M_PI); // Convert to degrees
-        nlohmann::json obj = {
-            {"q1", q1},
-            {"q2", q2},
-            {"q3", q3}
-        };
+        nlohmann::json obj = {{"q1", q1}, {"q2", q2}, {"q3", q3}};
 
         _post_json("/api/arm", obj);
     }
 
-    RR::RRArrayPtr<double > getf_arm_position() override
+    RR::RRArrayPtr<double> getf_arm_position() override
     {
         auto json_ret = _get_json("/api/state");
         double q1 = json_ret.at("q1").get<double>();
@@ -196,12 +184,7 @@ public:
     {
         vel_x = vel_x * 1.0e3; // Convert to mm/s
         vel_y = vel_y * 1.0e3; // Convert to mm/s
-        nlohmann::json obj = {
-            {"vel_x", vel_x},
-            {"vel_y", vel_y},
-            {"timeout", timeout},
-            {"wait", wait.value != 0}
-        };
+        nlohmann::json obj = {{"vel_x", vel_x}, {"vel_y", vel_y}, {"timeout", timeout}, {"wait", wait.value != 0}};
 
         _post_json("/api/drive_robot", obj);
     }
@@ -212,29 +195,20 @@ public:
         q2 = q2 * (180.0 / M_PI); // Convert to degrees
         q3 = q3 * (180.0 / M_PI); // Convert to degrees
 
-        nlohmann::json obj = {
-            {"q1", q1},
-            {"q2", q2},
-            {"q3", q3},
-            {"timeout", timeout},
-            {"wait", wait.value != 0}
-        };
+        nlohmann::json obj = {{"q1", q1}, {"q2", q2}, {"q3", q3}, {"timeout", timeout}, {"wait", wait.value != 0}};
 
         _post_json("/api/drive_arm", obj);
     }
 
     void say(const std::string& message) override
     {
-        nlohmann::json obj = {
-            {"message", message}
-        };
+        nlohmann::json obj = {{"message", message}};
 
         _post_json("/api/say", obj);
     }
 
-
     void _timer_cb(const RR::TimerEvent& ev)
-    {   
+    {
 
         // Many HTTP devices (such as ABB robot controllers) provide a WebSocket to provide asynchronous updates.
         // This is not available in the Reynard the Robot API, so we must poll the state.
@@ -253,7 +227,7 @@ public:
             double vel_q1 = json_ret.at("vel_q1").get<double>();
             double vel_q2 = json_ret.at("vel_q2").get<double>();
             double vel_q3 = json_ret.at("vel_q3").get<double>();
-            
+
             experimental::reynard_the_robot::ReynardStatePtr state(new experimental::reynard_the_robot::ReynardState());
             state->time = t;
             state->robot_position = RR::AllocateRRArray<double>(2);
@@ -285,24 +259,25 @@ public:
         }
         catch (std::exception& exp)
         {
-            ROBOTRACONTEUR_LOG_WARNING_COMPONENT(RR::RobotRaconteurNode::weak_sp(), UserService, 0, "Error updating state: " << exp.what());
+            ROBOTRACONTEUR_LOG_WARNING_COMPONENT(RR::RobotRaconteurNode::weak_sp(), UserService, 0,
+                                                 "Error updating state: " << exp.what());
         }
-        
     }
 
     void _start()
     {
         RR_WEAK_PTR<Reynard_impl> weak_this = shared_from_this();
-        state_timer = RR::RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(250), [weak_this](const RR::TimerEvent& ev)
-        {
-            RR_SHARED_PTR<Reynard_impl> strong_this = weak_this.lock();
-            if (!strong_this) return;
-            strong_this->_timer_cb(ev);
-        });
+        state_timer = RR::RobotRaconteurNode::s()->CreateTimer(
+            boost::posix_time::milliseconds(250), [weak_this](const RR::TimerEvent& ev) {
+                RR_SHARED_PTR<Reynard_impl> strong_this = weak_this.lock();
+                if (!strong_this)
+                    return;
+                strong_this->_timer_cb(ev);
+            });
         state_timer->Start();
     }
 
-    void _close() 
+    void _close()
     {
         if (state_timer)
         {
@@ -310,14 +285,13 @@ public:
             state_timer.reset();
         }
     }
-
 };
-
 
 int main(int argc, char* argv[])
 {
     // Use RobotRaconteur::NodeSetup to initialize Robot Raconteur
-    RR::ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "experimental.reynard_the_robot_cpp_rest", 59201, argc, argv);
+    RR::ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "experimental.reynard_the_robot_cpp_rest", 59201, argc,
+                                   argv);
 
     // Create the Reynard service instance
     auto reynard_obj = RR_MAKE_SHARED<Reynard_impl>("localhost", 29201);
@@ -334,7 +308,7 @@ int main(int argc, char* argv[])
     std::cout << "Candidate connection urls:" << std::endl;
     ctx->PrintCandidateConnectionURLs();
     std::cout << std::endl;
-    std::cout <<  "Press Ctrl-C to quit" << std::endl;
+    std::cout << "Press Ctrl-C to quit" << std::endl;
 
     // Use drekar_launch_process_cpp package to wait for exit
     drekar_launch_process_cpp::CWaitForExit wait_exit;
@@ -342,5 +316,4 @@ int main(int argc, char* argv[])
 
     // Stop the service timer
     reynard_obj->_close();
-
 }

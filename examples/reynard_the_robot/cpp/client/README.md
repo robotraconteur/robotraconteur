@@ -12,9 +12,9 @@ Check the instructions for the example for additional setup steps.
 
 ### Windows
 
-These instructions assume that a version of Visual Studio C++ is installed on the system. The 
-"Desktop Development with C++" workload must be installed in Visual Studio C++ to build the example. 
-CMake, Ninja, Git, and Python are also required. The easiest way to install all dependencies is to use Chocolatey. 
+These instructions assume that a version of Visual Studio C++ is installed on the system. The
+"Desktop Development with C++" workload must be installed in Visual Studio C++ to build the example.
+CMake, Ninja, Git, and Python are also required. The easiest way to install all dependencies is to use Chocolatey.
 See https://docs.chocolatey.org/en-us/choco/setup for instructions on installing Chocolatey.
 
 Once Chocolatey, run the following in an elevated command prompt to install the required dependencies:

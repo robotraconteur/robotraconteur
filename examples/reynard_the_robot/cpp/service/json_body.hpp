@@ -34,57 +34,45 @@ struct json_body
     struct writer
     {
         using const_buffers_type = boost::asio::const_buffer;
-        template<bool isRequest, class Fields>
-        writer(boost::beast::http::header<isRequest, Fields> const& h, 
-               value_type const& body)
+        template <bool isRequest, class Fields>
+        writer(boost::beast::http::header<isRequest, Fields> const& h, value_type const& body)
         {
-            serialized_body = body.dump();            
+            serialized_body = body.dump();
         }
 
-        void
-        init(boost::system::error_code& ec)
+        void init(boost::system::error_code& ec)
         {
             // The serializer always works, so no error can occur here.
             ec = {};
         }
-    
-        boost::optional<std::pair<const_buffers_type, bool>>
-        get(boost::system::error_code& ec)
+
+        boost::optional<std::pair<const_buffers_type, bool> > get(boost::system::error_code& ec)
         {
             ec = {};
             const_buffers_type output_buffer(serialized_body.data(), serialized_body.size());
-            return std::make_pair(output_buffer, false); 
+            return std::make_pair(output_buffer, false);
         }
+
       private:
         std::string serialized_body;
     };
 
     struct reader
     {
-        template<bool isRequest, class Fields>
-        reader(boost::beast::http::header<isRequest, Fields>& h, value_type& body)
-            : body(body)
-        {
-        }
-        void
-        init(
-            boost::optional<std::uint64_t> const& content_length,
-            boost::system::error_code& ec)
-        {
-            ec = {};
-        }
+        template <bool isRequest, class Fields>
+        reader(boost::beast::http::header<isRequest, Fields>& h, value_type& body) : body(body)
+        {}
+        void init(boost::optional<std::uint64_t> const& content_length, boost::system::error_code& ec) { ec = {}; }
 
-        template<class ConstBufferSequence>
-        std::size_t
-        put(ConstBufferSequence const& buffers, boost::system::error_code& ec)
+        template <class ConstBufferSequence>
+        std::size_t put(ConstBufferSequence const& buffers, boost::system::error_code& ec)
         {
             std::string buffer(static_cast<const char*>(buffers.data()), buffers.size());
             body = json::parse(buffer, nullptr, false, true);
             return buffers.size();
         }
 
-        void
-        finish(boost::system::error_code& ec)
+        void finish(boost::system::error_code& ec)
         {
             ec = {};
             // We check manually if the json is complete.
@@ -98,6 +86,5 @@ struct json_body
         value_type& body;
     };
 };
-
 
 #endif
