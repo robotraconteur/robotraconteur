@@ -10,6 +10,8 @@ https://github.com/robotraconteur/robotraconteur/blob/master/docs/common/install
 
 ## Run Example
 
+Start the Reynard the Robot server by following the instructions in the [Python example Readme](../../python/client/README.md).
+
 The `dotnet run` command will install the RobotRaconteurNET library and compile the example.
 
 ```
