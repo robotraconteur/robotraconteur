@@ -6,7 +6,8 @@ dotnet core 5.0 SDK or greater is required. See https://dotnet.microsoft.com/en-
 dotnet 6 is used.
 
 Platforms other than Windows require the native library to be installed. See
-https://github.com/robotraconteur/robotraconteur/blob/master/docs/common/installation.md
+[Installation](https://github.com/robotraconteur/robotraconteur/blob/master/docs/common/installation.md). For
+Ubuntu, the package `librobotraconteur-net-native` package must be installed.
 
 ## Run Example
 
