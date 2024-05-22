@@ -3,12 +3,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import com.robotraconteur.*;
 
-public class reynard_robotraconteur_service_http_rest
+public class reynard_robotraconteur_service_ascii_socket
 {
 
     public static void main(String[] args)
     {
-        ServerNodeSetup node_setup = new ServerNodeSetup("experimental.reynard_the_robot", 59201);
+        ServerNodeSetup node_setup = new ServerNodeSetup("experimental.reynard_the_robot_ascii_socket", 59201);
         try
         {
             // Register the service type
@@ -18,7 +18,7 @@ public class reynard_robotraconteur_service_http_rest
             Reynard_impl reynard = new Reynard_impl();
 
             // Register the service with Robot Raconteur
-            RobotRaconteurNode.s().registerService("reynard", "experimental.reynard_the_robot_http_rest", reynard);
+            RobotRaconteurNode.s().registerService("reynard", "experimental.reynard_the_robot", reynard);
 
             reynard._start();
 
