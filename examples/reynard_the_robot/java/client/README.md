@@ -2,6 +2,11 @@
 
 This example demonstrates controlling Reynard using Java as a Robot Raconteur client.
 
+## Setup
+
+The Java OpenJDK 11 or greater is required to compile the example. The Python Reynard the Robot server must be running.
+See the [Python example README](../../python/client/README.md) for instructions setting up Reynard the Robot.
+
 This example requires the Robot Raconteur Java files. Download the file `RobotRaconteur-Java-<ver>-Java.zip` and
 extract the contents to `C:\ws\robotraconteur_java` on Windows on `$HOME/robotraconteur_java` on Linux/Mac OS.
 
@@ -21,7 +26,13 @@ javac -cp C:\ws\robotraconteur_java\RobotRaconteur.jar reynard_robotraconteur_cl
 
 ## Run Example
 
-Run the following command:
+Open a command prompt and start the Reynard the Robot server:
+
+```cmd
+python -m reynard_the_robot
+```
+
+Open another command prompt and run the following command:
 
 ```
 java -cp C:\ws\robotraconteur_java\RobotRaconteur.jar;. -Djava.library.path=C:\ws\robotraconteur_java reynard_robotraconteur_client
