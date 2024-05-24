@@ -73,7 +73,7 @@ class Reynard_impl:
         self._communicate(f"COLORSET {value[0]} {value[1]} {value[2]}")
 
     def teleport(self, x, y):
-        self._communicate(f"TELEPORT {int(x*1000)} {int(y*1000)}")
+        self._communicate(f"TELEPORT {int(x * 1000)} {int(y * 1000)}")
 
     def setf_arm_position(self, q1, q2, q3):
         self._communicate(f"SETARM {np.rad2deg(q1)} {np.rad2deg(q2)} {np.rad2deg(q3)}")
@@ -83,7 +83,7 @@ class Reynard_impl:
         return [np.deg2rad(float(st[3])), np.deg2rad(float(st[4])), np.deg2rad(float(st[5]))]
 
     def drive_robot(self, vel_x, vel_y, timeout=-1, wait=False):
-        self._communicate(f"DRIVE {int(vel_x*1000)} {int(vel_y*1000)} {timeout} {int(wait)}")
+        self._communicate(f"DRIVE {int(vel_x * 1000)} {int(vel_y * 1000)} {timeout} {int(wait)}")
 
     def drive_arm(self, q1, q2, q3, timeout=-1, wait=False):
         self._communicate(f"DRIVEARM {np.rad2deg(q1)} {np.rad2deg(q2)} {np.rad2deg(q3)} {timeout} {int(wait)}")
