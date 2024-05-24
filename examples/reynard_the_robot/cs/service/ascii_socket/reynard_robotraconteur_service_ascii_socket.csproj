@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <LangVersion>9.0</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <RobotRaconteurGenCSharp Include="../../../robdef/experimental.reynard_the_robot.robdef" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DrekarLaunchProcessNET" Version="0.1.0" />
+      <PackageReference Include="RobotRaconteurNET" Version="1.2.0" />
+    </ItemGroup>
+
+</Project>

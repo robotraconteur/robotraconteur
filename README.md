@@ -44,6 +44,7 @@ A communication framework for robotics, automation, and the Internet of Things
 
 - [Robot Raconteur Core Library and Wrappers](#robot-raconteur-core-library-and-wrappers)
   - [Documentation](#documentation)
+  - [Examples](#examples)
   - [Getting Help](#getting-help)
   - [Quick Start](#quick-start)
   - [Getting Started](#getting-started)
@@ -62,6 +63,10 @@ A communication framework for robotics, automation, and the Internet of Things
 ## Documentation
 
 See [https://github.com/robotraconteur/robotraconteur/wiki/Documentation](https://github.com/robotraconteur/robotraconteur/wiki/Documentation) for documentation.
+
+## Examples
+
+See the [examples](examples) directory for examples in various programming languages.
 
 ## Getting Help
 
