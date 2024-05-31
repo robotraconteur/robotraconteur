@@ -1,0 +1,39 @@
+#Service to provide sample interface to webcams
+
+# This interface is for example only. Most cameras should use the standard com.robotraconteur.imaging.Camera interface
+service experimental.simplewebcam3
+
+# The current version of Robot Raconteur robdef standards is 0.10
+stdver 0.10
+
+struct WebcamImage
+    field int32 width
+    field int32 height
+    field int32 step
+    field uint8[] data
+end
+
+struct WebcamImage_size
+    field int32 width
+    field int32 height
+    field int32 step
+end
+
+object Webcam
+    property string name [readonly]
+    function WebcamImage capture_frame()
+
+    function void start_streaming()
+    function void stop_streaming()
+    pipe WebcamImage frame_stream [readonly]
+
+    function WebcamImage_size capture_frame_to_buffer()
+    memory uint8[] buffer [readonly]
+    memory uint8[*] multidimbuffer [readonly]
+
+end
+
+object WebcamHost
+    property string{int32} webcam_names [readonly]
+    objref Webcam{int32} webcams
+end
