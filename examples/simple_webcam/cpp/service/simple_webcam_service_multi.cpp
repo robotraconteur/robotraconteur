@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     RR::ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "experimental.simplewebcam3_multi", 22355);
 
     // Register the service
-    auto ctx = RR::RobotRaconteurNode::s()->RegisterService("webcam", "experimental.simplewebcam3", webcamhost);
+    auto ctx = RR::RobotRaconteurNode::s()->RegisterService("multiwebcam", "experimental.simplewebcam3", webcamhost);
 
     // Print out some info for the user
     std::cout << "Simple Multi Webcam Service Started" << std::endl << std::endl;

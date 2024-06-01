@@ -23,7 +23,7 @@ cv::Mat webcam_image_to_mat(cam::WebcamImagePtr image)
 
 int main(int argc, char* argv[])
 {
-    std::string url = "rr+tcp://localhost:22355?service=webcam";
+    std::string url = "rr+tcp://localhost:22355?service=multiwebcam";
     if (argc > 1)
     {
         url = argv[1];
