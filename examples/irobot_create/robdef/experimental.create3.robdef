@@ -46,8 +46,8 @@ object Create
 	function void stop()
 	function void setf_leds(bool play, bool advance)
 
-	property int32 distance_traveled [readonly]
-	property int32 angle_traveled [readonly]
+	property double distance_traveled [readonly]
+	property double angle_traveled [readonly]
 	property uint8 bumpers [readonly]
 
 	event bump()
