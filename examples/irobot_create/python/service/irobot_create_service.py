@@ -20,6 +20,27 @@ import numpy as np
 # Port names and NodeID of this service
 serial_port_name = "/dev/ttyUSB0"
 
+CREATE_OI_OP_START = 128
+CREATE_OI_OP_FULL = 132
+CREATE_OI_OP_DRIVE = 137
+CREATE_OI_OP_LEDS = 139
+CREATE_OI_OP_SONG = 140
+CREATE_OI_OP_DRIVE_DIRECT = 145
+CREATE_OI_OP_STREAM = 148
+CREATE_OI_OP_STREAM_RESUME = 150
+
+CREATE_OI_FLAGS_BUMP_RIGHT = 0x1
+CREATE_OI_FLAGS_BUMP_LEFT = 0x2
+CREATE_OI_FLAGS_WHEEL_DROP_RIGHT = 0x4
+CREATE_OI_FLAGS_WHEEL_DROP_LEFT = 0x8
+CREATE_OI_FLAGS_WHEEL_DROP_CASTER = 0x10
+
+CREATE_OI_FLAGS_PLAY_BUTTON = 0x1
+CREATE_OI_FLAGS_ADVANCE_BUTTON = 0x4
+
+CREATE_OI_SET_LED_PLAY = 2
+CREATE_OI_SET_LED_ADVANCE = 8
+
 
 class Create_impl(object):
     def __init__(self):
@@ -51,12 +72,12 @@ class Create_impl(object):
 
     def drive(self, velocity, radius):
         with self._lock:
-            dat = struct.pack(">B2h", 137, int(velocity * 1e3), int(radius * 1e3))
+            dat = struct.pack(">B2h", CREATE_OI_OP_DRIVE, int(velocity * 1e3), int(radius * 1e3))
             self._serial.write(dat)
 
     def drive_direct(self, right_velocity, left_velocity):
         with self._lock:
-            dat = struct.pack(">B2h", 145, int(right_velocity * 1e3), int(left_velocity * 1e3))
+            dat = struct.pack(">B2h", CREATE_OI_OP_DRIVE_DIRECT, int(right_velocity * 1e3), int(left_velocity * 1e3))
             self._serial.write(dat)
 
     def stop(self):
@@ -66,10 +87,10 @@ class Create_impl(object):
         with self._lock:
             bits = 0
             if play:
-                bits |= 2
+                bits |= CREATE_OI_SET_LED_PLAY
             if advance:
-                bits |= 8
-            dat = struct.pack(">4B", 139, bits, 80, 255)
+                bits |= CREATE_OI_SET_LED_ADVANCE
+            dat = struct.pack(">4B", CREATE_OI_OP_LEDS, bits, 80, 255)
             self._serial.write(dat)
 
     def _start_streaming(self):
@@ -78,7 +99,7 @@ class Create_impl(object):
                 raise Exception("Already streaming")
 
             # Send stop streaming command
-            command = struct.pack(">2B", 150, 0)
+            command = struct.pack(">2B", CREATE_OI_OP_STREAM_RESUME, 0)
             # Flush the serial read buffer
             self._serial.read_all()
             time.sleep(0.5)
@@ -90,12 +111,12 @@ class Create_impl(object):
             t.start()
             # Send command to start streaming packets after a short delay
             time.sleep(.1)
-            command = struct.pack(">3B", 148, 1, 6)
+            command = struct.pack(">3B", CREATE_OI_OP_STREAM, 1, 6)
             self._serial.write(command)
 
     def _stop_streaming(self):
         with self._lock:
-            command = struct.pack(">2B", 150, 0)
+            command = struct.pack(">2B", CREATE_OI_OP_STREAM_RESUME, 0)
             self._serial.write(command)
             self._streaming = False
 
@@ -122,7 +143,8 @@ class Create_impl(object):
     def _init(self, port):
         with self._lock:
             self._serial = serial.Serial(port=port, baudrate=57600)
-            dat = struct.pack(">8B", 128, 132, 150, 0, 139, 0, 80, 255)
+            dat = struct.pack(">8B", CREATE_OI_OP_START, CREATE_OI_OP_FULL,
+                              CREATE_OI_OP_STREAM_RESUME, 0, CREATE_OI_OP_LEDS, 0, 80, 255)
             self._serial.write(dat)
             time.sleep(.1)
             self._serial.flushInput()
@@ -131,6 +153,8 @@ class Create_impl(object):
     def _close(self):
         with suppress(Exception):
             self._stop_streaming()
+        dat = struct.pack(">B", CREATE_OI_OP_START)
+        self._serial.write(dat)
         with self._lock:
             self._serial.close()
 
@@ -210,15 +234,15 @@ class Create_impl(object):
             self._packet_unpack.unpack(packets)
 
         state_flags = 0
-        if bump_flags_b & 0x1:
+        if bump_flags_b & CREATE_OI_FLAGS_BUMP_RIGHT:
             state_flags |= self._create_state_flags["bump_right"]
-        if bump_flags_b & 0x2:
+        if bump_flags_b & CREATE_OI_FLAGS_BUMP_LEFT:
             state_flags |= self._create_state_flags["bump_left"]
-        if bump_flags_b & 0x4:
+        if bump_flags_b & CREATE_OI_FLAGS_WHEEL_DROP_RIGHT:
             state_flags |= self._create_state_flags["wheel_drop_right"]
-        if bump_flags_b & 0x8:
+        if bump_flags_b & CREATE_OI_FLAGS_WHEEL_DROP_LEFT:
             state_flags |= self._create_state_flags["wheel_drop_left"]
-        if bump_flags_b & 0x10:
+        if bump_flags_b & CREATE_OI_FLAGS_WHEEL_DROP_CASTER:
             state_flags |= self._create_state_flags["wheel_drop_caster"]
 
         if wall_b != 0:
@@ -236,9 +260,9 @@ class Create_impl(object):
         if virtual_wall_b != 0:
             state_flags |= self._create_state_flags["virtual_wall"]
 
-        if buttons_b & 0x1:
+        if buttons_b & CREATE_OI_FLAGS_PLAY_BUTTON:
             state_flags |= self._create_state_flags["play_button"]
-        if buttons_b & 0x4:
+        if buttons_b & CREATE_OI_FLAGS_ADVANCE_BUTTON:
             state_flags |= self._create_state_flags["advance_button"]
 
         ret.create_state_flags = state_flags
@@ -274,7 +298,7 @@ class Create_impl(object):
             notes = cb_func(self._distance_traveled, self._angle_traveled)
             notes2 = list(notes) + [141, 0]
 
-            command = struct.pack("%sB" % (5 + len(notes)), 140, 0, int(len(notes) / 2), *list(notes2))
+            command = struct.pack("%sB" % (5 + len(notes)), CREATE_OI_OP_SONG, 0, int(len(notes) / 2), *list(notes2))
             with self._lock:
                 self._serial.write(command)
 
