@@ -11,13 +11,22 @@ if(NUMPY3_INCLUDE_NDARRAYOBJECT_DIR)
 else()
     execute_process(
         COMMAND ${PYTHON3_EXECUTABLE} -c
-                "import numpy; import os; print(os.path.dirname(numpy.__file__) + '/core/include')"
-        RESULT_VARIABLE FIND_NUMPY3_RESULT OUTPUT_VARIABLE NUMPY3_INCLUDE_DIR)
-    string(STRIP "${NUMPY3_INCLUDE_DIR}" NUMPY3_INCLUDE_DIR)
+                "import numpy; import os; print(os.path.dirname(numpy.__file__))"
+        RESULT_VARIABLE FIND_NUMPY3_RESULT OUTPUT_VARIABLE NUMPY3_INCLUDE_DIR1)
+    string(STRIP "${NUMPY3_INCLUDE_DIR1}" NUMPY3_INCLUDE_DIR1)
 
     if(${FIND_NUMPY3_RESULT})
         message(FATAL_ERROR "Could not determine NumPy include directory")
     endif()
+
+    if(EXISTS "${NUMPY3_INCLUDE_DIR1}/core/include/numpy/ndarrayobject.h")
+        set(NUMPY3_INCLUDE_DIR "${NUMPY3_INCLUDE_DIR1}/core/include")
+    else()
+        if (EXISTS "${NUMPY3_INCLUDE_DIR1}/_core/include/numpy/ndarrayobject.h")
+            set(NUMPY3_INCLUDE_DIR "${NUMPY3_INCLUDE_DIR1}/_core/include")
+        endif()
+    endif()
+
 endif()
 
 if(NOT EXISTS "${NUMPY3_INCLUDE_DIR}/numpy/ndarrayobject.h")
