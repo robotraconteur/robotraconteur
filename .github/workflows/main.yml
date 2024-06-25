@@ -207,42 +207,6 @@ jobs:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
         retention-days: 2
-
-  build-gentoo:
-    runs-on: ubuntu-latest
-    container: gentoo/stage3:latest
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        path: robotraconteur
-        repository: robotraconteur/robotraconteur
-    - name: enable-binary-pkgs-make-conf
-      run: |
-        echo "FEATURES=\"${FEATURES} binpkg-request-signature getbinpkg\"" >> /etc/portage/make.conf
-    - name: sync-portage
-      run: |
-        emerge --sync --quiet
-    - name: install-deps
-      run: >-
-        emerge --getbinpkg --usepkg
-        dev-libs/boost dev-libs/openssl
-        sys-apps/dbus dev-libs/libusb net-wireless/bluez
-        dev-cpp/gtest dev-lang/python dev-python/numpy
-        dev-python/pip dev-python/pytest dev-build/cmake
-        dev-build/ninja dev-lang/swig
-    - name: config
-      run: >-
-        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
-    - name: build
-      run: >-
-        cmake --build build --config Release
-    - name: test
-      run: >-
-        ctest --test-dir build -C Release
-        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback"
-        --output-on-failure
-
   build-fedora:
     runs-on: ubuntu-latest
     container: fedora:latest
