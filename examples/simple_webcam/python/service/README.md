@@ -41,7 +41,7 @@ Install Python using Chocolatey or by downloading the installer from the [Python
 Once installed, run the following command in a command prompt to install the required Python packages using pip:
 
 ```cmd
-python -m pip install --user robotraconteur requests drekar-launch-process opencv-contrib-python
+python -m pip install --user robotraconteur drekar-launch-process opencv-contrib-python
 ```
 
 ### Ubuntu

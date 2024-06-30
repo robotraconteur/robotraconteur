@@ -1,4 +1,4 @@
-# iRobot Create Java Robot Raconteur Client Examples
+# iRobot Create C\# Robot Raconteur Client Examples
 
 The iRobot Create Client example demonstrates how to use the iRobot Create service with Robot Raconteur.
 The client drives the robot for a short distance, reads the states, and provides a callback for playing
@@ -19,29 +19,25 @@ on other platforms with minor modifications.
 
 ## Setup
 
-The Java OpenJDK 11 or greater is required to compile the example.
+These setup steps only need to be run once, however other examples may require additional packages to be installed.
+Check the instructions for the example for additional setup steps.
 
-This example requires the Robot Raconteur Java files. Download the file `RobotRaconteur-Java-<ver>-Java.zip` and
-extract the contents to `C:\ws\robotraconteur_java` on Windows on `$HOME/robotraconteur_java` on Linux/Mac OS.
+Install the "dotnet" SDK from https://dotnet.microsoft.com/download. In this example, dotnet 6 is used.
 
-## Compiling
-
-The thunk source must be generated manually in Java. Execute the following command:
-
-```
-RobotRaconteurGen --thunksource --lang=java ..\..\robdef\experimental.create3.robdef
-```
-
-Run the following command to build:
-
-```
-javac -cp C:\ws\robotraconteur_java\RobotRaconteur.jar *.java experimental\create3\*.java
-```
+Platforms other than Windows require the native library to be installed. See
+[Installation](https://github.com/robotraconteur/robotraconteur/blob/master/docs/common/installation.md). For
+Ubuntu, the package `librobotraconteur-net-native` package must be installed.
 
 ## Run Example
 
-Start one of the iRobot Create service examples and run:
+Navigate to the `examples/irobot_create/cs/service/` directory in a terminal and run:
 
+```bash
+dotnet run --framework net6.0 -- COM4
 ```
-java -cp C:\ws\robotraconteur_java\RobotRaconteur.jar;. -Djava.library.path=C:\ws\robotraconteur_java iRobotCreateClient
+
+Open a new terminal and navigate to the `examples/irobot_create/cs/client` directory and run:
+
+```bash
+dotnet run --framework net6.0
 ```
