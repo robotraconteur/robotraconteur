@@ -18,3 +18,5 @@ Examples are broken down by language:
 Practical systems should use the standard camera driver [robotraconteur_camera_driver](https://github.com/robotraconteur-contrib/robotraconteur_camera_driver) which uses
 the standard  [service definition
 `com.robotraconteur.imaging`](https://github.com/robotraconteur/robotraconteur_standard_robdef/blob/master/group1/com.robotraconteur.imaging.robdef).
+
+Instructions for atomically running the service on a Raspberry Pi are provided in the [C++ Service Readme](cpp/service/README.md).
