@@ -1,4 +1,4 @@
-# RobotPython Client Examples
+# Robot Python Client Examples
 
 This directory contains examples for controlling the standard robots robot using the standard driver service.
 Use with either the [robotraconteur_training_sim](https://github.com/robotraconteur-contrib/robotraconteur_training_sim)
