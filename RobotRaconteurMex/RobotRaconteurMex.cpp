@@ -10298,6 +10298,11 @@ mxArray* CreateEmptyValue(const boost::shared_ptr<TypeDefinition>& type1, const 
             return CreateEmptyValue_pod(type1, obj);
         }
 
+        case DataTypes_enum_t: {
+            mxArray* o = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+            return o;
+        }
+
         default:
             throw DataTypeException("Invalid type");
         }
