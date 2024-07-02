@@ -610,8 +610,8 @@ classdef RobotRaconteur
         end
 
         function empty_structure=CreateStructure(obj,structure_type)
-        % types=RobotRaconteur.CreateStructure(obj) Create a structure
-        %    with fields set to default values
+        % types=RobotRaconteur.CreateStructure(obj, structure_type) Create
+        %    a structure with fields set to default values
         %
         %    Create a new structure with fields set to default values.
         %    This is not required to be used, but is helpful to avoid
@@ -619,11 +619,26 @@ classdef RobotRaconteur
         %
         %    Example:
         %
-        %    my_struct = RobotRaconteur.CreateStructure('experimental.my_definition.MyStructure');
+        %    my_struct = RobotRaconteur.CreateStructure(obj, 'experimental.my_definition.MyStructure');
 
 
-               empty_structure=createstructure(obj,structure_type);
-            end
+            empty_structure=createstructure(obj,structure_type);
+        end
+
+        function consts=GetConstants(obj,service_type)
+        % constants=RobotRaconteur.GetConstants(obj,service_type) Get
+        %    the constants defined in a service definition
+        %
+        %    Returns a structure containing the constants
+        %    and enums defined in the specified fully qualified service
+        %    definition.
+        %
+        %    Example:
+        %
+        %    const = RobotRaconteur.GetConstants(obj, 'com.robotraconteur.robotics.robot');
+
+            consts=constants(obj,service_type);
+        end
 
 		function t=nowUTC()
         % RobotRaconteur.nowUTC The current time in UTC time zone.

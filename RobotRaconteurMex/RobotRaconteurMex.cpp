@@ -979,7 +979,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
         }
         else if (command == "constants")
         {
-            if (nlhs != 1 || nrhs != 3)
+            if (nlhs != 1 || (nrhs != 3 && nrhs != 4))
                 throw InvalidArgumentException("RobotRaconteurMex constants requires 3 input and 1 output arguments");
             int32_t stubtype = GetInt32Scalar(prhs[1]);
             int32_t stubid = GetInt32Scalar(prhs[2]);
@@ -994,7 +994,17 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                     o = e1->second;
                 }
 
-                plhs[0] = ServiceDefinitionConstants(o->RR_objecttype->ServiceDefinition_.lock());
+                if (nrhs == 3)
+                {
+                    plhs[0] = ServiceDefinitionConstants(o->RR_objecttype->ServiceDefinition_.lock());
+                }
+                else
+                {
+                    std::string type_str = mxToString(prhs[3]);
+                    RR_SHARED_PTR<ServiceDefinition> def =
+                        RobotRaconteurNode::s()->GetPulledServiceType(o, type_str)->ServiceDef();
+                    plhs[0] = ServiceDefinitionConstants(def);
+                }
             }
             else
                 throw InvalidArgumentException("Unknown RobotRaconteur object type");
