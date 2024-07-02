@@ -762,6 +762,12 @@ void CSharpServiceLangGen::GeneratePod(const RR_SHARED_PTR<ServiceEntryDefinitio
                 }
                 else
                 {
+                    w2 << "    if (" << t8.name << " == null || " << t8.name << ".Length != " << t7.ArrayLength.at(0)
+                       << ")" << std::endl;
+                    w2 << "    {" << std::endl;
+                    w2 << "    " << t8.name << " = new " << t8.cs_type << "[" << t7.ArrayLength.at(0) << "];"
+                       << std::endl;
+                    w2 << "    }" << std::endl;
                     w2 << "    Array.Copy(rr_a.Array, rr_a.Offset + " << i << ", " << t8.name << ", 0, "
                        << t7.ArrayLength.at(0) << ");" << std::endl;
                     i += t7.ArrayLength.at(0);
