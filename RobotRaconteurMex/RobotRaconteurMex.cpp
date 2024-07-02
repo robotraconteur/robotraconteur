@@ -979,7 +979,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
         }
         else if (command == "constants")
         {
-            if (nlhs != 1 || nrhs != 3)
+            if (nlhs != 1 || (nrhs != 3 && nrhs != 4))
                 throw InvalidArgumentException("RobotRaconteurMex constants requires 3 input and 1 output arguments");
             int32_t stubtype = GetInt32Scalar(prhs[1]);
             int32_t stubid = GetInt32Scalar(prhs[2]);
@@ -994,7 +994,17 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                     o = e1->second;
                 }
 
-                plhs[0] = ServiceDefinitionConstants(o->RR_objecttype->ServiceDefinition_.lock());
+                if (nrhs == 3)
+                {
+                    plhs[0] = ServiceDefinitionConstants(o->RR_objecttype->ServiceDefinition_.lock());
+                }
+                else
+                {
+                    std::string type_str = mxToString(prhs[3]);
+                    RR_SHARED_PTR<ServiceDefinition> def =
+                        RobotRaconteurNode::s()->GetPulledServiceType(o, type_str)->ServiceDef();
+                    plhs[0] = ServiceDefinitionConstants(def);
+                }
             }
             else
                 throw InvalidArgumentException("Unknown RobotRaconteur object type");
@@ -7454,6 +7464,26 @@ mxArray* ServiceDefinitionConstants(const boost::shared_ptr<ServiceDefinition>& 
             {
                 ::mexWarnMsgTxt("Error converting constant");
             }
+        }
+
+        if (!c2.data.empty())
+        {
+            obj_consts.push_back(c2);
+        }
+    }
+
+    BOOST_FOREACH (boost::shared_ptr<EnumDefinition>& ee, def->Enums)
+    {
+        obj_constant_type c2;
+        c2.name = (ee)->Name;
+        BOOST_FOREACH (EnumDefinitionValue& e, (ee)->Values)
+        {
+            constant_type c1;
+            c1.name = e.Name;
+            c1.data = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+            int32_t* c1_data = (int32_t*)mxGetData(c1.data);
+            *c1_data = e.Value;
+            c2.data.push_back(c1);
         }
 
         if (!c2.data.empty())
