@@ -12,7 +12,7 @@ url = 'rr+tcp://localhost:52511?service=robot'
 if (len(sys.argv) >= 3):
     url = sys.argv[2]
 
-# Connect to the ABB robot
+# Connect to the robot
 c = RRN.ConnectService(url)
 
 # Get the robot_info data from the driver
