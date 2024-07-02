@@ -7462,6 +7462,26 @@ mxArray* ServiceDefinitionConstants(const boost::shared_ptr<ServiceDefinition>& 
         }
     }
 
+    BOOST_FOREACH (boost::shared_ptr<EnumDefinition>& ee, def->Enums)
+    {
+        obj_constant_type c2;
+        c2.name = (ee)->Name;
+        BOOST_FOREACH (EnumDefinitionValue& e, (ee)->Values)
+        {
+            constant_type c1;
+            c1.name = e.Name;
+            c1.data = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+            int32_t* c1_data = (int32_t*)mxGetData(c1.data);
+            *c1_data = e.Value;
+            c2.data.push_back(c1);
+        }
+
+        if (!c2.data.empty())
+        {
+            obj_consts.push_back(c2);
+        }
+    }
+
     boost::shared_array<const char*> fieldnames(new const char*[base_consts.size() + obj_consts.size()]);
     size_t pos = 0;
     BOOST_FOREACH (constant_type& e, base_consts)
