@@ -5,7 +5,7 @@ Use with either the [robotraconteur_training_sim](https://github.com/robotracont
 or with a Robot Raconteur driver that exposes the standard camera service type such as the
 [robotraconteur_camera_driver](https://github.com/robotraconteur-contrib/robotraconteur_camera_driver).
 By default the examples will connect to the URL for the training
-simulator simulated camera. Pass the URL of the real camera driver.
+simulator simulated camera. Pass the URL of the real camera driver if using a real camera.
 The real URL can be found using the
 [Robot Raconteur Service Browser](https://github.com/robotraconteur/RobotRaconteur_ServiceBrowser).
 
