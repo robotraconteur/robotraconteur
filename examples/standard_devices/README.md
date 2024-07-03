@@ -27,5 +27,5 @@ to the driver for the real device.
 ## Standard Device Examples
 
 - [Robot](robot) - Client examples for the ABB IRB 1200 Robot and UR5e demonstrating standard robot interoperability
-- [Camera](standard_camera) - Client examples for a generic camera
+- [Camera](camera) - Client examples for a generic camera
 - [Reynard the Robot Standard Device](reynard_standard_device) - Example of a Reynard the Robot standard device and clients
