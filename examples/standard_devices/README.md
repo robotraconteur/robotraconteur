@@ -16,8 +16,7 @@ for information about the available companion libraries. Currently there are com
 libraries available for Python, C++, and C\#, but the companion libraries are developed separately from the core
 library so check the directory for up to date information.
 
-The "standard devices" examples demonstrate how to use robot and camera devices as clients, and also
-demonstrate an implementation of the Reynard the Robot service that is implemented as a standard device.
+The "standard devices" examples demonstrate how to use robot and camera devices as clients.
 
 These examples use the
 [robotraconteur_training_sim](https://github.com/robotraconteur-contrib/robotraconteur_training_sim) "multi-robot scene"
@@ -28,4 +27,3 @@ to the driver for the real device.
 
 - [Robot](robot) - Client examples for the ABB IRB 1200 Robot and UR5e demonstrating standard robot interoperability
 - [Camera](camera) - Client examples for a generic camera
-- [Reynard the Robot Standard Device](reynard_standard_device) - Example of a Reynard the Robot standard device and clients
