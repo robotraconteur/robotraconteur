@@ -7,4 +7,4 @@ This directory contains examples for Robot Raconteur.
    examples of how to use Robot Raconteur features.
 * [Simple Webcam](simple_webcam): Examples using the Simple Webcam service, including examples of how to use Robot Raconteur features.
 * [iRobot Create](irobot_create): Examples for the original iRobot Create robot, with services using the serial port OI protocol.
-* [Standard Devices](standard_devices): Examples using standardized device drivers and the Training Simulator
+* [Standard Devices](standard_devices): Examples using standardized device drivers and the Training Simulator.
