@@ -18,7 +18,7 @@ for instructions to set up the Matlab environment.
 
 Examples:
 
-- [robot_client_jog_freespace.m] - Use "jog" mode to move the robot
-- [robot_client_position_command.m] - Use streaming "position command" to directly control the robot in real-time
-- [robot_client_trajectory.m] - Send a trajectory to the robot to be executed in "trajectory mode". Change the robot_type
+- `robot_client_jog_freespace.m` - Use "jog" mode to move the robot
+- `robot_client_position_command.m` - Use streaming "position command" to directly control the robot in real-time
+- `robot_client_trajectory.m` - Send a trajectory to the robot to be executed in "trajectory mode". Change the robot_type
   variable to `abb` or `ur` to specify which robot is being used.

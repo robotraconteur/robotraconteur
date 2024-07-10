@@ -20,7 +20,7 @@ python -m pip install --user robotraconteurcompanion
 
 Examples:
 
-- [camera_client_capture_frame.py] - Capture and display a single image frame
-- [camera_client_capture_frame_compressed.py] - Capture and display a lossless compressed image frame
-- [camera_client_image.py] - Display streaming images from camera (full quality)
-- [camera_client_image_preview.py] - Display streaming preview stream, a reduced quality/bandwidth MJPEG stream
+- `camera_client_capture_frame.py` - Capture and display a single image frame
+- `camera_client_capture_frame_compressed.py` - Capture and display a lossless compressed image frame
+- `camera_client_image.py` - Display streaming images from camera (full quality)
+- `camera_client_image_preview.py` - Display streaming preview stream, a reduced quality/bandwidth MJPEG stream

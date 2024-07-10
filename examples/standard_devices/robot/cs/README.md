@@ -18,7 +18,7 @@ for instructions to set up the C\# environment.
 
 Examples:
 
-- [robot_client_jog_freespace.cs] - Use "jog" mode to move the robot
-- [robot_client_position_command.cs] - Use streaming "position command" to directly control the robot in real-time
-- [robot_client_trajectory.cs] - Send a trajectory to the robot to be executed in "trajectory mode". Pass `abb` or `ur`
+- `robot_client_jog_freespace.cs` - Use "jog" mode to move the robot
+- `robot_client_position_command.cs` - Use streaming "position command" to directly control the robot in real-time
+- `robot_client_trajectory.cs` - Send a trajectory to the robot to be executed in "trajectory mode". Pass `abb` or `ur`
   as first parameter to specify which robot is being used. The optional robot URL is the second parameter.

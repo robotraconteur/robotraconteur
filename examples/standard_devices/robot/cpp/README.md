@@ -15,9 +15,9 @@ Check the example for details.
 
 Examples:
 
-- [robot_client_jog_freespace.cpp] - Use "jog" mode to move the robot
-- [robot_client_position_command.cpp] - Use streaming "position command" to directly control the robot in real-time
-- [robot_client_trajectory.cpp] - Send a trajectory to the robot to be executed in "trajectory mode". Pass `abb` or `ur`
+- `robot_client_jog_freespace.cpp` - Use "jog" mode to move the robot
+- `robot_client_position_command.cpp` - Use streaming "position command" to directly control the robot in real-time
+- `robot_client_trajectory.cpp` - Send a trajectory to the robot to be executed in "trajectory mode". Pass `abb` or `ur`
   as first parameter to specify which robot is being used. The optional robot URL is the second parameter.
 
 ## Setup

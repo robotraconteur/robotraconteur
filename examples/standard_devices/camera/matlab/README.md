@@ -14,4 +14,4 @@ for instructions to set up the Matlab environment.
 
 Examples:
 
-- [camera_client_capture_frame.m] - Capture and display a single image frame
+- `camera_client_capture_frame.m` - Capture and display a single image frame

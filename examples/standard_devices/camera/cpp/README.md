@@ -11,7 +11,7 @@ The real URL can be found using the
 
 Examples:
 
-- [camera_client_capture_frame.cpp] - Capture and display a single image frame
+- `camera_client_capture_frame.cpp` - Capture and display a single image frame
 
 ## Setup
 
