@@ -27,3 +27,33 @@ to the driver for the real device.
 
 - [Robot](robot) - Client examples for the ABB IRB 1200 Robot and UR5e demonstrating standard robot interoperability
 - [Camera](camera) - Client examples for a generic camera
+
+## Drivers
+
+The Robot Raconteur ecosystem contains numerous open-source drivers for various robots, sensors, and other devices. These
+drivers are developed in mostly Python, C++, and C\#. These open-source drivers can be used as examples
+for how to develop full-featured drivers See the
+[Robot Raconteur Directory](https://github.com/robotraconteur/robotraconteur-directory) for a full
+list of the various drivers available.
+
+A short list of drivers to use as examples:
+
+- [URRobotRaconteurDriver](https://github.com/robotraconteur-contrib/URRobotRaconteurDriver) -  A driver for UR
+   robots using RTDE developed in C\#.
+- [ABBRobotRaconteurDriver](https://github.com/robotraconteur-contrib/ABBRobotRaconteurDriver) - A driver for ABB
+    IRC5 based robots using EGM developed in C\#.
+- [robotraconteur_camera_driver](https://github.com/robotraconteur-contrib/robotraconteur_camera_driver) - A
+    camera driver for cameras using the OpenCV video capture feature developed in Python.
+- [robotraconteur_joystick_driver](https://github.com/robotraconteur-contrib/robotraconteur_joystick_driver) - A
+     joystick/gamepad driver developed in C++
+- [tesseract_robotraconteur](https://github.com/tesseract-robotics/tesseract_robotraconteur) - A Robot Raconteur
+     service for the Tesseract robot motion planner
+
+Another widely used driver that is not currently standardized provide "motion program" control of robots. These
+"motion programs" execute a list of motion commands sent to the robot, usually using the built-in controller
+to execute the motions.
+
+Motion program drivers:
+
+- [abb_motion_program_exec](https://github.com/rpirobotics/abb_motion_program_exec) - Execute motion programs on
+    ABB IRC5 based robots
