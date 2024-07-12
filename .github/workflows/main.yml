@@ -28,6 +28,7 @@ env:
     boost-intrusive boost-lexical-cast boost-locale boost-random boost-range boost-regex
     boost-scope-exit boost-signals2 boost-thread boost-tuple boost-unordered
     boost-utility boost-uuid boost-program-options gtest openssl
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 
 
