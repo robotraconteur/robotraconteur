@@ -219,8 +219,6 @@ WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& no
         this->node = node;
     }
     this->period = boost::posix_time::microseconds(boost::lexical_cast<int64_t>(1000000.0 / frequency));
-    start_time = node->NowNodeTime();
-    last_time = node->NowNodeTime();
 #ifdef ROBOTRACONTEUR_WINDOWS
     HANDLE timer = CreateWaitableTimerExA(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
     if (timer == NULL)
@@ -241,6 +239,17 @@ WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& no
 
 void WallRate::Sleep()
 {
+    if (start_time.is_not_a_date_time())
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node2 = this->node.lock();
+        if (!node2)
+        {
+            throw InvalidOperationException("Node released");
+        }
+        boost::posix_time::ptime p4 = node2->NowNodeTime();
+        start_time = p4;
+        last_time = p4;
+    }
     boost::posix_time::ptime p2 = last_time + period;
 #ifdef ROBOTRACONTEUR_WINDOWS
     RR_SHARED_PTR<RobotRaconteurNode> node1 = this->node.lock();
