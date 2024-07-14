@@ -20,6 +20,12 @@
 #include "RobotRaconteur/AutoResetEvent.h"
 #include "RobotRaconteur/RobotRaconteurNode.h"
 
+#ifdef ROBOTRACONTEUR_WINDOWS
+#ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
+#define CREATE_WAITABLE_TIMER_HIGH_RESOLUTION 0x00000002
+#endif
+#endif
+
 namespace RobotRaconteur
 {
 
@@ -200,7 +206,9 @@ void WallTimer::Clear()
 }
 
 WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node)
+#ifndef ROBOTRACONTEUR_WINDOWS
     : timer(node->GetThreadPool()->get_io_context())
+#endif
 {
     if (!node)
     {
@@ -213,13 +221,53 @@ WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& no
     this->period = boost::posix_time::microseconds(boost::lexical_cast<int64_t>(1000000.0 / frequency));
     start_time = node->NowNodeTime();
     last_time = node->NowNodeTime();
+#ifdef ROBOTRACONTEUR_WINDOWS
+    HANDLE timer = CreateWaitableTimerExA(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
+    if (timer == NULL)
+    {
+        // Try again without high resolution
+        timer = CreateWaitableTimerExA(NULL, NULL, 0, TIMER_ALL_ACCESS);
+    }
+
+    if (timer == NULL)
+    {
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1, "Could not create waitable timer");
+        throw SystemResourceException("Could not create waitable timer");
+    }
+
+    timer_handle = boost::shared_ptr<void>(timer, CloseHandle);
+#endif
 }
 
 void WallRate::Sleep()
 {
     boost::posix_time::ptime p2 = last_time + period;
+#ifdef ROBOTRACONTEUR_WINDOWS
+    RR_SHARED_PTR<RobotRaconteurNode> node1 = this->node.lock();
+    if (!node1)
+    {
+        throw InvalidOperationException("Node released");
+    }
+    boost::posix_time::ptime p3 = node1->NowNodeTime();
+    boost::posix_time::time_duration d = p2 - p3;
+    if (!d.is_negative())
+    {
+        HANDLE timer = timer_handle.get();
+        LARGE_INTEGER due_time;
+        memset(&due_time, 0, sizeof(due_time));
+        due_time.QuadPart = -d.total_microseconds() * 10;
+        if (SetWaitableTimer(timer, &due_time, 0, NULL, NULL, FALSE) != TRUE)
+        {
+            ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1, "Could not set waitable timer for WallRate::Sleep()");
+            throw SystemResourceException("Could not set waitable timer for WallRate::Sleep()");
+        }
+        WaitForSingleObject(timer, INFINITE);
+    }
+#else
+    // Use boost::asio::deadline_timer
     timer.expires_at(p2);
     timer.wait();
+#endif
     last_time = p2;
 }
 } // namespace RobotRaconteur
