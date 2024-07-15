@@ -20,6 +20,19 @@
 #include "RobotRaconteur/AutoResetEvent.h"
 #include "RobotRaconteur/RobotRaconteurNode.h"
 
+#ifdef ROBOTRACONTEUR_WINDOWS
+#ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
+#define CREATE_WAITABLE_TIMER_HIGH_RESOLUTION 0x00000002
+#endif
+#endif
+
+#ifdef ROBOTRACONTEUR_LINUX
+// Taken from clock_nanosleep man page
+#if _XOPEN_SOURCE >= 600 || _POSIX_C_SOURCE >= 200112L
+#define ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP
+#endif
+#endif
+
 namespace RobotRaconteur
 {
 
@@ -199,9 +212,15 @@ void WallTimer::Clear()
     handler.clear();
 }
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node)
+#ifndef ROBOTRACONTEUR_WINDOWS
     : timer(node->GetThreadPool()->get_io_context())
+#endif
 {
+#ifdef ROBOTRACONTEUR_LINUX
+    memset(&ts, 0, sizeof(ts));
+#endif
     if (!node)
     {
         this->node = RobotRaconteurNode::sp();
@@ -211,15 +230,89 @@ WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& no
         this->node = node;
     }
     this->period = boost::posix_time::microseconds(boost::lexical_cast<int64_t>(1000000.0 / frequency));
-    start_time = node->NowNodeTime();
-    last_time = node->NowNodeTime();
+#ifdef ROBOTRACONTEUR_WINDOWS
+    HANDLE timer = CreateWaitableTimerExA(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
+    if (timer == NULL)
+    {
+        // Try again without high resolution
+        timer = CreateWaitableTimerExA(NULL, NULL, 0, TIMER_ALL_ACCESS);
+    }
+
+    if (timer == NULL)
+    {
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1, "Could not create waitable timer");
+        throw SystemResourceException("Could not create waitable timer");
+    }
+
+    timer_handle = boost::shared_ptr<void>(timer, CloseHandle);
+#endif
 }
+// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
 void WallRate::Sleep()
 {
+    if (start_time.is_not_a_date_time())
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node2 = this->node.lock();
+        if (!node2)
+        {
+            throw InvalidOperationException("Node released");
+        }
+        boost::posix_time::ptime p4 = node2->NowNodeTime();
+        start_time = p4;
+        last_time = p4;
+#ifdef ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP
+        if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0)
+        {
+            // This is very unlikely to happen
+            ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1,
+                                               "Could not get monotonic clock time for WallRate::Sleep()");
+            throw SystemResourceException("Could not get monotonic clock time");
+        }
+#endif
+    }
+#ifndef ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP
     boost::posix_time::ptime p2 = last_time + period;
-    timer.expires_at(p2);
+    RR_SHARED_PTR<RobotRaconteurNode> node1 = this->node.lock();
+    if (!node1)
+    {
+        throw InvalidOperationException("Node released");
+    }
+    boost::posix_time::ptime p3 = node1->NowNodeTime();
+    boost::posix_time::time_duration d = p2 - p3;
+#endif
+#ifdef ROBOTRACONTEUR_WINDOWS
+    if (!d.is_negative())
+    {
+        HANDLE timer = timer_handle.get();
+        LARGE_INTEGER due_time;
+        memset(&due_time, 0, sizeof(due_time));
+        due_time.QuadPart = -d.total_microseconds() * 10;
+        if (SetWaitableTimer(timer, &due_time, 0, NULL, NULL, FALSE) != TRUE)
+        {
+            ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1, "Could not set waitable timer for WallRate::Sleep()");
+            throw SystemResourceException("Could not set waitable timer for WallRate::Sleep()");
+        }
+        WaitForSingleObject(timer, INFINITE);
+    }
+    last_time = p2;
+#elif defined(ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP)
+
+    while (clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL) != 0)
+        ;
+
+    // Increment the timespec by the period
+    ts.tv_nsec += period.total_nanoseconds();
+    while (ts.tv_nsec >= 1000000000)
+    {
+        ts.tv_nsec -= 1000000000;
+        ts.tv_sec++;
+    }
+#else
+    // Use boost::asio::deadline_timer
+    timer.expires_from_now(d);
     timer.wait();
     last_time = p2;
+#endif
 }
 } // namespace RobotRaconteur
