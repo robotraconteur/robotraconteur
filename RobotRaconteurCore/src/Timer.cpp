@@ -257,11 +257,12 @@ void WallRate::Sleep()
         start_time = p4;
         last_time = p4;
 #ifdef ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP
-        if(clock_gettime(CLOCK_MONOTONIC, &ts)<0)
+        if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0)
         {
             // This is very unlikely to happen
-            ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1, "Could not get monotonic clock time for WallRate::Sleep()");
-            throw SystemResourceException("Could not get monotonic clock time");        
+            ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1,
+                                               "Could not get monotonic clock time for WallRate::Sleep()");
+            throw SystemResourceException("Could not get monotonic clock time");
         }
 #endif
     }
@@ -291,11 +292,10 @@ void WallRate::Sleep()
     }
     last_time = p2;
 #elif defined(ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP)
-    
-    
+
     while (clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL) != 0)
         ;
-    
+
     // Increment the timespec by the period
     ts.tv_nsec += period.total_nanoseconds();
     while (ts.tv_nsec >= 1000000000)
