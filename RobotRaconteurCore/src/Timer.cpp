@@ -256,12 +256,14 @@ void WallRate::Sleep()
         boost::posix_time::ptime p4 = node2->NowNodeTime();
         start_time = p4;
         last_time = p4;
+#ifdef ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP
         if(clock_gettime(CLOCK_MONOTONIC, &ts)<0)
         {
             // This is very unlikely to happen
             ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1, "Could not get monotonic clock time for WallRate::Sleep()");
             throw SystemResourceException("Could not get monotonic clock time");        
         }
+#endif
     }
 #ifndef ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP
     boost::posix_time::ptime p2 = last_time + period;
