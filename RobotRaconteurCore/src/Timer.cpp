@@ -212,6 +212,7 @@ void WallTimer::Clear()
     handler.clear();
 }
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node)
 #ifndef ROBOTRACONTEUR_WINDOWS
     : timer(node->GetThreadPool()->get_io_context())
@@ -246,6 +247,7 @@ WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& no
     timer_handle = boost::shared_ptr<void>(timer, CloseHandle);
 #endif
 }
+// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
 void WallRate::Sleep()
 {
