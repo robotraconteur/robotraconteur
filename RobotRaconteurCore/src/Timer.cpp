@@ -217,6 +217,10 @@ WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& no
     : timer(node->GetThreadPool()->get_io_context())
 #endif
 {
+#ifdef ROBOTRACONTEUR_LINUX
+    ts.tv_sec = 0;
+    ts.tv_nsec = 0;
+#endif
     if (!node)
     {
         this->node = RobotRaconteurNode::sp();
