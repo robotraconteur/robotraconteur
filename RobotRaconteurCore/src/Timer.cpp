@@ -26,6 +26,13 @@
 #endif
 #endif
 
+#ifdef ROBOTRACONTEUR_LINUX
+// Taken from clock_nanosleep man page
+#if _XOPEN_SOURCE >= 600 || _POSIX_C_SOURCE >= 200112L
+#define ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP
+#endif
+#endif
+
 namespace RobotRaconteur
 {
 
@@ -249,9 +256,15 @@ void WallRate::Sleep()
         boost::posix_time::ptime p4 = node2->NowNodeTime();
         start_time = p4;
         last_time = p4;
+        if(clock_gettime(CLOCK_MONOTONIC, &ts)<0)
+        {
+            // This is very unlikely to happen
+            ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1, "Could not get monotonic clock time for WallRate::Sleep()");
+            throw SystemResourceException("Could not get monotonic clock time");        
+        }
     }
+#ifndef ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP
     boost::posix_time::ptime p2 = last_time + period;
-#ifdef ROBOTRACONTEUR_WINDOWS
     RR_SHARED_PTR<RobotRaconteurNode> node1 = this->node.lock();
     if (!node1)
     {
@@ -259,6 +272,8 @@ void WallRate::Sleep()
     }
     boost::posix_time::ptime p3 = node1->NowNodeTime();
     boost::posix_time::time_duration d = p2 - p3;
+#endif
+#ifdef ROBOTRACONTEUR_WINDOWS
     if (!d.is_negative())
     {
         HANDLE timer = timer_handle.get();
@@ -272,11 +287,25 @@ void WallRate::Sleep()
         }
         WaitForSingleObject(timer, INFINITE);
     }
+    last_time = p2;
+#elif defined(ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP)
+    
+    
+    while (clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL) != 0)
+        ;
+    
+    // Increment the timespec by the period
+    ts.tv_nsec += period.total_nanoseconds();
+    while (ts.tv_nsec >= 1000000000)
+    {
+        ts.tv_nsec -= 1000000000;
+        ts.tv_sec++;
+    }
 #else
     // Use boost::asio::deadline_timer
-    timer.expires_at(p2);
+    timer.expires_from_now(d);
     timer.wait();
-#endif
     last_time = p2;
+#endif
 }
 } // namespace RobotRaconteur

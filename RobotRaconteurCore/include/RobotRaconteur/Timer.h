@@ -158,6 +158,9 @@ class ROBOTRACONTEUR_CORE_API WallRate : public Rate
 #ifdef ROBOTRACONTEUR_WINDOWS
     boost::shared_ptr<void> timer_handle;
 #endif
+#ifdef ROBOTRACONTEUR_LINUX
+    timespec ts;
+#endif
 
   public:
     WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node = RR_SHARED_PTR<RobotRaconteurNode>());
