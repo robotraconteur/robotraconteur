@@ -218,8 +218,7 @@ WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& no
 #endif
 {
 #ifdef ROBOTRACONTEUR_LINUX
-    ts.tv_sec = 0;
-    ts.tv_nsec = 0;
+    memset(&ts, 0, sizeof(ts));
 #endif
     if (!node)
     {
