@@ -315,4 +315,56 @@ void WallRate::Sleep()
     last_time = p2;
 #endif
 }
+
+void HighResolutionSleep(const boost::posix_time::time_duration& duration)
+{
+#ifdef ROBOTRACONTEUR_WINDOWS
+    HANDLE timer = CreateWaitableTimerExA(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
+    if (timer == NULL)
+    {
+        // Try again without high resolution
+        timer = CreateWaitableTimerExA(NULL, NULL, 0, TIMER_ALL_ACCESS);
+    }
+
+    if (timer == NULL)
+    {
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(RobotRaconteurNode::weak_sp(), Node, -1, "Could not create waitable timer");
+        throw SystemResourceException("Could not create waitable timer");
+    }
+
+    LARGE_INTEGER due_time;
+    memset(&due_time, 0, sizeof(due_time));
+    due_time.QuadPart = -duration.total_microseconds() * 10;
+    if (SetWaitableTimer(timer, &due_time, 0, NULL, NULL, FALSE) != TRUE)
+    {
+        CloseHandle(timer);
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(RobotRaconteurNode::weak_sp(), Node, -1,
+                                           "Could not set waitable timer for HighResolutionSleep()");
+        throw SystemResourceException("Could not set waitable timer for HighResolutionSleep()");
+    }
+    WaitForSingleObject(timer, INFINITE);
+    CloseHandle(timer);
+#elif defined(ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP)
+    timespec ts;
+    memset(&ts, 0, sizeof(ts));
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0)
+    {
+        // This is very unlikely to happen
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1,
+                                           "Could not get monotonic clock time for HighResolutionSleep()");
+        throw SystemResourceException("Could not get monotonic clock time");
+    }
+
+    while (clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL) != 0)
+        ;
+
+#else
+    // Use select for high resolution sleep
+    timeval tv;
+    tv.tv_sec = duration.total_seconds();
+    tv.tv_usec = duration.total_microseconds() % 1000000;
+    select(0, NULL, NULL, NULL, &tv);
+#endif
+}
+
 } // namespace RobotRaconteur

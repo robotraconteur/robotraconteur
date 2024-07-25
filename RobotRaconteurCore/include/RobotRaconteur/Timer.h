@@ -229,4 +229,14 @@ using TimerPtr = RR_SHARED_PTR<Timer>;
 using RatePtr = RR_SHARED_PTR<Rate>;
 #endif
 
+/**
+ * @brief Sleep using high resolution timer provided by the OS
+ *
+ * Prefer to use RobotRaconteurNode::Sleep() instead which will use simulated time
+ * if active.
+ *
+ * @param duration The duration to sleep
+ */
+void HighResolutionSleep(const boost::posix_time::time_duration& duration);
+
 } // namespace RobotRaconteur
