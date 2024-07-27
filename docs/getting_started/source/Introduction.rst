@@ -147,6 +147,8 @@ Robot Raconteur has these additional differentiating features:
 * Core library package “robotraconteur” available in ROS Noetic and ROS Humble
 * Robot Raconteur ↔ ROS 2 Bridge: https://github.com/robotraconteur-contrib/robotraconteur_ros2_bridge
 
+.. _client-service-model:
+
 Client-Service Object-Oriented Model
 ====================================
 
@@ -332,8 +334,11 @@ Robot Raconteur. Simulated device drivers interact with the plugin to simulate d
 Examples
 ========
 
-The rest of this Getting Started manual contains examples of using Robot Raconteur. Refer to the documentation for
-each specific library and computer language for detailed reference beyond what is offered in the examples.
+The rest of this Getting Started manual contains examples of using Robot Raconteur. This guide covers Python,
+MATLAB, and LabView examples.
+Refer to the documentation for
+each specific library and computer language for detailed reference beyond what is offered in the examples, including
+the other supported computer languages.
 
 .. note::
     Leave a message on the `Discussion <https://github.com/robotraconteur/robotraconteur/discussions>`_

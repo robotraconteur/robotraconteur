@@ -10,7 +10,10 @@ Welcome to Getting Started with Robot Raconteur!
    :width: 600
 
 Welcome to the Getting Started with Robot Raconteur documentation! This guide will help ease you in to using
-Robot Raconteur with a series of progressively more sophisticated examples. These examples are not intended to replace
+Robot Raconteur with a series of progressively more sophisticated examples. The getting starting
+guide focuses on client usage, since service development is typically carried out by more experienced users.
+
+These examples are not intended to replace
 the full documentation available for Robot Raconteur. See the
 `Robot Raconteur Documentation Wiki Page <https://github.com/robotraconteur/robotraconteur/wiki/Documentation>`_ for
 an up-to-date directory of available documentation.
@@ -22,6 +25,7 @@ an up-to-date directory of available documentation.
    Quickstart
    Introduction
    MeetReynard
+   CreatingConnections
 
 .. toctree::
    :maxdepth: 4
@@ -39,6 +43,7 @@ an up-to-date directory of available documentation.
    :maxdepth: 4
    :caption: Other Documentation:
 
+   Python-Based Tutorial <https://robotraconteur.github.io/robotraconteur/doc/core/latest/python/tutorial/Introduction.html>
    Robot Raconteur C++ <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp>
    Robot Raconteur Python <https://robotraconteur.github.io/robotraconteur/doc/core/latest/python>
    Robot Raconteur C# <https://robotraconteur.github.io/robotraconteur/doc/core/latest/net>
