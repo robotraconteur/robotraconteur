@@ -3,37 +3,68 @@
 The following example code shows the code contained in the "experimental.create2.robdef" file.  It is a *service definition*.  Service definition files are plain text files that describe the *object types* and *value types* (data types).  Object types are *references*, meaning that on the client they are simply an advanced reference (sometimes called a "proxy") to the service.  Value types are the actual data that are transmitted between client and service. They are always passed by *value*, meaning that they are copied between the client or service when transmitted.
 
     #Service to provide sample interface to the iRobot Create
-    service experimental.create2
+    #This example is for the original iRobot Create using the serial Open Interface (OI) protocol
+    service experimental.create3
 
     stdver 0.10
 
-    struct SensorPacket
-        field uint8 ID
-        field uint8[] Data
+    enum CreateStateFlags
+        unknown = 0,
+        bump_right = 0x1,
+        bump_left = 0x2,
+        wheel_drop_right = 0x4,
+        wheel_drop_left = 0x8,
+        wheel_drop_caster = 0x10,
+        wall_sensor = 0x20,
+        cliff_left = 0x40,
+        cliff_front_left = 0x80,
+        cliff_front_right = 0x100,
+        cliff_right = 0x200,
+        virtual_wall = 0x400,
+        play_button = 0x800,
+        advance_button = 0x1000,
+        error = 0x800000
+    end
+
+    struct CreateState
+        field double time
+        field uint32 create_state_flags
+        field double velocity
+        field double radius
+        field double right_wheel_velocity
+        field double left_wheel_velocity
+        field double distance_traveled
+        field double angle_traveled
+        field double battery_charge
+        field double battery_capacity
     end
 
     object Create
-        constant int16 DRIVE_STRAIGHT 32767
-        constant int16 SPIN_CLOCKWISE -1
-        constant int16 SPIN_COUNTERCLOCKWISE 1
+        constant double DRIVE_STRAIGHT 32.767
+        constant double SPIN_CLOCKWISE -1e-3
+        constant double SPIN_COUNTERCLOCKWISE 1e-3
 
-        function void Drive(int16 velocity, int16 radius)
+        function void drive(double velocity, double radius)
+        function void drive_direct(double right_wheel_velocity, double left_wheel_velocity)
+        function void stop()
+        function void setf_leds(bool play, bool advance)
 
-        function void StartStreaming()
-        function void StopStreaming()
+        property double distance_traveled [readonly]
+        property double angle_traveled [readonly]
+        property uint8 bumpers [readonly]
 
-        property int32 DistanceTraveled [readonly]
-        property int32 AngleTraveled [readonly]
-        property uint8 Bumpers [readonly]
+        event bump()
 
-        event Bump()
+        wire CreateState create_state [readonly]
 
-        wire SensorPacket packets [readonly]
-
-        callback uint8[] play_callback(int32 DistanceTraveled, int32 AngleTraveled)
+        # Callback to be called when the play button is pressed
+        # claim_play_callback() will assign the current client as the target for the callback
+        # Practical implementations will likely want to use a more sophisticated mechanism to assign the callback
+        function void claim_play_callback()
+        callback uint8[] play_callback(double distance_traveled, double angle_traveled)
     end
 
-The first line in the service definition contains the keyword `service` followed by the name of the service type. The names of services follow similar rules to Java package names. For experimental software, the name should be prefixed with `experimental`, for example `experimental.create2`.  For hobbyists and standalone software, the name should be prefixed with `community` and your username, for example `community.myusername.create`, where `myusername` is replaced with your robotraconteur.com username.  If a domain name for an organization is available it can be used in the same way as Java packages, for example `com.wasontech.examples.create2`. Unless you have valid ownership of a domain, `experimenta` or `community` should be used.
+The first line in the service definition contains the keyword `service` followed by the name of the service type. The names of services follow similar rules to Java package names. For experimental software, the name should be prefixed with `experimental`, for example `experimental.create3`.  For hobbyists and standalone software, the name should be prefixed with `community` and your username, for example `community.myusername.create`, where `myusername` is replaced with your robotraconteur.com username.  If a domain name for an organization is available it can be used in the same way as Java packages, for example `com.wasontech.examples.create3`. Unless you have valid ownership of a domain, `experimental` or `community` should be used.
 
 Next in the service there should be `stdver` and the minimum version of Robot Raconteur required to access the service.  For now this should be `0.10`.  Example `createinterface` does not show it, but there can also be one or more `import` to reference structures and objects in other service definitions. The rest of service definition defines the *structures* and *objects* of the service definition. (Lines starting with `#` are comments.)
 
@@ -161,7 +192,7 @@ In this example, `a` and `b` are sent with the function call, and `return` is re
 
 The last form takes a parameter each iteration.
 
-    function void accumulateNumbers(double{generator} b)}
+    function void accumulateNumbers(double{generator} b)
 
 Note that the generator return must be `void` or a generator type. Each call to `Next` will receive a parameter.
 
