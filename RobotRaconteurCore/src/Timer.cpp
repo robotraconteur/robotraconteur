@@ -345,7 +345,7 @@ void HighResolutionSleep(const boost::posix_time::time_duration& duration)
     WaitForSingleObject(timer, INFINITE);
     CloseHandle(timer);
 #elif defined(ROBOTRACONTEUR_USE_CLOCK_NANOSLEEP)
-    timespec ts;
+    timespec ts; // NOLINT(cppcoreguidelines-pro-type-member-init)
     memset(&ts, 0, sizeof(ts));
     if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0)
     {
