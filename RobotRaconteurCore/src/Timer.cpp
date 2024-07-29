@@ -350,9 +350,16 @@ void HighResolutionSleep(const boost::posix_time::time_duration& duration)
     if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0)
     {
         // This is very unlikely to happen
-        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, Node, -1,
+        ROBOTRACONTEUR_LOG_ERROR_COMPONENT(RobotRaconteurNode::weak_sp(), Node, -1,
                                            "Could not get monotonic clock time for HighResolutionSleep()");
         throw SystemResourceException("Could not get monotonic clock time");
+    }
+
+    ts.tv_nsec += duration.total_nanoseconds();
+    while (ts.tv_nsec >= 1000000000)
+    {
+        ts.tv_nsec -= 1000000000;
+        ts.tv_sec++;
     }
 
     while (clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL) != 0)
