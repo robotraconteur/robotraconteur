@@ -579,7 +579,7 @@ jobs:
     - name: archive out
       uses: actions/upload-artifact@v3
       with:
-        name: 'out-osx'
+        name: 'out-osx-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
@@ -1408,7 +1408,7 @@ jobs:
     - name: Download distfiles out-osx
       uses: actions/download-artifact@v2
       with:
-        path: artifacts/out-osx
+        path: artifacts/out-osx-x64
         name: out-osx
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
