@@ -479,10 +479,12 @@ jobs:
           vcpkg_triplet: x64-osx-dynamic-release
           arch: x64
           homebrew_root: /usr/local
+          py-version: '3.8'
         - runner: macos-14
           vcpkg_triplet: arm64-osx-dynamic-release
           arch: arm64
           homebrew_root: /opt/homebrew
+          py-version: '3.10'
     runs-on: ${{ matrix.config.runner }}
     env:
       LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
@@ -496,11 +498,10 @@ jobs:
       run: |
         brew install swig boost openssl googletest
     - uses: actions/setup-python@v4
-      if: ${{ matrix.config.arch == 'x64' }}
       id: python3
       with:
-        python-version: '3.8'
-        architecture: x64
+        python-version: ${{ matrix.config.py-version }}
+        architecture: ${{ matrix.config.arch}}
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
