@@ -1616,7 +1616,7 @@ jobs:
         - noetic
         - humble
         - iron
-        - jazy
+        - jazzy
     steps:
     - uses: actions/checkout@v3
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
@@ -1643,7 +1643,7 @@ jobs:
         ROS_DISTRO:
         - humble
         - iron
-        - jazy
+        - jazzy
     steps:
     - uses: actions/checkout@v3
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
