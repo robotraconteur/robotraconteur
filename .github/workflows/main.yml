@@ -1408,8 +1408,8 @@ jobs:
     - name: Download distfiles out-osx
       uses: actions/download-artifact@v2
       with:
-        path: artifacts/out-osx-x64
-        name: out-osx
+        path: artifacts/out-osx
+        name: out-osx-x64
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
         python_version: 3.7
@@ -1430,6 +1430,10 @@ jobs:
       with:
         python_version: "3.11"
         wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.12"
+        wheel_filename: RobotRaconteur-*-cp312-cp312-macosx*x86_64.whl
     # - name: .net test
     #   uses: ./robotraconteur/test/dist/net/action/osx
 
