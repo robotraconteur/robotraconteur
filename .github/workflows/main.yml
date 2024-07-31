@@ -1395,7 +1395,19 @@ jobs:
   distfiles-test-osx:
     needs:
     - build-dist
-    runs-on: macos-12
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - runner: macos-12
+          vcpkg_triplet: x64-osx-dynamic-release
+          arch: x64
+          wheel_arch: x86_64
+        - runner: macos-14
+          vcpkg_triplet: arm64-osx-dynamic-release
+          arch: arm64
+          wheel_arch: arm64
+    runs-on: ${{ matrix.config.runner }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -1409,31 +1421,40 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         path: artifacts/out-osx
-        name: out-osx-x64
+        name: out-osx-${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
+      if: ${{ matrix.config.arch == 'x64' }}
       with:
         python_version: 3.7
-        wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
+      if: ${{ matrix.config.arch == 'x64' }}
       with:
         python_version: 3.8
-        wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
+      if: ${{ matrix.config.arch == 'x64' }}
       with:
         python_version: 3.9
-        wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
         python_version: "3.10"
-        wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
         python_version: "3.11"
-        wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
         python_version: "3.12"
-        wheel_filename: RobotRaconteur-*-cp312-cp312-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp312-cp312-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     # - name: .net test
     #   uses: ./robotraconteur/test/dist/net/action/osx
 
