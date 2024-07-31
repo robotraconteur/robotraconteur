@@ -486,7 +486,7 @@ jobs:
           arch: arm64
           homebrew_root: /opt/homebrew
           py-version: '3.10'
-          cmake-args: -DCMAKE_OSX_ARCHITECTURES=arm64
+          cmake-args: -DCMAKE_OSX_ARCHITECTURES=arm64 -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
     runs-on: ${{ matrix.config.runner }}
     env:
       LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
