@@ -1606,3 +1606,58 @@ jobs:
       working-directory: build2_companion
       run: |
         ctest -C Release --output-on-failure
+  build-ros:
+    needs:
+    - build-ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ROS_DISTRO:
+        - noetic
+        - humble
+        - iron
+        - jazy
+    steps:
+    - uses: actions/checkout@v3
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+    - name: Download CI artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/out-ubuntu
+        name: out-ubuntu-20.04
+    - run: |
+        mv artifacts/out-ubuntu/generated_src .
+        rm -r artifacts
+    - name: ros industrial-ci
+      uses: ros-industrial/industrial_ci@master
+      env:
+        ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
+        ROS_REPO: main
+
+  build-ros-prerelease:
+    needs:
+    - build-ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - iron
+        - jazy
+    steps:
+    - uses: actions/checkout@v3
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+    - name: Download CI artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts/out-ubuntu
+        name: out-ubuntu-20.04
+    - run: |
+        mv artifacts/out-ubuntu/generated_src .
+        rm -r artifacts
+    - name: ros industrial-ci
+      uses: ros-industrial/industrial_ci@master
+      env:
+        ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
+        ROS_REPO: main
+        PRERELEASE: true
