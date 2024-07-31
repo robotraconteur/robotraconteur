@@ -471,9 +471,21 @@ jobs:
 
   build-osx:
 
-    runs-on: macos-12
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - runner: macos-12
+          vcpkg_triplet: x64-osx-dynamic-release
+          arch: x64
+          homebrew_root: /usr/local
+        - runner: macos-14
+          vcpkg_triplet: arm64-osx-dynamic-release
+          arch: arm64
+          homebrew_root: /opt/homebrew
+    runs-on: ${{ matrix.config.runner }}
     env:
-      LIBRARY_PATH: /usr/local/opt/icu4c/lib
+      LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
     steps:
     - uses: actions/checkout@v3
       with:
@@ -484,6 +496,7 @@ jobs:
       run: |
         brew install swig boost openssl googletest
     - uses: actions/setup-python@v4
+      if: ${{ matrix.config.arch == 'x64' }}
       id: python3
       with:
         python-version: '3.8'
@@ -496,7 +509,7 @@ jobs:
       id: cache-build
       uses: hendrikmuhs/ccache-action@v1.2.11
       with:
-        key: ${{ runner.os }}-build-main-ccache
+        key: ${{ runner.os }}-build-main-ccache-${{ matrix.config.arch }}
     - name: cmake cache args
       id: cmake-cache-args
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -508,7 +521,7 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release
         -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON
-        -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
+        -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=${{ matrix.config.homebrew_root }}/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
@@ -524,35 +537,38 @@ jobs:
       run: |
         ctest . -C Release --output-on-failure
     - name: python 3.7
+      if: ${{ matrix.config.arch == 'x64' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.7
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.8
+      if: ${{ matrix.config.arch == 'x64' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.8
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.9
+      if: ${{ matrix.config.arch == 'x64' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.9
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.10
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.10"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.11
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.11"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.12
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.12"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
