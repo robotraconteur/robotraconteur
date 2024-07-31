@@ -749,7 +749,7 @@ build_winxp_x86:
   - cd ${CI_PROJECT_DIR}
   - rm -rf build2
 
-build_linux_arm64_python_wheels:
+build_linux_arm64_python_release:
   extends: .release_build
   image: ubuntu:20.04
   stage: build
