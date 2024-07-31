@@ -20,6 +20,16 @@ runs:
     run: |
       python -m pip install numpy setuptools wheel pytest
     shell: bash
+  - name: env args
+    if: ${{ inputs.arch == 'x64' }}
+    run: |
+      echo "CMAKE_PYACT_EXTRA_ARGS=-DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DPYTHON3_WHEEL_EXTRA_ARGS='--plat-name=macosx-10.9-x86_64' -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl" >> $GITHUB_ENV
+    shell: bash
+  - name: env args
+    if: ${{ inputs.arch == 'arm64' }}
+    run: |
+      echo "CMAKE_PYACT_EXTRA_ARGS=-DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DPYTHON3_WHEEL_EXTRA_ARGS='--plat-name=macosx-12.0-arm64' -DOPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl" >> $GITHUB_ENV
+    shell: bash
   - name: configure
     run: >
       cmake -G "Unix Makefiles"
@@ -29,13 +39,11 @@ runs:
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
       -DBUILD_TESTING=ON
       -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
-      -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-10.9-x86_64"
       -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
       ${{ env.CMAKE_CACHE_ARGS }}
       -DCMAKE_BUILD_TYPE=Release
-      -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
-      -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
       -S robotraconteur -B build2_python_${{ inputs.python_version }}
+      ${{ env.CMAKE_PYACT_EXTRA_ARGS }}
     shell: bash
   - name: build
     working-directory: build2_python_${{ inputs.python_version }}
