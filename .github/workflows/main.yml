@@ -585,7 +585,7 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v3
       with:
-        name: 'build-artifacts-osx'
+        name: 'build-artifacts-osx-${{ matrix.config.arch }}'
         path: build2/*
         retention-days: 2
 
