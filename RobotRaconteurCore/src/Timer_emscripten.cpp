@@ -235,4 +235,11 @@ void WallTimer::Clear() { handler.clear(); }
 WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node) {}
 
 void WallRate::Sleep() { throw std::runtime_error("Rate not supported for single threaded emscripten"); }
+
+void HighResolutionSleep(const boost::posix_time::time_duration& duration)
+{
+    BOOST_ASSERT_MSG(false, "HighResolutionSleep not supported for single threaded emscripten");
+    throw std::runtime_error("HighResolutionSleep not supported for single threaded emscripten");
+}
+
 } // namespace RobotRaconteur
