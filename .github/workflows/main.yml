@@ -1623,13 +1623,14 @@ jobs:
       with:
         path: src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: src/robotraconteur
     - name: Download CI artifacts
       uses: actions/download-artifact@v2
       with:
         path: artifacts/out-ubuntu
         name: out-ubuntu-20.04
     - run: |
-        mv artifacts/out-ubuntu/generated_src .
+        mv artifacts/out-ubuntu/generated_src src/robotraconteur/
         rm -r artifacts
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
@@ -1653,13 +1654,14 @@ jobs:
       with:
         path: src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: src/robotraconteur
     - name: Download CI artifacts
       uses: actions/download-artifact@v2
       with:
         path: artifacts/out-ubuntu
         name: out-ubuntu-20.04
     - run: |
-        mv artifacts/out-ubuntu/generated_src .
+        mv artifacts/out-ubuntu/generated_src src/robotraconteur/
         rm -r artifacts
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
