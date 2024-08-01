@@ -1631,14 +1631,6 @@ jobs:
         automake libtool bison libpcre3-dev curl libgtest-dev -qq
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
-    - name: Download CI artifacts
-      uses: actions/download-artifact@v2
-      with:
-        path: artifacts/out-ubuntu
-        name: out-ubuntu-20.04
-    - run: |
-        mv artifacts/out-ubuntu/generated_src src/robotraconteur/
-        rm -r artifacts
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
       env:
