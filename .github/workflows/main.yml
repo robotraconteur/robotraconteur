@@ -1641,7 +1641,6 @@ jobs:
         CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
 
   build-ros-prerelease:
-    if: false
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -1674,3 +1673,4 @@ jobs:
         ROS_REPO: main
         PRERELEASE: true
         CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
+        ROSDEP_SKIP_KEYS: python3-setuptools
