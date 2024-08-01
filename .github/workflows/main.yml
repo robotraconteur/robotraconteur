@@ -5,6 +5,7 @@ on:
     branches-ignore:
     - ros-**
     - ros2-**
+    - ros
     tags:
     - v*
     - '!*ros*'
@@ -12,6 +13,7 @@ on:
     branches-ignore:
     - ros-**
     - ros2-**
+    - ros
   release:
     types:
     - created
