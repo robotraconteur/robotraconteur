@@ -1631,6 +1631,8 @@ jobs:
         automake libtool bison libpcre3-dev curl libgtest-dev -qq
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: src/robotraconteur
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
       env:
@@ -1662,6 +1664,8 @@ jobs:
         git cmake g++ make libboost-all-dev autoconf
         automake libtool bison libpcre3-dev curl libgtest-dev -qq
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
       working-directory: src/robotraconteur
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
