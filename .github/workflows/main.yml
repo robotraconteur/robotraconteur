@@ -1607,8 +1607,6 @@ jobs:
       run: |
         ctest -C Release --output-on-failure
   build-ros:
-    needs:
-    - build-ubuntu
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -1622,7 +1620,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         path: src/robotraconteur
-    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
     - name: Download CI artifacts
       uses: actions/download-artifact@v2
@@ -1640,8 +1638,6 @@ jobs:
         CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
 
   build-ros-prerelease:
-    needs:
-    - build-ubuntu
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -1654,7 +1650,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         path: src/robotraconteur
-    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
     - name: Download CI artifacts
       uses: actions/download-artifact@v2
