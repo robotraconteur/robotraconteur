@@ -1647,6 +1647,7 @@ jobs:
         CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
 
   build-ros-prerelease:
+    if: false
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -1671,7 +1672,6 @@ jobs:
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
     - name: ros industrial-ci
-      if: false
       uses: ros-industrial/industrial_ci@master
       env:
         ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
