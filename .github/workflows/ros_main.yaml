@@ -5,10 +5,12 @@ on:
     branches:
     - ros-**
     - ros2-**
+    - ros
   pull_request:
     branches:
     - ros-**
     - ros2-**
+    - ros
 
   workflow_dispatch:
 
@@ -16,25 +18,44 @@ jobs:
 
   build-ros:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - noetic
+        - humble
+        - iron
+        - jazzy
     steps:
     - uses: actions/checkout@v3
-    - name: ROS Distro
-      run: echo "ROS_DISTRO=$(echo "$GITHUB_REF" | sed 's/^.*ros\(2\?\)-\([[:alnum:]]*\).*$/\2/')" >> $GITHUB_ENV
+      with:
+        path: src/robotraconteur
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
       env:
-        ROS_DISTRO: ${{ env.ROS_DISTRO }}
+        ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
         ROS_REPO: main
+        CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
 
   build-ros-prerelease:
+    if: false
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - iron
+        - jazzy
     steps:
     - uses: actions/checkout@v3
-    - name: ROS Distro
-      run: echo "ROS_DISTRO=$(echo "$GITHUB_REF" | sed 's/^.*ros\(2\?\)-\([[:alnum:]]*\).*$/\2/')" >> $GITHUB_ENV
+      with:
+        path: src/robotraconteur
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
       env:
-        ROS_DISTRO: ${{ env.ROS_DISTRO }}
+        ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
         ROS_REPO: main
         PRERELEASE: true
+        CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
+        ROSDEP_SKIP_KEYS: python3-setuptools
