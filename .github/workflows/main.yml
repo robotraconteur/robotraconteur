@@ -476,9 +476,25 @@ jobs:
 
   build-osx:
 
-    runs-on: macos-12
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - runner: macos-12
+          vcpkg_triplet: x64-osx-dynamic-release
+          arch: x64
+          homebrew_root: /usr/local
+          py-version: '3.8'
+          cmake-args: -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_JAVA=ON -DBUILD_NET=ON
+        - runner: macos-14
+          vcpkg_triplet: arm64-osx-dynamic-release
+          arch: arm64
+          homebrew_root: /opt/homebrew
+          py-version: '3.10'
+          cmake-args: -DCMAKE_OSX_ARCHITECTURES=arm64 -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
+    runs-on: ${{ matrix.config.runner }}
     env:
-      LIBRARY_PATH: /usr/local/opt/icu4c/lib
+      LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
     steps:
     - uses: actions/checkout@v3
       with:
@@ -491,8 +507,8 @@ jobs:
     - uses: actions/setup-python@v4
       id: python3
       with:
-        python-version: '3.8'
-        architecture: x64
+        python-version: ${{ matrix.config.py-version }}
+        architecture: ${{ matrix.config.arch }}
     - name: pip3
       run: |
         python -m pip install numpy setuptools wheel pytest
@@ -501,7 +517,7 @@ jobs:
       id: cache-build
       uses: hendrikmuhs/ccache-action@v1.2.11
       with:
-        key: ${{ runner.os }}-build-main-ccache
+        key: ${{ runner.os }}-build-main-ccache-${{ matrix.config.arch }}
     - name: cmake cache args
       id: cmake-cache-args
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -512,13 +528,12 @@ jobs:
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release
-        -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON
-        -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
+        -DPACKAGE_SWIG_SOURCE_ALL=ON
+        -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=${{ matrix.config.homebrew_root }}/opt/openssl
         -DOPENSSL_USE_STATIC_LIBS=ON
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
-        ${{ env.CMAKE_CACHE_ARGS }}
+        ${{ env.CMAKE_CACHE_ARGS }} ${{ matrix.config.cmake-args }}
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -529,35 +544,38 @@ jobs:
       run: |
         ctest . -C Release --output-on-failure
     - name: python 3.7
+      if: ${{ matrix.config.arch == 'x64' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.7
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.8
+      if: ${{ matrix.config.arch == 'x64' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.8
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.9
+      if: ${{ matrix.config.arch == 'x64' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: 3.9
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.10
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.10"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.11
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.11"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: python 3.12
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.12"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -566,13 +584,13 @@ jobs:
     - name: archive out
       uses: actions/upload-artifact@v3
       with:
-        name: 'out-osx'
+        name: 'out-osx-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
       uses: actions/upload-artifact@v3
       with:
-        name: 'build-artifacts-osx'
+        name: 'build-artifacts-osx-${{ matrix.config.arch }}'
         path: build2/*
         retention-days: 2
 
@@ -1382,7 +1400,19 @@ jobs:
   distfiles-test-osx:
     needs:
     - build-dist
-    runs-on: macos-12
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - runner: macos-12
+          vcpkg_triplet: x64-osx-dynamic-release
+          arch: x64
+          wheel_arch: x86_64
+        - runner: macos-14
+          vcpkg_triplet: arm64-osx-dynamic-release
+          arch: arm64
+          wheel_arch: arm64
+    runs-on: ${{ matrix.config.runner }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -1396,27 +1426,40 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         path: artifacts/out-osx
-        name: out-osx
+        name: out-osx-${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
+      if: ${{ matrix.config.arch == 'x64' }}
       with:
         python_version: 3.7
-        wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp37-cp37m-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
+      if: ${{ matrix.config.arch == 'x64' }}
       with:
         python_version: 3.8
-        wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp38-cp38-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
+      if: ${{ matrix.config.arch == 'x64' }}
       with:
         python_version: 3.9
-        wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp39-cp39-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
         python_version: "3.10"
-        wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp310-cp310-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
         python_version: "3.11"
-        wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*x86_64.whl
+        wheel_filename: RobotRaconteur-*-cp311-cp311-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.12"
+        wheel_filename: RobotRaconteur-*-cp312-cp312-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     # - name: .net test
     #   uses: ./robotraconteur/test/dist/net/action/osx
 

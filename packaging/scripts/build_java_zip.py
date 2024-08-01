@@ -21,5 +21,5 @@ with zipfile.ZipFile('distfiles/RobotRaconteur-Java-%s-Java.zip' % ver_str, 'w',
     zip.write(asset_dir + "/out-win-x86/LICENSE.txt", arcname="LICENCE.txt")
     zip.write(asset_dir + "/out-win-x64/Java/RobotRaconteurJavaNative-win64.dll",
               arcname="RobotRaconteurJavaNative-win64.dll")
-    zip.write(asset_dir + "/out-osx/Java/libRobotRaconteurJavaNative-darwin.jnilib",
+    zip.write(asset_dir + "/out-osx-x64/Java/libRobotRaconteurJavaNative-darwin.jnilib",
               arcname="libRobotRaconteurJavaNative-darwin.jnilib")
