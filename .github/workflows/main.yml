@@ -1620,6 +1620,8 @@ jobs:
         - jazzy
     steps:
     - uses: actions/checkout@v3
+      with:
+        path: src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
     - name: Download CI artifacts
       uses: actions/download-artifact@v2
@@ -1648,6 +1650,8 @@ jobs:
         - jazzy
     steps:
     - uses: actions/checkout@v3
+      with:
+        path: src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
     - name: Download CI artifacts
       uses: actions/download-artifact@v2
