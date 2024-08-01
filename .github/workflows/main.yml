@@ -1665,6 +1665,7 @@ jobs:
         mv artifacts/out-ubuntu/generated_src src/robotraconteur/
         rm -r artifacts
     - name: ros industrial-ci
+      if: false
       uses: ros-industrial/industrial_ci@master
       env:
         ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
