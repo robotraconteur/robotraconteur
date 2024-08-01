@@ -50,6 +50,9 @@ jobs:
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
+        - os: ubuntu-24.04
+          runs_on: ubuntu-22.04
+          container: ""
         - os: ubuntu-16.04
           runs_on: ubuntu-latest
           container: ubuntu:xenial
