@@ -4,7 +4,6 @@ set(RobotRaconteur_DISABLE_MESSAGE4 FALSE CACHE BOOL "Disable Robot Raconteur me
 set(RobotRaconteur_DISABLE_STRINGTABLE FALSE CACHE BOOL "Disable Robot Raconteur string table by default")
 mark_as_advanced(RobotRaconteur_DISABLE_MESSAGE4 RobotRaconteur_DISABLE_STRINGTABLE)
 
-include(FindBoost)
 if(NOT EMSCRIPTEN)
     set(Boost_USE_MULTITHREADED ON)
     set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
