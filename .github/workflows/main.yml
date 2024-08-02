@@ -1686,7 +1686,6 @@ jobs:
       env:
         ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
         ROS_REPO: main
-        CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
 
   build-ros-prerelease:
     if: false
@@ -1721,5 +1720,4 @@ jobs:
         ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
         ROS_REPO: main
         PRERELEASE: true
-        CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
         ROSDEP_SKIP_KEYS: python3-setuptools
