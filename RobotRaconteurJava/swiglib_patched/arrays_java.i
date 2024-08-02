@@ -135,7 +135,7 @@ JAVA_ARRAYS_IMPL(long, jlong, Long, Long)        /* long long[] */
 #else
 JAVA_ARRAYS_IMPL(long, jint, Int, Long)               /* long[] */
 JAVA_ARRAYS_IMPL(unsigned long, jlong, Long, Ulong)   /* unsigned long[] */
-JAVA_ARRAYS_IMPL(jlong, jlong, Long, Longlong)        /* long long[] */
+JAVA_ARRAYS_IMPL(long long, jlong, Long, Longlong)        /* long long[] */
 #endif
 JAVA_ARRAYS_IMPL(float, jfloat, Float, Float)         /* float[] */
 JAVA_ARRAYS_IMPL(double, jdouble, Double, Double)     /* double[] */
