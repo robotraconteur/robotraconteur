@@ -336,24 +336,16 @@ build_freebsd_amd64:
   - >
     ${RUNCMD} cmake -G Ninja
     -DCMAKE_OSX_ARCHITECTURES=x86_64
-    -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
-    -DOPENSSL_USE_STATIC_LIBS=ON
+    -DCMAKE_TOOLCHAIN_FILE=/Users/wasonj/RobotRaconteur2/vcpkg/scripts/buildsystems/vcpkg.cmake
+    -DVCPKG_TARGET_TRIPLET=x64-osx
+    -DCMAKE_BUILD_TYPE=Release
     ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_MATLAB_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS} ${EXTRA_CMAKE_ARGS}
-    -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl\@3
     -DCMAKE_IGNORE_PREFIX_PATH=/opt
     -DMatlab_ROOT_DIR=/Applications/MATLAB_R2020a.app
     -DMatlab_MEX_EXTENSION=mexmaci64
     -DRR_MATLAB_TEST_EXTRA_ARGS=-maci64
-    -DBOOST_ROOT=/usr/local/Cellar/boost/1.81.0_1
     -DCMAKE_SYSTEM_IGNORE_PREFIX_PATH=/opt
-    -DGTest_DIR=/usr/local/Cellar/googletest/1.12.1/lib/cmake/GTest
     -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-    -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
-    -DBoost_NO_BOOST_CMAKE=ON
-    -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
-    -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
-    -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
-    -DCMAKE_FIND_ROOT_PATH="/usr/local;/Library;/System/Library;/Applications"
     -DROBOTRACONTEUR_EXTRA_TESTS=ON
     -DPYTHON3_EXECUTABLE=/Users/wasonj/python3-intel64/venv/bin/python3-intel64
     -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib
@@ -372,7 +364,6 @@ build_freebsd_amd64:
     paths:
     - ${OUTNAME}/out/*
   variables:
-    BOOST_VERSION: 1.81.0
     CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
 
@@ -435,6 +426,28 @@ build_osx_amd64_matlab_release:
     && tar -cf RobotRaconteur-$RR_VER-MATLAB-maci64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maci64
   after_script: []
 
+build_osx_arm64_matlab_release:
+  stage: build
+  extends: .osx_build_arm64_release
+  tags:
+  - wasontech
+  - macos
+  - m1
+  variables:
+    OUTNAME: "out-osx_arm64_matlab_release"
+  script:
+  - !reference [.osx_build_arm64_release, script]
+  - mkdir ../$OUTNAME
+  - mv out ../$OUTNAME/
+  - cd ../$OUTNAME
+  - cp out/LICENSE.txt out/Matlab
+  - cd out
+  - >
+    export RR_VER=`cat rrversion.txt`
+    && cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-maca64
+    && tar -cf RobotRaconteur-$RR_VER-MATLAB-maca64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maca64
+  after_script: []
+
 code_formatting_ubuntu_focal_amd64:
   stage: build
   extends: .all_build
@@ -495,30 +508,23 @@ build_raspbian_buster_armhf:
   stage: build
 
   script:
-  - export LIBRARY_PATH=/usr/local/opt/icu4c/lib
   - mkdir build
   - cd build
   - >
     ${RUNCMD} cmake -G Ninja
+    -DCMAKE_TOOLCHAIN_FILE=/Users/wasonj/RobotRaconteur2/vcpkg/scripts/buildsystems/vcpkg.cmake
+    -DVCPKG_TARGET_TRIPLET=arm64-osx
     -DCMAKE_OSX_ARCHITECTURES=arm64
-    -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
-    -DOPENSSL_USE_STATIC_LIBS=ON
     ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_MATLAB_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS} ${EXTRA_CMAKE_ARGS}
-    -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
-    -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0
-    -DGTest_DIR=/opt/homebrew/Cellar/googletest/1.12.1/lib/cmake/GTest
     -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-    -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
-    -DBoost_NO_BOOST_CMAKE=ON
-    -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
-    -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
-    -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
-    -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
     -DROBOTRACONTEUR_EXTRA_TESTS=ON
     -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
     -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib
     -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12
     -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64"
+    -DMatlab_ROOT_DIR=/Applications/MATLAB_R2023b.app
+    -DMatlab_MEX_EXTENSION=mexmaca64
+    -DRR_MATLAB_TEST_EXTRA_ARGS=maca64
     ..
   - ${RUNCMD} cmake --build . --config Release
   - ${RUNCMD} ctest . -C Release --output-on-failure
@@ -533,8 +539,8 @@ build_raspbian_buster_armhf:
     paths:
     - ${OUTNAME}/out/*
   variables:
-    BOOST_VERSION: 1.83.0
     CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
 
 .osx_build_arm64_dev:
   extends:
