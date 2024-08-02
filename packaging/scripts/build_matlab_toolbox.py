@@ -94,6 +94,8 @@ def main():
     subprocess.check_call(
         "tar xf ../../RobotRaconteur-*-MATLAB-maci64.tar.gz --strip-components 1 --wildcards RobotRaconteur-*-MATLAB-maci64/RobotRaconteurMex.*", shell=True, cwd=matlab_dir)
     subprocess.check_call(
+        "tar xf ../../RobotRaconteur-*-MATLAB-maca64.tar.gz --strip-components 1 --wildcards RobotRaconteur-*-MATLAB-maca64/RobotRaconteurMex.*", shell=True, cwd=matlab_dir)
+    subprocess.check_call(
         "unzip -j ../../RobotRaconteur-*-MATLAB-win64.zip RobotRaconteur-*-MATLAB-win64/RobotRaconteurMex.mexw64", shell=True, cwd=matlab_dir)
 
     semver_regex = r"^v((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
