@@ -52,6 +52,12 @@ The simplest and most direct method to connect to a service is using a URL and t
             :language: matlab
             :linenos:
 
+    .. group-tab:: LabView
+
+        .. image:: ../../../examples/features/connecting/labview/connect_url.png
+            :scale: 100%
+            :align: center
+
 Finding the URL for a service can be tricky. There are multiple "transports" to connect to the service,
 and the exact contents of the URL are very specific to the network topography between the client and the service.
 In the examples above, the ``rr+tcp`` "scheme" at the beginning of the URL means the connection is using TCP/IP,
@@ -140,6 +146,12 @@ instead of returning a client connection, a ``ServiceSubscription`` is returned.
             :language: matlab
             :linenos:
 
+    .. group-tab:: LabView
+
+        .. image:: ../../../examples/features/subscriptions/labview/subscribe_url.png
+            :scale: 100%
+            :align: center
+
 
 In these examples, the ``SubscribeService()`` and ``GetDefaultClientWait()`` functions are used to create
 the connection. The ``GetDefaultClient()`` and ``GetDefaultClientWait()`` function will return the "default" connected
@@ -188,6 +200,12 @@ Simple examples connecting all services of a specific type, in this case ``exper
         .. literalinclude:: ../../../examples/features/subscriptions/matlab/subscribe_type.m
             :language: matlab
             :linenos:
+
+    .. group-tab:: LabView
+
+        .. image:: ../../../examples/features/subscriptions/labview/subscribe_type.png
+            :scale: 80%
+            :align: center
 
 The use of filters is beyond the scope of this document.
 

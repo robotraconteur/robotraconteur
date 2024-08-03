@@ -335,7 +335,8 @@ Examples
 ========
 
 The rest of this Getting Started manual contains examples of using Robot Raconteur. This guide covers Python,
-MATLAB, and LabView examples.
+MATLAB, and LabView examples. Select the appropriate tab for the language you are using by clicking on the tab
+name.
 Refer to the documentation for
 each specific library and computer language for detailed reference beyond what is offered in the examples, including
 the other supported computer languages.
