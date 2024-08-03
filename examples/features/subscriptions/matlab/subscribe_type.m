@@ -1,4 +1,5 @@
-% Subscribe to a service by type
+% subscribe_type.py - Subscribe to services by type
+
 root_object_type = 'experimental.reynard_the_robot.Reynard';
 sub = RobotRaconteur.SubscribeServiceByType(root_object_type);
 

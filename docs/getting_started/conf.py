@@ -15,7 +15,8 @@ author = 'John Wason'
 
 extensions = [
     'sphinx_rtd_theme',
-    'sphinx_toolbox.collapse'
+    'sphinx_toolbox.collapse',
+    'sphinx_tabs.tabs'
 ]
 
 templates_path = ['templates']

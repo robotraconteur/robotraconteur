@@ -1,3 +1,5 @@
+# subscribe_type.py - Subscribe to services by type
+
 from RobotRaconteur.Client import *
 import time
 

@@ -38,19 +38,19 @@ Connect using a URL
 
 The simplest and most direct method to connect to a service is using a URL and the ``ConnectService()`` function.
 
-.. code-block:: python
-    :caption: Python Example
+.. tabs::
 
-    from RobotRaconteur.Client import *
+    .. group-tab:: Python
 
-    url = 'rr+tcp://localhost:29200?service=reynard'
-    c = RRN.ConnectService(url)
+        .. literalinclude:: ../../../examples/features/connecting/python/connect_url.py
+            :language: python
+            :linenos:
 
-.. code-block:: matlab
-    :caption: MATLAB Example
+    .. group-tab:: MATLAB
 
-    url = 'rr+tcp://localhost:29200?service=reynard';
-    c = RobotRaconteur.ConnectService(url);
+        .. literalinclude:: ../../../examples/features/connecting/matlab/connect_url.m
+            :language: matlab
+            :linenos:
 
 Finding the URL for a service can be tricky. There are multiple "transports" to connect to the service,
 and the exact contents of the URL are very specific to the network topography between the client and the service.
@@ -126,14 +126,19 @@ criteria based connections.
 Creating a subscription using a URL is similar to connecting to a service using ``ConnectService()``, except
 instead of returning a client connection, a ``ServiceSubscription`` is returned.
 
-.. literalinclude:: ../../../examples/features/subscriptions/python/subscribe_url.py
-    :language: python
-    :caption: Python Example
+.. tabs::
 
-.. literalinclude:: ../../../examples/features/subscriptions/matlab/subscribe_url.m
-    :language: matlab
-    :caption: MATLAB Example
+    .. group-tab:: Python
 
+        .. literalinclude:: ../../../examples/features/subscriptions/python/subscribe_url.py
+            :language: python
+            :linenos:
+
+    .. group-tab:: MATLAB
+
+        .. literalinclude:: ../../../examples/features/subscriptions/matlab/subscribe_url.m
+            :language: matlab
+            :linenos:
 
 
 In these examples, the ``SubscribeService()`` and ``GetDefaultClientWait()`` functions are used to create
@@ -170,13 +175,19 @@ The available criteria are:
 
 Simple examples connecting all services of a specific type, in this case ``experimental.reynard_the_robot.Reynard``:
 
-.. literalinclude:: ../../../examples/features/subscriptions/python/subscribe_type.py
-    :language: python
-    :caption: Python Example
+.. tabs::
 
-.. literalinclude:: ../../../examples/features/subscriptions/matlab/subscribe_type.m
-    :language: matlab
-    :caption: MATLAB Example
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/features/subscriptions/python/subscribe_type.py
+            :language: python
+            :linenos:
+
+    .. group-tab:: MATLAB
+
+        .. literalinclude:: ../../../examples/features/subscriptions/matlab/subscribe_type.m
+            :language: matlab
+            :linenos:
 
 The use of filters is beyond the scope of this document.
 
