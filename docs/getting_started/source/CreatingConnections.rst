@@ -353,9 +353,28 @@ The following example uses a Yaml file to specify the camera details.
             :language: cpp
             :linenos:
 
+PyRI Device Manager
+===================
 
+The `PyRI Open Source Teach Pendant <https://github.com/pyri-project/pyri-core>`_ uses a built-in "Device Manager"
+to add and remove devices
+from the system. The Device Manager can be accessed using a user interface, or a Robot Raconteur service.
+The Device Manager is typically used with Robot Raconteur services that provide a ``DeviceInfo`` structure.
 
+Third-part nodes can connect to the PyRI Device Manager and use it to connect to devices. In fact,
+almost all of the functionality provided by the PyRI Teach Pendant can be used through Robot Raconteur services.
+This is a powerful development option since it allows for the developer to utilize all the features of PyRI
+while developing their projects.
 
+The following example shows how to connect to the PyRI Device Manager and use it to connect to a camera:
+
+.. tabs::
+
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/features/pyri_device_manager/python/pyri_device_manager_client.py
+            :language: python
+            :linenos:
 
 Networking and Firewalls
 ========================
