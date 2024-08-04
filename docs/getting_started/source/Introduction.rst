@@ -87,7 +87,8 @@ compared to competing frameworks.
 
 .. note::
     Robot Raconteur has a unique "augmented object-oriented" design, and is very different than
-    ROS Middleware which is a pub-sub system.
+    ROS Middleware which is a pub-sub system. Robot Raconteur can provide similar functionality to pub-sub
+    systems using "Subscriptions", but the focus is on the client-service model.
 
 Robot Raconteur currently supports the following platforms:
 
