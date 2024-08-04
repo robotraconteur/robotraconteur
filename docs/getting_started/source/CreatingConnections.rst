@@ -58,6 +58,20 @@ The simplest and most direct method to connect to a service is using a URL and t
             :scale: 100%
             :align: center
 
+    .. group-tab:: C\#
+
+        .. literalinclude:: ../../../examples/features/connecting/cs/connect_url.cs
+            :language: csharp
+            :linenos:
+
+    .. group-tab:: C++
+
+            .. literalinclude:: ../../../examples/features/connecting/cpp/connect_url.cpp
+                :language: cpp
+                :linenos:
+
+
+
 Finding the URL for a service can be tricky. There are multiple "transports" to connect to the service,
 and the exact contents of the URL are very specific to the network topography between the client and the service.
 In the examples above, the ``rr+tcp`` "scheme" at the beginning of the URL means the connection is using TCP/IP,
@@ -152,6 +166,18 @@ instead of returning a client connection, a ``ServiceSubscription`` is returned.
             :scale: 100%
             :align: center
 
+    .. group-tab:: C\#
+
+        .. literalinclude:: ../../../examples/features/subscriptions/cs/subscribe_url.cs
+            :language: csharp
+            :linenos:
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/features/subscriptions/cpp/subscribe_url.cpp
+            :language: cpp
+            :linenos:
+
 
 In these examples, the ``SubscribeService()`` and ``GetDefaultClientWait()`` functions are used to create
 the connection. The ``GetDefaultClient()`` and ``GetDefaultClientWait()`` function will return the "default" connected
@@ -185,6 +211,12 @@ The available criteria are:
     In most cases it is preferred to use the Device Connector described in the next section rather than directly
     using ``SubscribeServiceByType()``.
 
+.. note::
+
+    ``SubscribeServiceByType()`` will match services where the root object extends/implement the required type along
+    with direct implementations. This allows for new types to extend existing types and still be matched, allowing
+    for forward compatibility.
+
 Simple examples connecting all services of a specific type, in this case ``experimental.reynard_the_robot.Reynard``:
 
 .. tabs::
@@ -206,6 +238,18 @@ Simple examples connecting all services of a specific type, in this case ``exper
         .. image:: ../../../examples/features/subscriptions/labview/subscribe_type.png
             :scale: 80%
             :align: center
+
+    .. group-tab:: C\#
+
+        .. literalinclude:: ../../../examples/features/subscriptions/cs/subscribe_type.cs
+            :language: csharp
+            :linenos:
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/features/subscriptions/cpp/subscribe_type.cpp
+            :language: cpp
+            :linenos:
 
 The use of filters is beyond the scope of this document.
 
