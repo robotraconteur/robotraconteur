@@ -1,0 +1,6 @@
+# devices.yml - Yaml file containing device information
+
+devices:
+  camera:
+    device: gazebo_camera
+    root_object_type: com.robotraconteur.imaging.Camera

@@ -20,12 +20,12 @@ Connections can be created using several different methods. These methods includ
 * Connect using a URL
 * Create a subscription using a URL
 * Create a subscription based on service criteria
-* Connect using the Device Manager
+* Connect using the Device Connector
 * Connect using the PyRI Device Manager
 * Use discovery to find available devices
 
 The best method to use will depend on the exact use case. For most simple use cases such as a laboratory environment,
-using a URL or a subscription with a URL is the simplest. For production environments, using the Device Manager
+using a URL or a subscription with a URL is the simplest. For production environments, using the Device Connector
 or the PyRI Device Manager is probably more appropriate.
 
 Note that firewalls and networking configurations can cause problems with connections between computers.
@@ -298,16 +298,64 @@ The following examples show how to use filters with ``SubscribeServiceByType()``
 The ``SubscribeServiceByType`` function and ``ServiceSubscription`` provide sophisticated capabilities.
 See :ref:`subscriptions` and the documentation specific to each programming language for more information.
 
-Device Manager
+Device Connector
 ==============
 
-The Device Manager is a utility provided as part of the Robot Raconteur Companion for Python. The
-device manager uses the "Device" concept discussed in :ref:`device-concept` that is introduced
+The Device Connector is a utility provided as part of the Robot Raconteur Companion for Python and C++. The
+Device Connector uses the "Device" concept discussed in :ref:`device-concept` that is introduced
 by the Robot Raconteur Standard Types. All "Devices" provide a ``DeviceInfo`` structure that contains
 metadata about the device including a unique identifier (name and UUID), model and manufacturer information,
-device class information, serial number, description, tags, and more. The Device Manager uses this metadata
-to connect to devices. The Device Manager can also use URLs and subscription filters to connect to services.
+device class information, serial number, description, tags, and more. The Device Connector uses this metadata
+to connect to devices. The Device Connector can also use URLs and subscription filters to connect to services.
 This capability is built on top of the Robot Raconteur subscription system.
+
+The Device Connector uses the ``DeviceConnectorDetails`` structure to specify which devices to connect. The
+``DeviceConnectorDetails`` can use the following methods to select devices:
+
+* Device name, along with additional information like tags, manufacturer, model, and serial number. The
+  device must provide a ``DeviceInfo`` structure to use this method.
+* A list of candidate URLs
+* A service type and filter
+
+The following example uses a ``DeviceConnector`` to connect to the camera found in the Training Simulator robot scenes:
+
+.. tabs::
+
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/features/device_connector/python/device_connector.py
+            :language: python
+            :linenos:
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/features/device_connector/cpp/device_connector.cpp
+            :language: cpp
+            :linenos:
+
+The following example uses a Yaml file to specify the camera details.
+
+.. literalinclude:: ../../../examples/features/device_connector/python/devices.yml
+    :language: yaml
+    :linenos:
+
+.. tabs::
+
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/features/device_connector/python/device_connector_yaml.py
+            :language: python
+            :linenos:
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/features/device_connector/cpp/device_connector_yaml.cpp
+            :language: cpp
+            :linenos:
+
+
+
+
 
 Networking and Firewalls
 ========================
