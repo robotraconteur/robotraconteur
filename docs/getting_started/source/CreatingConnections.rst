@@ -278,8 +278,8 @@ The following examples show how to use filters with ``SubscribeServiceByType()``
 
         .. group-tab:: LabView
 
-            .. image:: ../../../examples/features/subscriptions/labview/subscribe_type.png
-                :scale: 80%
+            .. image:: ../../../examples/features/subscriptions/labview/subscribe_filter.png
+                :width: 600
                 :align: center
 
         .. group-tab:: C\#
