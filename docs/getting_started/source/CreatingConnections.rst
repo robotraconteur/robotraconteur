@@ -378,3 +378,113 @@ The following example shows how to connect to the PyRI Device Manager and use it
 
 Networking and Firewalls
 ========================
+
+Robot Raconteur uses standard IPv4 and IPv6 networking protocols to communicate between nodes when they
+are on different computers, or using ``localhost`` (``127.0.0.1``) when they are on the same computer.
+Currently Robot Raconteur uses TCP/IP for communication, however UDP/IP communication using
+`QUIC <https://en.wikipedia.org/wiki/QUIC>`_ is planned. Networking can be an extremely complex topic,
+and has many pitfalls that can cause connections to fail. Robot Raconteur is primarily concerned with
+local connections between devices on the same local Ethernet network, which reduces the complexity somewhat.
+This section provides a brief overview of the relevant networking concepts to create connections. See
+also the `Networking and Firewall Configuration Application Note <https://github.com/robotraconteur/robotraconteur/wiki/Networking-and-Firewall-Configuration>`_
+for up-to-date information
+on networking and firewall configuration, along with tooling to help configure networks correctly.
+
+.. note::
+
+    See the `Networking and Firewall Configuration Application Note <https://github.com/robotraconteur/robotraconteur/wiki/Networking-and-Firewall-Configuration>`_
+    for a more in-depth discussion of networking and firewall configuration.
+
+.. note::
+
+    Robot Raconteur has the official TCP and UDP port number 48653 assigned by the `IANA <https://www.iana.org/>`_!
+    The Robot Raconteur Port Sharer uses TCP port 48653. Server nodes that are not using the port sharer
+    should use a different port number. UDP port 48653 is used for discovery.
+
+Networking Fundamentals
+-----------------------
+
+Devices on an IP network have an "IP Address", which allows for packets to be routed to the correct device.
+
+
+IPv4 addresses are 32-bits, and are typically written as four decimal numbers separated by periods, for example
+``192.168.12.14``. IPv4 addresses only have around 4 billion possible addresses, which means that it is not
+possible to assign a unique address to every device in existence. Configuration is required
+to guarantee a static IPv4 address which causes significant complications.
+
+
+IPv6 addresses use a 128-bit address space,
+which allows for more than 340 trillion, trillion, trillion possible addresses. IPv6 addresses have the
+concept of "link-local" addresses, which are only valid on a single local network. They start with
+``fe80::``, and are followed by a 64 bit hexadecimal number, for example ``fe80::6a23:fb1a:23b3:db79``.
+This number can be based on the MAC address
+of the adapter, or randomly generated. Crucially for Robot Raconteur, this is an automatically configured
+address that is statistically guaranteed to be unique on the local network. Robot Raconteur can use both IPv4
+and IPv6 addresses, but IPv6 is preferred since it is easier to configure and more robust. The discovery
+and subscription system will return IPv6 addresses by default.
+
+.. note::
+
+    By default Linux uses a randomly generated IPv6 link local address for privacy reasons. This
+    random address may change occasionally and this is highly undesirable for Robot Raconteur services. To disable
+    run the following command in a terminal:
+
+    .. code-block::
+
+        cat >> /etc/sysctl.conf <<EOT
+        net.ipv6.conf.all.use_tempaddr=0
+        net.ipv6.conf.default.use_tempaddr=0
+        EOT
+
+        sysctl -p
+
+    `Source <https://support.binarylane.com.au/support/solutions/articles/1000100519-disable-ipv6-privacy-extension-in-linux>`_
+
+To determine the IP address of a device:
+
+* Use ``ipconfig`` on Windows in a command prompt
+* Use ``ip a``  on Linux in a terminal
+* Use ``ifconfig`` on MacOS in a terminal
+
+These will typically return many addresses, some with a physical adapter attached to a network, but many
+more with virtual adapters that are not relevant. It is recommended that the Service Browser be used
+on the same computer as the client to determine the correct address to use since it can be very
+difficult to determine the correct address manually unless you are familiar with networking concepts.
+
+Firewall Configuration
+----------------------
+
+Most modern operating systems have a firewall that blocks incoming connections by default. This is an important
+security feature, but will by default block Robot Raconteur connections. The firewall must be configured
+to allow full access for the program running the Robot Raconteur node. The following subsections discuss
+how to configure the firewall for different operating systems.
+
+.. note::
+
+    Robot Raconteur uses IPv6 UDP multicast port 48653 for discovery. This port must be open for discovery
+    or the program must have an exception in the firewall!
+
+Windows Firewall
+++++++++++++++++
+
+By default Windows will block Robot Raconteur. It is necessary to either add an exception, or to disable
+the firewall completely. Disabling the firewall is useful for a development environment, but in general
+it is recommended to add an exception for the program running the Robot Raconteur node.
+
+* Instructions to disable the Windows Firewall: `Windows Firewall <https://support.microsoft.com/en-us/help/4028544/windows-10-turn-windows-defender-firewall-on-or-off>`_
+* Instructions to add an exception to the Windows Firewall for a specific program: `How to Allow or Block a Program Through Firewall Windows 10 <https://www.minitool.com/news/how-to-allow-a-program-through-firewall-windows-10.html>`_
+
+When a program first starts and attempts to open a port, Windows will typically prompt the user to allow or block
+the connection. This is the easiest way to configure the firewall.
+
+Linux Firewall
+++++++++++++++
+
+Ubuntu and Debian do not by default have a firewall enabled. If a firewall is enabled, it is typically
+`UFW <https://help.ubuntu.com/community/UFW>`_ or `iptables <https://wiki.debian.org/iptables>`_.
+Configuring these firewalls is more complex than Windows, and it is recommended to consult the documentation.
+
+MacOS Firewall
+++++++++++++++
+
+MacOS does not typically have a firewall enabled that blocks Robot Raconteur connections.
