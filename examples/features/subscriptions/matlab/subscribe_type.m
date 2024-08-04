@@ -18,3 +18,5 @@ for i = 1:length(client_keys)
     c = connected_clients(key);
     c.say('Hello from type subscription!');
 end
+
+sub.Close();

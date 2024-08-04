@@ -86,16 +86,23 @@ The README, documentation, and examples for services will often contain informat
 for the service.
 
 The `Robot Raconteur Service Browser <https://github.com/robotraconteur/RobotRaconteur_ServiceBrowser>`_ can
-be used to find service URLs using discovery. It is advised to always
+be used to find service URLs using discovery.
+
+.. image:: images/service_browser2.png
+   :alt: Robot Raconteur ServiceBrowser
+   :name: ServiceBrowser
+   :width: 600
+
+It is advised to always
 run the service browser on the same computer as the client. This will return a URL that is valid for that
 exact scenario. For example, when searching for Reynard the Robot on a different computer the following
 URL is returned:
 
 .. code-block::
 
-    rr+tcp://[fe80::b30:c364:2eb6:b520]:29200/?nodeid=e513887c-4512-4ce5-a7e7-1396cfc718f2&service=reynard
+    rr+tcp://[fe80::6a23:fb1a:23b3:db79]:29200/?nodeid=54cb0389-163d-4ce0-8237-154fd8b83deb&service=reynard
 
-Node the IP address in this URL is an IPv6 link-local address rather than IPv4. By default Robot Raconteur
+Note the IP address in this URL is an IPv6 link-local address rather than IPv4. By default Robot Raconteur
 will use IPv6 addresses since they automatically configure, and can be configured to be permanently static
 without the headache of IPv4 address assignment. The ``fe80::`` prefix means that this address is only
 valid within a local network. Note that this example address is only valid for the example network and
@@ -127,7 +134,7 @@ The URL has a special form:
 
     <scheme>://<host>:<port>/?nodename=<nodename>&nodeid=<nodeid>&service=<servicename>
 
-See the `Framework Nodes and Communication <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html>_`
+See the `Framework Nodes and Communication <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/nodes_and_communication.html>`_
 documentation for more details on URLs.
 
 Services opened using the ``ConnectService()`` function should be closed using the ``DisconnectService()`` function,
@@ -251,8 +258,43 @@ Simple examples connecting all services of a specific type, in this case ``exper
             :language: cpp
             :linenos:
 
-The use of filters is beyond the scope of this document.
+The following examples show how to use filters with ``SubscribeServiceByType()``.
 
+.. collapse:: SubscribeServiceByType() Filter Examples (click to expand)
+
+    .. tabs::
+
+        .. group-tab:: Python
+
+            .. literalinclude:: ../../../examples/features/subscriptions/python/subscribe_filter.py
+                :language: python
+                :linenos:
+
+        .. group-tab:: MATLAB
+
+            .. literalinclude:: ../../../examples/features/subscriptions/matlab/subscribe_filter.m
+                :language: matlab
+                :linenos:
+
+        .. group-tab:: LabView
+
+            .. image:: ../../../examples/features/subscriptions/labview/subscribe_type.png
+                :scale: 80%
+                :align: center
+
+        .. group-tab:: C\#
+
+            .. literalinclude:: ../../../examples/features/subscriptions/cs/subscribe_type.cs
+                :language: csharp
+                :linenos:
+
+        .. group-tab:: C++
+
+            .. literalinclude:: ../../../examples/features/subscriptions/cpp/subscribe_type.cpp
+                :language: cpp
+                :linenos:
+
+|
 The ``SubscribeServiceByType`` function and ``ServiceSubscription`` provide sophisticated capabilities.
 See :ref:`subscriptions` and the documentation specific to each programming language for more information.
 
