@@ -1,4 +1,4 @@
-% subscribe_filter.py - Subscribe to services by type
+% subscribe_filter.py - Subscribe to services by type using a filter
 
 function subscribe_filter()
 

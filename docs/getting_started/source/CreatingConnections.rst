@@ -284,13 +284,13 @@ The following examples show how to use filters with ``SubscribeServiceByType()``
 
         .. group-tab:: C\#
 
-            .. literalinclude:: ../../../examples/features/subscriptions/cs/subscribe_type.cs
+            .. literalinclude:: ../../../examples/features/subscriptions/cs/subscribe_filter.cs
                 :language: csharp
                 :linenos:
 
         .. group-tab:: C++
 
-            .. literalinclude:: ../../../examples/features/subscriptions/cpp/subscribe_type.cpp
+            .. literalinclude:: ../../../examples/features/subscriptions/cpp/subscribe_filter.cpp
                 :language: cpp
                 :linenos:
 

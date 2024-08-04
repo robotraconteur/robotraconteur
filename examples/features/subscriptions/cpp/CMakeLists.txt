@@ -23,3 +23,6 @@ target_link_libraries(subscribe_url RobotRaconteurCore)
 
 add_executable(subscribe_type subscribe_type.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
 target_link_libraries(subscribe_type RobotRaconteurCore)
+
+add_executable(subscribe_filter subscribe_filter.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
+target_link_libraries(subscribe_filter RobotRaconteurCore)

@@ -1,4 +1,4 @@
-# subscribe_filter.py - Subscribe to services by type with a filter
+# subscribe_filter.py - Subscribe to services by type using a filter
 
 from RobotRaconteur.Client import *
 import time

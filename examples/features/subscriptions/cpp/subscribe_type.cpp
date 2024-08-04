@@ -1,4 +1,4 @@
-// subscribe_url.cpp - Subscribe to a service by type
+// subscribe_type.cpp - Subscribe to a service by type
 
 #include <stdio.h>
 #include <iostream>
