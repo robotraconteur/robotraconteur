@@ -30,12 +30,11 @@ The following is an example of the service definition used for Reynard the Robot
 .. literalinclude:: ../../../examples/reynard_the_robot/robdef/experimental.reynard_the_robot.robdef
     :linenos:
 
-
 The service definition begins with the line ``service experimental.reynard_the_robot``. This line defines the name
-of the service. In this case the ``experimental`` namespace is used to indicate that the service is experimental.
+of the service. In this case, the ``experimental`` namespace is used to indicate that the service is experimental.
 The namespace follows "Java" package naming conventions, which is reverse domain names. For instance,
 the standard Robot Raconteur types begin with ``com.robotraconteur``. Services by a university might begin with
-``edu.universityname``. The next line is ``stdver 0.10``. This line defines the version of the minimum
+``edu.universityname``. The next line is ``stdver 0.10``. This line defines the minimum
 version of Robot Raconteur required to use the service type. Future revisions to the Robot Raconteur
 standard may introduce new features that are not compatible with older versions. Currently, the most recent
 revision to the service definition standard is "0.10". This version should be used until a future version
@@ -53,7 +52,7 @@ on the contents of service definitions and how to use them:
 .. note::
 
     Also see the `Robot Raconteur Framework Service Definition Documentation <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html>`_
-    and the `Robot Raconteur Service Definition Standard <https://github.com/robotraconteur/robotraconteur_standards/blob/master/draft/service_defintion.md>`_
+    and the `Robot Raconteur Service Definition Standard <https://github.com/robotraconteur/robotraconteur_standards/blob/master/draft/service_definition.md>`_
     for more detailed information on the service definition format.
 
 The following are additional examples of service definitions for the iRobot Create and Simple Webcam examples:
