@@ -101,12 +101,11 @@ object ValueTypesExample
     property varvalue p_varvalue_double_array
     property varvalue q_varvalue_string
     property varvalue r_varvalue_struct
-    property varvalue s_varvalue_map
     # varvalue{string} is a string keyed map of varvalues
     # It is frequently used for "extended" fields
     # to allow for forward compatibility
-    property varvalue{string} t_varvalue_map2
+    property varvalue{string} s_varvalue_map2
 
     # Null examples
-    property MyStructure u_struct_null
+    property MyStructure t_struct_null
 end

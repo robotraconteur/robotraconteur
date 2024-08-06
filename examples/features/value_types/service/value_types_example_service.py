@@ -351,6 +351,51 @@ class ValueTypesExample_impl:
         assert (len(value) == 1)
         assert_MyStructure(value[0])
 
+    @property
+    def p_varvalue_double_array(self):
+        return RR.VarValue(np.array([1.4, 2.5, 3.6], dtype=np.float64), "double[]")
+
+    @p_varvalue_double_array.setter
+    def p_varvalue_double_array(self, value):
+        np.testing.assert_array_equal(value.data, [1.4, 2.5, 3.6])
+        assert value.datatype == "double[]"
+
+    @property
+    def q_varvalue_string(self):
+        return RR.VarValue("varvalue string from service", "string")
+
+    @q_varvalue_string.setter
+    def q_varvalue_string(self, value):
+        assert value.data == "varvalue string from client"
+        assert value.datatype == "string"
+
+    @property
+    def r_varvalue_struct(self):
+        my_structure_type = RRN.GetStructureType("experimental.value_types.MyStructure")
+        s = my_structure_type()
+        fill_MyStructure(s)
+        return RR.VarValue(s, "experimental.value_types.MyStructure")
+
+    @r_varvalue_struct.setter
+    def r_varvalue_struct(self, value):
+        assert_MyStructure(value.data)
+        assert value.datatype == "experimental.value_types.MyStructure"
+
+    @property
+    def s_varvalue_map2(self):
+        return {
+            "key3": RR.VarValue(np.array([4, 5], dtype=np.int32), "int32[]"),
+            "key4": RR.VarValue("string 4", "string")
+        }
+
+    @s_varvalue_map2.setter
+    def s_varvalue_map2(self, value):
+        assert len(value) == 2
+        np.testing.assert_array_equal(value["key1"].data, [2, 3])
+        assert value["key1"].datatype == "int32[]"
+        assert value["key2"].data == "string 2"
+        assert value["key2"].datatype == "string"
+
 
 def fill_MyStructure(s, i=0):
     s.a = 52 + i
