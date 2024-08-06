@@ -261,6 +261,96 @@ class ValueTypesExample_impl:
         assert (value[1]["f"]["y"] == 30.2)
         assert (value[1]["f"]["z"] == 30.3)
 
+    # Containers
+    @property
+    def l_double_map(self):
+        return {1: 5.1, 5: 6.2}
+
+    @l_double_map.setter
+    def l_double_map(self, value):
+        assert (len(value) == 3)
+        assert (value[1] == 1.1)
+        assert (value[2] == 2.2)
+        assert (value[5] == 3.3)
+
+    @property
+    def l_double_array_map(self):
+        return {
+            "key3": np.array([5.1, 5.2, 5.3], dtype=np.float64),
+            "key4": np.array([6.1, 6.2, 6.3], dtype=np.float64)
+        }
+
+    @l_double_array_map.setter
+    def l_double_array_map(self, value):
+        assert (len(value) == 2)
+        np.testing.assert_array_equal(value["key1"], [1.1, 1.2, 1.3])
+        np.testing.assert_array_equal(value["key2"], [2.1, 2.2, 2.3])
+
+    @property
+    def m_string_list(self):
+        return ["string 4", "string 5"]
+
+    @m_string_list.setter
+    def m_string_list(self, value):
+        assert (len(value) == 3)
+        assert (value[0] == "string 1")
+        assert (value[1] == "string 2")
+        assert (value[2] == "string 3")
+
+    @property
+    def m_string_map_int32(self):
+        return {
+            87: "string 4",
+            1: "string 5"
+        }
+
+    @m_string_map_int32.setter
+    def m_string_map_int32(self, value):
+        assert (len(value) == 3)
+        assert (value[12] == "string 1")
+        assert (value[100] == "string 2")
+        assert (value[17] == "string 3")
+
+    @property
+    def m_string_map_string(self):
+        return {
+            "key3": "string 3",
+            "key4": "string 4",
+            "key5": "string 5"
+        }
+
+    @m_string_map_string.setter
+    def m_string_map_string(self, value):
+        assert (len(value) == 2)
+        assert (value["key1"] == "string 1")
+        assert (value["key2"] == "string 2")
+
+    @property
+    def n_vector_map(self):
+        r = np.zeros((1,), dtype=RRN.GetNamedArrayDType("experimental.value_types.MyVector3"))
+        r[0]["x"] = 4.0
+        r[0]["y"] = 5.0
+        r[0]["z"] = 6.0
+        return {1: r}
+
+    @n_vector_map.setter
+    def n_vector_map(self, value):
+        assert (len(value) == 1)
+        assert (value[1][0]["x"] == 1.0)
+        assert (value[1][0]["y"] == 2.0)
+        assert (value[1][0]["z"] == 3.0)
+
+    @property
+    def o_struct_list(self):
+        s = RRN.NewStructure("experimental.value_types.MyStructure")
+        fill_MyStructure(s)
+        return [s]
+
+    @o_struct_list.setter
+    def o_struct_list(self, value):
+        assert (len(value) == 1)
+        assert_MyStructure(value[0])
+
 
 def fill_MyStructure(s, i=0):
     s.a = 52 + i
