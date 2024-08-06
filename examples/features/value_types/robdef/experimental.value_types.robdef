@@ -80,7 +80,6 @@ object ValueTypesExample
     # Examples using pods
     property MyPod j_pod
     property MyPod[] j_pod_array
-    property MyPod[*] j_pod_marray
 
     # Examples using structures
     property MyStructure k_struct

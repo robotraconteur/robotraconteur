@@ -5,7 +5,7 @@ import numpy as np
 
 c = RRN.ConnectService('rr+tcp://localhost:53223?service=values_example')
 
-# Retrieve NamedArray numpy dtypes
+# Retrieve NamedArray numpy dtypes. NamedArrays are represented as NumPy dtypes with fields
 # obj is only used for clients. It is omitted for services.
 my_vector3_dtype = RRN.GetNamedArrayDType("experimental.value_types.MyVector3", obj=c)
 my_quaternion_dtype = RRN.GetNamedArrayDType("experimental.value_types.MyQuaternion", obj=c)

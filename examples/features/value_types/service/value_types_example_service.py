@@ -191,6 +191,76 @@ class ValueTypesExample_impl:
         assert (value[0]["position"]["y"] == 2.0)
         assert (value[0]["position"]["z"] == 3.0)
 
+    @property
+    def j_pod(self):
+        a = np.zeros((1,), dtype=RRN.GetNamedArrayDType("experimental.value_types.MyPod"))
+        a[0]["a"] = 0.791
+        a[0]["b"] = 1077
+        a[0]["c"] = [61, 52, 33, 24]
+        a[0]["d"]["len"] = 2
+        a[0]["d"]["array"][0:2] = [1, 2]
+        a[0]["e"] = [[7, 8, 9], [10, 11, 12]]
+        a[0]["f"]["x"] = 20.1
+        a[0]["f"]["y"] = 20.2
+        a[0]["f"]["z"] = 20.3
+        return a
+
+    @j_pod.setter
+    def j_pod(self, value):
+        assert (value[0]["a"] == 0.928)
+        assert (value[0]["b"] == 8374)
+        np.testing.assert_array_equal(value[0]["c"], [8, 9, 10, 11])
+        assert (value[0]["d"]["len"] == 1)
+        np.testing.assert_array_equal(value[0]["d"]["array"][0:1], [17])
+        np.testing.assert_array_equal(value[0]["e"], [[1, 2, 3], [4, 5, 6]])
+        assert (value[0]["f"]["x"] == 10.1)
+        assert (value[0]["f"]["y"] == 10.2)
+        assert (value[0]["f"]["z"] == 10.3)
+
+    @property
+    def j_pod_array(self):
+        d = np.zeros((2,), dtype=RRN.GetNamedArrayDType("experimental.value_types.MyPod"))
+        d[0]["a"] = 0.791
+        d[0]["b"] = 1077
+        d[0]["c"] = [61, 52, 33, 24]
+        d[0]["d"]["len"] = 2
+        d[0]["d"]["array"][0:2] = [1, 2]
+        d[0]["e"] = [[7, 8, 9], [10, 11, 12]]
+        d[0]["f"]["x"] = 20.1
+        d[0]["f"]["y"] = 20.2
+        d[0]["f"]["z"] = 20.3
+        d[1]["a"] = 0.03
+        d[1]["b"] = 693
+        d[1]["c"] = [5, 6, 7, 8]
+        d[1]["d"]["len"] = 1
+        d[1]["d"]["array"][0] = 3
+        d[1]["e"] = [[19, 20, 21], [22, 23, 24]]
+        d[1]["f"]["x"] = 40.1
+        d[1]["f"]["y"] = 40.2
+        d[1]["f"]["z"] = 40.3
+        return d
+
+    @j_pod_array.setter
+    def j_pod_array(self, value):
+        assert (value[0]["a"] == 0.928)
+        assert (value[0]["b"] == 8374)
+        np.testing.assert_array_equal(value[0]["c"], [8, 9, 10, 11])
+        assert (value[0]["d"]["len"] == 1)
+        np.testing.assert_array_equal(value[0]["d"]["array"][0:1], [17])
+        np.testing.assert_array_equal(value[0]["e"], [[1, 2, 3], [4, 5, 6]])
+        assert (value[0]["f"]["x"] == 10.1)
+        assert (value[0]["f"]["y"] == 10.2)
+        assert (value[0]["f"]["z"] == 10.3)
+        assert (value[1]["a"] == 0.67)
+        assert (value[1]["b"] == 123)
+        np.testing.assert_array_equal(value[1]["c"], [1, 2, 3, 4])
+        assert (value[1]["d"]["len"] == 2)
+        np.testing.assert_array_equal(value[1]["d"]["array"][0:2], [5, 6])
+        np.testing.assert_array_equal(value[1]["e"], [[13, 14, 15], [16, 17, 18]])
+        assert (value[1]["f"]["x"] == 30.1)
+        assert (value[1]["f"]["y"] == 30.2)
+        assert (value[1]["f"]["z"] == 30.3)
+
 
 def fill_MyStructure(s, i=0):
     s.a = 52 + i
