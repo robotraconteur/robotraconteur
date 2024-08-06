@@ -357,7 +357,7 @@ class ValueTypesExample_impl:
 
     @p_varvalue_double_array.setter
     def p_varvalue_double_array(self, value):
-        np.testing.assert_array_equal(value.data, [1.4, 2.5, 3.6])
+        np.testing.assert_array_equal(value.data, [1.1, 2.2, 3.3])
         assert value.datatype == "double[]"
 
     @property
@@ -395,6 +395,14 @@ class ValueTypesExample_impl:
         assert value["key1"].datatype == "int32[]"
         assert value["key2"].data == "string 2"
         assert value["key2"].datatype == "string"
+
+    @property
+    def t_struct_null(self):
+        return None
+
+    @t_struct_null.setter
+    def t_struct_null(self, value):
+        assert value is None
 
 
 def fill_MyStructure(s, i=0):
