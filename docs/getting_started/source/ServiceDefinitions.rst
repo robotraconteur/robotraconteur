@@ -51,6 +51,10 @@ on the contents of service definitions and how to use them:
 
 .. note::
 
+    "Values Types" are passed by value, while "Object Types" are passed by reference.
+
+.. note::
+
     Also see the `Robot Raconteur Framework Service Definition Documentation <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html>`_
     and the `Robot Raconteur Service Definition Standard <https://github.com/robotraconteur/robotraconteur_standards/blob/master/draft/service_definition.md>`_
     for more detailed information on the service definition format.
