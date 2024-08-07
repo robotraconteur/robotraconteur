@@ -11,7 +11,7 @@ using (var node_setup = new ClientNodeSetup(args))
     var c = (experimental.value_types.ValueTypesExample)RobotRaconteurNode.s.ConnectService(
         "rr+tcp://localhost:53223?service=values_example");
 
-    // Example using Pods. Pods are represented as Matlab struct
+    // Example using Pods
 
     // property MyPod j_pod
     var a = new MyPod() { a = 0.928,

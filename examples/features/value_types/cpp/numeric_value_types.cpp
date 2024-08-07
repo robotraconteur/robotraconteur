@@ -1,3 +1,5 @@
+// numeric_value_types.cpp - Example of using numeric value types
+
 #include <stdio.h>
 #include <iostream>
 #include <boost/range/algorithm.hpp>

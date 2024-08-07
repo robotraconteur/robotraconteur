@@ -22,7 +22,7 @@ using (var node_setup = new ClientNodeSetup(args))
     Debug.Assert(b[5] == 6.2);
 
     // property double[]{string} l_double_array_map
-    // int32 keyed map of double arrays
+    // string keyed map of double arrays
     c.l_double_array_map = new Dictionary<string, double[]>() { { "key1", new double[] { 1.1, 1.2, 1.3 } },
                                                                 { "key2", new double[] { 2.1, 2.2, 2.3 } } };
 

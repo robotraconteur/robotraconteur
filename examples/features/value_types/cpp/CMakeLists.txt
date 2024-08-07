@@ -20,3 +20,18 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(numeric_value_types numeric_value_types.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
 target_link_libraries(numeric_value_types RobotRaconteurCore)
+
+add_executable(string_value_type string_value_type.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
+target_link_libraries(string_value_type RobotRaconteurCore)
+
+add_executable(struct_value_types struct_value_types.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
+target_link_libraries(struct_value_types RobotRaconteurCore)
+
+add_executable(namedarray_value_types namedarray_value_types.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
+target_link_libraries(namedarray_value_types RobotRaconteurCore)
+
+add_executable(pod_value_types pod_value_types.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
+target_link_libraries(pod_value_types RobotRaconteurCore)
+
+add_executable(container_value_types container_value_types.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
+target_link_libraries(container_value_types RobotRaconteurCore)
