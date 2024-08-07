@@ -1,9 +1,9 @@
-% struct_value_type_simple.m - Simple example of using struct value types
+% struct_value_type.m - Simple example of using struct value types
 
 c = RobotRaconteur.ConnectService('rr+tcp://localhost:53223?service=values_example');
 
 % Create and populate a MyStructure
-s = RobotRaconteur.CreateStructure(c, "experimental.value_types.MyStructure");
+s = RobotRaconteur.CreateStructure(c, 'experimental.value_types.MyStructure');
 % field double a
 s.a = 5;
 % field uint32[2] b
@@ -29,7 +29,7 @@ assert (u.a == 52);
 % field uint32[2] b
 assert(isequal(u.b, [110, 120]'));
 % field string c
-assert (strcmp(u.c, "String from structure service"));
+assert (strcmp(u.c, 'String from structure service'));
 % field string{list} d
 assert (length(u.d) == 3);
 assert (strcmp(u.d{1}, 'string c'));

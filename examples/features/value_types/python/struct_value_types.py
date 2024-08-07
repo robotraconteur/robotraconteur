@@ -1,4 +1,4 @@
-# struct_value_type_simple.py - Simple example of using struct value types
+# struct_value_type.py - Simple example of using struct value types
 
 from RobotRaconteur.Client import *
 import numpy as np
@@ -10,10 +10,10 @@ c = RRN.ConnectService('rr+tcp://localhost:53223?service=values_example')
 
 # Retrieve the structure type. obj is only used
 # for clients. It is omitted for services.
-simple_structure_type = RRN.GetStructureType("experimental.value_types.MyStructure", obj=c)
+my_structure_type = RRN.GetStructureType("experimental.value_types.MyStructure", obj=c)
 
 # Create and populate a SimpleStructure
-s = simple_structure_type()
+s = my_structure_type()
 # field double a
 s.a = 5
 # field uint32[2] b

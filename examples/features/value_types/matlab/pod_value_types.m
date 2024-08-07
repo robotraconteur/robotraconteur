@@ -9,8 +9,6 @@ a = struct;
 a.a = 0.928;
 a.b = int32(8374);
 a.c = uint8([8, 9, 10, 11]');
-% Max length fields are stored with a length field and
-% data field.
 a.d = uint8(17);
 a.e = uint16([1, 2, 3; 4, 5, 6]);
 a.f = [10.1, 10.2, 10.3]';
