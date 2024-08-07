@@ -35,3 +35,9 @@ target_link_libraries(pod_value_types RobotRaconteurCore)
 
 add_executable(container_value_types container_value_types.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
 target_link_libraries(container_value_types RobotRaconteurCore)
+
+add_executable(varvalue_value_types varvalue_value_types.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
+target_link_libraries(varvalue_value_types RobotRaconteurCore)
+
+add_executable(null_value_types varvalue_value_types.cpp ${RR_THUNK_SRCS} ${RR_THUNK_HDRS})
+target_link_libraries(null_value_types RobotRaconteurCore)
