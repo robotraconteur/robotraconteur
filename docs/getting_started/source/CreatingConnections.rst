@@ -55,7 +55,6 @@ The simplest and most direct method to connect to a service is by using a URL an
     .. group-tab:: LabView
 
         .. image:: ../../../examples/features/connecting/labview/connect_url.png
-            :scale: 100%
             :align: center
 
     .. group-tab:: C\#
@@ -168,7 +167,6 @@ instead of returning a client connection, a ``ServiceSubscription`` is returned.
     .. group-tab:: LabView
 
         .. image:: ../../../examples/features/subscriptions/labview/subscribe_url.png
-            :scale: 100%
             :align: center
 
     .. group-tab:: C\#
@@ -241,7 +239,6 @@ Simple examples connecting all services of a specific type, in this case, ``expe
     .. group-tab:: LabView
 
         .. image:: ../../../examples/features/subscriptions/labview/subscribe_type.png
-            :scale: 80%
             :align: center
 
     .. group-tab:: C\#
@@ -277,7 +274,6 @@ The following examples show how to use filters with ``SubscribeServiceByType()``
         .. group-tab:: LabView
 
             .. image:: ../../../examples/features/subscriptions/labview/subscribe_filter.png
-                :width: 600
                 :align: center
 
         .. group-tab:: C\#
