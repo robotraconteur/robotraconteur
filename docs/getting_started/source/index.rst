@@ -28,6 +28,7 @@ an up-to-date directory of available documentation.
    CreatingConnections
    ServiceDefinitions
    ValueTypes
+   ObjectTypes
 
 .. toctree::
    :maxdepth: 4
