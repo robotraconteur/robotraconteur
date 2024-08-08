@@ -5,14 +5,14 @@ import numpy as np
 
 c = RRN.ConnectService('rr+tcp://localhost:53223?service=values_example')
 
-# Example using SimpleStructure type. Also see example
+# Example using MyStructure type. Also see example
 # using MyStructure for a more complex example.
 
 # Retrieve the structure type. obj is only used
 # for clients. It is omitted for services.
 my_structure_type = RRN.GetStructureType("experimental.value_types.MyStructure", obj=c)
 
-# Create and populate a SimpleStructure
+# Create and populate a MyStructure
 s = my_structure_type()
 # field double a
 s.a = 5
@@ -27,7 +27,7 @@ s.d = [
 ]
 
 # Set the property using the structure
-# property SimpleStructure k_struct
+# property MyStructure k_struct
 c.k_struct = s
 
 # Retrieve the structure from the service

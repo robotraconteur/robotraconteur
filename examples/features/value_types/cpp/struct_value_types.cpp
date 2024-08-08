@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
     s->d = d1;
 
     // Set the property using the structure
-    // property SimpleStructure k_struct
+    // property MyStructure k_struct
     c->set_k_struct(s);
 
     // Retrieve the structure from the service

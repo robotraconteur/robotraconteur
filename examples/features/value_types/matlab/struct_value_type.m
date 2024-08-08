@@ -15,7 +15,7 @@ s.d = {'string a','string b'}';
 
 
 % Set the property using the structure
-% property SimpleStructure k_struct
+% property MyStructure k_struct
 c.k_struct = s;
 
 % Retrieve the structure from the service

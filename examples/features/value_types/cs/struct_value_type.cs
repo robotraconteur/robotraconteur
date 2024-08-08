@@ -23,7 +23,7 @@ using (var node_setup = new ClientNodeSetup(args))
     s.d = new List<string>( { "string a", "string b" });
 
     // Set the property using the structure
-    // property SimpleStructure k_struct
+    // property MyStructure k_struct
     c.k_struct = s;
 
     // Retrieve the structure from the service
