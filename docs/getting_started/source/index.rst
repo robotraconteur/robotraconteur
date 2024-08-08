@@ -27,6 +27,7 @@ an up-to-date directory of available documentation.
    MeetReynard
    CreatingConnections
    ServiceDefinitions
+   ValueTypes
 
 .. toctree::
    :maxdepth: 4
