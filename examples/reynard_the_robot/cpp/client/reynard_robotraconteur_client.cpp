@@ -18,6 +18,10 @@ int main(int argc, char* argv[])
     auto reynard =
         RR::rr_cast<experimental::reynard_the_robot::Reynard>(RR::RobotRaconteurNode::s()->ConnectService(url));
 
+    // Connect a callback function to listen for new messages
+    reynard->get_new_message().connect(
+        [](const std::string& message) { std::cout << "New message: " << message << std::endl; });
+
     // Teleport the robot
     reynard->teleport(0.1, -0.2);
 

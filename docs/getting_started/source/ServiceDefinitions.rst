@@ -1,3 +1,5 @@
+.. _service_definitions:
+
 ===================
 Service Definitions
 ===================
@@ -44,8 +46,8 @@ The service definition defines the structure ``ReynardState``, and the object ``
 can also define enums, constants, namedarrays, pods, and exceptions. See the following pages for more information
 on the contents of service definitions and how to use them:
 
-* :ref:`value-types`
-* :ref:`object-types`
+* :ref:`value_types`
+* :ref:`object_types`
 * :ref:`constants`
 * :ref:`exceptions`
 

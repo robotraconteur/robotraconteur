@@ -1,3 +1,5 @@
+.. _value_types:
+
 ===========
 Value Types
 ===========

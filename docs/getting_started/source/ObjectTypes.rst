@@ -1,3 +1,5 @@
+.. _object_types:
+
 ============
 Object Types
 ============
@@ -6,8 +8,6 @@ Object Types
    :depth: 1
    :local:
    :backlinks: none
-
-.. _object_types:
 
 Overview
 ========
@@ -73,7 +73,7 @@ Example code excerpts demonstrating the use of properties:
 
         .. literalinclude:: ../../../examples/reynard_the_robot/cpp/client/reynard_robotraconteur_client.cpp
             :language: cpp
-            :lines: 39-46
+            :lines: 44-51
 
 function Member
 ===============
@@ -125,7 +125,7 @@ Example code excerpts demonstrating the use of functions:
 
         .. literalinclude:: ../../../examples/reynard_the_robot/cpp/client/reynard_robotraconteur_client.cpp
             :language: cpp
-            :lines: 21-22,24-25,30-31,33-34,36-37,55-56
+            :lines: 26-27,29-30,35-36,38-39,41-42,60-61
 
 ``function`` members can also return "generators", which are a simple co-routine mechanism. The generator
 function returns a generator object that has three functions: ``Next()``, ``Abort()``, and ``Close()``. The
@@ -244,13 +244,11 @@ Example code excerpts demonstrating the use of events:
             :language: csharp
             :lines: 14-16
 
-    .. TODO: C++ event example
-    ..
-    .. .. group-tab:: C++
-    ..
-    ..    .. literalinclude:: ../../../examples/reynard_the_robot/cpp/client/reynard_robotraconteur_client.cpp
-    ..        :language: cpp
-    ..        :lines: 21-22,24-25,30-31,33-34,36-37,55-56
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/reynard_the_robot/cpp/client/reynard_robotraconteur_client.cpp
+            :language: cpp
+            :lines: 21-24
 
 objref Member
 =============
