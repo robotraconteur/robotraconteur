@@ -19,7 +19,7 @@ to clients. Value types are passed between clients and services using the object
 may contain multiple objects. One object is the "root" object, and is returned when the client connects.
 Other objects in the service are accessed using ``objref`` members.
 
-Objects are defined using the ``object`` keyword in service definitions. See the `Service Definitions`_ page
+Objects are defined using the ``object`` keyword in service definitions. See the :ref:`service_definitions` page
 and the `Service Definition Framework page <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html>`_
 for more information on defining objects.
 
@@ -73,7 +73,7 @@ Example code excerpts demonstrating the use of properties:
 
         .. literalinclude:: ../../../examples/reynard_the_robot/cpp/client/reynard_robotraconteur_client.cpp
             :language: cpp
-            :lines: 44-51
+            :lines: 43-50
 
 function Member
 ===============
@@ -125,7 +125,7 @@ Example code excerpts demonstrating the use of functions:
 
         .. literalinclude:: ../../../examples/reynard_the_robot/cpp/client/reynard_robotraconteur_client.cpp
             :language: cpp
-            :lines: 26-27,29-30,35-36,38-39,41-42,60-61
+            :lines: 25-26,28-29,34-35,37-38,40-41,59-60
 
 ``function`` members can also return "generators", which are a simple co-routine mechanism. The generator
 function returns a generator object that has three functions: ``Next()``, ``Abort()``, and ``Close()``. The
