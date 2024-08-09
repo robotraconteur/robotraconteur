@@ -1,4 +1,4 @@
-<p align="center"><img src="https://robotraconteurpublicfiles.s3.amazonaws.com/RRheader2.jpg"></p>
+<p align="center"><img src="docs/figures/logo-header.svg"></p>
 
 # Robot Raconteur Core Library and Wrappers
 
