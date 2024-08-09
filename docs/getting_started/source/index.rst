@@ -29,6 +29,7 @@ an up-to-date directory of available documentation.
    ServiceDefinitions
    ValueTypes
    ObjectTypes
+   Constants
 
 .. toctree::
    :maxdepth: 4
