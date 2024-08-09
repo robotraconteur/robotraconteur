@@ -59,5 +59,10 @@ int main(int argc, char* argv[])
     // Say hello
     reynard->say("Hello, World From C++!");
 
+    // Read the current state using a wire "peek". Can also "connect" to receive streaming updates.
+    RR::TimeSpec ts;
+    experimental::reynard_the_robot::ReynardStatePtr state = reynard->get_state()->PeekInValue(ts);
+    std::cout << "State: " << state->robot_position->at(0) << " " << state->robot_position->at(0) << std::endl;
+
     return 0;
 }

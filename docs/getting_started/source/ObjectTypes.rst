@@ -400,3 +400,104 @@ Example code excerpts demonstrating the use of callbacks:
         .. literalinclude:: ../../../examples/irobot_create/cpp/client/irobot_create_client.cpp
             :language: cpp
             :lines: 41-48
+
+wire Member
+===========
+
+The ``wire`` member is used to communicate a "most recent" value between the client and service. The wire
+is "connected" to create connections between clients and services. A client may only create one client
+connection to a wire. Wires can also be modified to be ``[readonly]`` or ``[writeonly]``.
+
+Wires are normally "connected" to create a real-time streaming connection between the client and service. Wires
+can also be "Peeked" and "Poked" using the ``PeekInValue()``, ``PeekOutValue()`` and ``PokeOutValue()``
+functions. These functions work like properties where a request is sent to the service to get or set the value rather
+than using a streaming connection.
+
+Example wire from the ``experimental.reynard_the_robot.Reynard`` object:
+
+.. literalinclude:: ../../../examples/reynard_the_robot/robdef/experimental.reynard_the_robot.robdef
+    :lines: 31
+
+Example code excerpts demonstrating the use of wires with ``PeekInValue()``:
+
+.. tabs::
+
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/reynard_the_robot/python/client/reynard_robotraconteur_client.py
+            :language: python
+            :lines: 16-18
+
+    .. group-tab:: MATLAB
+
+        .. literalinclude:: ../../../examples/reynard_the_robot/matlab/client/reynard_robotraconteur_client.m
+            :language: matlab
+            :lines: 12-14
+
+    .. group-tab:: LabView
+
+        .. raw:: html
+
+            <div style="overflow: auto; width: 100%; height: 400px;">
+                <img src="../../../examples/reynard_the_robot/labview/client/reynard_robotraconteur_client_vi.png" style="max-width: none;">
+            </div>
+
+    .. group-tab:: C\#
+
+        .. literalinclude:: ../../../examples/reynard_the_robot/cs/client/reynard_robotraconteur_client.cs
+            :language: csharp
+            :lines: 18-21
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/reynard_the_robot/cpp/client/reynard_robotraconteur_client.cpp
+            :language: cpp
+            :lines: 62-65
+
+The standard robot streaming position command demonstrates using read and write wires to command
+a robot in (soft) real-time using the ``com.robotraconteur.robotics.robot.Robot`` object. Wire
+connections are established to the ``robot_state`` and ``position_command`` wires for real-time
+streaming of the robot state and position command.
+
+Example wires from the ``com.robotraconteur.robotics.robot.Robot`` object:
+
+.. codeblock::
+
+    wire RobotState robot_state [readonly,nolock]
+    wire RobotJointCommand position_command [writeonly]
+
+Example code excerpts demonstrating the use of wires for real-time streaming:
+
+.. tabs::
+
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/standard_devices/robot/python/robot_client_position_command.py
+            :language: python
+            :lines: 37-45,55-82
+
+    .. group-tab:: MATLAB
+
+        .. literalinclude:: ../../../examples/standard_devices/robot/matlab/robot_client_position_command.m
+            :language: matlab
+            :lines: 19-27,38-68
+
+    .. group-tab:: LabView
+
+        .. raw:: html
+
+            <div style="overflow: auto; width: 100%; height: 400px;">
+                <img src="../../../examples/standard_devices/robot/labview/robot_client_position_command.png" style="max-width: none;">
+            </div>
+
+    .. group-tab:: C\#
+
+        .. literalinclude:: ../../../examples/standard_devices/robot/cs/robot_client_position_command.cs
+            :language: csharp
+            :lines: 33-41,54-93
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/standard_devices/robot/cpp/robot_client_position_command.cpp
+            :language: cpp
+            :lines: 41-49,59-96
