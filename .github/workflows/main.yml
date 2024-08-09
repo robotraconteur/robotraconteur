@@ -1689,7 +1689,6 @@ jobs:
         ROS_REPO: main
 
   build-ros-prerelease:
-    if: false
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
