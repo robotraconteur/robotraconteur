@@ -49,6 +49,7 @@ jobs:
         mv build2/docs/net doc/doc/core/latest/net
         mv build2/docs/cpp/html doc/doc/core/latest/cpp
         mv build2/docs/getting_started doc/doc/core/latest/getting_started
+        cp docs/github_pages/index.html doc/index.md
     - name: archive docs
       uses: actions/upload-pages-artifact@v1
       with:
