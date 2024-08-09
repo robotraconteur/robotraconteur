@@ -38,8 +38,6 @@ setup(name='RobotRaconteur',
 	  distclass=BinaryDistribution,
 	  license='Apache-2.0',
 	  install_requires=['numpy'],
-	  long_description='This package contains Python wrappers for the Robot Raconteur communication framework. ' \
-	  'See http://robotraconteur.com/documentation for more information.',
       cmdclass={'build_ext': build_ext},
       ext_modules=[
         Extension(

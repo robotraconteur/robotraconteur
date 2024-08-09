@@ -1,6 +1,6 @@
 <p align="center"><img src="https://github.com/robotraconteur/robotraconteur/blob/master/docs/figures/logo-header.svg"></p>
 
-# Robot Raconteur Python Package
+# robotraconteur Python Package
 
 ![Python](https://img.shields.io/badge/python-2.7+|3.5+-blue.svg?style=flat&logo=python&logoColor=ffdd54)
 ![pypi](https://img.shields.io/pypi/v/robotraconteur?style=flat&logo=pypi)
