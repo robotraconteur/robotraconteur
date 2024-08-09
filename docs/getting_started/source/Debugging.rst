@@ -60,7 +60,12 @@ In MATLAB, it is necessary to use the API to enable logging and send the log out
     RobotRaconteur.SetLogLevel('DEBUG');
     RobotRaconteur.OpenLogFile('log.txt');
 
+Command Line Options
+======================
 
+Robot Raconteur supports a number of command line options to help with debugging and diagnostics. See
+the `Command Line Arguments Wiki Page <https://github.com/robotraconteur/robotraconteur/wiki/Command-Line-Options>`_
+for a full list of available command line options.
 
 Python Debugging
 ================
