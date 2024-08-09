@@ -1,3 +1,5 @@
+# reynard_the_robot_client_pyodide.py - Reynard the Robot client using Pyodide
+
 from RobotRaconteur.Client import *
 import js
 import asyncio

@@ -31,6 +31,7 @@ an up-to-date directory of available documentation.
    ObjectTypes
    Constants
    Exceptions
+   Web
 
 .. toctree::
    :maxdepth: 4
