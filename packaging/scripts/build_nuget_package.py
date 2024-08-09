@@ -55,7 +55,7 @@ with tempfile.TemporaryDirectory() as tmpdirname:
                     tmpdir.joinpath('runtimes/win-x64/native/RobotRaconteurNETNative.dll').absolute())
     shutil.copyfile(f'{win32dir}/bin/RobotRaconteurGen.exe',
                     tmpdir.joinpath('tools/RobotRaconteurGen.exe').absolute())
-    shutil.copyfile('robotraconteur/RobotRaconteurNET/nuget/README.md',
+    shutil.copyfile('robotraconteur/RobotRaconteurNET/README.md',
                     tmpdir.joinpath('docs/README.md').absolute())
 
     subprocess.check_call('nuget pack', cwd=tmpdir, shell=True)
