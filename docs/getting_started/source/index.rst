@@ -48,3 +48,4 @@ an up-to-date directory of available documentation.
    Robot Raconteur Python <https://robotraconteur.github.io/robotraconteur/doc/core/latest/python>
    Robot Raconteur C# <https://robotraconteur.github.io/robotraconteur/doc/core/latest/net>
    Standard Service Definitions <https://github.com/robotraconteur/robotraconteur_standard_robdef>
+   Robot Raconteur Wiki <https://github.com/robotraconteur/robotraconteur/wiki>
