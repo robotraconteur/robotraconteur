@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/robotraconteur/robotraconteur/blob/master/docs/figures/logo-header.svg"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/robotraconteur/robotraconteur/master/docs/figures/logo-header.svg"></p>
 
 # robotraconteur Python Package
 
