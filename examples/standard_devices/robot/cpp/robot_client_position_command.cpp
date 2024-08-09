@@ -36,10 +36,14 @@ int main(int argc, char* argv[])
     c->set_command_mode(robot::RobotCommandMode::halt);
     boost::this_thread::sleep(boost::posix_time::milliseconds(100));
     c->set_command_mode(robot::RobotCommandMode::position_command);
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
     // Connect to the position_command and robot_state wires for real-time data streaming
     auto cmd_w = c->get_position_command()->Connect();
     auto state_w = c->get_robot_state()->Connect();
+    // Set a lifespan of 500 ms for the robot state. If new packets
+    // are not received within 500 ms, an exception will be thrown
+    state_w->SetInValueLifespan(500);
 
     // Wait for the state_w wire to receive valid data
     state_w->WaitInValueValid();
@@ -59,6 +63,13 @@ int main(int argc, char* argv[])
 
         // Retrieve the current robot state
         auto robot_state = state_w->GetInValue();
+
+        // Make sure the robot is still in position mode
+        if (robot_state->command_mode != robot::RobotCommandMode::position_command)
+        {
+            std::cerr << "Robot is not in position mode" << std::endl;
+            return 1;
+        }
 
         // Increment command_seqno
         command_seqno++;
