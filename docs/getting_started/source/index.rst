@@ -36,6 +36,7 @@ an up-to-date directory of available documentation.
    Debugging
    CommonDevices
    DevelopingServices
+   Examples
 
 .. toctree::
    :maxdepth: 1
