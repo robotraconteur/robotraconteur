@@ -351,3 +351,52 @@ synchronously with a timeout without using a callback.
         .. literalinclude:: ../../../examples/simple_webcam/cpp/client/simple_webcam_client_streaming.cpp
             :language: cpp
             :lines: 28-38,57-62
+
+callback Member
+===============
+
+The ``callback`` member is a "reverse function" that allows the service to call a function in the client. The
+service must specify which client to call using the "Local Endpoint" of the client. The service determines
+the client's local endpoint during a function call. In the example, a specific function is used
+to claim the callback, but the service has flexibility in how it assigns the callback.
+
+Example callback from the ``experimental.create3.Create`` object:
+
+.. literalinclude:: ../../../examples/irobot_create/robdef/experimental.create3.robdef
+    :lines: 61
+
+Example code excerpts demonstrating the use of callbacks:
+
+.. tabs::
+
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/irobot_create/python/client/irobot_create_client.py
+            :language: python
+            :lines: 37-39,59-60
+
+    .. group-tab:: MATLAB
+
+        .. literalinclude:: ../../../examples/irobot_create/matlab/client/irobot_create_client.m
+            :language: matlab
+            :lines: 22-24,73-80
+
+    .. group-tab:: LabView
+
+        .. raw:: html
+
+            <div style="overflow: auto; width: 100%; height: 400px;">
+                <img src="../../../examples/irobot_create/labview/client/iRobot Create Client.png" style="max-width: none;">
+            </div>
+
+    .. group-tab:: C\#
+
+        .. literalinclude:: ../../../examples/irobot_create/cs/client/irobot_create_client.cs
+            :language: csharp
+            :lines: 24-28,53-58
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/irobot_create/cpp/client/irobot_create_client.cpp
+            :language: cpp
+            :lines: 41-48
