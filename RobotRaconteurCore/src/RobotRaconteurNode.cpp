@@ -2896,7 +2896,7 @@ void RobotRaconteurNode::Sleep(const boost::posix_time::time_duration& duration)
     }
     if (!t)
     {
-        boost::this_thread::sleep(duration);
+        HighResolutionSleep(duration);
     }
     else
     {

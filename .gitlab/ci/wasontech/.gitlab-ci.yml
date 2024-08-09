@@ -336,24 +336,16 @@ build_freebsd_amd64:
   - >
     ${RUNCMD} cmake -G Ninja
     -DCMAKE_OSX_ARCHITECTURES=x86_64
-    -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
-    -DOPENSSL_USE_STATIC_LIBS=ON
+    -DCMAKE_TOOLCHAIN_FILE=/Users/wasonj/RobotRaconteur2/vcpkg/scripts/buildsystems/vcpkg.cmake
+    -DVCPKG_TARGET_TRIPLET=x64-osx
+    -DCMAKE_BUILD_TYPE=Release
     ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_MATLAB_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS} ${EXTRA_CMAKE_ARGS}
-    -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl\@3
     -DCMAKE_IGNORE_PREFIX_PATH=/opt
     -DMatlab_ROOT_DIR=/Applications/MATLAB_R2020a.app
     -DMatlab_MEX_EXTENSION=mexmaci64
     -DRR_MATLAB_TEST_EXTRA_ARGS=-maci64
-    -DBOOST_ROOT=/usr/local/Cellar/boost/1.81.0_1
     -DCMAKE_SYSTEM_IGNORE_PREFIX_PATH=/opt
-    -DGTest_DIR=/usr/local/Cellar/googletest/1.12.1/lib/cmake/GTest
     -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-    -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
-    -DBoost_NO_BOOST_CMAKE=ON
-    -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
-    -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
-    -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
-    -DCMAKE_FIND_ROOT_PATH="/usr/local;/Library;/System/Library;/Applications"
     -DROBOTRACONTEUR_EXTRA_TESTS=ON
     -DPYTHON3_EXECUTABLE=/Users/wasonj/python3-intel64/venv/bin/python3-intel64
     -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib
@@ -372,7 +364,6 @@ build_freebsd_amd64:
     paths:
     - ${OUTNAME}/out/*
   variables:
-    BOOST_VERSION: 1.81.0
     CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON
     EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
 
@@ -435,6 +426,28 @@ build_osx_amd64_matlab_release:
     && tar -cf RobotRaconteur-$RR_VER-MATLAB-maci64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maci64
   after_script: []
 
+build_osx_arm64_matlab_release:
+  stage: build
+  extends: .osx_build_arm64_release
+  tags:
+  - wasontech
+  - macos
+  - m1
+  variables:
+    OUTNAME: "out-osx_arm64_matlab_release"
+  script:
+  - !reference [.osx_build_arm64_release, script]
+  - mkdir ../$OUTNAME
+  - mv out ../$OUTNAME/
+  - cd ../$OUTNAME
+  - cp out/LICENSE.txt out/Matlab
+  - cd out
+  - >
+    export RR_VER=`cat rrversion.txt`
+    && cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-maca64
+    && tar -cf RobotRaconteur-$RR_VER-MATLAB-maca64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maca64
+  after_script: []
+
 code_formatting_ubuntu_focal_amd64:
   stage: build
   extends: .all_build
@@ -495,30 +508,23 @@ build_raspbian_buster_armhf:
   stage: build
 
   script:
-  - export LIBRARY_PATH=/usr/local/opt/icu4c/lib
   - mkdir build
   - cd build
   - >
     ${RUNCMD} cmake -G Ninja
+    -DCMAKE_TOOLCHAIN_FILE=/Users/wasonj/RobotRaconteur2/vcpkg/scripts/buildsystems/vcpkg.cmake
+    -DVCPKG_TARGET_TRIPLET=arm64-osx
     -DCMAKE_OSX_ARCHITECTURES=arm64
-    -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
-    -DOPENSSL_USE_STATIC_LIBS=ON
     ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_MATLAB_ARGS} ${EXTRA_CMAKE_PYTHON_ARGS} ${EXTRA_CMAKE_ARGS}
-    -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
-    -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0
-    -DGTest_DIR=/opt/homebrew/Cellar/googletest/1.12.1/lib/cmake/GTest
     -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-    -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
-    -DBoost_NO_BOOST_CMAKE=ON
-    -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
-    -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
-    -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
-    -DCMAKE_FIND_ROOT_PATH="/opt/homebrew;/Library;/System/Library;/Applications"
     -DROBOTRACONTEUR_EXTRA_TESTS=ON
     -DPYTHON3_EXECUTABLE=/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
     -DPYTHON3_LIBRARY=/Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib
     -DPYTHON3_INCLUDE_DIRS=/Library/Frameworks/Python.framework/Versions/3.12/include/python3.12
     -DPYTHON3_WHEEL_EXTRA_ARGS="--plat-name=macosx-12.0-arm64"
+    -DMatlab_ROOT_DIR=/Applications/MATLAB_R2023b.app
+    -DMatlab_MEX_EXTENSION=mexmaca64
+    -DRR_MATLAB_TEST_EXTRA_ARGS=maca64
     ..
   - ${RUNCMD} cmake --build . --config Release
   - ${RUNCMD} ctest . -C Release --output-on-failure
@@ -533,8 +539,8 @@ build_raspbian_buster_armhf:
     paths:
     - ${OUTNAME}/out/*
   variables:
-    BOOST_VERSION: 1.83.0
     CONFIG_CMAKE_ARGS: -DBUILD_GEN=ON -DBUILD_TESTING=ON
+    EXTRA_CMAKE_MATLAB_ARGS: -DBUILD_MATLAB_MEX=ON
 
 .osx_build_arm64_dev:
   extends:
@@ -725,3 +731,98 @@ build_winxp_x86:
     - ${OUTNAME}/out/*
   variables:
     OUTNAME: "out-winxp_x86"
+
+.linux_arm64_build_python_ver:
+  script:
+  - cd ${CI_PROJECT_DIR}
+  - mkdir build2
+  - cd build2
+  - pyenv install $PYVER
+  - pyenv global $PYVER
+  - python -m pip install numpy wheel auditwheel pytest setuptools
+  - >-
+    cmake -G Ninja -DBUILD_CORE=OFF -DBUILD_GEN=OFF -DBUILD_TESTING=OFF
+    -DRobotRaconteur_DIR=${CI_PROJECT_DIR}/build
+    -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
+    -DPYTHON3_EXECUTABLE=$(pyenv which python)
+    -DPYTHON3_LIBRARY=$(pyenv root)/versions/$(pyenv version-name)/lib/libpython3.so
+    ..
+  - cmake --build . --config Release
+  - cd out/Python3/
+  - python -m auditwheel repair --plat manylinux_2_31_aarch64 dist/*.whl
+  - mkdir -p ${CI_PROJECT_DIR}/wheelhouse
+  - mv wheelhouse/*.whl ${CI_PROJECT_DIR}/wheelhouse/
+  - cd ${CI_PROJECT_DIR}
+  - rm -rf build2
+
+build_linux_arm64_python_release:
+  extends: .release_build
+  image: ubuntu:20.04
+  stage: build
+  tags:
+  - wasontech
+  - linux-docker
+  - arm64
+  - m1
+  script:
+  - apt update
+  - >-
+    DEBIAN_FRONTEND=noninteractive apt-get install
+    zlib1g zlib1g-dev libssl-dev libusb-1.0-0 wget
+    libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+    git cmake g++ make libboost-all-dev autoconf ninja-build libsqlite3-dev libreadline-dev
+    automake libtool bison libpcre3-dev curl libgtest-dev python3-minimal libffi-dev liblzma-dev -qq
+  - curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+  - export PATH="/root/.pyenv/bin:$PATH"
+  - eval "$(pyenv init -)"
+  - |
+    # Install a newer version of patchelf
+    PATCHELF_VERSION=0.14.3
+    wget https://github.com/NixOS/patchelf/archive/refs/tags/$PATCHELF_VERSION.tar.gz
+    tar -xzf $PATCHELF_VERSION.tar.gz
+    cd patchelf-$PATCHELF_VERSION
+    ./bootstrap.sh
+    ./configure
+    make
+    make install
+    cd ..
+    rm -rf patchelf-$PATCHELF_VERSION $PATCHELF_VERSION.tar.gz
+  - mkdir swig
+  - cd swig
+  - curl -L https://github.com/swig/swig/archive/refs/tags/v4.0.2.tar.gz -o swig.tar.gz
+  - tar -xzf swig.tar.gz
+  - cd swig-4.0.2
+  - ./autogen.sh
+  - ./configure
+  - make -j4
+  - make install
+  - cd ../..
+  - rm -r swig
+  - mkdir build
+  - cd build
+  - >-
+    cmake -G Ninja
+    -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
+    -DBUILD_GEN=OFF -DBUILD_TESTING=OFF
+    -DCMAKE_CXX_STANDARD=11
+    -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+    ..
+  - cmake --build . --config Release
+  - cd ${CI_PROJECT_DIR}
+  - export PYVER=3.7
+  - !reference [.linux_arm64_build_python_ver, script]
+  - export PYVER=3.8
+  - !reference [.linux_arm64_build_python_ver, script]
+  - export PYVER=3.9
+  - !reference [.linux_arm64_build_python_ver, script]
+  - export PYVER=3.10
+  - !reference [.linux_arm64_build_python_ver, script]
+  - export PYVER=3.11
+  - !reference [.linux_arm64_build_python_ver, script]
+  - export PYVER=3.12
+  - !reference [.linux_arm64_build_python_ver, script]
+  artifacts:
+    when: always
+    name: linux_arm64_python_wheels
+    paths:
+    - wheelhouse/*
