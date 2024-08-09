@@ -298,3 +298,56 @@ Example code excerpts demonstrating the use of objrefs:
         .. literalinclude:: ../../../examples/simple_webcam/cpp/client/simple_webcam_client.cpp
             :language: cpp
             :lines: 40-41,44-45
+
+pipe Member
+===========
+
+The ``pipe`` member provides reliable in-order streaming data transfer between the client and service. Pipes
+are full duplex, so data can be sent in both directions. Pipes are "connected" to create connections
+between clients and services. A single pipe
+member can have multiple connections between the same client and service. A pipe can also be modified to be
+``[readonly]`` or ``[writeonly]``. Pipes can also be modified to be ``[unreliable]`` to provide faster
+data transfer with no guarantees of delivery, where packets may be dropped or arrive out of order.
+
+Example pipes from the ``experimental.simplewebcam3.Webcam`` object:
+
+.. literalinclude:: ../../../examples/simple_webcam/robdef/experimental.simplewebcam3.robdef
+    :lines: 28
+
+Example code excerpts demonstrating the use of pipes follow. These examples use ``PipeEndpoint`` with a callback
+when new frames arrive. ``PipeEndpoint`` also has a ``TryReceivePacketWait()`` function to receive a packet
+synchronously with a timeout without using a callback.
+
+.. tabs::
+
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/simple_webcam/python/client/simple_webcam_client_streaming.py
+            :language: python
+            :lines: 34-41,62-70
+
+    .. group-tab:: MATLAB
+
+        .. literalinclude:: ../../../examples/simple_webcam/matlab/client/simple_webcam_client_stream.m
+            :language: matlab
+            :lines: 8-9,23-27
+
+    .. group-tab:: LabView
+
+        .. raw:: html
+
+            <div style="overflow: auto; width: 100%; height: 400px;">
+                <img src="../../../examples/simple_webcam/labview/client/Simple Webcam Client.png" style="max-width: none;">
+            </div>
+
+    .. group-tab:: C\#
+
+        .. literalinclude:: ../../../examples/simple_webcam/cs/client/simple_webcam_client_streaming/Program.cs
+            :language: csharp
+            :lines: 26-31,88-97
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/simple_webcam/cpp/client/simple_webcam_client_streaming.cpp
+            :language: cpp
+            :lines: 28-38,57-62
