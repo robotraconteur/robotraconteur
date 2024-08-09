@@ -1,5 +1,17 @@
 from setuptools import setup, Distribution, Extension
 
+import sys
+
+if sys.version_info[0] < 3:
+    import os
+    this_directory = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(this_directory, "README.md"), 'r') as f:
+        long_description = f.read()
+else:
+    from pathlib import Path
+    this_directory = Path(__file__).parent
+    long_description = (this_directory / "README.md").read_text()
+
 # Suggested at https://stackoverflow.com/questions/24071491/how-can-i-make-a-python-wheel-from-an-existing-native-library
 class BinaryDistribution(Distribution):
     def is_pure(foo):
@@ -26,13 +38,13 @@ setup(name='RobotRaconteur',
 	  distclass=BinaryDistribution,
 	  license='Apache-2.0',
 	  install_requires=['numpy'],
-	  long_description='This package contains Python wrappers for the Robot Raconteur communication framework. ' \
-	  'See http://robotraconteur.com/documentation for more information.',
       cmdclass={'build_ext': build_ext},
       ext_modules=[
         Extension(
           name='RobotRaconteur._RobotRaconteurPython',
           sources=[]
         )
-      ]
+      ],
+      long_description=long_description,
+      long_description_content_type='text/markdown'
     )
