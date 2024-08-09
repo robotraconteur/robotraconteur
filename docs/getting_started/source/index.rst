@@ -32,6 +32,7 @@ an up-to-date directory of available documentation.
    Constants
    Exceptions
    Web
+   Security
 
 .. toctree::
    :maxdepth: 4
