@@ -19,7 +19,7 @@ the full documentation available for Robot Raconteur. See the
 an up-to-date directory of available documentation.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    Quickstart
@@ -33,9 +33,11 @@ an up-to-date directory of available documentation.
    Exceptions
    Web
    Security
+   Debugging
+   CommonDevices
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: Framework:
 
    Introduction <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/introduction.html>
@@ -47,7 +49,7 @@ an up-to-date directory of available documentation.
    Ecosystem <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/ecosystem.html>
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: Other Documentation:
 
    Python-Based Tutorial <https://robotraconteur.github.io/robotraconteur/doc/core/latest/python/tutorial/Introduction.html>
