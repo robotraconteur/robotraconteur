@@ -14,10 +14,14 @@ disp(robot_state.command_mode);
 c.command_mode = int32(0);
 pause(0.1)
 c.command_mode = int32(3);
+pause(0.1)
 
 % Connect to the position_command and robot_state wires for real-time data streaming
 cmd_w = c.position_command.Connect();
 state_w = c.robot_state.Connect();
+% Set a lifespan of 0.5 seconds for the robot state. If new packets
+% are not received within 0.5 seconds, an exception will be thrown
+state_w.InValueLifespan = 0.5;
 
 % Wait for the state_w wire to receive valid data
 state_w.WaitInValueValid();
@@ -37,6 +41,11 @@ for i=1:1000
 
     % Retrieve the current robot state
     robot_state = state_w.InValue;
+
+    % Make sure the robot is still in position mode
+    if robot_state.command_mode ~= int32(3)
+        error("Robot is not in position mode")
+    end
 
     % Increment command_seqno
     command_seqno = command_seqno + 1;

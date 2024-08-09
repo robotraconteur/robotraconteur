@@ -16,3 +16,4 @@ The examples are broken down by language:
 - [Java](java) - Java examples
 - [Matlab](matlab) - Matlab examples
 - [LabView](labview) - NI LabView examples
+- [Pyodide](pyodide) - Web Browser client example using Pyodide (Python in the Browser)

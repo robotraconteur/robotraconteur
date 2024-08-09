@@ -28,10 +28,14 @@ using (var node_setup = new ClientNodeSetup())
     c.command_mode = RobotCommandMode.halt;
     Thread.Sleep(100);
     c.command_mode = RobotCommandMode.position_command;
+    Thread.Sleep(100);
 
     // Connect to the position_command and robot_state wires for real-time data streaming
     var cmd_w = c.position_command.Connect();
     var state_w = c.robot_state.Connect();
+    // Set a lifespan of 500 ms for the robot state. If new packets
+    // are not received within 500 ms, an exception will be thrown
+    state_w.InValueLifespan = 500;
 
     // Wait for the state_w wire to receive valid data
     state_w.WaitInValueValid();
@@ -54,6 +58,12 @@ using (var node_setup = new ClientNodeSetup())
 
         // Retreive the current robot state
         robot_state = state_w.InValue;
+
+        // Make sure the robot is still in position mode
+        if (robot_state.command_mode != RobotCommandMode.position_command)
+        {
+            throw new Exception("Robot is not in position mode");
+        }
 
         // Increment command_seqno
         command_seqno += 1;

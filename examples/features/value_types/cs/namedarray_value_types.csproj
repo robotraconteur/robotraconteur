@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+        <LangVersion>9.0</LangVersion>
+        <EnableDefaultItems>false</EnableDefaultItems>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="namedarray_value_types.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <RobotRaconteurGenCSharp Include="../robdef/experimental.value_types.robdef" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="RobotRaconteurNET" Version="1.2.1" />
+    </ItemGroup>
+
+</Project>

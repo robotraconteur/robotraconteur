@@ -1,0 +1,39 @@
+<!-- reynard_the_robot_client_pyodide.html - Reynard the Robot client using Pyodide -->
+<!doctype html>
+<html>
+  <head>
+      <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+  </head>
+  <body>
+    <h1>Reynard the Robot Pyodide Client</h1>
+    <h3>Status</h3>
+    <div id="status">Loading...</div>
+
+    <h3>Reynard Position</h3>
+    <div id="reynard_position"></div>
+
+    <h3>Teleport Reynard</h3>
+    x: <input id="teleport_x" placeholder="0.0"/> y: <input id="teleport_y" placeholder="0.0"/> <button id="teleport">Teleport</button>
+
+    <h3>Send a message to Reynard</h3>
+    <input id="message" cols="50"/>
+    <button id="send_message">Send</button>
+
+    <h3>New Messages from Reynard</h3>
+    <div id="received_messages"></div>
+
+    <h3>Error Log</h3>
+    <div id="error_log"></div>
+
+    <script type="text/javascript">
+    async function main()
+    {
+        // Initialize pyodide, load the required packages, and run the main script
+        let pyodide = await loadPyodide();
+        await pyodide.loadPackage(["numpy","micropip","Jinja2","RobotRaconteur","pyyaml"]);
+        pyodide.runPython(await (await fetch("/reynard_the_robot_client_pyodide.py")).text());
+    }
+    main()
+    </script>
+  </body>
+</html>

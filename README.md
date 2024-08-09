@@ -40,6 +40,8 @@ A communication framework for robotics, automation, and the Internet of Things
 
 [J. Wason and J. T. Wen, "Robot Raconteur: A Communication Architecture and Library for Robotic and Automation Systems", in Proc. IEEE Conference on Automation Science and Engineering, 2011, pp. 761-766.](https://files2.wasontech.com/RobotRaconteur_CASE2011.pdf)
 
+See the [Getting Started Guide](https://robotraconteur.github.io/robotraconteur/doc/core/latest/getting_started/)!
+
 ## Contents
 
 - [Robot Raconteur Core Library and Wrappers](#robot-raconteur-core-library-and-wrappers)
@@ -192,12 +194,8 @@ The quickstart file can be found in the [examples/quickstart](examples/quickstar
 
 ## Getting Started
 
-Robot Raconteur has a large ecosystem with a number of related projects. Start with the Robot Raconteur tutorial,
-and the Python examples:
-
-https://robotraconteur.github.io/robotraconteur/doc/core/latest/python/
-
-https://github.com/robotraconteur/RobotRaconteur_Python_Examples
+Robot Raconteur has a large ecosystem with a number of related projects. Start with the
+[Robot Raconteur Getting Started Guide](https://robotraconteur.github.io/robotraconteur/doc/core/latest/getting_started/).
 
 The Python examples support using a Gazebo simulated iRobot Create robot. See the training simulator for installation
 instructions:
@@ -207,15 +205,7 @@ https://github.com/robotraconteur-contrib/robotraconteur_training_sim
 The training simulator also contains a simulation for two Universal Robots UR5e robots, with grippers and cameras.
 Example scripts to control the robots are included. See the training simulator readme for instructions.
 
-Next, take a look out the examples for other languages:
-
-https://github.com/robotraconteur/RobotRaconteur_CPP_Examples
-
-https://github.com/robotraconteur/RobotRaconteur_CSharp_Examples
-
-https://github.com/robotraconteur/RobotRaconteur_Java_Examples
-
-https://github.com/robotraconteur/RobotRaconteur_MATLAB_Examples
+Numerous examples can be found in the [examples/](https://github.com/robotraconteur/robotraconteur/tree/master/examples)
 
 Robot Raconteur provides a large number of standardized types to use with robots and other devices. See the
 standard robdef repository:

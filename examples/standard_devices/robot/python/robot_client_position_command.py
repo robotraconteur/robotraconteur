@@ -32,10 +32,14 @@ RobotJointCommand = RRN.GetStructureType("com.robotraconteur.robotics.robot.Robo
 c.command_mode = halt_mode
 time.sleep(0.1)
 c.command_mode = position_mode
+time.sleep(0.1)
 
 # Connect to the position_command and robot_state wires for real-time data streaming
 cmd_w = c.position_command.Connect()
 state_w = c.robot_state.Connect()
+# Set a lifespan of 0.5 seconds for the robot state. If new packets
+# are not received within 0.5 seconds, an exception will be thrown
+state_w.InValueLifespan = 0.5
 
 # Wait for the state_w wire to receive valid data
 state_w.WaitInValueValid()
@@ -53,6 +57,10 @@ while (True):
 
     # Retreive the current robot state
     robot_state = state_w.InValue
+
+    # Make sure the robot is still in position mode
+    if (robot_state.command_mode != position_mode):
+        raise Exception("Robot is not in position mode")
 
     # Increment command_seqno
     command_seqno += 1

@@ -21,7 +21,7 @@ jobs:
         automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel
         python3-pytest mono-devel curl libgtest-dev swig doxygen python3-sphinx -qq
     - name: pip sphinx
-      run: sudo python3 -m pip install sphinx_rtd_theme
+      run: sudo python3 -m pip install sphinx_rtd_theme sphinx-toolbox sphinx-tabs
     - name: docfx
       run: dotnet tool update -g docfx
     - name: configure
@@ -49,6 +49,7 @@ jobs:
         mv build2/docs/net doc/doc/core/latest/net
         mv build2/docs/cpp/html doc/doc/core/latest/cpp
         mv build2/docs/getting_started doc/doc/core/latest/getting_started
+        cp robotraconteur/docs/github_pages/index.html doc/index.html
     - name: archive docs
       uses: actions/upload-pages-artifact@v1
       with:

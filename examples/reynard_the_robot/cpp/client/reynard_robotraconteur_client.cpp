@@ -18,6 +18,10 @@ int main(int argc, char* argv[])
     auto reynard =
         RR::rr_cast<experimental::reynard_the_robot::Reynard>(RR::RobotRaconteurNode::s()->ConnectService(url));
 
+    // Connect a callback function to listen for new messages
+    reynard->get_new_message().connect(
+        [](const std::string& message) { std::cout << "New message: " << message << std::endl; });
+
     // Teleport the robot
     reynard->teleport(0.1, -0.2);
 
@@ -54,6 +58,11 @@ int main(int argc, char* argv[])
 
     // Say hello
     reynard->say("Hello, World From C++!");
+
+    // Read the current state using a wire "peek". Can also "connect" to receive streaming updates.
+    RR::TimeSpec ts;
+    experimental::reynard_the_robot::ReynardStatePtr state = reynard->get_state()->PeekInValue(ts);
+    std::cout << "State: " << state->robot_position->at(0) << " " << state->robot_position->at(0) << std::endl;
 
     return 0;
 }
