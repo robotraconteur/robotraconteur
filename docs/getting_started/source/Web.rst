@@ -47,7 +47,8 @@ the origin is the domain name of the server. The port number is also sometimes i
 Any other origin, including ``localhost``, will be denied by default. To allow additional origins, the command
 line argument ``--robotraconteur-tcp-ws-add-origin=`` or the
 ``TcpTransport::RegisterWebSocketAllowedOrigin()`` API function can be used. The command line arguments
-are process by the ``ServerNodeSetup`` instance that is used to initialize the node.
+are process by the ``ServerNodeSetup`` instance that is used to initialize the node. The
+origin control is configured on the service side.
 
 For example, to start Reynard the Robot and allow connections from ``http://localhost:8000``, run the following:
 
