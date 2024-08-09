@@ -11,7 +11,7 @@ A communication framework for robotics, automation, and the Internet of Things
 
 [http://robotraconteur.com](http://robotraconteur.com)
 
-[J. Wason and J. T. Wen, "Robot Raconteur® Updates on an Open Source Interoperable Middleware for Robotics", in Proc. IEEE Conference on Automation Science and Engineering, 2023, pp. 1-8.](https://files2.wasontech.com/RobotRaconteur_CASE2023.pdf)
+[J. Wason and J. T. Wen, "Robot Raconteur Updates on an Open Source Interoperable Middleware for Robotics", in Proc. IEEE Conference on Automation Science and Engineering, 2023, pp. 1-8.](https://files2.wasontech.com/RobotRaconteur_CASE2023.pdf)
 
 Github Repository: https://github.com/robotraconteur/robotraconteur
 
