@@ -1,6 +1,6 @@
 # Service Definitions {#service_definition}
 
-The following example code shows the code contained in the "experimental.create2.robdef" file.  It is a *service definition*.  Service definition files are plain text files that describe the *object types* and *value types* (data types).  Object types are *references*, meaning that on the client they are simply an advanced reference (sometimes called a "proxy") to the service.  Value types are the actual data that are transmitted between client and service. They are always passed by *value*, meaning that they are copied between the client or service when transmitted.
+The following example code shows the code contained in the "experimental.create3.robdef" file.  It is a *service definition*.  Service definition files are plain text files that describe the *object types* and *value types* (data types).  Object types are *references*, meaning that on the client they are simply an advanced reference (sometimes called a "proxy") to the service.  Value types are the actual data that are transmitted between client and service. They are always passed by *value*, meaning that they are copied between the client or service when transmitted.
 
     #Service to provide sample interface to the iRobot Create
     #This example is for the original iRobot Create using the serial Open Interface (OI) protocol
@@ -115,7 +115,7 @@ Primitives consist of scalar numbers, single dimensional number arrays, and stri
 
 ### Structures
 
-Structures are collections of value types; structures can contain primitives, other structures, maps, or multidimensional arrays.  The example `experimental.create2` service definition shows the definition of the structure `SensorPacket`.  A structure is started with the keyword `struct` followed by the structure name.  It is ended with the `end` keyword.  The entries in the structure are defined with the keyword `field` followed by the type, and finally the name of the field. If a structure from a different service definition is used, first the referenced service definition is imported at the top of the service definition and the structure is referenced by the external service definition `dot` the name of the structure.
+Structures are collections of value types; structures can contain primitives, other structures, maps, or multidimensional arrays.  The example `experimental.create3` service definition shows the definition of the structure `CreateState`.  A structure is started with the keyword `struct` followed by the structure name.  It is ended with the `end` keyword.  The entries in the structure are defined with the keyword `field` followed by the type, and finally the name of the field. If a structure from a different service definition is used, first the referenced service definition is imported at the top of the service definition and the structure is referenced by the external service definition `dot` the name of the structure.
 
 ### Pods
 
