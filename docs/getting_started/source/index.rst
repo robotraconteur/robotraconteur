@@ -30,6 +30,7 @@ an up-to-date directory of available documentation.
    ValueTypes
    ObjectTypes
    Constants
+   Exceptions
 
 .. toctree::
    :maxdepth: 4

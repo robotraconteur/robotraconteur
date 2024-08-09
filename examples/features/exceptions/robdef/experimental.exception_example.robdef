@@ -1,0 +1,10 @@
+service experimental.exception_example
+
+stdver 0.10
+
+exception MyExampleCustomException
+
+object ExceptionExample
+    function void my_exception_function1()
+    function void my_exception_function2()
+end
