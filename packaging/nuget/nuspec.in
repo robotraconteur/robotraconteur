@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Robot Raconteur library for .NET wrapping the RobotRaconteurCore native library</description>
     <releaseNotes>See release on github for more details</releaseNotes>
-    <copyright>Copyright 2021</copyright>
+    <copyright>Copyright 2024</copyright>
 	  <repository type="git" url="https://github.com/robotraconteur/robotraconteur" />
     <readme>docs/README.md</readme>
   </metadata>

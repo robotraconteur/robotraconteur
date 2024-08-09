@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/robotraconteur/robotraconteur/master/docs/figures/logo-header.svg"></p>
+![](https://raw.githubusercontent.com/robotraconteur/robotraconteur/master/docs/figures/logo-header.svg)
 
 # RobotRaconteurNET NuGet Package
 
@@ -21,10 +21,10 @@ contains the Robot Raconteur Core library for .NET (C\#).
 
 ## Installation
 
-For most platforms, the easiest way to install Robot Raconteur is using `nuget`:
+For most platforms, the easiest way to install Robot Raconteur is using `dotnet`:
 
 ```bash
-nuget install RobotRaconteurNET
+dotnet add package RobotRaconteurNET
 ```
 
 ## Documentation
@@ -42,7 +42,7 @@ and setup instructions.
 In a terminal,run the following command to start the Reynard the Robot server:
 
 ```bash
-python reynard_the_robot
+python -m reynard_the_robot
 ```
 
 On Linux, you may need to use `python3` instead of `python`.
