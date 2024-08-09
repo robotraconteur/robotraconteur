@@ -21,7 +21,7 @@ jobs:
         automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel
         python3-pytest mono-devel curl libgtest-dev swig doxygen python3-sphinx -qq
     - name: pip sphinx
-      run: sudo python3 -m pip install sphinx_rtd_theme
+      run: sudo python3 -m pip install sphinx_rtd_theme sphinx-toolbox sphinx-tabs
     - name: docfx
       run: dotnet tool update -g docfx
     - name: configure
