@@ -461,7 +461,7 @@ streaming of the robot state and position command.
 
 Example wires from the ``com.robotraconteur.robotics.robot.Robot`` object:
 
-.. codeblock::
+.. code-block::
 
     wire RobotState robot_state [readonly,nolock]
     wire RobotJointCommand position_command [writeonly]
@@ -501,3 +501,54 @@ Example code excerpts demonstrating the use of wires for real-time streaming:
         .. literalinclude:: ../../../examples/standard_devices/robot/cpp/robot_client_position_command.cpp
             :language: cpp
             :lines: 41-49,59-96
+
+memory Member
+=============
+
+Memories represent a block of memory that can be read and written by the client. Memories can be single-dimensional
+or multi-dimensional. Memory members can be accessed like an array in the client. Each programming
+language has a different way of handling memory members. Memory members can be modified to be ``[readonly]``
+or ``[writeonly]``. Memory members are also intended to represent a memory-mapped region of memory
+such as a register space or hardware memory buffer,
+but currently this functionality is not used by any client libraries.
+
+Example memory members from the ``experimental.simplewebcam3.Webcam`` object:
+
+.. literalinclude:: ../../../examples/simple_webcam/robdef/experimental.simplewebcam3.robdef
+    :lines: 31-32
+
+Example code excerpts demonstrating the use of memory members:
+
+.. tabs::
+
+    .. group-tab:: Python
+
+        .. literalinclude:: ../../../examples/simple_webcam/python/client/simple_webcam_client_memory.py
+            :language: python
+            :lines: 26-42
+
+    .. group-tab:: MATLAB
+
+        .. literalinclude:: ../../../examples/simple_webcam/matlab/client/simple_webcam_client_memory.m
+            :language: matlab
+            :lines: 11-27
+
+    .. group-tab:: LabView
+
+        .. raw:: html
+
+            <div style="overflow: auto; width: 100%; height: 400px;">
+                <img src="../../../examples/simple_webcam/labview/client/Simple Webcam Client Memory.png" style="max-width: none;">
+            </div>
+
+    .. group-tab:: C\#
+
+        .. literalinclude:: ../../../examples/simple_webcam/cs/client/simple_webcam_client_memory/Program.cs
+            :language: csharp
+            :lines: 30-33,45-52
+
+    .. group-tab:: C++
+
+        .. literalinclude:: ../../../examples/simple_webcam/cpp/client/simple_webcam_client_memory.cpp
+            :language: cpp
+            :lines: 36-39,49-52
