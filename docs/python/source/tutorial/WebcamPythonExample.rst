@@ -5,58 +5,61 @@ Webcam Service
 --------------
 
 The example robot also has webcams that can be accessed using the Python OpenCV libraries. Example
-`SimpleWebcamService.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamService.py>`_
+`simple_webcam_service_multi.py <https://github.com/robotraconteur/robotraconteur/blob/master/examples/simple_webcam/python/service/simple_webcam_service_multi.py>`_
 on GitHub is a program that exposes the webcams as a Robot Raconteur
-service. The example is intended to demonstrate the usage of the “objref", “pipe", and “memory" members that were not
+service. The example is intended to demonstrate the usage of the ``objref``, ``pipe``, and ``memory`` members that were not
 used in the iRobot Create examples.
 
-::
+.. code-block::
 
-   #Service to provide sample interface to webcams
-   service experimental.createwebcam2
+  #Service to provide sample interface to webcams
 
-   stdver 0.9
+  # This interface is for example only. Most cameras should use the standard com.robotraconteur.imaging.Camera interface
+  service experimental.simplewebcam3
 
-   struct WebcamImage
-       field int32 width
-       field int32 height
-       field int32 step
-       field uint8[] data
-   end
+  # The current version of Robot Raconteur robdef standards is 0.10
+  stdver 0.10
 
-   struct WebcamImage_size
-       field int32 width
-       field int32 height
-       field int32 step
-   end
+  struct WebcamImage
+      field int32 width
+      field int32 height
+      field int32 step
+      field uint8[] data
+  end
 
-   object Webcam
-       property string Name [readonly]
-       function WebcamImage CaptureFrame()
+  struct WebcamImage_size
+      field int32 width
+      field int32 height
+      field int32 step
+  end
 
-       function void StartStreaming()
-       function void StopStreaming()
-       pipe WebcamImage FrameStream [readonly]
+  object Webcam
+      property string name [readonly]
+      function WebcamImage capture_frame()
 
-       function WebcamImage_size CaptureFrameToBuffer()
-       memory uint8[] buffer [readonly]
-       memory uint8[*] multidimbuffer [readonly]
+      function void start_streaming()
+      function void stop_streaming()
+      pipe WebcamImage frame_stream [readonly]
 
-   end
+      function WebcamImage_size capture_frame_to_buffer()
+      memory uint8[] buffer [readonly]
+      memory uint8[*] multidimbuffer [readonly]
 
-   object WebcamHost
-       property string{int32} WebcamNames [readonly]
-       objref Webcam{int32} Webcams
-   end
+  end
 
-The service definition for the ``experimental.createwebcam2`` shown in above
+  object WebcamHost
+      property string{int32} webcam_names [readonly]
+      objref Webcam{int32} webcams
+  end
+
+The service definition for the ``experimental.simplewebcam3`` shown in above
 contains two objects: ``WebcamHost`` and ``Webcam``. The ``Webcam`` object type represents a single camera, and the
 ``WebcamHost`` object allows for the client to determine the number of webcams and retrieve the ``Webcam`` objects
-through an “objref" member.
+through an ``objref`` member.
 
-The class ``WebcamHost_impl`` implements the ``WebcamHost`` object type. The function ``WebcamNames`` returns a map of
+The class ``WebcamHost_impl`` implements the ``WebcamHost`` object type. The property ``webcam_names`` returns a map of
 the indexes and names of the cameras, and is an example of the ``string{int32}`` Robot Raconteur type. The function
-``get_Webcams`` implements the ``Webcams`` objref. Note that the objref is implemented by prepending ``get\_`` to the name
+``get_webcams`` implements the ``webcams`` objref. Note that the objref is implemented by prepending ``get\_`` to the name
 of the objref member. The index may come as a ``string`` even though an ``int32`` is expected, so convert the type to
 ``int`` before using. When returning an object from an objref, it is necessary to return the fully qualified Robot
 Raconteur type of the object as a second parameter.
@@ -64,16 +67,9 @@ Raconteur type of the object as a second parameter.
 **Note: objects can only be registered as a service object ONCE. Objects cannot be returned by two separate objrefs.
 Objrefs must form a “tree" structure, where the child branches are the return objects from objrefs.**
 
-The ``Webcam_impl`` object implements the webcam functionality. The ``CaptureFrame`` function returns a single frame to
-the client. The ``StartStreaming`` and ``StopStreaming`` functions begin or stop a thread implemented by the
-``frame_threadfunc`` function that sends streaming frames to the connected clients through the ``FrameStream`` pipe.
-
-| Pipes are very similar to wires, and are implemented using Python properties in a similar way. The
-  ``FrameStream_pipeconnect`` function adds the passed
-| PipeEndpoint to the dictionary of connected ``PipeEndpoint``\ s. While a wire can only have one ``WireConnection``
-  client/server pair per client, pipes can have “indexed" ``PipeEndpoints`` meaning a single client can have multiple
-  ``PipeEndpoint`` client/server pairs per client. They are “indexed", meaning a ``PipeEndpoint`` is defined by the
-  Robot Raconteur client endpoint (not to be confused with the PipeEndpoint) and the index of the ``PipeEndpoint``.
+The ``Webcam_impl`` object implements the webcam functionality. The ``capture_frame`` function returns a single frame to
+the client. The ``start_streaming`` and ``stop_streaming`` functions begin or stop a thread implemented by the
+``frame_threadfunc`` function that sends streaming frames to the connected clients through the ``frame_stream`` pipe.
 
 A ``PipeBroadcaster`` is used for this example. The ``PipeBroadcaster`` is similar to the ``WireBroadcaster``, sending
 packets to all connected clients. While a ``PipeBroadcaster`` can be inferred for a ``readonly`` pipe and the attribute
@@ -87,9 +83,9 @@ send frames to the clients.
 | ``multidimbuffer``. These two members demonstrate how to use two flavors of memories that are either single
   dimensional or multi-dimensional. Memories are useful when data greater than about 10 MB needs to be transmitted
   between client and server, when there is a random-access block of memory, or in the future for shared memory
-  applications. The function ``CaptureFrameToBuffer`` captures the data and saves it to the buffers. Note that
+  applications. The function ``capture_frame_to_buffer`` captures the data and saves it to the buffers. Note that
   multi-dimensional arrays in Python are simply multi-dimensional NumPy arrays. Some processing is done to place the
-  data in “Matlab" style image formats. A structure of type “experimental.createwebcam.WebcamImage_size" is returned to
+  data in “Matlab" style image formats. A structure of type ``experimental.simplewebcam3.WebcamImage_size`` is returned to
   tell the client how big the image is.
 
 The two memories are implemented in Python using properties. The ``buffer`` member returns an ``ArrayMemory`` object,
@@ -100,27 +96,27 @@ to use the memory; instead, a persistent memory object should be used with a per
 Webcam Client
 -------------
 
-Example `SimpleWebcamClient.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient.py>`_
+Example `simple_webcam_client.py <https://github.com/robotraconteur/robotraconteur/blob/master/examples/simple_webcam/python/client/simple_webcam_client.py>`_
 on GitHub is a program that will read the webcams and display the images. The
-initialization and connection are similar to the iRobot Create example. The main difference is the use of the “objrefs",
+initialization and connection are similar to the iRobot Create example. The main difference is the use of the ``objrefs``,
 which are used to get references to the webcams ``c1`` and ``c2``:
 
-``c1=c_host.get_Webcams(0)``
+``c1=c_host.get_webcams(0)``
 
-``c2=c_host.get_Webcams(1)``
+``c2=c_host.get_webcams(1)``
 
 The rest of the program deals with OpenCV related functions to show the images.
 
 Webcam Client (streaming)
 -------------------------
 
-Example `SimpleWebcamClient_streaming.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient_streaming.py>`_
+Example `simple_webcam_host_streaming.py <https://github.com/robotraconteur/robotraconteur/blob/master/examples/simple_webcam/python/client/simple_webcam_client_streaming.py>`_
 is a program that provides a “live" view of the
 camera, although depending on the speed of the computer it may be fairly slow because Python is an interpreted language.
 The program connects and retrieves the webcam object reference ``c`` the same way as the previous example, and the
-connects to the pipe ``FrameStream``. The pipe index is given as the argument, and -1 means *any index*.
+connects to the pipe ``frame_stream``. The pipe index is given as the argument, and -1 means *any index*.
 
-``p=c.FrameStream.Connect(-1)``
+``p=c.frame_stream.Connect(-1)``
 
 Next, a callback is added so that the function ``new_frame`` will be called when a new pipe packet arrives.
 
@@ -135,12 +131,16 @@ The rest of the program handles showing the images as they arrive and shutting d
 
 ``p.Close()``
 
+Note that this example uses the single webcam version of the service ``simple_webcam_service.py``.
+
 Webcam Client (memory)
 ----------------------
 
-Example `SimpleWebcamClient_memory.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/SimpleWebcamClient_memory.py>`_
+Example `simple_webcam_host_memory.py <https://github.com/robotraconteur/robotraconteur/blob/master/examples/simple_webcam/python/client/simple_webcam_client_memory.py>`_
 on GitHub demonstrates the use of the memories. The memories have
 functions ``Read`` and ``Write`` that allow for a segment of the memory to be read or written into or from a buffer. The
 memory position, buffer, buffer position, and count are passed. For multi-dimensional arrays, the memory position,
 buffer position, and count are lists. The ArrayMemory has the special property "Length" for the length of the array, and
 the MultiDimArrayMemory has the special properties ``Dims``, ``DimCount``, and ``Complex``.
+
+Note that this example uses the single webcam version of the service ``simple_webcam_service.py``.

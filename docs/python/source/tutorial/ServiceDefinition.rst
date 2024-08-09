@@ -1,8 +1,8 @@
 Service Definition
 ==================
 
-ServiceDefinition Example ``experimental.create2`` (below)
-shows the code contained in the “experimental.create2.robdef" file. It
+ServiceDefinition Example ``experimental.create3`` (below)
+shows the code contained in the “experimental.create3.robdef" file. It
 is a *service definition*. Service definition files are plain text files
 that describe the *object types* and *value types* (data types). Object
 types are *references*, meaning that on the client they are simply an
@@ -79,7 +79,7 @@ The first line in the service definition contains the keyword
 ``service`` followed by the name of the service type. “Namespaces”
 follow similar rules to Java package names. For experimental software,
 the name should be prefixed with “experimental”, for example
-“experimental.create2”. For hobbyists and standalone software, the name
+"experimental.create3". For hobbyists and standalone software, the name
 should be prefixed with “community” and your username, for example
 “community.myusername.create”, where “myusername” is replaced with your
 ``robotraconteur.com`` username. If a domain name for an organization is
@@ -89,7 +89,7 @@ ownership of a domain, “experimental” or “community” should be used.
 
 Next in the service there should be “stdver" and the minimum version of
 Robot Raconteur required to access the service. For now this should be
-“0.10". Example "experimental.create2" does not show
+“0.10". Example "experimental.create3" does not show
 it, but there can also be one or more “import" to reference structures
 and objects in other service definitions. The rest of service definition
 defines the *structures* and *objects* of the service definition. (Lines
@@ -148,8 +148,8 @@ Structures
    |
    | Structures are collections of value types; structures can contain
      primitives, other structures, maps, or multidimensional arrays.
-     Example "experimental.create2" shows the
-     definition of the structure ``SensorPacket``. A structure is
+     Example "experimental.create3" shows the
+     definition of the structure ``CreateState``. A structure is
      started with the keyword ``struct`` followed by the structure name.
      It is ended with the ``end`` keyword. The entries in the structure
      are defined with the keyword ``field`` followed by the type, and
@@ -207,7 +207,7 @@ Maps
      The data is a value type (but not another map). They are created
      with curly braces. For example, ``string{int32}`` would be a map of
      strings keyed by an integer. ``string{string}`` would be a map of
-     strings keyed by another string. ``SensorPacket{string}`` and
+     strings keyed by another string. ``CreateState{string}`` and
      ``int32[]{int32}`` are also valid examples.
    | ``string{int32}{int32}`` is *not* valid. There can only be one
      dimension of keying.
@@ -216,7 +216,7 @@ Lists
    |
    | Lists follow similar rules to maps. They are created with curly
      braces. For example,
-   | ``string{list}`` would be a list of strings. ``SensorPacket{list}``
+   | ``string{list}`` would be a list of strings. ``CreateState{list}``
      and ``int32[]{list}`` are also valid examples.
    | ``string{list}{list}`` is *not* valid. There can only be one
      dimension of lists.

@@ -42,9 +42,9 @@ To find a service, use the command:
 
 .. code:: python
 
-  res=RRN.FindServiceByType("experimental.create.Create",["rr+local","rr+tcp","rrs+tcp"])
+  res=RRN.FindServiceByType("experimental.create3.Create",["rr+local","rr+tcp","rrs+tcp"])
 
-where “experimental.create2.Create" is replaced with the fully qualified type being searched for and the second
+where “experimental.create3.Create" is replaced with the fully qualified type being searched for and the second
 parameter is a list of the transport types to search. ``res`` is a list of ``ServiceInfo2`` structures that contains the
 ``NodeID``, ``NodeName``, ``Name``, ``RootObjectType``, ``RootObjectImplements``, ``ConnectionURL`` (list), and the
 ``Attributes``. The attributes entry is type ``varvalue{string}`` but should only contain type ``string`` and numeric
@@ -52,7 +52,7 @@ entries. This is used to help identify the correct service to connect to. Servic
 ``ServerContext`` object that is returned when a service is registered. A short example:
 
 .. code:: python
-  context=RRN.RegisterService ("Create","experimental.create.Create",obj)
+  context=RRN.RegisterService ("Create","experimental.create3.Create",obj)
   attributes={"RobotName" : RR.RobotRaconteurVarValue("Create1","string")}
   context.SetServiceAttributes(attributes)
 

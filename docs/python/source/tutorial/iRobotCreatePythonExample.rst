@@ -12,7 +12,7 @@ Simple service
 
 The first step in using Robot Raconteur is to develop an object that implements the service definition. The following
 example shows a non-Robot Raconteur program that contains a class ``Create_impl`` that
-implements the service definition "experimental.create2" presented in :doc:`ServiceDefinition`.
+implements the service definition "experimental.create3" presented in :doc:`ServiceDefinition`.
 Table `Members <#createmembers>`__
 lists the members and the functionality that will be implemented.
 
@@ -37,42 +37,37 @@ lists the members and the functionality that will be implemented.
            self._packets=None
            self._play_callback=None
 
-       def Drive(self, velocity, radius):
+       def drive(self, velocity, radius):
            with self._lock:
-               dat=struct.pack(">B2h",137,velocity,radius)
+               dat=struct.pack(">B2h",137,int(velocity*1e3),int(radius*1e3))
                self._serial.write(dat)
 
-       def StartStreaming(self):
-           pass
-
-       def StopStreaming(self):
-           pass
 
        @property
-       def DistanceTraveled(self):
-           return 0;
+       def distance_traveled(self):
+           return 0
 
        @property
-       def AngleTraveled(self):
-           return 0;
+       def angle_traveled(self):
+           return 0
 
        @property
-       def Bumpers(self):
-           return 0;
+       def bumpers(self):
+           return 0
 
        @property
        def play_callback(self):
-           return self._play_callback;
+           return self._play_callback
        @play_callback.setter
        def play_callback(self,value):
            self._play_callback=value
 
-       def Init(self,port):
+       def init(self,port):
            self._serial=serial.Serial(port="/dev/ttyUSB0",baudrate=57600)
            dat=struct.pack(">2B",128,131)
            self._serial.write(dat)
 
-       def Shutdown(self):
+       def shutdown(self):
            self._serial.close()
 
    def main():
@@ -82,9 +77,9 @@ lists the members and the functionality that will be implemented.
        obj.Init(serial_port_name)
 
        #Drive a bit to show that it works
-       obj.Drive(200,1000)
+       obj.drive(200,1000)
        time.sleep(1)
-       obj.Drive(0,0)
+       obj.drive(0,0)
 
        #Shutdown
        obj.Shutdown()
@@ -97,31 +92,29 @@ lists the members and the functionality that will be implemented.
 .. container::
    :name: createmembers
 
-   .. table:: Members of Create object
+   .. table:: Selected Members of Create object
 
       +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
       | Member                                                                          | Description                                                                                                                           |
       +=================================================================================+=======================================================================================================================================+
-      | ``function void Drive(int16 velocity, int16 radius)``                           | Drives the create at ``velocity`` (mm/s) with ``radius`` (mm)                                                                         |
+      | ``function void drive(double velocity, double radius)``                           | Drives the create at ``velocity`` (m/s) with ``radius`` (m)                                                                         |
       +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``function void StartStreaming()``                                              | Starts the sensor packet streaming (Bumpers (17), Distance Traveled (19), Angle Traveled (20))                                        |
+      | ``property int32 distance_traveled``                                             | Total distance traveled (doesn't seem to be accurate...)                                                                              |
       +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``function void StopStreaming()``                                               | Stops the sensor packet streaming                                                                                                     |
+      | ``property int32 angle_traveled``                                                | Total angle traveled (doesn't seem to be accurate...)                                                                                 |
       +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``property int32 DistanceTraveled``                                             | Total distance traveled (doesn’t seem to be accurate...)                                                                              |
+      | ``property uint8 bumpers``                                                      | Returns the byte with flags about the state of the bumper and wheel drops (See OI manual sensor packet id 7)                          |
       +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``property int32 AngleTraveled``                                                | Total angle traveled (doesn’t seem to be accurate...)                                                                                 |
+      | ``event bump()``                                                                | Event fired when the bumper goes from no contact to contact                                                                           |
       +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``property uint8 Bumpers``                                                      | Returns the byte with flags about the state of the bumper and wheel drops (See OI manual sensor packet id 7)                          |
+      | ``wire CreateState create_state``                                               | Streaming state from the Create robot                                                                                                 |
+      |                                                                                 |                                                                                                                                       |
       +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``event Bump()``                                                                | Event fired when the bumper goes from no contact to contact                                                                           |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``pipe SensorPacket packets``                                                   | Provides a stream of the raw sensor information as it is received. The ID is always 19. The rest of the packet is the sensor data     |
-      |                                                                                 | followed by checksum. The “nBytes" field is not included.                                                                             |
-      +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-      | ``callback uint8[] play_callback(int32 DistanceTraveled, int32 AngleTraveled)`` | A callback that is called when the “Play" button is pressed and returns notes to play on the Create.                                  |
+      | ``callback uint8[] play_callback(double distance_traveled, double angle_traveled)`` | A callback that is called when the “Play" button is pressed and returns notes to play on the Create.                                  |
       +---------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
 
+
+See the completed service implementation in `irobot_create_service.py <https://github.com/robotraconteur/robotraconteur/blob/master/examples/irobot_create/python/service/irobot_create_service.py>`_.
 
 The above example shows the members implemented, but not yet exposed as a service. Properties and functions are simply
 properties and functions in Python, events are implemented through the ``EventHook`` class that must be present as a
@@ -152,10 +145,10 @@ robot, exposes the service.
        comm_port=sys.argv[1]
        obj.Init(comm_port)
 
-       with RR.ServerNodeSetup("experimental.create2.Create",2354):
+       with RR.ServerNodeSetup("experimental.create3.Create",2354):
 
-           RRN.RegisterServiceTypeFromFile("experimental.create2")
-           RRN.RegisterService("Create","experimental.create2.Create",obj)
+           RRN.RegisterServiceTypeFromFile("experimental.create3.robdef")
+           RRN.RegisterService("Create","experimental.create3.Create",obj)
 
            raw_input("Server started, press enter to quit...")
 
@@ -225,9 +218,9 @@ is an example of driving the robot over a network using the service example abov
    obj=RRN.ConnectService("rr+tcp://101.2.2.2?service=Create")
 
    #Drive a bit
-   obj.Drive(200,1000)
+   obj.drive(200,1000)
    time.sleep(1)
-   obj.Drive(0,0)
+   obj.drive(0,0)
 
 The example registers uses the ``RobotRaconteur.Client`` convenience module to configure for the most common client
 operations. This module creates a variable “RR" that contains the Robot Raconteur module, and “RRN" that is the default
@@ -281,25 +274,24 @@ is driven a bit to demonstrate how to use a function.
 iRobot Create Service
 ---------------------
 
-The initial service shown above only fills in the ``Drive`` member. The example
-`iRobotCreateService.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/iRobotCreateService.py>`_
+The initial service shown above only fills in the ``drive`` member. The example
+`irobot_create_service.py <https://github.com/robotraconteur/robotraconteur/blob/master/examples/irobot_create/python/service/irobot_create_service.py>`_
 on GitHub shows a complete service that fills in all of the members. This is not intended to
 be exhaustive for the full features of the iRobot Create; it is instead intended to be used to demonstrate features of
 Robot Raconteur. Because of the length of the code it is printed in the appendix and will be referred to throughout this
 section.
 
-The functions ``StartStreaming`` and ``StopStreaming`` start and stop a thread that receives data from the serial port
-and transmits the data to the ``Bump`` event, the ``packets`` pipe, or the ``play_callback`` where appropriate. The
-``StartStreaming`` and ``StopStreaming`` functions also send commands to the Create robot to start or stop sending the
-data. The function ``_recv_thread`` implements the ability to receive and parse the packets. This function is dedicated
-to handling the serial data from the robot and calls the ``_fire_Bump`` function to fire the ``Bump`` event, the
-``_SendSensorPacket`` function to set the new value of the ``packets`` wire, or the ``_play`` function to handle when
+The background thread receives data from the serial port
+and transmits the data to the ``bump`` event, the ``create_state`` wire, or the ``play_callback`` where appropriate.
+ The function ``_receive_sensor_packets`` implements the ability to receive and parse the packets. This function is dedicated
+to handling the serial data from the robot and calls the ``_fire_bump`` function to fire the ``bump`` event, the
+``_parse_sensor_packets`` function to parse the new value of the ``create_state`` wire, or the ``_play`` function to handle when
 the Play button is pressed on the robot. It also keeps a running tally of distance and angle traveled in the
-``_DistanceTraveled`` and ``_AngleTraveled`` variables. The rest of this section will discuss the implementation of the
-different members. It stores the Bump data in the ``_Bumpers`` variable.
+``_distance_traveled`` and ``_angle_traveled`` variables. The rest of this section will discuss the implementation of the
+different members. It stores the Bump data in the ``_bumpers`` variable.
 
-The ``Bumpers``, ``DistanceTraveled``, and ``AngleTraveled`` properties are implemented as standard Python properties
-using the ``@Property`` decorator. Because these are read only, the setters throw an exception. Properties transparently
+The ``bumpers``, ``distance_traveled``, and ``angle_traveled`` properties are implemented as standard Python properties
+using the ``@property`` decorator. Because these are read only, the setters throw an exception. Properties transparently
 transmit exceptions back to the client. Functions also transparently transmit exceptions to the client. All Robot
 Raconteur calls should be surrounded with try/except blocks that catch ``Exception`` meaning it will catch and process
 any thrown exception.
@@ -314,7 +306,7 @@ event. The Robot Raconteur node will transmit this event to all connected client
 ``EventHook`` may contain parameters if the event has parameters.
 
 The ``packets`` wire is implemented by the node when the object is registered as a service. Because the wire is marked
-``readonly`` using a member modifier and the ``packets`` object attribute is not set, the node will assume that we want
+``readonly`` using a member modifier and the ``create_state`` object attribute is not set, the node will assume that we want
 a ``WireBroadcaster``. The node will create the attribute and assign a ``WireBroadcaster``. The ``WireBroadcaster``
 class is designed to send the same value to all connected clients. If the wire is marked ``writeonly``, the node will
 provide a ``WireUnicastReceiver`` object. If the wire does not specify a direction, A ``WireServer`` is passed to the
@@ -342,7 +334,7 @@ the peek and poke functions as part of the return from the functions.
 
 The ``play_callback`` member is assigned to the texttt\_play_callback attribute of the ``Create_impl`` object by the
 node when the object is registered as a service. The ``_play`` function demonstrates how to use the callback. The
-``StartStreaming`` command contains the following line:
+``claim_play_callback()`` function contains the following line:
 
 ``self._ep=RR.ServerEndpoint.GetCurrentEndpoint()``
 
@@ -353,7 +345,7 @@ following lines, which executes the callback on the client:
 
 ``cb_func=self.play_callback.GetClientFunction(self._ep)``
 
-``notes=cb_func(self._DistanceTraveled, self._AngleTraveled)``
+``notes=cb_func(self._distanceTraveled, self._angleTraveled)``
 
 The first line retrieves the a function handle to call the client based on the stored endpoint. The second line executes
 this function, which is actually implemented by calling the client with the supplied parameters and then returning the
@@ -365,16 +357,16 @@ send out beacon packets so that client nodes can find the service.
 iRobot Create Client
 --------------------
 
-An example client `iRobotCreateClient.py <https://github.com/robotraconteur/RobotRaconteur_Python_Examples/blob/master/iRobotCreateClient.py>`_
+An example client `irobot_create_client.py <https://github.com/robotraconteur/robotraconteur/blob/master/examples/irobot_create/python/client/irobot_create_client.py>`_
 on GitHub utilizes the service.
-The client is similar to the previous example client, however it adds functionality using the ``Bump``, ``packets``, and
+The client is similar to the previous example client, however it adds functionality using the ``pump``, ``create_state``, and
 ``play_callback`` member. The line:
 
-``c.Bump += Bumped``
+``c.bump += bumped``
 
-adds the function ``Bumped`` as a handler when the event is fired. The line:
+adds the function ``bumped`` as a handler when the event is fired. The line:
 
-``wire=c.packets.Connect()``
+``wire=c.create_state.Connect()``
 
 connects to the ``packets`` wire and returns a WireConnection object that is stored in the ``wire`` variable. This
 WireConnection has the same functionality as the one provided to the service object in the previous section. In this
@@ -389,7 +381,7 @@ line:
 
 ``c.play_callback.Function=play_callback``
 
-This function will now be called by the service when the service calls this client’s callback.
+This function will now be called by the service when the service calls this client's callback.
 
 After the setup the robot is driven a bit and then pauses to allow the user to try out the functionality. The
 ``RobotRaconteurNode`` is shutdown automatically when the program exits.
