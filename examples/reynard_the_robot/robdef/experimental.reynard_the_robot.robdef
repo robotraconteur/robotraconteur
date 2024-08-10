@@ -1,5 +1,7 @@
 service experimental.reynard_the_robot
 
+stdver 0.10
+
 struct ReynardState
     field double time
     field double[] robot_position

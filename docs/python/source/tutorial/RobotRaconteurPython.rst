@@ -16,6 +16,8 @@ Other packages are required to run the examples:
 
 ``sudo add-apt-repository ppa:robotraconteur/ppa`` ``sudo apt update``
 
+Newer versions of Ubuntu may use Python pip packages.
+
 Once the PPA is configured, install the Robot Raconteur packages:
 
 ``sudo apt install python-robotraconteur python3-robotraconteur``

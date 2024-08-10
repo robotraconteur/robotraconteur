@@ -15,7 +15,7 @@ for instructions to set up the Python environment.
 The `robotraconteur_companion_python` package is also required. Install using:
 
 ```
-python -m pip install --user robotraconteurcompanion
+python -m pip install --user robotraconteurcompanion opencv-contrib-python
 ```
 
 Examples:

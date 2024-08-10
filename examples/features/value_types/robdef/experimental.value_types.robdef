@@ -1,0 +1,111 @@
+service experimental.value_types
+
+stdver 0.10
+
+# Example vector namedarray. Note that all fields must
+# have the same underlying numeric type
+namedarray MyVector3
+    field double x
+    field double y
+    field double z
+end
+
+namedarray MyQuaternion
+    field double w
+    field double x
+    field double y
+    field double z
+end
+
+# Example pose namedarray using composition of other namedarrays.
+# All underlying fields must have the same numeric type.
+namedarray MyPose
+    field MyQuaternion orientation
+    field MyVector3 position
+end
+
+# Pod example. Only numeric types, other pods, and namedarrays can
+# be used in a pod. All arrays must have a fixed or maximum length.
+# Multidimarrays must be fixed. Pods have a fixed maximum binary
+# size to fit in contiguous memory. Pods do not
+# have to have the same underlying numeric type for all the
+# fields.
+pod MyPod
+    field double a
+    field int32 b
+    field uint8[4] c
+    field uint8[4-] d
+    field uint16[2,3] e
+    field MyVector3 f
+end
+
+# Structure examples.
+struct MyStructure
+    # struct fields can be any value type
+    field double a
+    field uint32[2] b
+    field string c
+    field string{list} d
+end
+
+# This object contains examples of many value types. The names of the fields are
+# arbitrary. See the standard service definitions for examples of more
+# common naming conventions.
+object ValueTypesExample
+    # Examples of scalar numeric types
+    property double a_double
+    property int32 b_int
+    property uint8 c_byte
+    property cdouble d_cdouble
+    property bool e_bool
+    property int32 meaning_of_life [readonly]
+
+    # Examples of numeric arrays. Any numeric array type
+    # can be used
+    property double[] a_double_array
+    property double[3] a_double_array_fixed
+    property double[6-] a_double_array_maxlen
+    property double[3,2] a_double_marray_fixed
+    property double[*] a_double_marray
+    property uint8[] c_byte_array
+
+    property string f_string
+
+    # Examples using namedarray
+    property MyVector3 g_vector
+    property MyVector3[] g_vector_array
+    property MyQuaternion h_quaternion
+    property MyPose i_pose
+
+    # Examples using pods
+    property MyPod j_pod
+    property MyPod[] j_pod_array
+
+    # Examples using structures
+    property MyStructure k_struct
+
+    # Container examples
+    # Containers can be int32 key maps, string key maps, or lists
+    # All types can be stored in containers, but containers cannot
+    # directly contain other containers. For example
+    # string{list} is allowed, but string{list}{list} is not.
+    property double{int32} l_double_map
+    property double[]{string} l_double_array_map
+    property string{list} m_string_list
+    property string{int32} m_string_map_int32
+    property string{string} m_string_map_string
+    property MyVector3{int32} n_vector_map
+    property MyStructure{list} o_struct_list
+
+    # varvalue examples
+    property varvalue p_varvalue_double_array
+    property varvalue q_varvalue_string
+    property varvalue r_varvalue_struct
+    # varvalue{string} is a string keyed map of varvalues
+    # It is frequently used for "extended" fields
+    # to allow for forward compatibility
+    property varvalue{string} s_varvalue_map2
+
+    # Null examples
+    property MyStructure t_struct_null
+end

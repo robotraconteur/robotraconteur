@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata minClientVersion="2.5">
     <id>RobotRaconteurNET</id>
     <version>@{VERSION}</version>
@@ -8,15 +8,17 @@
     <license type="expression">Apache-2.0</license>
     <projectUrl>http://robotraconteur.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Robot Raconteur library for .NET wrapping RobotRaconteurCore native library</description>
+    <description>Robot Raconteur library for .NET wrapping the RobotRaconteurCore native library</description>
     <releaseNotes>See release on github for more details</releaseNotes>
-    <copyright>Copyright 2021</copyright>
-	<repository type="git" url="https://github.com/robotraconteur/robotraconteur" />
+    <copyright>Copyright 2024</copyright>
+	  <repository type="git" url="https://github.com/robotraconteur/robotraconteur" />
+    <readme>docs/README.md</readme>
   </metadata>
   <files>
-    <file src="build\**" target="build" />
-	<file src="lib\**" target="lib" />
-	<file src="runtimes\**" target="runtimes" />
-	<file src="tools\**" target="tools" />
+    <file src="build/**" target="build" />
+	  <file src="lib/**" target="lib" />
+	  <file src="runtimes/**" target="runtimes" />
+	  <file src="tools/**" target="tools" />
+    <file src="docs/**" target="docs" />
   </files>
 </package>
