@@ -43,7 +43,7 @@ The following examples demonstrate connecting to a service that requires a usern
         .. raw:: html
 
             <div style="overflow: auto; width: 100%; height: 400px;">
-                <img src="../../../examples/features/authentication/labview/authentication_example.png" style="max-width: none;">
+                <img src="https://raw.githubusercontent.com/robotraconteur/robotraconteur/master/examples/features/authentication/labview/authentication_example.png" style="max-width: none;">
             </div>
 
     .. group-tab:: C\#

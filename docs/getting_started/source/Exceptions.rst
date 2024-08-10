@@ -55,7 +55,7 @@ The following example code demonstrates how to catch exceptions thrown by the ex
         .. raw:: html
 
             <div style="overflow: auto; width: 100%; height: 400px;">
-                <img src="../../../examples/features/exceptions/labview/exceptions_example.png" style="max-width: none;">
+                <img src="https://raw.githubusercontent.com/robotraconteur/robotraconteur/master/examples/features/exceptions/labview/exceptions_example.png" style="max-width: none;">
             </div>
 
     .. group-tab:: C\#

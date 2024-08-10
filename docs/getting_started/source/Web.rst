@@ -119,7 +119,7 @@ The following examples demonstrate connecting to the ``rr+wss://wstest2.wasontec
         .. raw:: html
 
             <div style="overflow: auto; width: 100%; height: 400px;">
-                <img src="../../../examples/features/web_https_client/labview/web_https_client.png" style="max-width: none;">
+                <img src="https://raw.githubusercontent.com/robotraconteur/robotraconteur/master/examples/features/web_https_client/labview/web_https_client.png" style="max-width: none;">
             </div>
 
     .. group-tab:: C\#
