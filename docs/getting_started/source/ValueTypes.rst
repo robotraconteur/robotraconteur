@@ -353,7 +353,7 @@ The examples below show how to use containers in Python, MATLAB, LabView, C\#, a
         .. raw:: html
 
             <div style="overflow: auto; width: 100%; height: 400px;">
-                <img src="../../../examples/features/value_types/labview/container_value_types.png" style="max-width: none;">
+                <img src="https://raw.githubusercontent.com/robotraconteur/robotraconteur/master/examples/features/value_types/labview/container_value_types.png" style="max-width: none;">
             </div>
 
     .. group-tab:: C\#
