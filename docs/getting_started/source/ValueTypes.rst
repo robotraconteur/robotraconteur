@@ -298,7 +298,7 @@ for namedarray types:
 
 .. notes::
 
-    Namedarrays are the must efficient way to transmit data in Robot Raconteur. It is recommended they
+    Namedarrays are more efficient than structures or PODs. It is recommended they
     be used when transferring large segments of data such as log recordings or sensor data.
 
 The examples below show how to use namedarrays in Python, MATLAB, LabView, C\#, and C++.
