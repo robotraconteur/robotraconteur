@@ -158,7 +158,7 @@ Structure Types
 
 Structures are a collection of fields that can contain any value type. Structures
 are defined using the Robot Raconteur "Service Definitions" format. Structures are nullable.
-Structures may contain themselves (recursive), but some fields will be null to prevent
+Structures may contain themselves (recursive), but some field values must be null to prevent
 infinite recursion. The following examples
 demonstrate using the ``experimental.value_types.MyStructure`` structure type:
 
@@ -295,6 +295,11 @@ for namedarray types:
 
 .. literalinclude:: ../../../examples/features/value_types/robdef/experimental.value_types.robdef
     :lines: 74-78
+
+.. notes::
+
+    Namedarrays are the must efficient way to transmit data in Robot Raconteur. It is recommended they
+    be used when transferring large segments of data such as log recordings or sensor data.
 
 The examples below show how to use namedarrays in Python, MATLAB, LabView, C\#, and C++.
 
