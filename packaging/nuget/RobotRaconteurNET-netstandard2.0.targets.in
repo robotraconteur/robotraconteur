@@ -13,14 +13,14 @@
 
 <Target Name="UpdateRobotRaconteurGenFiles" DependsOnTargets="_UpdateRobotRaconteurGenFiles" Condition="'@(RobotRaconteurGenCSharp)' != ''">
   <ItemGroup>
-    <Compile Include="$(BaseIntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs" />
+    <Compile Include="$(IntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs" />
   </ItemGroup>
 </Target>
 <Target Name="_UpdateRobotRaconteurGenFiles" Inputs="$(MSBuildProjectFile);@(RobotRaconteurGenCSharp)"
-  Outputs="$(BaseIntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs">
-  <Exec Command="&quot;$(MSBuildThisFileDirectory)..\..\tools\RobotRaconteurGen.exe&quot; --thunksource --lang=csharp --outfile=$(BaseIntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs @(RobotRaconteurGenInclude->'--include &quot;%(fullpath)&quot;', ' ') @(RobotRaconteurGenIncludePath->'--include-path &quot;%(FullPath)&quot;', ' ') --auto-import @(RobotRaconteurGenCSharp->'&quot;%(fullpath)&quot;',' ')"
+  Outputs="$(IntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs">
+  <Exec Command="&quot;$(MSBuildThisFileDirectory)..\..\tools\RobotRaconteurGen.exe&quot; --thunksource --lang=csharp --outfile=$(IntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs @(RobotRaconteurGenInclude->'--include &quot;%(fullpath)&quot;', ' ') @(RobotRaconteurGenIncludePath->'--include-path &quot;%(FullPath)&quot;', ' ') --auto-import @(RobotRaconteurGenCSharp->'&quot;%(fullpath)&quot;',' ')"
         Condition=" '$(OS)' == 'Windows_NT' " />
-  <Exec Command="RobotRaconteurGen --thunksource --lang=csharp --outfile=$(BaseIntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs @(RobotRaconteurGenInclude->'--include &quot;%(fullpath)&quot;', ' ') @(RobotRaconteurGenIncludePath->'--include-path &quot;%(FullPath)&quot;', ' ') --auto-import @(RobotRaconteurGenCSharp->'&quot;%(fullpath)&quot;',' ')"
+  <Exec Command="RobotRaconteurGen --thunksource --lang=csharp --outfile=&quot;$(IntermediateOutputPath)RobotRaconteurGenCSGeneratedFile.g.cs&quot; @(RobotRaconteurGenInclude->'--include &quot;%(fullpath)&quot;', ' ') @(RobotRaconteurGenIncludePath->'--include-path &quot;%(FullPath)&quot;', ' ') --auto-import @(RobotRaconteurGenCSharp->'&quot;%(fullpath)&quot;',' ')"
         Condition=" '$(OS)' != 'Windows_NT' " />
 </Target>
 
