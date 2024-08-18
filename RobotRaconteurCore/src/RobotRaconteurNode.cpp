@@ -1523,9 +1523,12 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
 
             try
             {
-                RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attr = AllocateEmptyRRMap<std::string, RRValue>();
-                attr->GetStorageContainer() = c->GetAttributes();
-                eret->AddElement("attributes", PackMapType<std::string, RRValue>(attr));
+                if (c)
+                {
+                    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attr = AllocateEmptyRRMap<std::string, RRValue>();
+                    attr->GetStorageContainer() = c->GetAttributes();
+                    eret->AddElement("attributes", PackMapType<std::string, RRValue>(attr));
+                }
             }
             catch (std::exception& exp)
             {
