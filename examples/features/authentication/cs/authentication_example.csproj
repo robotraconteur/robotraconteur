@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="RobotRaconteurNET" Version="1.2.1" />
+      <PackageReference Include="RobotRaconteurNET" Version="*" />
     </ItemGroup>
 
 </Project>
