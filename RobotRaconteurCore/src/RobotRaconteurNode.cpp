@@ -1520,6 +1520,19 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 eret->Error = MessageErrorType_AuthenticationError;
                 break;
             }
+
+            try
+            {
+                RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attr = AllocateEmptyRRMap<std::string, RRValue>();
+                attr->GetStorageContainer() = c->GetAttributes();
+                eret->AddElement("attributes", PackMapType<std::string, RRValue>(attr));
+            }
+            catch (std::exception& exp)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
+                    weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath, e->MemberName,
+                    "Could not add attributes to client connect return message: " << exp.what())
+            }
         }
         break;
 

@@ -30,8 +30,12 @@ class TestServerNodeConfig:
             t = self.node_setup.tcp_transport
 
             t2 = testroot_impl(t)
-            self.node.RegisterService(
+            t2_c = self.node.RegisterService(
                 "RobotRaconteurTestService", "com.robotraconteur.testing.TestService1.testroot", t2)
+            t2_c.SetServiceAttributes({
+                "test": RR.VarValue("This is a test attribute", "string"),
+                "test2": RR.VarValue(42, "int32")
+            })
 
             t3 = testroot_impl(t)
             authdata = "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\ntestuser2 841c4221c2e7e0cefbc0392a35222512 objectlock\ntestsuperuser 503ed776c50169f681ad7bbc14198b68 objectlock,objectlockoverride"

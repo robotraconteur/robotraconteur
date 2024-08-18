@@ -2087,6 +2087,26 @@ void ClientContext::AsyncConnectService7(
 
         try
         {
+            RR_INTRUSIVE_PTR<MessageElement> attributes;
+            if (ret->TryFindElement("attributes", attributes))
+            {
+                RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > attributes1 = rr_cast<RRMap<std::string, RRValue> >(
+                    (GetNode()->UnpackMapType<std::string, RRValue>(attributes->CastDataToNestedList())));
+                if (attributes1)
+                {
+                    boost::mutex::scoped_lock lock(m_Attributes_lock);
+                    m_Attributes.swap(attributes1->GetStorageContainer());
+                }
+            }
+        }
+        catch (std::exception& exp)
+        {
+            ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Client, GetLocalEndpoint(),
+                                                 "Error unpacking attributes: " << exp.what());
+        }
+
+        try
+        {
             if (GetNode()->GetDynamicServiceFactory())
             {
                 boost::mutex::scoped_lock lock(pulled_service_defs_lock);
