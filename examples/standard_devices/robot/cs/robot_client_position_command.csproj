@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0</TargetFrameworks>
         <LangVersion>9.0</LangVersion>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     </PropertyGroup>
@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="RobotRaconteurNET" Version="1.2.1" />
+      <PackageReference Include="RobotRaconteurNET" Version="*" />
       <PackageReference Include="RobotRaconteurNET.Companion" Version="0.2.0" />
     </ItemGroup>
 
