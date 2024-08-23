@@ -260,6 +260,14 @@ std::list<UsbDeviceManager_detected_device> WinUsbDeviceManager::GetDetectedDevi
         bResult = setupapi_f->SetupDiGetDeviceInterfaceDetailW(deviceInfo, &interfaceData, detailData.get(), length,
                                                                &requiredLength, NULL);
 
+        if (bResult == FALSE && GetLastError() == ERROR_INVALID_USER_BUFFER)
+        {
+            // TODO: Why is this 8 instead of 6 on Windows 10??
+            detailData->cbSize = 8;
+            bResult = setupapi_f->SetupDiGetDeviceInterfaceDetailW(deviceInfo, &interfaceData, detailData.get(), length,
+                                                                   &requiredLength, NULL);
+        }
+
         if (FALSE == bResult)
         {
             continue;
