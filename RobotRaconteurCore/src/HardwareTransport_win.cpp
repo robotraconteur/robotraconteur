@@ -1101,7 +1101,9 @@ HardwareTransport_win_discovery::HardwareTransport_win_discovery(const RR_SHARED
                                                                  const RR_SHARED_PTR<WinsockBluetoothConnector>& bt,
                                                                  const RR_SHARED_PTR<void>& f_void)
     : HardwareTransport_discovery(parent, schemes, usb, bt)
-{}
+{
+    f = RR_STATIC_POINTER_CAST<SetupApi_Functions>(f_void);
+}
 
 void HardwareTransport_win_discovery::Init()
 {
