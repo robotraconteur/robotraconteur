@@ -202,6 +202,7 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
+      if: ${{ matrix.config.os != 'ubuntu-16.04' &&  matrix.config.os != 'ubuntu-18.04' }}
       uses: actions/upload-artifact@v4
       with:
         name: 'out-${{ matrix.config.os }}'
