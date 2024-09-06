@@ -202,13 +202,14 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      if: ${{ matrix.config.os != 'ubuntu-16.04' &&  matrix.config.os != 'ubuntu-18.04' }}
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-${{ matrix.config.os }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
@@ -412,13 +413,13 @@ jobs:
         copy robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-win-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-win-${{ matrix.config.arch }}'
         path: build2/*
@@ -468,7 +469,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-win-shared'
         path: build2/*
@@ -583,13 +584,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-osx-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-osx-${{ matrix.config.arch }}'
         path: build2/*
@@ -673,13 +674,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-matlab'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-matlab'
         path: build2/*
@@ -910,13 +911,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-android-${{ matrix.config.android_abi }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-android-${{ matrix.config.android_abi }}'
         path: build2/*
@@ -954,13 +955,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-ios-arm64'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-ios-arm64'
         path: build2/*
@@ -1036,13 +1037,13 @@ jobs:
       working-directory: src
       run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
     - name: archive dist
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'pyodide-dist'
         path: src/dist/*
     - name: archive package logs
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'pyodide-package-logs'
         path: src/packages/build-logs/*
@@ -1061,7 +1062,7 @@ jobs:
         path: robotraconteur
     - uses: nuget/setup-nuget@v1
     - name: Download CI artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/main
     - name: collect source
@@ -1077,7 +1078,7 @@ jobs:
     - name: build android package
       run: python robotraconteur/packaging/scripts/build_android_package.py
     - name: archive distfiles
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'distfiles'
         path: distfiles/*
@@ -1206,7 +1207,7 @@ jobs:
         gcovr -r . --config=test/codecov/gcovr/gcovr.cfg --html-details -o build/codecov/codecov.html build
         gcovr -r . --config=test/codecov/gcovr/gcovr.cfg -s build
     - name: upload codecov
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: codecov
         path: build/codecov
@@ -1272,7 +1273,7 @@ jobs:
         ./disttest_cpp
       # Archive all logs
     - name: Archive all logs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: logs
@@ -1320,7 +1321,7 @@ jobs:
       with:
         path: robotraconteur
     - name: Download distfiles
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/distfiles
         name: distfiles
@@ -1366,12 +1367,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libboost-all-dev libssl-dev zlib1g-dev -y
     - name: Download distfiles
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/distfiles
         name: distfiles
     - name: Download distfiles out-ubuntu
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/out-ubuntu
         name: out-ubuntu-22.04
@@ -1419,12 +1420,12 @@ jobs:
       with:
         path: robotraconteur
     - name: Download distfiles
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/distfiles
         name: distfiles
     - name: Download distfiles out-osx
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/out-osx
         name: out-osx-${{ matrix.config.arch }}
