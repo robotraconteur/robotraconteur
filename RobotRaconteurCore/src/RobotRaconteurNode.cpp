@@ -459,9 +459,14 @@ void RobotRaconteurNode::Shutdown()
             }
         }
 
+        std::vector<RR_SHARED_PTR<Transport> > transportsv;
         {
             boost::unique_lock<boost::shared_mutex> lock(transports_lock);
-            BOOST_FOREACH (RR_SHARED_PTR<Transport>& e, transports | boost::adaptors::map_values)
+            boost::copy(transports | boost::adaptors::map_values, std::back_inserter(transportsv));
+        }
+
+        {
+            BOOST_FOREACH (RR_SHARED_PTR<Transport>& e, transportsv)
             {
                 try
                 {
