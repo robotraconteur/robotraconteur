@@ -1270,7 +1270,7 @@ class websocket_stream : private boost::noncopyable
 #if BOOST_ASIO_VERSION >= 101200
             boost::asio::post(boost::asio::get_associated_executor(handler2, get_executor()), handler2);
 #else
-            get_io_service().post(handler);
+            get_io_service().post(handler2);
 #endif
             return;
         }
