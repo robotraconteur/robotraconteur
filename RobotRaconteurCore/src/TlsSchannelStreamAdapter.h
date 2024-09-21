@@ -140,8 +140,7 @@ class TlsSchannelAsyncStreamAdapter_ASIO_adapter
     {
 
         // TODO: Don't allocate here
-        boost::shared_ptr<handler_wrapper<Handler> > handler2 =
-            boost::make_shared<handler_wrapper<Handler> >(boost::ref(handler));
+        boost::shared_ptr<handler_wrapper<Handler> > handler2 = boost::make_shared<handler_wrapper<Handler> >(handler);
 
         // TODO: use more than just first buffer
         mutable_buffers b;
