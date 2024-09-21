@@ -33,7 +33,7 @@ runs:
   - name: configure
     run: >
       cmake -G "Unix Makefiles"
-      -DBoost_USE_STATIC_LIBS=ON
+      -DBoost_USE_STATIC_LIBS=ON -DBUILD_DOCUMENTATION=OFF
       -DBUILD_CORE=OFF -DBUILD_GEN=OFF
       -DRobotRaconteur_DIR=${{ github.workspace }}/build2
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
