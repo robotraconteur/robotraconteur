@@ -7,7 +7,7 @@ def test_ws_https():
 
     with RR.ClientNodeSetup(node=node1):
         c = node1.ConnectService(
-            'rr+wss://wstest.wasontech.com/robotraconteur?service=testobj')
+            'rr+wss://wstest2.wasontech.com/robotraconteur?service=testobj')
 
         assert c.add_two_numbers(2, 4) == 6
 
