@@ -193,7 +193,7 @@ class websocket_stream : private boost::noncopyable
 
         if (end_header_pos == -1)
         {
-            pos += n;
+            pos += boost::numeric_cast<int64_t>(n);
             if (pos >= 4096)
             {
                 {
@@ -710,7 +710,7 @@ class websocket_stream : private boost::noncopyable
 
         if (end_header_pos == -1)
         {
-            pos += n;
+            pos += boost::numeric_cast<int64_t>(n);
             if (pos >= 4096)
             {
                 {
@@ -1270,7 +1270,7 @@ class websocket_stream : private boost::noncopyable
 #if BOOST_ASIO_VERSION >= 101200
             boost::asio::post(boost::asio::get_associated_executor(handler2, get_executor()), handler2);
 #else
-            executor_.post(handler);
+            get_io_service().post(handler);
 #endif
             return;
         }
