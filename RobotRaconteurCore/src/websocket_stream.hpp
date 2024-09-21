@@ -168,7 +168,7 @@ class websocket_stream : private boost::noncopyable
         {
             {
                 boost::mutex::scoped_lock lock(next_layer_lock);
-                next_layer_.close();
+                next_layer_.lowest_layer().close();
             }
             handler("", ec);
             return;
@@ -178,7 +178,7 @@ class websocket_stream : private boost::noncopyable
         {
             {
                 boost::mutex::scoped_lock lock(next_layer_lock);
-                next_layer_.close();
+                next_layer_.lowest_layer().close();
             }
             boost::system::error_code ec1(boost::system::errc::connection_aborted, boost::system::generic_category());
             handler("", ec1);
@@ -525,7 +525,7 @@ class websocket_stream : private boost::noncopyable
         {
             {
                 boost::mutex::scoped_lock lock(next_layer_lock);
-                next_layer_.close();
+                next_layer_.lowest_layer().close();
             }
             boost::system::error_code ec1(boost::system::errc::connection_aborted, boost::system::generic_category());
             handler("", ec1);
@@ -568,7 +568,7 @@ class websocket_stream : private boost::noncopyable
         {
             {
                 boost::mutex::scoped_lock lock(next_layer_lock);
-                next_layer_.close();
+                next_layer_.lowest_layer().close();
             }
             boost::system::error_code ec1(boost::system::errc::connection_aborted, boost::system::generic_category());
             handler("", ec1);
