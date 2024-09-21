@@ -117,7 +117,7 @@ class websocket_stream : private boost::noncopyable
 
         boost::mutex::scoped_lock lock(next_layer_lock);
         next_layer_.async_read_some(boost::asio::buffer(buf.get(), 4096),
-                                    boost::bind(&websocket_stream::server_handshake2, this, buf, protocol,
+                                    boost::bind(&websocket_stream::server_handshake2, this, buf, 0, protocol,
                                                 allowed_origins, boost::asio::placeholders::bytes_transferred,
                                                 boost::asio::placeholders::error, boost::protect(RR_MOVE(handler))));
     }
@@ -133,8 +133,34 @@ class websocket_stream : private boost::noncopyable
     std::string server_handshake_op;
     std::string server_handshake_path;
 
+    template <typename T>
+    int64_t find_http_header_end(T& str)
+    {
+        int64_t pos = str.find("\r\n\r\n");
+        if (pos != -1)
+        {
+            return pos + 4;
+        }
+        pos = str.find("\n\n");
+        if (pos != -1)
+        {
+            return pos + 2;
+        }
+        pos = str.find("\r\r");
+        if (pos != -1)
+        {
+            return pos + 2;
+        }
+        pos = str.find("\n\r\n\r");
+        if (pos != -1)
+        {
+            return pos + 4;
+        }
+        return -1;
+    }
+
     void server_handshake2(
-        const boost::shared_array<uint8_t>& buf, const std::string& protocol,
+        const boost::shared_array<uint8_t>& buf, int64_t pos, const std::string& protocol,
         const std::vector<std::string>& allowed_origins, std::size_t n, const boost::system::error_code& ec,
         boost::function<void(const std::string& protocol, const boost::system::error_code& ec)> handler)
     {
@@ -159,14 +185,51 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
-        int64_t pos = 0;
-        bool end_header = false;
+        boost::string_ref buf_str(reinterpret_cast<char*>(buf.get()), n + pos);
 
-        while (pos < boost::numeric_cast<int64_t>(n) && !end_header)
+        int64_t end_header_pos = find_http_header_end(buf_str);
+
+        if (end_header_pos == -1)
+        {
+            pos += n;
+            if (pos >= 4096)
+            {
+                {
+                    boost::mutex::scoped_lock lock(next_layer_lock);
+                    next_layer_.lowest_layer().close();
+                }
+                boost::system::error_code ec1(boost::system::errc::io_error, boost::system::generic_category());
+                handler("", ec1);
+                return;
+            }
+            boost::mutex::scoped_lock lock(next_layer_lock);
+            next_layer_.async_read_some(boost::asio::buffer(buf.get() + pos, 4096 - pos),
+                                        boost::bind(&websocket_stream::server_handshake2, this, buf, pos, protocol,
+                                                    allowed_origins, boost::asio::placeholders::bytes_transferred,
+                                                    boost::asio::placeholders::error, boost::protect(handler)));
+            return;
+        }
+
+        bool end_header = false;
+        n += pos;
+        pos = 0;
+
+        if ((size_t)end_header_pos > n)
+        {
+            size_t extra_len = n - end_header_pos;
+            {
+                boost::mutex::scoped_lock lock(extra_recv_data_lock);
+                extra_recv_data = boost::shared_array<uint8_t>(new uint8_t[extra_len]);
+                memcpy(extra_recv_data.get(), buf.get() + end_header_pos, extra_len);
+                extra_recv_data_len = extra_len;
+            }
+        }
+
+        while (pos < boost::numeric_cast<int64_t>(end_header_pos) && !end_header)
         {
 
             int64_t i_lf = -1;
-            for (int64_t i = pos; i < boost::numeric_cast<int64_t>(n); i++)
+            for (int64_t i = pos; i < boost::numeric_cast<int64_t>(end_header_pos); i++)
             {
                 if (buf[boost::numeric_cast<std::ptrdiff_t>(i)] == '\n')
                 {
@@ -177,32 +240,16 @@ class websocket_stream : private boost::noncopyable
 
             if (i_lf == -1)
             {
-                if (extra_recv_data_len + n >= 4096)
+                // This shouldn't be possible
                 {
-                    // We are just getting garbage...
                     {
                         boost::mutex::scoped_lock lock(next_layer_lock);
-                        next_layer_.close();
+                        next_layer_.lowest_layer().close();
                     }
-
-                    boost::system::error_code ec1(boost::system::errc::connection_aborted,
-                                                  boost::system::generic_category());
+                    boost::system::error_code ec1(boost::system::errc::io_error, boost::system::generic_category());
                     handler("", ec1);
                     return;
                 }
-                {
-                    boost::mutex::scoped_lock lock(extra_recv_data_lock);
-                    extra_recv_data = boost::shared_array<uint8_t>(new uint8_t[n - boost::numeric_cast<size_t>(pos)]);
-                    memcpy(extra_recv_data.get(), buf.get() + boost::numeric_cast<size_t>(pos),
-                           n - boost::numeric_cast<size_t>(pos));
-                    extra_recv_data_len = n - boost::numeric_cast<size_t>(pos);
-                }
-                boost::mutex::scoped_lock lock(next_layer_lock);
-                next_layer_.async_read_some(boost::asio::buffer(buf.get(), 4096),
-                                            boost::bind(&websocket_stream::server_handshake2, this, buf, protocol,
-                                                        allowed_origins, boost::asio::placeholders::bytes_transferred,
-                                                        boost::asio::placeholders::error, boost::protect(handler)));
-                return;
             }
 
             std::string line(reinterpret_cast<char*>(buf.get()) + boost::numeric_cast<size_t>(pos),
@@ -631,13 +678,13 @@ class websocket_stream : private boost::noncopyable
         boost::mutex::scoped_lock lock(next_layer_lock);
         next_layer_.async_read_some(
             boost::asio::buffer(buf.get(), 4096),
-            boost::bind(&websocket_stream::async_client_handshake3, this, buf, boost::asio::placeholders::error,
+            boost::bind(&websocket_stream::async_client_handshake3, this, buf, 0, boost::asio::placeholders::error,
                         boost::asio::placeholders::bytes_transferred, url, protocol, key, boost::protect(handler)));
     }
 
-    void async_client_handshake3(const boost::shared_array<uint8_t>& buf, const boost::system::error_code& ec,
-                                 std::size_t n, const std::string& url, const std::string& protocol,
-                                 const std::string& key,
+    void async_client_handshake3(const boost::shared_array<uint8_t>& buf, int64_t pos,
+                                 const boost::system::error_code& ec, std::size_t n, const std::string& url,
+                                 const std::string& protocol, const std::string& key,
                                  boost::function<void(const boost::system::error_code& ec)> handler)
     {
         if (ec)
@@ -661,14 +708,52 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
-        int64_t pos = 0;
-        bool end_header = false;
+        boost::string_ref buf_str(reinterpret_cast<char*>(buf.get()), n + pos);
 
-        while (pos < boost::numeric_cast<int64_t>(n) && !end_header)
+        int64_t end_header_pos = find_http_header_end(buf_str);
+
+        if (end_header_pos == -1)
+        {
+            pos += n;
+            if (pos >= 4096)
+            {
+                {
+                    boost::mutex::scoped_lock lock(next_layer_lock);
+                    next_layer_.lowest_layer().close();
+                }
+                boost::system::error_code ec1(boost::system::errc::io_error, boost::system::generic_category());
+                handler(ec1);
+                return;
+            }
+            boost::mutex::scoped_lock lock(next_layer_lock);
+            next_layer_.async_read_some(boost::asio::buffer(buf.get() + pos, 4096 - pos),
+                                        boost::bind(&websocket_stream::async_client_handshake3, this, buf, pos,
+                                                    boost::asio::placeholders::error,
+                                                    boost::asio::placeholders::bytes_transferred, url, protocol, key,
+                                                    boost::protect(handler)));
+            return;
+        }
+
+        bool end_header = false;
+        n += pos;
+        pos = 0;
+
+        if ((size_t)end_header_pos > n)
+        {
+            size_t extra_len = n - end_header_pos;
+            {
+                boost::mutex::scoped_lock lock(extra_recv_data_lock);
+                extra_recv_data = boost::shared_array<uint8_t>(new uint8_t[extra_len]);
+                memcpy(extra_recv_data.get(), buf.get() + end_header_pos, extra_len);
+                extra_recv_data_len = extra_len;
+            }
+        }
+
+        while (pos < boost::numeric_cast<int64_t>(end_header_pos) && !end_header)
         {
 
             int64_t i_lf = -1;
-            for (int64_t i = pos; i < boost::numeric_cast<int64_t>(n); i++)
+            for (int64_t i = pos; i < boost::numeric_cast<int64_t>(end_header_pos); i++)
             {
                 if (buf[boost::numeric_cast<std::ptrdiff_t>(i)] == '\n')
                 {
@@ -679,32 +764,16 @@ class websocket_stream : private boost::noncopyable
 
             if (i_lf == -1)
             {
-                if (extra_recv_data_len + n >= 4096)
+                // This shouldn't be possible
                 {
-                    // We are just getting garbage...
                     {
                         boost::mutex::scoped_lock lock(next_layer_lock);
                         next_layer_.lowest_layer().close();
                     }
-                    boost::system::error_code ec1(boost::system::errc::connection_aborted,
-                                                  boost::system::generic_category());
+                    boost::system::error_code ec1(boost::system::errc::io_error, boost::system::generic_category());
                     handler(ec1);
                     return;
                 }
-                {
-                    boost::mutex::scoped_lock lock(extra_recv_data_lock);
-                    extra_recv_data = boost::shared_array<uint8_t>(new uint8_t[n - boost::numeric_cast<size_t>(pos)]);
-                    memcpy(extra_recv_data.get(), buf.get() + boost::numeric_cast<size_t>(pos),
-                           n - boost::numeric_cast<size_t>(pos));
-                    extra_recv_data_len = n - boost::numeric_cast<size_t>(pos);
-                }
-                boost::mutex::scoped_lock lock(next_layer_lock);
-                next_layer_.async_read_some(boost::asio::buffer(buf.get(), 4096),
-                                            boost::bind(&websocket_stream::async_client_handshake3, this, buf,
-                                                        boost::asio::placeholders::error,
-                                                        boost::asio::placeholders::bytes_transferred, url, protocol,
-                                                        key, boost::protect(handler)));
-                return;
             }
 
             std::string line(reinterpret_cast<char*>(buf.get()) + boost::numeric_cast<size_t>(pos),
