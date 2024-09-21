@@ -528,7 +528,7 @@ jobs:
     - name: configure
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF
-        -DBUILD_JAVA=ON
+        -DBUILD_JAVA=ON -DBUILD_DOCUMENTATION=OFF
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release
         -DPACKAGE_SWIG_SOURCE_ALL=ON
         -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=${{ matrix.config.homebrew_root }}/opt/openssl
@@ -789,7 +789,7 @@ jobs:
     - name: configure
       run: >
         cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON -DCMAKE_BUILD_TYPE:STRING=Release
-        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}" -DBUILD_DOCUMENTATION=OFF
         -DPYTHON3_EXECUTABLE=$CONDA_PREFIX/bin/python -DOPENSSL_ROOT_DIR=$CONDA_PREFIX -S robotraconteur -B build2
     - name: build
       working-directory: build2
