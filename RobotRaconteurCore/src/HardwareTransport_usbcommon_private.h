@@ -25,6 +25,11 @@ namespace detail
 static const uint8_t RR_USB_CS_INTERFACE_UUID_DETECT[] = {0x3F, 0x81, 0x0F, 0xD2, 0x2B, 0xCE, 0x45, 0x52,
                                                           0x98, 0xF3, 0xA8, 0xAC, 0x22, 0x0A, 0xD4, 0x8D};
 
+// Robot Raconteur BOS Platform UUID 84670ec3-cec6-4917-b039-510e3e71788b
+// NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
+static const uint8_t RR_USB_BOS_PLATFORM_ROBOTRACONTEUR_UUID[] = {0xc3, 0x0e, 0x67, 0x84, 0xc6, 0xce, 0x17, 0x49,
+                                                                  0xb0, 0x39, 0x51, 0x0e, 0x3e, 0x71, 0x78, 0x8b};
+
 static const size_t RR_USB_MAX_PACKET_SIZE = (16384);
 // NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
