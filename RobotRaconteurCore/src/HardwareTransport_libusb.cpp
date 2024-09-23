@@ -439,9 +439,14 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
         if (!rr_found)
         {
             RR_SHARED_PTR<HardwareTransport> t = GetParent();
-            if (t->IsValidUsbDevice(device_descriptor.idVendor, device_descriptor.idProduct, 0))
+            for (uint8_t j = 0; j<config_desc->bNumInterfaces; j++)
             {
-                rr_found = true;
+                if (t->IsValidUsbDevice(device_descriptor.idVendor, device_descriptor.idProduct, j))
+                {
+                    rr_found = true;
+                    interface_ = j;
+                    break;
+                }
             }
         }
 
