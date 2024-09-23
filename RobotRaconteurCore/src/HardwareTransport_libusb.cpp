@@ -377,21 +377,21 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
 
         {
             libusb_device_handle* device_handle = NULL;
-            if(f->libusb_open(list1[i], &device_handle) != 0)
+            if (f->libusb_open(list1[i], &device_handle) != 0)
             {
                 f->libusb_free_config_descriptor(config_desc);
                 continue;
             }
 
             libusb_bos_descriptor* bos_desc = NULL;
-            if(f->libusb_get_bos_descriptor(device_handle, &bos_desc) != 0)
+            if (f->libusb_get_bos_descriptor(device_handle, &bos_desc) != 0)
             {
                 f->libusb_free_config_descriptor(config_desc);
                 f->libusb_free_bos_descriptor(bos_desc);
                 f->libusb_close(device_handle);
                 continue;
             }
-            for (uint8_t j = 0; j< bos_desc->bNumDeviceCaps; j++)
+            for (uint8_t j = 0; j < bos_desc->bNumDeviceCaps; j++)
             {
                 libusb_bos_dev_capability_descriptor* cap = bos_desc->dev_capability[j];
                 if (cap->bDescriptorType == LIBUSB_DT_DEVICE_CAPABILITY && cap->bDevCapabilityType == 0x05)
@@ -400,9 +400,9 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                     {
                         continue;
                     }
-                    std::vector<uint8_t> desc(cap->dev_capability_data+1, cap->dev_capability_data+cap->bLength-3);
+                    std::vector<uint8_t> desc(cap->dev_capability_data + 1,
+                                              cap->dev_capability_data + cap->bLength - 3);
                     platform_bos_desc.push_back(desc);
-                    
                 }
             }
 
@@ -414,7 +414,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
         uint8_t rr_desc_vendor_code = 0;
         bool rr_found = false;
 
-        for (size_t j = 0; j<platform_bos_desc.size(); j++)
+        for (size_t j = 0; j < platform_bos_desc.size(); j++)
         {
             std::vector<uint8_t>& desc = platform_bos_desc[j];
             if (desc.size() != 20)
@@ -440,14 +440,14 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
         {
             RR_SHARED_PTR<HardwareTransport> t = GetParent();
             if (t->IsValidUsbDevice(device_descriptor.idVendor, device_descriptor.idProduct, 0))
-            {                
+            {
                 rr_found = true;
             }
         }
 
         if (rr_found)
         {
-                   
+
             if (config_desc->interface[interface_].num_altsetting < 1)
             {
                 continue;
@@ -463,137 +463,147 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
             if (inter.bInterfaceClass != 0xFF)
             {
                 rr_found = false;
-            }            
-
             }
-
-            f->libusb_free_config_descriptor(config_desc);
-
-            if (!rr_found)
-                continue;
-
-            RR_SHARED_PTR<libusb_device> dev_sp(
-                list1[i], boost::bind(&LibUsb_Functions_libusb_unref, f, RR_BOOST_PLACEHOLDERS(_1)));
-            f->libusb_ref_device(dev_sp.get());
-            UsbDeviceManager_detected_device d;
-            d.handle = dev_sp;
-            d.interface_ = interface_;
-            d.path = ws_path;
-            d.rr_desc_vendor_code = rr_desc_vendor_code;
-            devices.push_back(d);
         }
 
-        f->libusb_free_device_list(list1, 1);
+        f->libusb_free_config_descriptor(config_desc);
 
-        return devices;
+        if (!rr_found)
+            continue;
+
+        RR_SHARED_PTR<libusb_device> dev_sp(list1[i],
+                                            boost::bind(&LibUsb_Functions_libusb_unref, f, RR_BOOST_PLACEHOLDERS(_1)));
+        f->libusb_ref_device(dev_sp.get());
+        UsbDeviceManager_detected_device d;
+        d.handle = dev_sp;
+        d.interface_ = interface_;
+        d.path = ws_path;
+        d.rr_desc_vendor_code = rr_desc_vendor_code;
+        devices.push_back(d);
     }
 
-    RR_SHARED_PTR<UsbDevice> LibUsbDeviceManager::CreateDevice(const UsbDeviceManager_detected_device& device)
+    f->libusb_free_device_list(list1, 1);
+
+    return devices;
+}
+
+RR_SHARED_PTR<UsbDevice> LibUsbDeviceManager::CreateDevice(const UsbDeviceManager_detected_device& device)
+{
+    return RR_MAKE_SHARED<LibUsbDevice>(RR_STATIC_POINTER_CAST<LibUsbDeviceManager>(shared_from_this()), f, device);
+}
+
+void LibUsbDeviceManager::UsbThread()
+{
+    RR_SHARED_PTR<libusb_context> context = this->context;
+
+    if (!context)
+        return;
+
+    while (true)
     {
-        return RR_MAKE_SHARED<LibUsbDevice>(RR_STATIC_POINTER_CAST<LibUsbDeviceManager>(shared_from_this()), f, device);
-    }
-
-    void LibUsbDeviceManager::UsbThread()
-    {
-        RR_SHARED_PTR<libusb_context> context = this->context;
-
-        if (!context)
-            return;
-
-        while (true)
         {
+            boost::mutex::scoped_lock lock(manager_transfer_lock);
+            if (!running)
             {
-                boost::mutex::scoped_lock lock(manager_transfer_lock);
-                if (!running)
+                if (manager_transfer_list.empty())
                 {
-                    if (manager_transfer_list.empty())
-                    {
-                        return;
-                    }
-                }
-            }
-
-            int rv = f->libusb_handle_events(context.get());
-            if (rv < 0)
-            {
-                if (rv != LIBUSB_ERROR_TIMEOUT)
-                {
-                    {
-                        boost::mutex::scoped_lock lock(this_lock);
-
-                        BOOST_FOREACH (RR_SHARED_PTR<UsbDevice>& d, devices | boost::adaptors::map_values)
-                        {
-                            d->Close();
-                        }
-
-                        devices.clear();
-
-                        context.reset();
-                        hotplug_cb_handle = 0;
-                        try
-                        {
-                            std::string message =
-                                "Internal usb event loop failure: " + boost::lexical_cast<std::string>(rv);
-                            ConnectionException exp(message);
-                            RobotRaconteurNode::TryHandleException(node, &exp);
-                        }
-                        catch (std::exception&)
-                        {}
-                    }
                     return;
                 }
             }
         }
+
+        int rv = f->libusb_handle_events(context.get());
+        if (rv < 0)
+        {
+            if (rv != LIBUSB_ERROR_TIMEOUT)
+            {
+                {
+                    boost::mutex::scoped_lock lock(this_lock);
+
+                    BOOST_FOREACH (RR_SHARED_PTR<UsbDevice>& d, devices | boost::adaptors::map_values)
+                    {
+                        d->Close();
+                    }
+
+                    devices.clear();
+
+                    context.reset();
+                    hotplug_cb_handle = 0;
+                    try
+                    {
+                        std::string message =
+                            "Internal usb event loop failure: " + boost::lexical_cast<std::string>(rv);
+                        ConnectionException exp(message);
+                        RobotRaconteurNode::TryHandleException(node, &exp);
+                    }
+                    catch (std::exception&)
+                    {}
+                }
+                return;
+            }
+        }
+    }
+}
+
+void LibUsb_Functions_libusb_close(const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_device_handle* h)
+{
+    f->libusb_close(h);
+}
+
+void LibUsbDeviceManager::LibUsbCloseDevice(RR_WEAK_PTR<LibUsbDeviceManager> d,
+                                            const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_device_handle* h)
+{
+    RR_SHARED_PTR<LibUsbDeviceManager> d1 = d.lock();
+    if (!d1)
+    {
+        // We lost the USB device manager...
+        f->libusb_close(h);
+        return;
     }
 
-    void LibUsb_Functions_libusb_close(const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_device_handle* h)
+    {
+        boost::mutex::scoped_lock lock(d1->manager_transfer_lock);
+        d1->closing_device_handles.erase(h);
+    }
+
+    if (boost::this_thread::get_id() == d1->usb_thread.get_id())
+    {
+        // Send the close request to the thread pool to avoid deadlock
+        RobotRaconteurNode::TryPostToThreadPool(d1->node, boost::bind(&LibUsb_Functions_libusb_close, f, h), true);
+    }
+    else
     {
         f->libusb_close(h);
     }
+}
 
-    void LibUsbDeviceManager::LibUsbCloseDevice(RR_WEAK_PTR<LibUsbDeviceManager> d,
-                                                const RR_SHARED_PTR<LibUsb_Functions>& f, libusb_device_handle* h)
+int LibUsbDeviceManager::OnUsbHotplugEvent(libusb_context* ctx, libusb_device* device, libusb_hotplug_event event,
+                                           void* user_data)
+{
+    RR_UNUSED(ctx);
+    RR_UNUSED(device);
+    RR_UNUSED(event);
+    RR_UNUSED(user_data);
+    return 0;
+}
+
+void LibUsbDeviceManager::submit_transfer(boost::intrusive_ptr<LibUsb_Transfer>& transfer)
+{
     {
-        RR_SHARED_PTR<LibUsbDeviceManager> d1 = d.lock();
-        if (!d1)
+        boost::mutex::scoped_lock lock(manager_transfer_lock);
+
+        if (!running)
         {
-            // We lost the USB device manager...
-            f->libusb_close(h);
+            transfer->transfer->actual_length = 0;
+            transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
+            RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer),
+                                                    true);
             return;
         }
 
+        if (!closing_device_handles.empty())
         {
-            boost::mutex::scoped_lock lock(d1->manager_transfer_lock);
-            d1->closing_device_handles.erase(h);
-        }
-
-        if (boost::this_thread::get_id() == d1->usb_thread.get_id())
-        {
-            // Send the close request to the thread pool to avoid deadlock
-            RobotRaconteurNode::TryPostToThreadPool(d1->node, boost::bind(&LibUsb_Functions_libusb_close, f, h), true);
-        }
-        else
-        {
-            f->libusb_close(h);
-        }
-    }
-
-    int LibUsbDeviceManager::OnUsbHotplugEvent(libusb_context * ctx, libusb_device * device, libusb_hotplug_event event,
-                                               void* user_data)
-    {
-        RR_UNUSED(ctx);
-        RR_UNUSED(device);
-        RR_UNUSED(event);
-        RR_UNUSED(user_data);
-        return 0;
-    }
-
-    void LibUsbDeviceManager::submit_transfer(boost::intrusive_ptr<LibUsb_Transfer> & transfer)
-    {
-        {
-            boost::mutex::scoped_lock lock(manager_transfer_lock);
-
-            if (!running)
+            if (closing_device_handles.find(transfer->device_handle.get()) != closing_device_handles.end())
             {
                 transfer->transfer->actual_length = 0;
                 transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
@@ -601,489 +611,471 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                                                         true);
                 return;
             }
-
-            if (!closing_device_handles.empty())
-            {
-                if (closing_device_handles.find(transfer->device_handle.get()) != closing_device_handles.end())
-                {
-                    transfer->transfer->actual_length = 0;
-                    transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
-                    RobotRaconteurNode::TryPostToThreadPool(
-                        node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer), true);
-                    return;
-                }
-            }
-
-            manager_transfer_list.push_back(*transfer);
         }
-        int rv = f->libusb_submit_transfer(transfer->transfer);
-        if (rv != 0)
-        {
-            transfer->transfer->actual_length = 0;
-            transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
-            RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer),
-                                                    true);
-        }
+
+        manager_transfer_list.push_back(*transfer);
     }
-
-    void LibUsbDeviceManager::transfer_complete(libusb_transfer * transfer)
+    int rv = f->libusb_submit_transfer(transfer->transfer);
+    if (rv != 0)
     {
-        boost::intrusive_ptr<LibUsb_Transfer> t1(static_cast<LibUsb_Transfer*>(transfer->user_data), false);
+        transfer->transfer->actual_length = 0;
+        transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer), true);
+    }
+}
 
+void LibUsbDeviceManager::transfer_complete(libusb_transfer* transfer)
+{
+    boost::intrusive_ptr<LibUsb_Transfer> t1(static_cast<LibUsb_Transfer*>(transfer->user_data), false);
+
+    {
+        RR_SHARED_PTR<LibUsbDeviceManager> m = t1->device_manager.lock();
+        if (m)
         {
-            RR_SHARED_PTR<LibUsbDeviceManager> m = t1->device_manager.lock();
-            if (m)
-            {
-                boost::mutex::scoped_lock lock(m->manager_transfer_lock);
-                m->manager_transfer_list.erase(m->manager_transfer_list.iterator_to(*t1));
+            boost::mutex::scoped_lock lock(m->manager_transfer_lock);
+            m->manager_transfer_list.erase(m->manager_transfer_list.iterator_to(*t1));
 
-                if (!m->closing_device_handles.empty())
+            if (!m->closing_device_handles.empty())
+            {
+                std::map<libusb_device_handle*, boost::function<void()> >::iterator e =
+                    m->closing_device_handles.find(t1->device_handle.get());
+                if (e != m->closing_device_handles.end())
                 {
-                    std::map<libusb_device_handle*, boost::function<void()> >::iterator e =
-                        m->closing_device_handles.find(t1->device_handle.get());
-                    if (e != m->closing_device_handles.end())
+                    int count = 0;
+                    for (LibUsb_Transfer::manager_transfer_list_t::iterator e2 = m->manager_transfer_list.begin();
+                         e2 != m->manager_transfer_list.end(); e2++)
                     {
-                        int count = 0;
-                        for (LibUsb_Transfer::manager_transfer_list_t::iterator e2 = m->manager_transfer_list.begin();
-                             e2 != m->manager_transfer_list.end(); e2++)
+                        if (e2->device_handle == t1->device_handle)
                         {
-                            if (e2->device_handle == t1->device_handle)
-                            {
-                                count++;
-                            }
+                            count++;
                         }
-                        if (count == 0)
+                    }
+                    if (count == 0)
+                    {
+                        boost::function<void()> draw_down_handler = e->second;
+                        e->second.clear();
+                        if (draw_down_handler)
                         {
-                            boost::function<void()> draw_down_handler = e->second;
-                            e->second.clear();
-                            if (draw_down_handler)
+                            try
                             {
-                                try
-                                {
-                                    RobotRaconteurNode::TryPostToThreadPool(m->GetNode(), draw_down_handler, true);
-                                }
-                                catch (std::exception&)
-                                {}
+                                RobotRaconteurNode::TryPostToThreadPool(m->GetNode(), draw_down_handler, true);
                             }
+                            catch (std::exception&)
+                            {}
                         }
                     }
                 }
             }
         }
-
-        t1->CompleteTransfer();
     }
 
-    void LibUsbDeviceManager::DrawDownRequests(const RR_SHARED_PTR<libusb_device_handle>& h,
-                                               boost::function<void()> handler)
-    {
-        // TODO: draw down requests
-        // GetNode()->GetThreadPool()->Post(handler);
+    t1->CompleteTransfer();
+}
 
+void LibUsbDeviceManager::DrawDownRequests(const RR_SHARED_PTR<libusb_device_handle>& h,
+                                           boost::function<void()> handler)
+{
+    // TODO: draw down requests
+    // GetNode()->GetThreadPool()->Post(handler);
+
+    boost::mutex::scoped_lock lock(manager_transfer_lock);
+
+    if (closing_device_handles.find(h.get()) != closing_device_handles.end())
+    {
+        RobotRaconteurNode::TryPostToThreadPool(node, handler, true);
+        return;
+    }
+
+    int count = 0;
+    for (LibUsb_Transfer::manager_transfer_list_t::iterator e = manager_transfer_list.begin();
+         e != manager_transfer_list.end(); e++)
+    {
+        if (e->device_handle == h)
+        {
+            f->libusb_cancel_transfer(e->transfer);
+            count++;
+        }
+    }
+
+    if (count == 0)
+    {
+        // This will most likely never happen...
+        RobotRaconteurNode::TryPostToThreadPool(node, handler, true);
+    }
+    else
+    {
+        closing_device_handles.insert(std::make_pair(h.get(), handler));
+    }
+}
+
+void LibUsbDeviceManager::Shutdown()
+{
+    UsbDeviceManager::Shutdown();
+    bool r = false;
+    {
         boost::mutex::scoped_lock lock(manager_transfer_lock);
-
-        if (closing_device_handles.find(h.get()) != closing_device_handles.end())
-        {
-            RobotRaconteurNode::TryPostToThreadPool(node, handler, true);
-            return;
-        }
-
-        int count = 0;
-        for (LibUsb_Transfer::manager_transfer_list_t::iterator e = manager_transfer_list.begin();
-             e != manager_transfer_list.end(); e++)
-        {
-            if (e->device_handle == h)
-            {
-                f->libusb_cancel_transfer(e->transfer);
-                count++;
-            }
-        }
-
-        if (count == 0)
-        {
-            // This will most likely never happen...
-            RobotRaconteurNode::TryPostToThreadPool(node, handler, true);
-        }
-        else
-        {
-            closing_device_handles.insert(std::make_pair(h.get(), handler));
-        }
+        r = running;
+        running = false;
     }
 
-    void LibUsbDeviceManager::Shutdown()
+    if (r)
     {
-        UsbDeviceManager::Shutdown();
-        bool r = false;
+        if (f)
         {
-            boost::mutex::scoped_lock lock(manager_transfer_lock);
-            r = running;
-            running = false;
+            f->libusb_hotplug_deregister_callback(context.get(), hotplug_cb_handle);
         }
+        usb_thread.join();
+    }
+}
 
-        if (r)
-        {
-            if (f)
-            {
-                f->libusb_hotplug_deregister_callback(context.get(), hotplug_cb_handle);
-            }
-            usb_thread.join();
-        }
+// End LibUsbDeviceManager
+
+// LibUsbDevice_Initialize
+
+LibUsbDevice_Initialize::LibUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent,
+                                                 const RR_SHARED_PTR<LibUsb_Functions>& f,
+                                                 const UsbDeviceManager_detected_device& detected_device)
+    : UsbDevice_Initialize(parent, detected_device)
+{
+    this->f = f;
+    this->m = RR_STATIC_POINTER_CAST<LibUsbDeviceManager>(parent->GetParent());
+}
+
+void LibUsbDevice_Initialize::AsyncControlTransfer(
+    uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
+    boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    AsyncControlTransferNoLock(bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
+}
+
+// Call with lock
+void LibUsbDevice_Initialize::AsyncControlTransferNoLock(
+    uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
+    boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
+{
+    RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
+    if (!m1)
+    {
+        throw InvalidOperationException("Device manager lost");
+    }
+    RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
+    boost::intrusive_ptr<LibUsb_Transfer> t(new LibUsb_Transfer_control(f, h, m1));
+    boost::static_pointer_cast<LibUsb_Transfer_control>(t)->FillTransfer(bmRequestType, bRequest, wValue, wIndex, buf,
+                                                                         handler);
+
+    m1->submit_transfer(t);
+}
+
+// Call with lock
+UsbDeviceStatus LibUsbDevice_Initialize::OpenDevice(RR_SHARED_PTR<void>& dev_h)
+{
+    RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
+    if (!m1)
+        return Error;
+    return LibUsbDevice_open_device(m1, f, RR_STATIC_POINTER_CAST<libusb_device>(detected_device.handle), dev_h);
+}
+
+// Call with lock
+UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
+                                                          RR_SHARED_PTR<UsbDevice_Settings>& settings)
+{
+
+    RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
+
+    libusb_config_descriptor* config_desc = NULL;
+    int desired_config = 0;
+    if (f->libusb_get_config_descriptor(f->libusb_get_device(h.get()), 0, &config_desc) != 0)
+    {
+        return Error;
     }
 
-    // End LibUsbDeviceManager
+    // NOLINTNEXTLINE(clang-analyzer-deadcode.DeadStores)
+    desired_config = config_desc->bConfigurationValue;
 
-    // LibUsbDevice_Initialize
-
-    LibUsbDevice_Initialize::LibUsbDevice_Initialize(const RR_SHARED_PTR<UsbDevice>& parent,
-                                                     const RR_SHARED_PTR<LibUsb_Functions>& f,
-                                                     const UsbDeviceManager_detected_device& detected_device)
-        : UsbDevice_Initialize(parent, detected_device)
+    const libusb_interface_descriptor* interface_desc = NULL;
+    for (uint8_t i = 0; i < config_desc->bNumInterfaces; i++)
     {
-        this->f = f;
-        this->m = RR_STATIC_POINTER_CAST<LibUsbDeviceManager>(parent->GetParent());
+        if (config_desc->interface[i].num_altsetting < 1)
+        {
+            continue;
+        }
+        if (config_desc->interface[i].altsetting[0].bInterfaceNumber != settings->interface_number)
+        {
+            continue;
+        }
+        interface_desc = &config_desc->interface[i].altsetting[0];
     }
 
-    void LibUsbDevice_Initialize::AsyncControlTransfer(
-        uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer & buf,
-        boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
+    if (!interface_desc)
     {
-        boost::mutex::scoped_lock lock(this_lock);
-        AsyncControlTransferNoLock(bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
-    }
-
-    // Call with lock
-    void LibUsbDevice_Initialize::AsyncControlTransferNoLock(
-        uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer & buf,
-        boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
-    {
-        RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
-        if (!m1)
-        {
-            throw InvalidOperationException("Device manager lost");
-        }
-        RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
-        boost::intrusive_ptr<LibUsb_Transfer> t(new LibUsb_Transfer_control(f, h, m1));
-        boost::static_pointer_cast<LibUsb_Transfer_control>(t)->FillTransfer(bmRequestType, bRequest, wValue, wIndex,
-                                                                             buf, handler);
-
-        m1->submit_transfer(t);
-    }
-
-    // Call with lock
-    UsbDeviceStatus LibUsbDevice_Initialize::OpenDevice(RR_SHARED_PTR<void> & dev_h)
-    {
-        RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
-        if (!m1)
-            return Error;
-        return LibUsbDevice_open_device(m1, f, RR_STATIC_POINTER_CAST<libusb_device>(detected_device.handle), dev_h);
-    }
-
-    // Call with lock
-    UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
-                                                              RR_SHARED_PTR<UsbDevice_Settings>& settings)
-    {
-
-        RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
-
-        libusb_config_descriptor* config_desc = NULL;
-        int desired_config = 0;
-        if (f->libusb_get_config_descriptor(f->libusb_get_device(h.get()), 0, &config_desc) != 0)
-        {
-            return Error;
-        }
-
-        // NOLINTNEXTLINE(clang-analyzer-deadcode.DeadStores)
-        desired_config = config_desc->bConfigurationValue;
-
-        const libusb_interface_descriptor* interface_desc = NULL;
-        for (uint8_t i = 0; i < config_desc->bNumInterfaces; i++)
-        {
-            if (config_desc->interface[i].num_altsetting < 1)
-            {
-                continue;
-            }
-            if (config_desc->interface[i].altsetting[0].bInterfaceNumber != settings->interface_number)
-            {
-                continue;
-            }
-            interface_desc = &config_desc->interface[i].altsetting[0];
-        }
-
-        if (!interface_desc)
-        {
-            f->libusb_free_config_descriptor(config_desc);
-            return Error;
-        }
-
-        bool in_found = false;
-        bool out_found = false;
-
-        for (uint8_t i = 0; i < interface_desc->bNumEndpoints; i++)
-        {
-            const libusb_endpoint_descriptor* ep = &interface_desc->endpoint[i];
-            if (USB_ENDPOINT_TYPE_BULK(ep->bmAttributes) && USB_ENDPOINT_DIRECTION_IN(ep->bEndpointAddress) &&
-                !in_found)
-            {
-                in_found = true;
-                settings->in_pipe_id = ep->bEndpointAddress;
-                settings->in_pipe_maxpacket = RR_USB_MAX_PACKET_SIZE;
-                settings->in_pipe_buffer_size = settings->in_pipe_maxpacket;
-            }
-
-            if (USB_ENDPOINT_TYPE_BULK(ep->bmAttributes) && USB_ENDPOINT_DIRECTION_OUT(ep->bEndpointAddress) &&
-                !out_found)
-            {
-                out_found = true;
-                settings->out_pipe_id = ep->bEndpointAddress;
-                settings->out_pipe_maxpacket = RR_USB_MAX_PACKET_SIZE;
-                settings->out_pipe_buffer_size = settings->out_pipe_maxpacket;
-            }
-        }
-
-        settings->interface_alt_setting = interface_desc->bAlternateSetting;
-        settings->device_desired_config = desired_config;
-
         f->libusb_free_config_descriptor(config_desc);
-
-        if (!in_found && !out_found)
-        {
-            return Error;
-        }
-
-        return Open;
+        return Error;
     }
 
-    UsbDeviceStatus LibUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
-                                                                   RR_SHARED_PTR<UsbDevice_Settings>& settings)
+    bool in_found = false;
+    bool out_found = false;
+
+    for (uint8_t i = 0; i < interface_desc->bNumEndpoints; i++)
     {
-        RR_UNUSED(dev_h);
-        RR_UNUSED(settings);
-
-        // This function is not used in libusb
-        return Open;
-    }
-
-    // End LibUsbDevice_Initialize
-
-    // LibUsbDevice_Claim
-    LibUsbDevice_Claim::LibUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent,
-                                           const RR_SHARED_PTR<LibUsb_Functions>& f,
-                                           const UsbDeviceManager_detected_device& detected_device)
-        : UsbDevice_Claim(parent, detected_device)
-    {
-        this->f = f;
-        m = RR_STATIC_POINTER_CAST<LibUsbDeviceManager>(parent->GetParent());
-    }
-    LibUsbDevice_Claim::~LibUsbDevice_Claim() {}
-
-    void LibUsbDevice_Claim::AsyncControlTransfer(
-        uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer & buf,
-        boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
-    {
-        boost::mutex::scoped_lock lock(this_lock);
-        AsyncControlTransferNoLock(bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
-    }
-
-    void LibUsbDevice_Claim::AsyncControlTransferNoLock(
-        uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer & buf,
-        boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
-    {
-        RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
-        if (!m1)
+        const libusb_endpoint_descriptor* ep = &interface_desc->endpoint[i];
+        if (USB_ENDPOINT_TYPE_BULK(ep->bmAttributes) && USB_ENDPOINT_DIRECTION_IN(ep->bEndpointAddress) && !in_found)
         {
-            throw InvalidOperationException("Device manager lost");
-        }
-        RR_SHARED_PTR<void> dev_h2 = dev_h;
-        if (!dev_h2)
-        {
-            dev_h2 = device_handle;
+            in_found = true;
+            settings->in_pipe_id = ep->bEndpointAddress;
+            settings->in_pipe_maxpacket = RR_USB_MAX_PACKET_SIZE;
+            settings->in_pipe_buffer_size = settings->in_pipe_maxpacket;
         }
 
-        if (!device_handle)
+        if (USB_ENDPOINT_TYPE_BULK(ep->bmAttributes) && USB_ENDPOINT_DIRECTION_OUT(ep->bEndpointAddress) && !out_found)
         {
-            RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, boost::asio::error::broken_pipe, 0),
-                                                    true);
-            return;
-        }
-
-        RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h2);
-        boost::intrusive_ptr<LibUsb_Transfer> t(new LibUsb_Transfer_control(f, h, m1));
-        boost::static_pointer_cast<LibUsb_Transfer_control>(t)->FillTransfer(bmRequestType, bRequest, wValue, wIndex,
-                                                                             buf, handler);
-
-        m1->submit_transfer(t);
-    }
-
-    void LibUsbDevice_Claim::AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer & buf,
-                                           boost::function<void(const boost::system::error_code&, size_t)> handler)
-    {
-        boost::mutex::scoped_lock lock(this_lock);
-        AsyncPipeOp(ep, buf, handler);
-    }
-
-    void LibUsbDevice_Claim::AsyncReadPipeNoLock(
-        uint8_t ep, boost::asio::mutable_buffer & buf,
-        boost::function<void(const boost::system::error_code&, size_t)> handler)
-    {
-        AsyncPipeOp(ep, buf, handler);
-    }
-
-    void LibUsbDevice_Claim::AsyncWritePipe(uint8_t ep, boost::asio::mutable_buffer & buf,
-                                            boost::function<void(const boost::system::error_code&, size_t)> handler)
-    {
-        boost::mutex::scoped_lock lock(this_lock);
-        AsyncPipeOp(ep, buf, handler);
-    }
-
-    void LibUsbDevice_Claim::AsyncWritePipeNoLock(
-        uint8_t ep, boost::asio::mutable_buffer & buf,
-        boost::function<void(const boost::system::error_code&, size_t)> handler)
-    {
-        AsyncPipeOp(ep, buf, handler);
-    }
-
-    void LibUsbDevice_Claim::AsyncPipeOp(uint8_t ep, boost::asio::mutable_buffer & buf,
-                                         boost::function<void(const boost::system::error_code&, size_t)> handler)
-    {
-        RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
-        if (!m1)
-        {
-            throw InvalidOperationException("Device manager lost");
-        }
-
-        if (!device_handle)
-        {
-            RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, boost::asio::error::broken_pipe, 0),
-                                                    true);
-            return;
-        }
-
-        RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(device_handle);
-        boost::intrusive_ptr<LibUsb_Transfer> t(new LibUsb_Transfer_bulk(f, h, m1));
-        boost::static_pointer_cast<LibUsb_Transfer_bulk>(t)->FillTransfer(ep, buf, handler);
-
-        m1->submit_transfer(t);
-    }
-
-    // Call with lock
-    UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void> & dev_h)
-    {
-        RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
-        if (!m1)
-            return Error;
-        UsbDeviceStatus res =
-            LibUsbDevice_open_device(m1, f, RR_STATIC_POINTER_CAST<libusb_device>(detected_device.handle), dev_h);
-        if (res != Open)
-        {
-            return res;
-        }
-
-        RR_SHARED_PTR<libusb_device_handle> dev_h1 = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
-
-        int current_config = 0;
-        if (f->libusb_get_configuration(dev_h1.get(), &current_config) != 0)
-        {
-            return Error;
-        }
-
-        if (current_config != settings->device_desired_config)
-        {
-            f->libusb_set_configuration(dev_h1.get(), 0);
-        }
-
-        int res1 = f->libusb_claim_interface(dev_h1.get(), settings->interface_number);
-        if (res1 != 0)
-        {
-            if (res1 == LIBUSB_ERROR_BUSY)
-            {
-                return Busy;
-            }
-
-            if (res1 == LIBUSB_ERROR_ACCESS)
-            {
-                return Unauthorized;
-            }
-
-            return Error;
-        }
-
-        f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
-        f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
-
-        device_handle = dev_h1;
-        return Open;
-    }
-
-    // Call with lock
-    void LibUsbDevice_Claim::ReleaseClaim()
-    {
-        if (!device_handle)
-            return;
-
-        f->libusb_release_interface(device_handle.get(), settings->interface_number);
-
-        device_handle.reset();
-    }
-
-    void LibUsbDevice_Claim::DrawDownRequests(boost::function<void()> handler)
-    {
-        if (!device_handle)
-            return;
-
-        // TODO: Draw down active requests
-
-        // f->libusb_(device_handle.get(), settings->in_pipe_id);
-        // f->WinUsb_AbortPipe(device_handle.get(), settings->out_pipe_id);
-
-        RR_SHARED_PTR<LibUsbDeviceManager> m;
-        try
-        {
-            m = RR_STATIC_POINTER_CAST<LibUsbDeviceManager>(GetParent()->GetParent());
-        }
-        catch (std::exception&)
-        {}
-
-        if (m)
-        {
-            m->DrawDownRequests(device_handle, handler);
-        }
-        else
-        {
-            RobotRaconteurNode::TryPostToThreadPool(node, handler, true);
+            out_found = true;
+            settings->out_pipe_id = ep->bEndpointAddress;
+            settings->out_pipe_maxpacket = RR_USB_MAX_PACKET_SIZE;
+            settings->out_pipe_buffer_size = settings->out_pipe_maxpacket;
         }
     }
 
-    void LibUsbDevice_Claim::ClearHalt(uint8_t ep)
+    settings->interface_alt_setting = interface_desc->bAlternateSetting;
+    settings->device_desired_config = desired_config;
+
+    f->libusb_free_config_descriptor(config_desc);
+
+    if (!in_found && !out_found)
     {
-        boost::mutex::scoped_lock lock(this_lock);
-        if (!device_handle)
-            return;
-        f->libusb_clear_halt(device_handle.get(), ep);
+        return Error;
     }
 
-    // End LibUsbDevice_Claim
+    return Open;
+}
 
-    // LibUsbDevice
+UsbDeviceStatus LibUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
+                                                               RR_SHARED_PTR<UsbDevice_Settings>& settings)
+{
+    RR_UNUSED(dev_h);
+    RR_UNUSED(settings);
 
-    LibUsbDevice::LibUsbDevice(const RR_SHARED_PTR<LibUsbDeviceManager>& parent,
-                               const RR_SHARED_PTR<LibUsb_Functions>& f, const UsbDeviceManager_detected_device& device)
-        : UsbDevice(parent, device)
+    // This function is not used in libusb
+    return Open;
+}
+
+// End LibUsbDevice_Initialize
+
+// LibUsbDevice_Claim
+LibUsbDevice_Claim::LibUsbDevice_Claim(const RR_SHARED_PTR<UsbDevice>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
+                                       const UsbDeviceManager_detected_device& detected_device)
+    : UsbDevice_Claim(parent, detected_device)
+{
+    this->f = f;
+    m = RR_STATIC_POINTER_CAST<LibUsbDeviceManager>(parent->GetParent());
+}
+LibUsbDevice_Claim::~LibUsbDevice_Claim() {}
+
+void LibUsbDevice_Claim::AsyncControlTransfer(uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
+                                              boost::asio::mutable_buffer& buf,
+                                              boost::function<void(const boost::system::error_code&, size_t)> handler,
+                                              const RR_SHARED_PTR<void>& dev_h)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    AsyncControlTransferNoLock(bmRequestType, bRequest, wValue, wIndex, buf, handler, dev_h);
+}
+
+void LibUsbDevice_Claim::AsyncControlTransferNoLock(
+    uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
+    boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
+{
+    RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
+    if (!m1)
     {
-
-        this->f = f;
+        throw InvalidOperationException("Device manager lost");
+    }
+    RR_SHARED_PTR<void> dev_h2 = dev_h;
+    if (!dev_h2)
+    {
+        dev_h2 = device_handle;
     }
 
-    LibUsbDevice::~LibUsbDevice() {}
-
-    RR_SHARED_PTR<UsbDevice_Initialize> LibUsbDevice::CreateInitialize()
+    if (!device_handle)
     {
-        return RR_MAKE_SHARED<LibUsbDevice_Initialize>(shared_from_this(), f, detected_device);
-    }
-    RR_SHARED_PTR<UsbDevice_Claim> LibUsbDevice::CreateClaim()
-    {
-        return RR_MAKE_SHARED<LibUsbDevice_Claim>(shared_from_this(), f, detected_device);
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, boost::asio::error::broken_pipe, 0), true);
+        return;
     }
 
-    // End LibUsbDevice
+    RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h2);
+    boost::intrusive_ptr<LibUsb_Transfer> t(new LibUsb_Transfer_control(f, h, m1));
+    boost::static_pointer_cast<LibUsb_Transfer_control>(t)->FillTransfer(bmRequestType, bRequest, wValue, wIndex, buf,
+                                                                         handler);
+
+    m1->submit_transfer(t);
+}
+
+void LibUsbDevice_Claim::AsyncReadPipe(uint8_t ep, boost::asio::mutable_buffer& buf,
+                                       boost::function<void(const boost::system::error_code&, size_t)> handler)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    AsyncPipeOp(ep, buf, handler);
+}
+
+void LibUsbDevice_Claim::AsyncReadPipeNoLock(uint8_t ep, boost::asio::mutable_buffer& buf,
+                                             boost::function<void(const boost::system::error_code&, size_t)> handler)
+{
+    AsyncPipeOp(ep, buf, handler);
+}
+
+void LibUsbDevice_Claim::AsyncWritePipe(uint8_t ep, boost::asio::mutable_buffer& buf,
+                                        boost::function<void(const boost::system::error_code&, size_t)> handler)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    AsyncPipeOp(ep, buf, handler);
+}
+
+void LibUsbDevice_Claim::AsyncWritePipeNoLock(uint8_t ep, boost::asio::mutable_buffer& buf,
+                                              boost::function<void(const boost::system::error_code&, size_t)> handler)
+{
+    AsyncPipeOp(ep, buf, handler);
+}
+
+void LibUsbDevice_Claim::AsyncPipeOp(uint8_t ep, boost::asio::mutable_buffer& buf,
+                                     boost::function<void(const boost::system::error_code&, size_t)> handler)
+{
+    RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
+    if (!m1)
+    {
+        throw InvalidOperationException("Device manager lost");
+    }
+
+    if (!device_handle)
+    {
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, boost::asio::error::broken_pipe, 0), true);
+        return;
+    }
+
+    RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(device_handle);
+    boost::intrusive_ptr<LibUsb_Transfer> t(new LibUsb_Transfer_bulk(f, h, m1));
+    boost::static_pointer_cast<LibUsb_Transfer_bulk>(t)->FillTransfer(ep, buf, handler);
+
+    m1->submit_transfer(t);
+}
+
+// Call with lock
+UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
+{
+    RR_SHARED_PTR<LibUsbDeviceManager> m1 = m.lock();
+    if (!m1)
+        return Error;
+    UsbDeviceStatus res =
+        LibUsbDevice_open_device(m1, f, RR_STATIC_POINTER_CAST<libusb_device>(detected_device.handle), dev_h);
+    if (res != Open)
+    {
+        return res;
+    }
+
+    RR_SHARED_PTR<libusb_device_handle> dev_h1 = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
+
+    int current_config = 0;
+    if (f->libusb_get_configuration(dev_h1.get(), &current_config) != 0)
+    {
+        return Error;
+    }
+
+    if (current_config != settings->device_desired_config)
+    {
+        f->libusb_set_configuration(dev_h1.get(), 0);
+    }
+
+    int res1 = f->libusb_claim_interface(dev_h1.get(), settings->interface_number);
+    if (res1 != 0)
+    {
+        if (res1 == LIBUSB_ERROR_BUSY)
+        {
+            return Busy;
+        }
+
+        if (res1 == LIBUSB_ERROR_ACCESS)
+        {
+            return Unauthorized;
+        }
+
+        return Error;
+    }
+
+    f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
+    f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
+
+    device_handle = dev_h1;
+    return Open;
+}
+
+// Call with lock
+void LibUsbDevice_Claim::ReleaseClaim()
+{
+    if (!device_handle)
+        return;
+
+    f->libusb_release_interface(device_handle.get(), settings->interface_number);
+
+    device_handle.reset();
+}
+
+void LibUsbDevice_Claim::DrawDownRequests(boost::function<void()> handler)
+{
+    if (!device_handle)
+        return;
+
+    // TODO: Draw down active requests
+
+    // f->libusb_(device_handle.get(), settings->in_pipe_id);
+    // f->WinUsb_AbortPipe(device_handle.get(), settings->out_pipe_id);
+
+    RR_SHARED_PTR<LibUsbDeviceManager> m;
+    try
+    {
+        m = RR_STATIC_POINTER_CAST<LibUsbDeviceManager>(GetParent()->GetParent());
+    }
+    catch (std::exception&)
+    {}
+
+    if (m)
+    {
+        m->DrawDownRequests(device_handle, handler);
+    }
+    else
+    {
+        RobotRaconteurNode::TryPostToThreadPool(node, handler, true);
+    }
+}
+
+void LibUsbDevice_Claim::ClearHalt(uint8_t ep)
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    if (!device_handle)
+        return;
+    f->libusb_clear_halt(device_handle.get(), ep);
+}
+
+// End LibUsbDevice_Claim
+
+// LibUsbDevice
+
+LibUsbDevice::LibUsbDevice(const RR_SHARED_PTR<LibUsbDeviceManager>& parent, const RR_SHARED_PTR<LibUsb_Functions>& f,
+                           const UsbDeviceManager_detected_device& device)
+    : UsbDevice(parent, device)
+{
+
+    this->f = f;
+}
+
+LibUsbDevice::~LibUsbDevice() {}
+
+RR_SHARED_PTR<UsbDevice_Initialize> LibUsbDevice::CreateInitialize()
+{
+    return RR_MAKE_SHARED<LibUsbDevice_Initialize>(shared_from_this(), f, detected_device);
+}
+RR_SHARED_PTR<UsbDevice_Claim> LibUsbDevice::CreateClaim()
+{
+    return RR_MAKE_SHARED<LibUsbDevice_Claim>(shared_from_this(), f, detected_device);
+}
+
+// End LibUsbDevice
 } // namespace detail
 } // namespace RobotRaconteur
