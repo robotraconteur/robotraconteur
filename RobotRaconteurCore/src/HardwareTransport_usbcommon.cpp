@@ -810,9 +810,9 @@ void UsbDevice_Initialize::ReadRRDescriptor1(
     {
         buf2 = boost::shared_array<uint8_t>(new uint8_t[total_len]);
     }
-
+    boost::asio::mutable_buffer buf3(buf2.get(), total_len);
     AsyncControlTransfer(VendorInterfaceRequest, 0xBA, 0, (descriptor_index << 8) | interface_number,
-                         boost::asio::mutable_buffer(buf2.get(), total_len),
+                         buf3,
                          boost::bind(&UsbDevice_Initialize::ReadRRDescriptor2, shared_from_this(),
                                      RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), interface_number,
                                      descriptor_index, buf2, total_len, boost::protect(handler), dev_h),

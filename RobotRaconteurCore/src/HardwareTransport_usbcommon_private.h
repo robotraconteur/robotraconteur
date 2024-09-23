@@ -157,6 +157,7 @@ class UsbDeviceManager_detected_device
     std::wstring path;
     RR_SHARED_PTR<void> handle;
     uint8_t interface_;
+    uint8_t rr_desc_vendor_code;
 };
 // NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
