@@ -461,6 +461,96 @@ void UsbDevice_Initialize::InitializeDevice1(uint32_t attempt, boost::function<v
         return;
     }
 
+    lock.unlock();
+
+    ReadRRDescriptor(settings->interface_number, RR_USB_VENDOR_SETUP_DEFAULT_DESCRIPTOR_INDEX,
+                     boost::bind(&UsbDevice_Initialize::InitializeDevice2, shared_from_this(),
+                                 RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), boost::protect(handler), dev_h,
+                                 settings),
+                     dev_h);
+}
+
+UsbDeviceStatus UsbDevice_Initialize::ParseRRDescriptors(const std::vector<uint8_t>& rr_descriptors,
+                                                         RR_SHARED_PTR<UsbDevice_Settings>& settings)
+{
+    if (rr_descriptors.size() < sizeof(robotraconteur_descriptors_header))
+    {
+        return Error;
+    }
+
+    const robotraconteur_descriptors_header* h =
+        reinterpret_cast<const robotraconteur_descriptors_header*>(&rr_descriptors[0]);
+    if (h->wRRVersionCode != 0x0100)
+    {
+        return Invalid;
+    }
+    size_t remaining = rr_descriptors.size() - sizeof(robotraconteur_descriptors_header);
+    size_t pos = sizeof(robotraconteur_descriptors_header);
+
+    while (remaining > 0)
+    {
+        if (remaining < sizeof(robotraconteur_interface_common_descriptor))
+        {
+            return Error;
+        }
+
+        const robotraconteur_interface_common_descriptor* h2 =
+            reinterpret_cast<const robotraconteur_interface_common_descriptor*>(&rr_descriptors[pos]);
+        if (remaining < h2->wLength)
+        {
+            return Error;
+        }
+
+        switch (h2->wDescriptorType)
+        {
+        case RR_USB_INTERFACE_DESCRIPTOR_TYPE: {
+            if (h2->wDescriptorSubType == 0)
+            {
+                const robotraconteur_interface_descriptor* h3 =
+                    reinterpret_cast<const robotraconteur_interface_descriptor*>(h2);
+                if (h3->wVersion != 0x0100)
+                {
+                    return Invalid;
+                }
+                settings->string_nodeid_index = h3->iNodeID;
+                settings->string_nodename_index = h3->iNodeName;
+                settings->string_lang_index = 0;
+                for (uint16_t j = 0; j < h3->wNumProtocols; j++)
+                {
+                    settings->supported_protocols.push_back(h3->wProtocols[j]);
+                }
+            }
+            break;
+        }
+        default:
+            break;
+        }
+
+        pos += h2->wLength;
+        remaining -= h2->wLength;
+    }
+
+    return Open;
+}
+
+void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec,
+                                             const std::vector<uint8_t> rr_descriptors,
+                                             boost::function<void(const UsbDeviceStatus&)> handler,
+                                             const RR_SHARED_PTR<void>& dev_h,
+                                             const RR_SHARED_PTR<UsbDevice_Settings>& settings)
+{
+
+    if (ec)
+    {
+        InitializeDevice_err(handler);
+        return;
+    }
+
+    boost::mutex::scoped_lock lock(this_lock);
+
+    RR_SHARED_PTR<UsbDevice_Settings> settings1 = settings;
+    ParseRRDescriptors(rr_descriptors, settings1);
+
     if (boost::range::count(settings->supported_protocols, 0x0100) == 0)
     {
         lock.unlock();
@@ -468,24 +558,24 @@ void UsbDevice_Initialize::InitializeDevice1(uint32_t attempt, boost::function<v
         return;
     }
 
-    UsbDeviceStatus res3 = ReadPipeSettings(dev_h, settings);
+    UsbDeviceStatus res3 = ReadPipeSettings(dev_h, settings1);
     if (res3 != Open)
     {
         lock.unlock();
-        InitializeDevice_err(handler, res);
+        InitializeDevice_err(handler, res3);
         return;
     }
 
     lock.unlock();
 
     ReadRRDeviceString(settings->interface_number, settings->string_nodeid_index,
-                       boost::bind(&UsbDevice_Initialize::InitializeDevice2, shared_from_this(),
+                       boost::bind(&UsbDevice_Initialize::InitializeDevice3, shared_from_this(),
                                    RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), boost::protect(handler), dev_h,
                                    settings),
                        dev_h);
 }
 
-void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec, const std::string& device_nodeid,
+void UsbDevice_Initialize::InitializeDevice3(const boost::system::error_code& ec, const std::string& device_nodeid,
                                              boost::function<void(const UsbDeviceStatus&)> handler,
                                              const RR_SHARED_PTR<void>& dev_h,
                                              const RR_SHARED_PTR<UsbDevice_Settings>& settings)
@@ -509,13 +599,13 @@ void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec
     }
 
     ReadRRDeviceString(settings->interface_number, settings->string_nodename_index,
-                       boost::bind(&UsbDevice_Initialize::InitializeDevice3, shared_from_this(),
+                       boost::bind(&UsbDevice_Initialize::InitializeDevice4, shared_from_this(),
                                    RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), boost::protect(handler), dev_h,
                                    settings),
                        dev_h);
 }
 
-void UsbDevice_Initialize::InitializeDevice3(const boost::system::error_code& ec, const std::string& device_nodename,
+void UsbDevice_Initialize::InitializeDevice4(const boost::system::error_code& ec, const std::string& device_nodename,
                                              boost::function<void(const UsbDeviceStatus&)> handler,
                                              const RR_SHARED_PTR<void>& dev_h,
                                              const RR_SHARED_PTR<UsbDevice_Settings>& settings)
@@ -667,6 +757,91 @@ void UsbDevice_Initialize::ReadRRDeviceString2(
     std::string res = boost::locale::conv::utf_to_utf<char>(reinterpret_cast<uint16_t*>(buf.get() + 2));
     boost::system::error_code ec1;
     handler(ec1, res);
+}
+
+void UsbDevice_Initialize::ReadRRDescriptor(
+    uint8_t interface_number, uint8_t descriptor_index,
+    boost::function<void(const boost::system::error_code&, const std::vector<uint8_t>&)> handler,
+    const RR_SHARED_PTR<void>& dev_h)
+{
+    boost::shared_array<uint8_t> buf(new uint8_t[8192]);
+
+    boost::asio::mutable_buffer buf3(buf.get(), 8);
+    AsyncControlTransfer(VendorInterfaceRequest, 0xBA, 0, (descriptor_index << 8) | interface_number, buf3,
+                         boost::bind(&UsbDevice_Initialize::ReadRRDescriptor1, shared_from_this(),
+                                     RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), interface_number,
+                                     descriptor_index, buf, boost::protect(RR_MOVE(handler)), dev_h),
+                         dev_h);
+}
+
+void UsbDevice_Initialize::ReadRRDescriptor1(
+    const boost::system::error_code ec, size_t bytes_transferred, uint8_t interface_number, uint8_t descriptor_index,
+    const boost::shared_array<uint8_t>& buf,
+    boost::function<void(const boost::system::error_code&, const std::vector<uint8_t>&)> handler,
+    const RR_SHARED_PTR<void>& dev_h)
+{
+    if (ec)
+    {
+        std::vector<uint8_t> v;
+        handler(ec, v);
+        return;
+    }
+
+    if (bytes_transferred < 8)
+    {
+        std::vector<uint8_t> v;
+        handler(boost::asio::error::connection_aborted, v);
+        return;
+    }
+
+    robotraconteur_descriptors_header* h = reinterpret_cast<robotraconteur_descriptors_header*>(buf.get());
+    if (h->wDescriptorType != RR_USB_BOS_DESCRIPTOR_TYPE)
+    {
+        std::vector<uint8_t> v;
+        handler(boost::asio::error::connection_aborted, v);
+        return;
+    }
+
+    uint16_t total_len = h->wTotalLength;
+
+    boost::shared_array<uint8_t> buf2 = buf;
+
+    if (total_len > 8192)
+    {
+        buf2 = boost::shared_array<uint8_t>(new uint8_t[total_len]);
+    }
+
+    AsyncControlTransfer(VendorInterfaceRequest, 0xBA, 0, (descriptor_index << 8) | interface_number,
+                         boost::asio::mutable_buffer(buf2.get(), total_len),
+                         boost::bind(&UsbDevice_Initialize::ReadRRDescriptor2, shared_from_this(),
+                                     RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), interface_number,
+                                     descriptor_index, buf2, total_len, boost::protect(handler), dev_h),
+                         dev_h);
+}
+
+void UsbDevice_Initialize::ReadRRDescriptor2(
+    const boost::system::error_code ec, size_t bytes_transferred, uint8_t interface_number, uint8_t descriptor_index,
+    const boost::shared_array<uint8_t>& buf, size_t buf_len,
+    boost::function<void(const boost::system::error_code&, const std::vector<uint8_t>&)> handler,
+    const RR_SHARED_PTR<void>& dev_h)
+{
+    if (ec)
+    {
+        std::vector<uint8_t> v;
+        handler(ec, v);
+        return;
+    }
+
+    if (bytes_transferred < buf_len)
+    {
+        std::vector<uint8_t> v;
+        handler(boost::asio::error::connection_aborted, v);
+        return;
+    }
+
+    std::vector<uint8_t> v(buf.get(), buf.get() + buf_len);
+    boost::system::error_code ec1;
+    handler(ec1, v);
 }
 
 // End UsbDevice_Initialize

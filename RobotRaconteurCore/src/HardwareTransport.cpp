@@ -507,8 +507,16 @@ void HardwareTransport::AsyncCreateTransportConnection2(
     RR_UNUSED(noden);
     if (err)
     {
-        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(),
-                                          "HardwareTransport failed to connect to device: " << err->what());
+        if (transport)
+        {
+            ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(),
+                                              "HardwareTransport failed to connect to device: " << err->what());
+        }
+        else
+        {
+            ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1,
+                                              "HardwareTransport failed to connect to device: " << err->what());
+        }
         try
         {
             callback(RR_SHARED_PTR<ITransportConnection>(), err);
