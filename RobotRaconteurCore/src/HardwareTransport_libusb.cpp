@@ -212,8 +212,6 @@ void LibUsb_Transfer_bulk::FillTransfer(uint8_t ep, boost::asio::mutable_buffer&
                               boost::numeric_cast<int>(boost::asio::buffer_size(buf)),
                               &LibUsbDeviceManager::transfer_complete, this, 0);
 
-    transfer->flags |= LIBUSB_TRANSFER_ADD_ZERO_PACKET;
-
     this->handler = RR_MOVE(handler);
     ref_count++;
 }
@@ -373,78 +371,101 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
             continue;
         }
 
+        std::vector<std::vector<uint8_t> > platform_bos_desc;
+
+        {
+            libusb_device_handle* device_handle = NULL;
+            if (f->libusb_open(list1[i], &device_handle) != 0)
+            {
+                f->libusb_free_config_descriptor(config_desc);
+                continue;
+            }
+
+            libusb_bos_descriptor* bos_desc = NULL;
+            if (f->libusb_get_bos_descriptor(device_handle, &bos_desc) != 0)
+            {
+                f->libusb_free_config_descriptor(config_desc);
+                f->libusb_free_bos_descriptor(bos_desc);
+                f->libusb_close(device_handle);
+                continue;
+            }
+            for (uint8_t j = 0; j < bos_desc->bNumDeviceCaps; j++)
+            {
+                libusb_bos_dev_capability_descriptor* cap = bos_desc->dev_capability[j];
+                if (cap->bDescriptorType == LIBUSB_DT_DEVICE_CAPABILITY && cap->bDevCapabilityType == 0x05)
+                {
+                    if (cap->bLength < 8)
+                    {
+                        continue;
+                    }
+                    std::vector<uint8_t> desc(cap->dev_capability_data + 1,
+                                              cap->dev_capability_data + cap->bLength - 3);
+                    platform_bos_desc.push_back(desc);
+                }
+            }
+
+            f->libusb_free_bos_descriptor(bos_desc);
+            f->libusb_close(device_handle);
+        }
+
         uint8_t interface_ = 0;
+        uint8_t rr_desc_vendor_code = 0;
         bool rr_found = false;
 
-        RR_SHARED_PTR<HardwareTransport> t = GetParent();
-
-        for (uint8_t j = 0; j < config_desc->bNumInterfaces; j++)
+        for (size_t j = 0; j < platform_bos_desc.size(); j++)
         {
-            if (config_desc->interface[j].num_altsetting < 1)
+            std::vector<uint8_t>& desc = platform_bos_desc[j];
+            if (desc.size() != 20)
+            {
+                continue;
+            }
+            if (memcmp(&desc[0], RR_USB_BOS_PLATFORM_ROBOTRACONTEUR_UUID, 16) != 0)
             {
                 continue;
             }
 
-            const libusb_interface_descriptor& inter = config_desc->interface[j].altsetting[0];
-
-            if (t->IsValidUsbDevice(device_descriptor.idVendor, device_descriptor.idProduct, inter.bInterfaceNumber))
+            // Version check 0x0100
+            if (desc[17] != 0x01 || desc[16] != 0x00)
             {
-                interface_ = inter.bInterfaceNumber;
-                rr_found = true;
-                break;
+                continue;
             }
+            interface_ = desc[18];
+            rr_desc_vendor_code = desc[19];
+            rr_found = true;
+        }
+
+        if (!rr_found)
+        {
+            RR_SHARED_PTR<HardwareTransport> t = GetParent();
+            for (uint8_t j = 0; j < config_desc->bNumInterfaces; j++)
+            {
+                if (t->IsValidUsbDevice(device_descriptor.idVendor, device_descriptor.idProduct, j))
+                {
+                    rr_found = true;
+                    interface_ = j;
+                    break;
+                }
+            }
+        }
+
+        if (rr_found)
+        {
+
+            if (config_desc->interface[interface_].num_altsetting < 1)
+            {
+                continue;
+            }
+
+            const libusb_interface_descriptor& inter = config_desc->interface[interface_].altsetting[0];
 
             if (device_descriptor.bDeviceClass != 0xFF && device_descriptor.bDeviceClass != 0x00)
             {
-                continue;
+                rr_found = false;
             }
 
             if (inter.bInterfaceClass != 0xFF)
             {
-                continue;
-            }
-
-            if (inter.extra_length < sizeof(robotraconteur_interface_descriptor))
-            {
-                continue;
-            }
-
-            boost::asio::const_buffer extra_desc(inter.extra, inter.extra_length);
-
-            while (boost::asio::buffer_size(extra_desc) >= 2)
-            {
-                const robotraconteur_usb_common_descriptor* c1 =
-                    boost::asio::buffer_cast<const robotraconteur_usb_common_descriptor*>(extra_desc);
-                if (c1->bLength > boost::asio::buffer_size(extra_desc))
-                {
-                    continue;
-                }
-
-                if (c1->bDescriptorType == RR_USB_CS_INTERFACE_DESCRIPTOR_TYPE)
-                {
-                    const robotraconteur_interface_common_descriptor* c3 =
-                        reinterpret_cast<const robotraconteur_interface_common_descriptor*>(c1);
-                    if (c3->bDescriptorSubType == 0)
-                    {
-
-                        if (c3->bLength != sizeof(robotraconteur_interface_descriptor))
-                        {
-                            continue;
-                        }
-                        const robotraconteur_interface_descriptor* c4 =
-                            reinterpret_cast<const robotraconteur_interface_descriptor*>(c3);
-
-                        if (memcmp(RR_USB_CS_INTERFACE_UUID_DETECT, c4->uuidRobotRaconteurDetect,
-                                   sizeof(RR_USB_CS_INTERFACE_UUID_DETECT)) == 0)
-                        {
-                            interface_ = inter.bInterfaceNumber;
-                            rr_found = true;
-                            break;
-                        }
-                    }
-                }
-
-                extra_desc = extra_desc + c1->bLength;
+                rr_found = false;
             }
         }
 
@@ -460,6 +481,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
         d.handle = dev_sp;
         d.interface_ = interface_;
         d.path = ws_path;
+        d.rr_desc_vendor_code = rr_desc_vendor_code;
         devices.push_back(d);
     }
 
@@ -486,10 +508,7 @@ void LibUsbDeviceManager::UsbThread()
             boost::mutex::scoped_lock lock(manager_transfer_lock);
             if (!running)
             {
-                if (manager_transfer_list.empty())
-                {
-                    return;
-                }
+                return;
             }
         }
 
@@ -691,13 +710,13 @@ void LibUsbDeviceManager::DrawDownRequests(const RR_SHARED_PTR<libusb_device_han
 
 void LibUsbDeviceManager::Shutdown()
 {
-    UsbDeviceManager::Shutdown();
     bool r = false;
     {
         boost::mutex::scoped_lock lock(manager_transfer_lock);
         r = running;
         running = false;
     }
+    UsbDeviceManager::Shutdown();
 
     if (r)
     {
@@ -706,6 +725,7 @@ void LibUsbDeviceManager::Shutdown()
             f->libusb_hotplug_deregister_callback(context.get(), hotplug_cb_handle);
         }
         usb_thread.join();
+        context.reset();
     }
 }
 
@@ -804,7 +824,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
         {
             in_found = true;
             settings->in_pipe_id = ep->bEndpointAddress;
-            settings->in_pipe_maxpacket = RR_USB_MAX_PACKET_SIZE;
+            settings->in_pipe_maxpacket = ep->wMaxPacketSize;
             settings->in_pipe_buffer_size = settings->in_pipe_maxpacket;
         }
 
@@ -812,7 +832,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
         {
             out_found = true;
             settings->out_pipe_id = ep->bEndpointAddress;
-            settings->out_pipe_maxpacket = RR_USB_MAX_PACKET_SIZE;
+            settings->out_pipe_maxpacket = ep->wMaxPacketSize;
             settings->out_pipe_buffer_size = settings->out_pipe_maxpacket;
         }
     }
@@ -833,111 +853,10 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
 UsbDeviceStatus LibUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
                                                                RR_SHARED_PTR<UsbDevice_Settings>& settings)
 {
-    RR_SHARED_PTR<libusb_device_handle> h = RR_STATIC_POINTER_CAST<libusb_device_handle>(dev_h);
+    RR_UNUSED(dev_h);
+    RR_UNUSED(settings);
 
-    libusb_config_descriptor* config_desc = NULL;
-    if (f->libusb_get_config_descriptor(f->libusb_get_device(h.get()), 0, &config_desc) != 0)
-    {
-        return Error;
-    }
-
-    // NOLINTNEXTLINE(clang-analyzer-deadcode.DeadStores)
-    int desired_config = config_desc->bConfigurationValue;
-
-    const libusb_interface_descriptor* interface_desc = NULL;
-    for (uint8_t i = 0; i < config_desc->bNumInterfaces; i++)
-    {
-        if (config_desc->interface[i].num_altsetting < 1)
-        {
-            continue;
-        }
-        if (config_desc->interface[i].altsetting[0].bInterfaceNumber != settings->interface_number)
-        {
-            continue;
-        }
-        interface_desc = &config_desc->interface[i].altsetting[0];
-    }
-
-    if (!interface_desc)
-    {
-        f->libusb_free_config_descriptor(config_desc);
-        return Error;
-    }
-
-    boost::asio::const_buffer desc(interface_desc->extra, interface_desc->extra_length);
-
-    bool cs_interface_found = false;
-    uint16_t num_protocols = 0;
-
-    while (boost::asio::buffer_size(desc) >= 2)
-    {
-        const robotraconteur_usb_common_descriptor* c1 =
-            boost::asio::buffer_cast<const robotraconteur_usb_common_descriptor*>(desc);
-        if (c1->bLength > boost::asio::buffer_size(desc))
-        {
-            return Error;
-        }
-
-        if (c1->bDescriptorType == RR_USB_CS_INTERFACE_DESCRIPTOR_TYPE)
-        {
-            const robotraconteur_interface_common_descriptor* c3 =
-                reinterpret_cast<const robotraconteur_interface_common_descriptor*>(c1);
-            if (c3->bDescriptorSubType == 0)
-            {
-
-                if (c3->bLength != sizeof(robotraconteur_interface_descriptor))
-                {
-                    f->libusb_free_config_descriptor(config_desc);
-                    return Invalid;
-                }
-                const robotraconteur_interface_descriptor* c4 =
-                    reinterpret_cast<const robotraconteur_interface_descriptor*>(c3);
-
-                if (memcmp(RR_USB_CS_INTERFACE_UUID_DETECT, c4->uuidRobotRaconteurDetect,
-                           sizeof(RR_USB_CS_INTERFACE_UUID_DETECT)) != 0)
-                {
-                    f->libusb_free_config_descriptor(config_desc);
-                    return Invalid;
-                }
-
-                settings->string_lang_index = 0;
-                settings->string_nodeid_index = c4->iNodeID;
-                settings->string_nodename_index = c4->iNodeName;
-                num_protocols = c4->wNumProtocols;
-
-                cs_interface_found = true;
-            }
-
-            if (c3->bDescriptorSubType == 1)
-            {
-                if (c3->bLength < sizeof(robotraconteur_protocol_descriptor))
-                {
-                    f->libusb_free_config_descriptor(config_desc);
-                    return Error;
-                }
-
-                const robotraconteur_protocol_descriptor* c4 =
-                    reinterpret_cast<const robotraconteur_protocol_descriptor*>(c3);
-
-                settings->supported_protocols.push_back(c4->wRRProtocol);
-            }
-        }
-
-        desc = desc + c1->bLength;
-    }
-
-    f->libusb_free_config_descriptor(config_desc);
-
-    if (!cs_interface_found)
-    {
-        return Invalid;
-    }
-
-    if (num_protocols != settings->supported_protocols.size())
-    {
-        return Invalid;
-    }
-
+    // This function is not used in libusb
     return Open;
 }
 
@@ -1081,8 +1000,8 @@ UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
         return Error;
     }
 
-    f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
-    f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
+    // f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
+    // f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
 
     device_handle = dev_h1;
     return Open;

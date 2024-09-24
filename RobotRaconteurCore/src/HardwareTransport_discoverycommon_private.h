@@ -167,7 +167,7 @@ class HardwareTransport_discovery
             }
         }
 
-        if (boost::range::find(schemes, "rr+usb") != schemes.end())
+        if (boost::range::find(schemes, "rr+bluetooth") != schemes.end())
         {
             if (RobotRaconteurNode::TryPostToThreadPool(
                     n, boost::bind(&HardwareTransport_discovery::GetBluetoothDevices2, this->shared_from_this(), op)))
@@ -280,9 +280,6 @@ class HardwareTransport_discovery
 
         boost::mutex::scoped_lock lock(op->this_lock);
 
-        if (op->handled)
-            return;
-
         RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > o = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
 
         BOOST_FOREACH (typename bluetooth_connector::device_info& e, d)
@@ -298,6 +295,13 @@ class HardwareTransport_discovery
             n1.LastAnnounceTime = node->NowNodeTime();
             n.URLs.push_back(n1);
             o->push_back(n);
+
+            try
+            {
+                node->NodeDetected(n);
+            }
+            catch (std::exception&)
+            {}
         }
 
         lock.unlock();

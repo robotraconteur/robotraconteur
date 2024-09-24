@@ -507,8 +507,16 @@ void HardwareTransport::AsyncCreateTransportConnection2(
     RR_UNUSED(noden);
     if (err)
     {
-        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(),
-                                          "HardwareTransport failed to connect to device: " << err->what());
+        if (transport)
+        {
+            ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(),
+                                              "HardwareTransport failed to connect to device: " << err->what());
+        }
+        else
+        {
+            ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1,
+                                              "HardwareTransport failed to connect to device: " << err->what());
+        }
         try
         {
             callback(RR_SHARED_PTR<ITransportConnection>(), err);
@@ -982,8 +990,8 @@ HardwareTransportConnection::HardwareTransportConnection(const RR_SHARED_PTR<Har
     this->m_LocalEndpoint = local_endpoint;
     this->m_RemoteEndpoint = 0;
 
-    this->HeartbeatPeriod = 30000;
-    this->ReceiveTimeout = 600000;
+    this->HeartbeatPeriod = 5000;
+    this->ReceiveTimeout = 15000;
 
     this->max_message_size = parent->GetMaxMessageSize();
 
