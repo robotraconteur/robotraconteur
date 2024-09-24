@@ -212,8 +212,6 @@ void LibUsb_Transfer_bulk::FillTransfer(uint8_t ep, boost::asio::mutable_buffer&
                               boost::numeric_cast<int>(boost::asio::buffer_size(buf)),
                               &LibUsbDeviceManager::transfer_complete, this, 0);
 
-    transfer->flags |= LIBUSB_TRANSFER_ADD_ZERO_PACKET;
-
     this->handler = RR_MOVE(handler);
     ref_count++;
 }
@@ -828,7 +826,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
         {
             in_found = true;
             settings->in_pipe_id = ep->bEndpointAddress;
-            settings->in_pipe_maxpacket = RR_USB_MAX_PACKET_SIZE;
+            settings->in_pipe_maxpacket = ep->wMaxPacketSize;
             settings->in_pipe_buffer_size = settings->in_pipe_maxpacket;
         }
 
@@ -836,7 +834,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
         {
             out_found = true;
             settings->out_pipe_id = ep->bEndpointAddress;
-            settings->out_pipe_maxpacket = RR_USB_MAX_PACKET_SIZE;
+            settings->out_pipe_maxpacket = ep->wMaxPacketSize;
             settings->out_pipe_buffer_size = settings->out_pipe_maxpacket;
         }
     }
@@ -1004,8 +1002,8 @@ UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
         return Error;
     }
 
-    f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
-    f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
+    //f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
+    //f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
 
     device_handle = dev_h1;
     return Open;

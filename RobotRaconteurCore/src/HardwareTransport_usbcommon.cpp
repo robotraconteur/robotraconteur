@@ -1012,8 +1012,8 @@ void UsbDevice_Claim::AsyncCreateTransportConnection2(
         return;
     }
 
-    ClearHalt(settings->in_pipe_id);
-    ClearHalt(settings->out_pipe_id);
+    //ClearHalt(settings->in_pipe_id);
+    //ClearHalt(settings->out_pipe_id);
 
     boost::shared_array<uint8_t> buf2(new uint8_t[1]);
     boost::asio::mutable_buffer buf3(buf2.get(), 0);
