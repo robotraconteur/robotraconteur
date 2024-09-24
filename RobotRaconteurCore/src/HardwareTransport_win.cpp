@@ -376,6 +376,25 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_P
     return Open;
 }
 
+UsbDeviceStatus WinUsbDevice_Initialize::ReadConfigurationDescriptorRaw(const RR_SHARED_PTR<void>& dev_h,
+                                                                        RR_SHARED_PTR<UsbDevice_Settings>& settings,
+                                                                        std::vector<uint8_t>& descriptor)
+{
+    RR_SHARED_PTR<WinUsbDevice_Handle> h = RR_STATIC_POINTER_CAST<WinUsbDevice_Handle>(dev_h);
+
+    std::vector<uint8_t> buf1(8192);
+
+    ULONG len = 0;
+    if (!f->WinUsb_GetDescriptor(h->hInterface.get(), USB_CONFIGURATION_DESCRIPTOR_TYPE,
+                                 settings->interface_alt_setting, 0, &buf1[0], buf1.size(), &len))
+    {
+        return Error;
+    }
+
+    descriptor = std::vector<uint8_t>(buf1.begin(), buf1.begin() + len);
+    return Open;
+}
+
 UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<void>& dev_h,
                                                           RR_SHARED_PTR<UsbDevice_Settings>& settings)
 {
@@ -385,46 +404,41 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
     bool in_found = false;
     bool out_found = false;
 
-    for (UCHAR i = 0; i < settings->interface_num_endpoints; i++)
-    {
-        // Bug with WinUsb WINUSB_PIPE_INFORMATION structure?
-        uint8_t d_pipe1[sizeof(WINUSB_PIPE_INFORMATION) * 2];
+    std::vector<uint8_t> desc_buf;
 
-        PWINUSB_PIPE_INFORMATION d_pipe = static_cast<PWINUSB_PIPE_INFORMATION>((void*)&d_pipe1);
-        if (f->WinUsb_QueryPipe(h->hInterface.get(), settings->interface_alt_setting, i, d_pipe))
+    if (ReadConfigurationDescriptorRaw(dev_h, settings, desc_buf) != Open)
+    {
+        return Error;
+    }
+
+    size_t pos = 0;
+    size_t remaining = desc_buf.size();
+
+    while (remaining > 0)
+    {
+        PUSB_COMMON_DESCRIPTOR d = reinterpret_cast<PUSB_COMMON_DESCRIPTOR>(&desc_buf[pos]);
+        if (d->bDescriptorType == WINUSB_USD_ENDPOINT_DESCRIPTOR_TYPE)
         {
-            if (d_pipe->PipeType == UsbdPipeTypeBulk && USB_ENDPOINT_DIRECTION_IN(d_pipe->PipeId) && !in_found)
+            PUSB_ENDPOINT_DESCRIPTOR d2 = reinterpret_cast<PUSB_ENDPOINT_DESCRIPTOR>(d);
+            if (((d2->bEndpointAddress & 0x80) == WINUSB_USB_ENDPOINT_DIRECTION_IN) && !in_found)
             {
                 in_found = true;
-                settings->in_pipe_id = d_pipe->PipeId;
-                settings->in_pipe_maxpacket = d_pipe->MaximumPacketSize;
-                if (RR_USB_MAX_PACKET_SIZE % settings->in_pipe_maxpacket == 0)
-                {
-                    settings->in_pipe_buffer_size = RR_USB_MAX_PACKET_SIZE;
-                }
-                else
-                {
-                    settings->in_pipe_buffer_size =
-                        ((RR_USB_MAX_PACKET_SIZE / settings->in_pipe_maxpacket) + 1) * settings->in_pipe_maxpacket;
-                }
+                settings->in_pipe_id = d2->bEndpointAddress;
+                settings->in_pipe_maxpacket = d2->wMaxPacketSize;
+                settings->in_pipe_buffer_size = settings->in_pipe_maxpacket;
             }
 
-            if (d_pipe->PipeType == UsbdPipeTypeBulk && USB_ENDPOINT_DIRECTION_OUT(d_pipe->PipeId) && !out_found)
+            if ((d2->bEndpointAddress & 0x80) == WINUSB_USB_ENDPOINT_DIRECTION_OUT && !out_found)
             {
                 out_found = true;
-                settings->out_pipe_id = d_pipe->PipeId;
-                settings->out_pipe_maxpacket = d_pipe->MaximumPacketSize;
-                if (RR_USB_MAX_PACKET_SIZE % settings->out_pipe_maxpacket == 0)
-                {
-                    settings->out_pipe_buffer_size = RR_USB_MAX_PACKET_SIZE;
-                }
-                else
-                {
-                    settings->out_pipe_buffer_size =
-                        ((RR_USB_MAX_PACKET_SIZE / settings->in_pipe_maxpacket) + 1) * settings->out_pipe_maxpacket;
-                }
+                settings->out_pipe_id = d2->bEndpointAddress;
+                settings->out_pipe_maxpacket = d2->wMaxPacketSize;
+                settings->out_pipe_buffer_size = settings->out_pipe_maxpacket;
             }
         }
+
+        pos += d->bLength;
+        remaining -= d->bLength;
     }
 
     if (!in_found || !out_found)
@@ -627,13 +641,13 @@ UsbDeviceStatus WinUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
     BOOL b_true = TRUE;
     BOOL b_false = FALSE;
     if (!f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, RAW_IO, sizeof(b_true), &b_true)
-        /*|| !f->WinUsb_SetPipePolicy(hInterface1.get(), out_pipe_id, RAW_IO, sizeof(b_true), &b_true)*/
+        || !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, RAW_IO, sizeof(b_true), &b_true)
         || !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, ALLOW_PARTIAL_READS, sizeof(b_false),
-                                    &b_false) ||
-        !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, SHORT_PACKET_TERMINATE, sizeof(b_true),
-                                 &b_true) ||
-        !f->WinUsb_ResetPipe(h->hInterface.get(), settings->in_pipe_id) ||
-        !f->WinUsb_ResetPipe(h->hInterface.get(), settings->out_pipe_id))
+                                    &b_false)
+        /*!f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, SHORT_PACKET_TERMINATE, sizeof(b_true),
+                                 &b_true) //||*/
+        /*!f->WinUsb_ResetPipe(h->hInterface.get(), settings->in_pipe_id) ||
+        !f->WinUsb_ResetPipe(h->hInterface.get(), settings->out_pipe_id))*/)
     {
         return Error;
     }
@@ -671,7 +685,7 @@ void WinUsbDevice_Claim::ClearHalt(uint8_t ep)
     if (!device_handle)
         return;
 
-    f->WinUsb_ResetPipe(device_handle->hInterface.get(), ep);
+    // f->WinUsb_ResetPipe(device_handle->hInterface.get(), ep);
 }
 
 // WinUsbDevice

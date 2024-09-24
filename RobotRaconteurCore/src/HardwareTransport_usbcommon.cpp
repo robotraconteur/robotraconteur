@@ -551,7 +551,7 @@ void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec
     RR_SHARED_PTR<UsbDevice_Settings> settings1 = settings;
     ParseRRDescriptors(rr_descriptors, settings1);
 
-    if (boost::range::count(settings->supported_protocols, 0x0100) == 0)
+    if (boost::range::count(settings->supported_protocols, 0x0101) == 0)
     {
         lock.unlock();
         InitializeDevice_err(handler, Error);
@@ -1032,11 +1032,11 @@ void UsbDevice_Claim::AsyncCreateTransportConnection3(
     RR_UNUSED(ec);
     RR_UNUSED(bytes_transferred);
     RR_UNUSED(buf);
-    ClearHalt(settings->in_pipe_id);
-    ClearHalt(settings->out_pipe_id);
+    // ClearHalt(settings->in_pipe_id);
+    // ClearHalt(settings->out_pipe_id);
 
     boost::shared_array<uint8_t> buf2(new uint8_t[2]);
-    (*reinterpret_cast<uint16_t*>(buf2.get())) = 0x0100;
+    (*reinterpret_cast<uint16_t*>(buf2.get())) = 0x0101;
 
     boost::asio::mutable_buffer b1(buf2.get(), 2);
     AsyncControlTransfer(VendorInterfaceOutRequest, RR_USB_CONTROL_CURRENT_PROTOCOL, 0, settings->interface_number, b1,
@@ -1324,7 +1324,7 @@ void UsbDevice_Claim::DoRead()
         std::list<boost::shared_array<uint8_t> >::iterator e = read_buf.begin();
 
         uint64_t c = read_count + 1;
-        boost::asio::mutable_buffer b1(e->get(), RR_USB_MAX_PACKET_SIZE);
+        boost::asio::mutable_buffer b1(e->get(), settings->in_pipe_buffer_size);
         AsyncReadPipeNoLock(settings->in_pipe_id, b1,
                             boost::bind(&UsbDevice_Claim::EndRead, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                                         RR_BOOST_PLACEHOLDERS(_2), *e, c));
@@ -1386,7 +1386,7 @@ void UsbDevice_Claim::DoWrite()
             if (c->CanDoWrite() > 0)
             {
                 std::list<boost::shared_array<uint8_t> >::iterator e2 = write_buf.begin();
-                boost::asio::mutable_buffer b(e2->get(), RR_USB_MAX_PACKET_SIZE);
+                boost::asio::mutable_buffer b(e2->get(), settings->out_pipe_buffer_size);
 
                 boost::asio::mutable_buffer b2 = b + 8;
 
