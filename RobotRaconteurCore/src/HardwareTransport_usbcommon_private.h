@@ -26,7 +26,6 @@ static const uint8_t RR_USB_CS_INTERFACE_UUID_DETECT[] = {0x3F, 0x81, 0x0F, 0xD2
                                                           0x98, 0xF3, 0xA8, 0xAC, 0x22, 0x0A, 0xD4, 0x8D};
 
 // Robot Raconteur BOS Platform UUID 84670ec3-cec6-4917-b039-510e3e71788b
-// NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
 static const uint8_t RR_USB_BOS_PLATFORM_ROBOTRACONTEUR_UUID[] = {0xc3, 0x0e, 0x67, 0x84, 0xc6, 0xce, 0x17, 0x49,
                                                                   0xb0, 0x39, 0x51, 0x0e, 0x3e, 0x71, 0x78, 0x8b};
 
@@ -112,6 +111,7 @@ struct robotraconteur_interface_descriptor
     uint8_t iNodeID;
     uint8_t iNodeName;
     uint16_t wNumProtocols;
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
     uint16_t wProtocols[1];
 } RR_ATTR_PACKED;
 
@@ -283,7 +283,7 @@ class UsbDevice_Initialize : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Initial
         uint32_t attempt, boost::function<void(const UsbDeviceStatus&)> handler,
         const RR_SHARED_PTR<boost::asio::deadline_timer>& timer = RR_SHARED_PTR<boost::asio::deadline_timer>());
 
-    void InitializeDevice2(const boost::system::error_code& ec, const std::vector<uint8_t> rr_descriptors,
+    void InitializeDevice2(const boost::system::error_code& ec, const std::vector<uint8_t>& rr_descriptors,
                            boost::function<void(const UsbDeviceStatus&)> handler, const RR_SHARED_PTR<void>& dev_h,
                            const RR_SHARED_PTR<UsbDevice_Settings>& settings);
 
@@ -341,12 +341,12 @@ class UsbDevice_Initialize : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Initial
                           boost::function<void(const boost::system::error_code&, const std::vector<uint8_t>&)> handler,
                           const RR_SHARED_PTR<void>& dev_h);
 
-    void ReadRRDescriptor1(const boost::system::error_code, size_t bytes_transferred, uint8_t interface_number,
+    void ReadRRDescriptor1(const boost::system::error_code& ec, size_t bytes_transferred, uint8_t interface_number,
                            uint8_t descriptor_index, const boost::shared_array<uint8_t>& buf,
                            boost::function<void(const boost::system::error_code&, const std::vector<uint8_t>&)> handler,
                            const RR_SHARED_PTR<void>& dev_h);
 
-    void ReadRRDescriptor2(const boost::system::error_code, size_t bytes_transferred, uint8_t interface_number,
+    void ReadRRDescriptor2(const boost::system::error_code& ec, size_t bytes_transferred, uint8_t interface_number,
                            uint8_t descriptor_index, const boost::shared_array<uint8_t>& buf, size_t buf_len,
                            boost::function<void(const boost::system::error_code&, const std::vector<uint8_t>&)> handler,
                            const RR_SHARED_PTR<void>& dev_h);

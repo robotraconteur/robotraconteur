@@ -534,7 +534,7 @@ UsbDeviceStatus UsbDevice_Initialize::ParseRRDescriptors(const std::vector<uint8
 }
 
 void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec,
-                                             const std::vector<uint8_t> rr_descriptors,
+                                             const std::vector<uint8_t>& rr_descriptors,
                                              boost::function<void(const UsbDeviceStatus&)> handler,
                                              const RR_SHARED_PTR<void>& dev_h,
                                              const RR_SHARED_PTR<UsbDevice_Settings>& settings)
@@ -775,7 +775,7 @@ void UsbDevice_Initialize::ReadRRDescriptor(
 }
 
 void UsbDevice_Initialize::ReadRRDescriptor1(
-    const boost::system::error_code ec, size_t bytes_transferred, uint8_t interface_number, uint8_t descriptor_index,
+    const boost::system::error_code& ec, size_t bytes_transferred, uint8_t interface_number, uint8_t descriptor_index,
     const boost::shared_array<uint8_t>& buf,
     boost::function<void(const boost::system::error_code&, const std::vector<uint8_t>&)> handler,
     const RR_SHARED_PTR<void>& dev_h)
@@ -819,11 +819,14 @@ void UsbDevice_Initialize::ReadRRDescriptor1(
 }
 
 void UsbDevice_Initialize::ReadRRDescriptor2(
-    const boost::system::error_code ec, size_t bytes_transferred, uint8_t interface_number, uint8_t descriptor_index,
+    const boost::system::error_code& ec, size_t bytes_transferred, uint8_t interface_number, uint8_t descriptor_index,
     const boost::shared_array<uint8_t>& buf, size_t buf_len,
     boost::function<void(const boost::system::error_code&, const std::vector<uint8_t>&)> handler,
     const RR_SHARED_PTR<void>& dev_h)
 {
+    RR_UNUSED(interface_number);
+    RR_UNUSED(descriptor_index);
+    RR_UNUSED(dev_h);
     if (ec)
     {
         std::vector<uint8_t> v;
