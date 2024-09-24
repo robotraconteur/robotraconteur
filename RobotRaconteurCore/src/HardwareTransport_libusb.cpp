@@ -1002,8 +1002,8 @@ UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
         return Error;
     }
 
-    //f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
-    //f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
+    // f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
+    // f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
 
     device_handle = dev_h1;
     return Open;
