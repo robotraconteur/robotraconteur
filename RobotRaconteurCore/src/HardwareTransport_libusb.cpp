@@ -508,10 +508,7 @@ void LibUsbDeviceManager::UsbThread()
             boost::mutex::scoped_lock lock(manager_transfer_lock);
             if (!running)
             {
-                if (manager_transfer_list.empty())
-                {
-                    return;
-                }
+                return;
             }
         }
 
@@ -713,13 +710,13 @@ void LibUsbDeviceManager::DrawDownRequests(const RR_SHARED_PTR<libusb_device_han
 
 void LibUsbDeviceManager::Shutdown()
 {
-    UsbDeviceManager::Shutdown();
     bool r = false;
     {
         boost::mutex::scoped_lock lock(manager_transfer_lock);
         r = running;
         running = false;
     }
+    UsbDeviceManager::Shutdown();
 
     if (r)
     {
@@ -728,6 +725,7 @@ void LibUsbDeviceManager::Shutdown()
             f->libusb_hotplug_deregister_callback(context.get(), hotplug_cb_handle);
         }
         usb_thread.join();
+        context.reset();
     }
 }
 
