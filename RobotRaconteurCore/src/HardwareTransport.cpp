@@ -990,8 +990,8 @@ HardwareTransportConnection::HardwareTransportConnection(const RR_SHARED_PTR<Har
     this->m_LocalEndpoint = local_endpoint;
     this->m_RemoteEndpoint = 0;
 
-    this->HeartbeatPeriod = 30000;
-    this->ReceiveTimeout = 600000;
+    this->HeartbeatPeriod = 5000;
+    this->ReceiveTimeout = 15000;
 
     this->max_message_size = parent->GetMaxMessageSize();
 
