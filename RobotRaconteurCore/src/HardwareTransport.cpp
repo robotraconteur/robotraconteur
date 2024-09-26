@@ -281,6 +281,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                                                    "HardwareTransport failed opening path \""
                                                        << boost::locale::conv::utf_to_utf<char>(*win_path)
                                                        << "\" error code " << GetLastError());
+                throw ConnectionException("Could not open USB device");
             }
         }
         else if (transport == "pci")
@@ -306,6 +307,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                                                        "HardwareTransport failed opening path \""
                                                            << boost::locale::conv::utf_to_utf<char>(*win_path)
                                                            << "\" error code " << GetLastError());
+                    throw ConnectionException("Could not open USB device");
                 }
             }
         }
@@ -341,6 +343,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                                                    "HardwareTransport failed opening path \""
                                                        << boost::locale::conv::utf_to_utf<char>(*win_path)
                                                        << "\" error code " << GetLastError());
+                throw ConnectionException("Could not open Bluetooth device");
             }
         }
         else
@@ -395,6 +398,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                                    "HardwareTransport failed opening path \"" << *dev_path
                                                                                               << "\" errno: " << errno);
+                throw ConnectionException("Could not open USB device");
             }
         }
         else if (transport == "pci")
@@ -420,6 +424,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                                        "HardwareTransport failed opening path \""
                                                            << *dev_path << "\" errno: " << errno);
+                    throw ConnectionException("Could not open PCI device");
                 }
             }
         }
@@ -457,6 +462,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                                        "HardwareTransport failed opening path \""
                                                            << *dev_path << "\" error code " << errno);
+                    throw ConnectionException("Could not open Bluetooth device");
                 }
             }
         }
