@@ -384,7 +384,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
             usb_port_numbers.resize(16);
             uint8_t bus_num = f->libusb_get_bus_number(list1[i]);
             int port_count = f->libusb_get_port_numbers(list1[i], &usb_port_numbers[0], 16);
-            if (port_count > 0 && port_count != LIBUSB_ERROR_OVERFLOW)
+            if (port_count > 0)
             {
                 usb_port_numbers.resize(port_count);
                 std::vector<std::string> usb_port_numbers_str;
@@ -402,7 +402,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                 if (f_bos >= 0)
                 {
                     sysfs_bos_desc.resize(UINT16_MAX);
-                    int bos_len = read(f_bos, &sysfs_bos_desc[0], UINT16_MAX);
+                    int bos_len = (int)read(f_bos, &sysfs_bos_desc[0], UINT16_MAX);
                     if (bos_len > 0)
                     {
                         sysfs_bos_desc.resize(bos_len);
@@ -417,7 +417,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                         while (p < sysfs_bos_desc.size() - 3)
                         {
                             struct libusb_bos_dev_capability_descriptor* cap =
-                                (struct libusb_bos_dev_capability_descriptor*)&sysfs_bos_desc[p];
+                                reinterpret_cast<libusb_bos_dev_capability_descriptor*>(&sysfs_bos_desc[p]);
                             size_t len = cap->bLength;
                             if (len == 0)
                             {
