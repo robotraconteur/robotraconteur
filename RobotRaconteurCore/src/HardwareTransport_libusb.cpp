@@ -428,8 +428,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                                 break;
                             }
 
-                            if (cap->bDescriptorType == LIBUSB_DT_DEVICE_CAPABILITY &&
-                                cap->bDevCapabilityType == LIBUSB_BT_PLATFORM_DESCRIPTOR)
+                            if (cap->bDescriptorType == LIBUSB_DT_DEVICE_CAPABILITY && cap->bDevCapabilityType == 0x05)
                             {
                                 if (cap->bLength < 20)
                                 {
