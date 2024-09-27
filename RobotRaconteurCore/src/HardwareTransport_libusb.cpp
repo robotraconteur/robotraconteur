@@ -21,6 +21,10 @@
 #include <boost/algorithm/string.hpp>
 #include <dlfcn.h>
 
+#define SYSFS_MOUNT_PATH "/sys"
+#define SYSFS_DEVICE_PATH SYSFS_MOUNT_PATH "/bus/usb/devices"
+#define USB_MAX_DEPTH 7
+
 namespace RobotRaconteur
 {
 namespace detail
@@ -371,9 +375,79 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
             continue;
         }
 
+        bool found_sysfs_bos_desc = false;
+        std::vector<uint8_t> sysfs_bos_desc;
         std::vector<std::vector<uint8_t> > platform_bos_desc;
-
+#ifdef ROBOTRACONTEUR_LINUX
         {
+            std::vector<uint8_t> usb_port_numbers;
+            usb_port_numbers.resize(16);
+            uint8_t bus_num = f->libusb_get_bus_number(list1[i]);
+            int port_count = f->libusb_get_port_numbers(list1[i], &usb_port_numbers[0], 16);
+            if (port_count > 0)
+            {
+                usb_port_numbers.resize(port_count);
+                std::vector<std::string> usb_port_numbers_str;
+                for (size_t j = 0; j < usb_port_numbers.size(); j++)
+                {
+                    usb_port_numbers_str.push_back(boost::lexical_cast<std::string>((int)usb_port_numbers[j]));
+                }
+                std::string sysfs_dev_path = SYSFS_DEVICE_PATH;
+                sysfs_dev_path +=
+                    "/" + boost::lexical_cast<std::string>((int)bus_num) + "-" + boost::join(usb_port_numbers_str, ".");
+
+                std::string bos_path = sysfs_dev_path + "/bos_descriptors";
+
+                int f_bos = open(bos_path.c_str(), O_RDONLY);
+                if (f_bos >= 0)
+                {
+                    sysfs_bos_desc.resize(UINT16_MAX);
+                    int bos_len = (int)read(f_bos, &sysfs_bos_desc[0], UINT16_MAX);
+                    if (bos_len > 0)
+                    {
+                        sysfs_bos_desc.resize(bos_len);
+                        found_sysfs_bos_desc = true;
+                    }
+                    close(f_bos);
+
+                    if (found_sysfs_bos_desc)
+                    {
+                        size_t p = 0;
+
+                        while (p < sysfs_bos_desc.size() - 3)
+                        {
+                            struct libusb_bos_dev_capability_descriptor* cap =
+                                reinterpret_cast<libusb_bos_dev_capability_descriptor*>(&sysfs_bos_desc[p]);
+                            size_t len = cap->bLength;
+                            if (len == 0)
+                            {
+                                break;
+                            }
+                            if (p + len > sysfs_bos_desc.size())
+                            {
+                                break;
+                            }
+
+                            if (cap->bDescriptorType == LIBUSB_DT_DEVICE_CAPABILITY && cap->bDevCapabilityType == 0x05)
+                            {
+                                if (cap->bLength < 20)
+                                {
+                                    break;
+                                }
+                                std::vector<uint8_t> desc(&sysfs_bos_desc[p + 4], &sysfs_bos_desc[p + len]);
+                                platform_bos_desc.push_back(desc);
+                            }
+                            p += len;
+                        }
+                    }
+                }
+            }
+        }
+#endif
+
+        if (!found_sysfs_bos_desc)
+        {
+            bool found_platform_bos_desc = false;
             libusb_device_handle* device_handle = NULL;
             if (f->libusb_open(list1[i], &device_handle) != 0)
             {
