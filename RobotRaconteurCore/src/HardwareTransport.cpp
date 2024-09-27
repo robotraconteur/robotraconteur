@@ -501,6 +501,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
         ROBOTRACONTEUR_LOG_INFO_COMPONENT(
             node, Transport, ep->GetLocalEndpoint(),
             "HardwareTransport could not connect to service URL: " << url << " error: " << exp.what());
+        throw;
     }
 }
 
