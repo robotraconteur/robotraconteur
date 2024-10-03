@@ -1,7 +1,7 @@
 import shutil
 import pathlib
 
-asset_dirs = ["artifacts/main/out-ubuntu-18.04"]
+asset_dirs = ["artifacts/main/out-ubuntu-20.04"]
 
 pathlib.Path("distfiles").mkdir(exist_ok=True)
 
