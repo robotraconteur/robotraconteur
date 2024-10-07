@@ -641,6 +641,8 @@ build_osx_arm64_release:
   - !reference [.osx_arm64_build_python_ver, script]
   - export PYVER=3.12
   - !reference [.osx_arm64_build_python_ver, script]
+  - export PYVER=3.13
+  - !reference [.osx_arm64_build_python_ver, script]
 
   artifacts:
     when: always
@@ -820,6 +822,8 @@ build_linux_arm64_python_release:
   - export PYVER=3.11
   - !reference [.linux_arm64_build_python_ver, script]
   - export PYVER=3.12
+  - !reference [.linux_arm64_build_python_ver, script]
+  - export PYVER=3.13
   - !reference [.linux_arm64_build_python_ver, script]
   artifacts:
     when: always
