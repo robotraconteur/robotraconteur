@@ -196,6 +196,12 @@ jobs:
       with:
         python_version: "3.12"
         arch: x64
+    - name: python 3.13
+      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: "3.13"
+        arch: x64
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -407,6 +413,12 @@ jobs:
         python_version: "3.12"
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.13
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: "3.13"
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: move out
       run: |
         copy build2/rrversion.txt build2/out/
@@ -577,6 +589,11 @@ jobs:
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
       with:
         python_version: "3.12"
+        arch: ${{ matrix.config.arch }}
+    - name: python 3.13
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: "3.13"
         arch: ${{ matrix.config.arch }}
     - name: move out
       run: |
@@ -1460,6 +1477,11 @@ jobs:
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
         python_version: "3.12"
+        wheel_filename: RobotRaconteur-*-cp312-cp312-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.13"
         wheel_filename: RobotRaconteur-*-cp312-cp312-macosx*${{ matrix.config.wheel_arch }}.whl
         arch: ${{ matrix.config.arch }}
     # - name: .net test
