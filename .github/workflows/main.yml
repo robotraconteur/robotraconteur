@@ -1482,7 +1482,7 @@ jobs:
     - uses: ./robotraconteur/test/dist/python/action/osx
       with:
         python_version: "3.13"
-        wheel_filename: RobotRaconteur-*-cp312-cp312-macosx*${{ matrix.config.wheel_arch }}.whl
+        wheel_filename: RobotRaconteur-*-cp313-cp313-macosx*${{ matrix.config.wheel_arch }}.whl
         arch: ${{ matrix.config.arch }}
     # - name: .net test
     #   uses: ./robotraconteur/test/dist/net/action/osx
