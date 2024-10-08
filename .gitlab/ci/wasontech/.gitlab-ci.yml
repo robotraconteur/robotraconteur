@@ -622,7 +622,6 @@ build_osx_arm64_release:
     -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
     -DOPENSSL_USE_STATIC_LIBS=ON
     ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
-    -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
     -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0
     -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
     -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
