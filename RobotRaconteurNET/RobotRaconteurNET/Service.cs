@@ -1988,7 +1988,7 @@ public class Wire<T>
         /// <param name="value">[out] The current InValue</param>
         /// <param name="ts">[out] The current InValue timestamp in the senders clock</param>
         /// <returns>true if the value is valid, otherwise false</returns>
-        bool TryGetInValue(out T value, out TimeSpec ts)
+        public bool TryGetInValue(out T value, out TimeSpec ts)
         {
             value = default(T);
             ts = default(TimeSpec);
@@ -2013,7 +2013,7 @@ public class Wire<T>
         /// <param name="value">[out] The current OutValue</param>
         /// <param name="ts">[out] The current OutValue timestamp in the local clock</param>
         /// <returns>true if the value is valid, otherwise false</returns>
-        bool TryGetOutValue(out T value, out TimeSpec ts)
+        public bool TryGetOutValue(out T value, out TimeSpec ts)
         {
             value = default(T);
             ts = default(TimeSpec);
