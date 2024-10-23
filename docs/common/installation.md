@@ -8,6 +8,7 @@
     - [Mac OSX](#mac-osx)
     - [iOS](#ios)
     - [Android](#android)
+    - [LabVIEW](#labview-add-on)
 
 ### Windows
 
@@ -180,3 +181,8 @@ See https://github.com/robotraconteur/robotraconteur/wiki/iOS
 ### Android
 
 See https://github.com/robotraconteur/robotraconteur/wiki/Android
+
+## LabVIEW Add-on
+
+A Robot Raconteur for LabVIEW Add-on is available from Wason Technology, LLC as a commercial product.
+[Click Here](https://github.com/robotraconteur/robotraconteur/wiki/LabView) for information on installation and purchasing a subscription license.
