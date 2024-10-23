@@ -54,6 +54,7 @@ See the [Getting Started Guide](https://robotraconteur.github.io/robotraconteur/
   - [Installation](#installation)
   - [Building](#building)
   - [ROS Support](#ros-support)
+  - [LabVIEW Add-on](#labview-add-on)
   - [Standard Service Types](#standard-service-types)
   - [Companion Libraries](#companion-libraries)
   - [Robot Raconteur Directory](#robot-raconteur-directory)
@@ -247,6 +248,11 @@ ROS 2, but swig version 4.0.2 or greater must be installed first.
 A Robot Raconteur to ROS 2 bridge is available, allowing access to ROS 2 topics and services from Robot Raconteur:
 
 https://github.com/robotraconteur-contrib/robotraconteur_ros2_bridge
+
+## LabVIEW Add-on
+
+A Robot Raconteur for LabVIEW Add-on is available from Wason Technology, LLC as a commercial product.
+[Click Here](https://github.com/robotraconteur/robotraconteur/wiki/LabView) for information on installation and purchasing a subscription license.
 
 ## Standard Service Types
 
