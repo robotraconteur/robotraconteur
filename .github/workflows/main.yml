@@ -504,7 +504,7 @@ jobs:
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: brew
       run: |
-        brew install swig boost openssl googletest
+        brew install swig boost openssl googletest icu4c
     - uses: actions/setup-python@v4
       id: python3
       with:
