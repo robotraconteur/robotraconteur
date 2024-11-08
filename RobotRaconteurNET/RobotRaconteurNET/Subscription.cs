@@ -1101,23 +1101,25 @@ public class WireSubscription<T>
     /// <param name="value">The new OutValue</param>
     public void SetOutValueAll(T value)
     {
-        var iter = new WrappedWireSubscription_send_iterator(_subscription);
-
-        while (iter.Next() != null)
+        using (var iter = new WrappedWireSubscription_send_iterator(_subscription))
         {
-            object dat = null;
-            try
+
+            while (iter.Next() != null)
             {
-                using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
+                object dat = null;
+                try
                 {
-                    iter.SetOutValue(m);
+                    using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
+                    {
+                        iter.SetOutValue(m);
+                    }
                 }
-            }
-            finally
-            {
-                IDisposable d = dat as IDisposable;
-                if (d != null)
-                    d.Dispose();
+                finally
+                {
+                    IDisposable d = dat as IDisposable;
+                    if (d != null)
+                        d.Dispose();
+                }
             }
         }
     }
@@ -1330,23 +1332,25 @@ public partial class PipeSubscription<T>
     /// <param name="value">The packet to send</param>
     public void AsyncSendPacketAll(T value)
     {
-        var iter = new WrappedPipeSubscription_send_iterator(_subscription);
-
-        while (iter.Next() != null)
+        using (var iter = new WrappedPipeSubscription_send_iterator(_subscription))
         {
-            object dat = null;
-            try
+
+            while (iter.Next() != null)
             {
-                using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
+                object dat = null;
+                try
                 {
-                    iter.AsyncSendPacket(m);
+                    using (MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value))
+                    {
+                        iter.AsyncSendPacket(m);
+                    }
                 }
-            }
-            finally
-            {
-                IDisposable d = dat as IDisposable;
-                if (d != null)
-                    d.Dispose();
+                finally
+                {
+                    IDisposable d = dat as IDisposable;
+                    if (d != null)
+                        d.Dispose();
+                }
             }
         }
     }

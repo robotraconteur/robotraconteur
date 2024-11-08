@@ -116,27 +116,37 @@ public class PipeSubscription<T>
     public void asyncSendPacketAll(T packet)
     {
         WrappedPipeSubscription_send_iterator iter = new WrappedPipeSubscription_send_iterator(_subscription);
-        while (iter.next() != null)
+        try
         {
-            Object dat = null;
-            MessageElement m = null;
-            try
+            while (iter.next() != null)
             {
-                dat = RobotRaconteurNode.s().packVarType(packet);
-                m = new MessageElement("value", dat);
-                iter.asyncSendPacket(m);
-            }
-            finally
-            {
-                if (m != null)
-                    m.delete();
-                if (dat != null)
+                Object dat = null;
+                MessageElement m = null;
+                try
                 {
-                    if (dat instanceof MessageElementData)
+                    dat = RobotRaconteurNode.s().packVarType(packet);
+                    m = new MessageElement("value", dat);
+                    iter.asyncSendPacket(m);
+                }
+                finally
+                {
+                    if (m != null)
+                        m.delete();
+                    if (dat != null)
                     {
-                        ((MessageElementData)dat).delete();
+                        if (dat instanceof MessageElementData)
+                        {
+                            ((MessageElementData)dat).delete();
+                        }
                     }
                 }
+            }
+        }
+        finally
+        {
+            if (iter != null)
+            {
+                iter.delete();
             }
         }
     }
