@@ -18,7 +18,7 @@ for more information.
 Install the Robot Raconteur Matlab add-on if not already installed. The add-on can be installed using
 the [Add-On Explorer in Matlab](https://www.mathworks.com/products/matlab/add-on-explorer.html).
 Search for "Robot Raconteur" and install the add-on. The homepage for the add-on
-can be found [here](https://www.mathworks.com/matlabcentral/fileexchange/80509-robot-raconteur-matlab).
+can be found [here](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab).
 
 ## Run Example
 
