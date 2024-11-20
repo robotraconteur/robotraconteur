@@ -10,7 +10,7 @@
 ![C\#](https://img.shields.io/badge/C%23-4.5|netstandard2.0-blue.svg?style=flat&logo=csharp)
 ![nuget](https://img.shields.io/nuget/v/robotraconteurnet?style=flat&logo=nuget)
 ![Java](https://img.shields.io/badge/Java-8+-blue.svg?style=flat&logo=openjdk)
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
+[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab)
 ![conda](https://img.shields.io/conda/vn/conda-forge/robotraconteur?label=conda&logo=anaconda)
 ![ros-noetic](https://img.shields.io/ros/v/noetic/robotraconteur?styple=flat&logo=ros)
 ![ros-humble](https://img.shields.io/ros/v/humble/robotraconteur?styple=flat&logo=ros)

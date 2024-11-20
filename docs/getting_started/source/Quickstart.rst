@@ -91,9 +91,9 @@ In MATLAB, this client is even simpler.
 
 
 .. |View Robot Raconteur Matlab on File Exchange| image:: https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg
-   :target: https://www.mathworks.com/matlabcentral/fileexchange/80509-robot-raconteur-matlab
+   :target: https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab
 
-The `Robot Raconteur Matlab <https://www.mathworks.com/matlabcentral/fileexchange/80509-robot-raconteur-matlab>`_
+The `Robot Raconteur Matlab <https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab>`_
 add-on can be installed using "Get Add-Ons" and "Add-On Explorer" in MATLAB.
 
 LabView can also be used to drive the robot:

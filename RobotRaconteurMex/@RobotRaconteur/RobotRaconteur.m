@@ -3,7 +3,7 @@ classdef RobotRaconteur
     %
     %   <a href="http://robotraconteur.com">Robot Raconteur Website</a>
     %   <a href="https://github.com/robotraconteur/robotraconteur">Robot Raconteur GitHub</a>
-    %   <a href="https://www.mathworks.com/matlabcentral/fileexchange/80509-robot-raconteur-matlab">Robot Raconteur Matlab Toolbox</a>
+    %   <a href="https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab">Robot Raconteur Matlab Toolbox</a>
     %
     %   Installation
     %

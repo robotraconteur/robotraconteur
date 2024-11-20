@@ -45,9 +45,9 @@ The Java library is available on the releases page on github.
 
 #### MATLAB
 
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
+[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab)
 
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
+The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
 
 ### Ubuntu Xenial, Bionic, Focal, Jammy, and Noble
 
@@ -87,9 +87,9 @@ Java must be built from source
 
 #### MATLAB
 
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
+[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab)
 
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
+The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
 
 ### Debian 10 (buster)
 
@@ -170,9 +170,9 @@ The Java library is available to download from the github release.
 
 #### MATLAB
 
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
+[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab)
 
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
+The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
 
 ### iOS
 
