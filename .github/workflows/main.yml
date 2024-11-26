@@ -300,7 +300,7 @@ jobs:
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
         github-binarycache: true
-    - uses: actions/setup-java@v1
+    - uses: actions/setup-java@v4
       with:
         java-version: 8
         java-package: jdk
