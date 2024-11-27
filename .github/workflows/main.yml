@@ -1495,9 +1495,6 @@ jobs:
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
-        - os: ubuntu-20.04
-          runs_on: ubuntu-latest
-          container: ubuntu:focal
         - os: debian-11
           runs_on: ubuntu-latest
           container: debian:bullseye-slim
