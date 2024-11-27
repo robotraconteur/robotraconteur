@@ -1778,26 +1778,23 @@ jobs:
         cmake --build .
         sudo cmake --build . --target install
     - name: build-swig
-      uses: johnwason/swig-build-action@v1
-      with:
-        cache-key: ${{ matrix.config.os }}
+      working-directory: /tmp
+      run: |
+        rm -rf swig_build_dir
+        mkdir -p swig_build_dir
+        cd swig_build_dir
+        curl -s -L https://github.com/swig/swig/archive/refs/tags/v${{ inputs.version }}.tar.gz --output swig-src.tar.gz
+        tar xf swig-src.tar.gz
+        cd swig-4.0.2
+        ./autogen.sh
+        ./configure
+        make
+        sudo make install
     - name: clone src
       run: |
         git clone --recursive ${{ github.repositoryUrl }} robotraconteur
         cd robotraconteur
         git checkout ${{ github.ref }}
-    - name: cache-build
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.11
-      with:
-        key: ${{ runner.os }}-${{ matrix.config.os }}-build-main-ccache
-    - name: cmake cache args
-      id: cmake-cache-args
-      if: startsWith(github.ref, 'refs/tags/v') != true
-      run: >
-        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
     - name: mkdir build2
       run: mkdir -p build2
     - name: configure
@@ -1805,9 +1802,8 @@ jobs:
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3
-        -DBUILD_JAVA=ON -DBUILD_NET=ON -DPACKAGE_SWIG_SOURCE_ALL=ON -DJAVA_HOME=/usr/lib/jvm/default-java
+        -DBUILD_JAVA=ON -DBUILD_NET=ON -DJAVA_HOME=/usr/lib/jvm/default-java
         -DBUILD_PYTHON_WHEEL=OFF  -DBUILD_PYTHON=ON
-        ${{ env.CMAKE_CACHE_ARGS }}
         ../robotraconteur
     - name: build
       working-directory: build2
