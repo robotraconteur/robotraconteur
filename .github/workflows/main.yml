@@ -1783,7 +1783,7 @@ jobs:
         rm -rf swig_build_dir
         mkdir -p swig_build_dir
         cd swig_build_dir
-        curl -s -L https://github.com/swig/swig/archive/refs/tags/v${{ inputs.version }}.tar.gz --output swig-src.tar.gz
+        curl -s -L https://github.com/swig/swig/archive/refs/tags/v4.0.2.tar.gz --output swig-src.tar.gz
         tar xf swig-src.tar.gz
         cd swig-4.0.2
         ./autogen.sh
