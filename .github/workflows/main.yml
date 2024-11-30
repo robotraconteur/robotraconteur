@@ -1792,7 +1792,7 @@ jobs:
         sudo make install
     - name: clone src
       run: |
-        git clone --recursive ${{ github.repositoryUrl }} robotraconteur
+        git clone --recursive https://github.com/${{ github.repository }}.git robotraconteur
         cd robotraconteur
         git checkout ${{ github.ref }}
     - name: mkdir build2
