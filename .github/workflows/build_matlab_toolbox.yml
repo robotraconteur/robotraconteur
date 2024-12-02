@@ -19,7 +19,7 @@ jobs:
         sudo apt-get install python3-numpy python3-setuptools python3-wheel
         python3-pytest mono-devel curl libgtest-dev -qq
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v1
+      uses: matlab-actions/setup-matlab@v2
       with:
         release: R2020b
     - name: pip
