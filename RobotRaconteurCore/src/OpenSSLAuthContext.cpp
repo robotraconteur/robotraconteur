@@ -60,7 +60,7 @@ struct x509_stack_cleanup
 BIO* make_buffer_bio(const boost::asio::const_buffer& b)
 {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-    return ::BIO_new_mem_buf(const_cast<void*>(boost::asio::buffer_cast<const void*>(b)),
+    return ::BIO_new_mem_buf(const_cast<void*>(RR_BOOST_ASIO_BUFFER_CAST(const void*,b)),
                              boost::numeric_cast<int>(boost::asio::buffer_size(b)));
 }
 

@@ -1,3 +1,31 @@
+if(NOT EMSCRIPTEN)
+    set(Boost_USE_MULTITHREADED ON)
+    set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
+    find_package(
+        Boost
+        COMPONENTS date_time
+                   filesystem
+                   system
+                   regex
+                   chrono
+                   atomic
+                   thread
+                   random
+                   program_options
+        REQUIRED)
+else()
+    find_package(
+        Boost
+        COMPONENTS date_time
+                   filesystem
+                   system
+                   regex
+                   chrono
+                   random
+                   program_options
+        REQUIRED)
+endif()
+
 set(RobotRaconteurGen_src
     CPPServiceLangGen.cpp CSharpServiceLangGen.cpp
     # VBNETServiceLangGen.cpp

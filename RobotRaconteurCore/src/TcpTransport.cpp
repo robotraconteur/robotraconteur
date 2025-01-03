@@ -1713,7 +1713,11 @@ void TcpWSSWebSocketConnector::Connect2(
 
         context->set_verify_mode(boost::asio::ssl::verify_peer);
 #ifndef ROBOTRACONTEUR_APPLE
+#if BOOST_ASIO_VERSION < 101601
         context->set_verify_callback(boost::asio::ssl::rfc2818_verification(servername));
+#else
+        context->set_verify_callback(boost::asio::ssl::host_name_verification(servername));
+#endif
 #else
         context->set_verify_callback(boost::bind(&TcpWSSWebSocketConnector::verify_callback, RR_BOOST_PLACEHOLDERS(_1),
                                                  RR_BOOST_PLACEHOLDERS(_2), servername));

@@ -1740,6 +1740,14 @@ class websocket_stream : private boost::noncopyable
         boost::range::copy(buffers, std::back_inserter(b));
         async_write_some(b, handler);
     }
+
+    template <typename Handler>
+    void async_write_some(const boost::asio::const_buffer& buffer, BOOST_ASIO_MOVE_ARG(Handler) handler)
+    {
+        const_buffers b;
+        b.push_back(buffer);
+        async_write_some(b, handler);
+    }
 };
 
 class websocket_tcp_connector : public boost::enable_shared_from_this<websocket_tcp_connector>
