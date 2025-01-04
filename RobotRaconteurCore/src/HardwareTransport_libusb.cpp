@@ -212,7 +212,7 @@ void LibUsb_Transfer_bulk::FillTransfer(uint8_t ep, boost::asio::mutable_buffer&
         throw SystemResourceException("Memory error");
     this->data_buf = buf;
 
-    libusb_fill_bulk_transfer(transfer, device_handle.get(), ep, boost::asio::buffer_cast<uint8_t*>(buf),
+    libusb_fill_bulk_transfer(transfer, device_handle.get(), ep, RR_BOOST_ASIO_BUFFER_CAST(uint8_t*, buf),
                               boost::numeric_cast<int>(boost::asio::buffer_size(buf)),
                               &LibUsbDeviceManager::transfer_complete, this, 0);
 

@@ -25,8 +25,8 @@
 
 #ifndef ROBOTRACONTEUR_VERSION
 // Boost Style Version Number
-#define ROBOTRACONTEUR_VERSION 100204
-#define ROBOTRACONTEUR_VERSION_TEXT "1.2.4"
+#define ROBOTRACONTEUR_VERSION 100205
+#define ROBOTRACONTEUR_VERSION_TEXT "1.2.5"
 #endif
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ == 7)
@@ -140,7 +140,7 @@
 #define RR_BOOST_ASIO_STRAND boost::asio::strand<boost::asio::io_context::executor_type>
 #define RR_BOOST_ASIO_STRAND2(exec_type) boost::asio::strand<exec_type>
 #define RR_BOOST_ASIO_POST(context, func) boost::asio::post(context, func)
-#define RR_BOOST_ASIO_BUFFER_CAST(type, buf) (type)(buf).data()
+#define RR_BOOST_ASIO_BUFFER_CAST(type, buf) static_cast<type>((buf).data())
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) boost::asio::bind_executor(strand, f)
 #define RR_BOOST_ASIO_NEW_STRAND(context)                                                                              \
     (new boost::asio::strand<boost::asio::io_context::executor_type>((context).get_executor()))
