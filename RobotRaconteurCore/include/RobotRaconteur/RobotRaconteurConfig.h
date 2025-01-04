@@ -67,7 +67,7 @@
 #include <boost/regex.hpp>
 
 #if __APPLE__
-#include "TargetConditionals.h" 
+#include "TargetConditionals.h"
 #endif
 
 #ifdef BOOST_WINDOWS
@@ -79,9 +79,9 @@
 #endif
 #elif defined(__APPLE__)
 #define ROBOTRACONTEUR_APPLE
-#if defined(TARGET_OS_IPHONE) && (TARGET_OS_IPHONE==1)
+#if defined(TARGET_OS_IPHONE) && (TARGET_OS_IPHONE == 1)
 #define ROBOTRACONTEUR_IOS
-#elif defined(TARGET_OS_OSX) && (TARGET_OS_OSX==1)
+#elif defined(TARGET_OS_OSX) && (TARGET_OS_OSX == 1)
 #define ROBOTRACONTEUR_OSX
 #endif
 #elif defined(__EMSCRIPTEN__)
