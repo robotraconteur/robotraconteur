@@ -1678,7 +1678,6 @@ jobs:
         ROS_DISTRO:
         - noetic
         - humble
-        - iron
         - jazzy
     steps:
     - uses: actions/checkout@v3
@@ -1710,7 +1709,6 @@ jobs:
       matrix:
         ROS_DISTRO:
         - humble
-        - iron
         - jazzy
     steps:
     - uses: actions/checkout@v3
