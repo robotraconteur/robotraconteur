@@ -1751,6 +1751,9 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
+    - uses: actions/checkout@v2
+      with:
+        path: robotraconteur
     - name: install sudo and tzdata
       run: |
         apt update
@@ -1788,11 +1791,6 @@ jobs:
         ./configure
         make
         sudo make install
-    - name: clone src
-      run: |
-        git clone --recursive https://github.com/${{ github.repository }}.git robotraconteur
-        cd robotraconteur
-        git checkout ${{ github.ref }}
     - name: mkdir build2
       run: mkdir -p build2
     - name: configure
