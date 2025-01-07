@@ -43,9 +43,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - os: ubuntu-18.04
-          runs_on: ubuntu-latest
-          container: ubuntu:bionic
         - os: ubuntu-20.04
           runs_on: ubuntu-20.04
           container: ""
@@ -55,9 +52,6 @@ jobs:
         - os: ubuntu-24.04
           runs_on: ubuntu-22.04
           container: ""
-        - os: ubuntu-16.04
-          runs_on: ubuntu-latest
-          container: ubuntu:xenial
         - os: debian-10
           runs_on: ubuntu-latest
           container: debian:buster-slim
@@ -1495,18 +1489,15 @@ jobs:
       fail-fast: false
       matrix:
         config:
+        - os: ubuntu-24.04
+          runs_on: ubuntu-24.04
+          container: ""
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
-        - os: ubuntu-16.04
+        - os: debian-11
           runs_on: ubuntu-latest
-          container: ubuntu:xenial
-        - os: debian-10
-          runs_on: ubuntu-latest
-          container: debian:buster-slim
-        cxx_standard:
-        - ""
-        - "-DCMAKE_CXX_STANDARD=11"
+          container: debian:bullseye-slim
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -1587,7 +1578,7 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         ../robotraconteur
     - name: build
       working-directory: build2
@@ -1599,7 +1590,7 @@ jobs:
         cmake -G "Unix Makefiles"
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DRobotRaconteur_DIR=$GITHUB_WORKSPACE/build2  -DBUILD_TESTING=ON
         -DROBOTRACONTEUR_GEN_EXECUTABLE=$GITHUB_WORKSPACE/build2/out/bin/RobotRaconteurGen
         -DEigen3_DIR=/usr/lib/cmake/eigen3
@@ -1687,7 +1678,6 @@ jobs:
         ROS_DISTRO:
         - noetic
         - humble
-        - iron
         - jazzy
     steps:
     - uses: actions/checkout@v3
@@ -1719,7 +1709,6 @@ jobs:
       matrix:
         ROS_DISTRO:
         - humble
-        - iron
         - jazzy
     steps:
     - uses: actions/checkout@v3
@@ -1745,3 +1734,36 @@ jobs:
         ROS_REPO: main
         PRERELEASE: true
         ROSDEP_SKIP_KEYS: python3-setuptools
+
+  build-old-ubuntu:
+    runs-on: ${{ matrix.config.runs_on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - os: ubuntu-16.04
+          runs_on: ubuntu-latest
+          container: ubuntu:xenial
+        - os: ubuntu-18.04
+          runs_on: ubuntu-latest
+          container: ubuntu:bionic
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: src/robotraconteur
+    - uses: actions/checkout@v4
+      with:
+        repository: robotraconteur/robotraconteur_companion
+        submodules: recursive
+        path: src/robotraconteur_companion
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install podman -qq
+    - name: build-and-test
+      run: >
+        podman run -v ${{github.workspace}}/src:/work/src -w /work --rm
+        ${{matrix.config.container}} /work/src/robotraconteur/tools/build_files/old_ubuntu_build/old_ubuntu_build.sh
