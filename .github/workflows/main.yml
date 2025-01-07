@@ -1750,9 +1750,14 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
-        path: robotraconteur
+        path: src/robotraconteur
+    - uses: actions/checkout@v4
+      with:
+        repository: robotraconteur/robotraconteur_companion
+        submodules: recursive
+        path: src/robotraconteur_companion
     - name: apt update
       run: sudo apt update
     - name: apt
