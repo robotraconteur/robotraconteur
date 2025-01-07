@@ -1759,6 +1759,6 @@ jobs:
       run: >
         sudo apt-get install podman -qq
     - name: build-and-test
-      run: > 
-        podman run -v ${{github.workspace}}/robotraconteur:/work/robotraconteur -w /work --rm 
+      run: >
+        podman run -v ${{github.workspace}}/robotraconteur:/work/robotraconteur -w /work --rm
         ${{matrix.config.container}} /work/robotraconteur/tools/build_files/old_ubuntu_build/old_ubuntu_build.sh
