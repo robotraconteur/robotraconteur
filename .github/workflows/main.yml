@@ -327,7 +327,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: mikehardy/buildcache-action@v1
+      uses: mikehardy/buildcache-action@v2
       with:
         cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main-buildcache
     - name: cmake cache args
@@ -451,7 +451,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: mikehardy/buildcache-action@v1
+      uses: mikehardy/buildcache-action@v2
       with:
         cache_key: win64-shared-build-main-buildcache
     - uses: ilammy/msvc-dev-cmd@v1
@@ -1631,7 +1631,7 @@ jobs:
         choco install swig -r
     - name: cache-build
       id: cache-build
-      uses: mikehardy/buildcache-action@v1
+      uses: mikehardy/buildcache-action@v2
       with:
         cache_key: ${{ runner.os }}-x64-build-companion-buildcache
     - uses: ilammy/msvc-dev-cmd@v1
