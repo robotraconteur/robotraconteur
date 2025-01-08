@@ -305,6 +305,7 @@ jobs:
         java-version: 8
         java-package: jdk
         architecture: ${{ matrix.config.arch }}
+        distribution: zulu
     - name: choco python2.7
       run: |
         choco install python2 ${{ matrix.config.arch == 'x86' && '-x86' || '' }} -r
