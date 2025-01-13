@@ -1097,7 +1097,7 @@ jobs:
         path: distfiles/*
     - name: make release
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.BOT_GITHUB_TOKEN }}
         draft: true
