@@ -706,7 +706,7 @@ jobs:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
         channels: conda-forge,robotraconteur
@@ -757,7 +757,7 @@ jobs:
       run: |
         sudo apt update -qq
         sudo apt install --no-install-recommends libbluetooth-dev -qq
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
         channels: conda-forge
@@ -791,7 +791,7 @@ jobs:
         path: robotraconteur
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
         channels: conda-forge,robotraconteur
