@@ -19,7 +19,7 @@ jobs:
       matrix:
         os: [ubuntu-18.04, ubuntu-20.04]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: '${{ github.event.inputs.ref }}'
         repository: robotraconteur/robotraconteur
@@ -78,7 +78,7 @@ jobs:
         arch: [x64, x86]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: '${{ github.event.inputs.ref }}'
         repository: robotraconteur/robotraconteur
@@ -162,7 +162,7 @@ jobs:
     runs-on: macos-10.15
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: '${{ github.event.inputs.ref }}'
         repository: robotraconteur/robotraconteur

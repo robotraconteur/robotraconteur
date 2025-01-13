@@ -61,7 +61,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: install sudo and tzdata
@@ -218,7 +218,7 @@ jobs:
     runs-on: ubuntu-latest
     container: fedora:latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -247,7 +247,7 @@ jobs:
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -285,7 +285,7 @@ jobs:
           vcpkg_triplet: x86-windows-static-md-release
           cmake_arch: Win32
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
@@ -435,7 +435,7 @@ jobs:
   build-win-shared:
     runs-on: windows-2019
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -504,7 +504,7 @@ jobs:
     env:
       LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
@@ -614,7 +614,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
@@ -701,7 +701,7 @@ jobs:
   build-conda-win:
     runs-on: windows-2019
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
@@ -735,10 +735,10 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: bluez-src
         repository: bluez/bluez
@@ -786,7 +786,7 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
@@ -830,7 +830,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
@@ -937,7 +937,7 @@ jobs:
   build-ios:
     runs-on: macos-13
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -1070,7 +1070,7 @@ jobs:
     - build-android
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - uses: nuget/setup-nuget@v1
@@ -1108,7 +1108,7 @@ jobs:
     env:
       SKIP: no-commit-to-branch
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
     - name: apt
       run: |
@@ -1118,7 +1118,7 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: apt update
@@ -1154,7 +1154,7 @@ jobs:
   cppcheck:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: apt update
@@ -1183,7 +1183,7 @@ jobs:
   codecov:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1228,7 +1228,7 @@ jobs:
   vcpkg-test-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v6
       id: vcpkg
@@ -1257,7 +1257,7 @@ jobs:
     env:
       VCPKG_MAX_CONCURRENCY: 2
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1296,7 +1296,7 @@ jobs:
   vcpkg-test-osx:
     runs-on: macos-13
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v6
       id: vcpkg
@@ -1330,7 +1330,7 @@ jobs:
         - arch: x86
           wheel_arch: win32
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: Download distfiles
@@ -1372,7 +1372,7 @@ jobs:
     - build-dist
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: apt
@@ -1429,7 +1429,7 @@ jobs:
           wheel_arch: arm64
     runs-on: ${{ matrix.config.runner }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: Download distfiles
@@ -1507,7 +1507,7 @@ jobs:
       run: |
         apt-get update
         apt-get install git -y
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: clone robotraconteur_companion
@@ -1608,10 +1608,10 @@ jobs:
   companion-build-win:
     runs-on: windows-2019
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: robotraconteur/robotraconteur_companion
         submodules: recursive
@@ -1681,7 +1681,7 @@ jobs:
         - humble
         - jazzy
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: src/robotraconteur
     - name: apt update
@@ -1712,7 +1712,7 @@ jobs:
         - humble
         - jazzy
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: src/robotraconteur
     - name: apt update
