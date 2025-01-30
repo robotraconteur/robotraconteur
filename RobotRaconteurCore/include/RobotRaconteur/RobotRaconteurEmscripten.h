@@ -3,6 +3,7 @@
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/function.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace RobotRaconteur
 {
