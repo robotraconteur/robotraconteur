@@ -980,7 +980,7 @@ jobs:
         retention-days: 2
   build-pyodide:
     runs-on: ubuntu-22.04
-    container: pyodide/pyodide-env:20240127-chrome114-firefox122-py312
+    container: pyodide/pyodide-env:20250116-chrome132-firefox134
     env:
       EMSDK_NUM_CORES: 3
       EMCC_CORES: 3
