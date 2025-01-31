@@ -26,6 +26,7 @@
 #include <boost/foreach.hpp>
 #include <boost/range.hpp>
 #include <boost/range/algorithm.hpp>
+#include <boost/bind.hpp>
 
 namespace RobotRaconteur
 {

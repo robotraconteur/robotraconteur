@@ -6,6 +6,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "RobotRaconteur/Timer.h"
+#include "RobotRaconteur/RobotRaconteurNode.h"
 
 namespace boost
 {
