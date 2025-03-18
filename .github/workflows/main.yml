@@ -631,7 +631,7 @@ jobs:
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v1
+      uses: matlab-actions/setup-matlab@v2
       with:
         release: R2020b
     - name: vcpkg build
