@@ -13,7 +13,7 @@ runs:
     shell: bash
     run: |
       pattern=*.nupkg
-      file=$(find . -name "$pattern" | head -n 1)
+      file=$(find . -iname "$pattern" | head -n 1)
       if [[ ! -f "$file" ]]; then
         echo "Nuget file not found"
         exit 1
