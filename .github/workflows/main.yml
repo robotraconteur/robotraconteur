@@ -44,20 +44,35 @@ jobs:
       matrix:
         config:
         - os: ubuntu-20.04
-          runs_on: ubuntu-20.04
-          container: ""
+          runs_on: ubuntu-latest
+          container: "ubuntu:focal"
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
         - os: ubuntu-24.04
           runs_on: ubuntu-22.04
           container: ""
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
         - os: debian-10
           runs_on: ubuntu-latest
           container: debian:buster-slim
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
         - os: debian-11
           runs_on: ubuntu-latest
           container: debian:bullseye-slim
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
+        - os: ubuntu-20.04-arm
+          runs_on: ubuntu-latest-arm
+          container: "ubuntu:focal"
+          arch: arm64
+          wheel_platform: manylinux_2_31_aarch64
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -155,47 +170,54 @@ jobs:
       run: |
         ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
     - name: python 3.7
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.7
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
     - name: python 3.8
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.8
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
     - name: python 3.9
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.9
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
     - name: python 3.10
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.10"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
     - name: python 3.11
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.11"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
     - name: python 3.12
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.12"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
     - name: python 3.13
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.13"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -610,7 +632,7 @@ jobs:
 
   build-matlab:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -730,7 +752,7 @@ jobs:
       shell: cmd /C call {0}
 
   build-conda-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash -l {0}
@@ -1068,7 +1090,7 @@ jobs:
     - build-osx
     - build-matlab
     - build-android
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -1116,7 +1138,7 @@ jobs:
         sudo apt install -y dos2unix
     - uses: pre-commit/action@v3.0.1
   clang-tidy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
       with:
