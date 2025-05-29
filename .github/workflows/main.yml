@@ -69,7 +69,7 @@ jobs:
           arch: x64
           wheel_platform: manylinux_2_31_x86_64
         - os: ubuntu-20.04-arm
-          runs_on: ubuntu-latest-arm
+          runs_on: ubuntu-24.04-arm
           container: "ubuntu:focal"
           arch: arm64
           wheel_platform: manylinux_2_31_aarch64
@@ -632,7 +632,8 @@ jobs:
 
   build-matlab:
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    container: ubuntu:focal
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
