@@ -14,7 +14,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - uses: actions/setup-python@v4
+  - uses: actions/setup-python@v5
     id: python3
     with:
       python-version: '${{ inputs.python_version }}'
