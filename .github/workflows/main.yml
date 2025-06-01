@@ -725,6 +725,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         -DCMAKE_TOOLCHAIN_FILE=$(pwd)/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DVCPKG_TARGET_TRIPLET=x64-linux-matlab
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
