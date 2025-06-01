@@ -674,7 +674,7 @@ jobs:
         libselinux1 libsm6 libsndfile1 libtcl8.6 libuuid1 libx11-6 libx11-xcb1 libxcb1 libxcomposite1
         libxcursor1 libxdamage1 libxext6 libxfixes3 libxft2 libxi6 libxinerama1 libxrandr2 libxrender1
         libxt6 libxtst6 libxxf86vm1 locales locales-all procps sudo unzip wget xkb-data zlib1g
-         -qq
+        -qq
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: Configure default compilers
