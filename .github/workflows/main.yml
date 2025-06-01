@@ -335,7 +335,6 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
-        github-binarycache: true
     - uses: actions/setup-java@v4
       with:
         java-version: 8
@@ -483,7 +482,6 @@ jobs:
         extra-args: --clean-after-build
         cache-key: win-shared-build-main
         token: ${{ github.token }}
-        github-binarycache: true
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -680,7 +678,6 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ubuntu-build-matlab-gcc9
         token: ${{ github.token }}
-        github-binarycache: true
 
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -988,7 +985,6 @@ jobs:
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
         token: ${{ github.token }}
         revision: 2023.08.09
-        github-binarycache: true
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
@@ -1270,7 +1266,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-win
         token: ${{ github.token }}
-        github-binarycache: true
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
@@ -1306,7 +1301,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-linux
         token: ${{ github.token }}
-        github-binarycache: true
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
@@ -1338,7 +1332,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-osx
         token: ${{ github.token }}
-        github-binarycache: true
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
@@ -1657,7 +1650,6 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-x64-build-companion
         token: ${{ github.token }}
-        github-binarycache: true
     - name: choco
       run: |
         choco install swig -r
