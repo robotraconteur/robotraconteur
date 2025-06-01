@@ -19,6 +19,21 @@ find_package(Matlab COMPONENTS MX_LIBRARY REQUIRED)
 
 add_definitions(-DMATLAB_MEX_FILE -DMATLAB_DEFAULT_RELEASE=R2018a)
 
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
+find_package(
+    Boost
+    COMPONENTS date_time
+               filesystem
+               system
+               regex
+               chrono
+               atomic
+               thread
+               random
+               program_options
+    REQUIRED)
+
 # INCLUDE(BuildMex.cmake)
 
 include_directories(${Matlab_INCLUDE_DIRS})
