@@ -1,6 +1,13 @@
 add_subdirectory(tcp_tls)
 
 if(BUILD_PYTHON3)
+    if(PYTHON3_EXECUTABLE)
+        set(Python3_EXECUTABLE ${PYTHON3_EXECUTABLE} CACHE FILEPATH "Python 3 executable")
+    endif()
+    find_package(Python3 COMPONENTS Interpreter Development NumPy REQUIRED)
+    set(PYTHON3_INCLUDE_DIRS ${Python3_INCLUDE_DIRS})
+    set(PYTHON3_LIBRARIES ${Python3_LIBRARIES})
+    set(PYTHON3_EXECUTABLE ${Python3_EXECUTABLE})
     if(WIN32)
         set(RR_TEST_PYTHON_PATH "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python3\\\;${CMAKE_CURRENT_SOURCE_DIR}")
     else()
