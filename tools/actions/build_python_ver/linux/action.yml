@@ -11,6 +11,9 @@ inputs:
     description: wheel_platform
     required: false
     default: 'manylinux_2_31_x86_64'
+  rr_build_dir:
+    description: rr_build_dir
+    required: true
 
 runs:
   using: "composite"
@@ -28,7 +31,7 @@ runs:
     run: >
       cmake -G "Unix Makefiles"
       -DBUILD_CORE=OFF -DBUILD_GEN=OFF
-      -DRobotRaconteur_DIR=${{ github.workspace }}/build2
+      -DRobotRaconteur_DIR=${{ inputs.rr_build_dir }}
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
       -DBUILD_TESTING=ON
       -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
