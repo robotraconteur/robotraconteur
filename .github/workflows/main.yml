@@ -704,10 +704,15 @@ jobs:
       working-directory: build2
       run: |
         cmake --build . --config Release -j 4
-    - name: test
-      working-directory: build2
+    - name: set test env
       run: |
-        ctest . -C Release --output-on-failure
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB=${{github.workspace}}/build2/test/out/lib/librobotraconteur_test_server_lib.so >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB_HFILE=${{ github.workspace }}/robotraconteur/test/cpp/service/test_server_lib.h >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
+    - name: test
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: matlab out tar
       run: >
         export RR_VER=`cat build2/rrversion.txt`
