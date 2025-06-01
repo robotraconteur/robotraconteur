@@ -668,7 +668,7 @@ jobs:
     - name: Set up MATLAB
       uses: matlab-actions/setup-matlab@v2
       with:
-        release: R2021b
+        release: R2022b
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v6
       id: vcpkg
