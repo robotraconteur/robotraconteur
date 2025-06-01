@@ -709,6 +709,7 @@ jobs:
         echo ROBOTRACONTEUR_TEST_SERVER_LIB=${{github.workspace}}/build2/test/out/lib/librobotraconteur_test_server_lib.so >> $GITHUB_ENV
         echo ROBOTRACONTEUR_TEST_SERVER_LIB_HFILE=${{ github.workspace }}/robotraconteur/test/cpp/service/test_server_lib.h >> $GITHUB_ENV
         echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
+        echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
     - name: test
       uses: matlab-actions/run-command@v2
       with:
