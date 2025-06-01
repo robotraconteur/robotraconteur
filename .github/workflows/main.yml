@@ -676,9 +676,9 @@ jobs:
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
-        triplet: x64-linux-matlab
+        triplet: x64-linux-matlab-gcc9
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
-        cache-key: ubuntu-build-matlab
+        cache-key: ubuntu-build-matlab-gcc9
         token: ${{ github.token }}
         github-binarycache: true
 
