@@ -68,9 +68,9 @@ jobs:
           container: debian:bullseye-slim
           arch: x64
           wheel_platform: manylinux_2_31_x86_64
-        - os: ubuntu-20.04-arm
-          runs_on: ubuntu-24.04-arm
-          container: "ubuntu:focal"
+        - os: ubuntu-22.04-arm
+          runs_on: ubuntu-22.04-arm
+          container: ""
           arch: arm64
           wheel_platform: manylinux_2_31_aarch64
     env:
