@@ -174,6 +174,8 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
+    - name: Set RR_BUILD_DIR
+      run: echo "RR_BUILD_DIR=$(pwd)/build2" >> $GITHUB_ENV
     - name: python 3.7
       if: ${{ matrix.config.os == 'ubuntu-20.04' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
@@ -181,7 +183,7 @@ jobs:
         python_version: 3.7
         arch: ${{ matrix.config.arch }}
         wheel_platform: ${{ matrix.config.wheel_platform }}
-        rr_build_dir: ${{ github.workspace }}/build2
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.8
       if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
@@ -189,7 +191,7 @@ jobs:
         python_version: 3.8
         arch: ${{ matrix.config.arch }}
         wheel_platform: ${{ matrix.config.wheel_platform }}
-        rr_build_dir: ${{ github.workspace }}/build2
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.9
       if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
@@ -197,7 +199,7 @@ jobs:
         python_version: 3.9
         arch: ${{ matrix.config.arch }}
         wheel_platform: ${{ matrix.config.wheel_platform }}
-        rr_build_dir: ${{ github.workspace }}/build2
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.10
       if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
@@ -205,7 +207,7 @@ jobs:
         python_version: "3.10"
         arch: ${{ matrix.config.arch }}
         wheel_platform: ${{ matrix.config.wheel_platform }}
-        rr_build_dir: ${{ github.workspace }}/build2
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.11
       if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
@@ -213,7 +215,7 @@ jobs:
         python_version: "3.11"
         arch: ${{ matrix.config.arch }}
         wheel_platform: ${{ matrix.config.wheel_platform }}
-        rr_build_dir: ${{ github.workspace }}/build2
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.12
       if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
@@ -221,7 +223,7 @@ jobs:
         python_version: "3.12"
         arch: ${{ matrix.config.arch }}
         wheel_platform: ${{ matrix.config.wheel_platform }}
-        rr_build_dir: ${{ github.workspace }}/build2
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.13
       if: ${{ matrix.config.os == 'ubuntu-20.04' || matrix.config.os == 'ubuntu-20.04-arm' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
@@ -229,7 +231,7 @@ jobs:
         python_version: "3.13"
         arch: ${{ matrix.config.arch }}
         wheel_platform: ${{ matrix.config.wheel_platform }}
-        rr_build_dir: ${{ github.workspace }}/build2
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -685,16 +687,24 @@ jobs:
       uses: matlab-actions/setup-matlab@v2
       with:
         release: R2020b
-    - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+    # - name: vcpkg build
+    #   uses: johnwason/vcpkg-action@v6
+    #   id: vcpkg
+    #   with:
+    #     pkgs: ${{ env.VCPKG_PKGS }}
+    #     triplet: x64-linux-matlab
+    #     extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
+    #     cache-key: ubuntu-build-matlab
+    #     token: ${{ github.token }}
+    #     github-binarycache: true
+    - name: vcpkg manual build
       id: vcpkg
-      with:
-        pkgs: ${{ env.VCPKG_PKGS }}
-        triplet: x64-linux-matlab
-        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
-        cache-key: ubuntu-build-matlab
-        token: ${{ github.token }}
-        github-binarycache: true
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git vcpkg
+        cd vcpkg
+        git checkout 2024.12.16
+        ./bootstrap-vcpkg.sh
+        ./vcpkg install ${{ env.VCPKG_PKGS }} --clean-after-build --overlay-triplets=../robotraconteur/tools/build_files/triplets --triplet x64-linux-matlab
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -713,7 +723,7 @@ jobs:
         -DBUILD_GEN=ON  -DBUILD_TESTING=ON
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
-        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+        -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
         ${{ env.CMAKE_CACHE_ARGS }}
         -S robotraconteur -B build2
     - name: build
