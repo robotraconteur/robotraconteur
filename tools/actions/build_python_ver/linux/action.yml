@@ -7,11 +7,18 @@ inputs:
   arch:
     description: arch
     required: true
+  wheel_platform:
+    description: wheel_platform
+    required: false
+    default: 'manylinux_2_31_x86_64'
+  rr_build_dir:
+    description: rr_build_dir
+    required: true
 
 runs:
   using: "composite"
   steps:
-  - uses: actions/setup-python@v4
+  - uses: actions/setup-python@v5
     id: python3
     with:
       python-version: '${{ inputs.python_version }}'
@@ -24,7 +31,7 @@ runs:
     run: >
       cmake -G "Unix Makefiles"
       -DBUILD_CORE=OFF -DBUILD_GEN=OFF
-      -DRobotRaconteur_DIR=${{ github.workspace }}/build2
+      -DRobotRaconteur_DIR=${{ inputs.rr_build_dir }}
       -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
       -DBUILD_TESTING=ON
       -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
@@ -41,7 +48,7 @@ runs:
   - name: auditwheel
     working-directory: build2_python_${{ inputs.python_version }}/out/Python3
     run: |
-      ${{ steps.python3.outputs.python-path }} -m auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
+      ${{ steps.python3.outputs.python-path }} -m auditwheel repair --plat ${{ inputs.wheel_platform }} dist/*.whl
     shell: bash
   - name: test
     working-directory: build2_python_${{ inputs.python_version }}

@@ -44,23 +44,43 @@ jobs:
       matrix:
         config:
         - os: ubuntu-20.04
-          runs_on: ubuntu-20.04
-          container: ""
+          runs_on: ubuntu-latest
+          container: "ubuntu:focal"
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
+          arch: x64
+          wheel_platform: manylinux_2_35_x86_64
         - os: ubuntu-24.04
           runs_on: ubuntu-22.04
           container: ""
+          arch: x64
+          wheel_platform: manylinux_2_39_x86_64
         - os: debian-10
           runs_on: ubuntu-latest
           container: debian:buster-slim
+          arch: x64
+          wheel_platform: manylinux_2_28_x86_64
         - os: debian-11
           runs_on: ubuntu-latest
           container: debian:bullseye-slim
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
+        - os: ubuntu-22.04-arm
+          runs_on: ubuntu-22.04-arm
+          container: ""
+          arch: arm64
+          wheel_platform: manylinux_2_35_aarch64
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
+    - name: Switch to Azure Ubuntu mirror
+      if: ${{ matrix.config.container != '' && startsWith(matrix.config.container, 'ubuntu:') }}
+      run: |
+        sed -i 's|http://archive.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+        sed -i 's|http://security.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
     - uses: actions/checkout@v4
       with:
         path: robotraconteur
@@ -69,7 +89,7 @@ jobs:
       run: |
         apt update
         apt install sudo tzdata python3 -y
-        ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+        ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
         apt install ca-certificates-java -y
     - name: semver
@@ -85,7 +105,7 @@ jobs:
         automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel
         python3-pytest mono-devel curl libgtest-dev -qq
     - name: apt python2.7
-      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
       run: >
         sudo apt-get install python-dev python-numpy python-setuptools python-pytest -qq
     - name: install gtest
@@ -98,12 +118,12 @@ jobs:
         cmake --build .
         sudo cmake --build . --target install
     - name: build-swig
-      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
       uses: johnwason/swig-build-action@v1.2
       with:
         cache-key: ${{ matrix.config.os }}
     - name: apt-swig
-      if: ${{ matrix.config.os == 'ubuntu-22.04' || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
       run: sudo apt-get install swig -qq -y
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -130,7 +150,7 @@ jobs:
         ${{ env.CMAKE_CACHE_ARGS }}
         ../robotraconteur
     - name: configure python2.7
-      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
       working-directory: build2
       run: cmake . -DBUILD_PYTHON=ON
     - name: build
@@ -154,48 +174,64 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
+    - name: Set RR_BUILD_DIR
+      run: echo "RR_BUILD_DIR=$(pwd)/build2" >> $GITHUB_ENV
     - name: python 3.7
       if: ${{ matrix.config.os == 'ubuntu-20.04' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.7
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.8
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.8
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.9
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.9
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.10
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.10"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.11
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.11"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.12
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.12"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.13
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.13"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -299,7 +335,6 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
-        github-binarycache: true
     - uses: actions/setup-java@v4
       with:
         java-version: 8
@@ -447,7 +482,6 @@ jobs:
         extra-args: --clean-after-build
         cache-key: win-shared-build-main
         token: ${{ github.token }}
-        github-binarycache: true
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -610,40 +644,41 @@ jobs:
 
   build-matlab:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
     - uses: actions/checkout@v4
       with:
         path: robotraconteur
-    - name: semver
-      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - name: apt update
-      run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0
+        sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0 python3 wget curl
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
-        git cmake g++ make mono-devel libgtest-dev gcc-8 g++-8 -qq
+        git cmake g++ make mono-devel libgtest-dev gcc-9 g++-9
+        unzip wget xkb-data zlib1g
+        zip tar
+        -qq
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: Configure default compilers
       run: |
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v1
+      uses: matlab-actions/setup-matlab@v2
       with:
-        release: R2020b
+        release: R2022b
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v6
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
-        triplet: x64-linux-matlab
+        triplet: x64-linux-matlab-gcc9
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
-        cache-key: ubuntu-build-matlab
+        cache-key: ubuntu-build-matlab-gcc9
         token: ${{ github.token }}
-        github-binarycache: true
+
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -669,10 +704,16 @@ jobs:
       working-directory: build2
       run: |
         cmake --build . --config Release -j 4
-    - name: test
-      working-directory: build2
+    - name: set test env
       run: |
-        ctest . -C Release --output-on-failure
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB=${{github.workspace}}/build2/test/out/lib/librobotraconteur_test_server_lib.so >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB_HFILE=${{ github.workspace }}/robotraconteur/test/cpp/service/test_server_lib.h >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
+        echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
+    - name: test
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: matlab out tar
       run: >
         export RR_VER=`cat build2/rrversion.txt`
@@ -730,7 +771,7 @@ jobs:
       shell: cmd /C call {0}
 
   build-conda-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash -l {0}
@@ -950,7 +991,6 @@ jobs:
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
         token: ${{ github.token }}
         revision: 2023.08.09
-        github-binarycache: true
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
@@ -980,7 +1020,7 @@ jobs:
         retention-days: 2
   build-pyodide:
     runs-on: ubuntu-22.04
-    container: pyodide/pyodide-env:20250116-chrome132-firefox134
+    container: pyodide/pyodide-env:20250311-chrome134-firefox136-py313
     env:
       EMSDK_NUM_CORES: 3
       EMCC_CORES: 3
@@ -1024,12 +1064,6 @@ jobs:
         make -C cpython
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
         make
-    - name: remove apt swig
-      run: sudo apt remove '^swig.*' -y -qq || true
-    - name: build-swig
-      uses: johnwason/swig-build-action@v1.2
-      with:
-        cache-key: pyodide-swig
     - name: build pregenerated_src
       run: |
         cmake -S $GITHUB_WORKSPACE/rr_src -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF -DPYTHON3_EXECUTABLE=/usr/local/bin/python3
@@ -1068,7 +1102,7 @@ jobs:
     - build-osx
     - build-matlab
     - build-android
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -1116,7 +1150,7 @@ jobs:
         sudo apt install -y dos2unix
     - uses: pre-commit/action@v3.0.1
   clang-tidy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -1238,7 +1272,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-win
         token: ${{ github.token }}
-        github-binarycache: true
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
@@ -1274,7 +1307,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-linux
         token: ${{ github.token }}
-        github-binarycache: true
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
@@ -1306,7 +1338,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-osx
         token: ${{ github.token }}
-        github-binarycache: true
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
@@ -1516,7 +1547,7 @@ jobs:
       if: ${{ matrix.config.container != '' }}
       run: |
         apt install sudo tzdata python3 -y
-        ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+        ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
     - name: apt update
       run: sudo apt update
@@ -1551,12 +1582,12 @@ jobs:
         cmake ..
         sudo make install
     - name: build-swig
-      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
       uses: johnwason/swig-build-action@v1.2
       with:
         cache-key: ${{ matrix.config.os }}
     - name: apt-swig
-      if: ${{ matrix.config.os == 'ubuntu-22.04' || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
       run: sudo apt-get install swig -qq -y
     - name: cache-build
       id: cache-build
@@ -1625,7 +1656,6 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-x64-build-companion
         token: ${{ github.token }}
-        github-binarycache: true
     - name: choco
       run: |
         choco install swig -r

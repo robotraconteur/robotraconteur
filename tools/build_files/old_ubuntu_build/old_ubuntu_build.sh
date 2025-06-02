@@ -4,6 +4,10 @@ set -e
 
 CURRENT_DIR=$(pwd)
 
+
+sed -i 's|http://archive.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+sed -i 's|http://security.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+
 # Set up container environment
 apt update
 apt install sudo tzdata python3 -y
