@@ -2938,7 +2938,7 @@ static std::string ConstantDefinition_EscapeString_Formatter(const boost::smatch
     if (i == "\t")
         return "\\t";
 
-#ifdef ROBOTRACONTEUR_EMSCIRPTEN
+#ifdef ROBOTRACONTEUR_EMSCRIPTEN
     std::basic_string<char16_t> v = boost::locale::conv::utf_to_utf<char16_t>(i);
 #else
     std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
