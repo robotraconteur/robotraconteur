@@ -80,6 +80,7 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/NETExceptions.cmake")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Properties/AssemblyInfo.cs.in"
                "${CMAKE_CURRENT_BINARY_DIR}/AssemblyInfo.cs" @ONLY)
 
+set(RR_NET_FRAMEWORK_VERSION "v4.5.2" CACHE STRING ".NET Framework version for library")
 if(NOT RR_NET_BUILD_NATIVE_ONLY)
 
     if(WIN32)
