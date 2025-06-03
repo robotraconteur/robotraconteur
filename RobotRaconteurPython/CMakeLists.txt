@@ -97,6 +97,7 @@ if(WIN32)
 else()
     set_target_properties(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PROPERTIES SUFFIX ".so")
 endif()
+set_target_properties(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PROPERTIES OUTPUT_NAME "_RobotRaconteurPython")
 
 if(NOT DEFINED RobotRaconteur_DIR)
     add_dependencies(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} RobotRaconteurCore)
