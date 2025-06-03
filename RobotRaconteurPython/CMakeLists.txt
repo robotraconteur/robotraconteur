@@ -1,21 +1,35 @@
 set(Python_ADDITIONAL_VERSIONS 2.7)
-
-find_package(PythonInterp REQUIRED)
-find_package(PythonLibs REQUIRED)
-
-find_path(NUMPY_INCLUDE_NDARRAYOBJECT_DIR numpy/ndarrayobject.h PATHS ${PYTHON_INCLUDE_DIRS} NO_DEFAULT_PATH)
-if(NUMPY_INCLUDE_NDARRAYOBJECT_DIR)
-    set(NUMPY_INCLUDE_DIR ${NUMPY_INCLUDE_NDARRAYOBJECT_DIR})
-else()
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -c
-                "import numpy; import os; print(os.path.dirname(numpy.__file__) + '/core/include')"
-        RESULT_VARIABLE FIND_NUMPY_RESULT OUTPUT_VARIABLE NUMPY_INCLUDE_DIR)
-    string(STRIP "${NUMPY_INCLUDE_DIR}" NUMPY_INCLUDE_DIR)
-
-    if(${FIND_NUMPY_RESULT})
-        message(FATAL_ERROR "Could not determine NumPy include directory")
+if((CMAKE_VERSION VERSION_GREATER 3.14 OR CMAKE_VERSION VERSION_EQUAL 3.14) AND NOT EMSCRIPTEN)
+    if(PYTHON_EXECUTABLE)
+        set(Python_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "Python executable")
     endif()
+    find_package(Python2 COMPONENTS Interpreter Development NumPy REQUIRED)
+    set(PYTHON_INCLUDE_DIRS ${Python_INCLUDE_DIRS})
+    set(PYTHON_LIBRARIES ${Python_LIBRARIES})
+    set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
+    set(NUMPY_INCLUDE_DIR ${Python_NumPy_INCLUDE_DIRS})
+    message(STATUS "Python2 found using new FindPython2 PYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}, "
+                   "PYTHON_INCLUDE_DIRS=${PYTHON_INCLUDE_DIRS}, " "PYTHON_LIBRARIES=${PYTHON_LIBRARIES}, "
+                   "Python_NumPy_INCLUDE_DIRS=${Python_NumPy_INCLUDE_DIRS}")
+else()
+    find_package(PythonInterp REQUIRED)
+    find_package(PythonLibs REQUIRED)
+
+    find_path(NUMPY_INCLUDE_NDARRAYOBJECT_DIR numpy/ndarrayobject.h PATHS ${PYTHON_INCLUDE_DIRS} NO_DEFAULT_PATH)
+    if(NUMPY_INCLUDE_NDARRAYOBJECT_DIR)
+        set(NUMPY_INCLUDE_DIR ${NUMPY_INCLUDE_NDARRAYOBJECT_DIR})
+    else()
+        execute_process(
+            COMMAND ${PYTHON_EXECUTABLE} -c
+                    "import numpy; import os; print(os.path.dirname(numpy.__file__) + '/core/include')"
+            RESULT_VARIABLE FIND_NUMPY_RESULT OUTPUT_VARIABLE NUMPY_INCLUDE_DIR)
+        string(STRIP "${NUMPY_INCLUDE_DIR}" NUMPY_INCLUDE_DIR)
+
+        if(${FIND_NUMPY_RESULT})
+            message(FATAL_ERROR "Could not determine NumPy include directory")
+        endif()
+    endif()
+
 endif()
 
 if(NOT EXISTS "${NUMPY_INCLUDE_DIR}/numpy/ndarrayobject.h")
