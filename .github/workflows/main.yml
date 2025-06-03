@@ -358,7 +358,7 @@ jobs:
         python -m pip install numpy setuptools wheel pytest
     - name: choco
       run: |
-        choco install swig -r
+        choco install swig dotnet4.5 -r
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
