@@ -4,13 +4,13 @@ if((CMAKE_VERSION VERSION_GREATER 3.14 OR CMAKE_VERSION VERSION_EQUAL 3.14) AND 
         set(Python_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "Python executable")
     endif()
     find_package(Python2 COMPONENTS Interpreter Development NumPy REQUIRED)
-    set(PYTHON_INCLUDE_DIRS ${Python_INCLUDE_DIRS})
-    set(PYTHON_LIBRARIES ${Python_LIBRARIES})
-    set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
-    set(NUMPY_INCLUDE_DIR ${Python_NumPy_INCLUDE_DIRS})
+    set(PYTHON_INCLUDE_DIRS ${Python2_INCLUDE_DIRS})
+    set(PYTHON_LIBRARIES ${Python2_LIBRARIES})
+    set(PYTHON_EXECUTABLE ${Python2_EXECUTABLE})
+    set(NUMPY_INCLUDE_DIR ${Python2_NumPy_INCLUDE_DIRS})
     message(STATUS "Python2 found using new FindPython2 PYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}, "
                    "PYTHON_INCLUDE_DIRS=${PYTHON_INCLUDE_DIRS}, " "PYTHON_LIBRARIES=${PYTHON_LIBRARIES}, "
-                   "Python_NumPy_INCLUDE_DIRS=${Python_NumPy_INCLUDE_DIRS}")
+                   "NUMPY_INCLUDE_DIR=${NUMPY_INCLUDE_DIR}")
 else()
     find_package(PythonInterp REQUIRED)
     find_package(PythonLibs REQUIRED)
