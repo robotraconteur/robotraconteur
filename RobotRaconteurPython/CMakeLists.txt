@@ -59,6 +59,7 @@ if(NOT USE_PREGENERATED_SOURCE)
         PythonTypeSupport.cpp
         PythonTypeSupport.h)
     swig_link_libraries(RobotRaconteurPython RobotRaconteurCore)
+    set_target_properties(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PROPERTIES PREFIX "")
 else()
     set(SWIG_MODULE_RobotRaconteurPython_REAL_NAME _RobotRaconteurPython)
 
