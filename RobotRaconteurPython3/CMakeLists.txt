@@ -71,6 +71,7 @@ if(NOT USE_PREGENERATED_SOURCE)
         ${PYTHON2_SOURCE_DIR}/PythonTypeSupport.cpp
         ${PYTHON2_SOURCE_DIR}/PythonTypeSupport.h)
     swig_link_libraries(RobotRaconteurPython3 RobotRaconteurCore)
+    set_target_properties(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PROPERTIES PREFIX "")
 else()
     set(SWIG_MODULE_RobotRaconteurPython3_REAL_NAME _RobotRaconteurPython3)
     if(NOT EMSCRIPTEN)

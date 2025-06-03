@@ -33,6 +33,17 @@ if(BUILD_PYTHON3)
 endif()
 
 if(BUILD_PYTHON)
+
+    if(CMAKE_VERSION VERSION_GREATER 3.14 OR CMAKE_VERSION VERSION_EQUAL 3.14)
+        if(PYTHON_EXECUTABLE)
+            set(Python2_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "Python executable")
+        endif()
+        find_package(Python2 COMPONENTS Interpreter Development NumPy REQUIRED)
+        set(PYTHON_INCLUDE_DIRS ${Python2_INCLUDE_DIRS})
+        set(PYTHON_LIBRARIES ${Python2_LIBRARIES})
+        set(PYTHON_EXECUTABLE ${Python2_EXECUTABLE})
+    endif()
+
     if(WIN32)
         set(RR_TEST_PYTHON_PATH "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/Python\\\;${CMAKE_CURRENT_SOURCE_DIR}")
     else()
