@@ -327,7 +327,7 @@ jobs:
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -474,7 +474,7 @@ jobs:
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -670,7 +670,7 @@ jobs:
       with:
         release: R2022b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -982,7 +982,7 @@ jobs:
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
@@ -1263,7 +1263,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1298,7 +1298,7 @@ jobs:
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
         git cmake g++ make curl libgtest-dev -qq
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1329,7 +1329,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1647,7 +1647,7 @@ jobs:
         submodules: recursive
         path: robotraconteur_companion
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }} yaml-cpp eigen3 opencv
