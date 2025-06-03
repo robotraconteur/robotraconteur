@@ -4,6 +4,7 @@ function(package_source_swig_net SWIG_NET_EXTRA_ARGS SWIG_NET_OUTDIR outfiles)
     include(${CMAKE_SOURCE_DIR}/RobotRaconteurNET/NETSwigVars.cmake)
     add_custom_command(
         TARGET package_source_swig
+        POST_BUILD
         COMMAND "${CMAKE_COMMAND}" -E make_directory ${SWIG_NET_OUTDIR}
         COMMAND
             "${CMAKE_COMMAND}" -E env "SWIG_LIB=${SWIG_DIR}" "${SWIG_EXECUTABLE}" -csharp -namespace RobotRaconteur
@@ -18,6 +19,7 @@ function(package_source_swig_java SWIG_JAVA_EXTRA_ARGS SWIG_JAVA_OUTDIR outfiles
     include(${CMAKE_SOURCE_DIR}/RobotRaconteurJava/JavaSwigVars.cmake)
     add_custom_command(
         TARGET package_source_swig
+        POST_BUILD
         COMMAND "${CMAKE_COMMAND}" -E make_directory ${SWIG_JAVA_OUTDIR}
         COMMAND
             "${CMAKE_COMMAND}" -E env "SWIG_LIB=${SWIG_DIR}" "${SWIG_EXECUTABLE}" -java -package com.robotraconteur
@@ -31,6 +33,7 @@ function(package_source_swig_python SWIG_PYTHON_EXTRA_ARGS SWIG_PYTHON_OUTDIR ou
     include(${CMAKE_SOURCE_DIR}/RobotRaconteurPython/PythonSwigVars.cmake)
     add_custom_command(
         TARGET package_source_swig
+        POST_BUILD
         COMMAND "${CMAKE_COMMAND}" -E make_directory ${SWIG_PYTHON_OUTDIR}
         COMMAND
             "${CMAKE_COMMAND}" -E env "SWIG_LIB=${SWIG_DIR}" "${SWIG_EXECUTABLE}" -python -relativeimport -outdir
