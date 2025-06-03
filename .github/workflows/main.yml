@@ -309,7 +309,7 @@ jobs:
         --output-on-failure
 
   build-win:
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
@@ -468,7 +468,7 @@ jobs:
         retention-days: 2
 
   build-win-shared:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
       with:
@@ -740,7 +740,7 @@ jobs:
         retention-days: 2
 
   build-conda-win:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
       with:
@@ -1636,7 +1636,7 @@ jobs:
         ctest -C Release --output-on-failure
 
   companion-build-win:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
       with:
