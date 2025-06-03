@@ -393,6 +393,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif()
 endif()
 
+if(EMSCRIPTEN)
+    set(ROBOTRACONTEUR_USE_CXX11 TRUE)
+endif()
+
 if(NOT ROBOTRACONTEUR_USE_CXX11)
     target_compile_definitions(RobotRaconteurCore PUBLIC ROBOTRACONTEUR_NO_CXX11)
 endif()

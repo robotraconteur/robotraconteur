@@ -2876,7 +2876,7 @@ static std::string ConstantDefinition_UnescapeString_Formatter(const boost::smat
     if (boost::starts_with(i, "\\u"))
     {
         std::stringstream ss;
-#ifdef ROBOTRACONTEUR_EMSCRIPTEN
+#ifndef ROBOTRACONTEUR_NO_CXX11
         std::basic_string<char16_t> v3;
 #else
         std::basic_string<uint16_t> v3;
@@ -2938,7 +2938,7 @@ static std::string ConstantDefinition_EscapeString_Formatter(const boost::smatch
     if (i == "\t")
         return "\\t";
 
-#ifdef ROBOTRACONTEUR_EMSCRIPTEN
+#ifndef ROBOTRACONTEUR_NO_CXX11
     std::basic_string<char16_t> v = boost::locale::conv::utf_to_utf<char16_t>(i);
 #else
     std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
