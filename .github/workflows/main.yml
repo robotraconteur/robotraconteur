@@ -1231,7 +1231,46 @@ jobs:
       with:
         name: 'pyodide-package-logs'
         path: src/packages/build-logs/*
-
+  build-matlab-toolbox:
+    needs:
+    - build-win
+    - build-matlab
+    - build-matlab-osx
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        path: robotraconteur
+    - uses: actions/download-artifact@v4
+      with:
+        path: artifacts/main
+        pattern: "out-matlab*"
+    - uses: actions/download-artifact@v4
+      with:
+        path: artifacts/main
+        pattern: out-win-x64
+    - name: install matlab
+      id: setup-matlab
+      uses: matlab-actions/setup-matlab@v2
+      with:
+        release: R2022b
+    - name: prepare matlab toolbox
+      run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox2.py
+    - name: build matlab toolbox
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/build-matlab-toolbox/build'); matlab.addons.toolbox.packageToolbox('RobotRaconteurMatlab.prj','RobotRaconteurMatlab');
+    - name: finish matlab toolbox
+      run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox3.py
+    - name: move matlab toolbox
+      run: |
+        mv build-matlab-toolbox/build/*.mltbx ${{github.workspace}}
+    - name: upload matlab toolbox
+      uses: actions/upload-artifact@v4
+      with:
+        name: out-matlab-toolbox
+        path: "*.mltbx"
   build-dist:
     needs:
     - build-ubuntu
@@ -1240,6 +1279,7 @@ jobs:
     - build-matlab
     - build-matlab-osx
     - build-android
+    - build-matlab-toolbox
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
