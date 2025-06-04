@@ -851,12 +851,12 @@ jobs:
       with:
         command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: matlab out tar
-      run: >
+      run: |
         export RR_VER=`cat build2/rrversion.txt`
-        && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}.tar.gz
-        --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}|"
-        --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}|"
-        build2/out/Matlab robotraconteur/LICENSE.txt
+        cp robotraconteur/LICENSE.txt build2/out/Matlab
+        cd build2/out
+        cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
+        tar -cf RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}.tar.gz RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
     - name: move out
       run: |
         cp robotraconteur/LICENSE.txt build2/out/
