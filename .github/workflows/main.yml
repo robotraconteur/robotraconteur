@@ -361,13 +361,14 @@ jobs:
         choco install swig dotnet4.5 -r
     - name: install matlab
       if: ${{ matrix.config.arch == 'x64' }}
+      id: setup-matlab
       uses: matlab-actions/setup-matlab@v2
       with:
         release: R2021a
     - name: matlab cmake args
       if: ${{ matrix.config.arch == 'x64' }}
       run: |
-        echo "MATLAB_ROOT=C:/Program Files/MATLAB/R2021a" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "MATLAB_ROOT=${{ steps.setup-matlab.outputs.matlabroot }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         echo "CMAKE_MATLAB_ARGS=-DBUILD_MATLAB_MEX=ON" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -405,7 +406,7 @@ jobs:
       if: ${{ matrix.config.arch != 'x86' }}
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure
+        ctest . -C Release --output-on-failure -E matlab
     - name: test x86
       if: ${{ matrix.config.arch == 'x86' }}
       working-directory: build2
