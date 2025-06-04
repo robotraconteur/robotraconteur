@@ -364,7 +364,7 @@ jobs:
       id: setup-matlab
       uses: matlab-actions/setup-matlab@v2
       with:
-        release: R2021a
+        release: R2022b
     - name: matlab cmake args
       if: ${{ matrix.config.arch == 'x64' }}
       run: |
