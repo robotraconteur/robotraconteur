@@ -40,6 +40,7 @@ include_directories(${Matlab_INCLUDE_DIRS})
 
 matlab_add_mex(
     NAME RobotRaconteurMex
+    MODULE
     SRC RobotRaconteurMex.cpp RobotRaconteurMex.h
     OUTPUT_NAME RobotRaconteurMex
     LINK_TO RobotRaconteurCore)
