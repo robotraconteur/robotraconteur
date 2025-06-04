@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RobotRaconteurNET</RootNamespace>
     <AssemblyName>RobotRaconteurNET</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>@RR_NET_FRAMEWORK_VERSION@</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile></TargetFrameworkProfile>
   </PropertyGroup>
