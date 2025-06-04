@@ -478,7 +478,7 @@ jobs:
       working-directory: build2/out
       if: ${{ matrix.config.arch == 'x64' }}
       run: |
-        cp ../../LICENSE.txt Matlab
+        cp ../../robotraconteur/LICENSE.txt Matlab
         $Env:RR_VER = Get-Content .\rrversion.txt
         Copy-Item -Path Matlab -Destination RobotRaconteur-$Env:RR_VER-MATLAB-win64 -Recurse
         Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.pdb
