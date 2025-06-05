@@ -116,7 +116,12 @@ def test_wire_subscription():
         assert wire_sub.InValue == 5.0
         assert wire_sub.TryGetInValue()[1] == 5.0
 
-        assert value_changed_count[0] > 0
+        for _ in range(10):
+            if value_changed_count[0] > 0:
+                break
+            time.sleep(0.01)
+        else:
+            assert False
 
         wire_sub.InValueLifespan = 0.1
         assert wire_sub.InValueLifespan == 0.1
