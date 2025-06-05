@@ -1661,6 +1661,7 @@ void ClientContext::AsyncConnectService2(
     // std::cout << "AsyncConnectService2" << std::endl;
     if (e)
     {
+        cl_lock.unlock();
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
                                            "AsyncConnectService failed: " << e->what());
         detail::InvokeHandlerWithException(node, handler, e);
