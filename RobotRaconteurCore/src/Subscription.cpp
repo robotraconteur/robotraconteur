@@ -1971,8 +1971,18 @@ void WireSubscriptionBase::SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& v
 
 size_t WireSubscriptionBase::GetActiveWireConnectionCount()
 {
+    size_t count = 0;
     boost::mutex::scoped_lock lock(this_lock);
-    return connections.size();
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::WireSubscription_connection>& c,
+                   connections | boost::adaptors::map_values)
+    {
+        RR_SHARED_PTR<WireConnectionBase> c1 = c->connection.lock();
+        if (c1)
+        {
+            count++;
+        }
+    }
+    return count;
 }
 
 void WireSubscriptionBase::Close()
@@ -2261,7 +2271,10 @@ void WireSubscription_connection::ClientConnected2(const RR_SHARED_PTR<WireConne
         }
     }
 
-    this->connection = connection;
+    {
+        boost::mutex::scoped_lock lock(p->this_lock);
+        this->connection = connection;
+    }
 
     connection->SetIgnoreInValue(p->ignore_in_value.data());
     connection->AddListener(shared_from_this());
@@ -2576,8 +2589,18 @@ void PipeSubscriptionBase::AsyncSendPacketAllBase(const RR_INTRUSIVE_PTR<RRValue
 
 size_t PipeSubscriptionBase::GetActivePipeEndpointCount()
 {
+    size_t count = 0;
     boost::mutex::scoped_lock lock(this_lock);
-    return connections.size();
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::PipeSubscription_connection>& c,
+                   connections | boost::adaptors::map_values)
+    {
+        RR_SHARED_PTR<PipeEndpointBase> pipe = c->connection.lock();
+        if (pipe)
+        {
+            count++;
+        }
+    }
+    return count;
 }
 
 void PipeSubscriptionBase::Close()
@@ -2812,7 +2835,10 @@ void PipeSubscription_connection::ClientConnected2(const RR_SHARED_PTR<PipeEndpo
         }
     }
 
-    this->connection = connection;
+    {
+        boost::mutex::scoped_lock lock(p->this_lock);
+        this->connection = connection;
+    }
 
     connection->SetIgnoreReceived(p->ignore_incoming_packets.data());
     connection->AddListener(shared_from_this());
