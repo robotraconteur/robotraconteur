@@ -40,9 +40,10 @@ include_directories(${Matlab_INCLUDE_DIRS})
 
 matlab_add_mex(
     NAME RobotRaconteurMex
+    MODULE
     SRC RobotRaconteurMex.cpp RobotRaconteurMex.h
-    OUTPUT_NAME RobotRaconteurMex
-    LINK_TO RobotRaconteurCore)
+    OUTPUT_NAME RobotRaconteurMex NO_IMPLICIT_LINK_TO_MATLAB_LIBRARIES
+    LINK_TO RobotRaconteurCore Matlab::mex Matlab::mx)
 
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/out/Matlab")
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/out_debug/Matlab")

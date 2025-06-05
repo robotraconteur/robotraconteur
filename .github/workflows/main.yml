@@ -315,10 +315,10 @@ jobs:
       matrix:
         config:
         - arch: x64
-          vcpkg_triplet: x64-windows-static-md-release
+          vcpkg_triplet: x64-windows-static-md-release-vc142
           cmake_arch: x64
         - arch: x86
-          vcpkg_triplet: x86-windows-static-md-release
+          vcpkg_triplet: x86-windows-static-md-release-vc142
           cmake_arch: Win32
     steps:
     - uses: actions/checkout@v4
@@ -359,6 +359,17 @@ jobs:
     - name: choco
       run: |
         choco install swig dotnet4.5 -r
+    - name: install matlab
+      if: ${{ matrix.config.arch == 'x64' }}
+      id: setup-matlab
+      uses: matlab-actions/setup-matlab@v2
+      with:
+        release: R2022b
+    - name: matlab cmake args
+      if: ${{ matrix.config.arch == 'x64' }}
+      run: |
+        echo "MATLAB_ROOT=${{ steps.setup-matlab.outputs.matlabroot }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "CMAKE_MATLAB_ARGS=-DBUILD_MATLAB_MEX=ON" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -375,6 +386,7 @@ jobs:
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: ${{ matrix.config.arch }}
+        toolset: "14.2"
     - name: configure
       run: >
         cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON
@@ -384,7 +396,7 @@ jobs:
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
-        ${{ env.CMAKE_CACHE_ARGS }}
+        ${{ env.CMAKE_CACHE_ARGS }} ${{ env.CMAKE_MATLAB_ARGS }}
         -DCMAKE_BUILD_TYPE=Release
         -S robotraconteur -B build2
     - name: build
@@ -395,7 +407,7 @@ jobs:
       if: ${{ matrix.config.arch != 'x86' }}
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure
+        ctest . -C Release --output-on-failure -E matlab
     - name: test x86
       if: ${{ matrix.config.arch == 'x86' }}
       working-directory: build2
@@ -449,6 +461,30 @@ jobs:
         python_version: "3.13"
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: set matlab test env
+      if: ${{ matrix.config.arch == 'x64' }}
+      run: |
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB=${{github.workspace}}/build2/test/out/bin/robotraconteur_test_server_lib.dll | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB_HFILE=${{ github.workspace }}/robotraconteur/test/cpp/service/test_server_lib.h | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    - name: matlab test
+      if: ${{ matrix.config.arch == 'x64' }}
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
+    - name: build matlab zip
+      shell: pwsh
+      working-directory: build2/out
+      if: ${{ matrix.config.arch == 'x64' }}
+      run: |
+        cp ../../robotraconteur/LICENSE.txt Matlab
+        $Env:RR_VER = Get-Content ..\rrversion.txt
+        Copy-Item -Path Matlab -Destination RobotRaconteur-$Env:RR_VER-MATLAB-win64 -Recurse
+        Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.pdb
+        Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.lib
+        Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.exp
+        Compress-Archive -Path RobotRaconteur-$Env:RR_VER-MATLAB-win64 -DestinationPath RobotRaconteur-$Env:RR_VER-MATLAB-win64.zip
     - name: move out
       run: |
         copy build2/rrversion.txt build2/out/
@@ -736,6 +772,108 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-matlab'
+        path: build2/*
+        retention-days: 2
+
+  build-matlab-osx:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - runner: macos-13
+          vcpkg_triplet: x64-osx-static-release
+          arch: x64
+          homebrew_root: /usr/local
+          cmake-args: -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_JAVA=ON -DBUILD_NET=ON
+          matlab-plat-suffix: maci64
+          matlab-ver: R2022b
+        - runner: macos-14
+          vcpkg_triplet: arm64-osx-static-release
+          arch: arm64
+          homebrew_root: /opt/homebrew
+          cmake-args: -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
+          matlab-plat-suffix: maca64
+          matlab-ver: R2023b
+    runs-on: ${{ matrix.config.runner }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: robotraconteur
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
+    - name: Set up MATLAB
+      uses: matlab-actions/setup-matlab@v2
+      with:
+        release: ${{ matrix.config.matlab-ver }}
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v7
+      id: vcpkg
+      with:
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: ${{ matrix.config.vcpkg_triplet }}
+        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
+        cache-key: osx-build-matlab-${{ matrix.config.arch }}
+        token: ${{ github.token }}
+
+    - name: cache-build
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      id: cache-build
+      uses: hendrikmuhs/ccache-action@v1.2.18
+      with:
+        key: ${{ runner.os }}-matlab-osx-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}-${{ matrix.config.arch }}
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
+    - name: configure
+      run: >
+        cmake -G "Ninja"
+        -DBUILD_GEN=ON  -DBUILD_TESTING=ON
+        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+        ${{ env.CMAKE_CACHE_ARGS }}
+        -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -j 4
+    - name: set test env
+      run: |
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB=${{github.workspace}}/build2/test/out/lib/librobotraconteur_test_server_lib.dylib >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB_HFILE=${{ github.workspace }}/robotraconteur/test/cpp/service/test_server_lib.h >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
+        echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
+    - name: test
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
+    - name: matlab out tar
+      run: |
+        export RR_VER=`cat build2/rrversion.txt`
+        cp robotraconteur/LICENSE.txt build2/out/Matlab
+        cd build2/out
+        cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
+        tar -cf RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}.tar.gz RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
+    - name: move out
+      run: |
+        cp robotraconteur/LICENSE.txt build2/out/
+        cp build2/rrversion.txt build2/out/
+        mv build2/out .
+    - name: archive out
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'out-matlab-osx-${{ matrix.config.arch }}'
+        path: out/*
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'build-artifacts-matlab-osx-${{ matrix.config.arch }}'
         path: build2/*
         retention-days: 2
 
@@ -1093,14 +1231,55 @@ jobs:
       with:
         name: 'pyodide-package-logs'
         path: src/packages/build-logs/*
-
+  build-matlab-toolbox:
+    needs:
+    - build-win
+    - build-matlab
+    - build-matlab-osx
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        path: robotraconteur
+    - uses: actions/download-artifact@v4
+      with:
+        path: artifacts/main
+        pattern: "out-matlab*"
+    - uses: actions/download-artifact@v4
+      with:
+        path: artifacts/main
+        pattern: out-win-x64
+    - name: install matlab
+      id: setup-matlab
+      uses: matlab-actions/setup-matlab@v2
+      with:
+        release: R2022b
+    - name: prepare matlab toolbox
+      run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox2.py
+    - name: build matlab toolbox
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/build-matlab-toolbox/build'); matlab.addons.toolbox.packageToolbox('RobotRaconteurMatlab.prj','RobotRaconteurMatlab');
+    - name: finish matlab toolbox
+      run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox3.py
+    - name: move matlab toolbox
+      run: |
+        mv build-matlab-toolbox/build/*.mltbx ${{github.workspace}}
+    - name: upload matlab toolbox
+      uses: actions/upload-artifact@v4
+      with:
+        name: out-matlab-toolbox
+        path: "*.mltbx"
   build-dist:
     needs:
     - build-ubuntu
     - build-win
     - build-osx
     - build-matlab
+    - build-matlab-osx
     - build-android
+    - build-matlab-toolbox
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
