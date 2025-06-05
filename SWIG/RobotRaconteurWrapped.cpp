@@ -804,32 +804,42 @@ void WrappedServiceStub::RRClose()
 {
     // DIRECTOR_CALL2(DIRECTOR_DELETE( RR_Director));
 
-    boost::unique_lock<boost::shared_mutex> lock2(RR_Director_lock);
+    boost::shared_ptr<WrappedServiceStubDirector> director1;
 
-    for (std::map<std::string, RR_SHARED_PTR<WrappedPipeClient> >::iterator e = pipes.begin(); e != pipes.end(); ++e)
     {
-        e->second->Shutdown();
+        boost::unique_lock<boost::shared_mutex> lock2(RR_Director_lock);
+
+        for (std::map<std::string, RR_SHARED_PTR<WrappedPipeClient> >::iterator e = pipes.begin(); e != pipes.end();
+             ++e)
+        {
+            e->second->Shutdown();
+        }
+
+        for (std::map<std::string, RR_SHARED_PTR<WrappedWireClient> >::iterator e = wires.begin(); e != wires.end();
+             ++e)
+        {
+            e->second->Shutdown();
+        }
+
+        // TODO: fill this in
+        ServiceStub::RRClose();
+        director1 = RR_Director;
+        RR_Director.reset();
     }
 
-    for (std::map<std::string, RR_SHARED_PTR<WrappedWireClient> >::iterator e = wires.begin(); e != wires.end(); ++e)
-    {
-        e->second->Shutdown();
-    }
-
-    // TODO: fill this in
-    ServiceStub::RRClose();
-
-    RR_Director.reset();
+    director1.reset();
 
 #ifdef RR_PYTHON
 
-    boost::mutex::scoped_lock lock(pystub_lock);
-
-    RR_Ensure_GIL py_gil;
-    if (pystub != NULL)
     {
-        DIRECTOR_CALL2(Py_XDECREF(pystub));
-        pystub = NULL;
+        boost::mutex::scoped_lock lock(pystub_lock);
+
+        RR_Ensure_GIL py_gil;
+        if (pystub != NULL)
+        {
+            DIRECTOR_CALL2(Py_XDECREF(pystub));
+            pystub = NULL;
+        }
     }
 #else
     // RR_Director=NULL;
@@ -865,10 +875,15 @@ WrappedServiceStub::~WrappedServiceStub()
 
 void WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int32_t id)
 {
-    boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
-    objectheapid = id;
-    this->RR_Director.reset(director,
-                            boost::bind(&ReleaseDirector<WrappedServiceStubDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
+    boost::shared_ptr<WrappedServiceStubDirector> director2;
+
+    {
+        boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director2 = RR_Director;
+        objectheapid = id;
+        this->RR_Director.reset(
+            director, boost::bind(&ReleaseDirector<WrappedServiceStubDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
+    }
 }
 
 int WrappedServiceStub::GetObjectHeapID() { return objectheapid; }
@@ -1042,8 +1057,11 @@ RR_SHARED_PTR<WrappedServiceStub> WrappedPipeEndpoint::GetStub()
 
 void WrappedPipeEndpoint::Close()
 {
+    boost::shared_ptr<WrappedPipeEndpointDirector> director1;
+
     {
         boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1 = RR_Director;
         RR_Director.reset();
     }
 
@@ -1055,8 +1073,10 @@ void WrappedPipeEndpoint::AsyncClose(int32_t timeout, AsyncVoidReturnDirector* h
     RR_SHARED_PTR<AsyncVoidReturnDirector> sphandler(
         handler, boost::bind(&ReleaseDirector<AsyncVoidReturnDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 
+    boost::shared_ptr<WrappedPipeEndpointDirector> director1;
     {
         boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1 = RR_Director;
         RR_Director.reset();
     }
 
@@ -1403,9 +1423,10 @@ WrappedWireConnection::~WrappedWireConnection()
 void WrappedWireConnection::Close()
 {
 
+    boost::shared_ptr<WrappedWireConnectionDirector> director1;
     {
         boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
-
+        director1 = RR_Director;
         RR_Director.reset();
     }
 
@@ -1417,8 +1438,10 @@ void WrappedWireConnection::AsyncClose(int32_t timeout, AsyncVoidReturnDirector*
     RR_SHARED_PTR<AsyncVoidReturnDirector> sphandler(
         handler, boost::bind(&ReleaseDirector<AsyncVoidReturnDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 
+    boost::shared_ptr<WrappedWireConnectionDirector> director1;
     {
         boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1 = RR_Director;
         RR_Director.reset();
     }
 
@@ -3798,8 +3821,10 @@ std::map<ServiceSubscriptionClientID, ServiceInfo2Wrapped> WrappedServiceInfo2Su
 
 void WrappedServiceInfo2Subscription::Close()
 {
+    boost::shared_ptr<WrappedServiceInfo2SubscriptionDirector> director1;
     {
         boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1 = RR_Director;
         RR_Director.reset();
     }
 
@@ -3890,8 +3915,10 @@ std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<WrappedServiceStub> > Wrappe
 
 void WrappedServiceSubscription::Close()
 {
+    boost::shared_ptr<WrappedServiceSubscriptionDirector> director1;
     {
         boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1 = RR_Director;
         RR_Director.reset();
     }
 
