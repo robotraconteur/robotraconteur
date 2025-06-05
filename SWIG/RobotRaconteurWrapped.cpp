@@ -888,7 +888,9 @@ void WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int
         director2 = RR_Director;
         if (director_closed)
         {
-            return;
+            // TODO: This should not assign the director if the stub has been closed,
+            // but errors occur if it is not
+            // return;
         }
         objectheapid = id;
         this->RR_Director.reset(
