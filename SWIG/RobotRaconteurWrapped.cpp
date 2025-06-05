@@ -189,8 +189,10 @@ WrappedServiceStub::WrappedServiceStub(boost::string_ref path, const RR_SHARED_P
     RR_objecttype = type;
     // this->RR_Director=0;
     this->objectheapid = 0;
+    director_closed = false;
 #ifdef RR_PYTHON
     pystub = NULL;
+    pystub_closed = false;
     // DIRECTOR_CALL2(Py_XINCREF(pystub));
 #endif
 }
@@ -825,6 +827,8 @@ void WrappedServiceStub::RRClose()
         ServiceStub::RRClose();
         director1 = RR_Director;
         RR_Director.reset();
+
+        director_closed = true;
     }
 
     director1.reset();
@@ -833,6 +837,8 @@ void WrappedServiceStub::RRClose()
 
     {
         boost::mutex::scoped_lock lock(pystub_lock);
+
+        pystub_closed = true;
 
         RR_Ensure_GIL py_gil;
         if (pystub != NULL)
@@ -880,6 +886,10 @@ void WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int
     {
         boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
         director2 = RR_Director;
+        if (director_closed)
+        {
+            return;
+        }
         objectheapid = id;
         this->RR_Director.reset(
             director, boost::bind(&ReleaseDirector<WrappedServiceStubDirector>, RR_BOOST_PLACEHOLDERS(_1), id));

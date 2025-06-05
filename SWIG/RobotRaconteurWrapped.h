@@ -455,6 +455,7 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
     boost::shared_mutex RR_Director_lock;
 
     int objectheapid;
+    bool director_closed;
 
   public:
     // WrappedServiceStubDirector* GetRRDirector();
@@ -477,6 +478,8 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
   protected:
     boost::mutex pystub_lock;
     PyObject* pystub;
+
+    bool pystub_closed;
 
   public:
     PyObject* GetPyStub()
@@ -501,6 +504,11 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
     void SetPyStub(PyObject* stub)
     {
         boost::mutex::scoped_lock lock(pystub_lock);
+
+        if (pystub_closed)
+        {
+            return;
+        }
 
         RR_Ensure_GIL py_gil;
 
