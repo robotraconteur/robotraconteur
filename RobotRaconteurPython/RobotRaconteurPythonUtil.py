@@ -395,10 +395,14 @@ def InitStub(stub):
             w._obj = outerstub
 
     director = WrappedServiceStubDirectorPython(outerstub, stub)
-    if stub.SetRRDirector(director, 0):
-        director.__disown__()
-
-    stub.SetPyStub(outerstub)
+    stub.SetRRDirector(director, 0)
+    director_lock = stub.GetRRDirectorLock()
+    try:
+        if director_lock.valid():
+            director.__disown__()
+            stub.SetPyStub(outerstub)
+    finally:
+        del director_lock
 
     outerstub.rrinnerstub = stub
     outerstub.rrlock = threading.RLock()

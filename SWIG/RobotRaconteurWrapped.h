@@ -353,6 +353,15 @@ class AsyncTimerEventReturnDirector
     virtual void handler(const TimerEvent& ret, HandlerErrorInfo& error) = 0;
 };
 
+class WrappedDirectorLock
+{
+    boost::shared_ptr<void> director_storage;
+
+  public:
+    WrappedDirectorLock(boost::shared_ptr<void> director) : director_storage(director) {}
+    bool valid() { return (bool)director_storage; }
+};
+
 class WrappedServiceStubDirector
 {
   public:
@@ -460,6 +469,7 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
   public:
     // WrappedServiceStubDirector* GetRRDirector();
     bool SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
+    boost::shared_ptr<WrappedDirectorLock> GetRRDirectorLock();
 
     std::map<std::string, RR_SHARED_PTR<WrappedPipeClient> > pipes;
     std::map<std::string, RR_SHARED_PTR<WrappedWireClient> > wires;

@@ -897,6 +897,12 @@ bool WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int
     }
 }
 
+boost::shared_ptr<WrappedDirectorLock> WrappedServiceStub::GetRRDirectorLock()
+{
+    boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+    return boost::make_shared<WrappedDirectorLock>(RR_Director);
+}
+
 int WrappedServiceStub::GetObjectHeapID() { return objectheapid; }
 
 // Wrapped Pipe Endpoint
