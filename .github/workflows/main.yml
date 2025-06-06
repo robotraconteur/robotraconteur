@@ -1888,6 +1888,8 @@ jobs:
         - noetic
         - humble
         - jazzy
+        - kilted
+        - rolling
     steps:
     - uses: actions/checkout@v4
       with:
@@ -1919,6 +1921,8 @@ jobs:
         ROS_DISTRO:
         - humble
         - jazzy
+        - kilted
+        - rolling
     steps:
     - uses: actions/checkout@v4
       with:
