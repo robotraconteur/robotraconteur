@@ -114,7 +114,7 @@ RR_KEEP_GIL()
 
 
 
-	void SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
+	bool SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
 
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> RRGetNode();
 
