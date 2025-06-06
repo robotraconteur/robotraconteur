@@ -254,6 +254,7 @@ static RR_INTRUSIVE_PTR<MessageElement> MessageSerializationTest_NewRandomMessag
 
     default:
         BOOST_ASSERT(false);
+        throw std::runtime_error("internal error");
     }
 }
 
@@ -569,6 +570,7 @@ static RR_INTRUSIVE_PTR<MessageElement> MessageSerializationTest4_NewRandomMessa
     }
     default:
         BOOST_ASSERT(false);
+        throw std::runtime_error("internal error");
     }
 }
 
