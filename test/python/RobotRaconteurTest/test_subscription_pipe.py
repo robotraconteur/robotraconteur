@@ -135,7 +135,7 @@ def test_pipe_subscription():
 
         res, val = pipe_sub.TryReceivePacketWait(1)
         assert res and val == 3.0
-        time.sleep(0.005)
+        pipe_sub.TryReceivePacketWait(1, True)
         assert pipe_sub.Available == 1
         res, val = pipe_sub.TryReceivePacketWait(1, True)
         assert res and val == 4.0
