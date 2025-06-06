@@ -26,6 +26,8 @@ jobs:
         - humble
         - iron
         - jazzy
+        - kilted
+        - rolling
     steps:
     - uses: actions/checkout@v4
       with:
@@ -45,8 +47,9 @@ jobs:
       matrix:
         ROS_DISTRO:
         - humble
-        - iron
         - jazzy
+        - kilted
+        - rolling
     steps:
     - uses: actions/checkout@v4
       with:

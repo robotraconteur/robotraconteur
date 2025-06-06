@@ -16,6 +16,8 @@
 ![ros-humble](https://img.shields.io/ros/v/humble/robotraconteur?styple=flat&logo=ros)
 ![ros-iron](https://img.shields.io/ros/v/iron/robotraconteur?styple=flat&logo=ros)
 ![ros-jazzy](https://img.shields.io/ros/v/jazzy/robotraconteur?styple=flat&logo=ros)
+![ros-kilted](https://img.shields.io/ros/v/kilted/robotraconteur?styple=flat&logo=ros)
+![ros-rolling](https://img.shields.io/ros/v/rolling/robotraconteur?styple=flat&logo=ros)
 
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
