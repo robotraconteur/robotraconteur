@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-22.04, ubuntu-24.04]
     steps:
     - uses: actions/checkout@v4
       with:
@@ -31,20 +31,9 @@ jobs:
       run: sudo add-apt-repository ppa:robotraconteur/robotraconteur-prerelease -y
     - name: apt update
       run: sudo apt update
-    - name: apt python2
-      if: matrix.os != 'ubuntu-20.04'
-      run: >
-        sudo apt-get install python-robotraconteur -q
     - name: apt python3
       run: >
         sudo apt-get install python3-robotraconteur -q
-    - name: test python2
-      if: matrix.os != 'ubuntu-20.04'
-      env:
-        ROBOTRACONTEUR_ROBDEF_PATH: '${{ github.workspace }}/testing/RobotRaconteurTest'
-      run: |
-        cd RobotRaconteurPython/test
-        python RobotRaconteurPythonTest.py loopback
     - name: test python3
       env:
         ROBOTRACONTEUR_ROBDEF_PATH: '${{ github.workspace }}/testing/RobotRaconteurTest'
@@ -71,7 +60,7 @@ jobs:
         ctest . -C Release --output-on-failure
 
   build-win:
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
@@ -159,7 +148,7 @@ jobs:
         cd build
         ctest . -C Release --output-on-failure
   build-osx:
-    runs-on: macos-10.15
+    runs-on: macos-13
 
     steps:
     - uses: actions/checkout@v4
