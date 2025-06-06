@@ -395,8 +395,8 @@ def InitStub(stub):
             w._obj = outerstub
 
     director = WrappedServiceStubDirectorPython(outerstub, stub)
-    stub.SetRRDirector(director, 0)
-    director.__disown__()
+    if stub.SetRRDirector(director, 0):
+        director.__disown__()
 
     stub.SetPyStub(outerstub)
 

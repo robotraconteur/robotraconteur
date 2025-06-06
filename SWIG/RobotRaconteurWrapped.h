@@ -459,7 +459,7 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
 
   public:
     // WrappedServiceStubDirector* GetRRDirector();
-    void SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
+    bool SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
 
     std::map<std::string, RR_SHARED_PTR<WrappedPipeClient> > pipes;
     std::map<std::string, RR_SHARED_PTR<WrappedWireClient> > wires;

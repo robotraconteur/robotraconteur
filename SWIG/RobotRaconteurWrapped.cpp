@@ -879,7 +879,7 @@ WrappedServiceStub::~WrappedServiceStub()
     return RR_Director;
 }*/
 
-void WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int32_t id)
+bool WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int32_t id)
 {
     boost::shared_ptr<WrappedServiceStubDirector> director2;
 
@@ -888,13 +888,12 @@ void WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int
         director2 = RR_Director;
         if (director_closed)
         {
-            // TODO: This should not assign the director if the stub has been closed,
-            // but errors occur if it is not
-            // return;
+            return false;
         }
         objectheapid = id;
         this->RR_Director.reset(
             director, boost::bind(&ReleaseDirector<WrappedServiceStubDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
+        return true;
     }
 }
 
