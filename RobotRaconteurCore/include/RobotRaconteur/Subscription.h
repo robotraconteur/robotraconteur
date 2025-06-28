@@ -1250,7 +1250,7 @@ class WireSubscription : public WireSubscriptionBase
     {
         RR_SHARED_PTR<WireConnectionBase> connection1;
         T o = RRPrimUtil<T>::PreUnpack(GetInValueBase(time, &connection1));
-        if (connection1)
+        if (connection && connection1)
         {
             *connection = RR_DYNAMIC_POINTER_CAST<WireConnection<T> >(connection1);
         }
