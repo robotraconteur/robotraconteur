@@ -2551,7 +2551,7 @@ template <typename T>
 static RR_INTRUSIVE_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t length)
 {
     typedef typename RRPrimUtil<T>::ElementArrayType a_type;
-    RR_INTRUSIVE_PTR<RRArray<a_type> > a = AllocateRRArray<a_type>(length * RRPrimUtil<T>::GetElementArrayCount());
+    RR_INTRUSIVE_PTR<RRArray<a_type> > a = AllocateEmptyRRArray<a_type>(length * RRPrimUtil<T>::GetElementArrayCount());
     return new RRNamedArray<T>(a); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
