@@ -111,6 +111,10 @@ int main(int argc, char* argv[])
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > w1_value;
     TimeSpec w1_time;
     broadcastwire->TryGetInValue(w1_value, &w1_time);
+    broadcastwire->TryGetInValue(w1_value);
+
+    broadcastwire->GetInValue(&w1_time);
+    broadcastwire->GetInValue();
 
     double pipe_val;
     while (broadcastpipe->TryReceivePacket(pipe_val))
