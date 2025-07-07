@@ -5,3 +5,5 @@ set(CMAKE_CXX_COMPILER /usr/bin/g++-9)
 
 set(CMAKE_C_FLAGS "-fPIC")
 set(CMAKE_CXX_FLAGS "-fPIC")
+
+set(CMAKE_CROSSCOMPILING FALSE)
