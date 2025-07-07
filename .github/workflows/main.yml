@@ -1173,16 +1173,16 @@ jobs:
         repository: pyodide/pyodide
         path: src
         submodules: recursive
+    - uses: actions/checkout@v4
+      with:
+        repository: pyodide/pyodide-recipes
+        path: recipes_src
     # - name: ccache deps
     #   uses: actions/cache@v3
     #   with:
     #     path: |
     #       /tmp/dep-ccache
     #     key: pyodide-deps-${{ hashFiles('Makefile.envs') }}
-    - name: cp meta.yaml
-      run: |
-        mkdir -p src/packages/RobotRaconteur
-        cp rr_src/tools/build_files/pyodide/meta.yaml src/packages/RobotRaconteur/meta.yaml
     - name: apt
       run: |
         sudo apt update
@@ -1200,8 +1200,8 @@ jobs:
       run: |
         make -C emsdk
         make -C cpython
-        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
-        make
+        sudo python3 -m pip install pyodide-build --break-system-packages
+        pyodide build-recipes $PYODIDE_PACKAGES2 --recipe-dir=$GITHUB_WORKSPACE/recipes_src/recipes --install
     - name: build pregenerated_src
       run: |
         cmake -S $GITHUB_WORKSPACE/rr_src -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF -DPYTHON3_EXECUTABLE=/usr/local/bin/python3
@@ -1216,8 +1216,7 @@ jobs:
       run: |
         # mkdir -p /tmp/ccache
         ln -s $GITHUB_WORKSPACE/rr_src /rr_src
-        pyodide build-recipes-no-deps RobotRaconteur
-        pyodide build-recipes RobotRaconteur numpy pytest Jinja2 micropip pyyaml --install
+        pyodide build-recipes-no-deps --recipe-dir=$GITHUB_WORKSPACE/rr_src/tools/build_files/pyodide-recipes RobotRaconteur --install
     - name: test
       working-directory: src
       run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
