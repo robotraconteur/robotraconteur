@@ -1190,7 +1190,6 @@ jobs:
     - name: pip-install
       working-directory: src
       run: |
-        pip install pyodide-build
         pip install -r requirements.txt
         pip install numpy
     - name: playwright install
@@ -1200,7 +1199,7 @@ jobs:
       run: |
         make -C emsdk
         make -C cpython
-        sudo python3 -m pip install ./pyodide-build --break-system-packages --root-user-action ignore
+        pip install ./pyodide-build --break-system-packages --root-user-action ignore
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
         pyodide build-recipes $PYODIDE_PACKAGES --recipe-dir=$GITHUB_WORKSPACE/recipes_src/packages --install
     - name: build pregenerated_src
@@ -1217,7 +1216,8 @@ jobs:
       run: |
         # mkdir -p /tmp/ccache
         ln -s $GITHUB_WORKSPACE/rr_src /rr_src
-        pyodide build-recipes-no-deps --recipe-dir=$GITHUB_WORKSPACE/rr_src/tools/build_files/pyodide-recipes RobotRaconteur --install
+        cp -r /rr_src/tools/build_files/pyodide-recipes/* $GITHUB_WORKSPACE/recipes_src/packages
+        pyodide build-recipes --recipe-dir=$GITHUB_WORKSPACE/recipes_src/packages RobotRaconteur --install
     - name: test
       working-directory: src
       run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
