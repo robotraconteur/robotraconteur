@@ -1202,7 +1202,7 @@ jobs:
         make -C cpython
         sudo python3 -m pip install ./pyodide-build --break-system-packages --root-user-action ignore
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
-        pyodide build-recipes $PYODIDE_PACKAGES --recipe-dir=$GITHUB_WORKSPACE/recipes_src/recipes --install
+        pyodide build-recipes $PYODIDE_PACKAGES --recipe-dir=$GITHUB_WORKSPACE/recipes_src/packages --install
     - name: build pregenerated_src
       run: |
         cmake -S $GITHUB_WORKSPACE/rr_src -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF -DPYTHON3_EXECUTABLE=/usr/local/bin/python3
