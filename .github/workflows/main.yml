@@ -1181,6 +1181,7 @@ jobs:
     #     key: pyodide-deps-${{ hashFiles('Makefile.envs') }}
     - name: cp meta.yaml
       run: |
+        mkdir -p src/packages/RobotRaconteur
         cp rr_src/tools/build_files/pyodide/meta.yaml src/packages/RobotRaconteur/meta.yaml
     - name: apt
       run: |
