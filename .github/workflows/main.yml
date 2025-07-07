@@ -1200,7 +1200,7 @@ jobs:
       run: |
         make -C emsdk
         make -C cpython
-        sudo python3 -m pip install pyodide-build --break-system-packages
+        sudo python3 -m pip install pyodide-build --break-system-packages -root-user-action
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
         pyodide build-recipes $PYODIDE_PACKAGES --recipe-dir=$GITHUB_WORKSPACE/recipes_src/recipes --install
     - name: build pregenerated_src
