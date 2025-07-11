@@ -194,11 +194,9 @@ Endpoint::Endpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 
     m_RemoteNodeName.clear();
     m_RemoteNodeID = NodeID::GetAny();
-    // TransportConnection = 0;
     m_LastMessageReceivedTime.store(boost::posix_time::microsec_clock::universal_time());
     m_LastMessageSentTime.store(boost::posix_time::microsec_clock::universal_time());
 
-    // MessageNumberLock = RR_MAKE_SHARED<Object>();
     this->node = node;
 }
 

@@ -141,7 +141,6 @@ void GenerateCPPFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::stri
                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
                       const std::vector<std::string>& cpp_extra_include, const std::string& output_dir)
 {
-    // std::cout << str << std::endl;
 
     CPPServiceLangGen::GenerateFiles(d, def_str, other_defs, cpp_extra_include, output_dir);
 }
@@ -630,14 +629,6 @@ int main(int argc, char* argv[])
 
                     return 1020;
                 }
-
-                // TODO: Verify robdef using regex??
-                /*std::vector<std::string> robdef_msgs;
-                if (!VerifyServiceDefinitionMatchesStandardRegex(alldefs_str.at(i), robdef_msgs))
-                {
-                    std::cout << d->ParseInfo.RobDefFilePath << "(1): error: service definition does not match stdver
-                0.9.2 syntax regex" << std::endl; return 1020;
-                }*/
             }
         }
 

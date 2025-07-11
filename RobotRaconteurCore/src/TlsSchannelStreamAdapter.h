@@ -22,9 +22,6 @@
 #endif
 #endif
 
-//#undef ROBOTRACONTEUR_USE_SCHANNEL
-//#define ROBOTRACONTEUR_USE_OPENSSL
-
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
 #define SECURITY_WIN32
 #endif
@@ -49,7 +46,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <wincrypt.h>
-//#include <wintrust.h>
 #include <schannel.h>
 #include <security.h>
 #include <sspi.h>
@@ -121,9 +117,6 @@ class TlsSchannelAsyncStreamAdapter_ASIO_adapter
 
         void do_complete(const boost::system::error_code& ec, const std::size_t& bytes_transferred)
         {
-            // boost::asio::detail::binder2<Handler, boost::system::error_code, std::size_t>
-            // handler1(handler_, ec, bytes_transferred);
-            // boost_asio_handler_invoke_helpers::invoke(handler1, handler1.handler_);
 
             handler_(ec, bytes_transferred);
         }
@@ -219,7 +212,6 @@ class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsS
     uint32_t send_buffer_end_pos;
     uint32_t recv_buffer_end_pos;
     uint32_t send_buffer_transfer_pos;
-    // uint32_t recv_buffer_transfer_pos;
 
     bool reading;
     bool writing;

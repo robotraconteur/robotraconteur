@@ -1086,25 +1086,6 @@ void HardwareTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message
 
     try
     {
-
-        // TODO: fix this (maybe??)...
-
-        /*boost::asio::ip::address addr=socket->local_endpoint().address();
-        uint16_t port=socket->local_endpoint().port();
-
-        std::string connecturl;
-        if (addr.is_v4())
-        {
-        connecturl="local://" + addr + ":" + boost::lexical_cast<std::string>(port) + "/";
-        }
-        else
-        {
-        boost::asio::ip::address_v6 addr2=addr.to_v6();
-        addr2.scope_id(0);
-        connecturl="tcp://[" + addr2 + "]:" + boost::lexical_cast<std::string>(port) + "/";
-        }
-        */
-
         std::string connecturl = scheme + ":///";
         // NOLINTBEGIN(cppcoreguidelines-owning-memory)
         Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));

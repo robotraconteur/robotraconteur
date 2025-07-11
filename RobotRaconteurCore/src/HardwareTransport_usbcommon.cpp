@@ -1015,9 +1015,6 @@ void UsbDevice_Claim::AsyncCreateTransportConnection2(
         return;
     }
 
-    // ClearHalt(settings->in_pipe_id);
-    // ClearHalt(settings->out_pipe_id);
-
     boost::shared_array<uint8_t> buf2(new uint8_t[1]);
     boost::asio::mutable_buffer buf3(buf2.get(), 0);
     AsyncWritePipe(settings->out_pipe_id, buf3,
@@ -1035,8 +1032,6 @@ void UsbDevice_Claim::AsyncCreateTransportConnection3(
     RR_UNUSED(ec);
     RR_UNUSED(bytes_transferred);
     RR_UNUSED(buf);
-    // ClearHalt(settings->in_pipe_id);
-    // ClearHalt(settings->out_pipe_id);
 
     boost::shared_array<uint8_t> buf2(new uint8_t[2]);
     (*reinterpret_cast<uint16_t*>(buf2.get())) = 0x0101;
@@ -1063,7 +1058,6 @@ void UsbDevice_Claim::AsyncCreateTransportConnection4(
             stream_connection_in_progress--;
             AsyncCreateTransportConnection_err(handler);
         }
-        // handler(RR_SHARED_PTR<ITransportConnection>(), RR_MAKE_SHARED<ConnectionException>("USB Device Error"));
         return;
     }
 
@@ -1955,8 +1949,6 @@ void UsbDeviceTransportConnection::async_write_some(
     if (!connected.load())
         throw ConnectionException("Connection lost");
     boost::mutex::scoped_lock lock(do_write_lock);
-    // TODO: handle write
-    // socket->async_write_some(b, handler);
     RR_SHARED_PTR<UsbDevice_Claim> device1 = device.lock();
     if (!device1)
     {
@@ -1976,8 +1968,6 @@ void UsbDeviceTransportConnection::async_read_some(
     if (!connected.load())
         throw ConnectionException("Connection lost");
     boost::mutex::scoped_lock lock(do_read_lock);
-    // TODO: handle read
-    // socket->async_read_some(b, handler);
     RR_SHARED_PTR<UsbDevice_Claim> device1 = device.lock();
     if (!device1)
     {

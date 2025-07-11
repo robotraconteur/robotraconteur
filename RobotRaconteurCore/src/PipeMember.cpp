@@ -103,7 +103,6 @@ void PipeEndpointBase::AsyncClose(boost::function<void(const RR_SHARED_PTR<Robot
 
     {
         boost::mutex::scoped_lock lock(recvlock);
-        // recv_packets.clear();
         closed = true;
         recv_packets_wait.notify_all();
     }
@@ -142,8 +141,6 @@ void PipeEndpointBase::RemoteClose()
     try
     {
         boost::mutex::scoped_lock lock(sendlock);
-        // if (parent.expired()) return;
-        // boost::mutex::scoped_lock lock2 (recvlock);
         GetParent()->AsyncClose(shared_from_this(), true, endpoint, &PipeEndpointBase_RemoteClose_emptyhandler, 1000);
     }
     catch (std::exception&)
@@ -483,7 +480,6 @@ void PipeBase::DispatchPacketAck(const RR_INTRUSIVE_PTR<MessageElement>& me, con
 bool PipeBase::DispatchPacket(const RR_INTRUSIVE_PTR<MessageElement>& me, const RR_SHARED_PTR<PipeEndpointBase>& e,
                               uint32_t& packetnumber)
 {
-    // int32_t index=boost::lexical_cast<int32_t>(me->ElementName);
 
     // Use message 2
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> elems1 = me->CastDataToNestedList(DataTypes_dictionary_t);
@@ -554,7 +550,6 @@ std::string PipeClientBase::GetMemberName() { return m_MemberName; }
 void PipeClientBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     RR_UNUSED(e);
-    // boost::shared_lock<boost::shared_mutex> lock(stub_lock);
 
     if (m->EntryType == MessageEntryType_PipeClosed)
     {
@@ -758,8 +753,6 @@ void PipeClientBase::Shutdown()
     }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "PipeClient shut down");
-
-    // stub.reset();
 }
 
 void PipeClientBase::AsyncSendPipePacket(
@@ -995,7 +988,6 @@ std::string PipeServerBase::GetMemberName() { return m_MemberName; }
 
 void PipeServerBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
-    // boost::shared_lock<boost::shared_mutex> lock2(skel_lock);
 
     if (m->EntryType == MessageEntryType_PipePacket)
     {
@@ -1141,11 +1133,7 @@ void PipeServerBase::Shutdown()
             {
                 RobotRaconteurNode::TryHandleException(node, &exp);
             }
-
-            //(endpoint)->second->RemoteClose();
         }
-
-        // skel.reset();
 
         listener_connection.disconnect();
     }
@@ -1198,7 +1186,7 @@ void PipeServerBase::AsyncClose(const RR_SHARED_PTR<PipeEndpointBase>& e, bool r
 void PipeServerBase::DeleteEndpoint(const RR_SHARED_PTR<PipeEndpointBase>& e)
 {
     boost::mutex::scoped_lock lock(pipeendpoints_lock);
-    // if (pipeendpoints.count(pipe_endpoint_server_id(e->GetEndpoint(),e->GetIndex()))==0) return;
+
     pipeendpoints.erase(pipe_endpoint_server_id(e->GetEndpoint(), e->GetIndex()));
 }
 
@@ -1222,7 +1210,7 @@ void PipeServerBase::ClientDisconnected(const RR_SHARED_PTR<ServerContext>& cont
             {
                 if (ee->first.endpoint == ep)
                 {
-                    // ee->second->RemoteClose();
+
                     p.push_back(ee->second);
 
                     ee = pipeendpoints.erase(ee);
@@ -1369,7 +1357,6 @@ RR_INTRUSIVE_PTR<MessageEntry> PipeServerBase::PipeCommand(const RR_INTRUSIVE_PT
 
                 lock.unlock();
                 ee->RemoteClose();
-                // ep.erase(index);
 
                 return CreateMessageEntry(MessageEntryType_PipeDisconnectRet, GetMemberName());
             }
@@ -1421,7 +1408,7 @@ class PipeBroadcasterBase_connected_endpoint
   public:
     PipeBroadcasterBase_connected_endpoint(const RR_SHARED_PTR<PipeEndpointBase>& ep)
     {
-        // backlog=0;
+
         endpoint = ep;
         active_send_count = 0;
     }

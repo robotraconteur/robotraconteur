@@ -2120,6 +2120,7 @@ void WireSubscriptionBase::ClientDisconnected(const ServiceSubscriptionClientID&
 
 void WireSubscriptionBase::WireConnectionClosed(const RR_SHARED_PTR<detail::WireSubscription_connection>& wire)
 {
+    // TODO:
     // boost::mutex::scoped_lock lock(this_lock);
     // connections.erase(wire);
 }
@@ -2698,8 +2699,6 @@ void PipeSubscriptionBase::PipeEndpointClosed(const RR_SHARED_PTR<detail::PipeSu
 void PipeSubscriptionBase::PipeEndpointPacketReceived(const RR_SHARED_PTR<detail::PipeSubscription_connection>& pipe,
                                                       const RR_INTRUSIVE_PTR<RRValue>& value)
 {
-    // RR_SHARED_PTR<RRObject> client = wire->client.lock();
-    // if (!client) return;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername,
                                             "Pipe subscription received packet");

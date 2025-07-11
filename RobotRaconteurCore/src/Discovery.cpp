@@ -73,7 +73,6 @@ void Discovery_updatediscoverednodes::timeout_timer_callback(const TimerEvent& e
     if (!e.stopped)
     {
         {
-            // boost::mutex::scoped_lock lock(searching_lock);
             if (!searching)
                 return;
             searching = false;
@@ -102,7 +101,6 @@ void Discovery_updatediscoverednodes::getdetectednodes_callback(
 
     bool c = false;
     {
-        // boost::mutex::scoped_lock lock(searching_lock);
         c = searching;
     }
 
@@ -126,7 +124,6 @@ void Discovery_updatediscoverednodes::getdetectednodes_callback(
     if (done)
     {
         {
-            // boost::mutex::scoped_lock lock(searching_lock);
             c = searching;
             searching = false;
         }
@@ -230,7 +227,6 @@ void Discovery_findservicebytype::handle_error(const int32_t& key, const RR_SHAR
     boost::recursive_mutex::scoped_lock lock2(work_lock);
 
     {
-        // boost::mutex::scoped_lock lock(searching_lock);
         if (!searching)
             return;
     }
@@ -249,7 +245,6 @@ void Discovery_findservicebytype::handle_error(const int32_t& key, const RR_SHAR
     // All activities have completed, assume failure
 
     {
-        // boost::mutex::scoped_lock lock(searching_lock);
         searching = false;
     }
 
@@ -276,7 +271,6 @@ void Discovery_findservicebytype::timeout_timer_callback(const TimerEvent& e)
     if (!e.stopped)
     {
         {
-            // boost::mutex::scoped_lock lock(searching_lock);
             if (!searching)
                 return;
             searching = false;
@@ -323,7 +317,6 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
 
     bool c = false;
     {
-        // boost::mutex::scoped_lock lock(searching_lock);
         c = searching;
     }
     if (!c)
@@ -383,19 +376,6 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
 
                             ServiceInfo2 si(*ii, *n);
 
-                            // TODO: what is this?
-                            BOOST_FOREACH (std::string& iii, si.ConnectionURL)
-                            {
-                                /*if (!boost::starts_with(*iii, scheme + "://"))
-                                {
-                                boost::smatch url_result2;
-                                boost::regex_search(*iii, url_result2, reg);
-
-                                if (url_result2.size() < 3) continue;
-                                *iii = scheme + "://" + url_result2[2];
-
-                                }*/
-                            }
                             this->ret->push_back(si);
                         }
                         else
@@ -408,19 +388,7 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
                                     boost::mutex::scoped_lock lock(ret_lock);
 
                                     ServiceInfo2 si(*ii, *n);
-                                    // TODO: What is this?
-                                    BOOST_FOREACH (std::string& iii, si.ConnectionURL)
-                                    {
-                                        /*if (!boost::starts_with(*iii, scheme + "://"))
-                                        {
-                                        boost::smatch url_result2;
-                                        boost::regex_search(*iii, url_result2, reg);
 
-                                        if (url_result2.size() < 3) continue;
-                                        *iii = scheme + "://" + url_result2[2];
-
-                                        }*/
-                                    }
                                     this->ret->push_back(si);
                                     break;
                                 }
@@ -452,7 +420,6 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
 
                 bool c2 = false;
                 {
-                    // boost::mutex::scoped_lock lock(searching_lock);
                     c2 = searching;
                     searching = false;
                 }
@@ -503,7 +470,6 @@ void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>
 
     bool c = false;
     {
-        // boost::mutex::scoped_lock lock(searching_lock);
         c = searching;
     }
     if (!c)
@@ -658,12 +624,11 @@ void Discovery_findservicebytype::AsyncFindServiceByType(
                                           boost::bind(&Discovery_findservicebytype::timeout_timer_callback,
                                                       shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
                                           true);
-
+        // TODO: check this
         // timeout_timer->Start();
     }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "FindServiceByType begin update detected nodes");
-    // int32_t timeout2=(timeout==RR_TIMEOUT_INFINITE) ? RR_TIMEOUT_INFINITE : timeout/4;
     node->AsyncUpdateDetectedNodes(schemes, boost::bind(&Discovery_findservicebytype::find2, shared_from_this()),
                                    timeout / 4);
 }
@@ -1573,8 +1538,6 @@ void Discovery::NodeAnnouncePacketReceived(boost::string_ref packet)
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "Parsing discovery text packet failed: " << exp.what());
     };
-
-    // Console.WriteLine(packet);
 }
 
 void Discovery::CleanDiscoveredNodes()

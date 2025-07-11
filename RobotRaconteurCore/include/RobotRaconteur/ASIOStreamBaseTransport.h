@@ -232,11 +232,6 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
     virtual void AsyncPauseSend(const boost::function<void(const boost::system::error_code&)>& handler);
     virtual void AsyncResumeSend();
 
-    // virtual void EndReceiveMessage(const boost::system::error_code& error,
-    // size_t bytes_transferred,  const boost::shared_array<uint8_t>& buf);
-
-    // virtual void EndReceiveMessage2(const RR_SHARED_PTR<RobotRaconteur::Message>& message);
-
     virtual void BeginReceiveMessage1();
 
     virtual void EndReceiveMessage1(size_t startpos, const boost::system::error_code& error, size_t bytes_transferred);

@@ -44,7 +44,6 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackStructure(const RR_INTRUSI
     std::string type = structure->RRType();
 
     boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -63,7 +62,6 @@ RR_INTRUSIVE_PTR<RRStructure> UnpackStructure(const RR_INTRUSIVE_PTR<MessageElem
     const MessageStringPtr& type = structure->TypeName;
 
     boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -80,7 +78,6 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodArray(const RR_INTRUSIV
     boost::string_ref type = a->RRElementTypeString();
 
     boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -97,7 +94,6 @@ RR_INTRUSIVE_PTR<RRPodBaseArray> UnpackPodArray(const RR_INTRUSIVE_PTR<MessageEl
     const MessageStringPtr& type = a->TypeName;
 
     boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -114,7 +110,6 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackPodMultiDimArray(
     boost::string_ref type = a->RRElementTypeString();
 
     boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -131,7 +126,6 @@ RR_INTRUSIVE_PTR<RRPodBaseMultiDimArray> UnpackPodMultiDimArray(
     const MessageStringPtr& type = a->TypeName;
 
     boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -148,7 +142,6 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedArray(const RR_INTRUS
     boost::string_ref type = a->RRElementTypeString();
 
     boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -166,7 +159,6 @@ RR_INTRUSIVE_PTR<RRNamedBaseArray> UnpackNamedArray(const RR_INTRUSIVE_PTR<Messa
     const MessageStringPtr& type = a->TypeName;
 
     boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -183,7 +175,6 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> PackNamedMultiDimArray(
     boost::string_ref type = a->RRElementTypeString();
 
     boost::string_ref servicetype = SplitQualifiedName(type).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 
@@ -201,7 +192,6 @@ RR_INTRUSIVE_PTR<RRNamedBaseMultiDimArray> UnpackNamedMultiDimArray(
     const MessageStringPtr& type = a->TypeName;
 
     boost::string_ref servicetype = SplitQualifiedName(type.str()).get<0>();
-    // std::string structuretype=res[1];
 
     RR_SHARED_PTR<ServiceFactory> factory = check_node_null(node)->GetServiceType(servicetype);
 

@@ -134,7 +134,6 @@ void AsyncMessageReaderImpl::prepare_continue(const const_buffers& other_bufs1, 
     }
 
     other_bufs_used = boost::asio::buffer_size(other_bufs1) - boost::asio::buffer_size(this->other_bufs);
-    // other_bufs.clear();
 }
 
 size_t AsyncMessageReaderImpl::available()

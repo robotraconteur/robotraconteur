@@ -306,7 +306,7 @@ class PodStub<pod_field_array<T, N, varlength> >
             throw NullValueException("Unexpected null array");
         if (a->TypeName != RRPrimUtil<T>::GetElementTypeString())
             throw DataTypeException("Pod data type mismatch");
-        // if (a->Elements.size() > N) throw OutOfRangeException("Array is too large for static vector size");
+
         v.resize(a->Elements.size());
         for (int32_t i = 0; i < boost::numeric_cast<int32_t>(a->Elements.size()); i++)
         {

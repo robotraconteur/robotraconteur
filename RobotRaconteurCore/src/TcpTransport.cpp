@@ -147,14 +147,6 @@ void TcpConnector::Connect(
 
             ParseConnectionURLResult url_res = ParseConnectionURL(e);
 
-            /*boost::smatch url_result;
-            boost::regex_search(*e,url_result,boost::regex("^([^:]+)://((?:\\[[A-Fa-f0-9:]+(?:\\%\\w*)?\\])|(?:[^\\[\\]\\:]+)):([^:/]+)/?(.*)$"));
-
-            if (url_result.size()<4) throw InvalidArgumentException("Malformed URL");
-
-            if (url_result[1]!="tcp" && url_result[1]!="tcps") throw InvalidArgumentException("Invalid transport type
-            for TcpTransport");*/
-
             if (url_res.scheme != "tcp" && url_res.scheme != "rr+tcp" && url_res.scheme != "rrs+tcp")
                 throw InvalidArgumentException("Invalid transport type for TcpTransport");
             if (url_res.host.empty())
@@ -220,7 +212,6 @@ void TcpConnector::Connect(
                                                                        key2, boost::asio::placeholders::error,
                                                                        boost::asio::placeholders::results, callback));
 #endif
-                    // std::cout << "Begin resolve" << std::endl;
 
                     active.push_back(key2);
                 }
@@ -272,7 +263,6 @@ void TcpConnector::connect2(int32_t key, const boost::system::error_code& err,
         return;
     }
 
-    // std::cout << "End resolve" << std::endl;
     try
     {
 
@@ -514,23 +504,6 @@ void TcpConnector::connected_callback(const RR_SHARED_PTR<boost::asio::ip::tcp::
 
         if (!c)
         {
-            /*std:: cout << "closing" << std::endl;
-            try
-            {
-            socket->set_option(boost::asio::ip::tcp::socket::linger(true,5));
-            }
-            catch (...) {}
-            try
-            {
-            socket->shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-            }
-            catch(...) {}
-            try
-            {
-            socket->close();
-            }
-            catch(...) {}*/
-
             return;
         }
 
@@ -584,7 +557,6 @@ void TcpConnector::connected_callback2(const RR_SHARED_PTR<boost::asio::ip::tcp:
             catch (std::exception&)
             {}
         }
-        // callback(RR_SHARED_PTR<TcpTransportConnection>(),err);
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
             node, Transport, endpoint,
             "Error attaching transport to socket: " << TcpTransport_socket_remote_endpoint(socket));
@@ -606,7 +578,6 @@ void TcpConnector::connected_callback2(const RR_SHARED_PTR<boost::asio::ip::tcp:
 
                 try
                 {
-                    // std::cout << "Closing 2" << std::endl;
                     connection->Close();
                 }
                 catch (std::exception&)
@@ -627,7 +598,6 @@ void TcpConnector::connected_callback2(const RR_SHARED_PTR<boost::asio::ip::tcp:
         try
         {
 
-            // std::cout << "connect callback" << std::endl;
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, endpoint,
                                                "TcpConnector connected transport to "
                                                    << TcpTransport_socket_remote_endpoint(socket));
@@ -702,7 +672,6 @@ void TcpConnector::handle_error(const int32_t& key, const RR_SHARED_PTR<RobotRac
         if (!active.empty())
             return;
 
-        // return;
         // All activities have completed, assume failure
 
         c = connecting;
@@ -1159,8 +1128,6 @@ void TcpWebSocketConnector::Connect(
         if (url_res.scheme != "rr+ws" && url_res.scheme != "rrs+ws")
             throw InvalidArgumentException("Invalid transport type for TcpTransport");
 
-        // if (url_result[1]!="tcp") throw InvalidArgumentException("Invalid transport type for TcpTransport");
-
         std::string host = url_res.host;
         std::string port = boost::lexical_cast<std::string>(url_res.port);
 
@@ -1177,7 +1144,6 @@ void TcpWebSocketConnector::Connect(
         }
         if (url_res.host.empty())
             throw ConnectionException("Invalid host for websocket transport");
-        // std::cout << ws_url << std::endl;
 
         RR_SHARED_PTR<detail::websocket_tcp_connector> socket_connector =
             RR_MAKE_SHARED<detail::websocket_tcp_connector>(
@@ -1433,8 +1399,6 @@ void TcpWSSWebSocketConnector::Connect(
         if (url_res.scheme != "rr+wss" && url_res.scheme != "rrs+wss")
             throw InvalidArgumentException("Invalid transport type for TcpTransport");
 
-        // if (url_result[1]!="tcp") throw InvalidArgumentException("Invalid transport type for TcpTransport");
-
         std::string host = url_res.host;
         servername = host;
         std::string port = boost::lexical_cast<std::string>(url_res.port);
@@ -1452,7 +1416,6 @@ void TcpWSSWebSocketConnector::Connect(
         }
         if (url_res.host == "")
             throw ConnectionException("Invalid host for usb transport");
-        // std::cout << ws_url << std::endl;
 
         RR_SHARED_PTR<detail::websocket_tcp_connector> socket_connector =
             RR_MAKE_SHARED<detail::websocket_tcp_connector>(
@@ -1774,8 +1737,6 @@ void TcpWSSWebSocketConnector::Connect(
         if (url_res.scheme != "rr+wss" && url_res.scheme != "rrs+wss")
             throw InvalidArgumentException("Invalid transport type for TcpTransport");
 
-        // if (url_result[1]!="tcp") throw InvalidArgumentException("Invalid transport type for TcpTransport");
-
         std::string host = url_res.host;
         servername = host;
         std::string port = boost::lexical_cast<std::string>(url_res.port);
@@ -1793,8 +1754,6 @@ void TcpWSSWebSocketConnector::Connect(
             std::string url1 = RR_MOVE(url.to_string());
             ws_url = boost::replace_first_copy(url1, "rrs+wss", "wss");
         }
-
-        // std::cout << ws_url << std::endl;
 
         RR_SHARED_PTR<detail::websocket_tcp_connector> socket_connector =
             RR_MAKE_SHARED<detail::websocket_tcp_connector>(
@@ -2722,7 +2681,6 @@ void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::addre
         HeapFree(GetProcessHeap(), 0, pAddresses);
     }
 #else
-    // TODO fill this in
     struct ifaddrs* ifaddr = NULL;
     struct ifaddrs* ifa = NULL;
 
@@ -2761,13 +2719,6 @@ void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::addre
     {
         throw SystemResourceException("Could not get any local IP addresses");
     }
-
-    /*for(std::vector<boost::asio::ip::address>::iterator e=addresses.begin(); e!=addresses.end(); ++e)
-    {
-        std::cout << e->to_string() << std::endl;
-    }
-
-    std::cout << std::endl;*/
 }
 
 void TcpTransport::handle_accept(const RR_SHARED_PTR<TcpTransport>& parent,
@@ -2794,7 +2745,6 @@ void TcpTransport::handle_accept(const RR_SHARED_PTR<TcpTransport>& parent,
             }
         }
 
-        // TcpTransport_attach_transport(parent,socket,"",true,0,boost::bind(&TcpTransport_connected_callback2,parent,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)));
         RR_SHARED_PTR<detail::TcpAcceptor> a = RR_MAKE_SHARED<detail::TcpAcceptor>(parent, "", 0);
         boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
                              const RR_SHARED_PTR<RobotRaconteurException>&)>
@@ -3192,6 +3142,7 @@ void TcpTransport::register_transport(const RR_SHARED_PTR<ITransportConnection>&
 {
     boost::mutex::scoped_lock lock(TransportConnections_lock);
     TransportConnections.insert(std::make_pair(connection->GetLocalEndpoint(), connection));
+    // TODO
     // RR_WEAK_PTR<ITransportConnection> w=connection;
     // std::remove(incoming_TransportConnections.begin(), incoming_TransportConnections.end(), w);
 }
@@ -3200,6 +3151,7 @@ void TcpTransport::incoming_transport(const RR_SHARED_PTR<ITransportConnection>&
 {
     RR_UNUSED(connection);
     boost::mutex::scoped_lock lock(TransportConnections_lock);
+    // TODO
     // incoming_TransportConnections.push_back(connection);
 }
 
@@ -3960,20 +3912,6 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(
 }
 #endif
 
-/*void TcpTransportConnection::do_starttls3(const RR_SHARED_PTR<RobotRaconteurException>& error,
-const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
-{
-    if (error)
-    {
-        callback(error);
-        return;
-    }
-
-    AsyncPauseSend(boost::bind(&TcpTransportConnection::do_starttls1,
-RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()),
-RR_BOOST_PLACEHOLDERS(_1),boost::protect(callback)));
-}*/
-
 void TcpTransportConnection::do_starttls1(
     const std::string& noden, const boost::system::error_code& error,
     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
@@ -4008,8 +3946,6 @@ void TcpTransportConnection::do_starttls1(
         RR_INTRUSIVE_PTR<Message> m = CreateMessage();
         m->header = CreateMessageHeader();
         m->header->ReceiverNodeName = target_nodename;
-        // m->header->SenderNodeName = GetNode()->NodeName();
-        // m->header->SenderNodeID = GetNode()->NodeID();
         m->header->ReceiverNodeID = target_nodeid;
 
         RR_INTRUSIVE_PTR<MessageEntry> mm = CreateMessageEntry(MessageEntryType_StreamOp, "STARTTLS");
@@ -4054,7 +3990,6 @@ void TcpTransportConnection::do_starttls1(
 
         starttls_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(
             new boost::asio::deadline_timer(_io_context, boost::posix_time::milliseconds(5000)));
-        // RR_WEAK_PTR<ASIOStreamBaseTransport> t=RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this());
         boost::system::error_code ec1(boost::system::errc::timed_out, boost::system::generic_category());
         RobotRaconteurNode::asio_async_wait(
             node, starttls_timer,
@@ -4089,8 +4024,6 @@ void TcpTransportConnection::do_starttls1(
         callback(RR_MAKE_SHARED<ConnectionException>("Could not initialize TLS connection"));
         return;
     }
-
-    // callback(RR_SHARED_PTR<RobotRaconteurException>());
 }
 
 void TcpTransportConnection::do_starttls2(
@@ -4424,8 +4357,6 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
 
 #endif
 
-    // lock.unlock();
-
     try
     {
         AsyncResumeSend();
@@ -4542,11 +4473,6 @@ void TcpTransportConnection::do_starttls7(const boost::system::error_code& error
     }
 
     boost::mutex::scoped_lock lock(send_lock);
-
-    /*{
-        boost::mutex::scoped_lock lock1(socket_lock);
-        is_tls=true;
-    }*/
 
     RR_INTRUSIVE_PTR<Message> mret = CreateMessage();
     mret->header = CreateMessageHeader();
@@ -5020,14 +4946,8 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
         {
             boost::asio::ip::address_v6 addr2 = addr.to_v6();
             addr2.scope_id(0);
-            /*if (addr2.is_v4_mapped())
-            {
-                connecturl = scheme + "://" + addr2.to_v4() + ":" + boost::lexical_cast<std::string>(port)+"/";
-            }
-            else
-            {*/
+
             connecturl = scheme + "://[" + addr2.to_string() + "]:" + boost::lexical_cast<std::string>(port) + "/";
-            //}
         }
 
         // NOLINTBEGIN(cppcoreguidelines-owning-memory)
@@ -5555,8 +5475,6 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
             return false;
         }
 
-        // lock2.unlock();
-
         RR_SHARED_PTR<TcpTransport> p = parent.lock();
         if (!p)
             throw InvalidOperationException("Transport shutdown");
@@ -5742,8 +5660,6 @@ void IPNodeDiscovery::start_listen_sockets2(int32_t key, const boost::system::er
                 has_ip6 = true;
         }
 
-        // has_ip6=true;
-
         ip4_listen = RR_SHARED_PTR<boost::asio::ip::udp::socket>(
             new boost::asio::ip::udp::socket(GetNode()->GetThreadPool()->get_io_context()));
 
@@ -5903,8 +5819,6 @@ void IPNodeDiscovery::handle_receive(const boost::system::error_code& error, std
         if (!listening)
             return;
     }
-
-    // if (error) return;
 
     if (!error)
     {
@@ -6145,9 +6059,6 @@ void IPNodeDiscovery::StartAnnouncingNode(uint32_t flags)
         node, broadcast_timer,
         boost::bind(&IPNodeDiscovery::handle_broadcast_timer, shared_from_this(), boost::asio::placeholders::error));
 
-    // RobotRaconteurNode::TryPostToThreadPool(node,
-    // boost::bind(&IPNodeDiscovery::handle_broadcast_timer,shared_from_this(),boost::system::error_code()));
-
     start_listen_sockets();
 }
 
@@ -6177,31 +6088,6 @@ void IPNodeDiscovery::handle_broadcast_timer(const boost::system::error_code& er
 
     if (!announce_listen_endpoints.empty())
     {
-
-        /*Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string("tcp://localhost:0/"));
-        RR_SHARED_PTR<ServiceIndexer> indexer=RR_MAKE_SHARED<ServiceIndexer>();
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteurServiceIndex::ServiceInfo> >
-        services=indexer->GetLocalNodeServices(); Transport::m_CurrentThreadTransportConnectionURL.reset(0);
-
-        std::vector<std::string> service_data2;
-        for (std::map<int32_t,RR_INTRUSIVE_PTR<RobotRaconteurServiceIndex::ServiceInfo> >::iterator
-        e=services->map.begin(); e!=services->map.end(); e++)
-        {
-        std::vector<std::string> implements;
-        implements.push_back(e->second->RootObjectType);
-        RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char> > > impl=
-        e->second->RootObjectImplements; for (std::map<int32_t,RR_INTRUSIVE_PTR<RRArray<char> > >::iterator
-        e2=impl->map.begin(); e2!=impl->map.end(); e2++)
-        {
-        implements.push_back(RRArrayToString(e2->second));
-        }
-
-        std::string one="Service: " + e->second->Name + "=" + boost::join(implements,",");
-        service_data2.push_back(one);
-
-        }
-        std::string service_data=boost::join(service_data2,"\n");
-        */
 
         std::vector<std::string> tcpschemes;
         // tcpschemes.push_back("tcp");
@@ -6717,13 +6603,6 @@ void TcpTransportPortSharerClient::client_thread()
                 RR_SHARED_PTR<RobotRaconteurNode> node = GetParent()->GetNode();
                 l.reset(new boost::asio::windows::stream_handle(node->GetThreadPool()->get_io_context(), h));
 
-                /*if (!detail::LocalTransportUtil::IsPipeSameUserOrService(l->native_handle(), true))
-                {
-                    l.reset();
-                    delay_event->WaitOne(1000);
-                    continue;
-                }*/
-
                 localsocket = l;
             }
 
@@ -6930,8 +6809,6 @@ void TcpTransportPortSharerClient::IncomingSocket(const RR_SHARED_PTR<boost::asi
     {
         socket->set_option(boost::asio::ip::tcp::socket::linger(true, 5));
 
-        // TcpTransport_attach_transport(parent1, socket, "", true, 0, boost::bind(&TcpTransport_connected_callback2,
-        // parent1, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3)));
         RR_SHARED_PTR<detail::TcpAcceptor> a = RR_MAKE_SHARED<detail::TcpAcceptor>(parent1, "", 0);
         boost::function<void(RR_SHARED_PTR<boost::asio::ip::tcp::socket>, const RR_SHARED_PTR<ITransportConnection>&,
                              const RR_SHARED_PTR<RobotRaconteurException>&)>

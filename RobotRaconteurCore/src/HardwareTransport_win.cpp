@@ -506,7 +506,6 @@ void WinUsbDevice_Initialize::AsyncControlTransferNoLock(
     uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
     boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
 {
-    // boost::mutex::scoped_lock lock(this_lock);
     WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest,
                                         wValue, wIndex, buf, handler, dev_h);
 }
@@ -540,7 +539,6 @@ void WinUsbDevice_Claim::AsyncControlTransferNoLock(
     uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
     boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
 {
-    // boost::mutex::scoped_lock lock(this_lock);
     RR_SHARED_PTR<void> dev_h1 = dev_h;
     if (!dev_h1)
     {
@@ -644,10 +642,6 @@ UsbDeviceStatus WinUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
         || !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, RAW_IO, sizeof(b_true), &b_true)
         || !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, ALLOW_PARTIAL_READS, sizeof(b_false),
                                     &b_false)
-        /*!f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, SHORT_PACKET_TERMINATE, sizeof(b_true),
-                                 &b_true) //||*/
-        /*!f->WinUsb_ResetPipe(h->hInterface.get(), settings->in_pipe_id) ||
-        !f->WinUsb_ResetPipe(h->hInterface.get(), settings->out_pipe_id))*/)
     {
         return Error;
     }
@@ -684,8 +678,6 @@ void WinUsbDevice_Claim::ClearHalt(uint8_t ep)
 
     if (!device_handle)
         return;
-
-    // f->WinUsb_ResetPipe(device_handle->hInterface.get(), ep);
 }
 
 // WinUsbDevice

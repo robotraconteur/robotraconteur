@@ -350,11 +350,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
 
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
-    /*public Message SendRequest(Message m)
-    {
-        return null;
-    }*/
-
   public:
     /**
      * @brief Construct a new ServerContext instance
@@ -400,8 +395,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     virtual void SendWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e);
 
   private:
-    // boost::mutex rec_sync;
-
     bool base_object_set;
 
   protected:
