@@ -1156,81 +1156,84 @@ jobs:
         path: build2/*
         retention-days: 2
   build-pyodide:
-    runs-on: ubuntu-22.04
-    container: pyodide/pyodide-env:20250311-chrome134-firefox136-py313
+    runs-on: ubuntu-latest
     env:
       EMSDK_NUM_CORES: 3
       EMCC_CORES: 3
       PYODIDE_JOBS: 3
-      #CCACHE_DIR: /tmp/dep-ccache
-      HOME: /root
+    defaults:
+      run:
+        shell: bash -el {0}
     steps:
     - uses: actions/checkout@v4
       with:
-        path: rr_src
+        path: robotraconteur
     - uses: actions/checkout@v4
       with:
         repository: pyodide/pyodide
-        path: src
+        path: pyodide_src
         submodules: recursive
+    - uses: actions/checkout@v4
+      with:
+        repository: pyodide/pyodide-recipes
+        path: pyodide_recipes_src
     # - name: ccache deps
     #   uses: actions/cache@v3
     #   with:
     #     path: |
     #       /tmp/dep-ccache
     #     key: pyodide-deps-${{ hashFiles('Makefile.envs') }}
-    - name: cp meta.yaml
-      run: |
-        cp rr_src/tools/build_files/pyodide/meta.yaml src/packages/RobotRaconteur/meta.yaml
     - name: apt
       run: |
         sudo apt update
-        sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev
+        sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev j2cli
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        activate-environment: pyodide-env
+        environment-file: pyodide_src/environment.yml
+        channels: conda-forge
     - name: pip-install
-      working-directory: src
+      working-directory: pyodide_src
       run: |
-        pip install pyodide-build
         pip install -r requirements.txt
         pip install numpy
-    - name: playwright install
-      run: playwright install
     - name: deps build
-      working-directory: src
+      working-directory: pyodide_src
       run: |
-        make -C emsdk
-        make -C cpython
-        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
-        make
+        make all-but-packages
+        pip install ./pyodide-build --break-system-packages --root-user-action ignore
     - name: build pregenerated_src
       run: |
-        cmake -S $GITHUB_WORKSPACE/rr_src -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF -DPYTHON3_EXECUTABLE=/usr/local/bin/python3
+        cmake -S $GITHUB_WORKSPACE/robotraconteur -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF
         cmake --build gen_src --config Release --target package_source_swig
-        cp -r $GITHUB_WORKSPACE/gen_src/generated_src $GITHUB_WORKSPACE/rr_src/
-        cmake --build gen_src --config Release --target install -j4
+        cp -r $GITHUB_WORKSPACE/gen_src/generated_src $GITHUB_WORKSPACE/robotraconteur/
+        cmake --build gen_src --config Release -j4
         python -m pip install $GITHUB_WORKSPACE/gen_src/out/Python3
     - name: build
-      working-directory: src
+      working-directory: pyodide_src
       # env:
       #   CCACHE_DIR: /tmp/ccache
       run: |
         # mkdir -p /tmp/ccache
-        ln -s $GITHUB_WORKSPACE/rr_src /rr_src
-        pyodide build-recipes-no-deps RobotRaconteur
-        pyodide build-recipes RobotRaconteur numpy pytest Jinja2 micropip pyyaml --install
+        export version=$(sed -n 's/^#define[ \t]*ROBOTRACONTEUR_VERSION_TEXT[ \t]*"\([^"]*\)".*/\1/p' $GITHUB_WORKSPACE/robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h)
+        export rr_src_path=$GITHUB_WORKSPACE/robotraconteur
+        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml,RobotRaconteur"
+        j2 $GITHUB_WORKSPACE/robotraconteur/tools/build_files/pyodide-recipes/RobotRaconteur/meta.yaml.j2 > $GITHUB_WORKSPACE/pyodide_recipes_src/packages/RobotRaconteur/meta.yaml
+        pyodide build-recipes --recipe-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/packages --install $PYODIDE_PACKAGES
     - name: test
-      working-directory: src
-      run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
+      working-directory: pyodide_src
+      run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_src/dist
     - name: archive dist
       uses: actions/upload-artifact@v4
       with:
         name: 'pyodide-dist'
-        path: src/dist/*
+        path: pyodide_src/dist/*
     - name: archive package logs
       if: failure()
       uses: actions/upload-artifact@v4
       with:
         name: 'pyodide-package-logs'
-        path: src/packages/build-logs/*
+        path: pyodide_recipes_src/packages/build-logs/*
   build-matlab-toolbox:
     needs:
     - build-win
