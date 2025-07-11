@@ -2148,6 +2148,13 @@ void WrappedGeneratorServer::CallNext(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 RR_INTRUSIVE_PTR<RRBaseArray> WrappedArrayMemoryClientUtil::Read(const RR_SHARED_PTR<ArrayMemoryBase>& mem,
                                                                  uint64_t memorypos, uint64_t count)
 {
+    /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
+    if (i8)
+    {
+        RR_SHARED_PTR<RRArray<int8_t> > dat=AllocateRRArray<int8_t>(count);
+        i8->Read(memorypos,dat,bufferpos,count);
+        return dat;
+    }*/
 
     RR_WAMCU_READ_TYPE(int8_t);
     RR_WAMCU_READ_TYPE(uint8_t);
@@ -2178,6 +2185,12 @@ void WrappedArrayMemoryClientUtil::Write(const RR_SHARED_PTR<ArrayMemoryBase>& m
                                          const RR_INTRUSIVE_PTR<RRBaseArray>& buffer, uint64_t bufferpos,
                                          uint64_t count)
 {
+    /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
+    if (i8)
+    {
+        i8->Write(memorypos,rr_cast<RRArray<int8_t> >(buffer),bufferpos,count);
+
+    }*/
 
     RR_WAMCU_WRITE_TYPE(int8_t);
     RR_WAMCU_WRITE_TYPE(uint8_t);
@@ -2253,6 +2266,34 @@ RR_SHARED_PTR<RRMultiDimArrayUntyped> WrappedMultiDimArrayMemoryClientUtil::Read
         elems *= boost::numeric_cast<size_t>(*e);
     }
 
+    /*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
+    if (i8)
+    {
+        RR_SHARED_PTR<RRArray<int8_t> > realdat=AllocateRRArray<int8_t>(elems);
+        RR_SHARED_PTR<RRArray<int8_t> > imagdat;
+        if (i8->Complex())
+        {
+            imagdat=AllocateRRArray<int8_t>(elems);
+        }
+
+        RR_SHARED_PTR<RRMultiDimArray<int8_t> > dat=RR_MAKE_SHARED<RRMultiDimArray<int8_t>
+    >(VectorToRRArray<int32_t>(count),realdat,imagdat);
+
+        std::vector<uint64_t> bufferpos(count.size());
+        std::fill(bufferpos.begin(),bufferpos.end(),0);
+
+        i8->Read(memorypos,dat,bufferpos,count);
+
+        RR_SHARED_PTR<RRMultiDimArrayUntyped> dat2=RR_MAKE_SHARED<RRMultiDimArrayUntyped>();
+        dat2->DimCount=dat->DimCount;
+        dat2->Dims=dat->Dims;
+        dat2->Complex=dat->Complex;
+        dat2->Real=dat->Real;
+        dat2->Imag=dat->Imag;
+
+        return dat2;
+    }*/
+
     RR_WMDAMCU_READ_TYPE(int8_t);
     RR_WMDAMCU_READ_TYPE(uint8_t);
     RR_WMDAMCU_READ_TYPE(int16_t);
@@ -2286,6 +2327,14 @@ void WrappedMultiDimArrayMemoryClientUtil::Write(const RR_SHARED_PTR<MultiDimArr
                                                  const RR_SHARED_PTR<RRMultiDimArrayUntyped>& buffer,
                                                  std::vector<uint64_t> bufferpos, std::vector<uint64_t> count)
 {
+    /*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
+    if (i8)
+    {
+        RR_SHARED_PTR<RRMultiDimArray<int8_t> > buffer2=RR_MAKE_SHARED<RRMultiDimArray<int8_t>
+    >(buffer->Dims,rr_cast<RRMultiDimArray<int8_t> >(buffer->Real),rr_cast<RRMultiDimArray<int8_t> >(buffer->Imag));
+        i8->Write(memorypos,buffer2,bufferpos,count);
+    }*/
+
     RR_WMDAMCU_WRITE_TYPE(int8_t);
     RR_WMDAMCU_WRITE_TYPE(uint8_t);
     RR_WMDAMCU_WRITE_TYPE(int16_t);

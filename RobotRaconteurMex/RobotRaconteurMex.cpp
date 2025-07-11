@@ -6705,6 +6705,14 @@ void MexWireClient::PokeOutValue(const mxArray* value)
 
 mxArray* MexArrayMemoryClientUtil::Read(const RR_SHARED_PTR<ArrayMemoryBase>& mem, uint64_t memorypos, uint64_t count)
 {
+    /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
+    if (i8)
+    {
+        RR_INTRUSIVE_PTR<RRArray<int8_t> > dat=AllocateRRArray<int8_t>(count);
+        i8->Read(memorypos,dat,bufferpos,count);
+        return dat;
+    }*/
+
     RR_WAMCU_READ_TYPE(int8_t);
     RR_WAMCU_READ_TYPE(uint8_t);
     RR_WAMCU_READ_TYPE(int16_t);
@@ -6874,6 +6882,37 @@ mxArray* MexMultiDimArrayMemoryClientUtil::Read(const RR_SHARED_PTR<MultiDimArra
         elems *= boost::numeric_cast<size_t>(e);
     }
 
+    /*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
+    if (i8)
+    {
+
+        std::vector<mwSize> dims(count.size());
+        for (size_t i=0; i<count.size(); i++)
+        {
+            dims[i]=(mwSize)count[i];
+        }
+        mxComplexity mxc=i8->Complex() ? mxCOMPLEX : mxREAL;
+        mxArray* mxdat= mxCreateNumericArray(dims.size(),
+    &dims[0],rrDataTypeToMxClassID(RRPrimUtil<uint8_t>::GetTypeID()),mxc);
+
+        RR_INTRUSIVE_PTR<RRArray<int8_t> > realdat=AttachRRArray<int8_t>((int8_t*)mxGetData(mxdat),elems,false);
+        RR_INTRUSIVE_PTR<RRArray<int8_t> > imagdat;
+        if (mxc==mxCOMPLEX)
+        {
+            imagdat=AttachRRArray<int8_t>((int8_t*)mxGetImagData(mxdat),elems,false);
+        }
+
+        RR_INTRUSIVE_PTR<RRMultiDimArray<int8_t> > dat=RR_MAKE_SHARED<RRMultiDimArray<int8_t>
+    >(VectorToRRArray<int32_t>(count),realdat,imagdat);
+
+        std::vector<uint64_t> bufferpos(count.size());
+        std::fill(bufferpos.begin(),bufferpos.end(),0);
+
+        i8->Read(memorypos,dat,bufferpos,count);
+
+        return mxdat;
+    }*/
+
     std::vector<mwSize> dims(count.size());
     for (size_t i = 0; i < count.size(); i++)
     {
@@ -6986,6 +7025,24 @@ void MexMultiDimArrayMemoryClientUtil::Write(const RR_SHARED_PTR<MultiDimArrayMe
             arrdims->data()[i] = 1;
         }
     }
+
+    /*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
+    if (i8)
+    {
+        if (mxGetClassID(buffer) != rrDataTypeToMxClassID(RRPrimUtil<uint8_t>::GetTypeID())) throw
+    InvalidArgumentException("Memory data type mismatch, expecting " +
+    GetRRDataTypeString(RRPrimUtil<uint8_t>::GetTypeID())); RR_INTRUSIVE_PTR<RRArray<int8_t> > imag; if
+    (::mxIsComplex(buffer) && i8->Complex())
+    imag=AttachRRArray((int8_t*)mxGetImagData(buffer),mxGetNumberOfElements(buffer),false); if (!mxIsComplex(buffer) &&
+    i8->Complex())
+        {
+            imag=AllocateRRArray<int8_t>(mxGetNumberOfElements(buffer));
+            memset(imag->ptr(),0,imag->Length()*sizeof(int8_t));
+        }
+        RR_INTRUSIVE_PTR<RRMultiDimArray<int8_t> > buffer2=RR_MAKE_SHARED<RRMultiDimArray<int8_t>
+    >(arrdims,AttachRRArray((int8_t*)mxGetData(buffer),mxGetNumberOfElements(buffer),false));
+        i8->Write(memorypos,buffer2,bufferpos,count);
+    }*/
 
     RR_WMDAMCU_WRITE_TYPE(int8_t);
     RR_WMDAMCU_WRITE_TYPE(uint8_t);
