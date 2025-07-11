@@ -638,11 +638,10 @@ UsbDeviceStatus WinUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
 
     BOOL b_true = TRUE;
     BOOL b_false = FALSE;
-    if (!f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, RAW_IO, sizeof(b_true), &b_true)
-        || !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, RAW_IO, sizeof(b_true), &b_true)
-        || !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, ALLOW_PARTIAL_READS, sizeof(b_false),
-                                    &b_false)
-    )
+    if (!f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, RAW_IO, sizeof(b_true), &b_true) ||
+        !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, RAW_IO, sizeof(b_true), &b_true) ||
+        !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, ALLOW_PARTIAL_READS, sizeof(b_false),
+                                 &b_false))
     {
         return Error;
     }
