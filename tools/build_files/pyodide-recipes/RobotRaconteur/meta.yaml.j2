@@ -1,11 +1,11 @@
 package:
   name: RobotRaconteur
-  version: 1.2.5
+  version: {{ version }}
 
 source:
   # url: https://github.com/robotraconteur/robotraconteur_pyodide/releases/download/v0.15.1-pyodide/RobotRaconteur-pyodide-0.15.1-post1-Source.tar.gz
   # sha256: 224427d0922dcb34d17221c1f3b8b5e94ebddc109f24f8e9a3f7f5d090386dc6
-  path: /rr_src
+  path: {{ rr_src_path }}
 
 requirements:
   run:
@@ -24,8 +24,8 @@ build:
     echo "set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS FALSE)" > ForceStaticLib.cmake
     emcmake cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DBUILD_GEN=OFF -DBUILD_TESTING=OFF -DBUILD_PYTHON3=ON \
     -DCMAKE_PROJECT_INCLUDE=ForceStaticLib.cmake \
-    -DNUMPY_INCLUDE_DIR=$HOSTINSTALLDIR/lib/python$PYMAJOR.$PYMINOR/site-packages/numpy/_core/include/ \
-    -DPYTHON3_INCLUDE_DIR=$PYTHONINCLUDE -DPYTHON3_EXECUTABLE=python$PYMAJOR.$PYMINOR \
+    -DNUMPY3_INCLUDE_DIR=$HOSTINSTALLDIR/lib/python$PYMAJOR.$PYMINOR/site-packages/numpy/_core/include/ \
+    -DPYTHON3_INCLUDE_DIRS=$PYTHONINCLUDE -DPYTHON3_EXECUTABLE=python$PYMAJOR.$PYMINOR \
     -DPYTHON3_LIBRARY=$HOSTINSTALLDIR/lib/python$PYMAJOR.$PYMINOR.a \
     -DCMAKE_CXX_FLAGS="-fPIC -fwasm-exceptions -DBOOST_AP_DISABLE_THREADS=1 -O2 -DBOOST_BIND_GLOBAL_PLACEHOLDERS=1" \
     -DBoost_INCLUDE_DIR=$WASM_LIBRARY_DIR/include -DBoost_LIBRARY_DIR=$WASM_LIBRARY_DIR/lib \
