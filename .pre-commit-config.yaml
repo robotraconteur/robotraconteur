@@ -1,7 +1,7 @@
 exclude: (^generated_src/.*$|^build\d?/.*$|^test/gen/.*$|rrversion\.txt\.in)
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: "v4.5.0"
+  rev: "v5.0.0"
   hooks:
   - id: check-added-large-files
   - id: check-case-conflict
@@ -27,21 +27,21 @@ repos:
     args: ['--branch', 'master']
   - id: forbid-submodules
 - repo: https://github.com/pre-commit/mirrors-clang-format
-  rev: v14.0.6
+  rev: v20.1.7
   hooks:
   - id: clang-format
     types_or: [c++, c, java, c#]
 - repo: https://github.com/hhatto/autopep8
-  rev: v2.0.4
+  rev: v2.3.2
   hooks:
   - id: autopep8
     args: ["--ignore=E402", "-i", "--max-line-length=120"]
 - repo: https://github.com/Kr4is/cmake-format-precommit
-  rev: b912a5a5bce3c479f4cb52763979cc5a8319eb44
+  rev: v0.6.14
   hooks:
   - id: cmake-format
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.12.0
+  rev: v2.15.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2', '--preserve-quotes']
