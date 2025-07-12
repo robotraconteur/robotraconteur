@@ -3,8 +3,8 @@
   - [Installation](#installation)
     - [Windows](#windows)
     - [Ubuntu Xenial, Bionic, Focal, Jammy, and Noble](#ubuntu-xenial-bionic-focal-jammy-and-noble)
-    - [Debian 10 (buster)](#debian-10-buster)
-    - [Raspbian 10 (buster)](#raspbian-10-buster)
+    - [Debian 10, 11, 12 (buster, bullseye, bookworm)](#debian-10-11-12-buster-bullseye-bookworm)
+    - [Raspbian 10, 11, 12](#raspbian-10-11-12)
     - [Mac OSX](#mac-osx)
     - [iOS](#ios)
     - [Android](#android)
@@ -42,7 +42,7 @@ The C\# library is available on NuGet. Search for "RobotRaconteurNET".
 
 #### Java
 
-The Java library is available on the releases page on github.
+A zip file is available on the releases page on github. Download the zip file and extract it to a directory in your classpath.
 
 ### Ubuntu Xenial, Bionic, Focal, Jammy, and Noble
 
@@ -78,9 +78,9 @@ sudo apt-get install librobotraconteur-net-native
 
 #### Java
 
-Java must be built from source
+Java must be built from source on Linux.
 
-### Debian 10 (buster)
+### Debian 10, 11, 12 (buster, bullseye, bookworm)
 
 An apt repository is available for Debian. Packages are available for amd64, armhf, and arm64. See below for raspbian setup. To use, run:
 
@@ -116,9 +116,9 @@ sudo apt-get install librobotraconteur-net-native
 
 #### Java
 
-Java must be built from source
+Java must be built from source on Linux.
 
-### Raspbian 10 (buster)
+### Raspbian 10, 11, 12
 
 The Raspberry Pi OS (raspbian) for amhf 32-bit processors is slightly different than the main debian armhf distributions. It uses ARMv6 instructions, instead of the ARMv7 instructions used by the main debian installation. Use the following to set up the raspbian repository, and see the debian section for the rest of the instructions.
 
