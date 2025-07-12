@@ -453,7 +453,7 @@ build_osx_arm64_matlab_release:
 
 code_formatting_ubuntu_focal_amd64:
   stage: build
-  extends: .all_build
+  when: manual
   tags:
   - wasontech
   - ubuntu-focal
