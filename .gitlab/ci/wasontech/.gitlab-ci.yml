@@ -384,47 +384,50 @@ build_freebsd_amd64:
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
 
 
-build_osx_amd64:
-  stage: build
-  extends: .osx_build_amd64_dev
-  tags:
-  - wasontech
-  - macos
-  - m1
-  variables:
-    OUTNAME: "out-osx_amd64"
+# build_osx_amd64:
+#   stage: build
+#   extends: .osx_build_amd64_dev
+#   when: manual
+#   tags:
+#   - wasontech
+#   - macos
+#   - m1
+#   variables:
+#     OUTNAME: "out-osx_amd64"
 
-build_osx_amd64_release:
-  stage: build
-  extends: .osx_build_amd64_release
-  tags:
-  - wasontech
-  - macos
-  - m1
-  variables:
-    OUTNAME: "out-osx_amd64"
+# build_osx_amd64_release:
+#   when: manual
+#   stage: build
+#   extends: .osx_build_amd64_release
+#   tags:
+#   - wasontech
+#   - macos
+#   - m1
+#   variables:
+#     OUTNAME: "out-osx_amd64"
 
-build_osx_amd64_matlab_release:
-  stage: build
-  extends: .osx_build_amd64_release
-  tags:
-  - wasontech
-  - macos
-  - m1
-  variables:
-    OUTNAME: "out-osx_amd64_matlab_release"
-  script:
-  - !reference [.osx_build_amd64_release, script]
-  - mkdir ../$OUTNAME
-  - mv out ../$OUTNAME/
-  - cd ../$OUTNAME
-  - cp out/LICENSE.txt out/Matlab
-  - cd out
-  - >
-    export RR_VER=`cat rrversion.txt`
-    && cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-maci64
-    && tar -cf RobotRaconteur-$RR_VER-MATLAB-maci64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maci64
-  after_script: []
+# build_osx_amd64_matlab_release:
+#   stage: build
+#   extends: .osx_build_amd64_release
+#   when: manual
+#   tags:
+#   - wasontech
+#   - macos
+#   - m1
+#   variables:
+#     OUTNAME: "out-osx_amd64_matlab_release"
+#   script:
+#   - !reference [.osx_build_amd64_release, script]
+#   - mkdir ../$OUTNAME
+#   - mv out ../$OUTNAME/
+#   - cd ../$OUTNAME
+#   - cp out/LICENSE.txt out/Matlab
+#   - cd out
+#   - >
+#     export RR_VER=`cat rrversion.txt`
+#     && cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-maci64
+#     && tar -cf RobotRaconteur-$RR_VER-MATLAB-maci64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maci64
+#   after_script: []
 
 build_osx_arm64_matlab_release:
   stage: build
