@@ -412,6 +412,11 @@ if(${CMAKE_VERSION} VERSION_GREATER "3.16.0")
     set_source_files_properties(src/Tap.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS TRUE)
 endif()
 
+option(ROBOTRACONTEURCORE_SOVERSION_MAJOR_ONLY "Only include major version in SOVERSION" OFF)
+if(ROBOTRACONTEURCORE_SOVERSION_MAJOR_ONLY)
+    set_target_properties(RobotRaconteurCore PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+endif()
+
 file(COPY "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" DESTINATION "${CMAKE_BINARY_DIR}/out/")
 if(WIN32)
     file(COPY "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" DESTINATION "${CMAKE_BINARY_DIR}/out_debug/")
