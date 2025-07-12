@@ -176,7 +176,7 @@ endif()
 
 # This mess is taken from github.com/ros/catkin/cmake/python.cmake...
 set(enable_setuptools_deb_layout OFF)
-if(ROBOTRACONTEUR_ROS AND $ENV{ROS_DISTRO} STREQUAL "noetic")
+if(ROBOTRACONTEUR_ROS AND "$ENV{ROS_DISTRO}" STREQUAL "noetic")
     if(EXISTS "/etc/debian_version")
         set(enable_setuptools_deb_layout ON)
     endif()
