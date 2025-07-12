@@ -50,7 +50,6 @@ class NodeDirectoriesFD
 
     void open_read(const boost::filesystem::path& path, boost::system::error_code& err);
     void open_lock_write(const boost::filesystem::path& path, bool delete_on_close, boost::system::error_code& err);
-    // void reopen_lock_write(bool delete_on_close, boost::system::error_code& err);
 
     bool read(std::string& data);
 

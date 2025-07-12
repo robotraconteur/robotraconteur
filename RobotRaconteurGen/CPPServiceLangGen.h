@@ -37,7 +37,6 @@ class CPPServiceLangGen
     {
         std::string name;     // o[0]
         std::string cpp_type; // o[1]
-        // std::string array_star //o[2] (why?)
     };
 
     static convert_type_result convert_type(const TypeDefinition& tdef);

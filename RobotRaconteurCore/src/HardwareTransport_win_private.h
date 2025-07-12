@@ -56,16 +56,6 @@ extern "C"
         ULONG_PTR Reserved;
     } SP_DEVINFO_DATA, *PSP_DEVINFO_DATA;
 
-    /*typedef GUID  DEVPROPGUID, *PDEVPROPGUID;
-    typedef ULONG DEVPROPID, *PDEVPROPID;
-
-    typedef struct _DEVPROPKEY {
-        DEVPROPGUID fmtid;
-        DEVPROPID   pid;
-    } DEVPROPKEY, *PDEVPROPKEY;
-
-    typedef ULONG DEVPROPTYPE, *PDEVPROPTYPE;*/
-
 #pragma pack()
 
 #define DIGCF_DEFAULT 0x00000001

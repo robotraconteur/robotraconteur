@@ -1447,11 +1447,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
             for (std::list<boost::weak_ptr<MexServiceSkel> >::const_iterator e = skels2.begin(); e != skels2.end();)
             {
                 boost::shared_ptr<MexServiceSkel> skel3 = e->lock();
-                /*if (!skel3)
-                {
-                    e=skels2.erase(e);
-                }
-                else*/
+
                 if (skel3)
                 {
                     skel3->ProcessRequests();

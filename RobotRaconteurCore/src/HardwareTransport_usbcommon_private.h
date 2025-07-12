@@ -508,7 +508,6 @@ class UsbDevice_Claim : public RR_ENABLE_SHARED_FROM_THIS<UsbDevice_Claim>
 
     UsbDeviceStatus status;
     std::list<UsbDevice_Claim_Lock*> claim_locks;
-    // RR_SHARED_PTR<void> device_handle;
 
     uint64_t read_count;
     uint64_t read_last_complete;

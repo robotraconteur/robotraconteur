@@ -79,9 +79,6 @@ class TcpTransportConnection : public detail::ASIOStreamBaseTransport
     void do_starttls2(const RR_SHARED_PTR<RobotRaconteurException>& error,
                       const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
 
-    // void do_starttls3(const RR_SHARED_PTR<RobotRaconteurException>& error,
-    // const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback);
-
     void do_starttls4(const std::string& servername, const boost::system::error_code& error);
 
     void do_starttls5(const boost::system::error_code& error);
@@ -220,8 +217,6 @@ class TcpConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpConnector>
             handler);
 
   protected:
-    // void attach_transport(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket, boost::function<void(
-    // RR_SHARED_PTR<boost::asio::ip::tcp::socket> , RR_SHARED_PTR<SuperNodeTransportConnection> , myerr )>& callback);
 #if BOOST_ASIO_VERSION < 101200
     void connect2(int32_t key, const boost::system::error_code& err,
                   boost::asio::ip::basic_resolver_iterator<boost::asio::ip::tcp> endpoint_iterator,
@@ -492,26 +487,12 @@ class IPNodeDiscovery : public RR_ENABLE_SHARED_FROM_THIS<IPNodeDiscovery>
 
     IPNodeDiscovery(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
-    /// <summary>
-    /// Starts listening for nodes
-    /// </summary>
-    /// <param name="flags">The IPv6 broadcost depth.  This should normally be all value "or'ed" together</param>
     void StartListeningForNodes(uint32_t flags);
 
-    /// <summary>
-    /// Disables the node auto discovery listening
-    /// </summary>
     void StopListeningForNodes();
 
-    /// <summary>
-    /// Starts broadcasting node announce packets so clients can find this node
-    /// </summary>
-    /// <param name="flags">The IPv6 broadcost depth.  This should normally be all value "or'ed" together</param>
     void StartAnnouncingNode(uint32_t flags);
 
-    /// <summary>
-    /// Disables the node announcing
-    /// </summary>
     void StopAnnouncingNode();
 
     void SendAnnounceNow();

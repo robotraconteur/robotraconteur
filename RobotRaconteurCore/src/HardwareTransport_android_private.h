@@ -15,7 +15,6 @@
 #include "RobotRaconteur/HardwareTransport.h"
 #include "RobotRaconteur/ASIOStreamBaseTransport.h"
 
-//#include "HardwareTransport_libusb_private.h"
 #include "HardwareTransport_bluetoothcommon_private.h"
 #include "HardwareTransport_discoverycommon_private.h"
 

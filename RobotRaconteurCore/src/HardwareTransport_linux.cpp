@@ -581,8 +581,6 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
         }
     }
 
-    // printf("Got uevent message: %u\n", (uint32_t)bytes_transferred);
-
     // TODO: process uevent message
 
     if (running)

@@ -144,7 +144,6 @@ class Discovery_updatediscoverednodes : public RR_ENABLE_SHARED_FROM_THIS<Discov
     std::list<int32_t> active;
     int32_t active_count;
     boost::function<void()> handler;
-    // boost::mutex searching_lock;
     bool searching;
     std::list<RR_SHARED_PTR<RobotRaconteurException> > errors;
 
@@ -176,7 +175,6 @@ class Discovery_findservicebytype : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
     int32_t active_count;
     boost::function<void(const RR_SHARED_PTR<std::vector<ServiceInfo2> >&)> handler;
     int32_t timeout;
-    // boost::mutex searching_lock;
     bool searching;
     std::list<RR_SHARED_PTR<RobotRaconteurException> > errors;
 

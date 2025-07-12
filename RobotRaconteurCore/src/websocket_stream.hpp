@@ -22,7 +22,6 @@
 #include <boost/date_time.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/regex.hpp>
-//#include <boost/asio/ip/tcp.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range.hpp>
 #include <boost/range/algorithm.hpp>
@@ -496,8 +495,6 @@ class websocket_stream : private boost::noncopyable
         accept_key = sha1_hash(key);
 
         send_server_success_response(accept_key, protocol, handler);
-
-        // send_server_error("404 File not found", handler);
     }
 
     void send_server_error(
@@ -1341,8 +1338,6 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
-        // recv_frame_pos = 0;
-
         uint8_t header2_len = 0;
 
         uint8_t opcode_recv1 = recv_header1[0] & 0x0F;
@@ -1647,8 +1642,6 @@ class websocket_stream : private boost::noncopyable
 #else
             executor_.post(handler);
 #endif
-            // boost::asio::asio_handler_invoke(handler, boost::asio::detail::addressof(handler_), ec,
-            // bytes_transferred);
         }
 
       private:

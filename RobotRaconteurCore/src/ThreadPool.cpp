@@ -103,11 +103,8 @@ bool ThreadPool::TryPost(boost::function<void()> function)
 void ThreadPool::start_new_thread()
 {
 
-    // boost::thread(boost::bind(&ThreadPool::thread_function,shared_from_this()));
-
     RR_SHARED_PTR<boost::thread> t =
         RR_MAKE_SHARED<boost::thread>(boost::bind(&ThreadPool::thread_function, shared_from_this()));
-    // t->start_thread();
     threads.push_back(t);
 }
 

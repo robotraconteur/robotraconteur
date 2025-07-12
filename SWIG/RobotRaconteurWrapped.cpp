@@ -873,12 +873,6 @@ WrappedServiceStub::~WrappedServiceStub()
 #endif
 }
 
-/*WrappedServiceStubDirector* WrappedServiceStub::GetRRDirector()
-{
-    boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
-    return RR_Director;
-}*/
-
 bool WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int32_t id)
 {
     boost::shared_ptr<WrappedServiceStubDirector> director2;
@@ -1038,22 +1032,6 @@ void WrappedPipeEndpoint::fire_PacketAckReceivedEvent(uint32_t packetnum)
 
 // WrappedPipeClient
 
-/*boost::function<void(const RR_SHARED_PTR<WrappedPipeEndpoint>&)> WrappedPipeClient::GetPipeConnectCallback()
-{
-    throw InvalidOperationException("Not valid for client");
-}
-
-void WrappedPipeClient::SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<WrappedPipeEndpoint>&)>
-function)
-{
-    throw InvalidOperationException("Not valid for client");
-}*/
-
-/*WrappedPipeEndpointDirector* WrappedPipeEndpoint::GetRRDirector()
-{
-    boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
-    return RR_Director;
-}*/
 void WrappedPipeEndpoint::SetRRDirector(WrappedPipeEndpointDirector* director, int32_t id)
 {
     boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
@@ -1244,12 +1222,6 @@ void WrappedPipeServer::fire_PipeConnectCallback(const RR_SHARED_PTR<PipeEndpoin
     }
 }
 
-/*WrappedPipeServerDirector* WrappedPipeServer::GetRRDirector()
-{
-    boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
-    return RR_Director;
-}*/
-
 void WrappedPipeServer::SetWrappedPipeConnectCallback(WrappedPipeServerConnectDirector* director, int32_t id)
 {
     boost::mutex::scoped_lock lock(callback_lock);
@@ -1407,12 +1379,6 @@ void WrappedWireConnection::fire_WireClosedCallback()
 
     DIRECTOR_CALL3(WrappedWireConnectionDirector, RR_Director2->WireConnectionClosedCallback());
 }
-
-/*WrappedWireConnectionDirector* WrappedWireConnection::GetRRDirector()
-{
-    boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
-    return RR_Director;
-}*/
 
 void WrappedWireConnection::SetRRDirector(WrappedWireConnectionDirector* director, int32_t id)
 {
@@ -1844,12 +1810,6 @@ void WrappedWireServer::do_PokeOutValue(const RR_INTRUSIVE_PTR<RRValue>& value, 
 
     throw InvalidOperationException("");
 }
-
-/*WrappedWireServerDirector* WrappedWireServer::GetRRDirector()
-{
-    boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
-    return RR_Director;
-}*/
 
 bool WrappedWireBroadcasterPredicateDirector::CallPredicate(uint32_t client_endpoint)
 {
@@ -3398,12 +3358,6 @@ bool WrappedServiceSkel::IsRequestNoLock(const RR_INTRUSIVE_PTR<RobotRaconteur::
 
     return false;
 }
-
-/*void WrappedServiceSkel::SetRRDirector(WrappedServiceSkelDirector* director, int32_t id)
-{
-    boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
-    this->RR_Director.reset(director,boost::bind(&ReleaseDirector,RR_BOOST_PLACEHOLDERS(_1),id));
-}*/
 
 // Pod array memory skels
 

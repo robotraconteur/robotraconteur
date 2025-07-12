@@ -220,8 +220,6 @@ void WireConnectionBase::RemoteClose()
     try
     {
         boost::mutex::scoped_lock lock(sendlock);
-        // if (parent.expired()) return;
-        // boost::mutex::scoped_lock lock2 (recvlock);
         GetParent()->AsyncClose(shared_from_this(), true, endpoint, &WireConnectionBase_RemoteClose_emptyhandler, 1000);
     }
     catch (std::exception&)
@@ -597,7 +595,6 @@ std::string WireClientBase::GetServicePath() { return service_path; }
 void WireClientBase::WirePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     RR_UNUSED(e);
-    // boost::shared_lock<boost::shared_mutex> lock2(stub_lock);
 
     if (m->EntryType == MessageEntryType_WireClosed)
     {
@@ -655,8 +652,6 @@ void WireClientBase::Shutdown()
 
         try
         {
-            // RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_WireDisconnectReq,
-            // GetMemberName()); RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
             if (c)
                 c->Shutdown();
         }
@@ -971,7 +966,6 @@ void WireServerBase::ClientDisconnected(const RR_SHARED_PTR<ServerContext>& cont
             {
                 if (ee->first == ep)
                 {
-                    // ee->second->RemoteClose();
                     c.push_back(ee->second);
                     ee = connections.erase(ee);
                     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep, service_path, m_MemberName,
@@ -1029,8 +1023,6 @@ void WireServerBase::Shutdown()
             RobotRaconteurNode::TryHandleException(node, &exp);
         }
     }
-
-    // skel.reset();;
 
     listener_connection.disconnect();
 
@@ -1152,7 +1144,6 @@ RR_INTRUSIVE_PTR<MessageEntry> WireServerBase::WireCommand(const RR_INTRUSIVE_PT
                 RR_SHARED_PTR<WireConnectionBase> c = e1->second;
                 lock.unlock();
                 c->RemoteClose();
-                // connections.erase(e);
                 return CreateMessageEntry(MessageEntryType_WireDisconnectRet, GetMemberName());
             }
             catch (std::exception& exp)

@@ -50,7 +50,6 @@ class RR_Ensure_GIL
 #define DIRECTOR_CALL(dirtype, command)                                                                                \
     {                                                                                                                  \
         boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);                                                \
-        /*RR_Ensure_GIL gil;*/                                                                                         \
         boost::shared_ptr<dirtype> RR_Director2(this->RR_Director);                                                    \
                                                                                                                        \
         lock.unlock();                                                                                                 \
@@ -63,7 +62,6 @@ class RR_Ensure_GIL
 
 #define DIRECTOR_CALL2(command)                                                                                        \
     {                                                                                                                  \
-        /*RR_Ensure_GIL gil;*/                                                                                         \
         {                                                                                                              \
             command;                                                                                                   \
         }                                                                                                              \
@@ -71,7 +69,6 @@ class RR_Ensure_GIL
 
 #define DIRECTOR_CALL3(dirtype, command)                                                                               \
     {                                                                                                                  \
-        /*RR_Ensure_GIL gil;*/                                                                                         \
         boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);                                                \
         boost::shared_ptr<dirtype> RR_Director2(this->RR_Director);                                                    \
                                                                                                                        \
@@ -280,15 +277,6 @@ class WrappedDynamicServiceFactory : public virtual DynamicServiceFactory
     RR_OVIRTUAL std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def)
         RR_OVERRIDE;
 };
-
-/*class AsyncHandlerDirector
-{
-public:
-    virtual ~AsyncHandlerDirector() {}
-    virtual void handler(void* m, uint32_t error_code, const std::string& errorname, const std::string& errormessage)
-{};
-
-};*/
 
 class HandlerErrorInfo
 {
@@ -1339,11 +1327,6 @@ class WrappedServiceSkelDirector
 class WrappedServiceSkel : public virtual ServiceSkel
 {
   public:
-    /*WrappedServiceSkel()
-    {
-        RR_Director=NULL;
-    }*/
-
     RR_OVIRTUAL ~WrappedServiceSkel() RR_OVERRIDE {}
     boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> Type;
 
@@ -1531,11 +1514,6 @@ class WrappedMultiDimArrayMemoryParams
 class WrappedMultiDimArrayMemoryDirector
 {
   public:
-    /*WrappedMultiDimArrayMemoryDirector()
-    {
-        objectheapid=0;
-    }*/
-
     virtual ~WrappedMultiDimArrayMemoryDirector(){};
     virtual std::vector<uint64_t> Dimensions() = 0;
     virtual uint64_t DimCount() = 0;

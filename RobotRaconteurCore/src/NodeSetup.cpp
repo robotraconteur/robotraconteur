@@ -99,11 +99,6 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
             local_transport->EnableNodeDiscoveryListening();
         }
 
-        // if (config->GetOptionOrDefaultAsBool("discovery-announce-enable"))
-        //{
-        //  Always announces due to file watching by clients
-        //}
-
         if (config->GetOptionOrDefaultAsBool("disable-message4"))
         {
             local_transport->SetDisableMessage4(true);

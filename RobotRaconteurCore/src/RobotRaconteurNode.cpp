@@ -450,8 +450,6 @@ void RobotRaconteurNode::Shutdown()
             endpoints.clear();
         }
 
-        // std::cout << "start transport close" << std::endl;
-
         {
             if (m_Discovery)
             {
@@ -926,7 +924,6 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(
         c = RR_MAKE_SHARED<ServerContext>(GetServiceType(servicetype), shared_from_this());
         c->SetBaseObject(name, obj, securitypolicy);
 
-        // RegisterEndpoint(c);
         services.insert(make_pair(RR_MOVE(name.to_string()), c));
     }
 
@@ -979,7 +976,6 @@ void RobotRaconteurNode::CloseService(boost::string_ref sname)
         }
         s = e1->second;
         s->Close();
-        // DeleteEndpoint(s);
         services.erase(sname.to_string());
     }
 
@@ -1116,7 +1112,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
         }
         break;
         case MessageEntryType_GetServiceDesc: {
-            // string name = (string)e.FindElement("servicename").Data;
+
             std::string name = e->ServicePath.str().to_string();
             try
             {
@@ -1222,7 +1218,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 }
 
                 {
-                    // boost::mutex::scoped_lock lock(services_lock);
+
                     try
                     {
                         GetService(name)->RemoveClient(se);
@@ -1239,7 +1235,6 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 }
                 catch (std::exception&)
                 {}
-                // eret.AddElement("servicedef", servicedef);
             }
             catch (std::exception& exp)
             {

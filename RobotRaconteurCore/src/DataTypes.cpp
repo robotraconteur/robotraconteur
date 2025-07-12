@@ -42,7 +42,6 @@ ROBOTRACONTEUR_CORE_API std::string RRArrayToString(const RR_INTRUSIVE_PTR<RRArr
         throw DataTypeException("Null pointer");
     }
     size_t s = arr->size();
-    // char* str=new char[arr->Length()+1];
 
     return std::string(arr->data(), s);
 }
@@ -251,7 +250,6 @@ ROBOTRACONTEUR_CORE_API size_t RRArrayElementSize(DataTypes type)
         throw DataTypeException("Invalid data type");
     }
     throw DataTypeException("Invalid data type");
-    // return 0;
 }
 
 TimeSpec::TimeSpec()
@@ -566,7 +564,6 @@ ROBOTRACONTEUR_CORE_API std::string decode_index(boost::string_ref index)
             out.put((char)v);
         }
     }
-    // std::cout << "decode: " << out.str() << out.str().length() << std::endl;
 
     return out.str();
 }

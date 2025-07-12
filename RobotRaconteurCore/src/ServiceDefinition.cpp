@@ -17,14 +17,12 @@
 #endif
 
 #include "RobotRaconteur/ServiceDefinition.h"
-//#include "RobotRaconteur.h"
 
 #include "RobotRaconteur/DataTypes.h"
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-//#include "Error.h"
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include "RobotRaconteur/IOUtils.h"
 
@@ -46,11 +44,6 @@ namespace RobotRaconteur
 typedef boost::match_results<boost::string_ref::const_iterator> ref_match;
 
 static boost::string_ref to_ref(const ref_match::value_type& s) { return boost::string_ref(s.first, s.length()); }
-
-/*static boost::string_ref to_ref(const boost::smatch::value_type& s)
-{
-    return boost::string_ref((const char*)s.first,s.length());
-}*/
 
 RobotRaconteurVersion::RobotRaconteurVersion()
 {
@@ -908,24 +901,6 @@ void ServiceEntryDefinition::ToStream(std::ostream& o) const
     }
 
     o << "end\n";
-
-    /*switch (EntryType)
-    {
-    case DataTypes_structure_t:
-        o << "end struct\n";
-        break;
-    case DataTypes_pod_t:
-        o << "end pod\n";
-        break;
-    case DataTypes_namedarray_t:
-        o << "end namedarray\n";
-        break;
-    case DataTypes_object_t:
-        o << "end object\n";
-        break;
-    default:
-        throw ServiceDefinitionException("Invalid ServiceEntryDefinition type in " + Name);
-    }*/
 }
 
 void ServiceEntryDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
@@ -1617,7 +1592,6 @@ MemberDefinition_NoLock MemberDefinition::NoLock() const
 void MemberDefinition::Reset()
 {
     Name.clear();
-    // ServiceEntry.reset();
     Modifiers.clear();
     ParseInfo.Reset();
 }
@@ -2908,7 +2882,6 @@ std::string ConstantDefinition::UnescapeString(boost::string_ref in)
 
     static boost::regex r_string_expression(
         "(\\\\\"|\\\\\\\\|\\\\/|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|(?:\\\\u[\\da-fA-F]{4})+)");
-    // const char* format_string = "(?1\\\")(?2\\\\)(?3\\b)(?4\\f)(?5\\n)(?6\\r)(?7\\t)(?8\\"
     // TODO: avoid copy
     const std::string in1 = in.to_string();
     boost::regex_replace(oi, in1.begin(), in1.end(), r_string_expression, ConstantDefinition_UnescapeString_Formatter,
@@ -3095,7 +3068,6 @@ void EnumDefinition::FromString(boost::string_ref s, const ServiceDefinitionPars
         throw ServiceDefinitionParseException("Parse error near: " + lines.front(), working_info2);
     }
 
-    // std::string values1 = boost::join(boost::make_iterator_range(++lines.begin(), --lines.end()), " ");
     static boost::regex r_docstring("^[ \\t]*##([ -~\\t]*)$");
     static boost::regex r_empty("^[ \\t]*$");
     bool empty_encountered_docstring = false;
@@ -3890,7 +3862,6 @@ std::string VerifyMember(const RR_SHARED_PTR<MemberDefinition>& m, const RR_SHAR
                     throw ServiceDefinitionVerifyException("Generator return must use generator container",
                                                            f->ParseInfo);
                 }
-                // VerifyReturnType(f->ReturnType, def, defs);
             }
 
             if (!f->Parameters.empty() && f->Parameters.back()->ContainerType == DataTypes_ContainerTypes_generator)
@@ -4172,7 +4143,6 @@ bool CompareTypeDefinition(const RR_SHARED_PTR<ServiceDefinition>& d1, const RR_
 {
     if (t1->Name != t2->Name)
         return false;
-    // if (t1->ImportedType!=t2->ImportedType) return false;
     if (t1->ArrayType != t2->ArrayType)
         return false;
     if (t1->ArrayType != DataTypes_ArrayTypes_none)
@@ -4616,7 +4586,6 @@ void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
     if (entry_type == DataTypes_namedarray_t)
     {
         std::set<std::string> n;
-        // VerifyStructure_check_recursion(strut, defs, n, DataTypes_namedarray_t);
         try
         {
             GetNamedArrayElementTypeAndCount(strut, all_defs);

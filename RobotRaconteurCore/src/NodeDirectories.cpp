@@ -506,23 +506,6 @@ void NodeDirectoriesFD::open_lock_write(const boost::filesystem::path& path, boo
 #endif
 }
 
-/*void NodeDirectoriesFD::reopen_lock_write(bool delete_on_close, boost::system::error_code& err)
-{
-    DWORD flags = FILE_ATTRIBUTE_NORMAL;
-    if (delete_on_close)
-    {
-        flags |= FILE_FLAG_DELETE_ON_CLOSE;
-    }
-    HANDLE h = ReOpenFile(fd, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, flags);
-    if (h == INVALID_HANDLE_VALUE)
-    {
-        err = boost::system::error_code(GetLastError(), boost::system::system_category());
-        return;
-    }
-
-    fd = h;
-}*/
-
 bool NodeDirectoriesFD::read(std::string& data) // NOLINT(readability-make-member-function-const)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS

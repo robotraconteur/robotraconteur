@@ -96,7 +96,6 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
 
     if (cert_error && cert_error != X509_V_ERR_UNHANDLED_CRITICAL_EXTENSION)
     {
-        // std::cout << "Certificate error: " << cert_error << std::endl;
         return false;
     }
 
@@ -104,23 +103,8 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
     X509* cert = X509_STORE_CTX_get_current_cert(ctx.native_handle());
     if (!cert)
     {
-        // std::cout << "Certificate error: null?" << std::endl;
         return false;
     }
-
-    /*if (depth==0)
-    {
-        char buf[256];
-        memset(buf,0,256);
-
-
-        X509_NAME_oneline(X509_get_subject_name(cert), buf, 256);
-
-        std::string buf2(buf);
-        //std::cout << "Certificate name: " << buf2 << " depth=" << depth << std::endl;
-
-
-    }*/
 
     X509_NAME* sub_name = X509_get_subject_name(cert);
     X509_NAME* iss_name = X509_get_issuer_name(cert);
@@ -129,11 +113,7 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
 
     if (X509_NAME_cmp(sub_name, iss_name) == 0)
     {
-
-        // if(X509_cmp(cert,root_cert.get())==0)
         isroot = true;
-        // else
-        //	return false;
     }
 
     {
@@ -189,8 +169,6 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
 
             return false;
         }
-
-        // std::cout << "Not root" << std::endl;
     }
 
     return true;
@@ -390,12 +368,8 @@ void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
 
     InitCA(server_context);
 
-    // server_context->set_verify_mode(boost::asio::ssl::context::verify_peer |
-    // boost::asio::ssl::context::verify_client_once);
     server_context->set_verify_callback(
         boost::bind(&detail::OpenSSLSupport::verify_callback, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
-
-    // OpenSSLSupport::add_certificate_authority_x509(server_context,boost::asio::buffer(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT,sizeof(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT)));
 
     bool error = false;
 
@@ -423,8 +397,6 @@ void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
         client_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,
                                                         RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
 
-        // OpenSSLSupport::add_certificate_authority_x509(client_context,boost::asio::buffer(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT,sizeof(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT)));
-
         InitCA(client_context);
 
         if (SSL_CTX_use_PrivateKey(client_context->native_handle(), (pkey)) != 1)
@@ -442,19 +414,6 @@ void OpenSSLAuthContext::LoadPKCS12FromFile(boost::string_ref fname)
             }
         }
     }
-
-    // SSL_CTX_set_client_CA_list(server_context->native_handle(),
-    // SSL_load_client_CA_file("/usr/local/share/ca-certificates/Robot_Raconteur_Node_Certificate_Authority_Root.crt"));
-
-    // if (ca) sk_X509_pop_free(ca, X509_free);
-    // if (cert) X509_free(cert);
-    // if (pkey) EVP_PKEY_free(pkey);
-
-    // RR_SHARED_PTR<OpenSSLSupport::x509_stack_cleanup>p12_ca1=RR_MAKE_SHARED<OpenSSLSupport::x509_stack_cleanup>();
-    // p12_ca1->p=ca;
-    // p12_ca=p12_ca1;
-    // p12_cert.reset(cert,X509_free);
-    // p12_key.reset(pkey,EVP_PKEY_free);
 
     if (error)
         throw ResourceNotFoundException("Could not load certificate file");
@@ -482,8 +441,6 @@ boost::shared_ptr<boost::asio::ssl::context> OpenSSLAuthContext::GetClientCreden
         client_context->set_verify_mode(boost::asio::ssl::context::verify_peer);
         client_context->set_verify_callback(boost::bind(&detail::OpenSSLSupport::verify_callback,
                                                         RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
-
-        // OpenSSLSupport::add_certificate_authority_x509(client_context,boost::asio::buffer(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT,sizeof(ROBOTRACONTEUR_NODE_CERTIFICATE_AUTHORITY_ROOT)));
 
         InitCA(client_context);
     }

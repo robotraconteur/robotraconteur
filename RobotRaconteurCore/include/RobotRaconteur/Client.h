@@ -516,8 +516,6 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
 
     uint32_t CheckServiceCapability(boost::string_ref name);
 
-    //		public event ClientServiceListenerDelegate ClientServiceListener;
-
     boost::signals2::signal<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
                                  const RR_SHARED_PTR<void>&)>
         ClientServiceListener;

@@ -21,7 +21,6 @@
  * limitations under the License.
  */
 
-//#include "RobotRaconteur/DataTypes.h"
 #include "RobotRaconteur/RobotRaconteurConstants.h"
 #include "RobotRaconteur/RobotRaconteurConfig.h"
 #include <stdexcept>

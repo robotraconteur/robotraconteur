@@ -248,7 +248,6 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
             if (handled)
                 return;
             handled = true;
-            //	timeout_timer_.reset();
 
             timeout_timer_.reset();
         }
@@ -281,30 +280,6 @@ void async_timeout_wrapper<T>::start_timer(int32_t timeout,
         timeout_exception_ = RR_MOVE(timeout_exception);
     }
 }
-
-/*template<typename Handler>
-class handler_move_wrapper
-{
-public:
-    handler_move_wrapper(Handler& handler)
-        : handler_(RR_MOVE(handler))
-    {}
-
-
-    Handler&& operator()
-    {
-        return RR_MOVE(handler_);
-    }
-
-protected:
-    Handler handler_;
-};
-
-template<typename Handler>
-handler_move_wrapper<Handler> make_handler_move_wrapper(Handler& handler)
-{
-    return handler_move_wrapper<Handler>(handler);
-}*/
 
 class ROBOTRACONTEUR_CORE_API async_signal_semaphore : private boost::noncopyable
 {
