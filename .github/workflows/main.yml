@@ -2216,7 +2216,7 @@ jobs:
         pip install -U colcon-common-extensions rosdep
     - name: rosdep
       run: |
-        rosdep init
+        sudo rosdep init
         rosdep update --include-eol-distros
         rosdep install --from-paths src --ignore-src -y
       working-directory: workspace
