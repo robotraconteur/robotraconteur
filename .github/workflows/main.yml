@@ -58,11 +58,6 @@ jobs:
           container: ""
           arch: x64
           wheel_platform: manylinux_2_39_x86_64
-        - os: debian-10
-          runs_on: ubuntu-latest
-          container: debian:buster-slim
-          arch: x64
-          wheel_platform: manylinux_2_28_x86_64
         - os: debian-11
           runs_on: ubuntu-latest
           container: debian:bullseye-slim
