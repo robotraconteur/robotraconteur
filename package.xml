@@ -17,28 +17,28 @@
   <build_depend>boost</build_depend>
   <build_depend>libssl-dev</build_depend>
   <build_depend>libusb-1.0-dev</build_depend>
-  <build_depend condition="$OS == 'Linux'">libdbus-dev</build_depend>
-  <build_depend condition="$OS == 'Linux'">libbluetooth-dev</build_depend>
+  <build_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libdbus-dev</build_depend>
+  <build_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libbluetooth-dev</build_depend>
   <build_depend>zlib</build_depend>
   <build_depend>python3</build_depend>
   <build_depend>python3-dev</build_depend>
   <build_depend>python3-numpy</build_depend>
   <build_depend>python3-setuptools</build_depend>
 
-  <exec_depend condition="$OS == 'Linux'">libboost-date-time</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libboost-filesystem</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libboost-system</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libboost-regex</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libboost-chrono</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libboost-atomic</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libboost-thread</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libboost-random</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libboost-program-options</exec_depend>
-  <exec_depend condition="$OS != 'Linux'">boost</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-date-time</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-filesystem</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-system</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-regex</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-chrono</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-atomic</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-thread</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-random</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-program-options</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX != '') or ($HOMEBREW_PREFIX != '')">boost</exec_depend>
   <exec_depend>libssl-dev</exec_depend>
   <exec_depend>libusb-1.0</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libdbus-dev</exec_depend>
-  <exec_depend condition="$OS == 'Linux'">libbluetooth</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libdbus-dev</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libbluetooth</exec_depend>
   <exec_depend>zlib</exec_depend>
   <exec_depend>python3</exec_depend>
   <exec_depend>python3-numpy</exec_depend>
