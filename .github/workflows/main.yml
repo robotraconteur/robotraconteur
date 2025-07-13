@@ -2055,15 +2055,15 @@ jobs:
         apt-get install -y
         git cmake g++ make autoconf fakeroot swig
         automake libtool bison libpcre3-dev curl python3-colcon-common-extensions -qq
-    - run: ./tools/build_files/generated_src/populate_generated_src.bash
-      working-directory: workspace/src/robotraconteur
-    - run: cp tools/build_files/ros/cmake_config_options.cmake .
-      working-directory: workspace/src/robotraconteur
     - name: rosdep install
       run: |
         rosdep update
         rosdep install --from-paths src --ignore-src -y
       working-directory: workspace
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: workspace/src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: workspace/src/robotraconteur
     - run: |
         colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
       working-directory: workspace
@@ -2093,6 +2093,11 @@ jobs:
         apt-get install -y
         git cmake g++ make libboost-all-dev autoconf fakeroot
         automake libtool bison libpcre3-dev curl libgtest-dev  -qq
+    - name: rosdep install
+      run: |
+        rosdep update
+        rosdep install --from-paths src --ignore-src -y
+      working-directory: workspace
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: workspace/src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
@@ -2101,11 +2106,6 @@ jobs:
       uses: johnwason/swig-build-action@v1.2
       with:
         cache-key: ros-catkin-${{ matrix.ROS_DISTRO }}-swig
-    - name: rosdep install
-      run: |
-        rosdep update
-        rosdep install --from-paths src --ignore-src -y
-      working-directory: workspace
     - run: |
         catkin_make_isolated --install --use-ninja --cmake-args -DCMAKE_BUILD_TYPE=Release
       working-directory: workspace
