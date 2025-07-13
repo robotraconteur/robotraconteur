@@ -2007,8 +2007,16 @@ jobs:
         apt-get install -y
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf fakeroot swig
+        git cmake g++ make libboost-all-dev autoconf fakeroot
         automake libtool bison libpcre3-dev curl libgtest-dev devscripts debhelper python3-bloom -qq
+    - name: install swig
+      if: ${{ matrix.ROS_DISTRO == 'noetic' }}
+      uses: johnwason/swig-build-action@v1.2
+      with:
+        cache-key: ros-package-python-path-${{ matrix.ROS_DISTRO }}-swig
+    - name: apt-swig
+      if: ${{ matrix.ROS_DISTRO != 'noetic' }}
+      run: sudo apt-get install swig -qq -y
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
@@ -2023,6 +2031,7 @@ jobs:
       working-directory: src/robotraconteur
     - name: test python path
       run: |
+        set -e
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
   test-ros-colcon-python-path:
     runs-on: ubuntu-latest
@@ -2038,26 +2047,30 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        path: src/robotraconteur
+        path: workspace/src/robotraconteur
     - name: apt update
       run: sudo apt update
     - name: apt
       run: >
         apt-get install -y
-        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf fakeroot swig
-        automake libtool bison libpcre3-dev curl libgtest-dev python3-colcon-common-extensions -qq
+        git cmake g++ make autoconf fakeroot swig
+        automake libtool bison libpcre3-dev curl python3-colcon-common-extensions -qq
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
-      working-directory: src/robotraconteur
+      working-directory: workspace/src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
-      working-directory: src/robotraconteur
+      working-directory: workspace/src/robotraconteur
+    - name: rosdep install
+      run: |
+        rosdep update
+        rosdep install --from-paths src --ignore-src -y
+      working-directory: workspace
     - run: |
         colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
-      working-directory: src
+      working-directory: workspace
     - name: test python path
-      working-directory: src
+      working-directory: workspace
       run: |
+        set -e
         source install/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
 
@@ -2072,25 +2085,33 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        path: src/robotraconteur
+        path: workspace/src/robotraconteur
     - name: apt update
       run: sudo apt update
     - name: apt
       run: >
         apt-get install -y
-        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
-        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf fakeroot swig
+        git cmake g++ make libboost-all-dev autoconf fakeroot
         automake libtool bison libpcre3-dev curl libgtest-dev  -qq
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
-      working-directory: src/robotraconteur
+      working-directory: workspace/src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
-      working-directory: src/robotraconteur
+      working-directory: workspace/src/robotraconteur
+    - name: build swig
+      uses: johnwason/swig-build-action@v1.2
+      with:
+        cache-key: ros-catkin-${{ matrix.ROS_DISTRO }}-swig
+    - name: rosdep install
+      run: |
+        rosdep update
+        rosdep install --from-paths src --ignore-src -y
+      working-directory: workspace
     - run: |
         catkin_make_isolated --install --use-ninja --cmake-args -DCMAKE_BUILD_TYPE=Release
-      working-directory: src
+      working-directory: workspace
     - name: test python path
-      working-directory: src
+      working-directory: workspace
       run: |
+        set -e
         source install_isolated/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
