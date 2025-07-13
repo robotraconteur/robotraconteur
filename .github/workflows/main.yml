@@ -2119,7 +2119,7 @@ jobs:
     - run: |
         set -e
         source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
-        catkin_make_isolated --install --use-ninja --cmake-args -DCMAKE_BUILD_TYPE=Release
+        catkin_make_isolated --install --cmake-args -DCMAKE_BUILD_TYPE=Release
       working-directory: workspace
     - name: test python path
       working-directory: workspace
