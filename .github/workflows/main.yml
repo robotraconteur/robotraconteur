@@ -2032,6 +2032,49 @@ jobs:
         set -e
         source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+    - name: copy deb
+      run: cp src/*.deb *
+    - name: upload deb
+      uses: actions/upload-artifact@v4
+      with:
+        name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
+  test-ros-package-python-path-install:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    needs: test-ros-package-python-path
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - jazzy
+        - kilted
+        - rolling
+        - noetic
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/src/robotraconteur
+    - name: download deb
+      uses: actions/download-artifact@v4
+      with:
+        name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
+    - name: apt update
+      run: sudo apt update
+    - name: install deb
+      run: sudo dpkg -i *.deb
+    - name: apt install
+      run: sudo apt-get install -f -y
+    - name: test python path
+      run: |
+        set -e
+        source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+
   test-ros-colcon-python-path:
     runs-on: ubuntu-latest
     container: ros:${{ matrix.ROS_DISTRO }}
