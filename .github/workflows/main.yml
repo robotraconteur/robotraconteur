@@ -2033,11 +2033,12 @@ jobs:
         source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
     - name: copy deb
-      run: cp src/*.deb *
+      run: cp src/*.deb .
     - name: upload deb
       uses: actions/upload-artifact@v4
       with:
         name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
+        path: "*.deb"
   test-ros-package-python-path-install:
     runs-on: ubuntu-latest
     container: ros:${{ matrix.ROS_DISTRO }}
