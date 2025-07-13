@@ -2213,7 +2213,7 @@ jobs:
         brew upgrade
     - name: pip install dependencies
       run: |
-        pip install -U colcon-common-extensions rosdep
+        pip install -U colcon-common-extensions rosdep numpy setuptools
     - name: rosdep
       run: |
         sudo rosdep init
