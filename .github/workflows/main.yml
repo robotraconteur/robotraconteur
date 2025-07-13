@@ -2163,3 +2163,69 @@ jobs:
         set -e
         source install_isolated/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+  test-ros-colcon-win-robostack:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: cmd
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/src/robotraconteur
+    - name: miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        miniconda-version: "latest"
+        channels: conda-forge,robostack
+        activate-environment: robostack
+        environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+    - name: rosdep
+      run: |
+        rosdep init
+        rosdep update --include-eol-distros
+        rosdep install --from-paths src --ignore-src -y
+      working-directory: workspace
+    - name: colcon build
+      run: |
+        colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+      working-directory: workspace
+    - name: test python path
+      working-directory: workspace
+      run: |
+        install\setup.bat
+        if %errorlevel% neq 0 exit /b %errorlevel%
+        python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+        if %errorlevel% neq 0 exit /b %errorlevel%
+
+  test-ros-colcon-mac-brew:
+    runs-on: macos-14
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/src/robotraconteur
+    - name: update brew
+      run: |
+        brew update
+        brew upgrade
+    - name: pip install dependencies
+      run: |
+        pip install -U colcon-common-extensions rosdep
+    - name: rosdep
+      run: |
+        rosdep init
+        rosdep update --include-eol-distros
+        rosdep install --from-paths src --ignore-src -y
+      working-directory: workspace
+    - name: colcon build
+      run: |
+        colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+      working-directory: workspace
+    - name: test python path
+      working-directory: workspace
+      run: |
+        source install/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
