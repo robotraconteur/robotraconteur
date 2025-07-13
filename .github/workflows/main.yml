@@ -2055,9 +2055,6 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v4
-      with:
-        path: workspace/src/robotraconteur
     - name: download deb
       uses: actions/download-artifact@v4
       with:
