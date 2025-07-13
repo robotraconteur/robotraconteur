@@ -1983,3 +1983,114 @@ jobs:
       run: >
         podman run -v ${{github.workspace}}/src:/work/src -w /work --rm
         ${{matrix.config.container}} /work/src/robotraconteur/tools/build_files/old_ubuntu_build/old_ubuntu_build.sh
+
+  test-ros-package-python-path:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - jazzy
+        - kilted
+        - rolling
+        - noetic
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        apt-get install -y
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make libboost-all-dev autoconf fakeroot swig
+        automake libtool bison libpcre3-dev curl libgtest-dev devscripts debhelper python3-bloom -qq
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: src/robotraconteur
+    - run: |
+        rosdep update
+        bloom-generate rosdebian
+      working-directory: src/robotraconteur
+    - run: DEB_BUILD_OPTIONS=nocheck debuild -us -uc -b
+      working-directory: src/robotraconteur
+    - run: sudo dpkg -i ../*robotraconteur_*.deb
+      working-directory: src/robotraconteur
+    - name: test python path
+      run: |
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+  test-ros-colcon-python-path:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - jazzy
+        - kilted
+        - rolling
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        apt-get install -y
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make libboost-all-dev autoconf fakeroot swig
+        automake libtool bison libpcre3-dev curl libgtest-dev python3-colcon-common-extensions -qq
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: src/robotraconteur
+    - run: |
+        colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+      working-directory: src
+    - name: test python path
+      working-directory: src
+      run: |
+        source install/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+  test-ros-catkin-python-path:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - noetic
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        apt-get install -y
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make libboost-all-dev autoconf fakeroot swig
+        automake libtool bison libpcre3-dev curl libgtest-dev  -qq
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: src/robotraconteur
+    - run: |
+        catkin_make_isolated --install --use-ninja --cmake-args -DCMAKE_BUILD_TYPE=Release
+      working-directory: src
+    - name: test python path
+      working-directory: src
+      run: |
+        source install_isolated/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
