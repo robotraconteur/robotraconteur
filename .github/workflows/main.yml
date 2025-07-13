@@ -2108,7 +2108,7 @@ jobs:
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
       working-directory: workspace/src/robotraconteur
     - run: |
-        colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
       working-directory: workspace
     - name: test python path
       working-directory: workspace
@@ -2188,7 +2188,7 @@ jobs:
       working-directory: workspace
     - name: colcon build
       run: |
-        colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
       working-directory: workspace
     - name: test python path
       working-directory: workspace
@@ -2197,6 +2197,45 @@ jobs:
         if %errorlevel% neq 0 exit /b %errorlevel%
         python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
         if %errorlevel% neq 0 exit /b %errorlevel%
+  test-ros-colcon-unix-robostack:
+    runs-on: ${{ matrix.config.runner }}
+    strategy:
+      matrix:
+        config:
+        - os: macos
+          runner: macos-latest
+        - os: ubuntu
+          runner: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/src/robotraconteur
+    - name: miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        miniconda-version: "latest"
+        channels: conda-forge,robostack
+        activate-environment: robostack
+        environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+    - name: rosdep
+      run: |
+        rosdep init
+        rosdep update --include-eol-distros
+        rosdep install --from-paths src --ignore-src -y
+      working-directory: workspace
+    - name: colcon build
+      run: |
+        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+      working-directory: workspace
+    - name: test python path
+      working-directory: workspace
+      run: |
+        set -e
+        source install/setup.bash
+        python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
 
   test-ros-colcon-mac-brew:
     runs-on: macos-14
@@ -2222,7 +2261,7 @@ jobs:
       working-directory: workspace
     - name: colcon build
       run: |
-        colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
       working-directory: workspace
     - name: test python path
       working-directory: workspace
