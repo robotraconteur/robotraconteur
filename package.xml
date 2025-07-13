@@ -21,9 +21,9 @@
   <build_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libbluetooth-dev</build_depend>
   <build_depend>zlib</build_depend>
   <build_depend>python3</build_depend>
-  <build_depend condition="$HOMEBREW_PREFIX == ''">python3-dev</build_depend>
-  <build_depend condition="$HOMEBREW_PREFIX == ''">python3-numpy</build_depend>
-  <build_depend condition="$HOMEBREW_PREFIX == ''">python3-setuptools</build_depend>
+  <build_depend condition="($CONDA_PREFIX != '') or ($HOMEBREW_PREFIX == '')">python3-dev</build_depend>
+  <build_depend condition="($CONDA_PREFIX != '') or ($HOMEBREW_PREFIX == '')">python3-numpy</build_depend>
+  <build_depend condition="($CONDA_PREFIX != '') or ($HOMEBREW_PREFIX == '')">python3-setuptools</build_depend>
 
   <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-date-time</exec_depend>
   <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libboost-filesystem</exec_depend>
@@ -41,8 +41,8 @@
   <exec_depend condition="($CONDA_PREFIX == '') and ($HOMEBREW_PREFIX == '')">libbluetooth</exec_depend>
   <exec_depend>zlib</exec_depend>
   <exec_depend>python3</exec_depend>
-  <exec_depend condition="$HOMEBREW_PREFIX == ''">python3-numpy</exec_depend>
-  <exec_depend condition="$HOMEBREW_PREFIX == ''">python3-setuptools</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX != '') or ($HOMEBREW_PREFIX == '')">python3-numpy</exec_depend>
+  <exec_depend condition="($CONDA_PREFIX != '') or ($HOMEBREW_PREFIX == '')">python3-setuptools</exec_depend>
 
   <test_depend>gtest</test_depend>
 
