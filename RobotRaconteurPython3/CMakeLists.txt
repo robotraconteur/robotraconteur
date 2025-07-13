@@ -11,6 +11,8 @@ if(NOT EMSCRIPTEN)
         set(PYTHON3_INCLUDE_DIRS ${Python3_INCLUDE_DIRS})
         set(PYTHON3_LIBRARIES ${Python3_LIBRARIES})
         set(PYTHON3_EXECUTABLE ${Python3_EXECUTABLE})
+        set(PYTHON3_VERSION_MAJOR ${Python3_VERSION_MAJOR})
+        set(PYTHON3_VERSION_MINOR ${Python3_VERSION_MINOR})
         set(NUMPY3_INCLUDE_DIR ${Python3_NumPy_INCLUDE_DIRS})
         message(STATUS "Python3 found using new FindPython3 PYTHON_3_EXECUTABLE=${PYTHON3_EXECUTABLE}, "
                        "PYTHON_3_INCLUDE_DIRS=${PYTHON3_INCLUDE_DIRS}, " "PYTHON_3_LIBRARIES=${PYTHON3_LIBRARIES}, "
@@ -176,16 +178,21 @@ endif()
 
 # This mess is taken from github.com/ros/catkin/cmake/python.cmake...
 set(enable_setuptools_deb_layout OFF)
-if(ROBOTRACONTEUR_ROS AND "$ENV{ROS_DISTRO}" STREQUAL "noetic")
-    if(EXISTS "/etc/debian_version")
-        set(enable_setuptools_deb_layout ON)
+if(ROBOTRACONTEUR_ROS)
+    if("$ENV{ROS_DISTRO}" STREQUAL "noetic")
+        if(EXISTS "/etc/debian_version")
+            set(enable_setuptools_deb_layout ON)
+        endif()
+    else()
+        set(SETUPTOOLS_ARG_EXTRA
+            "--install-lib \"{base}/lib/python${PYTHON3_VERSION_MAJOR}.${PYTHON3_VERSION_MINOR}/site-packages\"")
     endif()
 endif()
 
 option(SETUPTOOLS_DEB_LAYOUT "Enable debian style python package layout" ${enable_setuptools_deb_layout})
 if(SETUPTOOLS_DEB_LAYOUT)
     message(STATUS "Using Debian Python package layout")
-    set(SETUPTOOLS_ARG_EXTRA "--install-layout=deb")
+    set(SETUPTOOLS_ARG_EXTRA "--install-layout=deb --single-version-externally-managed")
 endif()
 
 option(INSTALL_PYTHON3 "Install Python3 library" OFF)
@@ -202,7 +209,7 @@ if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
     elseif(WIN32)
         set(ROS_PYTHONPATH lib/site-packages)
     else()
-        set(ROS_PYTHONPATH lib/python3.${PYTHON_VERSION_MINOR}/site-packages)
+        set(ROS_PYTHONPATH lib/python3.${PYTHON3_VERSION_MINOR}/site-packages)
     endif()
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv
          "prepend-non-duplicate;PYTHONPATH;${ROS_PYTHONPATH}")
