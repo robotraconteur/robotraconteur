@@ -1996,6 +1996,9 @@ jobs:
         - kilted
         - rolling
         - noetic
+    defaults:
+      run:
+        shell: bash
     steps:
     - uses: actions/checkout@v4
       with:
@@ -2044,6 +2047,9 @@ jobs:
         - jazzy
         - kilted
         - rolling
+    defaults:
+      run:
+        shell: bash
     steps:
     - uses: actions/checkout@v4
       with:
@@ -2082,6 +2088,9 @@ jobs:
       matrix:
         ROS_DISTRO:
         - noetic
+    defaults:
+      run:
+        shell: bash
     steps:
     - uses: actions/checkout@v4
       with:
@@ -2095,7 +2104,7 @@ jobs:
         automake libtool bison libpcre3-dev curl libgtest-dev  -qq
     - name: rosdep install
       run: |
-        rosdep update
+        rosdep update --include-eol-distros
         rosdep install --from-paths src --ignore-src -y
       working-directory: workspace
     - name: build swig
