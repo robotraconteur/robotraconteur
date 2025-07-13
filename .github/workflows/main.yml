@@ -2098,14 +2098,14 @@ jobs:
         rosdep update
         rosdep install --from-paths src --ignore-src -y
       working-directory: workspace
-    - run: ./tools/build_files/generated_src/populate_generated_src.bash
-      working-directory: workspace/src/robotraconteur
-    - run: cp tools/build_files/ros/cmake_config_options.cmake .
-      working-directory: workspace/src/robotraconteur
     - name: build swig
       uses: johnwason/swig-build-action@v1.2
       with:
         cache-key: ros-catkin-${{ matrix.ROS_DISTRO }}-swig
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: workspace/src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: workspace/src/robotraconteur
     - run: |
         catkin_make_isolated --install --use-ninja --cmake-args -DCMAKE_BUILD_TYPE=Release
       working-directory: workspace
