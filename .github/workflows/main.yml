@@ -2035,6 +2035,7 @@ jobs:
     - name: test python path
       run: |
         set -e
+        source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
   test-ros-colcon-python-path:
     runs-on: ubuntu-latest
@@ -2116,6 +2117,8 @@ jobs:
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
       working-directory: workspace/src/robotraconteur
     - run: |
+        set -e
+        source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
         catkin_make_isolated --install --use-ninja --cmake-args -DCMAKE_BUILD_TYPE=Release
       working-directory: workspace
     - name: test python path
