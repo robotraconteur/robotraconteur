@@ -2025,7 +2025,7 @@ jobs:
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
       working-directory: src/robotraconteur
     - run: |
-        rosdep update
+        rosdep update --include-eol-distros
         bloom-generate rosdebian
       working-directory: src/robotraconteur
     - run: DEB_BUILD_OPTIONS=nocheck debuild -us -uc -b
@@ -2063,7 +2063,7 @@ jobs:
         automake libtool bison libpcre3-dev curl python3-colcon-common-extensions -qq
     - name: rosdep install
       run: |
-        rosdep update
+        rosdep update --include-eol-distros
         rosdep install --from-paths src --ignore-src -y
       working-directory: workspace
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
