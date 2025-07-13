@@ -2063,7 +2063,7 @@ jobs:
     - name: apt update
       run: sudo apt update
     - name: install deb
-      run: sudo dpkg -i *.deb
+      run: sudo dpkg -i *.deb || true
     - name: apt install
       run: sudo apt-get install -f -y
     - name: test python path
