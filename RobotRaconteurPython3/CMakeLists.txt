@@ -185,7 +185,8 @@ if(ROBOTRACONTEUR_ROS)
         endif()
     else()
         set(SETUPTOOLS_ARG_EXTRA
-            "--install-lib \"{base}/lib/python${PYTHON3_VERSION_MAJOR}.${PYTHON3_VERSION_MINOR}/site-packages\"")
+            "--install-lib \"\$ENV\{DESTDIR\}${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON3_VERSION_MAJOR}.${PYTHON3_VERSION_MINOR}/site-packages\""
+        )
     endif()
 endif()
 
