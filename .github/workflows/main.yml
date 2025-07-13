@@ -2168,7 +2168,7 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        shell: cmd
+        shell: cmd /C CALL {0}
     steps:
     - uses: actions/checkout@v4
       with:
