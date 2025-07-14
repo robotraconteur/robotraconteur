@@ -33,7 +33,7 @@ endif()
 add_subdirectory(robdef)
 add_subdirectory(lfsr)
 
-if(BUILD_CORE)
+if(BUILD_CORE OR TEST_CORE)
     add_subdirectory(cpp)
 endif()
 
