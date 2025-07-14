@@ -2177,7 +2177,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        channels: conda-forge,robostack-jazzy
+        channels: conda-forge,robostack-staging
         activate-environment: robostack
         environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
     - name: rosdep
@@ -2218,7 +2218,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        channels: conda-forge,robostack-jazzy
+        channels: conda-forge,robostack-staging
         activate-environment: robostack
         environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
     - name: rosdep

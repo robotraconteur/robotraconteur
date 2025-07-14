@@ -1,7 +1,7 @@
 name: robostack
 channels:
 - conda-forge
-- robostack-jazzy
+- robostack-staging
 dependencies:
 - ros-jazzy-ros-core
 - cxx-compiler
