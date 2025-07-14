@@ -2255,9 +2255,13 @@ jobs:
         pip install -U colcon-common-extensions rosdep numpy setuptools
     - name: rosdep
       run: |
+        set -e
         sudo rosdep init
         rosdep update --include-eol-distros
-        rosdep install --from-paths src --ignore-src -y
+        rosdep install --from-paths src --ignore-src -y -tbuildtool
+        rosdep install --from-paths src --ignore-src -y -tbuild
+        rosdep install --from-paths src --ignore-src -y -texec
+        rosdep install --from-paths src --ignore-src -y -ttest
       working-directory: workspace
     - name: colcon build
       run: |
