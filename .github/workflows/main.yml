@@ -2258,10 +2258,10 @@ jobs:
         set -e
         sudo rosdep init
         rosdep update --include-eol-distros
-        rosdep install --from-paths src --ignore-src -y -tbuildtool
-        rosdep install --from-paths src --ignore-src -y -tbuild
-        rosdep install --from-paths src --ignore-src -y -texec
-        rosdep install --from-paths src --ignore-src -y -ttest
+        rosdep install --from-paths src --ignore-src -y -tbuildtool -r || true
+        rosdep install --from-paths src --ignore-src -y -tbuild -r || true
+        rosdep install --from-paths src --ignore-src -y -texec -r || true
+        rosdep install --from-paths src --ignore-src -y -ttest -r || true
       working-directory: workspace
     - name: colcon build
       run: |
