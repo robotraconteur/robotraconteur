@@ -197,9 +197,20 @@ if(SETUPTOOLS_DEB_LAYOUT)
 endif()
 
 option(INSTALL_PYTHON3 "Install Python3 library" OFF)
-if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON OR INSTALL_PYTHON3)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python3_install.cmake.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake @ONLY)
+option(INSTALL_PYTHON3_PIP "Install Python3 library using pip" OFF)
+if(ROBOTRACONTEUR_ROS
+   OR ROBOTRACONTEUR_COLCON
+   OR INSTALL_PYTHON3
+   OR INSTALL_PYTHON3_PIP)
+    if(INSTALL_PYTHON3_PIP)
+        message(STATUS "Installing Python3 library using pip")
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python3_install_pip.cmake.in
+                       ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake @ONLY)
+    else()
+        message(STATUS "Installing Python3 library using setup.py")
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python3_install.cmake.in
+                       ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake @ONLY)
+    endif()
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake)
 endif()
 
