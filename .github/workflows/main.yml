@@ -2177,7 +2177,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        channels: conda-forge,robostack
+        channels: conda-forge,robostack-jazzy
         activate-environment: robostack
         environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
     - name: rosdep
@@ -2200,6 +2200,7 @@ jobs:
   test-ros-colcon-unix-robostack:
     runs-on: ${{ matrix.config.runner }}
     strategy:
+      fail-fast: false
       matrix:
         config:
         - os: macos
@@ -2217,7 +2218,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        channels: conda-forge,robostack
+        channels: conda-forge,robostack-jazzy
         activate-environment: robostack
         environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
     - name: rosdep
@@ -2253,6 +2254,7 @@ jobs:
     - name: pip install dependencies
       run: |
         pip install -U colcon-common-extensions rosdep numpy setuptools
+        python3 -m pip install numpy
     - name: rosdep
       run: |
         set -e
