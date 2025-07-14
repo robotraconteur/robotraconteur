@@ -2263,6 +2263,7 @@ jobs:
       run: |
         brew update
         brew upgrade
+        brew install swig
     - name: pip install dependencies
       run: |
         pip install -U colcon-common-extensions rosdep numpy setuptools
