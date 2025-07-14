@@ -106,3 +106,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/RobotRaconteurGenerateThunk.cma
                ${CMAKE_BINARY_DIR}/RobotRaconteurGenerateThunk.cmake @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/RobotRaconteurGenerateThunk.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+
+if(UNIX)
+    # install man
+    install(FILES ${CMAKE_SOURCE_DIR}/docs/man/robotraconteurgen.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+            RENAME robotraconteurgen.1)
+endif()
