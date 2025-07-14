@@ -2267,7 +2267,7 @@ jobs:
     - name: pip install dependencies
       run: |
         pip install -U colcon-common-extensions rosdep numpy setuptools
-        python3 -m pip install numpy --break-system-packages
+        python3 -m pip install numpy setuptools --break-system-packages
     - name: rosdep
       run: |
         set -e
