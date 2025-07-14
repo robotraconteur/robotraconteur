@@ -4,7 +4,7 @@ channels:
 - robostack-jazzy
 dependencies:
 - ros-jazzy-ros-core
-- vs2019_win-64
+- cxx-compiler
 - colcon-common-extensions
 - ninja
 - swig
