@@ -4,7 +4,6 @@ channels:
 - robostack-staging
 dependencies:
 - ros-jazzy-ros-core
-- cxx-compiler
 - colcon-common-extensions
 - ninja
 - swig
