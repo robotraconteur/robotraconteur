@@ -2177,9 +2177,15 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        channels: conda-forge,robostack-staging
+        channels: conda-forge,robostack-jazzy
         activate-environment: robostack
         environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+    - name: print environment
+      run: |
+        conda info
+        conda list
+        echo %PATH%
+        echo %PYTHONPATH%
     - name: rosdep
       run: |
         rosdep init
@@ -2218,9 +2224,15 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        channels: conda-forge,robostack-staging
+        channels: conda-forge,robostack-jazzy
         activate-environment: robostack
         environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+    - name: print environment
+      run: |
+        conda info
+        conda list
+        echo $PATH
+        echo $PYTHONPATH
     - name: rosdep
       run: |
         rosdep init
