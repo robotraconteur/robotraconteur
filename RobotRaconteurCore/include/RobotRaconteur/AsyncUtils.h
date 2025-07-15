@@ -271,13 +271,13 @@ void async_timeout_wrapper<T>::start_timer(int32_t timeout,
 
     if (timeout != RR_TIMEOUT_INFINITE)
     {
+        timeout_exception_ = RR_MOVE(timeout_exception);
         timeout_timer_ =
             async_timeout_wrapper_CreateTimer(n, boost::posix_time::milliseconds(timeout),
                                               boost::bind(&async_timeout_wrapper<T>::timeout_handler,
                                                           this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
                                               true);
         timeout_timer_->Start();
-        timeout_exception_ = RR_MOVE(timeout_exception);
     }
 }
 
