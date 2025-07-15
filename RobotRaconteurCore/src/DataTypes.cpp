@@ -385,7 +385,7 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
         if (count.empty())
             throw InvalidArgumentException("MultiDimArray count invalid");
 
-        if (count.size() > mema_dims.size() || count.size() > memb_dims.size())
+        if (count.size() > mema_dims.size() || count.size() > mema_dims.size())
             throw InvalidArgumentException("MultiDimArray copy count invalid");
         if (count.size() > memb_dims.size() || count.size() > memb_dims.size())
             throw InvalidArgumentException("MultiDimArray copy count invalid");
