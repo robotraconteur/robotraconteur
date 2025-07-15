@@ -776,8 +776,15 @@ void WireClientBase::AsyncConnect_internal1(
         }
 
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "Wire connected");
+        {
+            RR_SHARED_PTR<WireConnectionBase> connection1;
+            {
+                boost::mutex::scoped_lock lock(connection_lock);
+                connection1 = connection;
+            }
 
-        detail::InvokeHandler(node, handler, connection);
+            detail::InvokeHandler(node, handler, connection1);
+        }
     }
     catch (std::exception& err2)
     {
