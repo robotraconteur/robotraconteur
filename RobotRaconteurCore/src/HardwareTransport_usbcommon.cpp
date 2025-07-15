@@ -1863,7 +1863,9 @@ void UsbDevice::Shutdown()
         RR_SHARED_PTR<UsbDevice_Claim> c = claim.lock();
         if (c)
         {
+            lock.unlock();
             c->Close();
+            lock.lock();
             claim.reset();
         }
     }
