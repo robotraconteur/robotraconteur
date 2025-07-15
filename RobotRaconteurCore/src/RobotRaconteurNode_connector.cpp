@@ -46,11 +46,14 @@ RobotRaconteurNode_connector::endpoint_cleanup::endpoint_cleanup(const RR_SHARED
 RobotRaconteurNode_connector::endpoint_cleanup::~endpoint_cleanup()
 {
     RR_SHARED_PTR<ClientContext> ep1;
+    try
     {
         boost::mutex::scoped_lock lock(eplock);
         ep1 = ep;
         ep.reset();
     }
+    catch (std::exception&)
+    {}
 
     if (!ep1)
         return;
