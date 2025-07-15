@@ -581,7 +581,7 @@ RR_INTRUSIVE_PTR<MessageEntry> WireBase::PackPacket(const RR_INTRUSIVE_PTR<RRVal
     }
 
     RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_WirePacket, GetMemberName());
-    m->elements = elems;
+    m->elements = RR_MOVE(elems);
     m->MetaData = "unreliable\n";
     return m;
 }

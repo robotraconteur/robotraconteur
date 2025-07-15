@@ -990,7 +990,7 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
                 {
 
                     // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-                    m_CurrentServicePath.reset(new std::string(ppath1));
+                    m_CurrentServicePath.reset(new std::string(RR_MOVE(ppath1)));
                     m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
                     // NOLINTEND(cppcoreguidelines-owning-memory)
                     RR_SHARED_PTR<RRObject> obj1 = skel->GetSubObj(p.at(i));
@@ -2501,7 +2501,7 @@ std::vector<std::string> ServerContext::GetCandidateConnectionURLs()
             if (!nodename.empty())
             {
                 url2 = url_split.at(0) + "?nodename=" + nodename + "&service=" + m_ServiceName;
-                o.push_back(url2);
+                o.push_back(RR_MOVE(url2));
             }
         }
     }

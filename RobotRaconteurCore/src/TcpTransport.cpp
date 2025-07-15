@@ -1739,7 +1739,7 @@ void TcpWSSWebSocketConnector::Connect(
             throw InvalidArgumentException("Invalid transport type for TcpTransport");
 
         std::string host = url_res.host;
-        servername = host;
+        servername = RR_MOVE(host);
         std::string port = boost::lexical_cast<std::string>(url_res.port);
 
         std::string path = url_res.path;
@@ -2012,7 +2012,7 @@ std::vector<std::string> TcpTransport::GetServerListenUrls()
                 o1 = s + "://[" + addr2.to_string() + "]:" + boost::lexical_cast<std::string>(e.port()) +
                      "?nodeid=" + nodeid.ToString("D");
             }
-            o.push_back(o1);
+            o.push_back(RR_MOVE(o1));
         }
     }
 
@@ -3658,9 +3658,9 @@ void TcpTransportConnection::AsyncAttachSocket(
 
         boost::system::error_code ec;
         if (!RobotRaconteurNode::TryPostToThreadPool(
-                node,
-                boost::bind(&TcpTransportConnection::do_starttls1,
-                            RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), noden, ec, callback)))
+                node, boost::bind(&TcpTransportConnection::do_starttls1,
+                                  RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), RR_MOVE(noden),
+                                  ec, callback)))
         {
             RobotRaconteurNode::TryPostToThreadPool(
                 node, boost::bind(callback, RR_MAKE_SHARED<ConnectionException>("Node closed")), true);
@@ -3734,9 +3734,9 @@ void TcpTransportConnection::AsyncAttachWebSocket(
 
         boost::system::error_code ec;
         if (!RobotRaconteurNode::TryPostToThreadPool(
-                node,
-                boost::bind(&TcpTransportConnection::do_starttls1,
-                            RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), noden, ec, callback)))
+                node, boost::bind(&TcpTransportConnection::do_starttls1,
+                                  RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), RR_MOVE(noden),
+                                  ec, callback)))
         {
             RobotRaconteurNode::TryPostToThreadPool(
                 node, boost::bind(callback, RR_MAKE_SHARED<ConnectionException>("Node closed")), true);
@@ -3894,9 +3894,9 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(
 
         boost::system::error_code ec;
         if (!RobotRaconteurNode::TryPostToThreadPool(
-                node,
-                boost::bind(&TcpTransportConnection::do_starttls1,
-                            RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), noden, ec, callback)))
+                node, boost::bind(&TcpTransportConnection::do_starttls1,
+                                  RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), RR_MOVE(noden),
+                                  ec, callback)))
         {
             detail::PostHandlerWithException(node, callback, RR_MAKE_SHARED<ConnectionException>("Node closed"), true,
                                              false);
@@ -4955,7 +4955,7 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
         }
 
         // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
+        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(RR_MOVE(connecturl)));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this())));
         // NOLINTEND(cppcoreguidelines-owning-memory)
@@ -5117,7 +5117,7 @@ void TcpTransportConnection::StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Mess
 
                 boost::function<void(const boost::system::error_code&)> h =
                     boost::bind(&TcpTransportConnection::do_starttls4,
-                                RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), servername,
+                                RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), RR_MOVE(servername),
                                 RR_BOOST_PLACEHOLDERS(_1));
                 AsyncPauseReceive(h);
                 return;
@@ -6281,7 +6281,7 @@ std::string IPNodeDiscovery::generate_response_packet(const boost::asio::ip::add
     std::string packetdata2 = packetdata + service_data + "\n";
     if (packetdata2.size() <= 2048)
     {
-        packetdata = packetdata2;
+        packetdata = RR_MOVE(packetdata2);
     }
 
     return packetdata;

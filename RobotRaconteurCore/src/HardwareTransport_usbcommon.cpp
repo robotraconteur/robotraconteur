@@ -976,7 +976,7 @@ void UsbDevice_Claim::AsyncCreateTransportConnection1(
     }
     case Claiming: {
         UsbDeviceClaim_create_request req(url_res, endpoint, noden, handler);
-        create_requests.push_back(req);
+        create_requests.push_back(RR_MOVE(req));
         break;
     }
     case Closing:

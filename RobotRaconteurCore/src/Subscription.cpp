@@ -445,8 +445,8 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
                                                        << info.NodeID.ToString());
                 e->second->service_info2 = info;
                 RobotRaconteurNode::TryPostToThreadPool(
-                    node,
-                    boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(), k, info));
+                    node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(),
+                                      RR_MOVE(k), info));
             }
 
             e->second->last_node_update = n->NowNodeTime();
@@ -487,7 +487,7 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
 
             RobotRaconteurNode::TryPostToThreadPool(node,
                                                     boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener,
-                                                                shared_from_this(), noden, c2->service_info2));
+                                                                shared_from_this(), RR_MOVE(noden), c2->service_info2));
         }
     }
 
@@ -522,8 +522,8 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
                                                        << " due to service no longer advertising");
 
                 RobotRaconteurNode::TryPostToThreadPool(
-                    node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(), id1,
-                                      info1));
+                    node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(),
+                                      RR_MOVE(id1), RR_MOVE(info1)));
             }
             else
             {
@@ -570,8 +570,9 @@ void ServiceInfo2Subscription::NodeLost(RR_SHARED_PTR<detail::Discovery_nodestor
                                                    << info1.Name << "\" on node " << info1.NodeID.ToString()
                                                    << " due to node lost");
 
-            RobotRaconteurNode::TryPostToThreadPool(
-                node, boost::bind(&ServiceInfo2Subscription::fire_ServiceLostListener, shared_from_this(), id1, info1));
+            RobotRaconteurNode::TryPostToThreadPool(node,
+                                                    boost::bind(&ServiceInfo2Subscription::fire_ServiceLostListener,
+                                                                shared_from_this(), RR_MOVE(id1), RR_MOVE(info1)));
         }
         else
         {
@@ -925,8 +926,8 @@ void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, bo
     RR_SHARED_PTR<detail::ServiceSubscription_client> c2 = RR_MAKE_SHARED<detail::ServiceSubscription_client>();
     c2->connecting.data() = true;
     c2->nodeid = service_nodeid;
-    c2->nodename = service_nodename;
-    c2->service_name = service_name;
+    c2->nodename = RR_MOVE(service_nodename);
+    c2->service_name = RR_MOVE(service_name);
     c2->service_type = objecttype.to_string();
     c2->urls = url;
     c2->last_node_update = n->NowNodeTime();
@@ -1055,7 +1056,7 @@ void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorag
         {
 
             RR_SHARED_PTR<detail::ServiceSubscription_client>& c2 = e->second;
-            c2->urls = urls;
+            c2->urls = RR_MOVE(urls);
             c2->last_node_update = n->NowNodeTime();
 
             if (c2->retry_timer)

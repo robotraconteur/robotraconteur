@@ -339,7 +339,7 @@ class websocket_stream : private boost::noncopyable
                     handshake_recv_args.find("sec-websocket-protocol") != handshake_recv_args.end())
                 {
                     std::string value2 = handshake_recv_args.at("sec-websocket-protocol") + ", " + value;
-                    handshake_recv_args.at("sec-websocket-protocol") = value2;
+                    handshake_recv_args.at("sec-websocket-protocol") = RR_MOVE(value2);
                 }
                 else
                 {
@@ -637,8 +637,8 @@ class websocket_stream : private boost::noncopyable
         next_layer_.async_write_some(boost::asio::buffer(data->c_str(), data->size()),
                                      boost::bind(&websocket_stream::async_client_handshake2, this,
                                                  boost::asio::placeholders::error,
-                                                 boost::asio::placeholders::bytes_transferred, data, url, protocol, key,
-                                                 boost::protect(RR_MOVE(handler))));
+                                                 boost::asio::placeholders::bytes_transferred, data, url, protocol,
+                                                 RR_MOVE(key), boost::protect(RR_MOVE(handler))));
     }
 
   protected:
@@ -865,7 +865,7 @@ class websocket_stream : private boost::noncopyable
         {
             handshake_recv_args2.insert(std::make_pair(boost::to_lower_copy(e.first), e.second));
         }
-        handshake_recv_args = handshake_recv_args2;
+        handshake_recv_args = RR_MOVE(handshake_recv_args2);
 
         if (handshake_recv_args.find("upgrade") == handshake_recv_args.end() ||
             handshake_recv_args.find("connection") == handshake_recv_args.end() ||

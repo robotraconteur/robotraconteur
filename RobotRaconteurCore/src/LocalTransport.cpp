@@ -266,7 +266,7 @@ void LocalTransport::AsyncCreateTransportConnection(
         }
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                            "LocalTransport searching \"" << user_path << "\" for URL: " << url);
-        search_paths.push_back(user_path);
+        search_paths.push_back(RR_MOVE(user_path));
 
         if (public_user_path)
         {
@@ -291,7 +291,7 @@ void LocalTransport::AsyncCreateTransportConnection(
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                                    "LocalTransport searching \"" << service_path
                                                                                  << "\" for URL: " << url);
-                search_paths.push_back(service_path);
+                search_paths.push_back(RR_MOVE(service_path));
             }
 
             usernames.push_back(service_username);
@@ -350,7 +350,7 @@ void LocalTransport::AsyncCreateTransportConnection(
                 }
             }
         }
-        usernames.push_back(username);
+        usernames.push_back(RR_MOVE(username));
     }
 
     // TODO: test this
@@ -1378,7 +1378,7 @@ void LocalTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
     {
         std::string connecturl = "rr+local:///";
         // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
+        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(RR_MOVE(connecturl)));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this())));
         // NOLINTEND(cppcoreguidelines-owning-memory)
@@ -1794,9 +1794,9 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
             i.NodeID = nodeid;
             i.NodeName.clear();
             NodeDiscoveryInfoURL iurl;
-            iurl.URL = url;
+            iurl.URL = RR_MOVE(url);
             iurl.LastAnnounceTime = now;
-            i.URLs.push_back(iurl);
+            i.URLs.push_back(RR_MOVE(iurl));
 
             e_type service_nonce = info.find("ServiceStateNonce");
             if (service_nonce != info.end())
@@ -1804,7 +1804,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
                 i.ServiceStateNonce = service_nonce->second;
             }
 
-            nodeinfo.push_back(i);
+            nodeinfo.push_back(RR_MOVE(i));
         }
         catch (std::exception&)
         {}

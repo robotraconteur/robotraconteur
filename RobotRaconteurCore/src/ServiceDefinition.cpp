@@ -670,7 +670,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
                     throw ServiceDefinitionParseException("constant must be before struct and object", working_info);
                 RR_SHARED_PTR<ConstantDefinition> constant_def = RR_MAKE_SHARED<ConstantDefinition>(shared_from_this());
                 constant_def->FromString(l, &working_info);
-                constant_def->DocString = docstring;
+                constant_def->DocString = RR_MOVE(docstring);
                 Constants.push_back(constant_def);
                 entry_key_max = 7;
                 continue;
@@ -761,7 +761,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
         bool version_found = false;
         if (stdver_found)
         {
-            StdVer = stdver_version;
+            StdVer = RR_MOVE(stdver_version);
             version_found = true;
         }
         BOOST_FOREACH (std::string& so, Options)
@@ -2969,7 +2969,7 @@ std::vector<ConstantDefinition_StructField> ConstantDefinition::ValueToStructFie
         ConstantDefinition_StructField f;
         f.Name = r_match[1];
         f.ConstantRefName = r_match[2];
-        o.push_back(f);
+        o.push_back(RR_MOVE(f));
     }
 
     return o;
@@ -4109,7 +4109,7 @@ rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj,
                                                        parse_info);
 
             rrimplements imp2 = get_implements(obj2, def2, defs, parse_info, rootobj);
-            out.implements.push_back(imp2);
+            out.implements.push_back(RR_MOVE(imp2));
         }
     }
 
@@ -4382,7 +4382,7 @@ void VerifyObject(const RR_SHARED_PTR<ServiceEntryDefinition>& obj, const RR_SHA
         if (boost::range::find(membernames, membername) != membernames.end())
             throw ServiceDefinitionVerifyException(
                 "Object \"" + obj->Name + "\" contains multiple members named \"" + membername + "\"", obj->ParseInfo);
-        membernames.push_back(membername);
+        membernames.push_back(RR_MOVE(membername));
     }
 
     rrimplements r = get_implements(obj, def, defs, obj->ParseInfo);
@@ -4473,7 +4473,7 @@ void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
                 throw ServiceDefinitionVerifyException("Structure \"" + strut->Name +
                                                            "\" contains multiple members named \"" + membername + "\"",
                                                        strut->ParseInfo);
-            membernames.push_back(membername);
+            membernames.push_back(RR_MOVE(membername));
         }
     }
 
@@ -4580,7 +4580,7 @@ void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
     if (entry_type == DataTypes_pod_t)
     {
         std::set<std::string> n;
-        VerifyStructure_check_recursion(strut, all_defs, n, DataTypes_pod_t);
+        VerifyStructure_check_recursion(strut, all_defs, RR_MOVE(n), DataTypes_pod_t);
     }
 
     if (entry_type == DataTypes_namedarray_t)
@@ -4663,7 +4663,7 @@ rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def,
         }
 
         rrimports imp2 = get_imports(def2, defs, parent_defs);
-        out.imported.push_back(imp2);
+        out.imported.push_back(RR_MOVE(imp2));
     }
 
     return out;
@@ -4830,7 +4830,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(const std::vector<RR_SHARE
                 throw ServiceDefinitionVerifyException("Service definition \"" + e->Name +
                                                            "\" contains multiple high level names \"" + name + "\"",
                                                        ee->ParseInfo);
-            names.push_back(name);
+            names.push_back(RR_MOVE(name));
         }
 
         BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& ee, e->Objects)
@@ -5164,6 +5164,6 @@ ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes, size_t> GetNamedArrayElementType
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<RRObject>& client)
 {
     std::set<std::string> n;
-    return GetNamedArrayElementTypeAndCount(def, other_defs, node, client, n);
+    return GetNamedArrayElementTypeAndCount(def, other_defs, node, client, RR_MOVE(n));
 }
 } // namespace RobotRaconteur

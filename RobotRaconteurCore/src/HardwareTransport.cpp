@@ -1088,7 +1088,7 @@ void HardwareTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message
     {
         std::string connecturl = scheme + ":///";
         // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
+        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(RR_MOVE(connecturl)));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<HardwareTransportConnection>(shared_from_this())));
         // NOLINTEND(cppcoreguidelines-owning-memory)

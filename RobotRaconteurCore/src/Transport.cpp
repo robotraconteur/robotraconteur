@@ -158,7 +158,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
         }
         else
         {
-            o.nodename = noden;
+            o.nodename = RR_MOVE(noden);
         }
         o.path = "/";
         try
