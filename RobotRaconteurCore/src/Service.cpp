@@ -2180,6 +2180,7 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
     }
 
     {
+        boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
         boost::mutex::scoped_lock lock(skels_lock);
         std::vector<std::string> objkeys;
         BOOST_FOREACH (const MessageStringPtr& k, skels | boost::adaptors::map_keys)
@@ -2208,7 +2209,6 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
             {
 
                 {
-                    boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
                     boost::mutex::scoped_lock lock2(s->objectlock_lock);
                     RR_SHARED_PTR<ServerContext_ObjectLock> lock = s->objectlock.lock();
                     if (!lock)
