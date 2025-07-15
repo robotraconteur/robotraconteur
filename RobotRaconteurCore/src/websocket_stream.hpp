@@ -1705,7 +1705,7 @@ class websocket_stream : private boost::noncopyable
             }
 
             const_buffers send_b;
-            send_b.push_back(boost::asio::buffer(ping_data2.get(), ping_data_len));
+            send_b.push_back(boost::asio::buffer(ping_data2.get(), ping_data_len2));
             lock.unlock();
 
             async_write_message(
