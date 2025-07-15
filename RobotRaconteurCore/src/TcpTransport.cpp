@@ -1975,7 +1975,9 @@ int32_t TcpTransport::GetListenPort()
             return c->GetListenPort();
         }
     }
+    lock.unlock();
 
+    boost::mutex::scoped_lock lock2(acceptor_lock);
     return m_Port;
 }
 
