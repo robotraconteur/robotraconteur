@@ -1251,6 +1251,7 @@ class websocket_stream : private boost::noncopyable
     template <typename MutableBufferSequence, typename Handler>
     void next_layer_async_read_some(MutableBufferSequence buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
     {
+        boost::mutex::scoped_lock lock(extra_recv_data_lock);
         if (extra_recv_data_len > 0)
         {
             size_t l = boost::asio::buffer_copy(
@@ -1265,6 +1266,7 @@ class websocket_stream : private boost::noncopyable
                 extra_recv_data_pos += l;
                 extra_recv_data_len -= l;
             }
+            lock.unlock();
             boost::asio::detail::binder2<Handler, boost::system::error_code, std::size_t> handler2(
                 handler, boost::system::error_code(), l);
 #if BOOST_ASIO_VERSION >= 101200
@@ -1275,6 +1277,7 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
+        lock.unlock();
         next_layer_.async_read_some(buffers, BOOST_ASIO_MOVE_CAST(Handler)(handler));
     }
 
