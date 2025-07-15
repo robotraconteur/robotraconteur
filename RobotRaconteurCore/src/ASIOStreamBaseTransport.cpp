@@ -1160,7 +1160,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(const RR_INTRUSIVE_PTR<Message>
 void ASIOStreamBaseTransport::EndReceiveMessage4()
 {
     {
-        boost::mutex::scoped_lock recv_lock;
+        boost::mutex::scoped_lock lock(recv_lock);
 
         if (recv_pause_request)
         {
