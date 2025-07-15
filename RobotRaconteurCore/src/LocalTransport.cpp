@@ -166,17 +166,20 @@ void LocalTransport::Close()
         fds = RR_MAKE_SHARED<detail::LocalTransportFDs>();
     }
 
+    {
+        boost::mutex::scoped_lock lock(acceptor_lock);
 #ifndef ROBOTRACONTEUR_WINDOWS
-    if (!socket_file_name.empty())
-    {
-        unlink(socket_file_name.c_str());
-    }
+        if (!socket_file_name.empty())
+        {
+            unlink(socket_file_name.c_str());
+        }
 #else
-    if (!socket_file_name.empty())
-    {
-        DeleteFileA(socket_file_name.c_str());
-    }
+        if (!socket_file_name.empty())
+        {
+            DeleteFileA(socket_file_name.c_str());
+        }
 #endif
+    }
 
     DisableNodeDiscoveryListening();
 
