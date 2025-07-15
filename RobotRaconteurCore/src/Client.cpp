@@ -2742,7 +2742,7 @@ std::string ClientContext::LogoutUser()
     try
     {
         boost::mutex::scoped_lock lock(m_Authentication_lock);
-        if (!GetUserAuthenticated())
+        if (!m_UserAuthenticated)
             throw InvalidOperationException("User is not authenticated");
 
         m_UserAuthenticated = false;
