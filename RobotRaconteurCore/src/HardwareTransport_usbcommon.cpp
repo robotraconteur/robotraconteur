@@ -400,6 +400,7 @@ void UsbDevice_Initialize::InitializeDevice(boost::function<void(const UsbDevice
 
     if (status != NotInitialized && status != Busy)
     {
+        lock.unlock();
         InitializeDevice_err(handler, Busy);
         return;
     }
