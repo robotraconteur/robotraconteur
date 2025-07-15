@@ -374,6 +374,8 @@ bool WireConnectionBase::TryGetOutValueBase(RR_INTRUSIVE_PTR<RRValue>& value, Ti
         return false;
     }
     value = outval;
+    lock2.unlock();
+    boost::mutex::scoped_lock lock3(sendlock);
     time = lasttime_send;
     return true;
 }
