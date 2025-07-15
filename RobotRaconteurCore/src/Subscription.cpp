@@ -1626,6 +1626,8 @@ std::vector<std::string> ServiceSubscription::GetServiceURL()
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "Subscription not using service url");
         throw InvalidOperationException("Subscription not using service url");
     }
+
+    boost::mutex::scoped_lock lock(this_lock);
     return service_url;
 }
 
