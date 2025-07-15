@@ -1354,7 +1354,7 @@ void UsbDevice_Claim::DoWrite()
                 RR_SHARED_PTR<UsbDeviceTransportConnection> c = e->lock();
                 if (!c)
                 {
-                    e = transport_write.erase(e);
+                    e = transport_write_idle.erase(e);
                     continue;
                 }
                 if (c->CanDoWrite() > 0)
