@@ -160,6 +160,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
 
     if (timeout != RR_TIMEOUT_INFINITE)
     {
+        boost::mutex::scoped_lock lock2(timeout_timer_lock);
         timeout_timer = node->CreateTimer(boost::posix_time::milliseconds(timeout),
                                           boost::bind(&Discovery_updatediscoverednodes::timeout_timer_callback,
                                                       shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
@@ -168,7 +169,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
     }
 
     {
-        boost::mutex::scoped_lock lock(active_lock);
+        boost::mutex::scoped_lock lock3(active_lock);
         int32_t timeout1 = timeout;
         if (timeout1 > 0)
         {
@@ -201,7 +202,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
 
     bool done = false;
     {
-        boost::mutex::scoped_lock lock(active_lock);
+        boost::mutex::scoped_lock lock4(active_lock);
         if (active.empty())
             done = true;
     }
