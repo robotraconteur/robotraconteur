@@ -159,7 +159,9 @@ void GeneratorClientBase::AsyncNextBase1(
 
     if (!ret->TryFindElement("return", mret))
     {
-        throw ProtocolException("Generator next response does not contain return element");
+        handler(RR_INTRUSIVE_PTR<MessageElement>(),
+                RR_MAKE_SHARED<ProtocolException>("Generator next response does not contain return element"), node1);
+        return;
     }
     handler(mret, err, node1);
 }
