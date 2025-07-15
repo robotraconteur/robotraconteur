@@ -2464,7 +2464,7 @@ void TcpTransport::StartServer(const std::vector<boost::asio::ip::tcp::endpoint>
 
 std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetListenEndpoints()
 {
-
+    boost::mutex::scoped_lock lock2(port_sharer_client_lock);
     if (port_sharer_client)
     {
         RR_SHARED_PTR<detail::TcpTransportPortSharerClient> c =
@@ -2481,6 +2481,7 @@ std::vector<boost::asio::ip::tcp::endpoint> TcpTransport::GetListenEndpoints()
             }
         }
     }
+    lock2.unlock();
 
     boost::mutex::scoped_lock lock(acceptor_lock);
 
