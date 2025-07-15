@@ -117,7 +117,16 @@ RRLogRecordStream::RRLogRecordStream(const RR_SHARED_PTR<RobotRaconteurNode>& no
 RRLogRecordStream::~RRLogRecordStream()
 {
     record.Message = ss.str();
-    node->LogRecord(record);
+    try
+    {
+        node->LogRecord(record);
+    }
+    catch (std::exception& exp)
+    {
+        // If logging fails, we just ignore it
+        // This is to prevent logging from throwing exceptions that could crash the application
+        std::cerr << "Failed to log record: " << exp.what() << std::endl;
+    }
 }
 
 std::stringstream& RRLogRecordStream::Stream() { return ss; }
