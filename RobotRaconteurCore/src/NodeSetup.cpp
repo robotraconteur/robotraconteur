@@ -419,7 +419,7 @@ RobotRaconteurNodeSetup::~RobotRaconteurNodeSetup()
                 node->Shutdown();
             }
         }
-        catch (std::exception& exp)
+        catch (std::exception&)
         {
             // TODO: Log this error? To where?
         }
