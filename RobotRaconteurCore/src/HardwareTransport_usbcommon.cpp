@@ -1911,6 +1911,7 @@ void UsbDevice::DeviceClaimError(const RR_SHARED_PTR<UsbDevice_Claim>& claim, Us
 
 void UsbDevice::DeviceClaimReleased(const RR_SHARED_PTR<UsbDevice_Claim>& claim)
 {
+    boost::mutex::scoped_lock lock(this_lock);
     RR_SHARED_PTR<UsbDevice_Claim> c = this->claim.lock();
     if (!c || c == claim)
     {
