@@ -67,6 +67,8 @@ TimeSpec WireConnectionBase::GetLastValueSentTime()
     boost::mutex::scoped_lock lock(outval_lock);
     if (!outval_valid)
         throw ValueNotSetException("No value sent");
+    lock.unlock();
+    boost::mutex::scoped_lock lock2(sendlock);
     return lasttime_send;
 }
 
