@@ -1001,8 +1001,7 @@ void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(
 
     timeout_timer = t;
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
-                                       "Begin UpdateServiceInfo to remote node "
-                                           << this->remote_nodeid.ToString() << " using " << backoff << " ms backoff");
+                                       "Begin UpdateServiceInfo using " << backoff << " ms backoff");
 }
 
 // class Discovery
