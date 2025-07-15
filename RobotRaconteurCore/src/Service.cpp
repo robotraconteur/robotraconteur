@@ -2208,11 +2208,11 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
             {
 
                 {
+                    boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
                     boost::mutex::scoped_lock lock2(s->objectlock_lock);
                     RR_SHARED_PTR<ServerContext_ObjectLock> lock = s->objectlock.lock();
                     if (!lock)
                         return;
-                    boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
                     if (lock->GetRootServicePath() == path1)
                     {
                         active_object_locks.erase(lock->GetUsername());
