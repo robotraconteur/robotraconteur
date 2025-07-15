@@ -5902,7 +5902,14 @@ void IPNodeDiscovery::handle_receive_update_timer(const boost::system::error_cod
 
 void IPNodeDiscovery::NodeAnnounceReceived(boost::string_ref packet, const boost::asio::ip::udp::endpoint& send_ep)
 {
-    if (listening)
+    bool listening1 = false;
+    bool broadcasting1 = false;
+    {
+        boost::mutex::scoped_lock lock(change_lock);
+        listening1 = listening;
+        broadcasting1 = broadcasting;
+    }
+    if (listening1)
     {
         try
         {
@@ -5979,7 +5986,7 @@ void IPNodeDiscovery::NodeAnnounceReceived(boost::string_ref packet, const boost
         {}
     }
 
-    if (broadcasting)
+    if (broadcasting1)
     {
         try
         {
