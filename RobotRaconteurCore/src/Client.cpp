@@ -396,8 +396,8 @@ void ClientContext::AsyncFindObjRef1(
                     AsyncPullServiceDefinitionAndImports(
                         objectdef,
                         boost::bind(&ClientContext::AsyncFindObjRef2, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
-                                    RR_BOOST_PLACEHOLDERS(_2), objecttype, objectdef.to_string(), path, objecttype2,
-                                    handler, timeout),
+                                    RR_BOOST_PLACEHOLDERS(_2), RR_MOVE(objecttype), objectdef.to_string(), path,
+                                    objecttype2, handler, timeout),
                         timeout);
                     return;
                 }
