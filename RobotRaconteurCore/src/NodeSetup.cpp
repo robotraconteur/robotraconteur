@@ -412,9 +412,16 @@ RobotRaconteurNodeSetup::~RobotRaconteurNodeSetup()
         return;
     if (node)
     {
-        if (detail::ThreadPool_IsNodeMultithreaded(node))
+        try
         {
-            node->Shutdown();
+            if (detail::ThreadPool_IsNodeMultithreaded(node))
+            {
+                node->Shutdown();
+            }
+        }
+        catch (std::exception& exp)
+        {
+            // TODO: Log this error? To where?
         }
     }
 }
