@@ -1691,12 +1691,12 @@ class websocket_stream : private boost::noncopyable
         boost::shared_ptr<handler_wrapper<Handler, executor_type> > handler2 =
             boost::make_shared<handler_wrapper<Handler, executor_type> >(
                 boost::ref(handler), RR_BOOST_ASIO_REF_IO_SERVICE(RR_BOOST_ASIO_GET_IO_SERVICE((*this))));
+        boost::mutex::scoped_lock lock(ping_lock);
         if (ping_requested)
         {
             boost::shared_array<uint8_t> ping_data2;
             size_t ping_data_len2 = 0;
             {
-                boost::mutex::scoped_lock lock(ping_lock);
                 ping_data2 = ping_data;
                 ping_data_len2 = ping_data_len;
                 ping_data.reset();
@@ -1706,6 +1706,7 @@ class websocket_stream : private boost::noncopyable
 
             const_buffers send_b;
             send_b.push_back(boost::asio::buffer(ping_data2.get(), ping_data_len));
+            lock.unlock();
 
             async_write_message(
                 WebSocketOpcode_pong, send_b,
@@ -1719,6 +1720,7 @@ class websocket_stream : private boost::noncopyable
         }
         else
         {
+            lock.unlock();
             // TODO: use more than first buffer
             async_write_message(DataFrameType, buffers,
                                 boost::bind(&handler_wrapper<Handler, executor_type>::do_complete, handler2,
