@@ -193,6 +193,7 @@ std::string LocalTransport::GetUrlSchemeString() const { return "rr+local"; }
 
 std::vector<std::string> LocalTransport::GetServerListenUrls()
 {
+    boost::mutex::scoped_lock lock(acceptor_lock);
     std::vector<std::string> o;
     if (acceptor)
     {
