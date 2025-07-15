@@ -800,7 +800,6 @@ std::string WireServerBase::GetServicePath() { return service_path; }
 
 WireClientBase::WireClientBase(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub,
                                MemberDefinition_Direction direction)
-    : WireBase()
 {
     this->stub = stub;
     this->m_MemberName = RR_MOVE(name.to_string());
@@ -1243,7 +1242,6 @@ RR_INTRUSIVE_PTR<MessageEntry> WireServerBase::WireCommand(const RR_INTRUSIVE_PT
 
 WireServerBase::WireServerBase(boost::string_ref name, const RR_SHARED_PTR<ServiceSkel>& skel,
                                MemberDefinition_Direction direction)
-    : WireBase()
 {
     this->skel = skel;
     this->m_MemberName = RR_MOVE(name.to_string());

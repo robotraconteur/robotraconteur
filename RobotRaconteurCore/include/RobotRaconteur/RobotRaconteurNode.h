@@ -2082,7 +2082,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
         RR_SHARED_PTR<ThreadPool> t;
         if (!node1->TryGetThreadPool(t))
             return false;
-        return t->TryPost(RR_MOVE(h));
+        return t->TryPost(RR_FORWARD(HandlerType, h));
     }
 
     /**
@@ -2642,7 +2642,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
             return t->TryPost(boost::bind(f, boost::asio::error::operation_aborted));
         }
 
-        RR_SHARED_PTR<asio_async_wait1<F> > f1(new asio_async_wait1<F>(RR_MOVE(f)));
+        RR_SHARED_PTR<asio_async_wait1<F> > f1(new asio_async_wait1<F>(RR_FORWARD(F, f)));
         t->async_wait(boost::bind(&asio_async_wait1<F>::do_complete, f1, boost::asio::placeholders::error));
 
         node1->shutdown_listeners.connect(

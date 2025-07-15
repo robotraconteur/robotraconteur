@@ -294,7 +294,7 @@ class HardwareTransport_discovery
             n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";
             n1.LastAnnounceTime = node->NowNodeTime();
             n.URLs.push_back(RR_MOVE(n1));
-            o->push_back(RR_MOVE(n));
+            o->push_back(n);
 
             try
             {
