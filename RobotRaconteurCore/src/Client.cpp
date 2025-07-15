@@ -764,7 +764,18 @@ RR_INTRUSIVE_PTR<MessageEntry> ClientContext::ProcessRequest(const RR_INTRUSIVE_
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
                 node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
                 "Service returned remote error during ProcessRequest: " << err->what());
-            m_ServiceDef->DownCastAndThrowException(*err);
+            {
+                boost::recursive_mutex::scoped_lock lock(connect_lock);
+                if (m_ServiceDef)
+                {
+                    m_ServiceDef->DownCastAndThrowException(*err);
+                }
+                else
+                {
+                    lock.unlock();
+                    RobotRaconteurExceptionUtil::ThrowMessageEntryException(rec_message);
+                }
+            }
         }
 
         if (rec_message->Error == MessageErrorType_StopIteration)
@@ -1200,7 +1211,18 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
                         {
                             RR_SHARED_PTR<RobotRaconteurException> err =
                                 RobotRaconteurExceptionUtil::MessageEntryToException(m);
-                            RR_SHARED_PTR<RobotRaconteurException> err2 = m_ServiceDef->DownCastException(err);
+                            RR_SHARED_PTR<RobotRaconteurException> err2;
+                            {
+                                boost::recursive_mutex::scoped_lock lock(connect_lock);
+                                if (m_ServiceDef)
+                                {
+                                    err2 = m_ServiceDef->DownCastException(err);
+                                }
+                                else
+                                {
+                                    err2 = err;
+                                }
+                            }
                             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
                                 node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
                                 "Service returned remote error during ProcessRequest: " << err->what());
