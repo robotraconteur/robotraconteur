@@ -501,9 +501,9 @@ void IntraTransport::AsyncGetDetectedNodes(
                 NodeDiscoveryInfoURL u;
                 u.URL = "rr+intra:///?nodeid=" + n.NodeID.ToString("B") + "&service=RobotRaconteurServiceIndex";
                 u.LastAnnounceTime = boost::posix_time::microsec_clock::universal_time();
-                n.URLs.push_back(u);
+                n.URLs.push_back(RR_MOVE(u));
 
-                o->push_back(n);
+                o->push_back(RR_MOVE(n));
             }
         }
     }
@@ -531,7 +531,7 @@ void IntraTransport::SendNodeDiscovery()
     NodeDiscoveryInfoURL u;
     u.URL = "rr+intra:///?nodeid=" + info.NodeID.ToString("B") + "&service=RobotRaconteurServiceIndex";
     u.LastAnnounceTime = boost::posix_time::microsec_clock::universal_time();
-    info.URLs.push_back(u);
+    info.URLs.push_back(RR_MOVE(u));
 
     {
         boost::mutex::scoped_lock lock(peer_transports_lock);
@@ -726,7 +726,7 @@ void IntraTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
     {
         std::string connecturl = "rr+intra:///";
         // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
+        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(RR_MOVE(connecturl)));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<IntraTransportConnection>(shared_from_this())));
         // NOLINTEND(cppcoreguidelines-owning-memory)
@@ -940,9 +940,9 @@ void IntraTransport::DiscoverAllNodes()
                 NodeDiscoveryInfoURL u;
                 u.URL = "rr+intra:///?nodeid=" + n.NodeID.ToString("B") + "&service=RobotRaconteurServiceIndex";
                 u.LastAnnounceTime = boost::posix_time::microsec_clock::universal_time();
-                n.URLs.push_back(u);
+                n.URLs.push_back(RR_MOVE(u));
 
-                discovered_info.push_back(n);
+                discovered_info.push_back(RR_MOVE(n));
             }
         }
     }

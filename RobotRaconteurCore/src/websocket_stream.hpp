@@ -339,7 +339,7 @@ class websocket_stream : private boost::noncopyable
                     handshake_recv_args.find("sec-websocket-protocol") != handshake_recv_args.end())
                 {
                     std::string value2 = handshake_recv_args.at("sec-websocket-protocol") + ", " + value;
-                    handshake_recv_args.at("sec-websocket-protocol") = value2;
+                    handshake_recv_args.at("sec-websocket-protocol") = RR_MOVE(value2);
                 }
                 else
                 {
@@ -637,8 +637,8 @@ class websocket_stream : private boost::noncopyable
         next_layer_.async_write_some(boost::asio::buffer(data->c_str(), data->size()),
                                      boost::bind(&websocket_stream::async_client_handshake2, this,
                                                  boost::asio::placeholders::error,
-                                                 boost::asio::placeholders::bytes_transferred, data, url, protocol, key,
-                                                 boost::protect(RR_MOVE(handler))));
+                                                 boost::asio::placeholders::bytes_transferred, data, url, protocol,
+                                                 RR_MOVE(key), boost::protect(RR_MOVE(handler))));
     }
 
   protected:
@@ -865,7 +865,7 @@ class websocket_stream : private boost::noncopyable
         {
             handshake_recv_args2.insert(std::make_pair(boost::to_lower_copy(e.first), e.second));
         }
-        handshake_recv_args = handshake_recv_args2;
+        handshake_recv_args = RR_MOVE(handshake_recv_args2);
 
         if (handshake_recv_args.find("upgrade") == handshake_recv_args.end() ||
             handshake_recv_args.find("connection") == handshake_recv_args.end() ||
@@ -1251,6 +1251,7 @@ class websocket_stream : private boost::noncopyable
     template <typename MutableBufferSequence, typename Handler>
     void next_layer_async_read_some(MutableBufferSequence buffers, BOOST_ASIO_MOVE_ARG(Handler) handler)
     {
+        boost::mutex::scoped_lock lock(extra_recv_data_lock);
         if (extra_recv_data_len > 0)
         {
             size_t l = boost::asio::buffer_copy(
@@ -1265,6 +1266,7 @@ class websocket_stream : private boost::noncopyable
                 extra_recv_data_pos += l;
                 extra_recv_data_len -= l;
             }
+            lock.unlock();
             boost::asio::detail::binder2<Handler, boost::system::error_code, std::size_t> handler2(
                 handler, boost::system::error_code(), l);
 #if BOOST_ASIO_VERSION >= 101200
@@ -1275,6 +1277,7 @@ class websocket_stream : private boost::noncopyable
             return;
         }
 
+        lock.unlock();
         next_layer_.async_read_some(buffers, BOOST_ASIO_MOVE_CAST(Handler)(handler));
     }
 
@@ -1691,12 +1694,12 @@ class websocket_stream : private boost::noncopyable
         boost::shared_ptr<handler_wrapper<Handler, executor_type> > handler2 =
             boost::make_shared<handler_wrapper<Handler, executor_type> >(
                 boost::ref(handler), RR_BOOST_ASIO_REF_IO_SERVICE(RR_BOOST_ASIO_GET_IO_SERVICE((*this))));
+        boost::mutex::scoped_lock lock(ping_lock);
         if (ping_requested)
         {
             boost::shared_array<uint8_t> ping_data2;
             size_t ping_data_len2 = 0;
             {
-                boost::mutex::scoped_lock lock(ping_lock);
                 ping_data2 = ping_data;
                 ping_data_len2 = ping_data_len;
                 ping_data.reset();
@@ -1705,7 +1708,8 @@ class websocket_stream : private boost::noncopyable
             }
 
             const_buffers send_b;
-            send_b.push_back(boost::asio::buffer(ping_data2.get(), ping_data_len));
+            send_b.push_back(boost::asio::buffer(ping_data2.get(), ping_data_len2));
+            lock.unlock();
 
             async_write_message(
                 WebSocketOpcode_pong, send_b,
@@ -1719,6 +1723,7 @@ class websocket_stream : private boost::noncopyable
         }
         else
         {
+            lock.unlock();
             // TODO: use more than first buffer
             async_write_message(DataFrameType, buffers,
                                 boost::bind(&handler_wrapper<Handler, executor_type>::do_complete, handler2,

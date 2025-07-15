@@ -160,6 +160,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
 
     if (timeout != RR_TIMEOUT_INFINITE)
     {
+        boost::mutex::scoped_lock lock2(timeout_timer_lock);
         timeout_timer = node->CreateTimer(boost::posix_time::milliseconds(timeout),
                                           boost::bind(&Discovery_updatediscoverednodes::timeout_timer_callback,
                                                       shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
@@ -168,7 +169,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
     }
 
     {
-        boost::mutex::scoped_lock lock(active_lock);
+        boost::mutex::scoped_lock lock3(active_lock);
         int32_t timeout1 = timeout;
         if (timeout1 > 0)
         {
@@ -201,7 +202,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
 
     bool done = false;
     {
-        boost::mutex::scoped_lock lock(active_lock);
+        boost::mutex::scoped_lock lock4(active_lock);
         if (active.empty())
             done = true;
     }
@@ -389,7 +390,7 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
 
                                     ServiceInfo2 si(*ii, *n);
 
-                                    this->ret->push_back(si);
+                                    this->ret->push_back(RR_MOVE(si));
                                     break;
                                 }
                             }
@@ -552,7 +553,7 @@ void Discovery_findservicebytype::find2()
             }
 
             if (!urls1.empty())
-                urls.push_back(urls1);
+                urls.push_back(RR_MOVE(urls1));
         }
         catch (std::exception& exp)
         {
@@ -570,8 +571,11 @@ void Discovery_findservicebytype::find2()
         return;
     }
 
-    if (timeout_timer)
-        timeout_timer->Start();
+    {
+        boost::mutex::scoped_lock lock4(timeout_timer_lock);
+        if (timeout_timer)
+            timeout_timer->Start();
+    }
 
     BOOST_FOREACH (std::vector<std::string>& e, urls)
     {
@@ -801,7 +805,7 @@ void Discovery_updateserviceinfo::serviceinfo_handler(const RR_INTRUSIVE_PTR<Mes
                 o1.RootObjectType = e->RootObjectType;
                 o1.RootObjectImplements = Discovery_updateserviceinfo_convertmap(e->RootObjectImplements);
                 o1.Attributes = e->Attributes->GetStorageContainer();
-                o->push_back(o1);
+                o->push_back(RR_MOVE(o1));
             }
         }
     }
@@ -997,8 +1001,7 @@ void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(
 
     timeout_timer = t;
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
-                                       "Begin UpdateServiceInfo to remote node "
-                                           << this->remote_nodeid.ToString() << " using " << backoff << " ms backoff");
+                                       "Begin UpdateServiceInfo using " << backoff << " ms backoff");
 }
 
 // class Discovery
@@ -1505,7 +1508,7 @@ void Discovery::NodeAnnouncePacketReceived(boost::string_ref packet)
 
                     if (attr_name == "ServiceStateNonce" && attr_value.size() < 32)
                     {
-                        services_nonce = attr_value;
+                        services_nonce = RR_MOVE(attr_value);
                     }
                 }
             }
@@ -1517,12 +1520,12 @@ void Discovery::NodeAnnouncePacketReceived(boost::string_ref packet)
 
             NodeDiscoveryInfo info;
             info.NodeID = nodeid;
-            info.NodeName = nodename;
+            info.NodeName = RR_MOVE(nodename);
             NodeDiscoveryInfoURL url1;
             url1.LastAnnounceTime = n->NowNodeTime();
-            url1.URL = url;
-            info.URLs.push_back(url1);
-            info.ServiceStateNonce = services_nonce;
+            url1.URL = RR_MOVE(url);
+            info.URLs.push_back(RR_MOVE(url1));
+            info.ServiceStateNonce = RR_MOVE(services_nonce);
 
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
                 node, Discovery, -1, "Parsing discovery text packet successful for node " << info.NodeID.ToString());
@@ -1667,7 +1670,7 @@ void Discovery::AsyncFindServiceByType(boost::string_ref servicetype, const std:
             }
 
             if (!urls.empty())
-                all_urls.push_back(urls);
+                all_urls.push_back(RR_MOVE(urls));
         }
         catch (std::exception& exp)
         {
@@ -1765,7 +1768,7 @@ void Discovery::EndAsyncFindNodeByID(
                                             boost::replace_all_copy(
                                                 boost::replace_all_copy(u.nodeid.ToString(), "{", ""), "}", "");
                             }
-                            n.ConnectionURL.push_back(short_url);
+                            n.ConnectionURL.push_back(RR_MOVE(short_url));
                             break;
                         }
                     }
@@ -1781,7 +1784,7 @@ void Discovery::EndAsyncFindNodeByID(
 
             if (!n.ConnectionURL.empty())
             {
-                ret->push_back(n);
+                ret->push_back(RR_MOVE(n));
             }
         }
     }
@@ -1863,7 +1866,7 @@ void Discovery::EndAsyncFindNodeByName(
                                                 boost::replace_all_copy(
                                                     boost::replace_all_copy(u.nodeid.ToString(), "{", ""), "}", "");
                                 }
-                                n.ConnectionURL.push_back(short_url);
+                                n.ConnectionURL.push_back(RR_MOVE(short_url));
                                 break;
                             }
                         }
@@ -1879,7 +1882,7 @@ void Discovery::EndAsyncFindNodeByName(
 
                 if (!n.ConnectionURL.empty())
                 {
-                    ret->push_back(n);
+                    ret->push_back(RR_MOVE(n));
                 }
             }
         }

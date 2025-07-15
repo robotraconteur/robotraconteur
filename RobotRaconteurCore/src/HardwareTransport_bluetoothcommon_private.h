@@ -266,6 +266,11 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
                 int res = connect(s1, reinterpret_cast<const sockaddr*>(&a1), sizeof(a1));
                 if (res == SOCKET_ERROR)
                 {
+#ifdef _WIN32
+                    closesocket(s1);
+#else
+                    close(s1);
+#endif
                     continue;
                 }
 

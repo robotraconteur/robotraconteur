@@ -400,6 +400,7 @@ void UsbDevice_Initialize::InitializeDevice(boost::function<void(const UsbDevice
 
     if (status != NotInitialized && status != Busy)
     {
+        lock.unlock();
         InitializeDevice_err(handler, Busy);
         return;
     }
@@ -975,7 +976,7 @@ void UsbDevice_Claim::AsyncCreateTransportConnection1(
     }
     case Claiming: {
         UsbDeviceClaim_create_request req(url_res, endpoint, noden, handler);
-        create_requests.push_back(req);
+        create_requests.push_back(RR_MOVE(req));
         break;
     }
     case Closing:
@@ -1353,7 +1354,7 @@ void UsbDevice_Claim::DoWrite()
                 RR_SHARED_PTR<UsbDeviceTransportConnection> c = e->lock();
                 if (!c)
                 {
-                    e = transport_write.erase(e);
+                    e = transport_write_idle.erase(e);
                     continue;
                 }
                 if (c->CanDoWrite() > 0)
@@ -1862,7 +1863,9 @@ void UsbDevice::Shutdown()
         RR_SHARED_PTR<UsbDevice_Claim> c = claim.lock();
         if (c)
         {
+            lock.unlock();
             c->Close();
+            lock.lock();
             claim.reset();
         }
     }
@@ -1911,6 +1914,7 @@ void UsbDevice::DeviceClaimError(const RR_SHARED_PTR<UsbDevice_Claim>& claim, Us
 
 void UsbDevice::DeviceClaimReleased(const RR_SHARED_PTR<UsbDevice_Claim>& claim)
 {
+    boost::mutex::scoped_lock lock(this_lock);
     RR_SHARED_PTR<UsbDevice_Claim> c = this->claim.lock();
     if (!c || c == claim)
     {

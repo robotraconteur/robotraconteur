@@ -1160,7 +1160,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(const RR_INTRUSIVE_PTR<Message>
 void ASIOStreamBaseTransport::EndReceiveMessage4()
 {
     {
-        boost::mutex::scoped_lock recv_lock;
+        boost::mutex::scoped_lock lock(recv_lock);
 
         if (recv_pause_request)
         {
@@ -2411,7 +2411,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(
                         message4_string_caps |= TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE;
                         std::vector<uint32_t> string_table_flags;
                         string_table_flags.push_back(message4_string_caps);
-                        string_table4->SetTableFlags(string_table_flags);
+                        string_table4->SetTableFlags(RR_MOVE(string_table_flags));
                         ret_caps.push_back(message4_string_caps);
                         active_capabilities_message4_stringtable = message4_string_caps;
                         use_string_table4.store(true);
@@ -2762,7 +2762,7 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(const RR
                         message4_string_caps | TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE;
                     std::vector<uint32_t> string_table_flags;
                     string_table_flags.push_back(active_capabilities_message4_stringtable);
-                    string_table4->SetTableFlags(string_table_flags);
+                    string_table4->SetTableFlags(RR_MOVE(string_table_flags));
                     use_string_table4.store(true);
                 }
             }

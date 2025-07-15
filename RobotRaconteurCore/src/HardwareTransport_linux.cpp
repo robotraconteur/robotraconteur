@@ -519,8 +519,8 @@ std::vector<NodeDiscoveryInfo> HardwareTransport_linux_discovery::GetDriverDevic
             NodeDiscoveryInfoURL n1;
             n1.URL = scheme + ":///?nodeid=" + e.get<0>().ToString("D") + "&service=RobotRaconteurServiceIndex";
             n1.LastAnnounceTime = node->NowNodeTime();
-            n.URLs.push_back(n1);
-            o.push_back(n);
+            n.URLs.push_back(RR_MOVE(n1));
+            o.push_back(RR_MOVE(n));
         }
     }
     catch (std::exception&)

@@ -474,7 +474,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                     }
                     std::vector<uint8_t> desc(cap->dev_capability_data + 1,
                                               cap->dev_capability_data + cap->bLength - 3);
-                    platform_bos_desc.push_back(desc);
+                    platform_bos_desc.push_back(RR_MOVE(desc));
                 }
             }
 
@@ -554,9 +554,9 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
         UsbDeviceManager_detected_device d;
         d.handle = dev_sp;
         d.interface_ = interface_;
-        d.path = ws_path;
+        d.path = RR_MOVE(ws_path);
         d.rr_desc_vendor_code = rr_desc_vendor_code;
-        devices.push_back(d);
+        devices.push_back(RR_MOVE(d));
     }
 
     f->libusb_free_device_list(list1, 1);

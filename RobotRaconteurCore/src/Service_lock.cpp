@@ -161,7 +161,10 @@ void ServerContext_ObjectLock::ReleaseLock()
             {
                 RR_SHARED_PTR<ServiceSkel> ss = s.lock();
                 if (ss)
+                {
+                    boost::mutex::scoped_lock lock2(ss->objectlock_lock);
                     ss->objectlock.reset();
+                }
             }
             catch (std::exception&)
             {}

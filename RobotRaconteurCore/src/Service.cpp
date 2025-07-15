@@ -990,7 +990,7 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
                 {
 
                     // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-                    m_CurrentServicePath.reset(new std::string(ppath1));
+                    m_CurrentServicePath.reset(new std::string(RR_MOVE(ppath1)));
                     m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
                     // NOLINTEND(cppcoreguidelines-owning-memory)
                     RR_SHARED_PTR<RRObject> obj1 = skel->GetSubObj(p.at(i));
@@ -2180,6 +2180,7 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
     }
 
     {
+        boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
         boost::mutex::scoped_lock lock(skels_lock);
         std::vector<std::string> objkeys;
         BOOST_FOREACH (const MessageStringPtr& k, skels | boost::adaptors::map_keys)
@@ -2212,14 +2213,15 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
                     RR_SHARED_PTR<ServerContext_ObjectLock> lock = s->objectlock.lock();
                     if (!lock)
                         return;
-                    boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
                     if (lock->GetRootServicePath() == path1)
                     {
                         active_object_locks.erase(lock->GetUsername());
+                        lock2.unlock();
                         lock->ReleaseLock();
                     }
                     else
                     {
+                        lock2.unlock();
                         lock->ReleaseSkel(s);
                     }
                 }
@@ -2501,7 +2503,7 @@ std::vector<std::string> ServerContext::GetCandidateConnectionURLs()
             if (!nodename.empty())
             {
                 url2 = url_split.at(0) + "?nodename=" + nodename + "&service=" + m_ServiceName;
-                o.push_back(url2);
+                o.push_back(RR_MOVE(url2));
             }
         }
     }

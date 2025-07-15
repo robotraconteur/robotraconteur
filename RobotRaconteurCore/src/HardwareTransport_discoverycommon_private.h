@@ -204,8 +204,8 @@ class HardwareTransport_discovery
                 NodeDiscoveryInfoURL n1;
                 n1.URL = "rr+usb:///?nodeid=" + e.get<0>().ToString("D") + "&service=RobotRaconteurServiceIndex";
                 n1.LastAnnounceTime = node->NowNodeTime();
-                n.URLs.push_back(n1);
-                o->push_back(n);
+                n.URLs.push_back(RR_MOVE(n1));
+                o->push_back(RR_MOVE(n));
             }
         }
         catch (std::exception&)
@@ -293,7 +293,7 @@ class HardwareTransport_discovery
             NodeDiscoveryInfoURL n1;
             n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";
             n1.LastAnnounceTime = node->NowNodeTime();
-            n.URLs.push_back(n1);
+            n.URLs.push_back(RR_MOVE(n1));
             o->push_back(n);
 
             try
