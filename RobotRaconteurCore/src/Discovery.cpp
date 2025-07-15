@@ -571,8 +571,11 @@ void Discovery_findservicebytype::find2()
         return;
     }
 
-    if (timeout_timer)
-        timeout_timer->Start();
+    {
+        boost::mutex::scoped_lock lock4(timeout_timer_lock);
+        if (timeout_timer)
+            timeout_timer->Start();
+    }
 
     BOOST_FOREACH (std::vector<std::string>& e, urls)
     {
