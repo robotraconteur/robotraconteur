@@ -375,6 +375,7 @@ void TcpConnector::connect3(const RR_SHARED_PTR<std::list<boost::asio::ip::tcp::
         // This should never happen!
         if (candidate_endpoints->empty())
         {
+            lock.unlock();
             connect4();
             return;
         }
