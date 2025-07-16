@@ -33,8 +33,6 @@ namespace detail
 
 static void RobotRaconteurNode_connector_empty_handler() {}
 
-static void RobotRaconteurNode_connector_empty_handler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
-
 RobotRaconteurNode_connector::endpoint_cleanup::endpoint_cleanup(const RR_SHARED_PTR<ClientContext>& ep,
                                                                  const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {

@@ -2564,8 +2564,6 @@ void PipeSubscriptionBase::SetIgnoreReceived(bool ignore)
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "IgnoreReceived set to " << ignore);
 }
 
-static void PipeSubscriptionBase_empty_send_handler(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&) {}
-
 void PipeSubscriptionBase::AsyncSendPacketAllBase(const RR_INTRUSIVE_PTR<RRValue>& packet)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername,

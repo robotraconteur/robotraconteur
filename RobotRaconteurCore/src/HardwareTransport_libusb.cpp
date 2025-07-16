@@ -82,6 +82,10 @@ static void libusb_status_to_ec(libusb_transfer_status err, boost::system::error
     }
 }
 
+#ifdef __GNUG__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 static void libusb_error_to_ec(int err, boost::system::error_code& ec)
 {
     if (err >= 0)
@@ -107,6 +111,9 @@ static void libusb_error_to_ec(int err, boost::system::error_code& ec)
         break;
     }
 }
+#ifdef __GNUG__
+#pragma GCC diagnostic pop
+#endif
 
 // LibUsb_Transfer
 
@@ -354,7 +361,6 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
 
     for (ssize_t i = 0; i < device_count; i++)
     {
-        uint8_t interface_number = 0;
         int bus_num = f->libusb_get_bus_number(list1[i]);
         int port_num = f->libusb_get_device_address(list1[i]);
         if (bus_num <= 0 || port_num <= 0)
@@ -447,7 +453,6 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
 
         if (!found_sysfs_bos_desc)
         {
-            bool found_platform_bos_desc = false;
             libusb_device_handle* device_handle = NULL;
             if (f->libusb_open(list1[i], &device_handle) != 0)
             {

@@ -452,9 +452,6 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
             return false;
         }
 
-        int a = 0;
-        int b = 0;
-
         indexa = 0;
         for (uint32_t j = 0; j < boost::numeric_cast<uint32_t>(count.size()); j++)
             indexa += (current_count[j] + mema_pos[j]) * stridea[j];

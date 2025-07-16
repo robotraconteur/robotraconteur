@@ -44,8 +44,8 @@ RR_SHARED_PTR<RobotRaconteurNode> ASIOStreamBaseTransport::GetNode()
 }
 
 ASIOStreamBaseTransport::ASIOStreamBaseTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node)
-    : _io_context(node->GetThreadPool()->get_io_context()), send_version4(false), use_string_table4(false),
-      connected(true) RR_MEMBER_ARRAY_INIT(streammagic)
+    : _io_context(node->GetThreadPool()->get_io_context()), connected(true) RR_MEMBER_ARRAY_INIT(streammagic),
+      send_version4(false), use_string_table4(false)
 {
 
     send_message_size = 0;

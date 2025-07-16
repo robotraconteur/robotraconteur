@@ -211,8 +211,6 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
     while (dbus_f->dbus_message_iter_get_arg_type(&iter_array) == DBUS_TYPE_OBJECT_PATH)
     {
         const char* object_path = NULL;
-        char* name = NULL;
-        char* bdaddr = NULL;
 
         dbus_f->dbus_message_iter_get_basic(&iter_array, &object_path);
 

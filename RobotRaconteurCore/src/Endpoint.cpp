@@ -188,7 +188,7 @@ uint32_t Endpoint::EndpointCapability(boost::string_ref name)
 }
 
 Endpoint::Endpoint(const RR_SHARED_PTR<RobotRaconteurNode>& node)
-    : m_LocalEndpoint(0), m_RemoteEndpoint(0), MessageNumber(0), m_transport(std::numeric_limits<uint32_t>::max())
+    : m_LocalEndpoint(0), m_RemoteEndpoint(0), m_transport(std::numeric_limits<uint32_t>::max()), MessageNumber(0)
 
 {
 

@@ -388,8 +388,6 @@ bool AsyncMessageReaderImpl::read_int_x2(int64_t& num)
     return false;
 }
 
-static void null_str_deleter(std::string* s) {}
-
 bool AsyncMessageReaderImpl::read_string(MessageStringPtr& str, state_type next_state)
 {
     uint16_t l = 0;

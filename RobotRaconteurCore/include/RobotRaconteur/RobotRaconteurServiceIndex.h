@@ -4,8 +4,11 @@
 
 #pragma once
 
+#ifdef _MSVC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
+#endif
+
 #include <boost/signals2.hpp>
 
 namespace RobotRaconteurServiceIndex
@@ -53,4 +56,6 @@ class ServiceIndex : public virtual RobotRaconteur::RRObject
 
 } // namespace RobotRaconteurServiceIndex
 
+#ifdef _MSVC_VER
 #pragma warning(pop)
+#endif

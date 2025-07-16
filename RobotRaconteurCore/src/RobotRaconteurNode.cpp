@@ -40,8 +40,6 @@ namespace RobotRaconteur
 {
 static void RobotRaconteurNode_empty_handler() {}
 
-static void RobotRaconteurNode_empty_handler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
-
 RobotRaconteurNode RobotRaconteurNode::m_s;
 RR_SHARED_PTR<RobotRaconteurNode> RobotRaconteurNode::m_sp;
 RR_WEAK_PTR<RobotRaconteurNode> RobotRaconteurNode::m_weak_sp;

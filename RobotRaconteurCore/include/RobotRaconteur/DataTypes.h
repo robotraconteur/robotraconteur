@@ -582,7 +582,7 @@ class RRArray : public RRBaseArray
   public:
     RR_OVIRTUAL DataTypes GetTypeID() RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
 
-    RRArray(T* data, size_t length, bool owned) : data_(data), owned(owned), element_count(length) {}
+    RRArray(T* data, size_t length, bool owned) : data_(data), element_count(length), owned(owned) {}
 
     RR_OVIRTUAL ~RRArray() RR_OVERRIDE
     {

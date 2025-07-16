@@ -2924,8 +2924,6 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
                                            "Begin MonitorEnter for servicepath \"" << stub2->ServicePath << "\"");
 
-        bool iserror = true;
-
         {
 
             RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);

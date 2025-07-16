@@ -32,9 +32,11 @@
 #include <boost/call_traits.hpp>
 #include <list>
 
+#ifdef _MSVC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #pragma warning(disable : 4996)
+#endif
 
 #include <boost/signals2.hpp>
 
@@ -1302,4 +1304,6 @@ using PipeBroadcasterPtr = RR_SHARED_PTR<PipeBroadcaster<T> >;
 #endif
 } // namespace RobotRaconteur
 
+#ifdef _MSVC_VER
 #pragma warning(pop)
+#endif
