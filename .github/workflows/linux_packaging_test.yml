@@ -18,6 +18,14 @@ jobs:
           runs_on: ubuntu-24.04-arm
           arch: arm64
           pkg_opts: "podman-build --dist=gentoo --gentoo-local-src"
+        - os: debian
+          runs_on: ubuntu-latest
+          arch: amd64
+          pkg_opts: "podman-build --dist=debian"
+        - os: debian
+          runs_on: ubuntu-24.04-arm
+          arch: arm64
+          pkg_opts: "podman-build --dist=debian"
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
