@@ -2166,11 +2166,11 @@ jobs:
         - os: gentoo
           runs_on: ubuntu-latest
           arch: amd64
-          pkg-opts: "podman-build --dist=gentoo --gentoo-local-src"
+          pkg_opts: "podman-build --dist=gentoo --gentoo-local-src"
         - os: gentoo
           runs_on: ubuntu-latest-arm64
           arch: arm64
-          pkg-opts: "podman-build --dist=gentoo --gentoo-local-src"
+          pkg_opts: "podman-build --dist=gentoo --gentoo-local-src"
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
