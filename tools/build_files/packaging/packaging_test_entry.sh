@@ -14,4 +14,12 @@ if [ -f /etc/debian_version ]; then
     fi
 fi
 
+# detect fedora
+if [ -f /etc/fedora-release ]; then
+    # install python3 if not detected
+    if [ ! -f /usr/bin/python3 ]; then
+        dnf install -y python3 sudo systemd systemd-udev dbus
+    fi
+fi
+
 ./packaging_test.py "$@"
