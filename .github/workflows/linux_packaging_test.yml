@@ -2,6 +2,11 @@ name: Linux Packaging Test
 
 on:
   workflow_dispatch:
+  schedule:
+  - cron: '0 3 * * 0'
+  push:
+    branches:
+    - packaging-test**
 
 jobs:
   linux-package-test:
