@@ -278,7 +278,7 @@ def do_podman_build_impl_gentoo(args):
         subprocess.check_call("gpg --no-tty --batch --import /usr/share/openpgp-keys/gentoo-release.asc", shell=True)
         subprocess.check_call("getuto")
         print("Begin emerge sync", flush=True)
-        subprocess.check_call("emerge --sync --quiet", shell=True)
+        subprocess.check_call("emerge-webrsync --quiet", shell=True)
         subprocess.check_call("mkdir -p /etc/portage/repos.conf", shell=True)
         subprocess.check_call("cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf", shell=True)
         subprocess.check_call(
