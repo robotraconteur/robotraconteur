@@ -2156,3 +2156,33 @@ jobs:
         set -e
         source install_isolated/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+  linux-package-test:
+    runs-on: ${{ matrix.config.runs_on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - os: gentoo
+          runs_on: ubuntu-latest
+          arch: amd64
+          pkg-opts: "podman-build --dist=gentoo --gentoo-local-src"
+        - os: gentoo
+          runs_on: ubuntu-latest-arm64
+          arch: arm64
+          pkg-opts: "podman-build --dist=gentoo --gentoo-local-src"
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install podman -qq
+    - name: build-and-test
+      working-directory: src/robotraconteur
+      run: >
+        ./tools/build_files/packaging/packaging_test.py ${{ matrix.config.pkg_opts }}
