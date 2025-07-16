@@ -2183,7 +2183,8 @@ jobs:
       run: >
         sudo apt-get install podman zlib1g zlib1g-dev libssl-dev libusb-1.0-0
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
-        cmake g++ make libboost-all-dev autoconf
+        cmake g++ make libboost-all-dev autoconf python3-numpy python3-dev
+        python3-setuptools python3-wheel python3-pytest git
         automake libtool bison libpcre3-dev curl libgtest-dev -qq
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
