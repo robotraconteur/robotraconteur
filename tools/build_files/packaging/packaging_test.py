@@ -31,7 +31,8 @@ Build-Depends: cmake (>=3.5.1),
                zlib1g-dev,
                python3-dev,
                python3-numpy,
-               python3-setuptools
+               python3-setuptools,
+               libgtest-dev
 Standards-Version: 4.7.0
 Homepage: https://github.com/robotraconteur/robotraconteur
 
@@ -497,17 +498,20 @@ def do_podman_build(args):
     if args.gentoo_local_src:
         passthrough_args.append(f"--gentoo-local-src")
 
+    if args.version:
+        passthrough_args.append(f"--version={args.version}")
+
     rm_str = ""
     if not args.no_rm:
         rm_str = "--rm"
 
     if not args.shell:
         subprocess.check_call(
-            f"podman run {rm_str} -v {src_dir}:/src -v {__file__}:/packaging_test.py {container} python3 packaging_test.py podman-build-impl {' '.join(passthrough_args)}", shell=True)
+            f"podman run {rm_str} -v {src_dir}:/src -v {__file__}:/packaging_test.py -v {str(Path(__file__).parent / 'packaging_test_entry.sh')}:/packaging_test_entry.sh {container} /packaging_test_entry.sh podman-build-impl {' '.join(passthrough_args)}", shell=True)
     else:
         print(f"Command to run: python3 packaging_test.py podman-build-impl {' '.join(passthrough_args)}")
         subprocess.check_call(
-            f"podman run {rm_str} -it -v {src_dir}:/src -v {__file__}:/packaging_test.py {container}", shell=True)
+            f"podman run {rm_str} -it -v {src_dir}:/src -v {__file__}:/packaging_test.py -v {str(Path(__file__).parent / 'packaging_test_entry.sh')}:/packaging_test_entry.sh {container}", shell=True)
 
 
 def podman_build_copy_src():
@@ -557,9 +561,78 @@ def do_podman_build_impl_gentoo(args):
         subprocess.check_call("pytest /src2/test/python/RobotRaconteurTest/test_service.py", shell=True)
 
 
+def _save_installed_apt_packages():
+    with open("/installed_packages.txt", "w") as f:
+        subprocess.run(
+            ["dpkg-query", "-f", "${binary:Package}\n", "-W"],
+            stdout=f,
+            check=True
+        )
+
+
+def _revert_to_saved_packages():
+    if not Path("/installed_packages.txt").exists():
+        print("No saved packages to revert to.")
+        return
+    with open("/installed_packages.txt") as f:
+        keep = set(line.strip() for line in f)
+
+    result = subprocess.run(
+        ["dpkg-query", "-f", "${binary:Package}\n", "-W"],
+        capture_output=True, text=True, check=True
+    )
+    current = set(result.stdout.strip().splitlines())
+
+    to_remove = current - keep
+
+    if to_remove:
+        print("Packages to remove:", " ".join(to_remove))
+        subprocess.run(["apt-get remove --purge -y"] + list(to_remove), shell=True)
+    else:
+        print("No extra packages to remove.")
+
+
+def do_podman_build_impl_debian(args):
+    if args.steps is None or args.steps == "all":
+        steps = ["setup", "gen", "build", "setup-test", "test"]
+    else:
+        steps = args.steps.split(",")
+
+    if "setup" in steps:
+        _save_installed_apt_packages()
+        subprocess.check_call("apt-get update", shell=True)
+        # install debian build tools
+        subprocess.check_call(
+            "apt-get install -y devscripts equivs git tree git-buildpackage debian-keyring  debian-archive-keyring dh-make", shell=True)
+    if "gen" in steps:
+        podman_build_copy_src()
+        subprocess.check_call("python3 /packaging_test.py gen --dist=debian --src-dir=/src2", shell=True)
+
+    if "build" in steps:
+        subprocess.check_call("mk-build-deps -i -r -t \"apt-get -y\" /src2/debian/control", shell=True, cwd="/src2")
+        subprocess.check_call(
+            "mk-build-deps --install --tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' /src2/debian/control", shell=True, cwd="/src2")
+        subprocess.check_call("debuild -us -uc -b", shell=True, cwd="/src2")
+
+    if "setup-test" in steps:
+        _revert_to_saved_packages()
+        subprocess.check_call("apt-get install -y libgtest-dev python3-pytest", shell=True)
+        subprocess.call("dpkg -i /*.deb", shell=True)
+        subprocess.check_call("apt-get install -f -y", shell=True)
+    if "test" in steps:
+        subprocess.check_call(
+            "cmake -S /src2 -B /build_test -DBUILD_CORE=OFF -DBUILD_GEN=OFF -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTEST_CORE=ON", shell=True)
+        subprocess.check_call(f"cmake --build /build_test --config RelWithDebInfo -- -j{os.cpu_count()}", shell=True)
+        subprocess.check_call(
+            "ctest . -C RelWithDebInfo -E \"robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback\" --output-on-failure", cwd="build_test", shell=True)
+        subprocess.check_call("pytest /src2/test/python/RobotRaconteurTest/test_service.py", shell=True)
+
+
 def do_podman_build_impl(args):
     if args.dist == "gentoo":
         do_podman_build_impl_gentoo(args)
+    elif args.dist == "debian":
+        do_podman_build_impl_debian(args)
     else:
         raise Exception(f"Unknown dist {args.dist}")
 
@@ -584,6 +657,7 @@ def main():
     parser_gen.add_argument("--dist", type=str, default="debian", help="Linux target dist")
     parser_gen.add_argument("--container", type=str, default=None, help="podman container name")
     parser_gen.add_argument("--src-dir", type=str, default=None, help="Directory of source")
+    parser_gen.add_argument("--version", type=str, default=None, help="Package version")
     parser_gen.add_argument("--package-version", type=str, default=None, help="Package version")
     parser_gen.add_argument("--debian-dist", type=str, default="unstable", help="Debian target distribution")
     parser_gen.add_argument("--debian-version-suffix", type=str, default="", help="Debian package version suffix")
