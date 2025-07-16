@@ -43,6 +43,7 @@ S="$${WORKDIR}/RobotRaconteur-$${PV}-Source"
 
 python_configure() {
     local mycmakeargs=(
+        -DCMAKE_SKIP_RPATH=ON
         -DBUILD_GEN=ON
         -DBUILD_TESTING=OFF
         -DBUILD_DOCUMENTATION=OFF
@@ -59,9 +60,11 @@ src_configure() {
         python_foreach_impl python_configure
     else
         local mycmakeargs=(
+            -DCMAKE_SKIP_RPATH=ON
             -DBUILD_GEN=ON
             -DBUILD_TESTING=OFF
             -DBUILD_DOCUMENTATION=OFF
+            -DROBOTRACONTEURCORE_SOVERSION_MAJOR_ONLY=ON
         )
         cmake_src_configure
     fi
