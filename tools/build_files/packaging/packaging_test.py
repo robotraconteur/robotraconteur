@@ -115,6 +115,7 @@ License: GPL-2+
 _debian_python3_robotraconteur_install = \
     """\
 /usr/lib/python3*/dist-packages/RobotRaconteur/*.py
+/usr/lib/python3*/dist-packages/RobotRaconteur/__pycache__/*.pyc*
 /usr/lib/python3*/dist-packages/RobotRaconteur/*.so
 /usr/lib/python3*/dist-packages/RobotRaconteur-*.egg-info/*
 """
