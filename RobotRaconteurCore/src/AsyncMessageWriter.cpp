@@ -270,8 +270,6 @@ bool AsyncMessageWriterImpl::write_int_x2(int64_t number)
     return write_all_bytes(v3.data(), 9);
 }
 
-static void null_str_deleter(std::string* s) {}
-
 bool AsyncMessageWriterImpl::write_string(MessageStringPtr& str_ref, state_type next_state)
 {
     boost::string_ref str = str_ref.str();

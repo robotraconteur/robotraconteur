@@ -1168,7 +1168,7 @@ void TcpWebSocketConnector::Connect(
 
 namespace detail
 {
-
+#ifdef ROBOTRACONTEUR_USE_SCHANNEL
 static void TcpTransportConnection_socket_read_adapter(
     RR_WEAK_PTR<RobotRaconteurNode> node, RR_WEAK_PTR<boost::asio::ip::tcp::socket> sock, mutable_buffers& b,
     const boost::function<void(const boost::system::error_code&, size_t)>& handler)
@@ -1196,8 +1196,6 @@ static void TcpTransportConnection_socket_close_adapter(RR_WEAK_PTR<boost::asio:
         return;
     sock1->close();
 }
-
-#ifdef ROBOTRACONTEUR_USE_SCHANNEL
 
 void TcpWSSWebSocketConnector::Connect4(
     const RR_SHARED_PTR<RobotRaconteurException>& err, const RR_SHARED_PTR<ITransportConnection>& connection,
@@ -4048,6 +4046,7 @@ void TcpTransportConnection::do_starttls2(
 
 namespace detail
 {
+#ifdef ROBOTRACONTEUR_USE_SCHANNEL
 static void TcpTransportConnection_websocket_read_adapter(
     detail::websocket_stream<boost::asio::ip::tcp::socket&>* sock, mutable_buffers& b,
     const boost::function<void(const boost::system::error_code&, size_t)>& handler)
@@ -4068,7 +4067,6 @@ static void TcpTransportConnection_websocket_close_adapter(
     sock->close();
 }
 
-#ifdef ROBOTRACONTEUR_USE_SCHANNEL
 static void TcpTransportConnection_wss_websocket_read_adapter(
     detail::websocket_stream<detail::TlsSchannelAsyncStreamAdapter_ASIO_adapter&>* sock, mutable_buffers& b,
     const boost::function<void(const boost::system::error_code&, size_t)>& handler)

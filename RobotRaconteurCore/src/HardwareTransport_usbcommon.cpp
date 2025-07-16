@@ -405,7 +405,6 @@ void UsbDevice_Initialize::InitializeDevice(boost::function<void(const UsbDevice
     }
 
     status = Initializing;
-    uint32_t attempt = 0;
     if (!RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&UsbDevice_Initialize::InitializeDevice1,
                                                                    shared_from_this(), 0, boost::protect(handler),
                                                                    RR_SHARED_PTR<boost::asio::deadline_timer>())))

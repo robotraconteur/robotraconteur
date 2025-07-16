@@ -968,7 +968,7 @@ void MessageEntry::Read4(ArrayBinaryReader& r)
 
     elements = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
     elements.reserve(ecount);
-    for (int32_t i = 0; i < ecount; i++)
+    for (uint32_t i = 0; i < ecount; i++)
     {
         RR_INTRUSIVE_PTR<MessageElement> e = CreateMessageElement();
         e->Read4(r);

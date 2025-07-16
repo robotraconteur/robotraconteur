@@ -31,8 +31,10 @@
 
 #include "RobotRaconteur/Timer.h"
 
+#ifdef _MSVC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
+#endif
 #include <boost/signals2.hpp>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -223,4 +225,6 @@ using ITransportConnectionPtr = RR_SHARED_PTR<ITransportConnection>;
 
 } // namespace RobotRaconteur
 
+#ifdef _MSVC_VER
 #pragma warning(pop)
+#endif

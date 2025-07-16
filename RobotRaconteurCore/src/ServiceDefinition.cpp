@@ -333,7 +333,7 @@ static void ServiceDefinition_FindBlock(boost::string_ref current_line, std::ist
     while (ServiceDefinition_GetLine(is, l, docstring, parse_info, true))
     {
         last_pos++;
-        for (; last_pos < parse_info.LineNumber; last_pos++)
+        for (; last_pos < boost::numeric_cast<size_t>(parse_info.LineNumber); last_pos++)
         {
             os << "\n";
         }
@@ -4486,8 +4486,6 @@ void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
                                                    strut->ParseInfo);
         membernames.push_back(membername);
     }
-
-    DataTypes namedarray_element_type = DataTypes_void_t;
 
     BOOST_FOREACH (RR_SHARED_PTR<MemberDefinition>& e, strut->Members)
     {

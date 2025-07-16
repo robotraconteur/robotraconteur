@@ -552,7 +552,7 @@ class FillOptionsDescription_add_helper
     boost::program_options::options_description& desc;
     FillOptionsDescription_add_helper(boost::program_options::options_description& desc_, const std::string& prefix_,
                                       uint32_t& allowed_overrides_)
-        : desc(desc_), prefix(prefix_), allowed_overrides(allowed_overrides_)
+        : prefix(prefix_), allowed_overrides(allowed_overrides_), desc(desc_)
     {}
 
     template <typename T>

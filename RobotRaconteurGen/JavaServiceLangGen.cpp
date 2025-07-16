@@ -3268,9 +3268,6 @@ void JavaServiceLangGen::GenerateConstants(ServiceDefinition* d, std::ostream* w
         }
     }
 
-    BOOST_FOREACH (RR_SHARED_PTR<EnumDefinition>& e, d->Enums)
-    {}
-
     w2 << "}" << std::endl;
 }
 
