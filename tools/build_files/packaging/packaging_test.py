@@ -295,6 +295,7 @@ def do_podman_build_impl_gentoo(args):
 
     if "build" in steps:
         subprocess.check_call("ls /var/db/repos/local/dev-cpp/robotraconteur", shell=True)
+        subprocess.check_call("USE='python' emerge --onlydeps --getbinpkg dev-cpp/robotraconteur", shell=True)
         subprocess.check_call("USE='python' emerge dev-cpp/robotraconteur", shell=True)
 
     if "setup-test" in steps:
