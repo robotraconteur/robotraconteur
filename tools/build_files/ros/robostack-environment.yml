@@ -1,0 +1,11 @@
+name: robostack
+channels:
+- conda-forge
+- robostack-jazzy
+dependencies:
+- ros-jazzy-ros-core
+- colcon-common-extensions
+- ninja
+- swig
+- rosdep
+- zstandard

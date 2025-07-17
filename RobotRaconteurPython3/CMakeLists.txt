@@ -218,8 +218,6 @@ if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
     # Allows Colcon to find Python package
     if(SETUPTOOLS_DEB_LAYOUT)
         set(ROS_PYTHONPATH lib/python3/dist-packages)
-    elseif(WIN32)
-        set(ROS_PYTHONPATH lib/site-packages)
     else()
         set(ROS_PYTHONPATH lib/python3.${PYTHON3_VERSION_MINOR}/site-packages)
     endif()

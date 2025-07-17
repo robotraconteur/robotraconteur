@@ -2066,6 +2066,47 @@ jobs:
         set -e
         source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+    - name: copy deb
+      run: cp src/*.deb .
+    - name: upload deb
+      uses: actions/upload-artifact@v4
+      with:
+        name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
+        path: "*.deb"
+  test-ros-package-python-path-install:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    needs: test-ros-package-python-path
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - jazzy
+        - kilted
+        - rolling
+        - noetic
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: download deb
+      uses: actions/download-artifact@v4
+      with:
+        name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
+    - name: apt update
+      run: sudo apt update
+    - name: install deb
+      run: sudo dpkg -i *.deb || true
+    - name: apt install
+      run: sudo apt-get install -f -y
+    - name: test python path
+      run: |
+        set -e
+        source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+
   test-ros-colcon-python-path:
     runs-on: ubuntu-latest
     container: ros:${{ matrix.ROS_DISTRO }}
@@ -2101,7 +2142,7 @@ jobs:
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
       working-directory: workspace/src/robotraconteur
     - run: |
-        colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
       working-directory: workspace
     - name: test python path
       working-directory: workspace
@@ -2155,4 +2196,130 @@ jobs:
       run: |
         set -e
         source install_isolated/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+  # RobotStack rosdep tests disabled until issue is resolved:
+  # https://github.com/conda-forge/rosdep-feedstock/issues/33
+  # test-ros-colcon-win-robostack:
+  #   runs-on: windows-latest
+  #   defaults:
+  #     run:
+  #       shell: cmd /C CALL {0}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       path: workspace/src/robotraconteur
+  #   - name: miniconda
+  #     uses: conda-incubator/setup-miniconda@v3
+  #     with:
+  #       miniconda-version: "latest"
+  #       channels: conda-forge,robostack-jazzy
+  #       activate-environment: robostack
+  #       environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+  #   - name: print environment
+  #     run: |
+  #       conda info
+  #       conda list
+  #       echo %PATH%
+  #       echo %PYTHONPATH%
+  #   - name: rosdep
+  #     run: |
+  #       rosdep init
+  #       rosdep update --include-eol-distros
+  #       rosdep install --from-paths src --ignore-src -y
+  #     working-directory: workspace
+  #   - name: colcon build
+  #     run: |
+  #       colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+  #     working-directory: workspace
+  #   - name: test python path
+  #     working-directory: workspace
+  #     run: |
+  #       install\setup.bat
+  #       if %errorlevel% neq 0 exit /b %errorlevel%
+  #       python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+  #       if %errorlevel% neq 0 exit /b %errorlevel%
+  # test-ros-colcon-unix-robostack:
+  #   runs-on: ${{ matrix.config.runner }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       config:
+  #       - os: macos
+  #         runner: macos-latest
+  #       - os: ubuntu
+  #         runner: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       shell: bash -el {0}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       path: workspace/src/robotraconteur
+  #   - name: miniconda
+  #     uses: conda-incubator/setup-miniconda@v3
+  #     with:
+  #       miniconda-version: "latest"
+  #       channels: conda-forge,robostack-jazzy
+  #       activate-environment: robostack
+  #       environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+  #   - name: print environment
+  #     run: |
+  #       conda info
+  #       conda list
+  #       echo $PATH
+  #       echo $PYTHONPATH
+  #   - name: rosdep
+  #     run: |
+  #       rosdep init
+  #       rosdep update --include-eol-distros
+  #       rosdep install --from-paths src --ignore-src -y
+  #     working-directory: workspace
+  #   - name: colcon build
+  #     run: |
+  #       colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+  #     working-directory: workspace
+  #   - name: test python path
+  #     working-directory: workspace
+  #     run: |
+  #       set -e
+  #       source install/setup.bash
+  #       python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+  test-ros-colcon-mac-brew:
+    runs-on: macos-14
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/src/robotraconteur
+    - name: update brew
+      run: |
+        brew update
+        brew upgrade
+        brew install swig
+    - name: pip install dependencies
+      run: |
+        pip install -U colcon-common-extensions rosdep numpy setuptools
+        python3 -m pip install numpy setuptools --break-system-packages
+    - name: rosdep
+      run: |
+        set -e
+        sudo rosdep init
+        rosdep update --include-eol-distros
+        rosdep install --from-paths src --ignore-src -y -tbuildtool -r || true
+        rosdep install --from-paths src --ignore-src -y -tbuild -r || true
+        rosdep install --from-paths src --ignore-src -y -texec -r || true
+        rosdep install --from-paths src --ignore-src -y -ttest -r || true
+      working-directory: workspace
+    - name: colcon build
+      run: |
+        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+      working-directory: workspace
+    - name: test python path
+      working-directory: workspace
+      run: |
+        source install/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
