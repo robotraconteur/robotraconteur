@@ -258,7 +258,7 @@ jobs:
         getuto
     - name: sync-portage
       run: |
-        emerge --sync --quiet
+        emerge-webrsync --quiet
     - name: install-deps
       run: >-
         emerge --getbinpkg --usepkg
