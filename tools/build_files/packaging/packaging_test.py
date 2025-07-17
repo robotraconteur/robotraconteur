@@ -8,11 +8,13 @@ import re
 import os
 from datetime import datetime, timezone
 import shutil
+import pwd
 
 _containers = {
     "debian": "docker.io/debian:sid",
     "gentoo": "docker.io/gentoo/stage3:latest",
-    "fedora": "docker.io/fedora:latest"
+    "fedora": "docker.io/fedora:latest",
+    "arch": "docker.io/archlinux:latest"
 }
 
 # debian
@@ -446,6 +448,170 @@ make install DESTDIR=%{buildroot}
 - Test RPM Build
 """
 
+# pacman
+_pacman_srcinfo = \
+    """\
+pkgbase = robotraconteur
+	pkgdesc = Robot Raconteur is a communication framework for Robotics and Automation
+	pkgver = %{TEMPLATE_VERSION}
+	pkgrel = %{TEMPLATE_PACKAGE_VERSION}
+	url = https://github.com/robotraconteur/robotraconteur
+	arch = x86_64
+	license = Apache-2.0
+	makedepends = cmake>=3.5.1
+	makedepends = boost>=1.58.0
+	makedepends = bluez-libs
+	makedepends = dbus
+	makedepends = openssl
+	makedepends = libusb
+	makedepends = zlib
+	makedepends = python
+	makedepends = python-numpy
+	makedepends = python-setuptools
+	makedepends = python-pip
+	makedepends = gtest
+	makedepends = base-devel
+	source = RobotRaconteur-${pkgver}-Source.tar.gz
+	sha256sums = SKIP
+
+pkgname = librobotraconteurcore1
+	pkgdesc = Robot Raconteur runtime library
+	depends = bluez-libs
+	depends = dbus
+	depends = libusb
+
+pkgname = librobotraconteur-devel
+	pkgdesc = Robot Raconteur development files
+	depends = librobotraconteurcore1
+	depends = boost>=1.58.0
+	depends = cmake
+	depends = base-devel
+	depends = openssl
+
+pkgname = python-robotraconteur
+	pkgdesc = Robot Raconteur Python 3 module
+	depends = bluez-libs
+	depends = dbus
+	depends = libusb
+	depends = python
+	depends = python-numpy
+
+pkgname = robotraconteurgen
+	pkgdesc = RobotRaconteurGen tool
+	depends = librobotraconteurcore1
+"""
+
+_pacman_pkgbuild =\
+    """\
+# Maintainer: John Wason <wason@wasontech.com>
+pkgbase=robotraconteur
+pkgname=(librobotraconteurcore1 librobotraconteur-devel python-robotraconteur robotraconteurgen)
+pkgver=%{TEMPLATE_VERSION}
+pkgrel=%{TEMPLATE_PACKAGE_VERSION}
+pkgdesc="Robot Raconteur is a communication framework for Robotics and Automation"
+arch=('x86_64')
+url="https://github.com/robotraconteur/robotraconteur"
+license=('Apache-2.0')
+source=("RobotRaconteur-${pkgver}-Source.tar.gz")
+sha256sums=('SKIP') # Replace with actual sha256sum for release
+makedepends=(
+  'cmake>=3.5.1'
+  'boost>=1.58.0'
+  'bluez-libs'
+  'dbus'
+  'openssl'
+  'libusb'
+  'zlib'
+  'python'
+  'python-numpy'
+  'python-setuptools'
+  'python-pip'
+  'gtest'
+  'base-devel'
+)
+_libdepends=('bluez-libs' 'dbus' 'libusb')
+_pythondepends=('python' 'python-numpy')
+
+prepare() {
+  cd "RobotRaconteur-${pkgver}-Source"
+  rm -rf build
+  mkdir build
+}
+
+build() {
+  cd "RobotRaconteur-${pkgver}-Source/build"
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_GEN=ON \
+    -DBUILD_PYTHON=OFF \
+    -DBUILD_PYTHON3=ON \
+    -DUSE_PREGENERATED_SOURCE=ON \
+    -DPYTHON3_EXECUTABLE=/usr/bin/python3 \
+    -DINSTALL_PYTHON3_PIP=ON \
+    -DBUILD_DOCUMENTATION=OFF \
+    -DBUILD_SHARED_LIBS=ON \
+    -DROBOTRACONTEURCORE_SOVERSION_MAJOR_ONLY=ON \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DROBOTRACONTEUR_TESTING_DISABLE_DISCOVERY_LOOPBACK=ON \
+    -DBUILD_TESTING=OFF \
+    -DINSTALL_PYTHON3_PIP_EXTRA_ARGS="--compile --use-pep517 --no-build-isolation --no-deps --root-user-action=ignore"
+  cmake --build . -- -j$(nproc)
+}
+
+package_librobotraconteurcore1() {
+  pkgdesc="Robot Raconteur runtime library"
+  depends=("${_libdepends[@]}")
+  cd "$srcdir/RobotRaconteur-${pkgver}-Source/build"
+  DESTDIR="$pkgdir" cmake --install .
+  # Prune unrelated files
+  find "$pkgdir/usr/lib" -maxdepth 1 -type d -name "python*" -exec rm -r {} +
+  rm -rf "$pkgdir/usr/include" "$pkgdir/usr/lib/cmake" "$pkgdir/usr/bin" "$pkgdir/usr/share" "$pkgdir/usr/lib/pkgconfig"
+  find "$pkgdir/usr/lib" -type f,l ! -name 'libRobotRaconteurCore.so.*' -delete
+  install -Dm644 ../LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_librobotraconteur-devel() {
+  pkgdesc="Robot Raconteur development files"
+  depends=('librobotraconteurcore1' 'boost>=1.58.0' 'cmake' 'base-devel' 'openssl')
+  cd "$srcdir/RobotRaconteur-${pkgver}-Source/build"
+  DESTDIR="$pkgdir" cmake --install .
+  # Keep only headers, development symlinks, and cmake files
+  find "$pkgdir/usr/lib" -maxdepth 1 -type d -name "python*" -exec rm -r {} +
+  find "$pkgdir/usr/lib" -type f,l ! -name 'libRobotRaconteurCore.so' ! -name '*.cmake' -delete
+  rm -rf "$pkgdir/usr/bin" "$pkgdir/usr/share" "$pkgdir/usr/lib/pkgconfig"
+  find "$pkgdir/usr/lib" -type f,l -name 'libRobotRaconteurCore.so.*' -delete
+  install -Dm644 ../LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_python-robotraconteur() {
+  pkgdesc="Robot Raconteur Python 3 module"
+  depends=("${_libdepends[@]}" "${_pythondepends[@]}")
+  cd "$srcdir/RobotRaconteur-${pkgver}-Source/build"
+  DESTDIR="$pkgdir" cmake --install .
+  # Prune to only python site-packages
+  pyver=$(python3 -c 'import sys; print("{}.{}".format(sys.version_info.major, sys.version_info.minor))')
+  sitepkg="usr/lib/python${pyver}/site-packages"
+  find "$pkgdir/usr" -mindepth 1 -maxdepth 1 ! -name "lib" -exec rm -rf {} +
+  find "$pkgdir/usr/lib" -mindepth 1 -maxdepth 1 ! -name "python${pyver}" -exec rm -rf {} +
+  install -Dm644 ../LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_robotraconteurgen() {
+  pkgdesc="RobotRaconteurGen tool"
+  depends=('librobotraconteurcore1')
+  cd "$srcdir/RobotRaconteur-${pkgver}-Source/build"
+  DESTDIR="$pkgdir" cmake --install .
+  # Keep only the generator binary and man page (if present)
+  find "$pkgdir/usr" -mindepth 1 -maxdepth 1 ! -name "bin" -a ! -name "share" -exec rm -rf {} +
+  find "$pkgdir/usr/bin" -type f ! -name 'RobotRaconteurGen' -delete
+  if [ -d "$pkgdir/usr/share/man/man1" ]; then
+    find "$pkgdir/usr/share/man/man1" -type f ! -name 'robotraconteurgen*' -delete
+  fi
+  install -Dm644 ../LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+"""
+
 
 def get_src_dir(src_dir_arg):
     if src_dir_arg is not None:
@@ -617,6 +783,45 @@ def do_gen_fedora(args):
             f.write(rpm_spec)
 
 
+class PercentTemplate(string.Template):
+    delimiter = "%"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+def do_gen_arch(args):
+    src_dir = get_src_dir(args.src_dir)
+    ver = get_version(src_dir, args.version)
+    print(f"src_dir: {src_dir}")
+    print(f"ver: {ver}")
+    out_dir = get_out_dir(args.out_dir, "/testbuild")
+    print(f"out_dir: {out_dir}")
+
+    data = {
+        "TEMPLATE_TIMESTAMP": datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000"),
+        "TEMPLATE_VERSION": ver,
+        "TEMPLATE_PACKAGE_VERSION": args.package_version or "1",
+    }
+
+    deb_files_to_write = {
+        ".SRCINFO": PercentTemplate(_pacman_srcinfo).substitute(data),
+        "PKGBUILD": PercentTemplate(_pacman_pkgbuild).substitute(data)
+    }
+
+    if args.stdout:
+        for k, v in deb_files_to_write.items():
+            print(f"=== debian/{k} ===")
+            print(v)
+            print("")
+    else:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        for k, v in deb_files_to_write.items():
+            print(f"writing file {str(out_dir / k)}")
+            with open(out_dir / k, "w") as f:
+                f.write(v)
+
+
 def do_gen(args):
 
     if args.dist == "gentoo":
@@ -625,6 +830,8 @@ def do_gen(args):
         do_gen_debian(args)
     elif args.dist == "fedora":
         do_gen_fedora(args)
+    elif args.dist == "arch":
+        do_gen_arch(args)
     else:
         raise Exception(f"Unknown dist {args.dist}")
 
@@ -861,6 +1068,112 @@ def do_podman_build_impl_fedora(args):
         subprocess.check_call("pytest /src2/test/python/RobotRaconteurTest/test_service.py", shell=True)
 
 
+def _user_exists(username):
+    try:
+        pwd.getpwnam(username)
+        return True
+    except KeyError:
+        return False
+
+
+def _add_user(username):
+    subprocess.run(["useradd", "-m", username], check=True)
+    subprocess.run(["passwd", "-d", username], check=True)
+    subprocess.run(["usermod", "-aG", "wheel", username], check=True)
+
+
+def _ensure_wheel_nopasswd():
+    sudoers_line = "%wheel ALL=(ALL) NOPASSWD: ALL"
+    with open("/etc/sudoers", "r") as f:
+        if sudoers_line in f.read():
+            return
+    with open("/etc/sudoers", "a") as f:
+        f.write(sudoers_line + "\n")
+
+
+def _save_installed_pacman_packages():
+    with open("/installed_packages.txt", "w") as f:
+        subprocess.run(
+            ["pacman", "-Qq"],
+            stdout=f,
+            check=True
+        )
+
+
+def _revert_to_saved_pacman_packages():
+    if not Path("/installed_packages.txt").exists():
+        print("No saved packages to revert to.")
+        return
+    with open("/installed_packages.txt") as f:
+        keep = set(line.strip() for line in f)
+
+    result = subprocess.run(
+        ["pacman", "-Qq"],
+        capture_output=True, text=True, check=True
+    )
+    current = set(result.stdout.strip().splitlines())
+
+    to_remove = current - keep
+
+    if to_remove:
+        print("Packages to remove:", " ".join(to_remove))
+        subprocess.run(["pacman", "-Rns", "--noconfirm"] + list(to_remove), check=True)
+    else:
+        print("No extra packages to remove.")
+
+
+def do_podman_build_impl_arch(args):
+    username = "testuser"
+    if args.steps is None or args.steps == "all":
+        steps = ["setup", "gen", "build", "setup-test", "test"]
+    else:
+        steps = args.steps.split(",")
+
+    src_dir = get_src_dir(args.src_dir)
+    ver = get_version(src_dir, None)
+    out_dir = Path("/testbuild")
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if "setup" in steps:
+        subprocess.check_call("pacman -S --needed --noconfirm base-devel sudo git", shell=True)
+        if not _user_exists(username):
+            _add_user(username)
+        _ensure_wheel_nopasswd()
+        _save_installed_pacman_packages()
+
+    if "gen" in steps:
+        podman_build_copy_src()
+        subprocess.check_call(
+            f"tar czvf RobotRaconteur-{ver}-Source.tar.gz --transform 's,^,RobotRaconteur-{ver}-Source/,' *", shell=True, cwd="/src2")
+
+        shutil.move(f"/src2/RobotRaconteur-{ver}-Source.tar.gz",
+                    str(out_dir / f"RobotRaconteur-{ver}-Source.tar.gz"))
+        subprocess.check_call("python3 /packaging_test.py gen --dist=arch --src-dir=/src2", shell=True)
+
+    if "build" in steps:
+        subprocess.check_call(f"chown {username} /testbuild", shell=True)
+        subprocess.check_call(
+            f"su - {username} -c \"export MAKEFLAGS='-j$(nproc)'; cd {str(out_dir)} && makepkg -s --noconfirm\"", shell=True, cwd=out_dir)
+
+    if "setup-test" in steps:
+        _revert_to_saved_pacman_packages()
+        subprocess.check_call("pacman -S --noconfirm gtest python-pytest", shell=True)
+        rpm_fnames = []
+        for p in Path(out_dir).rglob("*.pkg.tar.zst"):
+            if "debug" in str(p):
+                continue
+            rpm_fnames.append(str(p))
+        print(f"pacman -U --noconfigm {' '.join(rpm_fnames)}")
+        subprocess.check_call(f"pacman -U --noconfirm {' '.join(rpm_fnames)}", shell=True, cwd=out_dir)
+    if "test" in steps:
+        subprocess.check_call(
+            "cmake -S /src2 -B /build_test -DBUILD_CORE=OFF -DBUILD_GEN=OFF -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTEST_CORE=ON", shell=True)
+        subprocess.check_call(f"cmake --build /build_test --config RelWithDebInfo -- -j{os.cpu_count()}", shell=True)
+        subprocess.check_call(
+            "ctest . -C RelWithDebInfo -E \"robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback\" --output-on-failure", cwd="build_test", shell=True)
+        subprocess.check_call("pytest /src2/test/python/RobotRaconteurTest/test_service.py", shell=True)
+
+
 def do_podman_build_impl(args):
     if args.dist == "gentoo":
         do_podman_build_impl_gentoo(args)
@@ -868,6 +1181,8 @@ def do_podman_build_impl(args):
         do_podman_build_impl_debian(args)
     elif args.dist == "fedora":
         do_podman_build_impl_fedora(args)
+    elif args.dist == "arch":
+        do_podman_build_impl_arch(args)
     else:
         raise Exception(f"Unknown dist {args.dist}")
 

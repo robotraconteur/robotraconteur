@@ -14,6 +14,12 @@ if [ -f /etc/debian_version ]; then
     fi
 fi
 
+if [ -f /etc/arch-release ]; then
+    if [ ! -f /usr/bin/python3 ]; then
+        pacman -Sy --noconfirm python
+    fi
+fi
+
 # detect fedora
 if [ -f /etc/fedora-release ]; then
     # install python3 if not detected
