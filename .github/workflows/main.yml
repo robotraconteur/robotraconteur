@@ -2164,91 +2164,93 @@ jobs:
         source install_isolated/setup.bash
         python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
 
-  test-ros-colcon-win-robostack:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: cmd /C CALL {0}
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        path: workspace/src/robotraconteur
-    - name: miniconda
-      uses: conda-incubator/setup-miniconda@v3
-      with:
-        miniconda-version: "latest"
-        channels: conda-forge,robostack-jazzy
-        activate-environment: robostack
-        environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
-    - name: print environment
-      run: |
-        conda info
-        conda list
-        echo %PATH%
-        echo %PYTHONPATH%
-    - name: rosdep
-      run: |
-        rosdep init
-        rosdep update --include-eol-distros
-        rosdep install --from-paths src --ignore-src -y
-      working-directory: workspace
-    - name: colcon build
-      run: |
-        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
-      working-directory: workspace
-    - name: test python path
-      working-directory: workspace
-      run: |
-        install\setup.bat
-        if %errorlevel% neq 0 exit /b %errorlevel%
-        python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
-        if %errorlevel% neq 0 exit /b %errorlevel%
-  test-ros-colcon-unix-robostack:
-    runs-on: ${{ matrix.config.runner }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - os: macos
-          runner: macos-latest
-        - os: ubuntu
-          runner: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -el {0}
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        path: workspace/src/robotraconteur
-    - name: miniconda
-      uses: conda-incubator/setup-miniconda@v3
-      with:
-        miniconda-version: "latest"
-        channels: conda-forge,robostack-jazzy
-        activate-environment: robostack
-        environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
-    - name: print environment
-      run: |
-        conda info
-        conda list
-        echo $PATH
-        echo $PYTHONPATH
-    - name: rosdep
-      run: |
-        rosdep init
-        rosdep update --include-eol-distros
-        rosdep install --from-paths src --ignore-src -y
-      working-directory: workspace
-    - name: colcon build
-      run: |
-        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
-      working-directory: workspace
-    - name: test python path
-      working-directory: workspace
-      run: |
-        set -e
-        source install/setup.bash
-        python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+  # RobotStack rosdep tests disabled until issue is resolved:
+  # https://github.com/conda-forge/rosdep-feedstock/issues/33
+  # test-ros-colcon-win-robostack:
+  #   runs-on: windows-latest
+  #   defaults:
+  #     run:
+  #       shell: cmd /C CALL {0}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       path: workspace/src/robotraconteur
+  #   - name: miniconda
+  #     uses: conda-incubator/setup-miniconda@v3
+  #     with:
+  #       miniconda-version: "latest"
+  #       channels: conda-forge,robostack-jazzy
+  #       activate-environment: robostack
+  #       environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+  #   - name: print environment
+  #     run: |
+  #       conda info
+  #       conda list
+  #       echo %PATH%
+  #       echo %PYTHONPATH%
+  #   - name: rosdep
+  #     run: |
+  #       rosdep init
+  #       rosdep update --include-eol-distros
+  #       rosdep install --from-paths src --ignore-src -y
+  #     working-directory: workspace
+  #   - name: colcon build
+  #     run: |
+  #       colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+  #     working-directory: workspace
+  #   - name: test python path
+  #     working-directory: workspace
+  #     run: |
+  #       install\setup.bat
+  #       if %errorlevel% neq 0 exit /b %errorlevel%
+  #       python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+  #       if %errorlevel% neq 0 exit /b %errorlevel%
+  # test-ros-colcon-unix-robostack:
+  #   runs-on: ${{ matrix.config.runner }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       config:
+  #       - os: macos
+  #         runner: macos-latest
+  #       - os: ubuntu
+  #         runner: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       shell: bash -el {0}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       path: workspace/src/robotraconteur
+  #   - name: miniconda
+  #     uses: conda-incubator/setup-miniconda@v3
+  #     with:
+  #       miniconda-version: "latest"
+  #       channels: conda-forge,robostack-jazzy
+  #       activate-environment: robostack
+  #       environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+  #   - name: print environment
+  #     run: |
+  #       conda info
+  #       conda list
+  #       echo $PATH
+  #       echo $PYTHONPATH
+  #   - name: rosdep
+  #     run: |
+  #       rosdep init
+  #       rosdep update --include-eol-distros
+  #       rosdep install --from-paths src --ignore-src -y
+  #     working-directory: workspace
+  #   - name: colcon build
+  #     run: |
+  #       colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+  #     working-directory: workspace
+  #   - name: test python path
+  #     working-directory: workspace
+  #     run: |
+  #       set -e
+  #       source install/setup.bash
+  #       python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
 
   test-ros-colcon-mac-brew:
     runs-on: macos-14
