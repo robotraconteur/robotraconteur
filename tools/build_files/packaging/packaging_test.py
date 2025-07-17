@@ -457,6 +457,7 @@ pkgbase = robotraconteur
 	pkgrel = %{TEMPLATE_PACKAGE_VERSION}
 	url = https://github.com/robotraconteur/robotraconteur
 	arch = x86_64
+    arch = aarch64
 	license = Apache-2.0
 	makedepends = cmake>=3.5.1
 	makedepends = boost>=1.58.0
@@ -509,7 +510,7 @@ pkgname=(librobotraconteurcore1 librobotraconteur-devel python-robotraconteur ro
 pkgver=%{TEMPLATE_VERSION}
 pkgrel=%{TEMPLATE_PACKAGE_VERSION}
 pkgdesc="Robot Raconteur is a communication framework for Robotics and Automation"
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url="https://github.com/robotraconteur/robotraconteur"
 license=('Apache-2.0')
 source=("RobotRaconteur-${pkgver}-Source.tar.gz")
