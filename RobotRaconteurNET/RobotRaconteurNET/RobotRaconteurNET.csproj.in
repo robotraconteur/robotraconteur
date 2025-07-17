@@ -34,7 +34,7 @@
 	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
+    <NoWarn>$(NoWarn);@RR_NET_DISABLED_WARNINGS@</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
