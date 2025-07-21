@@ -249,7 +249,7 @@ jobs:
     runs-on: ubuntu-latest
     container: gentoo/stage3:latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
