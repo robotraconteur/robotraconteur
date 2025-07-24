@@ -3452,8 +3452,8 @@ class UnpackMessageElementToMxArrayImpl
         if (tdef->Type == DataTypes_string_t)
         {
             RR_INTRUSIVE_PTR<RRArray<char> > m_str = m->CastData<RRArray<char> >();
-            std::basic_string<uint16_t> data_utf16 =
-                boost::locale::conv::utf_to_utf<uint16_t>(m_str->data(), m_str->data() + m_str->size());
+            std::basic_string<char16_t> data_utf16 =
+                boost::locale::conv::utf_to_utf<char16_t>(m_str->data(), m_str->data() + m_str->size());
 
             mwSize data_size[2];
             data_size[0] = 1;
@@ -7289,7 +7289,7 @@ constant_type convert_constant(const RR_SHARED_PTR<ConstantDefinition>& c1,
     if (def->Type == DataTypes_string_t)
     {
         std::string data_utf8 = c1->ValueToString();
-        std::basic_string<uint16_t> data_utf16 = boost::locale::conv::utf_to_utf<uint16_t>(data_utf8);
+        std::basic_string<char16_t> data_utf16 = boost::locale::conv::utf_to_utf<char16_t>(data_utf8);
 
         mwSize data_size[2];
         data_size[0] = 1;
