@@ -2715,14 +2715,22 @@ static std::string CSharpServiceLangGen_EscapeString_Formatter(const boost::smat
     if (i == "\t")
         return "\\t";
 
-    std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
-
     std::stringstream v2;
     v2 << std::hex << std::setfill('0');
+
+#ifndef ROBOTRACONTEUR_NO_CXX11
+    std::basic_string<char16_t> v = boost::locale::conv::utf_to_utf<char16_t>(i);
+    BOOST_FOREACH (const char16_t& v3, v)
+    {
+        v2 << std::setw(0) << "\\u" << std::setw(4) << v3;
+    }
+#else
+    std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
     BOOST_FOREACH (const uint16_t& v3, v)
     {
         v2 << std::setw(0) << "\\u" << std::setw(4) << v3;
     }
+#endif
 
     return v2.str();
 }
