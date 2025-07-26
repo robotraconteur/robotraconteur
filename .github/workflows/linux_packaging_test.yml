@@ -63,4 +63,12 @@ jobs:
     - name: build-and-test
       working-directory: src/robotraconteur
       run: >
-        ./tools/build_files/packaging/packaging_test.py ${{ matrix.config.pkg_opts }}
+        ./tools/build_files/packaging/packaging_test.py ${{ matrix.config.pkg_opts }} --out-dir=$GITHUB_WORKSPACE/out
+
+    - name: Upload packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: out-linux-packaging-${{ matrix.config.os }}-${{ matrix.config.arch }}
+        path: |
+          "out/**/*"
+          "out/*"
