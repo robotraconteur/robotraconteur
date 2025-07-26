@@ -70,5 +70,4 @@ jobs:
       with:
         name: out-linux-packaging-${{ matrix.config.os }}-${{ matrix.config.arch }}
         path: |
-          "out/**/*"
-          "out/*"
+          "out/**
