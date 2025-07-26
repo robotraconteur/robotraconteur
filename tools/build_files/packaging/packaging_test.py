@@ -54,7 +54,7 @@ Description: Robot Raconteur is a communication framework for
 Package: librobotraconteur-dev
 Architecture: any
 Section: contrib/libdevel
-Depends: librobotraconteurcore1, ${misc:Depends}, ${shlibs:Depends}, libboost-all-dev (>=1.58.0)
+Depends: librobotraconteurcore1, robotraconteurgen, ${misc:Depends}, ${shlibs:Depends}, libboost-all-dev (>=1.58.0)
 Description: Robot Raconteur is a communication framework for
  Robotics and Automation
  .
@@ -375,7 +375,7 @@ This package provides the run-time library of Robot Raconteur.
 
 %package -n librobotraconteur-devel
 Summary:        Robot Raconteur development files
-Requires:       librobotraconteurcore1, boost-devel >= 1.58.0, cmake, g++, gcc, make, openssl-devel
+Requires:       librobotraconteurcore1, robotraconteurgen boost-devel >= 1.58.0, cmake, g++, gcc, make, openssl-devel
 
 %description -n librobotraconteur-devel
 This package provides development files for Robot Raconteur.
@@ -484,6 +484,7 @@ pkgname = librobotraconteurcore1
 pkgname = librobotraconteur-devel
 	pkgdesc = Robot Raconteur development files
 	depends = librobotraconteurcore1
+    depends = robotraconteurgen
 	depends = boost>=1.58.0
 	depends = cmake
 	depends = base-devel
