@@ -54,7 +54,7 @@ Description: Robot Raconteur is a communication framework for
 Package: librobotraconteur-dev
 Architecture: any
 Section: contrib/libdevel
-Depends: librobotraconteurcore1, ${misc:Depends}, ${shlibs:Depends}, libboost-all-dev (>=1.58.0)
+Depends: librobotraconteurcore1, robotraconteurgen, ${misc:Depends}, ${shlibs:Depends}, libboost-all-dev (>=1.58.0)
 Description: Robot Raconteur is a communication framework for
  Robotics and Automation
  .
@@ -375,7 +375,7 @@ This package provides the run-time library of Robot Raconteur.
 
 %package -n librobotraconteur-devel
 Summary:        Robot Raconteur development files
-Requires:       librobotraconteurcore1, boost-devel >= 1.58.0, cmake, g++, gcc, make, openssl-devel
+Requires:       librobotraconteurcore1, robotraconteurgen boost-devel >= 1.58.0, cmake, g++, gcc, make, openssl-devel
 
 %description -n librobotraconteur-devel
 This package provides development files for Robot Raconteur.
@@ -484,6 +484,7 @@ pkgname = librobotraconteurcore1
 pkgname = librobotraconteur-devel
 	pkgdesc = Robot Raconteur development files
 	depends = librobotraconteurcore1
+    depends = robotraconteurgen
 	depends = boost>=1.58.0
 	depends = cmake
 	depends = base-devel
@@ -574,7 +575,7 @@ package_librobotraconteurcore1() {
 
 package_librobotraconteur-devel() {
   pkgdesc="Robot Raconteur development files"
-  depends=('librobotraconteurcore1' 'boost>=1.58.0' 'cmake' 'base-devel' 'openssl')
+  depends=('librobotraconteurcore1' 'boost>=1.58.0' 'cmake' 'base-devel' 'openssl' 'robotraconteurgen')
   cd "$srcdir/RobotRaconteur-${pkgver}-Source/build"
   DESTDIR="$pkgdir" cmake --install .
   # Keep only headers, development symlinks, and cmake files
@@ -849,14 +850,16 @@ def do_podman_build(args):
         f"--dist={args.dist}"
     ]
 
+    podman_args = []
+
     if args.debian_dist and len(args.debian_dist) > 0:
         passthrough_args.append(f"--debian-dist={args.debian_dist}")
 
     if args.debian_version_suffix and len(args.debian_version_suffix) > 0:
-        passthrough_args.append(f"--debian-version-suffix=${args.debian_version_suffix}")
+        passthrough_args.append(f"--debian-version-suffix={args.debian_version_suffix}")
 
     if args.package_version:
-        passthrough_args.append(f"--package-version=${args.package_version}")
+        passthrough_args.append(f"--package-version={args.package_version}")
 
     if args.gentoo_local_src:
         passthrough_args.append(f"--gentoo-local-src")
@@ -864,17 +867,21 @@ def do_podman_build(args):
     if args.version:
         passthrough_args.append(f"--version={args.version}")
 
+    if args.out_dir:
+        podman_args.append(f"-v {str(Path(args.out_dir).absolute())}:/out")
+        Path(args.out_dir).absolute().mkdir(parents=True, exist_ok=True)
+
     rm_str = ""
     if not args.no_rm:
         rm_str = "--rm"
 
     if not args.shell:
         subprocess.check_call(
-            f"podman run {rm_str} -v {src_dir}:/src -v {__file__}:/packaging_test.py -v {str(Path(__file__).parent / 'packaging_test_entry.sh')}:/packaging_test_entry.sh {container} /packaging_test_entry.sh podman-build-impl {' '.join(passthrough_args)}", shell=True)
+            f"podman run {rm_str} {' '.join(podman_args)} -v {src_dir}:/src -v {__file__}:/packaging_test.py -v {str(Path(__file__).parent / 'packaging_test_entry.sh')}:/packaging_test_entry.sh {container} /packaging_test_entry.sh podman-build-impl {' '.join(passthrough_args)}", shell=True)
     else:
         print(f"Command to run: python3 packaging_test.py podman-build-impl {' '.join(passthrough_args)}")
         subprocess.check_call(
-            f"podman run {rm_str} -it -v {src_dir}:/src -v {__file__}:/packaging_test.py -v {str(Path(__file__).parent / 'packaging_test_entry.sh')}:/packaging_test_entry.sh {container}", shell=True)
+            f"podman run {rm_str} -it {' '.join(podman_args)} -v {src_dir}:/src -v {__file__}:/packaging_test.py -v {str(Path(__file__).parent / 'packaging_test_entry.sh')}:/packaging_test_entry.sh {container}", shell=True)
 
 
 def podman_build_copy_src():
@@ -912,6 +919,11 @@ def do_podman_build_impl_gentoo(args):
         subprocess.check_call("ls /var/db/repos/local/dev-cpp/robotraconteur", shell=True)
         subprocess.check_call("USE='python' emerge --onlydeps --getbinpkg dev-cpp/robotraconteur", shell=True)
         subprocess.check_call("USE='python' emerge dev-cpp/robotraconteur", shell=True)
+
+        if Path("/out").is_dir():
+            Path("/out/dev-cpp/robotraconteur").mkdir(parents=True, exist_ok=True)
+            subprocess.check_call("cp /var/db/repos/local/dev-cpp/robotraconteur/*.ebuild /out/dev-cpp/robotraconteur/", shell=True)
+            subprocess.check_call("cp /var/db/repos/local/dev-cpp/robotraconteur/metadata.xml /out/dev-cpp/robotraconteur/", shell=True)
 
     if "setup-test" in steps:
         subprocess.check_call("emerge --getbinpkg dev-cpp/gtest dev-python/pytest", shell=True)
@@ -976,6 +988,10 @@ def do_podman_build_impl_debian(args):
         subprocess.check_call(
             "mk-build-deps --install --tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' /src2/debian/control", shell=True, cwd="/src2")
         subprocess.check_call("debuild -us -uc -b", shell=True, cwd="/src2")
+
+        if Path("/out").is_dir():
+            Path("/out/debian").mkdir(parents=True, exist_ok=True)
+            subprocess.check_call("cp /*.deb /out/debian/", shell=True)
 
     if "setup-test" in steps:
         _revert_to_saved_packages()
@@ -1049,6 +1065,10 @@ def do_podman_build_impl_fedora(args):
     if "build" in steps:
         subprocess.check_call("dnf builddep robotraconteur.spec -y", shell=True, cwd="/root/rpmbuild/SPECS")
         subprocess.check_call("rpmbuild -ba robotraconteur.spec", shell=True, cwd="/root/rpmbuild/SPECS")
+
+    if Path("/out").is_dir():
+        Path("/out/fedora").mkdir(parents=True, exist_ok=True)
+        subprocess.check_call("cp /root/rpmbuild/RPMS/*/*.rpm /out/fedora/", shell=True)
 
     if "setup-test" in steps:
         _revert_to_saved_rpm_packages()
@@ -1155,6 +1175,10 @@ def do_podman_build_impl_arch(args):
         subprocess.check_call(f"chown {username} /testbuild", shell=True)
         subprocess.check_call(
             f"su - {username} -c \"export MAKEFLAGS='-j$(nproc)'; cd {str(out_dir)} && makepkg -s --noconfirm\"", shell=True, cwd=out_dir)
+        
+        if Path("/out").is_dir():
+            Path("/out/arch").mkdir(parents=True, exist_ok=True)
+            subprocess.check_call("cp /testbuild/*.pkg.tar.zst /out/arch/", shell=True)
 
     if "setup-test" in steps:
         _revert_to_saved_pacman_packages()
@@ -1215,6 +1239,7 @@ def main():
     parser_gen.add_argument("--gentoo-local-src", action="store_true", help="Use local src with gentoo")
     parser_gen.add_argument("--no-rm", action="store_true", help="Don't add --rm to podman command")
     parser_gen.add_argument("--shell", action="store_true", help="Start an interactive shell")
+    parser_gen.add_argument("--out-dir", type=str, default=None, help="Output directory for packages")
 
     parser_gen = subparsers.add_parser("podman-build-impl")
     parser_gen.add_argument("--dist", type=str, default="debian", help="Linux target dist")
