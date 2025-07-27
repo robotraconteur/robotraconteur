@@ -575,7 +575,7 @@ package_librobotraconteurcore1() {
 
 package_librobotraconteur-devel() {
   pkgdesc="Robot Raconteur development files"
-  depends=('librobotraconteurcore1' 'boost>=1.58.0' 'cmake' 'base-devel' 'openssl')
+  depends=('librobotraconteurcore1' 'boost>=1.58.0' 'cmake' 'base-devel' 'openssl' 'robotraconteurgen')
   cd "$srcdir/RobotRaconteur-${pkgver}-Source/build"
   DESTDIR="$pkgdir" cmake --install .
   # Keep only headers, development symlinks, and cmake files
