@@ -41,7 +41,7 @@ jobs:
           pkg_opts: "podman-build --dist=fedora"
         - os: arch
           runs_on: ubuntu-latest
-          arch: arm64
+          arch: amd64
           pkg_opts: "podman-build --dist=arch"
     env:
       DEBIAN_FRONTEND: noninteractive
