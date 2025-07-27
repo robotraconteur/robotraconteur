@@ -922,8 +922,10 @@ def do_podman_build_impl_gentoo(args):
 
         if Path("/out").is_dir():
             Path("/out/dev-cpp/robotraconteur").mkdir(parents=True, exist_ok=True)
-            subprocess.check_call("cp /var/db/repos/local/dev-cpp/robotraconteur/*.ebuild /out/dev-cpp/robotraconteur/", shell=True)
-            subprocess.check_call("cp /var/db/repos/local/dev-cpp/robotraconteur/metadata.xml /out/dev-cpp/robotraconteur/", shell=True)
+            subprocess.check_call(
+                "cp /var/db/repos/local/dev-cpp/robotraconteur/*.ebuild /out/dev-cpp/robotraconteur/", shell=True)
+            subprocess.check_call(
+                "cp /var/db/repos/local/dev-cpp/robotraconteur/metadata.xml /out/dev-cpp/robotraconteur/", shell=True)
 
     if "setup-test" in steps:
         subprocess.check_call("emerge --getbinpkg dev-cpp/gtest dev-python/pytest", shell=True)
@@ -1175,7 +1177,7 @@ def do_podman_build_impl_arch(args):
         subprocess.check_call(f"chown {username} /testbuild", shell=True)
         subprocess.check_call(
             f"su - {username} -c \"export MAKEFLAGS='-j$(nproc)'; cd {str(out_dir)} && makepkg -s --noconfirm\"", shell=True, cwd=out_dir)
-        
+
         if Path("/out").is_dir():
             Path("/out/arch").mkdir(parents=True, exist_ok=True)
             subprocess.check_call("cp /testbuild/*.pkg.tar.zst /out/arch/", shell=True)
