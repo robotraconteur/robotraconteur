@@ -14,7 +14,6 @@
 ![conda](https://img.shields.io/conda/vn/conda-forge/robotraconteur?label=conda&logo=anaconda)
 ![ros-noetic](https://img.shields.io/ros/v/noetic/robotraconteur?styple=flat&logo=ros)
 ![ros-humble](https://img.shields.io/ros/v/humble/robotraconteur?styple=flat&logo=ros)
-![ros-iron](https://img.shields.io/ros/v/iron/robotraconteur?styple=flat&logo=ros)
 ![ros-jazzy](https://img.shields.io/ros/v/jazzy/robotraconteur?styple=flat&logo=ros)
 ![ros-kilted](https://img.shields.io/ros/v/kilted/robotraconteur?styple=flat&logo=ros)
 ![ros-rolling](https://img.shields.io/ros/v/rolling/robotraconteur?styple=flat&logo=ros)
@@ -30,6 +29,8 @@
 ![FreeBSD](https://img.shields.io/badge/-FreeBSD-%23870000?style=for-the-badge&logo=freebsd&logoColor=white)
 ![ROS](https://img.shields.io/badge/-ROS-22314E?style=for-the-badge&logo=ros&logoColor=white)
 ![Arduino](https://img.shields.io/badge/-Arduino-00979D?style=for-the-badge&logo=arduino&logoColor=white)
+
+[![NI Tools Network](docs/figures/ni_tools_network_small.png)](https://www.ni.com/en/support/downloads/tools-network/download.robot-raconteur-for-labview.html)
 
 A communication framework for robotics, automation, and the Internet of Things
 
@@ -253,8 +254,14 @@ https://github.com/robotraconteur-contrib/robotraconteur_ros2_bridge
 
 ## LabVIEW Add-on
 
-A Robot Raconteur for LabVIEW Add-on is available from Wason Technology, LLC as a commercial product.
-[Click Here](https://github.com/robotraconteur/robotraconteur/wiki/LabView) for information on installation and purchasing a subscription license.
+[![NI Tools Network](docs/figures/ni_tools_network_small.png)](https://www.ni.com/en/support/downloads/tools-network/download.robot-raconteur-for-labview.html)
+
+A Robot Raconteur for LabVIEW Add-on is available from Wason Technology, LLC as a commercial product. It is
+available for purchase on the [NI Tools Network](https://www.ni.com/en/support/downloads/tools-network/download.robot-raconteur-for-labview.html)
+and can be installed using the VIPM Package Manager. The add-on is available in the default channel. See
+the [Robot Raconteur for LabVIEW VIPM page](https://www.vipm.io/package/wason_technology_llc_lib_robot_raconteur_for_labview/)
+See the [Wiki Page](https://github.com/robotraconteur/robotraconteur/wiki/LabView) for information on the LabVIEW Add-on,
+direct download links, and instructions.
 
 ## Standard Service Types
 
