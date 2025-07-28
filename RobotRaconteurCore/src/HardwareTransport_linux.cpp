@@ -211,8 +211,6 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
     while (dbus_f->dbus_message_iter_get_arg_type(&iter_array) == DBUS_TYPE_OBJECT_PATH)
     {
         const char* object_path = NULL;
-        char* name = NULL;
-        char* bdaddr = NULL;
 
         dbus_f->dbus_message_iter_get_basic(&iter_array, &object_path);
 
@@ -281,8 +279,8 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
             {
                 try
                 {
-                    boost::uuids::uuid svc_uuid = {0x25, 0xbb, 0x0b, 0x62, 0x86, 0x1a, 0x49, 0x74,
-                                                   0xa1, 0xb8, 0x18, 0xed, 0x54, 0x95, 0xaa, 0x07};
+                    boost::uuids::uuid svc_uuid = {{0x25, 0xbb, 0x0b, 0x62, 0x86, 0x1a, 0x49, 0x74, 0xa1, 0xb8, 0x18,
+                                                    0xed, 0x54, 0x95, 0xaa, 0x07}};
 
                     dbus_f->dbus_message_iter_recurse(&dict_entry, &iter_dict_val);
 
@@ -519,8 +517,8 @@ std::vector<NodeDiscoveryInfo> HardwareTransport_linux_discovery::GetDriverDevic
             NodeDiscoveryInfoURL n1;
             n1.URL = scheme + ":///?nodeid=" + e.get<0>().ToString("D") + "&service=RobotRaconteurServiceIndex";
             n1.LastAnnounceTime = node->NowNodeTime();
-            n.URLs.push_back(n1);
-            o.push_back(n);
+            n.URLs.push_back(RR_MOVE(n1));
+            o.push_back(RR_MOVE(n));
         }
     }
     catch (std::exception&)
@@ -580,8 +578,6 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
             }
         }
     }
-
-    // printf("Got uevent message: %u\n", (uint32_t)bytes_transferred);
 
     // TODO: process uevent message
 

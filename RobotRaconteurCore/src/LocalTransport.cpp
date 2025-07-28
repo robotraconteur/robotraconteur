@@ -166,17 +166,20 @@ void LocalTransport::Close()
         fds = RR_MAKE_SHARED<detail::LocalTransportFDs>();
     }
 
+    {
+        boost::mutex::scoped_lock lock(acceptor_lock);
 #ifndef ROBOTRACONTEUR_WINDOWS
-    if (!socket_file_name.empty())
-    {
-        unlink(socket_file_name.c_str());
-    }
+        if (!socket_file_name.empty())
+        {
+            unlink(socket_file_name.c_str());
+        }
 #else
-    if (!socket_file_name.empty())
-    {
-        DeleteFileA(socket_file_name.c_str());
-    }
+        if (!socket_file_name.empty())
+        {
+            DeleteFileA(socket_file_name.c_str());
+        }
 #endif
+    }
 
     DisableNodeDiscoveryListening();
 
@@ -193,6 +196,7 @@ std::string LocalTransport::GetUrlSchemeString() const { return "rr+local"; }
 
 std::vector<std::string> LocalTransport::GetServerListenUrls()
 {
+    boost::mutex::scoped_lock lock(acceptor_lock);
     std::vector<std::string> o;
     if (acceptor)
     {
@@ -262,7 +266,7 @@ void LocalTransport::AsyncCreateTransportConnection(
         }
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                            "LocalTransport searching \"" << user_path << "\" for URL: " << url);
-        search_paths.push_back(user_path);
+        search_paths.push_back(RR_MOVE(user_path));
 
         if (public_user_path)
         {
@@ -287,7 +291,7 @@ void LocalTransport::AsyncCreateTransportConnection(
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                                    "LocalTransport searching \"" << service_path
                                                                                  << "\" for URL: " << url);
-                search_paths.push_back(service_path);
+                search_paths.push_back(RR_MOVE(service_path));
             }
 
             usernames.push_back(service_username);
@@ -346,7 +350,7 @@ void LocalTransport::AsyncCreateTransportConnection(
                 }
             }
         }
-        usernames.push_back(username);
+        usernames.push_back(RR_MOVE(username));
     }
 
     // TODO: test this
@@ -493,28 +497,6 @@ void LocalTransport::CloseTransportConnection_timed(const boost::system::error_c
         {}
     }
 }
-
-/*void LocalTransport::StartServer(boost::string_ref name)
-{
-    boost::mutex::scoped_lock lock(acceptor_lock);
-
-    if (acceptor) throw InvalidOperationException("Server already running");
-#ifdef ROBOTRACONTEUR_WINDOWS
-    acceptor=RR_MAKE_SHARED<socket_acceptor_type>("\\\\.\\pipe\\RobotRaconteur_" + name,20,GetNode());
-    acceptor->listen();
-
-    acceptor->async_accept(boost::bind(&LocalTransport::handle_accept,shared_from_this(),acceptor,RR_BOOST_PLACEHOLDERS(_2),boost::asio::placeholders::error));
-#else
-    std::string fname="/tmp/RobotRaconteur_" + name;
-    RR_SHARED_PTR<detail::LocalTransport_socket>
-socket=RR_MAKE_SHARED<detail::LocalTransport_socket>(boost::ref(GetNode()->GetThreadPool()->get_io_context()));
-    boost::asio::local::stream_protocol::endpoint ep(fname);
-    acceptor=RR_MAKE_SHARED<socket_acceptor_type>(boost::ref(GetNode()->GetThreadPool()->get_io_context()),ep);
-    acceptor->listen();
-    acceptor->async_accept(*socket,boost::bind(&LocalTransport::handle_accept,shared_from_this(),acceptor,socket,boost::asio::placeholders::error));
-#endif
-
-}*/
 
 void LocalTransport::StartClientAsNodeName(boost::string_ref name)
 {
@@ -1394,28 +1376,9 @@ void LocalTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& 
 
     try
     {
-
-        // TODO: fix this (maybe??)...
-
-        /*boost::asio::ip::address addr=socket->local_endpoint().address();
-        uint16_t port=socket->local_endpoint().port();
-
-        std::string connecturl;
-        if (addr.is_v4())
-        {
-            connecturl="local://" + addr + ":" + boost::lexical_cast<std::string>(port) + "/";
-        }
-        else
-        {
-            boost::asio::ip::address_v6 addr2=addr.to_v6();
-            addr2.scope_id(0);
-            connecturl="tcp://[" + addr2 + "]:" + boost::lexical_cast<std::string>(port) + "/";
-        }
-        */
-
         std::string connecturl = "rr+local:///";
         // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
+        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(RR_MOVE(connecturl)));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<LocalTransportConnection>(shared_from_this())));
         // NOLINTEND(cppcoreguidelines-owning-memory)
@@ -1831,9 +1794,9 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
             i.NodeID = nodeid;
             i.NodeName.clear();
             NodeDiscoveryInfoURL iurl;
-            iurl.URL = url;
+            iurl.URL = RR_MOVE(url);
             iurl.LastAnnounceTime = now;
-            i.URLs.push_back(iurl);
+            i.URLs.push_back(RR_MOVE(iurl));
 
             e_type service_nonce = info.find("ServiceStateNonce");
             if (service_nonce != info.end())
@@ -1841,7 +1804,7 @@ void FindNodesInDirectory(std::vector<NodeDiscoveryInfo>& nodeinfo, const boost:
                 i.ServiceStateNonce = service_nonce->second;
             }
 
-            nodeinfo.push_back(i);
+            nodeinfo.push_back(RR_MOVE(i));
         }
         catch (std::exception&)
         {}

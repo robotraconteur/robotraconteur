@@ -42,8 +42,6 @@ RR_SHARED_PTR<RobotRaconteurNode> Transport::GetNode() const
     return n;
 }
 
-// template <class T>
-// void thread_null_deleter(T* a) {}
 boost::thread_specific_ptr<std::string> Transport::m_CurrentThreadTransportConnectionURL;
 
 std::string Transport::GetCurrentTransportConnectionURL()
@@ -151,7 +149,6 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
 
         std::vector<std::string> s;
         boost::split(s, ap, boost::is_from_range('/', '/'));
-        // s = ap.Split(std::vector<int8_t>(tempVector4, tempVector4 + sizeof(tempVector4) / sizeof(tempVector4[0])),3);
         if (s.size() < 2)
             throw ConnectionException("Invalid Connection URL");
         std::string noden = s.at(0);
@@ -161,7 +158,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
         }
         else
         {
-            o.nodename = noden;
+            o.nodename = RR_MOVE(noden);
         }
         o.path = "/";
         try

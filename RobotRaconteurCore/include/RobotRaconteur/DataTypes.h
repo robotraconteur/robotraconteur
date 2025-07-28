@@ -62,6 +62,7 @@
 #include <boost/variant.hpp>
 
 #include <boost/date_time/posix_time/ptime.hpp>
+#include "boost/date_time/posix_time/posix_time_types.hpp"
 
 #pragma once
 
@@ -581,7 +582,7 @@ class RRArray : public RRBaseArray
   public:
     RR_OVIRTUAL DataTypes GetTypeID() RR_OVERRIDE { return RRPrimUtil<T>::GetTypeID(); }
 
-    RRArray(T* data, size_t length, bool owned) : data_(data), owned(owned), element_count(length) {}
+    RRArray(T* data, size_t length, bool owned) : data_(data), element_count(length), owned(owned) {}
 
     RR_OVIRTUAL ~RRArray() RR_OVERRIDE
     {
@@ -2550,7 +2551,7 @@ template <typename T>
 static RR_INTRUSIVE_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t length)
 {
     typedef typename RRPrimUtil<T>::ElementArrayType a_type;
-    RR_INTRUSIVE_PTR<RRArray<a_type> > a = AllocateRRArray<a_type>(length * RRPrimUtil<T>::GetElementArrayCount());
+    RR_INTRUSIVE_PTR<RRArray<a_type> > a = AllocateEmptyRRArray<a_type>(length * RRPrimUtil<T>::GetElementArrayCount());
     return new RRNamedArray<T>(a); // NOLINT(cppcoreguidelines-owning-memory)
 }
 

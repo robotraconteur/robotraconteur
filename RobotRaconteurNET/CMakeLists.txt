@@ -80,6 +80,7 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/NETExceptions.cmake")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/RobotRaconteurNET/Properties/AssemblyInfo.cs.in"
                "${CMAKE_CURRENT_BINARY_DIR}/AssemblyInfo.cs" @ONLY)
 
+set(RR_NET_FRAMEWORK_VERSION "v4.5.2" CACHE STRING ".NET Framework version for library")
 if(NOT RR_NET_BUILD_NATIVE_ONLY)
 
     if(WIN32)
@@ -96,6 +97,24 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
             $<$<CONFIG:debug>:/p:Configuration=Debug>$<$<CONFIG:release>:/p:Configuration=Release> /p:Platform="Any CPU"
             RobotRaconteurNET.csproj
             WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+
+        execute_process(
+            COMMAND "${XBUILD_EXECUTABLE}" /version
+            OUTPUT_VARIABLE XBUILD_VERSION_OUTPUT
+            ERROR_VARIABLE XBUILD_VERSION_ERROR
+            RESULT_VARIABLE XBUILD_VERSION_RESULT
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+        # Extract version number like "12.0" from "XBuild Engine Version 12.0"
+        string(REGEX MATCH "XBuild Engine Version ([0-9]+\\.[0-9]+)" _match "${XBUILD_VERSION_OUTPUT}")
+        set(XBUILD_VERSION "")
+        if(_match)
+            string(REGEX REPLACE "XBuild Engine Version ([0-9]+\\.[0-9]+)" "\\1" XBUILD_VERSION "${_match}")
+        endif()
+        if("${XBUILD_VERSION}" AND "${XBUILD_VERSION}" VERSION_LESS "14.0")
+            set(RR_NET_DISABLED_WARNINGS "")
+        else()
+            set(RR_NET_DISABLED_WARNINGS "CS1591;CS1573")
+        endif()
     endif()
     add_dependencies(RobotRaconteurNET RobotRaconteurNETNative)
 

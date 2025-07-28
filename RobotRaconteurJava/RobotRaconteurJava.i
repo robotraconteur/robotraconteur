@@ -67,6 +67,10 @@
 
 %rename("%(regex:/^(RobotRaconteur_LogLevel)_(.*)/LogLevel_\\2/)s", %$isenumitem) "";
 %rename("%(regex:/^(RobotRaconteur_LogComponent)_(.*)/LogComponent_\\2/)s", %$isenumitem) "";
+
+%ignore "RR_TIMEOUT_INFINITE";
+%ignore "RR_VALUE_LIFESPAN_INFINITE";
+
 %include "RobotRaconteurConstants.i"
 
 %include "JavaTypemaps.i"

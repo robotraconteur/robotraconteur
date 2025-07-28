@@ -64,7 +64,6 @@ void ServerContext_ObjectLock::AddSkel(const RR_SHARED_PTR<ServiceSkel>& skel)
                 {
                     if (mr == skel)
                     {
-                        // boost::mutex::scoped_lock lock2(mr->objectlock_lock);
                         mr->objectlock = shared_from_this();
                     }
                     else
@@ -115,8 +114,6 @@ void ServerContext_ObjectLock::ReleaseSkel(const RR_SHARED_PTR<ServiceSkel>& ske
             return;
         }
 
-        // skels.erase(std::remove(skels.begin(),skels.end(),skel_weak),skels.end());
-
         for (std::vector<RR_WEAK_PTR<ServiceSkel> >::iterator e = skels.begin(); e != skels.end();)
         {
             RR_SHARED_PTR<ServiceSkel> s = e->lock();
@@ -164,7 +161,10 @@ void ServerContext_ObjectLock::ReleaseLock()
             {
                 RR_SHARED_PTR<ServiceSkel> ss = s.lock();
                 if (ss)
+                {
+                    boost::mutex::scoped_lock lock2(ss->objectlock_lock);
                     ss->objectlock.reset();
+                }
             }
             catch (std::exception&)
             {}
@@ -202,8 +202,6 @@ std::string ServerContext_MonitorObjectSkel::MonitorEnter(uint32_t local_endpoin
 
     this->timeout = timeout;
     this->local_endpoint = local_endpoint;
-    // wait_event = AutoResetEvent();
-    // monitor_thread_event = AutoResetEvent();
     maintain_lock = true;
 
     {

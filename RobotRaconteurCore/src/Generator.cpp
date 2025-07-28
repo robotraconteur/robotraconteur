@@ -106,7 +106,10 @@ RR_INTRUSIVE_PTR<MessageElement> GeneratorClientBase::NextBase(const RR_INTRUSIV
     }
     RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
     RR_INTRUSIVE_PTR<MessageElement> mret;
-    ret->TryFindElement("return", mret);
+    if (!ret->TryFindElement("return", mret))
+    {
+        throw ProtocolException("Generator next response does not contain return element");
+    }
     return mret;
 }
 void GeneratorClientBase::AsyncNextBase(
@@ -154,7 +157,12 @@ void GeneratorClientBase::AsyncNextBase1(
         return;
     }
 
-    ret->TryFindElement("return", mret);
+    if (!ret->TryFindElement("return", mret))
+    {
+        handler(RR_INTRUSIVE_PTR<MessageElement>(),
+                RR_MAKE_SHARED<ProtocolException>("Generator next response does not contain return element"), node1);
+        return;
+    }
     handler(mret, err, node1);
 }
 

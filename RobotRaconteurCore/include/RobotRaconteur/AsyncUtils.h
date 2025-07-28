@@ -24,6 +24,7 @@
 #include <boost/bind/placeholders.hpp>
 #include <boost/scope_exit.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/bind/bind.hpp>
 
 #include "RobotRaconteur/Error.h"
 #include "RobotRaconteur/DataTypes.h"
@@ -247,7 +248,6 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
             if (handled)
                 return;
             handled = true;
-            //	timeout_timer_.reset();
 
             timeout_timer_.reset();
         }
@@ -271,39 +271,15 @@ void async_timeout_wrapper<T>::start_timer(int32_t timeout,
 
     if (timeout != RR_TIMEOUT_INFINITE)
     {
+        timeout_exception_ = RR_MOVE(timeout_exception);
         timeout_timer_ =
             async_timeout_wrapper_CreateTimer(n, boost::posix_time::milliseconds(timeout),
                                               boost::bind(&async_timeout_wrapper<T>::timeout_handler,
                                                           this->shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
                                               true);
         timeout_timer_->Start();
-        timeout_exception_ = RR_MOVE(timeout_exception);
     }
 }
-
-/*template<typename Handler>
-class handler_move_wrapper
-{
-public:
-    handler_move_wrapper(Handler& handler)
-        : handler_(RR_MOVE(handler))
-    {}
-
-
-    Handler&& operator()
-    {
-        return RR_MOVE(handler_);
-    }
-
-protected:
-    Handler handler_;
-};
-
-template<typename Handler>
-handler_move_wrapper<Handler> make_handler_move_wrapper(Handler& handler)
-{
-    return handler_move_wrapper<Handler>(handler);
-}*/
 
 class ROBOTRACONTEUR_CORE_API async_signal_semaphore : private boost::noncopyable
 {

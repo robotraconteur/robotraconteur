@@ -33,8 +33,6 @@ namespace detail
 
 static void RobotRaconteurNode_connector_empty_handler() {}
 
-static void RobotRaconteurNode_connector_empty_handler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
-
 RobotRaconteurNode_connector::endpoint_cleanup::endpoint_cleanup(const RR_SHARED_PTR<ClientContext>& ep,
                                                                  const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
@@ -46,11 +44,14 @@ RobotRaconteurNode_connector::endpoint_cleanup::endpoint_cleanup(const RR_SHARED
 RobotRaconteurNode_connector::endpoint_cleanup::~endpoint_cleanup()
 {
     RR_SHARED_PTR<ClientContext> ep1;
+    try
     {
         boost::mutex::scoped_lock lock(eplock);
         ep1 = ep;
         ep.reset();
     }
+    catch (std::exception&)
+    {}
 
     if (!ep1)
         return;
@@ -80,7 +81,6 @@ RobotRaconteurNode_connector::RobotRaconteurNode_connector(const RR_SHARED_PTR<R
 
 void RobotRaconteurNode_connector::handle_error(const int32_t& key, const RR_SHARED_PTR<RobotRaconteurException>& err)
 {
-    // std::cout << "Got error" << std::endl;
     {
         boost::mutex::scoped_lock lock(connecting_lock);
         if (!connecting)
@@ -91,15 +91,12 @@ void RobotRaconteurNode_connector::handle_error(const int32_t& key, const RR_SHA
         boost::mutex::scoped_lock lock(active_lock);
         active.remove(key);
         errors.push_back(err);
-
-        // if(active.size()!=0) return;
     }
 
     boost::mutex::scoped_lock lock2(handler_lock);
 
     {
         boost::mutex::scoped_lock lock(active_lock);
-        // std::cout << active.size() << std::endl;
         if (!active.empty())
             return;
     }
@@ -133,7 +130,7 @@ void RobotRaconteurNode_connector::connected_client(const RR_SHARED_PTR<RRObject
                                                     int32_t key)
 {
     RR_UNUSED(key);
-    // std::cout << "Connected client" << std::endl;
+
     if (err)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1, "Client connection failed: " << err->what());
@@ -205,7 +202,6 @@ void RobotRaconteurNode_connector::connected_client(const RR_SHARED_PTR<RRObject
             RR_SHARED_PTR<ClientContext> client_context = rr_cast<ServiceStub>(client)->GetContext();
             if (listener != 0)
                 client_context->ClientServiceListener.connect(listener);
-            // std::cout << "call connect handler" << std::endl;
             ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Node,
                                               rr_cast<ServiceStub>(client)->GetContext()->GetLocalEndpoint(),
                                               "Client connected: " << url);
@@ -236,7 +232,6 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1,
                                            "Error connecting to candidate service url " << url << " : " << err->what());
-        // std::cout << "Transport connect error" << std::endl;
         handle_error(key, err);
         return;
     }
@@ -244,7 +239,6 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
     boost::mutex::scoped_lock lock(connecting_lock);
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Transport connected: " << url);
-    // std::cout << "Transport connected" << std::endl;
     bool c = false;
     bool tc = false;
     {
@@ -255,7 +249,6 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
     if (!c)
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Already connected, closing candidate url: " << url);
-        // std::cout << "Node connector close transport" << std::endl;
         try
         {
             connection->Close();
@@ -287,7 +280,6 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
 
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Transport connected, connect service: " << url);
 
-                // std::cout << "Node connector connect service" << std::endl;
                 ep->ep->AsyncConnectService(
                     transport, connection, url, username, credentials, objecttype,
                     boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_client, shared_from_this(),

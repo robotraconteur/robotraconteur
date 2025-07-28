@@ -56,16 +56,6 @@ extern "C"
         ULONG_PTR Reserved;
     } SP_DEVINFO_DATA, *PSP_DEVINFO_DATA;
 
-    /*typedef GUID  DEVPROPGUID, *PDEVPROPGUID;
-    typedef ULONG DEVPROPID, *PDEVPROPID;
-
-    typedef struct _DEVPROPKEY {
-        DEVPROPGUID fmtid;
-        DEVPROPID   pid;
-    } DEVPROPKEY, *PDEVPROPKEY;
-
-    typedef ULONG DEVPROPTYPE, *PDEVPROPTYPE;*/
-
 #pragma pack()
 
 #define DIGCF_DEFAULT 0x00000001
@@ -417,6 +407,10 @@ namespace detail
         return false;
 #define WINUSB_FUNCTIONS_PTR_INIT_NOERR(t) t = (t##_t)GetProcAddress(hLibModule, #t);
 
+#define WINUSB_USD_ENDPOINT_DESCRIPTOR_TYPE 0x05
+#define WINUSB_USB_ENDPOINT_DIRECTION_IN 0x80
+#define WINUSB_USB_ENDPOINT_DIRECTION_OUT 0x00
+
 class WinUsb_Functions : public boost::noncopyable
 {
   private:
@@ -495,6 +489,11 @@ class WinUsbDevice_Initialize : public UsbDevice_Initialize
     // Call with lock
     virtual UsbDeviceStatus ReadInterfaceSettings(const RR_SHARED_PTR<void>& dev_h,
                                                   RR_SHARED_PTR<UsbDevice_Settings>& settings);
+
+    // Call with lock
+    virtual UsbDeviceStatus ReadConfigurationDescriptorRaw(const RR_SHARED_PTR<void>& dev_h,
+                                                           RR_SHARED_PTR<UsbDevice_Settings>& settings,
+                                                           std::vector<uint8_t>& descriptor);
 
   protected:
     RR_SHARED_PTR<WinUsb_Functions> f;

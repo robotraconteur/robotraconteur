@@ -1,0 +1,180 @@
+.TH robotraconteurgen 1 "2025-07-13" "Robot Raconteur 1.2.5" "User Commands"
+.SH NAME
+robotraconteurgen \- Robot Raconteur service definition utility
+.SH SYNOPSIS
+.B robotraconteurgen
+[\fIcommand\fR] [\fIoptions\fR] [service1.robdef [service2.robdef ...]]
+.SH DESCRIPTION
+.B robotraconteurgen
+is a utility for working with Robot Raconteur service definition (\fI.robdef\fR) files. It can generate thunk source code, verify service definitions, generate string tables, create node IDs, hash passwords, and pull service definitions from Robot Raconteur services.
+
+It supports multiple commands to perform different tasks. The command is selected via the first argument after the program name.
+
+.SH COMMANDS
+.TP
+.B --thunksource
+Generate thunk source code for a specified language from one or more .robdef files.
+.PP
+\fBSyntax:\fR
+.RS
+robotraconteurgen --thunksource --lang=<target_language> [options] service1.robdef [service2.robdef ...]
+.RE
+.PP
+\fBOptions:\fR
+.RS
+.TP
+\fB--lang=<target_language>\fR
+Required. Specify the output language: \fBcpp\fR, \fBcsharp\fR, or \fBjava\fR.
+.TP
+\fB--import=<file>\fR
+Optional, one or more. Import other .robdef files without generating code for them.
+.TP
+\fB--include-path=<dir>\fR, \fB-I <dir>\fR
+Optional, one or more. Add search path for .robdef files.
+.TP
+\fB--master-header\fR
+Optional. Generate a master header file (C++ only).
+.TP
+\fB--outfile=<filename>\fR
+Optional. Output all generated code to a single file (C# only).
+.TP
+\fB--outdir=<dir>\fR
+Optional. Specify output directory. Defaults to current directory; must exist.
+.RE
+
+.TP
+.B --verify-robdef
+Verify one or more .robdef files without generating code.
+.PP
+\fBSyntax:\fR
+.RS
+robotraconteurgen --verify-robdef [options] service1.robdef [service2.robdef ...]
+.RE
+.PP
+\fBOptions:\fR
+.RS
+.TP
+\fB--include-path=<dir>\fR, \fB-I <dir>\fR
+Optional, one or more. Add search path for .robdef files.
+.TP
+\fB--import=<file>\fR
+Optional. Import .robdef files (not typically needed in this mode).
+.RE
+
+.TP
+.B --string-table
+List all qualified names defined in service definitions for transport string tables (advanced use).
+.PP
+\fBSyntax:\fR
+.RS
+robotraconteurgen --string-table [options] service1.robdef [service2.robdef ...]
+.RE
+
+.TP
+.B --newnodeid
+Generate and print a new random generation 4 UUID.
+.PP
+\fBSyntax:\fR
+.RS
+robotraconteurgen --newnodeid
+.RE
+
+.TP
+.B --md5passwordhash
+Return the MD5 hash of a specified password, for use with PasswordFileUserAuthenticator.
+.PP
+\fBSyntax:\fR
+.RS
+robotraconteurgen --md5passwordhash <password>
+.RE
+
+.TP
+.B --pullservicedef
+Pull the service definition and all imported service definitions from the specified Robot Raconteur URL.
+.PP
+\fBSyntax:\fR
+.RS
+robotraconteurgen --pullservicedef <url>
+.RE
+
+.TP
+.B --help
+Print help message with all available options.
+.PP
+\fBSyntax:\fR
+.RS
+robotraconteurgen --help
+.RE
+
+.SH OPTIONS
+.TP
+.B -h, --help
+Print usage message.
+.TP
+.B --version
+Print program version.
+.TP
+.B --output-dir <dir>
+Specify output directory (default is current directory).
+.TP
+.B --thunksource
+Generate thunk source files.
+.TP
+.B --verify-robdef
+Verify robdef files.
+.TP
+.B --string-table
+Generate string table entries for robdef.
+.TP
+.B --newnodeid
+Generate a new NodeID.
+.TP
+.B --md5passwordhash
+Hash a password using the MD5 algorithm.
+.TP
+.B --pullservicedef
+Pull a service definition from a service URL.
+.TP
+.B --lang <lang>
+Specify language for thunk code generation.
+.TP
+.B -I, --include-path <dir>
+Include path for robdef files.
+.TP
+.B --import <file>
+Input file for use in imports.
+.TP
+.B --master-header <file>
+Master header file for generated C++ files.
+.TP
+.B --outfile <file>
+Unified output file (C# only).
+
+.SH ENVIRONMENT
+.TP
+.B ROBOTRACONTEUR_ROBDEF_PATH
+Environmental variable for additional search directories for .robdef files.
+
+.SH SEE ALSO
+.PP
+More documentation about Robot Raconteur is available online at
+https://robotraconteur.github.io/robotraconteur.
+
+.SH AUTHOR
+\fBJohn Wason\fR <wason@wasontech\&.com>
+
+.SH COPYRIGHT
+.PP
+Copyright 2025 John Wason
+.PP
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+.PP
+    http://www.apache.org/licenses/LICENSE-2.0
+.PP
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

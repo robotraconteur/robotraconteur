@@ -78,10 +78,6 @@ TlsSchannelAsyncStreamAdapterContext::TlsSchannelAsyncStreamAdapterContext(const
     boost::shared_array<uint8_t> root_cert_2020_bytes =
         unmask_certificate(ROBOTRACONTEUR_NODE_ROOT_CA_2020, sizeof(ROBOTRACONTEUR_NODE_ROOT_CA_2020));
 
-    /*FILE* f = fopen("root.cer", "wb");
-    fwrite(*b2.get(), 1, sizeof(ROBOTRACONTEUR_NODE_ROOT_CA), f);
-    fclose(f);*/
-
     HCERTSTORE root = CertOpenStore(CERT_STORE_PROV_MEMORY, 0, NULL, CERT_STORE_CREATE_NEW_FLAG, &rootcertificate2015);
     if (!root)
         throw InternalErrorException("Internal error");
@@ -376,8 +372,6 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyCertificateOIDExtension(PCERT_I
             continue;
         }
 
-        // std::cout << cert1->rgExtension[i].fCritical << ": " << cert1->rgExtension[i].pszObjId << std::endl;
-
         if (cert1->rgExtension[i].fCritical)
         {
             return false;
@@ -414,7 +408,6 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteNodeCertificate(PCCERT_CO
     p.cbSize = sizeof(CERT_CHAIN_PARA);
     p.dwUrlRetrievalTimeout = 100;
 
-    // ZeroMemory(&p,sizeof(CERT_CHAIN_PARA));
     PCCERT_CHAIN_CONTEXT pChainContext = NULL;
     if (!CertGetCertificateChain(hc, cert, NULL, cert->hCertStore /*store*/, &p, NULL, NULL, &pChainContext))
     {
@@ -486,7 +479,6 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteNodeCertificate(PCCERT_CO
     ZeroMemory(&policy_para1, sizeof(policy_para1));
     policy_para1.cbSize = sizeof(policy_para1);
     policy_para1.dwAuthType = AUTHTYPE_SERVER;
-    // policy_para1.fdwChecks=SECURITY_FLAG_IGNORE_UNKNOWN_CA;
     policy_para1.pwszServerName = cnw;
 
     CERT_CHAIN_POLICY_PARA policy_para;
@@ -558,9 +550,6 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteNodeCertificate(PCCERT_CO
             }
         }
     }
-    /*PCERT_CHAIN_ELEMENT cert1=pChainContext->rgpChain[0]->rgpElement[0];
-    PCERT_CHAIN_ELEMENT cert2=pChainContext->rgpChain[0]->rgpElement[1];
-    PCERT_CHAIN_ELEMENT cert3=pChainContext->rgpChain[0]->rgpElement[2];*/
 
     if (valid)
     {
@@ -612,7 +601,6 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCER
     p.cbSize = sizeof(CERT_CHAIN_PARA);
     p.dwUrlRetrievalTimeout = 100;
 
-    // ZeroMemory(&p,sizeof(CERT_CHAIN_PARA));
     PCCERT_CHAIN_CONTEXT pChainContext = NULL;
     if (!CertGetCertificateChain(hc, cert, NULL, cert->hCertStore /*store*/, &p, NULL, NULL, &pChainContext))
     {
@@ -640,13 +628,11 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCER
     ZeroMemory(&policy_para1, sizeof(policy_para1));
     policy_para1.cbSize = sizeof(policy_para1);
     policy_para1.dwAuthType = AUTHTYPE_SERVER;
-    // policy_para1.fdwChecks=SECURITY_FLAG_IGNORE_UNKNOWN_CA;
     policy_para1.pwszServerName = cnw;
 
     CERT_CHAIN_POLICY_PARA policy_para;
     ZeroMemory(&policy_para, sizeof(policy_para));
     policy_para.cbSize = sizeof(policy_para);
-    // policy_para.dwFlags = CERT_CHAIN_POLICY_IGNORE_NOT_SUPPORTED_CRITICAL_EXT_FLAG;
     policy_para.pvExtraPolicyPara = &policy_para1;
 
     ZeroMemory(&status, sizeof(status));
@@ -694,7 +680,6 @@ TlsSchannelAsyncStreamAdapter::TlsSchannelAsyncStreamAdapter(
     send_buffer_transfer_pos = 0;
 
     recv_buffer_un_end_pos = 0;
-    // recv_buffer_transfer_pos=0;
 
     this->_async_read_some = async_read_some;
     this->_async_write_some = async_write_some;
@@ -1028,7 +1013,6 @@ void TlsSchannelAsyncStreamAdapter::do_handshake3(const boost::system::error_cod
                          boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake2, shared_from_this(),
                                      boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred,
                                      boost::protect(handler), true));
-        //_async_read_some(boost::asio::mutable_buffer(recv_buffer,max_tls_record_size),boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake2,shared_from_this(),boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,boost::protect(handler)));
         return;
     }
 
@@ -1284,17 +1268,6 @@ void TlsSchannelAsyncStreamAdapter::async_write_some(
         return;
     }
 
-    /*if (request_shutdown && async_shutdown_handler_op)
-    {
-        boost::function<void (const boost::system::error_code&)> async_shutdown_handler1=async_shutdown_handler_op;
-        async_shutdown_handler_op.clear();
-        boost::system::error_code ec1(boost::system::errc::broken_pipe,boost::system::generic_category);
-        async_write_op=(boost::bind(handler,ec1,0));
-        do_shutdown1(boost::bind(async_shutdown_handler1,RR_BOOST_PLACEHOLDERS(_1)));
-
-        return;
-    }*/
-
     if (handshaking || shutingdown)
     {
         if (async_write_op)
@@ -1349,8 +1322,6 @@ void TlsSchannelAsyncStreamAdapter::async_write_some(
 
     boost::asio::buffer_copy(boost::asio::buffer(buffer_dat, s), b);
 
-    // memcpy(buffer_dat,b2,s);
-
     scRet = EncryptMessage(hContext.get(), 0, &Message, 0);
 
     if (FAILED(scRet))
@@ -1381,7 +1352,6 @@ void TlsSchannelAsyncStreamAdapter::async_write_some1(
     if (error)
     {
         writing = false;
-        // lock.unlock();
         async_write_some2(error, handler);
         return;
     }
@@ -1573,7 +1543,6 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
         return;
     }
 
-    // memcpy(recv_buffer + recv_buffer_end_pos, boost::asio::buffer_cast<void*>(b),bytes_transferred);
     recv_buffer_end_pos += boost::numeric_cast<uint32_t>(bytes_transferred);
 
     bool keepgoing = true;
@@ -1638,9 +1607,6 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
             {
                 MoveMemory(recv_buffer.get(), pExtraBuffer->pvBuffer, pExtraBuffer->cbBuffer);
                 recv_buffer_end_pos = pExtraBuffer->cbBuffer;
-                //_async_read_some(boost::asio::buffer(recv_buffer+recv_buffer_end_pos,max_tls_record_size-recv_buffer_end_pos),boost::bind(&TlsSchannelAsyncStreamAdapter::async_read_some1,shared_from_this(),
-                // b, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred,
-                // boost::protect(handler)));
 
                 if (scRet != SEC_I_RENEGOTIATE)
                 {
@@ -1667,11 +1633,6 @@ void TlsSchannelAsyncStreamAdapter::async_read_some1(
                                       RR_BOOST_PLACEHOLDERS(_1), b, handler));
             return;
         }
-
-        /*boost::system::error_code ec1(boost::system::errc::broken_pipe, boost::system::generic_category);
-        lock.unlock();
-        handler(ec1,0);
-        return;*/
     }
 
     recv_buffer_end_pos = 0;
@@ -1767,12 +1728,9 @@ void TlsSchannelAsyncStreamAdapter::async_read_some2(
     const boost::function<void(const boost::system::error_code&, size_t)>& handler)
 {
     {
-        // boost::mutex::scoped_lock lock(stream_lock);
 
         if (error)
         {
-            // reading=false;
-            // lock.unlock();
             handler(error, 0);
             return;
         }
@@ -1785,10 +1743,6 @@ void TlsSchannelAsyncStreamAdapter::async_read_some2(
 void TlsSchannelAsyncStreamAdapter::async_shutdown(boost::function<void(const boost::system::error_code&)> handler)
 {
     boost::mutex::scoped_lock lock(stream_lock);
-
-    /*boost::system::error_code ec;
-    _io_context.post(boost::bind(handler,ec));
-    return;*/
 
     if (!open)
     {
@@ -1881,8 +1835,6 @@ void TlsSchannelAsyncStreamAdapter::do_shutdown1()
                                             NULL, 0, hContext.get(), &OutBuffer, &dwSSPIOutFlags, &tsExpiry);
     }
 
-    // if(FAILED(Status)) { printf("**** Error 0x%x returned by InitializeSecurityContext\n", Status); goto cleanup; }
-
     if (FAILED(Status))
     {
         boost::system::error_code ec1(boost::system::errc::protocol_error, boost::system::generic_category());
@@ -1944,16 +1896,6 @@ void TlsSchannelAsyncStreamAdapter::do_shutdown2(const boost::system::error_code
 
     boost::system::error_code ec1;
     do_shutdown3(ec1);
-
-    /*if (async_shutdown_handler_rd)
-    {
-        boost::function<void ()> async_shutdown_handler_rd1=async_shutdown_handler_rd;
-        async_write_op.clear();
-        _io_context.post(async_shutdown_handler_rd1);
-    }*/
-
-    //_async_write_some.clear();
-    //_async_read_some.clear();
 }
 
 void TlsSchannelAsyncStreamAdapter::do_shutdown3(const boost::system::error_code& error)
@@ -1994,7 +1936,6 @@ TlsSchannelAsyncStreamAdapter::~TlsSchannelAsyncStreamAdapter()
     try
     {
         boost::mutex::scoped_lock lock(stream_lock);
-        // if (!open) return;
 
         _async_write_some.clear();
         _async_read_some.clear();
@@ -2119,10 +2060,6 @@ boost::tuple<std::string, std::string> TlsSchannelAsyncStreamAdapter::GetTlsPubl
         throw InternalErrorException("Internal error");
     }
     ::CertFreeCertificateContext(c_r);
-
-    /*std::cout << c_l_64 << std::endl << std::endl;
-
-    std::cout << c_r_64 << std::endl << std::endl;*/
 
     return boost::make_tuple(c_l_64, c_r_64);
 }

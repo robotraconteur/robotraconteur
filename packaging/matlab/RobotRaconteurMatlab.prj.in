@@ -8,22 +8,21 @@
     <param.description> Robot Raconteur is a powerful communication framework for robotics and automation systems.
                         While intended for use with robotics, it is flexible enough to be used for other applications,
                         including building control, infrastructure, and Internet-of-Things applications, among many others. This package
-                        contains the Robot Raconteur Core library for MATLAB.<br/>
+                        contains the Robot Raconteur Core library for MATLAB.
 
                         Robot Raconteur has unique features that make it particularly well-suited for robotics and automation applications
                         including plug-and-play operation, an "augmented object-oriented" data model, rich data types,
-                        flexible transports, and support for many programming languages.<br/>
+                        flexible transports, and support for many programming languages.
 
-                        See the <a href="https://robotraconteur.github.io/robotraconteur/doc/core/latest/getting_started/">Getting Started Guide</a>
-                        to start using Robot Raconteur in your project.<br/><br/>
+                        Getting Started Guide: https://robotraconteur.github.io/robotraconteur/doc/core/latest/getting_started/
 
-                        Check out the <a href="https://github.com/robotraconteur/robotraconteur/tree/master/examples">examples</a>.<br/><br/>
+                        Examples: https://github.com/robotraconteur/robotraconteur/tree/master/examples
 
-                        See the <a href="https://github.com/robotraconteur/robotraconteur">GitHub repository</a> for the latest source code.<br/><br/>
+                        GitHub repository: https://github.com/robotraconteur/robotraconteur
 
-                        Use the <a href="https://github.com/robotraconteur/robotraconteur/issues">Issue Tracker</a> on GitHub to report bugs or request features.<br/><br/>
+                        Issue Tracker: https://github.com/robotraconteur/robotraconteur/issues
 
-                        Ask questions on the <a href="https://github.com/robotraconteur/robotraconteur/discussions">Discussions</a> page.<br/><br/>
+                        Ask questions: https://github.com/robotraconteur/robotraconteur/discussions
 
                         Robot Raconteur is open source under the Apache 2.0 license.
     </param.description>

@@ -17,14 +17,12 @@
 #endif
 
 #include "RobotRaconteur/ServiceDefinition.h"
-//#include "RobotRaconteur.h"
 
 #include "RobotRaconteur/DataTypes.h"
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-//#include "Error.h"
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include "RobotRaconteur/IOUtils.h"
 
@@ -35,6 +33,10 @@
 #include <boost/range/numeric.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
 
+#ifdef ROBOTRACONTEUR_EMSCRIPTEN
+#include <uchar.h>
+#endif
+
 using namespace boost::algorithm;
 
 namespace RobotRaconteur
@@ -42,11 +44,6 @@ namespace RobotRaconteur
 typedef boost::match_results<boost::string_ref::const_iterator> ref_match;
 
 static boost::string_ref to_ref(const ref_match::value_type& s) { return boost::string_ref(s.first, s.length()); }
-
-/*static boost::string_ref to_ref(const boost::smatch::value_type& s)
-{
-    return boost::string_ref((const char*)s.first,s.length());
-}*/
 
 RobotRaconteurVersion::RobotRaconteurVersion()
 {
@@ -336,7 +333,7 @@ static void ServiceDefinition_FindBlock(boost::string_ref current_line, std::ist
     while (ServiceDefinition_GetLine(is, l, docstring, parse_info, true))
     {
         last_pos++;
-        for (; last_pos < parse_info.LineNumber; last_pos++)
+        for (; last_pos < boost::numeric_cast<size_t>(parse_info.LineNumber); last_pos++)
         {
             os << "\n";
         }
@@ -673,7 +670,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
                     throw ServiceDefinitionParseException("constant must be before struct and object", working_info);
                 RR_SHARED_PTR<ConstantDefinition> constant_def = RR_MAKE_SHARED<ConstantDefinition>(shared_from_this());
                 constant_def->FromString(l, &working_info);
-                constant_def->DocString = docstring;
+                constant_def->DocString = RR_MOVE(docstring);
                 Constants.push_back(constant_def);
                 entry_key_max = 7;
                 continue;
@@ -764,7 +761,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
         bool version_found = false;
         if (stdver_found)
         {
-            StdVer = stdver_version;
+            StdVer = RR_MOVE(stdver_version);
             version_found = true;
         }
         BOOST_FOREACH (std::string& so, Options)
@@ -904,24 +901,6 @@ void ServiceEntryDefinition::ToStream(std::ostream& o) const
     }
 
     o << "end\n";
-
-    /*switch (EntryType)
-    {
-    case DataTypes_structure_t:
-        o << "end struct\n";
-        break;
-    case DataTypes_pod_t:
-        o << "end pod\n";
-        break;
-    case DataTypes_namedarray_t:
-        o << "end namedarray\n";
-        break;
-    case DataTypes_object_t:
-        o << "end object\n";
-        break;
-    default:
-        throw ServiceDefinitionException("Invalid ServiceEntryDefinition type in " + Name);
-    }*/
 }
 
 void ServiceEntryDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
@@ -1613,7 +1592,6 @@ MemberDefinition_NoLock MemberDefinition::NoLock() const
 void MemberDefinition::Reset()
 {
     Name.clear();
-    // ServiceEntry.reset();
     Modifiers.clear();
     ParseInfo.Reset();
 }
@@ -2872,7 +2850,11 @@ static std::string ConstantDefinition_UnescapeString_Formatter(const boost::smat
     if (boost::starts_with(i, "\\u"))
     {
         std::stringstream ss;
+#ifndef ROBOTRACONTEUR_NO_CXX11
+        std::basic_string<char16_t> v3;
+#else
         std::basic_string<uint16_t> v3;
+#endif
         v3.resize(i.size() / 6);
         for (size_t j = 0; j < v3.size(); j++)
         {
@@ -2900,7 +2882,6 @@ std::string ConstantDefinition::UnescapeString(boost::string_ref in)
 
     static boost::regex r_string_expression(
         "(\\\\\"|\\\\\\\\|\\\\/|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|(?:\\\\u[\\da-fA-F]{4})+)");
-    // const char* format_string = "(?1\\\")(?2\\\\)(?3\\b)(?4\\f)(?5\\n)(?6\\r)(?7\\t)(?8\\"
     // TODO: avoid copy
     const std::string in1 = in.to_string();
     boost::regex_replace(oi, in1.begin(), in1.end(), r_string_expression, ConstantDefinition_UnescapeString_Formatter,
@@ -2930,7 +2911,11 @@ static std::string ConstantDefinition_EscapeString_Formatter(const boost::smatch
     if (i == "\t")
         return "\\t";
 
+#ifndef ROBOTRACONTEUR_NO_CXX11
+    std::basic_string<char16_t> v = boost::locale::conv::utf_to_utf<char16_t>(i);
+#else
     std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
+#endif
 
     std::stringstream v2;
     v2 << std::hex << std::setfill('0');
@@ -2984,7 +2969,7 @@ std::vector<ConstantDefinition_StructField> ConstantDefinition::ValueToStructFie
         ConstantDefinition_StructField f;
         f.Name = r_match[1];
         f.ConstantRefName = r_match[2];
-        o.push_back(f);
+        o.push_back(RR_MOVE(f));
     }
 
     return o;
@@ -3083,7 +3068,6 @@ void EnumDefinition::FromString(boost::string_ref s, const ServiceDefinitionPars
         throw ServiceDefinitionParseException("Parse error near: " + lines.front(), working_info2);
     }
 
-    // std::string values1 = boost::join(boost::make_iterator_range(++lines.begin(), --lines.end()), " ");
     static boost::regex r_docstring("^[ \\t]*##([ -~\\t]*)$");
     static boost::regex r_empty("^[ \\t]*$");
     bool empty_encountered_docstring = false;
@@ -3878,7 +3862,6 @@ std::string VerifyMember(const RR_SHARED_PTR<MemberDefinition>& m, const RR_SHAR
                     throw ServiceDefinitionVerifyException("Generator return must use generator container",
                                                            f->ParseInfo);
                 }
-                // VerifyReturnType(f->ReturnType, def, defs);
             }
 
             if (!f->Parameters.empty() && f->Parameters.back()->ContainerType == DataTypes_ContainerTypes_generator)
@@ -4126,7 +4109,7 @@ rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj,
                                                        parse_info);
 
             rrimplements imp2 = get_implements(obj2, def2, defs, parse_info, rootobj);
-            out.implements.push_back(imp2);
+            out.implements.push_back(RR_MOVE(imp2));
         }
     }
 
@@ -4160,7 +4143,6 @@ bool CompareTypeDefinition(const RR_SHARED_PTR<ServiceDefinition>& d1, const RR_
 {
     if (t1->Name != t2->Name)
         return false;
-    // if (t1->ImportedType!=t2->ImportedType) return false;
     if (t1->ArrayType != t2->ArrayType)
         return false;
     if (t1->ArrayType != DataTypes_ArrayTypes_none)
@@ -4400,7 +4382,7 @@ void VerifyObject(const RR_SHARED_PTR<ServiceEntryDefinition>& obj, const RR_SHA
         if (boost::range::find(membernames, membername) != membernames.end())
             throw ServiceDefinitionVerifyException(
                 "Object \"" + obj->Name + "\" contains multiple members named \"" + membername + "\"", obj->ParseInfo);
-        membernames.push_back(membername);
+        membernames.push_back(RR_MOVE(membername));
     }
 
     rrimplements r = get_implements(obj, def, defs, obj->ParseInfo);
@@ -4491,7 +4473,7 @@ void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
                 throw ServiceDefinitionVerifyException("Structure \"" + strut->Name +
                                                            "\" contains multiple members named \"" + membername + "\"",
                                                        strut->ParseInfo);
-            membernames.push_back(membername);
+            membernames.push_back(RR_MOVE(membername));
         }
     }
 
@@ -4504,8 +4486,6 @@ void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
                                                    strut->ParseInfo);
         membernames.push_back(membername);
     }
-
-    DataTypes namedarray_element_type = DataTypes_void_t;
 
     BOOST_FOREACH (RR_SHARED_PTR<MemberDefinition>& e, strut->Members)
     {
@@ -4598,13 +4578,12 @@ void VerifyStructure_common(const RR_SHARED_PTR<ServiceEntryDefinition>& strut,
     if (entry_type == DataTypes_pod_t)
     {
         std::set<std::string> n;
-        VerifyStructure_check_recursion(strut, all_defs, n, DataTypes_pod_t);
+        VerifyStructure_check_recursion(strut, all_defs, RR_MOVE(n), DataTypes_pod_t);
     }
 
     if (entry_type == DataTypes_namedarray_t)
     {
         std::set<std::string> n;
-        // VerifyStructure_check_recursion(strut, defs, n, DataTypes_namedarray_t);
         try
         {
             GetNamedArrayElementTypeAndCount(strut, all_defs);
@@ -4682,7 +4661,7 @@ rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def,
         }
 
         rrimports imp2 = get_imports(def2, defs, parent_defs);
-        out.imported.push_back(imp2);
+        out.imported.push_back(RR_MOVE(imp2));
     }
 
     return out;
@@ -4849,7 +4828,7 @@ ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(const std::vector<RR_SHARE
                 throw ServiceDefinitionVerifyException("Service definition \"" + e->Name +
                                                            "\" contains multiple high level names \"" + name + "\"",
                                                        ee->ParseInfo);
-            names.push_back(name);
+            names.push_back(RR_MOVE(name));
         }
 
         BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& ee, e->Objects)
@@ -5183,6 +5162,6 @@ ROBOTRACONTEUR_CORE_API boost::tuple<DataTypes, size_t> GetNamedArrayElementType
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<RRObject>& client)
 {
     std::set<std::string> n;
-    return GetNamedArrayElementTypeAndCount(def, other_defs, node, client, n);
+    return GetNamedArrayElementTypeAndCount(def, other_defs, node, client, RR_MOVE(n));
 }
 } // namespace RobotRaconteur

@@ -25,8 +25,8 @@
 
 #ifndef ROBOTRACONTEUR_VERSION
 // Boost Style Version Number
-#define ROBOTRACONTEUR_VERSION 100202
-#define ROBOTRACONTEUR_VERSION_TEXT "1.2.2"
+#define ROBOTRACONTEUR_VERSION 100205
+#define ROBOTRACONTEUR_VERSION_TEXT "1.2.5"
 #endif
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ == 7)
@@ -66,6 +66,10 @@
 
 #include <boost/regex.hpp>
 
+#if __APPLE__
+#include "TargetConditionals.h"
+#endif
+
 #ifdef BOOST_WINDOWS
 #define ROBOTRACONTEUR_WINDOWS
 #elif defined(__linux__)
@@ -75,9 +79,9 @@
 #endif
 #elif defined(__APPLE__)
 #define ROBOTRACONTEUR_APPLE
-#if defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
+#if defined(TARGET_OS_IPHONE) && (TARGET_OS_IPHONE == 1)
 #define ROBOTRACONTEUR_IOS
-#else
+#elif defined(TARGET_OS_OSX) && (TARGET_OS_OSX == 1)
 #define ROBOTRACONTEUR_OSX
 #endif
 #elif defined(__EMSCRIPTEN__)
@@ -140,7 +144,7 @@
 #define RR_BOOST_ASIO_STRAND boost::asio::strand<boost::asio::io_context::executor_type>
 #define RR_BOOST_ASIO_STRAND2(exec_type) boost::asio::strand<exec_type>
 #define RR_BOOST_ASIO_POST(context, func) boost::asio::post(context, func)
-#define RR_BOOST_ASIO_BUFFER_CAST(type, buf) (type)(buf).data()
+#define RR_BOOST_ASIO_BUFFER_CAST(type, buf) static_cast<type>((buf).data())
 #define RR_BOOST_ASIO_STRAND_WRAP(strand, f) boost::asio::bind_executor(strand, f)
 #define RR_BOOST_ASIO_NEW_STRAND(context)                                                                              \
     (new boost::asio::strand<boost::asio::io_context::executor_type>((context).get_executor()))

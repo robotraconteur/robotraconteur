@@ -19,15 +19,31 @@ find_package(Matlab COMPONENTS MX_LIBRARY REQUIRED)
 
 add_definitions(-DMATLAB_MEX_FILE -DMATLAB_DEFAULT_RELEASE=R2018a)
 
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
+find_package(
+    Boost
+    COMPONENTS date_time
+               filesystem
+               system
+               regex
+               chrono
+               atomic
+               thread
+               random
+               program_options
+    REQUIRED)
+
 # INCLUDE(BuildMex.cmake)
 
 include_directories(${Matlab_INCLUDE_DIRS})
 
 matlab_add_mex(
     NAME RobotRaconteurMex
+    MODULE
     SRC RobotRaconteurMex.cpp RobotRaconteurMex.h
-    OUTPUT_NAME RobotRaconteurMex
-    LINK_TO RobotRaconteurCore)
+    OUTPUT_NAME RobotRaconteurMex NO_IMPLICIT_LINK_TO_MATLAB_LIBRARIES
+    LINK_TO RobotRaconteurCore Matlab::mex Matlab::mx)
 
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/out/Matlab")
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/out_debug/Matlab")

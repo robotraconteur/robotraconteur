@@ -32,16 +32,16 @@ repos:
   - id: clang-format
     types_or: [c++, c, java, c#]
 - repo: https://github.com/hhatto/autopep8
-  rev: v2.0.4
+  rev: v2.3.2
   hooks:
   - id: autopep8
     args: ["--ignore=E402", "-i", "--max-line-length=120"]
 - repo: https://github.com/Kr4is/cmake-format-precommit
-  rev: b912a5a5bce3c479f4cb52763979cc5a8319eb44
+  rev: v0.6.14
   hooks:
   - id: cmake-format
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.12.0
+  rev: v2.15.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2', '--preserve-quotes']

@@ -384,47 +384,50 @@ build_freebsd_amd64:
     EXTRA_CMAKE_PYTHON_ARGS: -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=ON
 
 
-build_osx_amd64:
-  stage: build
-  extends: .osx_build_amd64_dev
-  tags:
-  - wasontech
-  - macos
-  - m1
-  variables:
-    OUTNAME: "out-osx_amd64"
+# build_osx_amd64:
+#   stage: build
+#   extends: .osx_build_amd64_dev
+#   when: manual
+#   tags:
+#   - wasontech
+#   - macos
+#   - m1
+#   variables:
+#     OUTNAME: "out-osx_amd64"
 
-build_osx_amd64_release:
-  stage: build
-  extends: .osx_build_amd64_release
-  tags:
-  - wasontech
-  - macos
-  - m1
-  variables:
-    OUTNAME: "out-osx_amd64"
+# build_osx_amd64_release:
+#   when: manual
+#   stage: build
+#   extends: .osx_build_amd64_release
+#   tags:
+#   - wasontech
+#   - macos
+#   - m1
+#   variables:
+#     OUTNAME: "out-osx_amd64"
 
-build_osx_amd64_matlab_release:
-  stage: build
-  extends: .osx_build_amd64_release
-  tags:
-  - wasontech
-  - macos
-  - m1
-  variables:
-    OUTNAME: "out-osx_amd64_matlab_release"
-  script:
-  - !reference [.osx_build_amd64_release, script]
-  - mkdir ../$OUTNAME
-  - mv out ../$OUTNAME/
-  - cd ../$OUTNAME
-  - cp out/LICENSE.txt out/Matlab
-  - cd out
-  - >
-    export RR_VER=`cat rrversion.txt`
-    && cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-maci64
-    && tar -cf RobotRaconteur-$RR_VER-MATLAB-maci64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maci64
-  after_script: []
+# build_osx_amd64_matlab_release:
+#   stage: build
+#   extends: .osx_build_amd64_release
+#   when: manual
+#   tags:
+#   - wasontech
+#   - macos
+#   - m1
+#   variables:
+#     OUTNAME: "out-osx_amd64_matlab_release"
+#   script:
+#   - !reference [.osx_build_amd64_release, script]
+#   - mkdir ../$OUTNAME
+#   - mv out ../$OUTNAME/
+#   - cd ../$OUTNAME
+#   - cp out/LICENSE.txt out/Matlab
+#   - cd out
+#   - >
+#     export RR_VER=`cat rrversion.txt`
+#     && cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-maci64
+#     && tar -cf RobotRaconteur-$RR_VER-MATLAB-maci64.tar.gz RobotRaconteur-$RR_VER-MATLAB-maci64
+#   after_script: []
 
 build_osx_arm64_matlab_release:
   stage: build
@@ -450,7 +453,7 @@ build_osx_arm64_matlab_release:
 
 code_formatting_ubuntu_focal_amd64:
   stage: build
-  extends: .all_build
+  when: manual
   tags:
   - wasontech
   - ubuntu-focal
@@ -590,7 +593,6 @@ build_osx_arm64_release:
     -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
     -DOPENSSL_USE_STATIC_LIBS=ON
     ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
-    -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
     -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0
     -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
     -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
@@ -607,6 +609,7 @@ build_osx_arm64_release:
     -DRobotRaconteur_DIR=${CI_PROJECT_DIR}/build
     ..
   - ${RUNCMD} cmake --build . --config Release
+  - delocate-wheel --require-archs arm64 out/Python3/dist/*.whl
   - cp out/Python3/dist/*.whl ${CI_PROJECT_DIR}/${OUTNAME}/
   - ${RUNCMD} ctest . -C Release --output-on-failure
 
@@ -622,7 +625,6 @@ build_osx_arm64_release:
     -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=ON
     -DOPENSSL_USE_STATIC_LIBS=ON
     ${CONFIG_CMAKE_ARGS} ${EXTRA_CMAKE_ARGS}
-    -DOPENSSL_ROOT_DIR=/opt/homebrew/Cellar/openssl\@3/3.1.2
     -DBOOST_ROOT=/opt/homebrew/Cellar/boost/1.83.0
     -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
     -DBoost_ADDITIONAL_VERSIONS=${BOOST_VERSION}
@@ -640,6 +642,8 @@ build_osx_arm64_release:
   - export PYVER=3.11
   - !reference [.osx_arm64_build_python_ver, script]
   - export PYVER=3.12
+  - !reference [.osx_arm64_build_python_ver, script]
+  - export PYVER=3.13
   - !reference [.osx_arm64_build_python_ver, script]
 
   artifacts:
@@ -820,6 +824,8 @@ build_linux_arm64_python_release:
   - export PYVER=3.11
   - !reference [.linux_arm64_build_python_ver, script]
   - export PYVER=3.12
+  - !reference [.linux_arm64_build_python_ver, script]
+  - export PYVER=3.13
   - !reference [.linux_arm64_build_python_ver, script]
   artifacts:
     when: always

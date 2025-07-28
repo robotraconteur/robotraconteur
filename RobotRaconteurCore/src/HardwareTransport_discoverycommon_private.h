@@ -167,7 +167,7 @@ class HardwareTransport_discovery
             }
         }
 
-        if (boost::range::find(schemes, "rr+usb") != schemes.end())
+        if (boost::range::find(schemes, "rr+bluetooth") != schemes.end())
         {
             if (RobotRaconteurNode::TryPostToThreadPool(
                     n, boost::bind(&HardwareTransport_discovery::GetBluetoothDevices2, this->shared_from_this(), op)))
@@ -204,8 +204,8 @@ class HardwareTransport_discovery
                 NodeDiscoveryInfoURL n1;
                 n1.URL = "rr+usb:///?nodeid=" + e.get<0>().ToString("D") + "&service=RobotRaconteurServiceIndex";
                 n1.LastAnnounceTime = node->NowNodeTime();
-                n.URLs.push_back(n1);
-                o->push_back(n);
+                n.URLs.push_back(RR_MOVE(n1));
+                o->push_back(RR_MOVE(n));
             }
         }
         catch (std::exception&)
@@ -280,9 +280,6 @@ class HardwareTransport_discovery
 
         boost::mutex::scoped_lock lock(op->this_lock);
 
-        if (op->handled)
-            return;
-
         RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > o = RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >();
 
         BOOST_FOREACH (typename bluetooth_connector::device_info& e, d)
@@ -296,8 +293,15 @@ class HardwareTransport_discovery
             NodeDiscoveryInfoURL n1;
             n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";
             n1.LastAnnounceTime = node->NowNodeTime();
-            n.URLs.push_back(n1);
+            n.URLs.push_back(RR_MOVE(n1));
             o->push_back(n);
+
+            try
+            {
+                node->NodeDetected(n);
+            }
+            catch (std::exception&)
+            {}
         }
 
         lock.unlock();

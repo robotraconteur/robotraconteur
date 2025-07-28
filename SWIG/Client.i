@@ -14,6 +14,7 @@
 
 %shared_ptr(RobotRaconteur::WrappedServiceStub)
 %shared_ptr(RobotRaconteur::RobotRaconteurNode)
+%shared_ptr(RobotRaconteur::WrappedDirectorLock)
 
 %feature("director") RobotRaconteur::WrappedServiceStubDirector;
 %feature("director") RobotRaconteur::AsyncStubReturnDirector;
@@ -40,6 +41,13 @@ class AsyncStubReturnDirector
 public:
 	virtual ~AsyncStubReturnDirector() {}
 	virtual void handler(const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& stub, HandlerErrorInfo& error) = 0;
+};
+
+%nodefaultctor WrappedDirectorLock;
+class WrappedDirectorLock
+{
+	public:
+	    bool valid();
 };
 
 %nodefaultctor WrappedServiceStub;
@@ -114,7 +122,8 @@ RR_KEEP_GIL()
 
 
 
-	void SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
+	bool SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
+	boost::shared_ptr<RobotRaconteur::WrappedDirectorLock> GetRRDirectorLock();
 
 	boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> RRGetNode();
 

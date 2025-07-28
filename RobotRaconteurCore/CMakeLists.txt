@@ -336,12 +336,12 @@ if(UNIX AND NOT APPLE AND NOT ANDROID)
 
         target_include_directories(RobotRaconteurCore PRIVATE ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR}
                                                               ${LIBUSB_INCLUDE_DIR})
-        target_link_libraries(RobotRaconteurCore PRIVATE OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
+        target_link_libraries(RobotRaconteurCore PRIVATE OpenSSL::SSL OpenSSL::Crypto ${CMAKE_DL_LIBS})
         target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
     else()
         target_include_directories(RobotRaconteurCore PRIVATE ${DBUS_INCLUDE_DIR} ${DBUS_INCLUDE_ARCH_DIR}
                                                               ${LIBUSB_INCLUDE_DIR})
-        target_link_libraries(RobotRaconteurCore PUBLIC OpenSSL::SSL OpenSSL::Crypto pthread rt z dl)
+        target_link_libraries(RobotRaconteurCore PUBLIC OpenSSL::SSL OpenSSL::Crypto ${CMAKE_DL_LIBS})
         target_compile_definitions(RobotRaconteurCore PUBLIC ROBOTRACONTEUR_USE_OPENSSL)
     endif()
 
@@ -393,6 +393,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif()
 endif()
 
+if(EMSCRIPTEN)
+    set(ROBOTRACONTEUR_USE_CXX11 TRUE)
+endif()
+
 if(NOT ROBOTRACONTEUR_USE_CXX11)
     target_compile_definitions(RobotRaconteurCore PUBLIC ROBOTRACONTEUR_NO_CXX11)
 endif()
@@ -406,6 +410,11 @@ if(${CMAKE_VERSION} VERSION_GREATER "3.16.0")
     target_precompile_headers(RobotRaconteurCore PRIVATE ${RobotRaconteurCore_header})
     set_source_files_properties(src/LocalTransport.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS TRUE)
     set_source_files_properties(src/Tap.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS TRUE)
+endif()
+
+option(ROBOTRACONTEURCORE_SOVERSION_MAJOR_ONLY "Only include major version in SOVERSION" OFF)
+if(ROBOTRACONTEURCORE_SOVERSION_MAJOR_ONLY)
+    set_target_properties(RobotRaconteurCore PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 endif()
 
 file(COPY "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" DESTINATION "${CMAKE_BINARY_DIR}/out/")

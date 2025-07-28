@@ -31,8 +31,10 @@
 #include <boost/atomic.hpp>
 #include <set>
 
+#ifdef _MSVC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
+#endif
 #include <boost/signals2.hpp>
 
 namespace RobotRaconteur
@@ -516,8 +518,6 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
 
     uint32_t CheckServiceCapability(boost::string_ref name);
 
-    //		public event ClientServiceListenerDelegate ClientServiceListener;
-
     boost::signals2::signal<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
                                  const RR_SHARED_PTR<void>&)>
         ClientServiceListener;
@@ -547,3 +547,7 @@ using ServiceStubConstPtr = RR_SHARED_PTR<const ServiceStub>;
 #endif
 
 } // namespace RobotRaconteur
+
+#ifdef _MSVC_VER
+#pragma warning(pop)
+#endif

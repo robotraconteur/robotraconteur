@@ -1,30 +1,50 @@
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
-find_package(PythonInterp3 REQUIRED)
-find_package(PythonLibs3 REQUIRED)
-
 set(PYTHON2_SOURCE_DIR "${CMAKE_SOURCE_DIR}/RobotRaconteurPython")
 
-find_path(NUMPY3_INCLUDE_NDARRAYOBJECT_DIR numpy/ndarrayobject.h PATHS ${PYTHON3_INCLUDE_DIRS} NO_DEFAULT_PATH)
-if(NUMPY3_INCLUDE_NDARRAYOBJECT_DIR)
-    set(NUMPY3_INCLUDE_DIR ${NUMPY3_INCLUDE_NDARRAYOBJECT_DIR})
-else()
-    execute_process(COMMAND ${PYTHON3_EXECUTABLE} -c "import numpy; import os; print(os.path.dirname(numpy.__file__))"
-                    RESULT_VARIABLE FIND_NUMPY3_RESULT OUTPUT_VARIABLE NUMPY3_INCLUDE_DIR1)
-    string(STRIP "${NUMPY3_INCLUDE_DIR1}" NUMPY3_INCLUDE_DIR1)
-
-    if(${FIND_NUMPY3_RESULT})
-        message(FATAL_ERROR "Could not determine NumPy include directory")
-    endif()
-
-    if(EXISTS "${NUMPY3_INCLUDE_DIR1}/core/include/numpy/ndarrayobject.h")
-        set(NUMPY3_INCLUDE_DIR "${NUMPY3_INCLUDE_DIR1}/core/include")
+if(NOT EMSCRIPTEN)
+    if((CMAKE_VERSION VERSION_GREATER 3.14 OR CMAKE_VERSION VERSION_EQUAL 3.14))
+        if(PYTHON3_EXECUTABLE)
+            set(Python3_EXECUTABLE ${PYTHON3_EXECUTABLE} CACHE FILEPATH "Python 3 executable")
+        endif()
+        find_package(Python3 COMPONENTS Interpreter Development NumPy REQUIRED)
+        set(PYTHON3_INCLUDE_DIRS ${Python3_INCLUDE_DIRS})
+        set(PYTHON3_LIBRARIES ${Python3_LIBRARIES})
+        set(PYTHON3_EXECUTABLE ${Python3_EXECUTABLE})
+        set(PYTHON3_VERSION_MAJOR ${Python3_VERSION_MAJOR})
+        set(PYTHON3_VERSION_MINOR ${Python3_VERSION_MINOR})
+        set(NUMPY3_INCLUDE_DIR ${Python3_NumPy_INCLUDE_DIRS})
+        message(STATUS "Python3 found using new FindPython3 PYTHON_3_EXECUTABLE=${PYTHON3_EXECUTABLE}, "
+                       "PYTHON_3_INCLUDE_DIRS=${PYTHON3_INCLUDE_DIRS}, " "PYTHON_3_LIBRARIES=${PYTHON3_LIBRARIES}, "
+                       "Python3_NumPy_INCLUDE_DIRS=${Python3_NumPy_INCLUDE_DIRS}")
     else()
-        if(EXISTS "${NUMPY3_INCLUDE_DIR1}/_core/include/numpy/ndarrayobject.h")
-            set(NUMPY3_INCLUDE_DIR "${NUMPY3_INCLUDE_DIR1}/_core/include")
+
+        find_package(PythonInterp3 REQUIRED)
+        find_package(PythonLibs3 REQUIRED)
+
+        find_path(NUMPY3_INCLUDE_NDARRAYOBJECT_DIR numpy/ndarrayobject.h PATHS ${PYTHON3_INCLUDE_DIRS} NO_DEFAULT_PATH)
+        if(NUMPY3_INCLUDE_NDARRAYOBJECT_DIR)
+            set(NUMPY3_INCLUDE_DIR ${NUMPY3_INCLUDE_NDARRAYOBJECT_DIR})
+        else()
+            execute_process(
+                COMMAND ${PYTHON3_EXECUTABLE} -c "import numpy; import os; print(os.path.dirname(numpy.__file__))"
+                RESULT_VARIABLE FIND_NUMPY3_RESULT OUTPUT_VARIABLE NUMPY3_INCLUDE_DIR1)
+            string(STRIP "${NUMPY3_INCLUDE_DIR1}" NUMPY3_INCLUDE_DIR1)
+
+            if(${FIND_NUMPY3_RESULT})
+                message(FATAL_ERROR "Could not determine NumPy include directory")
+            endif()
+
+            if(EXISTS "${NUMPY3_INCLUDE_DIR1}/core/include/numpy/ndarrayobject.h")
+                set(NUMPY3_INCLUDE_DIR "${NUMPY3_INCLUDE_DIR1}/core/include")
+            else()
+                if(EXISTS "${NUMPY3_INCLUDE_DIR1}/_core/include/numpy/ndarrayobject.h")
+                    set(NUMPY3_INCLUDE_DIR "${NUMPY3_INCLUDE_DIR1}/_core/include")
+                endif()
+            endif()
+
         endif()
     endif()
-
 endif()
 
 if(NOT EXISTS "${NUMPY3_INCLUDE_DIR}/numpy/ndarrayobject.h")
@@ -55,6 +75,7 @@ if(NOT USE_PREGENERATED_SOURCE)
         ${PYTHON2_SOURCE_DIR}/PythonTypeSupport.cpp
         ${PYTHON2_SOURCE_DIR}/PythonTypeSupport.h)
     swig_link_libraries(RobotRaconteurPython3 RobotRaconteurCore)
+    set_target_properties(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PROPERTIES PREFIX "")
 else()
     set(SWIG_MODULE_RobotRaconteurPython3_REAL_NAME _RobotRaconteurPython3)
     if(NOT EMSCRIPTEN)
@@ -158,21 +179,38 @@ endif()
 # This mess is taken from github.com/ros/catkin/cmake/python.cmake...
 set(enable_setuptools_deb_layout OFF)
 if(ROBOTRACONTEUR_ROS)
-    if(EXISTS "/etc/debian_version")
-        set(enable_setuptools_deb_layout ON)
+    if("$ENV{ROS_DISTRO}" STREQUAL "noetic")
+        if(EXISTS "/etc/debian_version")
+            set(enable_setuptools_deb_layout ON)
+        endif()
+    else()
+        set(SETUPTOOLS_ARG_EXTRA
+            "--install-lib \"\$ENV\{DESTDIR\}${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON3_VERSION_MAJOR}.${PYTHON3_VERSION_MINOR}/site-packages\""
+        )
     endif()
 endif()
 
 option(SETUPTOOLS_DEB_LAYOUT "Enable debian style python package layout" ${enable_setuptools_deb_layout})
 if(SETUPTOOLS_DEB_LAYOUT)
     message(STATUS "Using Debian Python package layout")
-    set(SETUPTOOLS_ARG_EXTRA "--install-layout=deb")
+    set(SETUPTOOLS_ARG_EXTRA "--install-layout=deb --single-version-externally-managed")
 endif()
 
 option(INSTALL_PYTHON3 "Install Python3 library" OFF)
-if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON OR INSTALL_PYTHON3)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python3_install.cmake.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake @ONLY)
+option(INSTALL_PYTHON3_PIP "Install Python3 library using pip" OFF)
+if(ROBOTRACONTEUR_ROS
+   OR ROBOTRACONTEUR_COLCON
+   OR INSTALL_PYTHON3
+   OR INSTALL_PYTHON3_PIP)
+    if(INSTALL_PYTHON3_PIP)
+        message(STATUS "Installing Python3 library using pip")
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python3_install_pip.cmake.in
+                       ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake @ONLY)
+    else()
+        message(STATUS "Installing Python3 library using setup.py")
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/python3_install.cmake.in
+                       ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake @ONLY)
+    endif()
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/python3_install.cmake)
 endif()
 
@@ -180,10 +218,8 @@ if(ROBOTRACONTEUR_ROS OR ROBOTRACONTEUR_COLCON)
     # Allows Colcon to find Python package
     if(SETUPTOOLS_DEB_LAYOUT)
         set(ROS_PYTHONPATH lib/python3/dist-packages)
-    elseif(WIN32)
-        set(ROS_PYTHONPATH lib/site-packages)
     else()
-        set(ROS_PYTHONPATH lib/python3.${PYTHON_VERSION_MINOR}/dist-packages)
+        set(ROS_PYTHONPATH lib/python3.${PYTHON3_VERSION_MINOR}/site-packages)
     endif()
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/robotraconteur/hook/python_path.dsv
          "prepend-non-duplicate;PYTHONPATH;${ROS_PYTHONPATH}")

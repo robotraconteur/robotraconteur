@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: apt update
@@ -51,7 +51,7 @@ jobs:
         mv build2/docs/getting_started doc/doc/core/latest/getting_started
         cp robotraconteur/docs/github_pages/index.html doc/index.html
     - name: archive docs
-      uses: actions/upload-pages-artifact@v1
+      uses: actions/upload-pages-artifact@v3
       with:
         path: doc
   # Deploy job
@@ -74,4 +74,4 @@ jobs:
     steps:
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v1
+      uses: actions/deploy-pages@v4

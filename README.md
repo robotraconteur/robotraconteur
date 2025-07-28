@@ -10,12 +10,13 @@
 ![C\#](https://img.shields.io/badge/C%23-4.5|netstandard2.0-blue.svg?style=flat&logo=csharp)
 ![nuget](https://img.shields.io/nuget/v/robotraconteurnet?style=flat&logo=nuget)
 ![Java](https://img.shields.io/badge/Java-8+-blue.svg?style=flat&logo=openjdk)
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
+[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab)
 ![conda](https://img.shields.io/conda/vn/conda-forge/robotraconteur?label=conda&logo=anaconda)
 ![ros-noetic](https://img.shields.io/ros/v/noetic/robotraconteur?styple=flat&logo=ros)
 ![ros-humble](https://img.shields.io/ros/v/humble/robotraconteur?styple=flat&logo=ros)
-![ros-iron](https://img.shields.io/ros/v/iron/robotraconteur?styple=flat&logo=ros)
 ![ros-jazzy](https://img.shields.io/ros/v/jazzy/robotraconteur?styple=flat&logo=ros)
+![ros-kilted](https://img.shields.io/ros/v/kilted/robotraconteur?styple=flat&logo=ros)
+![ros-rolling](https://img.shields.io/ros/v/rolling/robotraconteur?styple=flat&logo=ros)
 
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
@@ -28,6 +29,8 @@
 ![FreeBSD](https://img.shields.io/badge/-FreeBSD-%23870000?style=for-the-badge&logo=freebsd&logoColor=white)
 ![ROS](https://img.shields.io/badge/-ROS-22314E?style=for-the-badge&logo=ros&logoColor=white)
 ![Arduino](https://img.shields.io/badge/-Arduino-00979D?style=for-the-badge&logo=arduino&logoColor=white)
+
+[![NI Tools Network](docs/figures/ni_tools_network_small.png)](https://www.ni.com/en/support/downloads/tools-network/download.robot-raconteur-for-labview.html)
 
 A communication framework for robotics, automation, and the Internet of Things
 
@@ -54,6 +57,7 @@ See the [Getting Started Guide](https://robotraconteur.github.io/robotraconteur/
   - [Installation](#installation)
   - [Building](#building)
   - [ROS Support](#ros-support)
+  - [LabVIEW Add-on](#labview-add-on)
   - [Standard Service Types](#standard-service-types)
   - [Companion Libraries](#companion-libraries)
   - [Robot Raconteur Directory](#robot-raconteur-directory)
@@ -247,6 +251,17 @@ ROS 2, but swig version 4.0.2 or greater must be installed first.
 A Robot Raconteur to ROS 2 bridge is available, allowing access to ROS 2 topics and services from Robot Raconteur:
 
 https://github.com/robotraconteur-contrib/robotraconteur_ros2_bridge
+
+## LabVIEW Add-on
+
+[![NI Tools Network](docs/figures/ni_tools_network_small.png)](https://www.ni.com/en/support/downloads/tools-network/download.robot-raconteur-for-labview.html)
+
+A Robot Raconteur for LabVIEW Add-on is available from Wason Technology, LLC as a commercial product. It is
+available for purchase on the [NI Tools Network](https://www.ni.com/en/support/downloads/tools-network/download.robot-raconteur-for-labview.html)
+and can be installed using the VIPM Package Manager. The add-on is available in the default channel. See
+the [Robot Raconteur for LabVIEW VIPM page](https://www.vipm.io/package/wason_technology_llc_lib_robot_raconteur_for_labview/)
+See the [Wiki Page](https://github.com/robotraconteur/robotraconteur/wiki/LabView) for information on the LabVIEW Add-on,
+direct download links, and instructions.
 
 ## Standard Service Types
 

@@ -67,6 +67,8 @@ TimeSpec WireConnectionBase::GetLastValueSentTime()
     boost::mutex::scoped_lock lock(outval_lock);
     if (!outval_valid)
         throw ValueNotSetException("No value sent");
+    lock.unlock();
+    boost::mutex::scoped_lock lock2(sendlock);
     return lasttime_send;
 }
 
@@ -136,6 +138,7 @@ RR_SHARED_PTR<RobotRaconteurNode> WireConnectionBase::GetNode()
 
 void WireConnectionBase::WirePacketReceived(TimeSpec timespec, const RR_INTRUSIVE_PTR<RRValue>& packet)
 {
+    TimeSpec lasttime_recv1;
     {
         boost::mutex::scoped_lock lock(recvlock);
         RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
@@ -145,23 +148,24 @@ void WireConnectionBase::WirePacketReceived(TimeSpec timespec, const RR_INTRUSIV
             return;
         }
 
+        boost::mutex::scoped_lock lock2(inval_lock);
+
         if (lasttime_recv == TimeSpec(0, 0) || timespec > lasttime_recv)
         {
+            inval = packet;
+            lasttime_recv = timespec;
+            if (n)
+            {
+                lasttime_recv_local = n->NowNodeTime();
+            }
+            inval_valid = true;
+            inval_wait.notify_all();
+
+            lock2.unlock();
+
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
                                                     "Wire packet in value received timespec " << timespec.seconds << ","
                                                                                               << timespec.nanoseconds);
-
-            {
-                boost::mutex::scoped_lock lock2(inval_lock);
-                inval = packet;
-                lasttime_recv = timespec;
-                if (n)
-                {
-                    lasttime_recv_local = n->NowNodeTime();
-                }
-                inval_valid = true;
-                inval_wait.notify_all();
-            }
 
             RR_WIRE_CONNECTION_LISTENER_ITER(w1->WireValueChanged(shared_from_this(), packet, timespec));
 
@@ -179,6 +183,8 @@ void WireConnectionBase::WirePacketReceived(TimeSpec timespec, const RR_INTRUSIV
         }
         else
         {
+            lock2.unlock();
+
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
                                                     "Old wire packet received timespec " << timespec.seconds << ","
                                                                                          << timespec.nanoseconds
@@ -220,8 +226,6 @@ void WireConnectionBase::RemoteClose()
     try
     {
         boost::mutex::scoped_lock lock(sendlock);
-        // if (parent.expired()) return;
-        // boost::mutex::scoped_lock lock2 (recvlock);
         GetParent()->AsyncClose(shared_from_this(), true, endpoint, &WireConnectionBase_RemoteClose_emptyhandler, 1000);
     }
     catch (std::exception&)
@@ -376,6 +380,8 @@ bool WireConnectionBase::TryGetOutValueBase(RR_INTRUSIVE_PTR<RRValue>& value, Ti
         return false;
     }
     value = outval;
+    lock2.unlock();
+    boost::mutex::scoped_lock lock3(sendlock);
     time = lasttime_send;
     return true;
 }
@@ -575,7 +581,7 @@ RR_INTRUSIVE_PTR<MessageEntry> WireBase::PackPacket(const RR_INTRUSIVE_PTR<RRVal
     }
 
     RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_WirePacket, GetMemberName());
-    m->elements = elems;
+    m->elements = RR_MOVE(elems);
     m->MetaData = "unreliable\n";
     return m;
 }
@@ -597,7 +603,6 @@ std::string WireClientBase::GetServicePath() { return service_path; }
 void WireClientBase::WirePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     RR_UNUSED(e);
-    // boost::shared_lock<boost::shared_mutex> lock2(stub_lock);
 
     if (m->EntryType == MessageEntryType_WireClosed)
     {
@@ -655,8 +660,6 @@ void WireClientBase::Shutdown()
 
         try
         {
-            // RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_WireDisconnectReq,
-            // GetMemberName()); RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
             if (c)
                 c->Shutdown();
         }
@@ -773,8 +776,15 @@ void WireClientBase::AsyncConnect_internal1(
         }
 
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, m_MemberName, "Wire connected");
+        {
+            RR_SHARED_PTR<WireConnectionBase> connection1;
+            {
+                boost::mutex::scoped_lock lock(connection_lock);
+                connection1 = connection;
+            }
 
-        detail::InvokeHandler(node, handler, connection);
+            detail::InvokeHandler(node, handler, connection1);
+        }
     }
     catch (std::exception& err2)
     {
@@ -971,7 +981,6 @@ void WireServerBase::ClientDisconnected(const RR_SHARED_PTR<ServerContext>& cont
             {
                 if (ee->first == ep)
                 {
-                    // ee->second->RemoteClose();
                     c.push_back(ee->second);
                     ee = connections.erase(ee);
                     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep, service_path, m_MemberName,
@@ -1029,8 +1038,6 @@ void WireServerBase::Shutdown()
             RobotRaconteurNode::TryHandleException(node, &exp);
         }
     }
-
-    // skel.reset();;
 
     listener_connection.disconnect();
 
@@ -1152,7 +1159,6 @@ RR_INTRUSIVE_PTR<MessageEntry> WireServerBase::WireCommand(const RR_INTRUSIVE_PT
                 RR_SHARED_PTR<WireConnectionBase> c = e1->second;
                 lock.unlock();
                 c->RemoteClose();
-                // connections.erase(e);
                 return CreateMessageEntry(MessageEntryType_WireDisconnectRet, GetMemberName());
             }
             catch (std::exception& exp)

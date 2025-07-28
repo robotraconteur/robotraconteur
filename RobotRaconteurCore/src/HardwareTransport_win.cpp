@@ -260,6 +260,14 @@ std::list<UsbDeviceManager_detected_device> WinUsbDeviceManager::GetDetectedDevi
         bResult = setupapi_f->SetupDiGetDeviceInterfaceDetailW(deviceInfo, &interfaceData, detailData.get(), length,
                                                                &requiredLength, NULL);
 
+        if (bResult == FALSE && GetLastError() == ERROR_INVALID_USER_BUFFER)
+        {
+            // TODO: Why is this 8 instead of 6 on Windows 10??
+            detailData->cbSize = 8;
+            bResult = setupapi_f->SetupDiGetDeviceInterfaceDetailW(deviceInfo, &interfaceData, detailData.get(), length,
+                                                                   &requiredLength, NULL);
+        }
+
         if (FALSE == bResult)
         {
             continue;
@@ -365,104 +373,25 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadInterfaceSettings(const RR_SHARED_P
 
     settings->interface_number = d.bInterfaceNumber;
     settings->interface_num_endpoints = d.bNumEndpoints;
+    return Open;
+}
 
-    ULONG desc_buf_len = 64 * 1024;
-    ULONG desc_buf_read = 0;
-    boost::scoped_array<uint8_t> desc_buf(new uint8_t[desc_buf_len]);
+UsbDeviceStatus WinUsbDevice_Initialize::ReadConfigurationDescriptorRaw(const RR_SHARED_PTR<void>& dev_h,
+                                                                        RR_SHARED_PTR<UsbDevice_Settings>& settings,
+                                                                        std::vector<uint8_t>& descriptor)
+{
+    RR_SHARED_PTR<WinUsbDevice_Handle> h = RR_STATIC_POINTER_CAST<WinUsbDevice_Handle>(dev_h);
 
-    if (!f->WinUsb_GetDescriptor(h->hInterface.get(), USB_CONFIGURATION_DESCRIPTOR_TYPE, settings->interface_number, 0,
-                                 desc_buf.get(), desc_buf_len, &desc_buf_read))
+    std::vector<uint8_t> buf1(8192);
+
+    ULONG len = 0;
+    if (!f->WinUsb_GetDescriptor(h->hInterface.get(), USB_CONFIGURATION_DESCRIPTOR_TYPE,
+                                 settings->interface_alt_setting, 0, &buf1[0], buf1.size(), &len))
     {
         return Error;
     }
 
-    boost::asio::mutable_buffer desc(desc_buf.get(), desc_buf_read);
-
-    bool in_desired_interface = false;
-
-    bool cs_interface_found = false;
-    uint16_t num_protocols;
-
-    while (boost::asio::buffer_size(desc) >= 2)
-    {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        USB_COMMON_DESCRIPTOR* c1 = RR_BOOST_ASIO_BUFFER_CAST(USB_COMMON_DESCRIPTOR*, desc);
-        if (c1->bLength > boost::asio::buffer_size(desc))
-        {
-            return Error;
-        }
-
-        if (c1->bDescriptorType == USB_INTERFACE_DESCRIPTOR_TYPE)
-        {
-            USB_INTERFACE_DESCRIPTOR* c2 = (USB_INTERFACE_DESCRIPTOR*)c1;
-            if (c2->bInterfaceNumber == settings->interface_number &&
-                c2->bAlternateSetting == settings->interface_alt_setting)
-            {
-                in_desired_interface = true;
-            }
-            else
-            {
-                in_desired_interface = false;
-            }
-        }
-
-        if (c1->bDescriptorType == USB_ENDPOINT_DESCRIPTOR_TYPE)
-        {
-            in_desired_interface = false;
-        }
-
-        if (in_desired_interface && c1->bDescriptorType == USB_CS_INTERFACE_DESCRIPTOR_TYPE)
-        {
-            robotraconteur_interface_common_descriptor* c3 = (robotraconteur_interface_common_descriptor*)c1;
-            if (c3->bDescriptorSubType == 0)
-            {
-
-                if (c3->bLength != sizeof(robotraconteur_interface_descriptor))
-                {
-                    return Invalid;
-                }
-                robotraconteur_interface_descriptor* c4 = (robotraconteur_interface_descriptor*)c3;
-
-                if (memcmp(RR_USB_CS_INTERFACE_UUID_DETECT, c4->uuidRobotRaconteurDetect,
-                           sizeof(RR_USB_CS_INTERFACE_UUID_DETECT)) != 0)
-                {
-                    return Invalid;
-                }
-
-                settings->string_lang_index = 0;
-                settings->string_nodeid_index = c4->iNodeID;
-                settings->string_nodename_index = c4->iNodeName;
-                num_protocols = c4->wNumProtocols;
-
-                cs_interface_found = true;
-            }
-
-            if (c3->bDescriptorSubType == 1)
-            {
-                if (c3->bLength < sizeof(robotraconteur_protocol_descriptor))
-                {
-                    return Error;
-                }
-
-                robotraconteur_protocol_descriptor* c4 = (robotraconteur_protocol_descriptor*)c3;
-
-                settings->supported_protocols.push_back(c4->wRRProtocol);
-            }
-        }
-
-        desc = desc + c1->bLength;
-    }
-
-    if (!cs_interface_found)
-    {
-        return Invalid;
-    }
-
-    if (num_protocols != settings->supported_protocols.size())
-    {
-        return Invalid;
-    }
-
+    descriptor = std::vector<uint8_t>(buf1.begin(), buf1.begin() + len);
     return Open;
 }
 
@@ -475,46 +404,41 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
     bool in_found = false;
     bool out_found = false;
 
-    for (UCHAR i = 0; i < settings->interface_num_endpoints; i++)
-    {
-        // Bug with WinUsb WINUSB_PIPE_INFORMATION structure?
-        uint8_t d_pipe1[sizeof(WINUSB_PIPE_INFORMATION) * 2];
+    std::vector<uint8_t> desc_buf;
 
-        PWINUSB_PIPE_INFORMATION d_pipe = static_cast<PWINUSB_PIPE_INFORMATION>((void*)&d_pipe1);
-        if (f->WinUsb_QueryPipe(h->hInterface.get(), settings->interface_alt_setting, i, d_pipe))
+    if (ReadConfigurationDescriptorRaw(dev_h, settings, desc_buf) != Open)
+    {
+        return Error;
+    }
+
+    size_t pos = 0;
+    size_t remaining = desc_buf.size();
+
+    while (remaining > 0)
+    {
+        PUSB_COMMON_DESCRIPTOR d = reinterpret_cast<PUSB_COMMON_DESCRIPTOR>(&desc_buf[pos]);
+        if (d->bDescriptorType == WINUSB_USD_ENDPOINT_DESCRIPTOR_TYPE)
         {
-            if (d_pipe->PipeType == UsbdPipeTypeBulk && USB_ENDPOINT_DIRECTION_IN(d_pipe->PipeId) && !in_found)
+            PUSB_ENDPOINT_DESCRIPTOR d2 = reinterpret_cast<PUSB_ENDPOINT_DESCRIPTOR>(d);
+            if (((d2->bEndpointAddress & 0x80) == WINUSB_USB_ENDPOINT_DIRECTION_IN) && !in_found)
             {
                 in_found = true;
-                settings->in_pipe_id = d_pipe->PipeId;
-                settings->in_pipe_maxpacket = d_pipe->MaximumPacketSize;
-                if (RR_USB_MAX_PACKET_SIZE % settings->in_pipe_maxpacket == 0)
-                {
-                    settings->in_pipe_buffer_size = RR_USB_MAX_PACKET_SIZE;
-                }
-                else
-                {
-                    settings->in_pipe_buffer_size =
-                        ((RR_USB_MAX_PACKET_SIZE / settings->in_pipe_maxpacket) + 1) * settings->in_pipe_maxpacket;
-                }
+                settings->in_pipe_id = d2->bEndpointAddress;
+                settings->in_pipe_maxpacket = d2->wMaxPacketSize;
+                settings->in_pipe_buffer_size = settings->in_pipe_maxpacket;
             }
 
-            if (d_pipe->PipeType == UsbdPipeTypeBulk && USB_ENDPOINT_DIRECTION_OUT(d_pipe->PipeId) && !out_found)
+            if ((d2->bEndpointAddress & 0x80) == WINUSB_USB_ENDPOINT_DIRECTION_OUT && !out_found)
             {
                 out_found = true;
-                settings->out_pipe_id = d_pipe->PipeId;
-                settings->out_pipe_maxpacket = d_pipe->MaximumPacketSize;
-                if (RR_USB_MAX_PACKET_SIZE % settings->out_pipe_maxpacket == 0)
-                {
-                    settings->out_pipe_buffer_size = RR_USB_MAX_PACKET_SIZE;
-                }
-                else
-                {
-                    settings->out_pipe_buffer_size =
-                        ((RR_USB_MAX_PACKET_SIZE / settings->in_pipe_maxpacket) + 1) * settings->out_pipe_maxpacket;
-                }
+                settings->out_pipe_id = d2->bEndpointAddress;
+                settings->out_pipe_maxpacket = d2->wMaxPacketSize;
+                settings->out_pipe_buffer_size = settings->out_pipe_maxpacket;
             }
         }
+
+        pos += d->bLength;
+        remaining -= d->bLength;
     }
 
     if (!in_found || !out_found)
@@ -582,7 +506,6 @@ void WinUsbDevice_Initialize::AsyncControlTransferNoLock(
     uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
     boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
 {
-    // boost::mutex::scoped_lock lock(this_lock);
     WinUsbDevice_async_control_transfer(GetNode()->GetThreadPool()->get_io_context(), f, bmRequestType, bRequest,
                                         wValue, wIndex, buf, handler, dev_h);
 }
@@ -616,7 +539,6 @@ void WinUsbDevice_Claim::AsyncControlTransferNoLock(
     uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, boost::asio::mutable_buffer& buf,
     boost::function<void(const boost::system::error_code&, size_t)> handler, const RR_SHARED_PTR<void>& dev_h)
 {
-    // boost::mutex::scoped_lock lock(this_lock);
     RR_SHARED_PTR<void> dev_h1 = dev_h;
     if (!dev_h1)
     {
@@ -716,14 +638,10 @@ UsbDeviceStatus WinUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
 
     BOOL b_true = TRUE;
     BOOL b_false = FALSE;
-    if (!f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, RAW_IO, sizeof(b_true), &b_true)
-        /*|| !f->WinUsb_SetPipePolicy(hInterface1.get(), out_pipe_id, RAW_IO, sizeof(b_true), &b_true)*/
-        || !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, ALLOW_PARTIAL_READS, sizeof(b_false),
-                                    &b_false) ||
-        !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, SHORT_PACKET_TERMINATE, sizeof(b_true),
-                                 &b_true) ||
-        !f->WinUsb_ResetPipe(h->hInterface.get(), settings->in_pipe_id) ||
-        !f->WinUsb_ResetPipe(h->hInterface.get(), settings->out_pipe_id))
+    if (!f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, RAW_IO, sizeof(b_true), &b_true) ||
+        !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->out_pipe_id, RAW_IO, sizeof(b_true), &b_true) ||
+        !f->WinUsb_SetPipePolicy(h->hInterface.get(), settings->in_pipe_id, ALLOW_PARTIAL_READS, sizeof(b_false),
+                                 &b_false))
     {
         return Error;
     }
@@ -760,8 +678,6 @@ void WinUsbDevice_Claim::ClearHalt(uint8_t ep)
 
     if (!device_handle)
         return;
-
-    f->WinUsb_ResetPipe(device_handle->hInterface.get(), ep);
 }
 
 // WinUsbDevice
@@ -1093,7 +1009,9 @@ HardwareTransport_win_discovery::HardwareTransport_win_discovery(const RR_SHARED
                                                                  const RR_SHARED_PTR<WinsockBluetoothConnector>& bt,
                                                                  const RR_SHARED_PTR<void>& f_void)
     : HardwareTransport_discovery(parent, schemes, usb, bt)
-{}
+{
+    f = RR_STATIC_POINTER_CAST<SetupApi_Functions>(f_void);
+}
 
 void HardwareTransport_win_discovery::Init()
 {

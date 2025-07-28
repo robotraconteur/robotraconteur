@@ -1,5 +1,7 @@
 if(NOT RR_NET_BUILD_NATIVE_ONLY)
 
+    set(RR_NET_FRAMEWORK_VERSION "v4.5.2" CACHE STRING ".NET Framework version for library")
+
     include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)
 
     if(NOT RobotRaconteur_GEN)

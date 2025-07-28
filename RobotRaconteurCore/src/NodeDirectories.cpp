@@ -29,6 +29,11 @@ namespace RobotRaconteur
 
 namespace detail
 {
+
+#ifdef __GNUG__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 static boost::filesystem::path replace_default_val_with_env(const boost::filesystem::path& default_val,
                                                             const std::string& rr_env_var)
 {
@@ -39,6 +44,9 @@ static boost::filesystem::path replace_default_val_with_env(const boost::filesys
     }
     return default_val;
 }
+#ifdef __GNUG__
+#pragma GCC diagnostic pop
+#endif
 
 #ifndef ROBOTRACONTEUR_WINDOWS
 static boost::filesystem::path user_unix_home_dir(const std::string& default_rel_dir, const std::string& xdg_env,
@@ -108,6 +116,7 @@ static boost::filesystem::path user_unix_run_dir(const std::string& xdg_env, con
     return boost::filesystem::path(run_path);
 }
 
+#ifdef ROBOTRACONTEUR_APPLE
 static boost::filesystem::path user_apple_run_dir(const std::string& rr_env_var)
 {
     const char* rr_env_var_val = std::getenv(rr_env_var.c_str());
@@ -128,6 +137,7 @@ static boost::filesystem::path user_apple_run_dir(const std::string& rr_env_var)
     path /= "robotraconteur";
     return path;
 }
+#endif
 #endif
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -168,6 +178,10 @@ static boost::filesystem::path get_common_appdata()
 }
 #endif
 
+#ifdef __GNUG__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 static bool is_sub_dir(boost::filesystem::path p, const boost::filesystem::path& root)
 {
     while (p != boost::filesystem::path())
@@ -180,6 +194,9 @@ static bool is_sub_dir(boost::filesystem::path p, const boost::filesystem::path&
     }
     return false;
 }
+#ifdef __GNUG__
+#pragma GCC diagnostic pop
+#endif
 
 } // namespace detail
 
@@ -506,23 +523,6 @@ void NodeDirectoriesFD::open_lock_write(const boost::filesystem::path& path, boo
 #endif
 }
 
-/*void NodeDirectoriesFD::reopen_lock_write(bool delete_on_close, boost::system::error_code& err)
-{
-    DWORD flags = FILE_ATTRIBUTE_NORMAL;
-    if (delete_on_close)
-    {
-        flags |= FILE_FLAG_DELETE_ON_CLOSE;
-    }
-    HANDLE h = ReOpenFile(fd, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, flags);
-    if (h == INVALID_HANDLE_VALUE)
-    {
-        err = boost::system::error_code(GetLastError(), boost::system::system_category());
-        return;
-    }
-
-    fd = h;
-}*/
-
 bool NodeDirectoriesFD::read(std::string& data) // NOLINT(readability-make-member-function-const)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -604,7 +604,7 @@ bool NodeDirectoriesFD::write(boost::string_ref data) // NOLINT(readability-make
         return false;
 #else
     ssize_t ret = ::write(fd, &data[0], data.size());
-    if (ret != data.size())
+    if (ret != static_cast<ssize_t>(data.size()))
         return false;
     if (fsync(fd) < 0)
         return false;
@@ -779,7 +779,7 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
 #endif
     size_t len = fd->file_len();
 
-    if (len == 0 || len == -1 || len > 16384)
+    if (len == 0 || len > 16384)
     {
         nodeid = NodeID::NewUniqueID();
         std::string dat = nodeid.ToString();

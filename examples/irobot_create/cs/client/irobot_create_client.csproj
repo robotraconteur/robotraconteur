@@ -14,7 +14,7 @@
       <PackageReference Include="DrekarLaunchProcessNET" Version="0.1.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="restsharp" Version="110.2.0" />
-      <PackageReference Include="RobotRaconteurNET" Version="1.2.1" />
+      <PackageReference Include="RobotRaconteurNET" Version="*" />
       <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     </ItemGroup>
 

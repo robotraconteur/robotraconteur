@@ -3,11 +3,13 @@
   - [Installation](#installation)
     - [Windows](#windows)
     - [Ubuntu Xenial, Bionic, Focal, Jammy, and Noble](#ubuntu-xenial-bionic-focal-jammy-and-noble)
-    - [Debian 10 (buster)](#debian-10-buster)
-    - [Raspbian 10 (buster)](#raspbian-10-buster)
+    - [Debian 10, 11, 12 (buster, bullseye, bookworm)](#debian-10-11-12-buster-bullseye-bookworm)
+    - [Raspbian 10, 11, 12](#raspbian-10-11-12)
     - [Mac OSX](#mac-osx)
     - [iOS](#ios)
     - [Android](#android)
+    - [MATLAB](#matlab-add-on)
+    - [LabVIEW](#labview-add-on)
 
 ### Windows
 
@@ -40,13 +42,7 @@ The C\# library is available on NuGet. Search for "RobotRaconteurNET".
 
 #### Java
 
-The Java library is available on the releases page on github.
-
-#### MATLAB
-
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
-
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
+A zip file is available on the releases page on github. Download the zip file and extract it to a directory in your classpath.
 
 ### Ubuntu Xenial, Bionic, Focal, Jammy, and Noble
 
@@ -82,15 +78,9 @@ sudo apt-get install librobotraconteur-net-native
 
 #### Java
 
-Java must be built from source
+Java must be built from source on Linux.
 
-#### MATLAB
-
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
-
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
-
-### Debian 10 (buster)
+### Debian 10, 11, 12 (buster, bullseye, bookworm)
 
 An apt repository is available for Debian. Packages are available for amd64, armhf, and arm64. See below for raspbian setup. To use, run:
 
@@ -126,9 +116,9 @@ sudo apt-get install librobotraconteur-net-native
 
 #### Java
 
-Java must be built from source
+Java must be built from source on Linux.
 
-### Raspbian 10 (buster)
+### Raspbian 10, 11, 12
 
 The Raspberry Pi OS (raspbian) for amhf 32-bit processors is slightly different than the main debian armhf distributions. It uses ARMv6 instructions, instead of the ARMv7 instructions used by the main debian installation. Use the following to set up the raspbian repository, and see the debian section for the rest of the instructions.
 
@@ -167,12 +157,6 @@ The C\# library must be built from source.
 
 The Java library is available to download from the github release.
 
-#### MATLAB
-
-[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur)
-
-The MATLAB toolbox can be downloaded from the Matlab File Exchange. [https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur](https://www.mathworks.com/matlabcentral/fileexchange/80509-robotraconteur) Click "Download from GitHub" and save the file. Open the file with MATLAB to install the toolbox.
-
 ### iOS
 
 See https://github.com/robotraconteur/robotraconteur/wiki/iOS
@@ -180,3 +164,17 @@ See https://github.com/robotraconteur/robotraconteur/wiki/iOS
 ### Android
 
 See https://github.com/robotraconteur/robotraconteur/wiki/Android
+
+### MATLAB Add-on
+
+[![View robotraconteur on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab)
+
+The Robot Raconteur Matlab add-on can be installed using
+the [Add-On Explorer in Matlab](https://www.mathworks.com/products/matlab/add-on-explorer.html).
+Search for "Robot Raconteur" and install the add-on by clicking the "Add" button. The homepage for the add-on
+can be found at [https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab](https://www.mathworks.com/matlabcentral/fileexchange/176028-robot-raconteur-matlab). Alternatively Click "Download from GitHub," save the file, and open the file with MATLAB to install the toolbox.
+
+### LabVIEW Add-on
+
+A Robot Raconteur for LabVIEW Add-on is available from Wason Technology, LLC as a commercial product.
+[Click Here](https://github.com/robotraconteur/robotraconteur/wiki/LabView) for information on installation and purchasing a subscription license.

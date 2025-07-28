@@ -107,7 +107,12 @@ def test_pipe_subscription():
         pipe_sub.PipePacketReceived += packet_recv
         sub.GetDefaultClientWait(5)
 
-        assert pipe_sub.ActivePipeEndpointCount > 0
+        for _ in range(10):
+            if pipe_sub.ActivePipeEndpointCount > 0:
+                break
+            time.sleep(0.01)
+        else:
+            assert False
 
         with pytest.raises(RR.InvalidOperationException):
             pipe_sub.ReceivePacket()
@@ -130,7 +135,7 @@ def test_pipe_subscription():
 
         res, val = pipe_sub.TryReceivePacketWait(1)
         assert res and val == 3.0
-        time.sleep(0.005)
+        pipe_sub.TryReceivePacketWait(1, True)
         assert pipe_sub.Available == 1
         res, val = pipe_sub.TryReceivePacketWait(1, True)
         assert res and val == 4.0

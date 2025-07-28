@@ -445,8 +445,8 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
                                                        << info.NodeID.ToString());
                 e->second->service_info2 = info;
                 RobotRaconteurNode::TryPostToThreadPool(
-                    node,
-                    boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(), k, info));
+                    node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(),
+                                      RR_MOVE(k), info));
             }
 
             e->second->last_node_update = n->NowNodeTime();
@@ -487,7 +487,7 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
 
             RobotRaconteurNode::TryPostToThreadPool(node,
                                                     boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener,
-                                                                shared_from_this(), noden, c2->service_info2));
+                                                                shared_from_this(), RR_MOVE(noden), c2->service_info2));
         }
     }
 
@@ -522,8 +522,8 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
                                                        << " due to service no longer advertising");
 
                 RobotRaconteurNode::TryPostToThreadPool(
-                    node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(), id1,
-                                      info1));
+                    node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(),
+                                      RR_MOVE(id1), RR_MOVE(info1)));
             }
             else
             {
@@ -570,8 +570,9 @@ void ServiceInfo2Subscription::NodeLost(RR_SHARED_PTR<detail::Discovery_nodestor
                                                    << info1.Name << "\" on node " << info1.NodeID.ToString()
                                                    << " due to node lost");
 
-            RobotRaconteurNode::TryPostToThreadPool(
-                node, boost::bind(&ServiceInfo2Subscription::fire_ServiceLostListener, shared_from_this(), id1, info1));
+            RobotRaconteurNode::TryPostToThreadPool(node,
+                                                    boost::bind(&ServiceInfo2Subscription::fire_ServiceLostListener,
+                                                                shared_from_this(), RR_MOVE(id1), RR_MOVE(info1)));
         }
         else
         {
@@ -925,8 +926,8 @@ void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, bo
     RR_SHARED_PTR<detail::ServiceSubscription_client> c2 = RR_MAKE_SHARED<detail::ServiceSubscription_client>();
     c2->connecting.data() = true;
     c2->nodeid = service_nodeid;
-    c2->nodename = service_nodename;
-    c2->service_name = service_name;
+    c2->nodename = RR_MOVE(service_nodename);
+    c2->service_name = RR_MOVE(service_name);
     c2->service_type = objecttype.to_string();
     c2->urls = url;
     c2->last_node_update = n->NowNodeTime();
@@ -1055,7 +1056,7 @@ void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorag
         {
 
             RR_SHARED_PTR<detail::ServiceSubscription_client>& c2 = e->second;
-            c2->urls = urls;
+            c2->urls = RR_MOVE(urls);
             c2->last_node_update = n->NowNodeTime();
 
             if (c2->retry_timer)
@@ -1626,6 +1627,8 @@ std::vector<std::string> ServiceSubscription::GetServiceURL()
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1, "Subscription not using service url");
         throw InvalidOperationException("Subscription not using service url");
     }
+
+    boost::mutex::scoped_lock lock(this_lock);
     return service_url;
 }
 
@@ -1971,8 +1974,18 @@ void WireSubscriptionBase::SetOutValueAllBase(const RR_INTRUSIVE_PTR<RRValue>& v
 
 size_t WireSubscriptionBase::GetActiveWireConnectionCount()
 {
+    size_t count = 0;
     boost::mutex::scoped_lock lock(this_lock);
-    return connections.size();
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::WireSubscription_connection>& c,
+                   connections | boost::adaptors::map_values)
+    {
+        RR_SHARED_PTR<WireConnectionBase> c1 = c->connection.lock();
+        if (c1)
+        {
+            count++;
+        }
+    }
+    return count;
 }
 
 void WireSubscriptionBase::Close()
@@ -2110,6 +2123,7 @@ void WireSubscriptionBase::ClientDisconnected(const ServiceSubscriptionClientID&
 
 void WireSubscriptionBase::WireConnectionClosed(const RR_SHARED_PTR<detail::WireSubscription_connection>& wire)
 {
+    // TODO:
     // boost::mutex::scoped_lock lock(this_lock);
     // connections.erase(wire);
 }
@@ -2261,7 +2275,10 @@ void WireSubscription_connection::ClientConnected2(const RR_SHARED_PTR<WireConne
         }
     }
 
-    this->connection = connection;
+    {
+        boost::mutex::scoped_lock lock(p->this_lock);
+        this->connection = connection;
+    }
 
     connection->SetIgnoreInValue(p->ignore_in_value.data());
     connection->AddListener(shared_from_this());
@@ -2547,8 +2564,6 @@ void PipeSubscriptionBase::SetIgnoreReceived(bool ignore)
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername, "IgnoreReceived set to " << ignore);
 }
 
-static void PipeSubscriptionBase_empty_send_handler(uint32_t, const RR_SHARED_PTR<RobotRaconteurException>&) {}
-
 void PipeSubscriptionBase::AsyncSendPacketAllBase(const RR_INTRUSIVE_PTR<RRValue>& packet)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername,
@@ -2576,8 +2591,18 @@ void PipeSubscriptionBase::AsyncSendPacketAllBase(const RR_INTRUSIVE_PTR<RRValue
 
 size_t PipeSubscriptionBase::GetActivePipeEndpointCount()
 {
+    size_t count = 0;
     boost::mutex::scoped_lock lock(this_lock);
-    return connections.size();
+    BOOST_FOREACH (const RR_SHARED_PTR<detail::PipeSubscription_connection>& c,
+                   connections | boost::adaptors::map_values)
+    {
+        RR_SHARED_PTR<PipeEndpointBase> pipe = c->connection.lock();
+        if (pipe)
+        {
+            count++;
+        }
+    }
+    return count;
 }
 
 void PipeSubscriptionBase::Close()
@@ -2675,8 +2700,6 @@ void PipeSubscriptionBase::PipeEndpointClosed(const RR_SHARED_PTR<detail::PipeSu
 void PipeSubscriptionBase::PipeEndpointPacketReceived(const RR_SHARED_PTR<detail::PipeSubscription_connection>& pipe,
                                                       const RR_INTRUSIVE_PTR<RRValue>& value)
 {
-    // RR_SHARED_PTR<RRObject> client = wire->client.lock();
-    // if (!client) return;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", membername,
                                             "Pipe subscription received packet");
@@ -2812,7 +2835,10 @@ void PipeSubscription_connection::ClientConnected2(const RR_SHARED_PTR<PipeEndpo
         }
     }
 
-    this->connection = connection;
+    {
+        boost::mutex::scoped_lock lock(p->this_lock);
+        this->connection = connection;
+    }
 
     connection->SetIgnoreReceived(p->ignore_incoming_packets.data());
     connection->AddListener(shared_from_this());

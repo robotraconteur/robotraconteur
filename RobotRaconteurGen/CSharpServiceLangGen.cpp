@@ -737,7 +737,6 @@ void CSharpServiceLangGen::GeneratePod(const RR_SHARED_PTR<ServiceEntryDefinitio
                 w2 << "    " << t8.name << ".GetNumericArray(ref rr_a" << i << ");" << std::endl;
                 i += boost::numeric_cast<int32_t>(t9.get<1>() * e2_count);
             }
-            // w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << std::endl;
             MEMBER_ITER_END()
         }
         w2 << "    }" << std::endl;
@@ -784,7 +783,6 @@ void CSharpServiceLangGen::GeneratePod(const RR_SHARED_PTR<ServiceEntryDefinitio
                 w2 << "    " << t8.name << ".AssignFromNumericArray(ref rr_a" << i << ");" << std::endl;
                 i += boost::numeric_cast<int32_t>(t9.get<1>() * e2_count);
             }
-            // w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << std::endl;
             MEMBER_ITER_END()
             w2 << "    }" << std::endl;
         }
@@ -1150,7 +1148,6 @@ void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const st
 
     w2 << "    public override IStructureStub FindStructureStub(string objecttype)" << std::endl
        << "    {" << std::endl;
-    // w2 << "    string objshort=RemovePath(objecttype);" << std::endl;
 
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin();
          e != d->Structures.end(); ++e)
@@ -1162,7 +1159,6 @@ void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const st
     w2 << "    }" << std::endl;
 
     w2 << "    public override IPodStub FindPodStub(string objecttype)" << std::endl << "    {" << std::endl;
-    // w2 << "    string objshort=RemovePath(objecttype);" << std::endl;
 
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end();
          ++e)
@@ -1175,7 +1171,6 @@ void CSharpServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const st
 
     w2 << "    public override INamedArrayStub FindNamedArrayStub(string objecttype)" << std::endl
        << "    {" << std::endl;
-    // w2 << "    string objshort=RemovePath(objecttype);" << std::endl;
 
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin();
          e != d->NamedArrays.end(); ++e)
@@ -1296,7 +1291,6 @@ void CSharpServiceLangGen::GenerateStructureStub(ServiceEntryDefinition* e, std:
        << std::endl;
 
     MEMBER_ITER_END()
-    // w2 << "    if ((s as T)==null) throw new DataTypeException(\"Incorrect structure cast\");");
     w2 << "    T st; try {st=(T)((object)s);} catch (InvalidCastException) {throw new "
           "DataTypeMismatchException(\"Wrong structuretype\");}"
        << std::endl;
@@ -1441,7 +1435,6 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         w2 << "    Task async_set_" << t.name << "(" << t.cs_type << t.cs_arr_type
            << " value, int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE);" << std::endl;
     }
-    // w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(FunctionDefinition)
@@ -1458,12 +1451,10 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         std::string task_type;
         if (m->ReturnType->Type == DataTypes_void_t)
         {
-            // t2.push_back("Action<Exception> rr_handler");
             task_type = "Task";
         }
         else
         {
-            // t2.push_back("Action<" + t.cs_type + t.cs_arr_type + ",Exception> rr_handler");
             task_type = "Task<" + t.cs_type + t.cs_arr_type + ">";
         }
         t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
@@ -1480,8 +1471,6 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         {
             t2.push_back(params);
         }
-
-        // t2.push_back("Action<" + t.generator_csharp_type + ",Exception> rr_handler");
 
         t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
@@ -1895,7 +1884,6 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         w2 << "    }" << std::endl;
     }
 
-    // w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(FunctionDefinition)
@@ -1912,12 +1900,10 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         std::string task_type;
         if (m->ReturnType->Type == DataTypes_void_t)
         {
-            // t2.push_back("Action<Exception> rr_handler");
             task_type = "Task";
         }
         else
         {
-            // t2.push_back("Action<" + t.cs_type + t.cs_arr_type + ",Exception> rr_handler");
             task_type = "Task<" + t.cs_type + t.cs_arr_type + ">";
         }
         t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
@@ -1955,8 +1941,6 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         {
             t2.push_back(params);
         }
-
-        // t2.push_back("Action<" + t.generator_csharp_type + ",Exception> rr_handler");
 
         t2.push_back("int rr_timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE");
 
@@ -2337,9 +2321,6 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
         w2 << "    WrappedArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedArrayMemoryDirectorNET<"
            << t.cs_type << ">(obj." << fix_name(m->Name) << ");" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2365,9 +2346,6 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         w2 << "    WrappedMultiDimArrayMemoryDirectorNET<" << t.cs_type
            << "> dir=new  WrappedMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name) << ");"
            << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2397,9 +2375,6 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
         w2 << "    WrappedPodArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedPodArrayMemoryDirectorNET<"
            << t.cs_type << ">(obj." << fix_name(m->Name) << ");" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2431,9 +2406,6 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         w2 << "    WrappedPodMultiDimArrayMemoryDirectorNET<" << t.cs_type
            << "> dir=new  WrappedPodMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name)
            << ");" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2464,9 +2436,6 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         w2 << "    case \"" << m->Name << "\": {" << std::endl;
         w2 << "    WrappedNamedArrayMemoryDirectorNET<" << t.cs_type << "> dir=new  WrappedNamedArrayMemoryDirectorNET<"
            << t.cs_type << ">(obj." << fix_name(m->Name) << ");" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2498,9 +2467,6 @@ void CSharpServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream*
         w2 << "    WrappedNamedMultiDimArrayMemoryDirectorNET<" << t.cs_type
            << "> dir=new  WrappedNamedMultiDimArrayMemoryDirectorNET<" << t.cs_type << ">(obj." << fix_name(m->Name)
            << ");" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2749,14 +2715,22 @@ static std::string CSharpServiceLangGen_EscapeString_Formatter(const boost::smat
     if (i == "\t")
         return "\\t";
 
-    std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
-
     std::stringstream v2;
     v2 << std::hex << std::setfill('0');
+
+#ifndef ROBOTRACONTEUR_NO_CXX11
+    std::basic_string<char16_t> v = boost::locale::conv::utf_to_utf<char16_t>(i);
+    BOOST_FOREACH (const char16_t& v3, v)
+    {
+        v2 << std::setw(0) << "\\u" << std::setw(4) << v3;
+    }
+#else
+    std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
     BOOST_FOREACH (const uint16_t& v3, v)
     {
         v2 << std::setw(0) << "\\u" << std::setw(4) << v3;
     }
+#endif
 
     return v2.str();
 }

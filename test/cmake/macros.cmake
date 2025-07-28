@@ -29,9 +29,6 @@ endfunction()
 function(RR_TEST_ADD_EXECUTABLE TARGET_NAME)
 
     cmake_parse_arguments(RR_ARG "" "" "SRC;INCLUDE;DEPS;TEST_EXTRA_ARGS" ${ARGN})
-    message("TARGET_NAME ${TARGET_NAME}")
-    message("ARGN ${ARGN}")
-    message("SRC ${RR_ARG_SRC}")
 
     add_executable(${TARGET_NAME} ${RR_ARG_SRC})
     if(RR_ARG_INCLUDE)

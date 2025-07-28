@@ -99,11 +99,6 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
             local_transport->EnableNodeDiscoveryListening();
         }
 
-        // if (config->GetOptionOrDefaultAsBool("discovery-announce-enable"))
-        //{
-        //  Always announces due to file watching by clients
-        //}
-
         if (config->GetOptionOrDefaultAsBool("disable-message4"))
         {
             local_transport->SetDisableMessage4(true);
@@ -417,9 +412,16 @@ RobotRaconteurNodeSetup::~RobotRaconteurNodeSetup()
         return;
     if (node)
     {
-        if (detail::ThreadPool_IsNodeMultithreaded(node))
+        try
         {
-            node->Shutdown();
+            if (detail::ThreadPool_IsNodeMultithreaded(node))
+            {
+                node->Shutdown();
+            }
+        }
+        catch (std::exception&)
+        {
+            // TODO: Log this error? To where?
         }
     }
 }
@@ -557,7 +559,7 @@ class FillOptionsDescription_add_helper
     boost::program_options::options_description& desc;
     FillOptionsDescription_add_helper(boost::program_options::options_description& desc_, const std::string& prefix_,
                                       uint32_t& allowed_overrides_)
-        : desc(desc_), prefix(prefix_), allowed_overrides(allowed_overrides_)
+        : prefix(prefix_), allowed_overrides(allowed_overrides_), desc(desc_)
     {}
 
     template <typename T>

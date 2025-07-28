@@ -210,199 +210,211 @@ def ArrayToNamedArray(a, named_array_dt):
     return b
 
 
+_init_stub_lock = threading.Lock()
+
+
 def InitStub(stub):
-    odef = stub.RR_objecttype
-    mdict = {}
+    with _init_stub_lock:
+        old_stub = stub.GetPyStub()
+        if (old_stub is not None):
+            return old_stub
+        odef = stub.RR_objecttype
+        mdict = {}
 
-    for i in range(len(odef.Members)):
-        m = odef.Members[i]
-        if (isinstance(m, RobotRaconteurPython.PropertyDefinition)):
-            def inner_prop(m1):
-                def fget(self): return stub_getproperty(stub, m1.Name, m1)
-                def fset(self, value): return stub_setproperty(
-                    stub, m1.Name, m1, value)
-                return property(fget, fset)
-            p1 = inner_prop(m)
+        for i in range(len(odef.Members)):
+            m = odef.Members[i]
+            if (isinstance(m, RobotRaconteurPython.PropertyDefinition)):
+                def inner_prop(m1):
+                    def fget(self): return stub_getproperty(stub, m1.Name, m1)
+                    def fset(self, value): return stub_setproperty(
+                        stub, m1.Name, m1, value)
+                    return property(fget, fset)
+                p1 = inner_prop(m)
 
-            mdict[m.Name] = p1
+                mdict[m.Name] = p1
 
-            def inner_async_prop(m1):
-                def fget(self, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_getproperty(
-                    stub, m1.Name, m1, handler, timeout)
+                def inner_async_prop(m1):
+                    def fget(self, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_getproperty(
+                        stub, m1.Name, m1, handler, timeout)
 
-                def fset(self, value, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_setproperty(
-                    stub, m1.Name, m1, value, handler, timeout)
-                return fget, fset
-            p1_async = inner_async_prop(m)
+                    def fset(self, value, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_setproperty(
+                        stub, m1.Name, m1, value, handler, timeout)
+                    return fget, fset
+                p1_async = inner_async_prop(m)
 
-            mdict['async_get_' + m.Name] = p1_async[0]
-            mdict['async_set_' + m.Name] = p1_async[1]
+                mdict['async_get_' + m.Name] = p1_async[0]
+                mdict['async_set_' + m.Name] = p1_async[1]
 
-        if (isinstance(m, RobotRaconteurPython.FunctionDefinition)):
-            def inner_func(m1):
-                if (not m1.IsGenerator()):
-                    if (m1.ReturnType.Type == RobotRaconteurPython.DataTypes_void_t):
-                        f = lambda self, * \
-                            args: stub_functioncallvoid(
-                                stub, m1.Name, m1, *args)
+            if (isinstance(m, RobotRaconteurPython.FunctionDefinition)):
+                def inner_func(m1):
+                    if (not m1.IsGenerator()):
+                        if (m1.ReturnType.Type == RobotRaconteurPython.DataTypes_void_t):
+                            f = lambda self, * \
+                                args: stub_functioncallvoid(
+                                    stub, m1.Name, m1, *args)
+                        else:
+                            f = lambda self, * \
+                                args: stub_functioncall(stub, m1.Name, m1, *args)
+                        return f
                     else:
-                        f = lambda self, * \
-                            args: stub_functioncall(stub, m1.Name, m1, *args)
+                        return lambda self, *args: stub_functioncallgenerator(stub, m1.Name, m1, *args)
+                f1 = inner_func(m)
+                mdict[m.Name] = f1
+
+                def inner_async_func(m1):
+                    if not m1.IsGenerator():
+                        if (m1.ReturnType.Type == RobotRaconteurPython.DataTypes_void_t):
+                            f = lambda self, * \
+                                args: stub_async_functioncallvoid(
+                                    stub, m1.Name, m1, *args)
+                        else:
+                            f = lambda self, * \
+                                args: stub_async_functioncall(
+                                    stub, m1.Name, m1, *args)
+                        return f
+                    else:
+                        return lambda self, *args: stub_async_functioncallgenerator(stub, m1.Name, m1, *args)
+
+                f1_async = inner_async_func(m)
+                mdict['async_' + m.Name] = f1_async
+
+            if (isinstance(m, RobotRaconteurPython.EventDefinition)):
+                def new_evt_hook():
+                    evt = EventHook()
+                    def fget(self): return evt
+
+                    def fset(self, value):
+                        if (value is not evt):
+                            raise RuntimeError("Invalid operation")
+                    return property(fget, fset)
+                mdict[m.Name] = new_evt_hook()
+
+            if (isinstance(m, RobotRaconteurPython.ObjRefDefinition)):
+                def inner_objref(m1):
+                    if (m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
+                        def f(self, index): return stub_objref(
+                            stub, m1.Name, index)
+                    else:
+                        def f(self): return stub_objref(stub, m1.Name)
                     return f
-                else:
-                    return lambda self, *args: stub_functioncallgenerator(stub, m1.Name, m1, *args)
-            f1 = inner_func(m)
-            mdict[m.Name] = f1
+                f1 = inner_objref(m)
+                mdict['get_%s' % m.Name] = f1
 
-            def inner_async_func(m1):
-                if not m1.IsGenerator():
-                    if (m1.ReturnType.Type == RobotRaconteurPython.DataTypes_void_t):
-                        f = lambda self, * \
-                            args: stub_async_functioncallvoid(
-                                stub, m1.Name, m1, *args)
+                def inner_async_objref(m1):
+                    if (m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
+                        def f(self, index, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_objref(
+                            stub, m1.Name, index, handler, timeout)
                     else:
-                        f = lambda self, * \
-                            args: stub_async_functioncall(
-                                stub, m1.Name, m1, *args)
+                        def f(self, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_objref(
+                            stub, m1.Name, None, handler, timeout)
                     return f
-                else:
-                    return lambda self, *args: stub_async_functioncallgenerator(stub, m1.Name, m1, *args)
+                f1 = inner_async_objref(m)
+                mdict['async_get_%s' % m.Name] = f1
 
-            f1_async = inner_async_func(m)
-            mdict['async_' + m.Name] = f1_async
-
-        if (isinstance(m, RobotRaconteurPython.EventDefinition)):
-            def new_evt_hook():
-                evt = EventHook()
-                def fget(self): return evt
-
-                def fset(self, value):
-                    if (value is not evt):
-                        raise RuntimeError("Invalid operation")
-                return property(fget, fset)
-            mdict[m.Name] = new_evt_hook()
-
-        if (isinstance(m, RobotRaconteurPython.ObjRefDefinition)):
-            def inner_objref(m1):
-                if (m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
-                    def f(self, index): return stub_objref(
-                        stub, m1.Name, index)
-                else:
-                    def f(self): return stub_objref(stub, m1.Name)
-                return f
-            f1 = inner_objref(m)
-            mdict['get_%s' % m.Name] = f1
-
-            def inner_async_objref(m1):
-                if (m1.ArrayType != RobotRaconteurPython.DataTypes_ArrayTypes_none or m1.ContainerType != RobotRaconteurPython.DataTypes_ContainerTypes_none):
-                    def f(self, index, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_objref(
-                        stub, m1.Name, index, handler, timeout)
-                else:
-                    def f(self, handler, timeout=RobotRaconteurPython.RR_TIMEOUT_INFINITE): return stub_async_objref(
-                        stub, m1.Name, None, handler, timeout)
-                return f
-            f1 = inner_async_objref(m)
-            mdict['async_get_%s' % m.Name] = f1
-
-        if (isinstance(m, RobotRaconteurPython.PipeDefinition)):
-            def inner_pipe(m1):
-                innerp = stub.GetPipe(m1.Name)
-                outerp = Pipe(innerp)
-                def fget(self): return outerp
-                return property(fget)
-            p2 = inner_pipe(m)
-            mdict[m.Name] = p2
-
-        if (isinstance(m, RobotRaconteurPython.CallbackDefinition)):
-            def new_cb_client():
-                cb = CallbackClient()
-                def fget(self): return cb
-                return property(fget)
-            mdict[m.Name] = new_cb_client()
-
-        if (isinstance(m, RobotRaconteurPython.WireDefinition)):
-            def inner_wire(m1):
-                innerw = stub.GetWire(m1.Name)
-                outerw = Wire(innerw)
-                def fget(self): return outerw
-                return property(fget)
-            w = inner_wire(m)
-            mdict[m.Name] = w
-
-        if (isinstance(m, RobotRaconteurPython.MemoryDefinition)):
-            if (RobotRaconteurPython.IsTypeNumeric(m.Type.Type)):
-                def inner_memory(m1):
-                    if (m.Type.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
-                        outerm = ArrayMemoryClient(
-                            stub.GetArrayMemory(m1.Name))
-                    else:
-                        outerm = MultiDimArrayMemoryClient(
-                            stub.GetMultiDimArrayMemory(m1.Name))
-
-                    def fget(self): return outerm
+            if (isinstance(m, RobotRaconteurPython.PipeDefinition)):
+                def inner_pipe(m1):
+                    innerp = stub.GetPipe(m1.Name)
+                    outerp = Pipe(innerp)
+                    def fget(self): return outerp
                     return property(fget)
-                mem = inner_memory(m)
-                mdict[m.Name] = mem
-            else:
-                memory_rr_type = RobotRaconteurPython._GetNamedTypeEntryType(
-                    m.Type, stub, stub.RRGetNode())
-                if (memory_rr_type == RobotRaconteurPython.DataTypes_pod_t):
-                    def inner_memory(m1):
-                        if (m.Type.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
-                            pass
-                            outerm = PodArrayMemoryClient(stub.GetPodArrayMemory(
-                                m1.Name), m.Type, stub, stub.RRGetNode())
-                        else:
-                            outerm = PodMultiDimArrayMemoryClient(
-                                stub.GetPodMultiDimArrayMemory(m1.Name), m.Type, stub, stub.RRGetNode())
-                            pass
+                p2 = inner_pipe(m)
+                mdict[m.Name] = p2
 
-                        def fget(self): return outerm
-                        return property(fget)
-                    mem = inner_memory(m)
-                    mdict[m.Name] = mem
-                elif (memory_rr_type == RobotRaconteurPython.DataTypes_namedarray_t):
+            if (isinstance(m, RobotRaconteurPython.CallbackDefinition)):
+                def new_cb_client():
+                    cb = CallbackClient()
+                    def fget(self): return cb
+                    return property(fget)
+                mdict[m.Name] = new_cb_client()
+
+            if (isinstance(m, RobotRaconteurPython.WireDefinition)):
+                def inner_wire(m1):
+                    innerw = stub.GetWire(m1.Name)
+                    outerw = Wire(innerw)
+                    def fget(self): return outerw
+                    return property(fget)
+                w = inner_wire(m)
+                mdict[m.Name] = w
+
+            if (isinstance(m, RobotRaconteurPython.MemoryDefinition)):
+                if (RobotRaconteurPython.IsTypeNumeric(m.Type.Type)):
                     def inner_memory(m1):
                         if (m.Type.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
-                            pass
-                            outerm = NamedArrayMemoryClient(stub.GetNamedArrayMemory(
-                                m1.Name), m.Type, stub, stub.RRGetNode())
+                            outerm = ArrayMemoryClient(
+                                stub.GetArrayMemory(m1.Name))
                         else:
-                            outerm = NamedMultiDimArrayMemoryClient(
-                                stub.GetNamedMultiDimArrayMemory(m1.Name), m.Type, stub, stub.RRGetNode())
-                            pass
+                            outerm = MultiDimArrayMemoryClient(
+                                stub.GetMultiDimArrayMemory(m1.Name))
 
                         def fget(self): return outerm
                         return property(fget)
                     mem = inner_memory(m)
                     mdict[m.Name] = mem
                 else:
-                    assert False
+                    memory_rr_type = RobotRaconteurPython._GetNamedTypeEntryType(
+                        m.Type, stub, stub.RRGetNode())
+                    if (memory_rr_type == RobotRaconteurPython.DataTypes_pod_t):
+                        def inner_memory(m1):
+                            if (m.Type.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
+                                pass
+                                outerm = PodArrayMemoryClient(stub.GetPodArrayMemory(
+                                    m1.Name), m.Type, stub, stub.RRGetNode())
+                            else:
+                                outerm = PodMultiDimArrayMemoryClient(
+                                    stub.GetPodMultiDimArrayMemory(m1.Name), m.Type, stub, stub.RRGetNode())
+                                pass
 
-    mdict["__slots__"] = ["rrinnerstub", "rrlock"]
-    outerstub_type = type(str(odef.Name), (ServiceStub,), mdict)
-    outerstub = outerstub_type()
+                            def fget(self): return outerm
+                            return property(fget)
+                        mem = inner_memory(m)
+                        mdict[m.Name] = mem
+                    elif (memory_rr_type == RobotRaconteurPython.DataTypes_namedarray_t):
+                        def inner_memory(m1):
+                            if (m.Type.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array):
+                                pass
+                                outerm = NamedArrayMemoryClient(stub.GetNamedArrayMemory(
+                                    m1.Name), m.Type, stub, stub.RRGetNode())
+                            else:
+                                outerm = NamedMultiDimArrayMemoryClient(
+                                    stub.GetNamedMultiDimArrayMemory(m1.Name), m.Type, stub, stub.RRGetNode())
+                                pass
 
-    for i in range(len(odef.Members)):
-        m = odef.Members[i]
+                            def fget(self): return outerm
+                            return property(fget)
+                        mem = inner_memory(m)
+                        mdict[m.Name] = mem
+                    else:
+                        assert False
 
-        if (isinstance(m, RobotRaconteurPython.PipeDefinition)):
-            p = getattr(outerstub, m.Name)
-            p._obj = outerstub
+        mdict["__slots__"] = ["rrinnerstub", "rrlock"]
+        outerstub_type = type(str(odef.Name), (ServiceStub,), mdict)
+        outerstub = outerstub_type()
 
-        if (isinstance(m, RobotRaconteurPython.WireDefinition)):
-            w = getattr(outerstub, m.Name)
-            w._obj = outerstub
+        for i in range(len(odef.Members)):
+            m = odef.Members[i]
 
-    director = WrappedServiceStubDirectorPython(outerstub, stub)
-    stub.SetRRDirector(director, 0)
-    director.__disown__()
+            if (isinstance(m, RobotRaconteurPython.PipeDefinition)):
+                p = getattr(outerstub, m.Name)
+                p._obj = outerstub
 
-    stub.SetPyStub(outerstub)
+            if (isinstance(m, RobotRaconteurPython.WireDefinition)):
+                w = getattr(outerstub, m.Name)
+                w._obj = outerstub
 
-    outerstub.rrinnerstub = stub
-    outerstub.rrlock = threading.RLock()
-    return outerstub
+        director = WrappedServiceStubDirectorPython(outerstub, stub)
+        stub.SetRRDirector(director, 0)
+        director_lock = stub.GetRRDirectorLock()
+        try:
+            if director_lock.valid():
+                director.__disown__()
+        finally:
+            del director_lock
+
+        stub.SetPyStub(outerstub)
+
+        outerstub.rrinnerstub = stub
+        outerstub.rrlock = threading.RLock()
+        return outerstub
 
 
 def check_member_args(name, param_types, args, isasync=False):

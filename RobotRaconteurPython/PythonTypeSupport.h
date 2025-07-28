@@ -67,13 +67,6 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, const bo
 PyObject* UnpackFromRRArray_numpy(const boost::intrusive_ptr<RRBaseArray>& rrarray,
                                   const boost::shared_ptr<TypeDefinition>& type1);
 
-/*boost::intrusive_ptr<MessageElementNestedElementList> PackToRRMultiDimArray(PyObject* array_,
-const boost::shared_ptr<TypeDefinition>& type1,const boost::intrusive_ptr<RRBaseArray>& destrrarray);
-
-PyObject* UnpackFromRRMultiDimArray(const boost::intrusive_ptr<MessageElementNestedElementList>& rrarray,
-const boost::shared_ptr<TypeDefinition>& type1);
-*/
-
 boost::intrusive_ptr<MessageElementNestedElementList> PackToRRMultiDimArray_numpy(
     PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1);
 

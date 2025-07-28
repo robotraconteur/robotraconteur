@@ -50,7 +50,6 @@ class RR_Ensure_GIL
 #define DIRECTOR_CALL(dirtype, command)                                                                                \
     {                                                                                                                  \
         boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);                                                \
-        /*RR_Ensure_GIL gil;*/                                                                                         \
         boost::shared_ptr<dirtype> RR_Director2(this->RR_Director);                                                    \
                                                                                                                        \
         lock.unlock();                                                                                                 \
@@ -63,7 +62,6 @@ class RR_Ensure_GIL
 
 #define DIRECTOR_CALL2(command)                                                                                        \
     {                                                                                                                  \
-        /*RR_Ensure_GIL gil;*/                                                                                         \
         {                                                                                                              \
             command;                                                                                                   \
         }                                                                                                              \
@@ -71,7 +69,6 @@ class RR_Ensure_GIL
 
 #define DIRECTOR_CALL3(dirtype, command)                                                                               \
     {                                                                                                                  \
-        /*RR_Ensure_GIL gil;*/                                                                                         \
         boost::shared_lock<boost::shared_mutex> lock(RR_Director_lock);                                                \
         boost::shared_ptr<dirtype> RR_Director2(this->RR_Director);                                                    \
                                                                                                                        \
@@ -281,15 +278,6 @@ class WrappedDynamicServiceFactory : public virtual DynamicServiceFactory
         RR_OVERRIDE;
 };
 
-/*class AsyncHandlerDirector
-{
-public:
-    virtual ~AsyncHandlerDirector() {}
-    virtual void handler(void* m, uint32_t error_code, const std::string& errorname, const std::string& errormessage)
-{};
-
-};*/
-
 class HandlerErrorInfo
 {
   public:
@@ -351,6 +339,15 @@ class AsyncTimerEventReturnDirector
   public:
     virtual ~AsyncTimerEventReturnDirector() {}
     virtual void handler(const TimerEvent& ret, HandlerErrorInfo& error) = 0;
+};
+
+class WrappedDirectorLock
+{
+    boost::shared_ptr<void> director_storage;
+
+  public:
+    WrappedDirectorLock(boost::shared_ptr<void> director) : director_storage(director) {}
+    bool valid() { return (bool)director_storage; }
 };
 
 class WrappedServiceStubDirector
@@ -455,10 +452,12 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
     boost::shared_mutex RR_Director_lock;
 
     int objectheapid;
+    bool director_closed;
 
   public:
     // WrappedServiceStubDirector* GetRRDirector();
-    void SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
+    bool SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
+    boost::shared_ptr<WrappedDirectorLock> GetRRDirectorLock();
 
     std::map<std::string, RR_SHARED_PTR<WrappedPipeClient> > pipes;
     std::map<std::string, RR_SHARED_PTR<WrappedWireClient> > wires;
@@ -477,6 +476,8 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
   protected:
     boost::mutex pystub_lock;
     PyObject* pystub;
+
+    bool pystub_closed;
 
   public:
     PyObject* GetPyStub()
@@ -501,6 +502,11 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
     void SetPyStub(PyObject* stub)
     {
         boost::mutex::scoped_lock lock(pystub_lock);
+
+        if (pystub_closed)
+        {
+            return;
+        }
 
         RR_Ensure_GIL py_gil;
 
@@ -1321,11 +1327,6 @@ class WrappedServiceSkelDirector
 class WrappedServiceSkel : public virtual ServiceSkel
 {
   public:
-    /*WrappedServiceSkel()
-    {
-        RR_Director=NULL;
-    }*/
-
     RR_OVIRTUAL ~WrappedServiceSkel() RR_OVERRIDE {}
     boost::shared_ptr<RobotRaconteur::ServiceEntryDefinition> Type;
 
@@ -1513,11 +1514,6 @@ class WrappedMultiDimArrayMemoryParams
 class WrappedMultiDimArrayMemoryDirector
 {
   public:
-    /*WrappedMultiDimArrayMemoryDirector()
-    {
-        objectheapid=0;
-    }*/
-
     virtual ~WrappedMultiDimArrayMemoryDirector(){};
     virtual std::vector<uint64_t> Dimensions() = 0;
     virtual uint64_t DimCount() = 0;

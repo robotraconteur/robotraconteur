@@ -1,0 +1,75 @@
+name: Linux Packaging Test
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 3 * * 0'
+  push:
+    branches:
+    - packaging-test**
+
+jobs:
+  linux-package-test:
+    runs-on: ${{ matrix.config.runs_on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - os: gentoo
+          runs_on: ubuntu-latest
+          arch: amd64
+          pkg_opts: "podman-build --dist=gentoo --gentoo-local-src"
+        - os: gentoo
+          runs_on: ubuntu-24.04-arm
+          arch: arm64
+          pkg_opts: "podman-build --dist=gentoo --gentoo-local-src"
+        - os: debian
+          runs_on: ubuntu-latest
+          arch: amd64
+          pkg_opts: "podman-build --dist=debian"
+        - os: debian
+          runs_on: ubuntu-24.04-arm
+          arch: arm64
+          pkg_opts: "podman-build --dist=debian"
+        - os: fedora
+          runs_on: ubuntu-latest
+          arch: amd64
+          pkg_opts: "podman-build --dist=fedora"
+        - os: fedora
+          runs_on: ubuntu-24.04-arm
+          arch: arm64
+          pkg_opts: "podman-build --dist=fedora"
+        - os: arch
+          runs_on: ubuntu-latest
+          arch: amd64
+          pkg_opts: "podman-build --dist=arch"
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install podman zlib1g zlib1g-dev libssl-dev libusb-1.0-0
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
+        cmake g++ make libboost-all-dev autoconf python3-numpy python3-dev
+        python3-setuptools python3-wheel python3-pytest git
+        automake libtool bison libpcre3-dev curl libgtest-dev -qq
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: src/robotraconteur
+    - name: build-and-test
+      working-directory: src/robotraconteur
+      run: >
+        ./tools/build_files/packaging/packaging_test.py ${{ matrix.config.pkg_opts }} --out-dir=$GITHUB_WORKSPACE/out
+
+    - name: List out dir
+      run: ls -lR out || true
+    - name: Upload packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: out-linux-packaging-${{ matrix.config.os }}-${{ matrix.config.arch }}
+        path: |
+          out/*

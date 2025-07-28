@@ -79,7 +79,7 @@ void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_s
     if (d.limit > message_len())
         throw ProtocolException("Invalid message limit");
 
-    state_stack.push_back(d);
+    state_stack.push_back(RR_MOVE(d));
 }
 
 void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_state,
@@ -97,7 +97,7 @@ void AsyncMessageReaderImpl::push_state(AsyncMessageReaderImpl::state_type new_s
     if (d.limit > message_len())
         throw ProtocolException("Invalid message limit");
 
-    state_stack.push_back(d);
+    state_stack.push_back(RR_MOVE(d));
 }
 
 void AsyncMessageReaderImpl::prepare_continue(const const_buffers& other_bufs1, size_t& other_bufs_used)
@@ -134,7 +134,6 @@ void AsyncMessageReaderImpl::prepare_continue(const const_buffers& other_bufs1, 
     }
 
     other_bufs_used = boost::asio::buffer_size(other_bufs1) - boost::asio::buffer_size(this->other_bufs);
-    // other_bufs.clear();
 }
 
 size_t AsyncMessageReaderImpl::available()
@@ -389,8 +388,6 @@ bool AsyncMessageReaderImpl::read_int_x2(int64_t& num)
     return false;
 }
 
-static void null_str_deleter(std::string* s) {}
-
 bool AsyncMessageReaderImpl::read_string(MessageStringPtr& str, state_type next_state)
 {
     uint16_t l = 0;
@@ -461,7 +458,7 @@ void AsyncMessageReaderImpl::Reset()
     s.limit = 12;
     message_pos = 0;
 
-    state_stack.push_back(s);
+    state_stack.push_back(RR_MOVE(s));
 
     message_pos = 0;
 }

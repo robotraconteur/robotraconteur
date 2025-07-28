@@ -43,31 +43,40 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - os: ubuntu-18.04
-          runs_on: ubuntu-latest
-          container: ubuntu:bionic
         - os: ubuntu-20.04
-          runs_on: ubuntu-20.04
-          container: ""
+          runs_on: ubuntu-latest
+          container: "ubuntu:focal"
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
+          arch: x64
+          wheel_platform: manylinux_2_35_x86_64
         - os: ubuntu-24.04
           runs_on: ubuntu-22.04
           container: ""
-        - os: ubuntu-16.04
-          runs_on: ubuntu-latest
-          container: ubuntu:xenial
-        - os: debian-10
-          runs_on: ubuntu-latest
-          container: debian:buster-slim
+          arch: x64
+          wheel_platform: manylinux_2_39_x86_64
         - os: debian-11
           runs_on: ubuntu-latest
           container: debian:bullseye-slim
+          arch: x64
+          wheel_platform: manylinux_2_31_x86_64
+        - os: ubuntu-22.04-arm
+          runs_on: ubuntu-22.04-arm
+          container: ""
+          arch: arm64
+          wheel_platform: manylinux_2_35_aarch64
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v3
+    - name: Switch to Azure Ubuntu mirror
+      if: ${{ matrix.config.container != '' && startsWith(matrix.config.container, 'ubuntu:') }}
+      run: |
+        sed -i 's|http://archive.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+        sed -i 's|http://security.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: install sudo and tzdata
@@ -75,7 +84,7 @@ jobs:
       run: |
         apt update
         apt install sudo tzdata python3 -y
-        ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+        ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
         apt install ca-certificates-java -y
     - name: semver
@@ -91,7 +100,7 @@ jobs:
         automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel
         python3-pytest mono-devel curl libgtest-dev -qq
     - name: apt python2.7
-      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
       run: >
         sudo apt-get install python-dev python-numpy python-setuptools python-pytest -qq
     - name: install gtest
@@ -104,17 +113,17 @@ jobs:
         cmake --build .
         sudo cmake --build . --target install
     - name: build-swig
-      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
-      uses: johnwason/swig-build-action@v1
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      uses: johnwason/swig-build-action@v1.2
       with:
         cache-key: ${{ matrix.config.os }}
     - name: apt-swig
-      if: ${{ matrix.config.os == 'ubuntu-22.04' || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
       run: sudo apt-get install swig -qq -y
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.11
+      uses: hendrikmuhs/ccache-action@v1.2.18
       with:
         key: ${{ runner.os }}-${{ matrix.config.os }}-build-main-ccache
     - name: cmake cache args
@@ -136,7 +145,7 @@ jobs:
         ${{ env.CMAKE_CACHE_ARGS }}
         ../robotraconteur
     - name: configure python2.7
-      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
       working-directory: build2
       run: cmake . -DBUILD_PYTHON=ON
     - name: build
@@ -160,64 +169,121 @@ jobs:
       working-directory: build2
       run: |
         ctest . -C Release -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" --output-on-failure
+    - name: Set RR_BUILD_DIR
+      run: echo "RR_BUILD_DIR=$(pwd)/build2" >> $GITHUB_ENV
     - name: python 3.7
       if: ${{ matrix.config.os == 'ubuntu-20.04' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.7
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.8
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.8
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.9
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: 3.9
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.10
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.10"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.11
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.11"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: python 3.12
-      if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
       uses: ./robotraconteur/tools/actions/build_python_ver/linux
       with:
         python_version: "3.12"
-        arch: x64
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
+    - name: python 3.13
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: "3.13"
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      if: ${{ matrix.config.os != 'ubuntu-16.04' &&  matrix.config.os != 'ubuntu-18.04' }}
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-${{ matrix.config.os }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
         retention-days: 2
+  build-gentoo:
+    runs-on: ubuntu-latest
+    container: gentoo/stage3:latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: robotraconteur
+        repository: robotraconteur/robotraconteur
+    - name: getuto
+      run: |
+        getuto
+    - name: sync-portage
+      run: |
+        emerge-webrsync --quiet
+    - name: install-deps
+      run: >-
+        emerge --getbinpkg --usepkg
+        dev-libs/boost dev-libs/openssl
+        sys-apps/dbus dev-libs/libusb net-wireless/bluez
+        dev-cpp/gtest dev-lang/python dev-python/numpy
+        dev-python/pip dev-python/pytest dev-build/cmake
+        dev-build/ninja dev-lang/swig
+    - name: config
+      run: >-
+        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
+    - name: build
+      run: >-
+        cmake --build build --config Release
+    - name: test
+      run: >-
+        ctest --test-dir build -C Release
+        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback"
+        --output-on-failure
   build-fedora:
     runs-on: ubuntu-latest
     container: fedora:latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -246,7 +312,7 @@ jobs:
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -272,25 +338,25 @@ jobs:
         --output-on-failure
 
   build-win:
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
         config:
         - arch: x64
-          vcpkg_triplet: x64-windows-static-md-release
+          vcpkg_triplet: x64-windows-static-md-release-vc142
           cmake_arch: x64
         - arch: x86
-          vcpkg_triplet: x86-windows-static-md-release
+          vcpkg_triplet: x86-windows-static-md-release-vc142
           cmake_arch: Win32
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -298,12 +364,12 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
-        github-binarycache: true
-    - uses: actions/setup-java@v1
+    - uses: actions/setup-java@v4
       with:
         java-version: 8
         java-package: jdk
         architecture: ${{ matrix.config.arch }}
+        distribution: zulu
     - name: choco python2.7
       run: |
         choco install python2 ${{ matrix.config.arch == 'x86' && '-x86' || '' }} -r
@@ -311,7 +377,7 @@ jobs:
       run: |
         C:\python27\python -m pip install --upgrade pip
         C:\python27\python -m pip install numpy setuptools wheel pytest
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       id: python3
       with:
         python-version: '3.8'
@@ -321,11 +387,22 @@ jobs:
         python -m pip install numpy setuptools wheel pytest
     - name: choco
       run: |
-        choco install swig -r
+        choco install swig dotnet4.5 -r
+    - name: install matlab
+      if: ${{ matrix.config.arch == 'x64' }}
+      id: setup-matlab
+      uses: matlab-actions/setup-matlab@v2
+      with:
+        release: R2022b
+    - name: matlab cmake args
+      if: ${{ matrix.config.arch == 'x64' }}
+      run: |
+        echo "MATLAB_ROOT=${{ steps.setup-matlab.outputs.matlabroot }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "CMAKE_MATLAB_ARGS=-DBUILD_MATLAB_MEX=ON" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: mikehardy/buildcache-action@v1
+      uses: mikehardy/buildcache-action@v2
       with:
         cache_key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main-buildcache
     - name: cmake cache args
@@ -338,6 +415,7 @@ jobs:
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: ${{ matrix.config.arch }}
+        toolset: "14.2"
     - name: configure
       run: >
         cmake -G "Ninja" -DBUILD_GEN=ON -DBUILD_TESTING=ON
@@ -347,7 +425,7 @@ jobs:
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
-        ${{ env.CMAKE_CACHE_ARGS }}
+        ${{ env.CMAKE_CACHE_ARGS }} ${{ env.CMAKE_MATLAB_ARGS }}
         -DCMAKE_BUILD_TYPE=Release
         -S robotraconteur -B build2
     - name: build
@@ -358,7 +436,7 @@ jobs:
       if: ${{ matrix.config.arch != 'x86' }}
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure
+        ctest . -C Release --output-on-failure -E matlab
     - name: test x86
       if: ${{ matrix.config.arch == 'x86' }}
       working-directory: build2
@@ -406,32 +484,62 @@ jobs:
         python_version: "3.12"
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.13
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: "3.13"
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: set matlab test env
+      if: ${{ matrix.config.arch == 'x64' }}
+      run: |
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB=${{github.workspace}}/build2/test/out/bin/robotraconteur_test_server_lib.dll | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB_HFILE=${{ github.workspace }}/robotraconteur/test/cpp/service/test_server_lib.h | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    - name: matlab test
+      if: ${{ matrix.config.arch == 'x64' }}
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
+    - name: build matlab zip
+      shell: pwsh
+      working-directory: build2/out
+      if: ${{ matrix.config.arch == 'x64' }}
+      run: |
+        cp ../../robotraconteur/LICENSE.txt Matlab
+        $Env:RR_VER = Get-Content ..\rrversion.txt
+        Copy-Item -Path Matlab -Destination RobotRaconteur-$Env:RR_VER-MATLAB-win64 -Recurse
+        Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.pdb
+        Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.lib
+        Remove-Item RobotRaconteur-$Env:RR_VER-MATLAB-win64\*.exp
+        Compress-Archive -Path RobotRaconteur-$Env:RR_VER-MATLAB-win64 -DestinationPath RobotRaconteur-$Env:RR_VER-MATLAB-win64.zip
     - name: move out
       run: |
         copy build2/rrversion.txt build2/out/
         copy robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-win-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-win-${{ matrix.config.arch }}'
         path: build2/*
         retention-days: 2
 
   build-win-shared:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -439,11 +547,10 @@ jobs:
         extra-args: --clean-after-build
         cache-key: win-shared-build-main
         token: ${{ github.token }}
-        github-binarycache: true
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: mikehardy/buildcache-action@v1
+      uses: mikehardy/buildcache-action@v2
       with:
         cache_key: win64-shared-build-main-buildcache
     - uses: ilammy/msvc-dev-cmd@v1
@@ -468,7 +575,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-win-shared'
         path: build2/*
@@ -480,7 +587,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - runner: macos-12
+        - runner: macos-13
           vcpkg_triplet: x64-osx-dynamic-release
           arch: x64
           homebrew_root: /usr/local
@@ -496,15 +603,15 @@ jobs:
     env:
       LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: brew
       run: |
-        brew install swig boost openssl googletest
-    - uses: actions/setup-python@v4
+        brew install swig boost openssl googletest icu4c
+    - uses: actions/setup-python@v5
       id: python3
       with:
         python-version: ${{ matrix.config.py-version }}
@@ -515,7 +622,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.11
+      uses: hendrikmuhs/ccache-action@v1.2.18
       with:
         key: ${{ runner.os }}-build-main-ccache-${{ matrix.config.arch }}
     - name: cmake cache args
@@ -527,7 +634,7 @@ jobs:
     - name: configure
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=ON -DBUILD_PYTHON3=ON -DBUILD_PYTHON3_WHEEL=OFF
-        -DBUILD_JAVA=ON
+        -DBUILD_JAVA=ON -DBUILD_DOCUMENTATION=OFF
         -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release
         -DPACKAGE_SWIG_SOURCE_ALL=ON
         -DBUILD_PYTHON=OFF -DBUILD_PYTHON_WHEEL=OFF -DOPENSSL_ROOT_DIR=${{ matrix.config.homebrew_root }}/opt/openssl
@@ -577,19 +684,24 @@ jobs:
       with:
         python_version: "3.12"
         arch: ${{ matrix.config.arch }}
+    - name: python 3.13
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: "3.13"
+        arch: ${{ matrix.config.arch }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-osx-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-osx-${{ matrix.config.arch }}'
         path: build2/*
@@ -597,44 +709,45 @@ jobs:
 
   build-matlab:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
-    - name: semver
-      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - name: apt update
-      run: sudo apt update
     - name: apt
       run: >
-        sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0
+        sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0 python3 wget curl
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
-        git cmake g++ make mono-devel libgtest-dev gcc-8 g++-8 -qq
+        git cmake g++ make mono-devel libgtest-dev gcc-9 g++-9
+        unzip wget xkb-data zlib1g
+        zip tar
+        -qq
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: Configure default compilers
       run: |
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v1
+      uses: matlab-actions/setup-matlab@v2
       with:
-        release: R2020b
+        release: R2022b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
-        triplet: x64-linux-matlab
+        triplet: x64-linux-matlab-gcc9
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
-        cache-key: ubuntu-build-matlab
+        cache-key: ubuntu-build-matlab-gcc9
         token: ${{ github.token }}
-        github-binarycache: true
+
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.11
+      uses: hendrikmuhs/ccache-action@v1.2.18
       with:
         key: ${{ runner.os }}-matlab-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}
     - name: cmake cache args
@@ -656,10 +769,16 @@ jobs:
       working-directory: build2
       run: |
         cmake --build . --config Release -j 4
-    - name: test
-      working-directory: build2
+    - name: set test env
       run: |
-        ctest . -C Release --output-on-failure
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB=${{github.workspace}}/build2/test/out/lib/librobotraconteur_test_server_lib.so >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB_HFILE=${{ github.workspace }}/robotraconteur/test/cpp/service/test_server_lib.h >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
+        echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
+    - name: test
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: matlab out tar
       run: >
         export RR_VER=`cat build2/rrversion.txt`
@@ -673,33 +792,135 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-matlab'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-matlab'
         path: build2/*
         retention-days: 2
 
-  build-conda-win:
-    runs-on: windows-2019
+  build-matlab-osx:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - runner: macos-13
+          vcpkg_triplet: x64-osx-static-release
+          arch: x64
+          homebrew_root: /usr/local
+          cmake-args: -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_JAVA=ON -DBUILD_NET=ON
+          matlab-plat-suffix: maci64
+          matlab-ver: R2022b
+        - runner: macos-14
+          vcpkg_triplet: arm64-osx-static-release
+          arch: arm64
+          homebrew_root: /opt/homebrew
+          cmake-args: -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
+          matlab-plat-suffix: maca64
+          matlab-ver: R2023b
+    runs-on: ${{ matrix.config.runner }}
+
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        path: robotraconteur
+    - name: semver
+      run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
+    - name: Set up MATLAB
+      uses: matlab-actions/setup-matlab@v2
+      with:
+        release: ${{ matrix.config.matlab-ver }}
+    - name: vcpkg build
+      uses: johnwason/vcpkg-action@v7
+      id: vcpkg
+      with:
+        pkgs: ${{ env.VCPKG_PKGS }}
+        triplet: ${{ matrix.config.vcpkg_triplet }}
+        extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
+        cache-key: osx-build-matlab-${{ matrix.config.arch }}
+        token: ${{ github.token }}
+
+    - name: cache-build
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      id: cache-build
+      uses: hendrikmuhs/ccache-action@v1.2.18
+      with:
+        key: ${{ runner.os }}-matlab-osx-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}-${{ matrix.config.arch }}
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" >> $GITHUB_ENV
+    - name: configure
+      run: >
+        cmake -G "Ninja"
+        -DBUILD_GEN=ON  -DBUILD_TESTING=ON
+        -DBoost_USE_STATIC_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_MATLAB_MEX=ON
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+        ${{ env.CMAKE_CACHE_ARGS }}
+        -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . --config Release -j 4
+    - name: set test env
+      run: |
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB=${{github.workspace}}/build2/test/out/lib/librobotraconteur_test_server_lib.dylib >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_TEST_SERVER_LIB_HFILE=${{ github.workspace }}/robotraconteur/test/cpp/service/test_server_lib.h >> $GITHUB_ENV
+        echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
+        echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
+    - name: test
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
+    - name: matlab out tar
+      run: |
+        export RR_VER=`cat build2/rrversion.txt`
+        cp robotraconteur/LICENSE.txt build2/out/Matlab
+        cd build2/out
+        cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
+        tar -cf RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}.tar.gz RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
+    - name: move out
+      run: |
+        cp robotraconteur/LICENSE.txt build2/out/
+        cp build2/rrversion.txt build2/out/
+        mv build2/out .
+    - name: archive out
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'out-matlab-osx-${{ matrix.config.arch }}'
+        path: out/*
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'build-artifacts-matlab-osx-${{ matrix.config.arch }}'
+        path: build2/*
+        retention-days: 2
+
+  build-conda-win:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
         channels: conda-forge,robotraconteur
     - name: conda install
       run: >
-        conda install git cmake boost-cpp python swig numpy pytest ninja pip vs2019_win-64 vs2015_runtime gtest gmock
+        conda install git cmake libboost-devel python swig numpy pytest ninja pip vs2019_win-64 vs2015_runtime gtest gmock
     - name: configure
       run: >
         cmake -GNinja -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE:STRING=Release
@@ -717,15 +938,15 @@ jobs:
       shell: cmd /C call {0}
 
   build-conda-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: bluez-src
         repository: bluez/bluez
@@ -744,13 +965,13 @@ jobs:
       run: |
         sudo apt update -qq
         sudo apt install --no-install-recommends libbluetooth-dev -qq
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
         channels: conda-forge
     - name: conda install
       run: >
-        conda install git cmake boost-cpp python swig numpy pytest pip dbus make zlib openssl libusb compilers gcc_impl_linux-64 gtest gmock
+        conda install git cmake libboost-devel python swig numpy pytest pip dbus make zlib openssl libusb compilers gcc_impl_linux-64 gtest gmock
     - name: printenv
       run: printenv
     - name: configure
@@ -768,27 +989,27 @@ jobs:
         ctest . -C Release --output-on-failure
 
   build-conda-osx:
-    runs-on: macos-12
+    runs-on: macos-13
     defaults:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
         channels: conda-forge,robotraconteur
     - name: conda install
       run: >
-        conda install git cmake boost-cpp python swig numpy pytest pip dbus clang clangxx compiler-rt openssl gtest gmock
+        conda install git cmake libboost-devel python swig numpy pytest pip dbus clang clangxx compiler-rt openssl gtest gmock
     - name: configure
       run: >
         cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON -DCMAKE_BUILD_TYPE:STRING=Release
-        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}" -DBUILD_DOCUMENTATION=OFF
         -DPYTHON3_EXECUTABLE=$CONDA_PREFIX/bin/python -DOPENSSL_ROOT_DIR=$CONDA_PREFIX -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -817,7 +1038,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: semver
@@ -910,25 +1131,25 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-android-${{ matrix.config.android_abi }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-android-${{ matrix.config.android_abi }}'
         path: build2/*
         retention-days: 2
   build-ios:
-    runs-on: macos-12
+    runs-on: macos-14
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
@@ -936,8 +1157,6 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
         token: ${{ github.token }}
-        revision: 2023.08.09
-        github-binarycache: true
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
@@ -954,114 +1173,153 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'out-ios-arm64'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'build-artifacts-ios-arm64'
         path: build2/*
         retention-days: 2
   build-pyodide:
-    runs-on: ubuntu-22.04
-    container: pyodide/pyodide-env:20240127-chrome114-firefox122-py312
+    runs-on: ubuntu-latest
     env:
       EMSDK_NUM_CORES: 3
       EMCC_CORES: 3
       PYODIDE_JOBS: 3
-      #CCACHE_DIR: /tmp/dep-ccache
-      HOME: /root
+    defaults:
+      run:
+        shell: bash -el {0}
     steps:
     - uses: actions/checkout@v4
       with:
-        path: rr_src
+        path: robotraconteur
     - uses: actions/checkout@v4
       with:
         repository: pyodide/pyodide
-        path: src
+        path: pyodide_src
+        submodules: recursive
+    - uses: actions/checkout@v4
+      with:
+        repository: pyodide/pyodide-recipes
+        path: pyodide_recipes_src
     # - name: ccache deps
     #   uses: actions/cache@v3
     #   with:
     #     path: |
     #       /tmp/dep-ccache
     #     key: pyodide-deps-${{ hashFiles('Makefile.envs') }}
-    - name: cp meta.yaml
-      run: |
-        cp rr_src/tools/build_files/pyodide/meta.yaml src/packages/RobotRaconteur/meta.yaml
     - name: apt
       run: |
         sudo apt update
-        sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev
+        sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev j2cli
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        activate-environment: pyodide-env
+        environment-file: pyodide_src/environment.yml
+        channels: conda-forge
     - name: pip-install
-      working-directory: src
+      working-directory: pyodide_src
       run: |
-        pip install pyodide-build
         pip install -r requirements.txt
         pip install numpy
-    - name: playwright install
-      run: playwright install
     - name: deps build
-      working-directory: src
+      working-directory: pyodide_src
       run: |
-        make -C emsdk
-        make -C cpython
-        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,boost-cpp,pytest,pyyaml"
-        make
-    - name: remove apt swig
-      run: sudo apt remove '^swig.*' -y -qq || true
-    - name: build-swig
-      uses: johnwason/swig-build-action@v1.1
-      with:
-        cache-key: pyodide-swig
+        make all-but-packages
+        pip install ./pyodide-build --break-system-packages --root-user-action ignore
     - name: build pregenerated_src
       run: |
-        cmake -S $GITHUB_WORKSPACE/rr_src -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF -DPYTHON3_EXECUTABLE=/usr/local/bin/python3
+        cmake -S $GITHUB_WORKSPACE/robotraconteur -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF
         cmake --build gen_src --config Release --target package_source_swig
-        cp -r $GITHUB_WORKSPACE/gen_src/generated_src $GITHUB_WORKSPACE/rr_src/
-        cmake --build gen_src --config Release --target install -j4
+        cp -r $GITHUB_WORKSPACE/gen_src/generated_src $GITHUB_WORKSPACE/robotraconteur/
+        cmake --build gen_src --config Release -j4
         python -m pip install $GITHUB_WORKSPACE/gen_src/out/Python3
     - name: build
-      working-directory: src
+      working-directory: pyodide_src
       # env:
       #   CCACHE_DIR: /tmp/ccache
       run: |
         # mkdir -p /tmp/ccache
-        ln -s $GITHUB_WORKSPACE/rr_src /rr_src
-        pyodide build-recipes-no-deps RobotRaconteur
-        pyodide build-recipes RobotRaconteur numpy pytest Jinja2 micropip pyyaml --install
+        export version=$(sed -n 's/^#define[ \t]*ROBOTRACONTEUR_VERSION_TEXT[ \t]*"\([^"]*\)".*/\1/p' $GITHUB_WORKSPACE/robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h)
+        export rr_src_path=$GITHUB_WORKSPACE/robotraconteur
+        export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,libboost,pytest,pyyaml,RobotRaconteur"
+        j2 $GITHUB_WORKSPACE/robotraconteur/tools/build_files/pyodide-recipes/RobotRaconteur/meta.yaml.j2 > $GITHUB_WORKSPACE/pyodide_recipes_src/packages/RobotRaconteur/meta.yaml
+        pyodide build-recipes --recipe-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/packages --install $PYODIDE_PACKAGES
     - name: test
-      working-directory: src
-      run: pytest $GITHUB_WORKSPACE/rr_src/test/pyodide --runtime=firefox-no-host --runner=playwright -s --dist-dir=$GITHUB_WORKSPACE/src/dist
+      working-directory: pyodide_src
+      run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_src/dist
     - name: archive dist
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'pyodide-dist'
-        path: src/dist/*
+        path: pyodide_src/dist/*
     - name: archive package logs
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'pyodide-package-logs'
-        path: src/packages/build-logs/*
-
+        path: pyodide_recipes_src/packages/build-logs/*
+  build-matlab-toolbox:
+    needs:
+    - build-win
+    - build-matlab
+    - build-matlab-osx
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        path: robotraconteur
+    - uses: actions/download-artifact@v4
+      with:
+        path: artifacts/main
+        pattern: "out-matlab*"
+    - uses: actions/download-artifact@v4
+      with:
+        path: artifacts/main
+        pattern: out-win-x64
+    - name: install matlab
+      id: setup-matlab
+      uses: matlab-actions/setup-matlab@v2
+      with:
+        release: R2022b
+    - name: prepare matlab toolbox
+      run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox2.py
+    - name: build matlab toolbox
+      uses: matlab-actions/run-command@v2
+      with:
+        command: cd('${{github.workspace}}/build-matlab-toolbox/build'); matlab.addons.toolbox.packageToolbox('RobotRaconteurMatlab.prj','RobotRaconteurMatlab');
+    - name: finish matlab toolbox
+      run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox3.py
+    - name: move matlab toolbox
+      run: |
+        mv build-matlab-toolbox/build/*.mltbx ${{github.workspace}}
+    - name: upload matlab toolbox
+      uses: actions/upload-artifact@v4
+      with:
+        name: out-matlab-toolbox
+        path: "*.mltbx"
   build-dist:
     needs:
     - build-ubuntu
     - build-win
     - build-osx
     - build-matlab
+    - build-matlab-osx
     - build-android
-    runs-on: ubuntu-20.04
+    - build-matlab-toolbox
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
-    - uses: nuget/setup-nuget@v1
+    - uses: nuget/setup-nuget@v2
     - name: Download CI artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/main
     - name: collect source
@@ -1077,13 +1335,13 @@ jobs:
     - name: build android package
       run: python robotraconteur/packaging/scripts/build_android_package.py
     - name: archive distfiles
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 'distfiles'
         path: distfiles/*
     - name: make release
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.BOT_GITHUB_TOKEN }}
         draft: true
@@ -1094,17 +1352,17 @@ jobs:
     env:
       SKIP: no-commit-to-branch
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
     - name: apt
       run: |
         sudo apt update
         sudo apt install -y dos2unix
     - uses: pre-commit/action@v3.0.1
   clang-tidy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: apt update
@@ -1140,7 +1398,7 @@ jobs:
   cppcheck:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: apt update
@@ -1169,7 +1427,7 @@ jobs:
   codecov:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1206,7 +1464,7 @@ jobs:
         gcovr -r . --config=test/codecov/gcovr/gcovr.cfg --html-details -o build/codecov/codecov.html build
         gcovr -r . --config=test/codecov/gcovr/gcovr.cfg -s build
     - name: upload codecov
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: codecov
         path: build/codecov
@@ -1214,9 +1472,9 @@ jobs:
   vcpkg-test-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1224,7 +1482,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-win
         token: ${{ github.token }}
-        github-binarycache: true
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
@@ -1243,7 +1500,7 @@ jobs:
     env:
       VCPKG_MAX_CONCURRENCY: 2
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1252,7 +1509,7 @@ jobs:
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
         git cmake g++ make curl libgtest-dev -qq
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1260,7 +1517,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-linux
         token: ${{ github.token }}
-        github-binarycache: true
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
@@ -1272,7 +1528,7 @@ jobs:
         ./disttest_cpp
       # Archive all logs
     - name: Archive all logs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: logs
@@ -1280,11 +1536,11 @@ jobs:
           **/*.log
 
   vcpkg-test-osx:
-    runs-on: macos-12
+    runs-on: macos-13
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1292,7 +1548,6 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-osx
         token: ${{ github.token }}
-        github-binarycache: true
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
@@ -1316,11 +1571,11 @@ jobs:
         - arch: x86
           wheel_arch: win32
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: Download distfiles
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/distfiles
         name: distfiles
@@ -1358,7 +1613,7 @@ jobs:
     - build-dist
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: apt
@@ -1366,12 +1621,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libboost-all-dev libssl-dev zlib1g-dev -y
     - name: Download distfiles
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/distfiles
         name: distfiles
     - name: Download distfiles out-ubuntu
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/out-ubuntu
         name: out-ubuntu-22.04
@@ -1405,7 +1660,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - runner: macos-12
+        - runner: macos-13
           vcpkg_triplet: x64-osx-dynamic-release
           arch: x64
           wheel_arch: x86_64
@@ -1415,16 +1670,16 @@ jobs:
           wheel_arch: arm64
     runs-on: ${{ matrix.config.runner }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: Download distfiles
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/distfiles
         name: distfiles
     - name: Download distfiles out-osx
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts/out-osx
         name: out-osx-${{ matrix.config.arch }}
@@ -1461,6 +1716,11 @@ jobs:
         python_version: "3.12"
         wheel_filename: RobotRaconteur-*-cp312-cp312-macosx*${{ matrix.config.wheel_arch }}.whl
         arch: ${{ matrix.config.arch }}
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.13"
+        wheel_filename: RobotRaconteur-*-cp313-cp313-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     # - name: .net test
     #   uses: ./robotraconteur/test/dist/net/action/osx
 
@@ -1471,18 +1731,15 @@ jobs:
       fail-fast: false
       matrix:
         config:
+        - os: ubuntu-24.04
+          runs_on: ubuntu-24.04
+          container: ""
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
-        - os: ubuntu-16.04
+        - os: debian-11
           runs_on: ubuntu-latest
-          container: ubuntu:xenial
-        - os: debian-10
-          runs_on: ubuntu-latest
-          container: debian:buster-slim
-        cxx_standard:
-        - ""
-        - "-DCMAKE_CXX_STANDARD=11"
+          container: debian:bullseye-slim
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -1491,7 +1748,7 @@ jobs:
       run: |
         apt-get update
         apt-get install git -y
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
     - name: clone robotraconteur_companion
@@ -1500,7 +1757,7 @@ jobs:
       if: ${{ matrix.config.container != '' }}
       run: |
         apt install sudo tzdata python3 -y
-        ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+        ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
         dpkg-reconfigure --frontend noninteractive tzdata
     - name: apt update
       run: sudo apt update
@@ -1535,16 +1792,16 @@ jobs:
         cmake ..
         sudo make install
     - name: build-swig
-      if: ${{ matrix.config.os != 'ubuntu-22.04' && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
-      uses: johnwason/swig-build-action@v1
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      uses: johnwason/swig-build-action@v1.2
       with:
         cache-key: ${{ matrix.config.os }}
     - name: apt-swig
-      if: ${{ matrix.config.os == 'ubuntu-22.04' || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
       run: sudo apt-get install swig -qq -y
     - name: cache-build
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.11
+      uses: hendrikmuhs/ccache-action@v1.2.18
       with:
         key: ${{ runner.os }}-${{ matrix.config.os }}-build-companion-ccache
     - name: cmake cache args
@@ -1563,7 +1820,7 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         ../robotraconteur
     - name: build
       working-directory: build2
@@ -1575,7 +1832,7 @@ jobs:
         cmake -G "Unix Makefiles"
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ${{ matrix.cxx_standard }}
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DRobotRaconteur_DIR=$GITHUB_WORKSPACE/build2  -DBUILD_TESTING=ON
         -DROBOTRACONTEUR_GEN_EXECUTABLE=$GITHUB_WORKSPACE/build2/out/bin/RobotRaconteurGen
         -DEigen3_DIR=/usr/lib/cmake/eigen3
@@ -1590,18 +1847,18 @@ jobs:
         ctest -C Release --output-on-failure
 
   companion-build-win:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: robotraconteur
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: robotraconteur/robotraconteur_companion
         submodules: recursive
         path: robotraconteur_companion
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v6
+      uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }} yaml-cpp eigen3 opencv
@@ -1609,13 +1866,12 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-x64-build-companion
         token: ${{ github.token }}
-        github-binarycache: true
     - name: choco
       run: |
         choco install swig -r
     - name: cache-build
       id: cache-build
-      uses: mikehardy/buildcache-action@v1
+      uses: mikehardy/buildcache-action@v2
       with:
         cache_key: ${{ runner.os }}-x64-build-companion-buildcache
     - uses: ilammy/msvc-dev-cmd@v1
@@ -1663,10 +1919,11 @@ jobs:
         ROS_DISTRO:
         - noetic
         - humble
-        - iron
         - jazzy
+        - kilted
+        - rolling
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: src/robotraconteur
     - name: apt update
@@ -1695,10 +1952,11 @@ jobs:
       matrix:
         ROS_DISTRO:
         - humble
-        - iron
         - jazzy
+        - kilted
+        - rolling
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: src/robotraconteur
     - name: apt update
@@ -1721,3 +1979,347 @@ jobs:
         ROS_REPO: main
         PRERELEASE: true
         ROSDEP_SKIP_KEYS: python3-setuptools
+
+  build-old-ubuntu:
+    runs-on: ${{ matrix.config.runs_on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - os: ubuntu-16.04
+          runs_on: ubuntu-latest
+          container: ubuntu:xenial
+        - os: ubuntu-18.04
+          runs_on: ubuntu-latest
+          container: ubuntu:bionic
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: src/robotraconteur
+    - uses: actions/checkout@v4
+      with:
+        repository: robotraconteur/robotraconteur_companion
+        submodules: recursive
+        path: src/robotraconteur_companion
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        sudo apt-get install podman -qq
+    - name: build-and-test
+      run: >
+        podman run -v ${{github.workspace}}/src:/work/src -w /work --rm
+        ${{matrix.config.container}} /work/src/robotraconteur/tools/build_files/old_ubuntu_build/old_ubuntu_build.sh
+
+  test-ros-package-python-path:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - jazzy
+        - kilted
+        - rolling
+        - noetic
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        apt-get install -y
+        zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
+        libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
+        git cmake g++ make libboost-all-dev autoconf fakeroot
+        automake libtool bison libpcre3-dev curl libgtest-dev devscripts debhelper python3-bloom -qq
+    - name: install swig
+      if: ${{ matrix.ROS_DISTRO == 'noetic' }}
+      uses: johnwason/swig-build-action@v1.2
+      with:
+        cache-key: ros-package-python-path-${{ matrix.ROS_DISTRO }}-swig
+    - name: apt-swig
+      if: ${{ matrix.ROS_DISTRO != 'noetic' }}
+      run: sudo apt-get install swig -qq -y
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: src/robotraconteur
+    - run: |
+        rosdep update --include-eol-distros
+        bloom-generate rosdebian
+      working-directory: src/robotraconteur
+    - run: DEB_BUILD_OPTIONS=nocheck debuild -us -uc -b
+      working-directory: src/robotraconteur
+    - run: sudo dpkg -i ../*robotraconteur_*.deb
+      working-directory: src/robotraconteur
+    - name: test python path
+      run: |
+        set -e
+        source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+    - name: copy deb
+      run: cp src/*.deb .
+    - name: upload deb
+      uses: actions/upload-artifact@v4
+      with:
+        name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
+        path: "*.deb"
+  test-ros-package-python-path-install:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    needs: test-ros-package-python-path
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - jazzy
+        - kilted
+        - rolling
+        - noetic
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: download deb
+      uses: actions/download-artifact@v4
+      with:
+        name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
+    - name: apt update
+      run: sudo apt update
+    - name: install deb
+      run: sudo dpkg -i *.deb || true
+    - name: apt install
+      run: sudo apt-get install -f -y
+    - name: test python path
+      run: |
+        set -e
+        source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+
+  test-ros-colcon-python-path:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - humble
+        - jazzy
+        - kilted
+        - rolling
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        apt-get install -y
+        git cmake g++ make autoconf fakeroot swig
+        automake libtool bison libpcre3-dev curl python3-colcon-common-extensions -qq
+    - name: rosdep install
+      run: |
+        rosdep update --include-eol-distros
+        rosdep install --from-paths src --ignore-src -y
+      working-directory: workspace
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: workspace/src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: workspace/src/robotraconteur
+    - run: |
+        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
+      working-directory: workspace
+    - name: test python path
+      working-directory: workspace
+      run: |
+        set -e
+        source install/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+  test-ros-catkin-python-path:
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.ROS_DISTRO }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO:
+        - noetic
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: >
+        apt-get install -y
+        git cmake g++ make libboost-all-dev autoconf fakeroot
+        automake libtool bison libpcre3-dev curl libgtest-dev  -qq
+    - name: rosdep install
+      run: |
+        rosdep update --include-eol-distros
+        rosdep install --from-paths src --ignore-src -y
+      working-directory: workspace
+    - name: build swig
+      uses: johnwason/swig-build-action@v1.2
+      with:
+        cache-key: ros-catkin-${{ matrix.ROS_DISTRO }}-swig
+    - run: ./tools/build_files/generated_src/populate_generated_src.bash
+      working-directory: workspace/src/robotraconteur
+    - run: cp tools/build_files/ros/cmake_config_options.cmake .
+      working-directory: workspace/src/robotraconteur
+    - run: |
+        set -e
+        source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
+        catkin_make_isolated --install --cmake-args -DCMAKE_BUILD_TYPE=Release
+      working-directory: workspace
+    - name: test python path
+      working-directory: workspace
+      run: |
+        set -e
+        source install_isolated/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+  # RobotStack rosdep tests disabled until issue is resolved:
+  # https://github.com/conda-forge/rosdep-feedstock/issues/33
+  # test-ros-colcon-win-robostack:
+  #   runs-on: windows-latest
+  #   defaults:
+  #     run:
+  #       shell: cmd /C CALL {0}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       path: workspace/src/robotraconteur
+  #   - name: miniconda
+  #     uses: conda-incubator/setup-miniconda@v3
+  #     with:
+  #       miniconda-version: "latest"
+  #       channels: conda-forge,robostack-jazzy
+  #       activate-environment: robostack
+  #       environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+  #   - name: print environment
+  #     run: |
+  #       conda info
+  #       conda list
+  #       echo %PATH%
+  #       echo %PYTHONPATH%
+  #   - name: rosdep
+  #     run: |
+  #       rosdep init
+  #       rosdep update --include-eol-distros
+  #       rosdep install --from-paths src --ignore-src -y
+  #     working-directory: workspace
+  #   - name: colcon build
+  #     run: |
+  #       colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+  #     working-directory: workspace
+  #   - name: test python path
+  #     working-directory: workspace
+  #     run: |
+  #       install\setup.bat
+  #       if %errorlevel% neq 0 exit /b %errorlevel%
+  #       python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+  #       if %errorlevel% neq 0 exit /b %errorlevel%
+  # test-ros-colcon-unix-robostack:
+  #   runs-on: ${{ matrix.config.runner }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       config:
+  #       - os: macos
+  #         runner: macos-latest
+  #       - os: ubuntu
+  #         runner: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       shell: bash -el {0}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       path: workspace/src/robotraconteur
+  #   - name: miniconda
+  #     uses: conda-incubator/setup-miniconda@v3
+  #     with:
+  #       miniconda-version: "latest"
+  #       channels: conda-forge,robostack-jazzy
+  #       activate-environment: robostack
+  #       environment-file: workspace/src/robotraconteur/tools/build_files/ros/robostack-environment.yml
+  #   - name: print environment
+  #     run: |
+  #       conda info
+  #       conda list
+  #       echo $PATH
+  #       echo $PYTHONPATH
+  #   - name: rosdep
+  #     run: |
+  #       rosdep init
+  #       rosdep update --include-eol-distros
+  #       rosdep install --from-paths src --ignore-src -y
+  #     working-directory: workspace
+  #   - name: colcon build
+  #     run: |
+  #       colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+  #     working-directory: workspace
+  #   - name: test python path
+  #     working-directory: workspace
+  #     run: |
+  #       set -e
+  #       source install/setup.bash
+  #       python -c "import RobotRaconteur; print(RobotRaconteur.__file__)"
+
+  test-ros-colcon-mac-brew:
+    runs-on: macos-14
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: workspace/src/robotraconteur
+    - name: update brew
+      run: |
+        brew update
+        brew upgrade
+        brew install swig
+    - name: pip install dependencies
+      run: |
+        pip install -U colcon-common-extensions rosdep numpy setuptools
+        python3 -m pip install numpy setuptools --break-system-packages
+    - name: rosdep
+      run: |
+        set -e
+        sudo rosdep init
+        rosdep update --include-eol-distros
+        rosdep install --from-paths src --ignore-src -y -tbuildtool -r || true
+        rosdep install --from-paths src --ignore-src -y -tbuild -r || true
+        rosdep install --from-paths src --ignore-src -y -texec -r || true
+        rosdep install --from-paths src --ignore-src -y -ttest -r || true
+      working-directory: workspace
+    - name: colcon build
+      run: |
+        colcon build --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release -DROBOTRACONTEUR_ROS=ON
+      working-directory: workspace
+    - name: test python path
+      working-directory: workspace
+      run: |
+        source install/setup.bash
+        python3 -c "import RobotRaconteur; print(RobotRaconteur.__file__)"

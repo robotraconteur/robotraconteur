@@ -96,7 +96,12 @@ def test_wire_subscription():
         wire_sub.WireValueChanged += value_changed
         sub.GetDefaultClientWait(5)
 
-        assert wire_sub.ActiveWireConnectionCount > 0
+        for _ in range(10):
+            if wire_sub.ActiveWireConnectionCount > 0:
+                break
+            time.sleep(0.01)
+        else:
+            assert False
 
         with pytest.raises(RR.ValueNotSetException):
             _ = wire_sub.InValue
@@ -111,7 +116,12 @@ def test_wire_subscription():
         assert wire_sub.InValue == 5.0
         assert wire_sub.TryGetInValue()[1] == 5.0
 
-        assert value_changed_count[0] > 0
+        for _ in range(10):
+            if value_changed_count[0] > 0:
+                break
+            time.sleep(0.01)
+        else:
+            assert False
 
         wire_sub.InValueLifespan = 0.1
         assert wire_sub.InValueLifespan == 0.1
@@ -124,6 +134,8 @@ def test_wire_subscription():
         assert wire_sub.InValue == 6.0
 
         wire_sub2 = sub.SubscribeWire("testwire3", "*.subobj")
+
+        time.sleep(0.05)
 
         assert wire_sub2.ActiveWireConnectionCount > 0
 

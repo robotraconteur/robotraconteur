@@ -961,7 +961,6 @@ void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefi
             }
             i += boost::numeric_cast<int32_t>(t9.get<1>() * e2_count);
         }
-        // w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << std::endl;
         MEMBER_ITER_END()
     }
     w2 << "    }" << std::endl;
@@ -1021,7 +1020,6 @@ void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefi
             }
             i += boost::numeric_cast<int32_t>(t9.get<1>() * e2_count);
         }
-        // w2 << "    public " + t8.cs_type + t8.cs_arr_type + " " + t8.name + ";" << std::endl;
         MEMBER_ITER_END()
         w2 << "    }" << std::endl;
 
@@ -1044,8 +1042,6 @@ void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefi
         w2 << "    public static void getNumericArray(" << fix_name(e->Name) << "[] s, " << t6.java_type
            << t6.java_arr_type << " a, int offset)" << std::endl
            << "    {" << std::endl;
-        // w2 << "    if(a.Count < " << t4.get<1>() << " * s.Length) throw new ArgumentException(\"ArraySegment invalid
-        // length\");" << std::endl;
         w2 << "    for (int i=0; i<s.length; i++)" << std::endl << "    {" << std::endl;
         w2 << "    s[i].getNumericArray(a, offset + " << t4.get<1>() << " * i);" << std::endl;
         w2 << "    }" << std::endl;
@@ -1054,8 +1050,6 @@ void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefi
         w2 << "    public static void assignFromNumericArray(" << fix_name(e->Name) << "[] s, " << t6.java_type
            << t6.java_arr_type << " a, int offset)" << std::endl
            << "    {" << std::endl;
-        // w2 << "    if(a.Count < " << t1.get<1>() << " * s.Length) throw new ArgumentException(\"ArraySegment invalid
-        // length\");" << std::endl;
 
         w2 << "    for (int i=0; i<s.length; i++)" << std::endl << "    {" << std::endl;
         w2 << "    s[i].assignFromNumericArray(a, offset + " << t4.get<1>() << " * i);" << std::endl;
@@ -1247,7 +1241,6 @@ void JavaServiceLangGen::GenerateAsyncInterface(ServiceEntryDefinition* e, std::
         w2 << "    void async_set_" << t.name << "(" << t.java_type << t.java_arr_type
            << " value, Action1<RuntimeException> rr_handler, int rr_timeout);" << std::endl;
     }
-    // w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(FunctionDefinition)
@@ -1373,7 +1366,6 @@ void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std:
     w2 << "    }" << std::endl;
 
     w2 << "    public IStructureStub findStructureStub(String objecttype)" << std::endl << "    {" << std::endl;
-    // w2 << "    String objshort=removePath(objecttype);" << std::endl;
 
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin();
          e != d->Structures.end(); ++e)
@@ -1385,7 +1377,6 @@ void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std:
     w2 << "    }" << std::endl;
 
     w2 << "    public IPodStub findPodStub(String objecttype)" << std::endl << "    {" << std::endl;
-    // w2 << "    String objshort=removePath(objecttype);" << std::endl;
 
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end();
          ++e)
@@ -1397,7 +1388,6 @@ void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std:
     w2 << "    }" << std::endl;
 
     w2 << "    public INamedArrayStub findNamedArrayStub(String objecttype)" << std::endl << "    {" << std::endl;
-    // w2 << "    String objshort=removePath(objecttype);" << std::endl;
 
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin();
          e != d->NamedArrays.end(); ++e)
@@ -1414,7 +1404,6 @@ void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std:
        << std::endl;
     w2 << "    if (RobotRaconteurNode.splitQualifiedName(objecttype)[0].equals( \"" << d->Name << "\")) {" << std::endl;
     w2 << "    String objshort=removePath(objecttype);" << std::endl;
-    // w2 << "    switch (objshort) {" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin();
          e != d->Objects.end(); ++e)
     {
@@ -1422,9 +1411,6 @@ void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std:
         w2 << "    if(objshort.equals( \"" << objname << "\"))" << std::endl;
         w2 << "    return new " << fix_name(objname) << "_stub(innerstub);" << std::endl;
     }
-    // w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    } else {" << std::endl;
     w2 << "    String ext_service_type=(RobotRaconteurNode.splitQualifiedName(objecttype)[0]);" << std::endl;
     w2 << "    return RobotRaconteurNode.s().getServiceType(ext_service_type).createStub(innerstub);" << std::endl;
@@ -1438,7 +1424,6 @@ void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std:
     w2 << "    if ((RobotRaconteurNode.splitQualifiedName(objtype.toString())[0]).equals( \"" << d->Name << "\")) {"
        << std::endl;
     w2 << "    String sobjtype=removePath(objtype);" << std::endl;
-    // w2 << "    switch(sobjtype) {" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin();
          e != d->Objects.end(); ++e)
     {
@@ -1446,9 +1431,6 @@ void JavaServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, const std:
         w2 << "    if(sobjtype.equals( \"" << objname << "\"))" << std::endl;
         w2 << "    return new " << fix_name(objname) << "_skel((" << fix_name(objname) << ")obj);" << std::endl;
     }
-    // w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    } else {" << std::endl;
     w2 << "    String ext_service_type=(RobotRaconteurNode.splitQualifiedName(objtype.toString())[0]);" << std::endl;
     w2 << "    return RobotRaconteurNode.s().getServiceType(ext_service_type).createSkel(obj);" << std::endl;
@@ -1520,7 +1502,6 @@ void JavaServiceLangGen::GenerateStructureStub(ServiceEntryDefinition* e, std::o
        << std::endl;
 
     MEMBER_ITER_END()
-    // w2 << "    if ((s as T)==null) throw new DataTypeException(\"Incorrect structure cast\");");
     w2 << "    T st; try {st=(T)s;} catch (Exception e) {throw new RuntimeException(new "
           "DataTypeMismatchException(\"Wrong structuretype\"));}"
        << std::endl;
@@ -1613,8 +1594,6 @@ void JavaServiceLangGen::GenerateNamedArrayStub(const RR_SHARED_PTR<ServiceEntry
     w2 << "    }" << std::endl;
     w2 << "    public " << fix_name(e->Name) << " getNamedArrayStructFromNumericArray(" << t6.java_type
        << t6.java_arr_type << " m) {" << std::endl;
-    // w2 << "    if (m.lengthength != " << t4.get<1>() << ") throw new DataTypeException(\"Invalid namedarray
-    // array\");" << std::endl;
     w2 << "    " << fix_name(e->Name) << " s = new " << fix_name(e->Name) << "();" << std::endl;
     w2 << "    s.assignFromNumericArray(m,0);" << std::endl;
     w2 << "    return s;" << std::endl;
@@ -1625,8 +1604,6 @@ void JavaServiceLangGen::GenerateNamedArrayStub(const RR_SHARED_PTR<ServiceEntry
     w2 << "    }" << std::endl;
     w2 << "    public " << fix_name(e->Name) << "[] getNamedArrayFromNumericArray(" << t6.java_type << t6.java_arr_type
        << " m) {" << std::endl;
-    // w2 << "    if (m.Length % " << t4.get<1>() << " != 0) throw new DataTypeException(\"Invalid namedarray array\");"
-    // << std::endl;
     w2 << "    " << fix_name(e->Name) << "[] s = new " << fix_name(e->Name);
     if (!unsigned_int)
     {
@@ -1857,7 +1834,6 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
     MEMBER_ITER_END()
 
     w2 << "    public void dispatchEvent(String rr_membername, vectorptr_messageelement rr_m) {" << std::endl;
-    // w2 << "    switch (rr_membername) {" << std::endl;
     MEMBER_ITER2(EventDefinition)
     std::string params = str_pack_parameters_delegate(m->Parameters, false);
     w2 << "    if(rr_membername.equals( \"" << m->Name << "\"))" << std::endl << "    {" << std::endl;
@@ -1878,9 +1854,6 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
     w2 << "    return;" << std::endl;
     w2 << "    }" << std::endl;
     MEMBER_ITER_END()
-    // w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    }" << std::endl;
 
     MEMBER_ITER2(ObjRefDefinition)
@@ -1965,7 +1938,6 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
     MEMBER_ITER_END()
 
     w2 << "    public MessageElement callbackCall(String rr_membername, vectorptr_messageelement rr_m) {" << std::endl;
-    // w2 << "    switch (rr_membername) {" << std::endl;
     MEMBER_ITER2(CallbackDefinition)
     std::string params = str_pack_parameters_delegate(m->Parameters, false);
     w2 << "    if(rr_membername.equals( \"" << m->Name << "\"))" << std::endl << "    {" << std::endl;
@@ -1993,9 +1965,6 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
     }
     w2 << "    }" << std::endl;
     MEMBER_ITER_END()
-    // w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    throw new MemberNotFoundException(\"Member not found\");" << std::endl;
     w2 << "    }" << std::endl;
 
@@ -2102,7 +2071,6 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    }" << std::endl;
         w2 << "    }" << std::endl;
     }
-    // w2 << "    " + t[1] + t[2] + " " + t[0] + " { get; set; }" << std::endl;
     MEMBER_ITER_END()
 
     MEMBER_ITER2(FunctionDefinition)
@@ -2310,7 +2278,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
     w2 << "    }" << std::endl;
 
     w2 << "    public MessageElement callGetProperty(String membername) {" << std::endl;
-    // w2 << "    switch (membername) {" << std::endl;
     MEMBER_ITER2(PropertyDefinition)
     if (m->Direction() != MemberDefinition_Direction_writeonly)
     {
@@ -2323,14 +2290,10 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    }" << std::endl;
     }
     MEMBER_ITER_END()
-    // w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    throw new MemberNotFoundException(\"Member not found\");" << std::endl;
     w2 << "    }" << std::endl;
 
     w2 << "    public void callSetProperty(String membername, MessageElement m) {" << std::endl;
-    // w2 << "    switch (membername) {" << std::endl;
     MEMBER_ITER2(PropertyDefinition)
     if (m->Direction() != MemberDefinition_Direction_readonly)
     {
@@ -2342,14 +2305,10 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    }" << std::endl;
     }
     MEMBER_ITER_END()
-    // w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    throw new MemberNotFoundException(\"Member not found\");" << std::endl;
     w2 << "    }" << std::endl;
 
     w2 << "    public MessageElement callFunction(String rr_membername, vectorptr_messageelement rr_m) {" << std::endl;
-    // w2 << "    switch (rr_membername) {" << std::endl;
     MEMBER_ITER2(FunctionDefinition)
     if (!m->IsGenerator())
     {
@@ -2405,14 +2364,10 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    }" << std::endl;
     }
     MEMBER_ITER_END()
-    // w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    throw new MemberNotFoundException(\"Member not found\");" << std::endl;
     w2 << "    }" << std::endl;
 
     w2 << "    public Object getSubObj(String name, String ind) {" << std::endl;
-    // w2 << "    switch (name) {" << std::endl;
     MEMBER_ITER2(ObjRefDefinition)
     w2 << "    if(name.equals( \"" << m->Name << "\")) {" << std::endl;
     std::string indtype;
@@ -2433,9 +2388,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
     }
     w2 << "    }" << std::endl;
     MEMBER_ITER_END()
-    //	w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    throw new MemberNotFoundException(\"\");" << std::endl;
     w2 << "    }" << std::endl;
 
@@ -2527,7 +2479,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
     MEMBER_ITER_END()
 
     w2 << "    public Object getCallbackFunction(long endpoint, String membername) {" << std::endl;
-    // w2 << "    switch (membername) {" << std::endl;
     MEMBER_ITER2(CallbackDefinition)
     convert_type_result t = convert_type(*m->ReturnType);
     std::string params = str_pack_parameters(m->Parameters, true);
@@ -2535,9 +2486,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
     w2 << "    return new rr_" << fix_name(m->Name) << "(endpoint);" << std::endl;
     w2 << "    }" << std::endl;
     MEMBER_ITER_END()
-    //	w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    throw new MemberNotFoundException(\"Member not found\");" << std::endl;
     w2 << "    }" << std::endl;
 
@@ -2569,7 +2517,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
     w2 << "    }" << std::endl;
 
     w2 << "    public WrappedArrayMemoryDirector getArrayMemory(String name) {" << std::endl;
-    // w2 << "    switch (name) {" << std::endl;
     MEMBER_ITER2(MemoryDefinition)
     TypeDefinition t2;
     m->Type->CopyTo(t2);
@@ -2584,9 +2531,7 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    WrappedArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type
            << "> dir=new  WrappedArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type << ">(obj.get_"
            << fix_name(m->Name) + "());" << std::endl;
-        /*w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        w2 << "    dir.memoryid=id;" << std::endl;
-        w2 << "    dir.disown();" << std::endl;*/
+
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
         break;
@@ -2596,14 +2541,10 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         throw DataTypeException("Invalid memory definition");
     }
     MEMBER_ITER_END()
-    //	w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << std::endl;
     w2 << "    }" << std::endl;
 
     w2 << "    public WrappedMultiDimArrayMemoryDirector getMultiDimArrayMemory(String name) {" << std::endl;
-    // w2 << "    switch (name) {" << std::endl;
     MEMBER_ITER2(MemoryDefinition)
     TypeDefinition t2;
     m->Type->CopyTo(t2);
@@ -2621,9 +2562,7 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    WrappedMultiDimArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type
            << "> dir=new  WrappedMultiDimArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type << ">(obj.get_"
            << fix_name(m->Name) << "());" << std::endl;
-        /*w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        w2 << "    dir.memoryid=id;" << std::endl;
-        w2 << "    dir.disown();" << std::endl;*/
+
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
         break;
@@ -2632,9 +2571,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         throw DataTypeException("Invalid memory definition");
     }
     MEMBER_ITER_END()
-    //	w2 << "    default:" << std::endl;
-    // w2 << "    break;" << std::endl;
-    // w2 << "    }" << std::endl;
     w2 << "    throw new MemberNotFoundException(\"Member Not Found\");" << std::endl;
     w2 << "    }" << std::endl;
 
@@ -2656,9 +2592,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    WrappedPodArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type
            << "> dir=new  WrappedPodArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type << ">(obj.get_"
            << fix_name(m->Name) << "(), " << t.java_type << ".class);" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2685,9 +2618,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    WrappedPodMultiDimArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type
            << "> dir=new  WrappedPodMultiDimArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type << ">(obj.get_"
            << fix_name(m->Name) << "(), " << t.java_type << ".class);" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2715,9 +2645,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    WrappedNamedArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type
            << "> dir=new  WrappedNamedArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type << ">(obj.get_"
            << fix_name(m->Name) << "(), " << t.java_type << ".class);" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2744,9 +2671,6 @@ void JavaServiceLangGen::GenerateSkel(ServiceEntryDefinition* e, std::ostream* w
         w2 << "    WrappedNamedMultiDimArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type
            << "> dir=new  WrappedNamedMultiDimArrayMemoryDirectorJava<" << t.java_type << t.java_arr_type
            << ">(obj.get_" << fix_name(m->Name) << "(), " << t.java_type << ".class);" << std::endl;
-        // w2 << "    int id=RRObjectHeap.AddObject(dir); " << std::endl;
-        // w2 << "    dir.memoryid=id;" << std::endl;
-        // w2 << "    dir.Disown();" << std::endl;
         w2 << "    return dir;" << std::endl;
         w2 << "    }" << std::endl;
     }
@@ -2985,7 +2909,6 @@ void JavaServiceLangGen::GenerateServiceFactoryFile(ServiceDefinition* d, const 
     w2 << "package " << fix_name(d->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateServiceFactory(d, defstring, w);
 }
@@ -2998,7 +2921,6 @@ void JavaServiceLangGen::GenerateStructureFile(ServiceEntryDefinition* d, std::o
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateStructure(d, w);
 }
@@ -3011,7 +2933,6 @@ void JavaServiceLangGen::GenerateStructureStubFile(ServiceEntryDefinition* d, st
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateStructureStub(d, w);
 }
@@ -3024,7 +2945,6 @@ void JavaServiceLangGen::GeneratePodFile(ServiceEntryDefinition* d, std::ostream
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GeneratePod(d, w);
 }
@@ -3037,7 +2957,6 @@ void JavaServiceLangGen::GenerateNamedArrayFile(const RR_SHARED_PTR<ServiceEntry
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateNamedArray(d, w);
 }
@@ -3050,7 +2969,6 @@ void JavaServiceLangGen::GeneratePodStubFile(ServiceEntryDefinition* d, std::ost
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GeneratePodStub(d, w);
 }
@@ -3063,7 +2981,6 @@ void JavaServiceLangGen::GenerateNamedArrayStubFile(const RR_SHARED_PTR<ServiceE
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateNamedArrayStub(d, w);
 }
@@ -3076,7 +2993,6 @@ void JavaServiceLangGen::GenerateInterfaceFile(ServiceEntryDefinition* d, std::o
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateInterface(d, w);
 }
@@ -3089,7 +3005,6 @@ void JavaServiceLangGen::GenerateAsyncInterfaceFile(ServiceEntryDefinition* d, s
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateAsyncInterface(d, w);
 }
@@ -3102,7 +3017,6 @@ void JavaServiceLangGen::GenerateStubFile(ServiceEntryDefinition* d, std::ostrea
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateStub(d, w);
 }
@@ -3132,14 +3046,22 @@ static std::string JavaServiceLangGen_EscapeString_Formatter(const boost::smatch
     if (i == "\t")
         return "\\t";
 
-    std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
-
     std::stringstream v2;
     v2 << std::hex << std::setfill('0');
+
+#ifndef ROBOTRACONTEUR_NO_CXX11
+    std::basic_string<char16_t> v = boost::locale::conv::utf_to_utf<char16_t>(i);
+    BOOST_FOREACH (const char16_t& v3, v)
+    {
+        v2 << std::setw(0) << "\\u" << std::setw(4) << v3;
+    }
+#else
+    std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);
     BOOST_FOREACH (const uint16_t& v3, v)
     {
         v2 << std::setw(0) << "\\u" << std::setw(4) << v3;
     }
+#endif
 
     return v2.str();
 }
@@ -3354,9 +3276,6 @@ void JavaServiceLangGen::GenerateConstants(ServiceDefinition* d, std::ostream* w
         }
     }
 
-    BOOST_FOREACH (RR_SHARED_PTR<EnumDefinition>& e, d->Enums)
-    {}
-
     w2 << "}" << std::endl;
 }
 
@@ -3368,7 +3287,6 @@ void JavaServiceLangGen::GenerateExceptionFile(ExceptionDefinition* exp, Service
     w2 << "package " << fix_name(d->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateDocString(exp->DocString, "    ", w);
 
@@ -3389,9 +3307,6 @@ void JavaServiceLangGen::GenerateEnumFile(EnumDefinition* e, ServiceDefinition* 
 
     w2 << "//This file is automatically generated. DO NOT EDIT!" << std::endl;
     w2 << "package " << fix_name(d->Name) << ";" << std::endl;
-    // w2 << "import java.util.*;" << std::endl;
-    // w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateDocString(e->DocString, "", w);
     w2 << "public enum " << fix_name(e->Name) << std::endl;
@@ -3443,7 +3358,6 @@ void JavaServiceLangGen::GenerateConstantsFile(ServiceDefinition* d, std::ostrea
     w2 << "package " << fix_name(d->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateConstants(d, w);
 }
@@ -3456,7 +3370,6 @@ void JavaServiceLangGen::GenerateSkelFile(ServiceEntryDefinition* d, std::ostrea
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateSkel(d, w);
 }
@@ -3469,7 +3382,6 @@ void JavaServiceLangGen::GenerateDefaultImplFile(ServiceEntryDefinition* d, std:
     w2 << "package " << fix_name(d->ServiceDefinition_.lock()->Name) << ";" << std::endl;
     w2 << "import java.util.*;" << std::endl;
     w2 << "import com.robotraconteur.*;" << std::endl;
-    // w2 << "using System.Collections.Generic;" << std::endl << std::endl;
 
     GenerateDefaultImpl(d, w);
 }

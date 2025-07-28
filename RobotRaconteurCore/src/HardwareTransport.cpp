@@ -281,6 +281,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                                                    "HardwareTransport failed opening path \""
                                                        << boost::locale::conv::utf_to_utf<char>(*win_path)
                                                        << "\" error code " << GetLastError());
+                throw ConnectionException("Could not open USB device");
             }
         }
         else if (transport == "pci")
@@ -306,6 +307,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                                                        "HardwareTransport failed opening path \""
                                                            << boost::locale::conv::utf_to_utf<char>(*win_path)
                                                            << "\" error code " << GetLastError());
+                    throw ConnectionException("Could not open USB device");
                 }
             }
         }
@@ -341,6 +343,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                                                    "HardwareTransport failed opening path \""
                                                        << boost::locale::conv::utf_to_utf<char>(*win_path)
                                                        << "\" error code " << GetLastError());
+                throw ConnectionException("Could not open Bluetooth device");
             }
         }
         else
@@ -395,6 +398,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                                    "HardwareTransport failed opening path \"" << *dev_path
                                                                                               << "\" errno: " << errno);
+                throw ConnectionException("Could not open USB device");
             }
         }
         else if (transport == "pci")
@@ -420,6 +424,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                                        "HardwareTransport failed opening path \""
                                                            << *dev_path << "\" errno: " << errno);
+                    throw ConnectionException("Could not open PCI device");
                 }
             }
         }
@@ -457,6 +462,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, ep->GetLocalEndpoint(),
                                                        "HardwareTransport failed opening path \""
                                                            << *dev_path << "\" error code " << errno);
+                    throw ConnectionException("Could not open Bluetooth device");
                 }
             }
         }
@@ -495,6 +501,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
         ROBOTRACONTEUR_LOG_INFO_COMPONENT(
             node, Transport, ep->GetLocalEndpoint(),
             "HardwareTransport could not connect to service URL: " << url << " error: " << exp.what());
+        throw;
     }
 }
 
@@ -507,8 +514,16 @@ void HardwareTransport::AsyncCreateTransportConnection2(
     RR_UNUSED(noden);
     if (err)
     {
-        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(),
-                                          "HardwareTransport failed to connect to device: " << err->what());
+        if (transport)
+        {
+            ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(),
+                                              "HardwareTransport failed to connect to device: " << err->what());
+        }
+        else
+        {
+            ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, -1,
+                                              "HardwareTransport failed to connect to device: " << err->what());
+        }
         try
         {
             callback(RR_SHARED_PTR<ITransportConnection>(), err);
@@ -982,8 +997,8 @@ HardwareTransportConnection::HardwareTransportConnection(const RR_SHARED_PTR<Har
     this->m_LocalEndpoint = local_endpoint;
     this->m_RemoteEndpoint = 0;
 
-    this->HeartbeatPeriod = 30000;
-    this->ReceiveTimeout = 600000;
+    this->HeartbeatPeriod = 5000;
+    this->ReceiveTimeout = 15000;
 
     this->max_message_size = parent->GetMaxMessageSize();
 
@@ -1071,28 +1086,9 @@ void HardwareTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message
 
     try
     {
-
-        // TODO: fix this (maybe??)...
-
-        /*boost::asio::ip::address addr=socket->local_endpoint().address();
-        uint16_t port=socket->local_endpoint().port();
-
-        std::string connecturl;
-        if (addr.is_v4())
-        {
-        connecturl="local://" + addr + ":" + boost::lexical_cast<std::string>(port) + "/";
-        }
-        else
-        {
-        boost::asio::ip::address_v6 addr2=addr.to_v6();
-        addr2.scope_id(0);
-        connecturl="tcp://[" + addr2 + "]:" + boost::lexical_cast<std::string>(port) + "/";
-        }
-        */
-
         std::string connecturl = scheme + ":///";
         // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(connecturl));
+        Transport::m_CurrentThreadTransportConnectionURL.reset(new std::string(RR_MOVE(connecturl)));
         Transport::m_CurrentThreadTransport.reset(new RR_SHARED_PTR<ITransportConnection>(
             RR_STATIC_POINTER_CAST<HardwareTransportConnection>(shared_from_this())));
         // NOLINTEND(cppcoreguidelines-owning-memory)

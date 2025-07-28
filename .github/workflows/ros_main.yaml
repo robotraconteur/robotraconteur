@@ -26,8 +26,10 @@ jobs:
         - humble
         - iron
         - jazzy
+        - kilted
+        - rolling
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: src/robotraconteur
     - name: ros industrial-ci
@@ -45,10 +47,11 @@ jobs:
       matrix:
         ROS_DISTRO:
         - humble
-        - iron
         - jazzy
+        - kilted
+        - rolling
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: src/robotraconteur
     - name: ros industrial-ci

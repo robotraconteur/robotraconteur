@@ -158,7 +158,6 @@ RR_SHARED_PTR<RRObject> ServiceSkel::GetSubObj(boost::string_ref name)
 {
     std::vector<std::string> s1;
     boost::split(s1, name, boost::is_from_range('[', '['));
-    //= name.Split(std::vector<int8_t>(tempVector2, tempVector2 + sizeof(tempVector2) / sizeof(tempVector2[0])));
     if (s1.size() == 1)
     {
         return GetSubObj(name, "");
@@ -433,7 +432,6 @@ bool ServiceSkel::IsRequestNoLock(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 // NOLINTNEXTLINE(readability-make-member-function-const)
 bool ServiceSkel::IsMonitorLocked()
 {
-    // boost::mutex::scoped_lock lock2(monitorlocks_lock);
     if (!monitorlock)
         return false;
     return monitorlock->IsLocked();
@@ -760,11 +758,9 @@ void ServerContext::SendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_
 
 void ServerContext::SendMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, const RR_SHARED_PTR<Endpoint>& e)
 {
-    // m.ServicePath = ServiceName;
 
     RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
     mm->header = CreateMessageHeader();
-    // mm.header.ReceiverEndpoint = RemoteEndpoint;
     mm->entries.push_back(m);
 
     e->SendMessage(mm);
@@ -796,11 +792,8 @@ void ServerContext::AsyncSendMessage(
     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
 
-    // m.ServicePath = ServiceName;
-
     RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
     mm->header = CreateMessageHeader();
-    // mm.header.ReceiverEndpoint = RemoteEndpoint;
     mm->entries.push_back(m);
 
     e->AsyncSendMessage(mm, callback);
@@ -812,7 +805,6 @@ void ServerContext::AsyncSendUnreliableMessage(
 {
     RR_INTRUSIVE_PTR<Message> mm = CreateMessage();
     mm->header = CreateMessageHeader();
-    // mm.header.ReceiverEndpoint = RemoteEndpoint;
     mm->entries.push_back(m);
     mm->header->MetaData = "unreliable\n";
     e->AsyncSendMessage(mm, callback);
@@ -922,7 +914,7 @@ void ServerContext::SetBaseObject(boost::string_ref name, const RR_SHARED_PTR<RR
 
         RR_SHARED_PTR<ServiceSkel> s = GetServiceDef()->CreateSkel(o->RRType(), name, o, shared_from_this());
 
-        m_RootObjectType = RR_MOVE(o->RRType()); // boost::algorithm::replace_all_copy(o->RRType(),"::",".");
+        m_RootObjectType = RR_MOVE(o->RRType());
         base_object_set = true;
 
         {
@@ -951,8 +943,6 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, servicepath, "", "GetObjectSkel");
 
-    // object obj = null;
-
     try
     {
         static boost::regex r_service_path("^[a-zA-Z](?:\\w*[a-zA-Z0-9])?(\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?(?:\\[(?:[a-"
@@ -978,7 +968,6 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
 
             skel = skels.at(ppath);
         }
-        // obj = skel.uncastobj;
 
         RR_SHARED_PTR<ServiceSkel> skel1 = skel;
 
@@ -1001,7 +990,7 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
                 {
 
                     // NOLINTBEGIN(cppcoreguidelines-owning-memory)
-                    m_CurrentServicePath.reset(new std::string(ppath1));
+                    m_CurrentServicePath.reset(new std::string(RR_MOVE(ppath1)));
                     m_CurrentServerContext.reset(new RR_SHARED_PTR<ServerContext>(shared_from_this()));
                     // NOLINTEND(cppcoreguidelines-owning-memory)
                     RR_SHARED_PTR<RRObject> obj1 = skel->GetSubObj(p.at(i));
@@ -1254,7 +1243,6 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
 
         else if (m->EntryType == MessageEntryType_CallbackCallRet)
         {
-            // Console.WriteLine("Got " + m.RequestID + " " + m.EntryType + " " + m.MemberName);
             noreturn = true;
             RR_SHARED_PTR<outstanding_request> t;
             uint32_t requestid = m->RequestID;
@@ -1907,8 +1895,6 @@ void ServerContext::ClientLockOp(const RR_INTRUSIVE_PTR<MessageEntry>& m, const 
     {
         boost::mutex::scoped_lock lock(ClientLockOp_lockobj);
 
-        // if (m.ServicePath != ServiceName) throw new Exception("Only locking of root object currently supported");
-
         std::vector<std::string> priv;
         std::string username;
         if (!boost::starts_with(m->MemberName.str(), "Monitor"))
@@ -2194,6 +2180,7 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
     }
 
     {
+        boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
         boost::mutex::scoped_lock lock(skels_lock);
         std::vector<std::string> objkeys;
         BOOST_FOREACH (const MessageStringPtr& k, skels | boost::adaptors::map_keys)
@@ -2226,20 +2213,20 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
                     RR_SHARED_PTR<ServerContext_ObjectLock> lock = s->objectlock.lock();
                     if (!lock)
                         return;
-                    boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
                     if (lock->GetRootServicePath() == path1)
                     {
                         active_object_locks.erase(lock->GetUsername());
+                        lock2.unlock();
                         lock->ReleaseLock();
                     }
                     else
                     {
+                        lock2.unlock();
                         lock->ReleaseSkel(s);
                     }
                 }
             }
 
-            // s->ReleaseCastObject();
             skels.erase(path1);
             s->ReleaseObject();
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, path, "", "Object released");
@@ -2364,7 +2351,6 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(const RR_IN
                                                 "ProcessCallbackRequest sending message with requestid "
                                                     << myrequestid << " EntryType " << m->EntryType);
 
-        // Console.WriteLine("Sent " + m.RequestID + " " + m.EntryType + " " + m.MemberName);
         SendMessage(m, e);
 
         boost::posix_time::ptime request_start = GetNode()->NowNodeTime();
@@ -2517,7 +2503,7 @@ std::vector<std::string> ServerContext::GetCandidateConnectionURLs()
             if (!nodename.empty())
             {
                 url2 = url_split.at(0) + "?nodename=" + nodename + "&service=" + m_ServiceName;
-                o.push_back(url2);
+                o.push_back(RR_MOVE(url2));
             }
         }
     }

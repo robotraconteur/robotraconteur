@@ -31,8 +31,10 @@
 
 #include "RobotRaconteur/Timer.h"
 
+#ifdef _MSVC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
+#endif
 #include <boost/signals2.hpp>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -137,8 +139,6 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
 
     static RR_SHARED_PTR<ITransportConnection> GetCurrentThreadTransport();
 
-    //		public event MessageHandler MessageReceivedEvent;
-
     uint32_t TransportID;
 
     virtual void CheckConnection(uint32_t endpoint) = 0;
@@ -150,8 +150,6 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
     virtual std::string GetUrlSchemeString() const = 0;
 
     virtual std::vector<std::string> GetServerListenUrls() = 0;
-
-    // public abstract string Scheme { get; }
 
     virtual bool CanConnectService(boost::string_ref url) = 0;
 
@@ -181,9 +179,6 @@ class ROBOTRACONTEUR_CORE_API Transport : public IPeriodicCleanupTask, boost::no
     RR_OVIRTUAL void PeriodicCleanupTask() RR_OVERRIDE;
 
     virtual uint32_t TransportCapability(boost::string_ref name);
-
-    // typedef void (*TransportListenerDelegate)(const RR_SHARED_PTR<Transport> &transport, TransportListenerEventType
-    // ev, const RR_SHARED_PTR<void> &parameter);
 
     boost::signals2::signal<void(const RR_SHARED_PTR<Transport>& transport, TransportListenerEventType ev,
                                  const RR_SHARED_PTR<void>& parameter)>
@@ -230,4 +225,6 @@ using ITransportConnectionPtr = RR_SHARED_PTR<ITransportConnection>;
 
 } // namespace RobotRaconteur
 
+#ifdef _MSVC_VER
 #pragma warning(pop)
+#endif
