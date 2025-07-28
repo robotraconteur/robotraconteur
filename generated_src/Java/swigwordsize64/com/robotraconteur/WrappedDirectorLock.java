@@ -8,16 +8,16 @@
 
 package com.robotraconteur;
 
-public class ArrayMemoryBase {
+public class WrappedDirectorLock {
   private transient long swigCPtr;
   private transient boolean swigCMemOwn;
 
-  protected ArrayMemoryBase(long cPtr, boolean cMemoryOwn) {
+  protected WrappedDirectorLock(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(ArrayMemoryBase obj) {
+  protected static long getCPtr(WrappedDirectorLock obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
@@ -34,18 +34,14 @@ public class ArrayMemoryBase {
     if (swigCPtr != 0) {
       if (swigCMemOwn) {
         swigCMemOwn = false;
-        RobotRaconteurJavaJNI.delete_ArrayMemoryBase(swigCPtr);
+        RobotRaconteurJavaJNI.delete_WrappedDirectorLock(swigCPtr);
       }
       swigCPtr = 0;
     }
   }
 
-  public java.math.BigInteger length() {
-    return RobotRaconteurJavaJNI.ArrayMemoryBase_length(swigCPtr, this);
-  }
-
-  public DataTypes elementTypeID() {
-    return DataTypes.swigToEnum(RobotRaconteurJavaJNI.ArrayMemoryBase_elementTypeID(swigCPtr, this));
+  public boolean valid() {
+    return RobotRaconteurJavaJNI.WrappedDirectorLock_valid(swigCPtr, this);
   }
 
 }
