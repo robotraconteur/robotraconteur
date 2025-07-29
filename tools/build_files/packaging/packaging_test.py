@@ -352,6 +352,7 @@ BuildRequires:  zlib-devel
 BuildRequires:  python3-devel
 BuildRequires:  python3-numpy
 BuildRequires:  python3-setuptools
+BuildRequires:  python3-pip
 BuildRequires:  gtest-devel
 BuildRequires:  g++
 BuildRequires:  gcc
@@ -412,7 +413,9 @@ cmake .. -DCMAKE_INSTALL_PREFIX=%{_prefix} \\
          -DROBOTRACONTEURCORE_SOVERSION_MAJOR_ONLY=ON \\
          -DCMAKE_SKIP_RPATH=ON \\
          -DROBOTRACONTEUR_TESTING_DISABLE_DISCOVERY_LOOPBACK=ON \\
-         -DBUILD_TESTING=OFF
+         -DBUILD_TESTING=OFF \\
+         -DINSTALL_PYTHON3_PIP_EXTRA_ARGS="--compile --no-build-isolation \\
+            --no-deps --root-user-action=ignore"
 
 make %{?_smp_mflags}
 
@@ -436,7 +439,7 @@ make install DESTDIR=%{buildroot}
 %files -n python3-robotraconteur
 %license LICENSE.txt
 %{python3_sitearch}/RobotRaconteur/
-%{python3_sitearch}/robotraconteur-*.dist-info/
+%{python3_sitearch}/RobotRaconteur-*.dist-info/
 
 %files -n robotraconteurgen
 %license LICENSE.txt
@@ -1068,9 +1071,9 @@ def do_podman_build_impl_fedora(args):
         subprocess.check_call("dnf builddep robotraconteur.spec -y", shell=True, cwd="/root/rpmbuild/SPECS")
         subprocess.check_call("rpmbuild -ba robotraconteur.spec", shell=True, cwd="/root/rpmbuild/SPECS")
 
-    if Path("/out").is_dir():
-        Path("/out/fedora").mkdir(parents=True, exist_ok=True)
-        subprocess.check_call("cp /root/rpmbuild/RPMS/*/*.rpm /out/fedora/", shell=True)
+        if Path("/out").is_dir():
+            Path("/out/fedora").mkdir(parents=True, exist_ok=True)
+            subprocess.check_call("cp /root/rpmbuild/RPMS/*/*.rpm /out/fedora/", shell=True)
 
     if "setup-test" in steps:
         _revert_to_saved_rpm_packages()
