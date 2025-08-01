@@ -137,6 +137,7 @@ endif()
 add_subdirectory(docs/getting_started)
 
 include(CMakePackageConfigHelpers)
+if (BUILD_CORE)
 configure_package_config_file(
     "cmake/Config.cmake.in" "${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake"
     INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}"
@@ -148,6 +149,7 @@ install(FILES ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
 install(FILES ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+endif()
 
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.git/")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.vs/")
