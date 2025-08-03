@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
     }
     catch (std::exception& e)
     {
-        std::cout << "Error occured in client: " << std::string(e.what()) << std::endl;
+        std::cout << "Error occurred in client: " << std::string(e.what()) << std::endl;
         return -1;
     }
 }

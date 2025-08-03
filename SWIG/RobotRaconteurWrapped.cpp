@@ -695,12 +695,12 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> WrappedServiceStub::CallbackCall(
     catch (...)
     {
 
-        throw UnknownException("RobotRaconteur.UnknownException", "Error occured in callback");
+        throw UnknownException("RobotRaconteur.UnknownException", "Error occurred in callback");
     }
 
     if (!mres)
     {
-        throw OperationFailedException("Exception occured in callback");
+        throw OperationFailedException("Exception occurred in callback");
     }
 
     RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> res =

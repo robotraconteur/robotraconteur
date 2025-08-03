@@ -1303,7 +1303,7 @@
       <remarks>
         <para>
           ServiceException is a catch-all error for exceptions on services.
-          See the message field for an explanation of the error that occured.
+          See the message field for an explanation of the error that occurred.
         </para>
         <para>
           Error code MessageErrorType_ServiceError (8)
@@ -3575,7 +3575,7 @@
         </para>
       </remarks>
       <param name="servicepath">The service path to release lock</param>
-      <param name="username">The username requsting the lock release</param>
+      <param name="username">The username requesting the lock release</param>
       <param name="override_">If False, only the creating username can release the lock. If True,
         any username can release the lock</param>
     </member>

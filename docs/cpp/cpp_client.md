@@ -235,7 +235,7 @@ Functions may also be invoked asynchronously. Like properties, the asynchronous 
         {
             if (err)
             {
-                std::cout << "Error occured invoking function: " << err->what() << std::endl;
+                std::cout << "Error occurred invoking function: " << err->what() << std::endl;
             }
 
             std::cout << "do_something() invocation successful" << std::endl;
@@ -418,7 +418,7 @@ ObjRefs may also be invoked asynchronously. Like properties, the asynchronous fo
         {
             if (err)
             {
-                std::cout << "Error occured invoking objref: " << err->what() << std::endl;
+                std::cout << "Error occurred invoking objref: " << err->what() << std::endl;
                 return;
             }
 
@@ -428,7 +428,7 @@ ObjRefs may also be invoked asynchronously. Like properties, the asynchronous fo
                 {
                     if (err)
                     {
-                        std::cout << "Error occured invoking function: " << err->what() << std::endl;
+                        std::cout << "Error occurred invoking function: " << err->what() << std::endl;
                     }
                 }
             )

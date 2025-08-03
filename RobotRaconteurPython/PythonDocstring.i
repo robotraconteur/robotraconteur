@@ -1393,7 +1393,7 @@ the \"objectlockoverride\" permission.
 
 :param servicepath: The service path to release lock
 :type str:
-:param username: The username requsting the lock release
+:param username: The username requesting the lock release
 :type username:
 :param override_: If False, only the creating username can release the lock. If True,
  any username can release the lock

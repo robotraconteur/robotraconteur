@@ -278,7 +278,7 @@ void RobotRaconteurNode::UnregisterServiceType(boost::string_ref type)
     if (e1 == service_factories.end())
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1,
-                                           "Cannot unregister nonexistant service type \"" << type << "\"");
+                                           "Cannot unregister nonexistent service type \"" << type << "\"");
         throw InvalidArgumentException("Service type not registered");
     }
     service_factories.erase(e1);

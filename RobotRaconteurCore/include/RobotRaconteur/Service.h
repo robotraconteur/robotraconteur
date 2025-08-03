@@ -542,7 +542,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
      * the "objectlockoverride" permission.
      *
      * @param servicepath The service path to release lock
-     * @param username The username requsting the lock release
+     * @param username The username requesting the lock release
      * @param override_ If false, only the creating username can release the lock. If true,
      * any username can release the lock
      */

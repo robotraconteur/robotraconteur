@@ -191,19 +191,19 @@ void ServiceStub::SendWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 void ServiceStub::DispatchPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, m->MemberName,
-                                            "Pipe packet received for nonexistant member");
+                                            "Pipe packet received for nonexistent member");
 }
 
 void ServiceStub::DispatchWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, m->MemberName,
-                                            "Wire packet received for nonexistant member");
+                                            "Wire packet received for nonexistent member");
 }
 
 RR_INTRUSIVE_PTR<MessageEntry> ServiceStub::CallbackCall(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, RREndpoint, ServicePath, m->MemberName,
-                                            "Callback request received for nonexistant member");
+                                            "Callback request received for nonexistent member");
     throw MemberNotFoundException("Member not found");
 }
 
@@ -1120,7 +1120,7 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
             else
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
-                                                        "Client received event for nonexistant service path");
+                                                        "Client received event for nonexistent service path");
             }
         }
         else if (m->EntryType == MessageEntryType_PropertyGetRes || m->EntryType == MessageEntryType_PropertySetRes ||
@@ -1297,7 +1297,7 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
             else
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
-                                                        "Client received pipe packet for nonexistant service path");
+                                                        "Client received pipe packet for nonexistent service path");
             }
             return;
         }
@@ -1322,7 +1322,7 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
             else
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
-                                                        "Client received wire packet for nonexistant service path");
+                                                        "Client received wire packet for nonexistent service path");
             }
         }
         else if (m->EntryType == MessageEntryType_ServicePathReleasedReq)
@@ -1376,7 +1376,7 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
         else
         {
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
-                                                    "Client received unkown EntryType: " << m->EntryType);
+                                                    "Client received unknown EntryType: " << m->EntryType);
             throw ServiceException("Unknown service command");
         }
     }

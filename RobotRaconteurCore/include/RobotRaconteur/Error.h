@@ -382,7 +382,7 @@ class NodeNotFoundException : public RobotRaconteurException
  * an operation on a service
  *
  * ServiceException is a catch-all error for exceptions on services.
- * See the message field for an explanation of the error that occured.
+ * See the message field for an explanation of the error that occurred.
  *
  * Error code MessageErrorType_ServiceError (8)
  *

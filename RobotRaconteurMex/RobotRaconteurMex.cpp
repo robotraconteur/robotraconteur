@@ -5276,8 +5276,8 @@ void MexServiceStub::MexProcessRequests()
                     mxArray* ret2 = 0;
                     if ((ret2 = ::mexCallMATLABWithTrap(0, NULL, (int)args2.size(), &args2[0], "feval")))
                     {
-                        // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occured in MATLAB
-                        // callback").c_str()); throw OperationFailedException("Error occured in MATLAB callback");
+                        // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occurred in MATLAB
+                        // callback").c_str()); throw OperationFailedException("Error occurred in MATLAB callback");
                         std::string errmsg = mxToString(mxGetProperty(ret2, 0, "message"));
                         ::mexWarnMsgTxt(errmsg.c_str());
                         throw OperationFailedException(errmsg);
@@ -5291,7 +5291,7 @@ void MexServiceStub::MexProcessRequests()
                     mxArray* ret2 = 0;
                     if ((ret2 = ::mexCallMATLABWithTrap(1, lhs, (int)args2.size(), &args2[0], "feval")))
                     {
-                        // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occured in MATLAB
+                        // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occurred in MATLAB
                         // callback").c_str());
                         std::string errmsg = mxToString(mxGetProperty(ret2, 0, "message"));
                         ::mexWarnMsgTxt(errmsg.c_str());
@@ -7756,8 +7756,8 @@ void MexServiceSkel::ProcessRequests()
                 mxArray* mxret = NULL;
                 if ((ret2 = ::mexCallMATLABWithTrap(1, &mxret, (int)args2.size(), &args2[0], "subsref")))
                 {
-                    // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occured in MATLAB
-                    // callback").c_str()); throw InvalidArgumentException("Error occured in MATLAB callback");
+                    // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occurred in MATLAB
+                    // callback").c_str()); throw InvalidArgumentException("Error occurred in MATLAB callback");
                     std::string errmsg = mxToString(mxGetProperty(ret2, 0, "message"));
                     ::mexWarnMsgTxt(errmsg.c_str());
                     throw OperationFailedException(errmsg);
@@ -7822,8 +7822,8 @@ void MexServiceSkel::ProcessRequests()
 
                 if ((ret2 = ::mexCallMATLABWithTrap(0, NULL, (int)args2.size(), &args2[0], "subsasgn")))
                 {
-                    // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occured in MATLAB
-                    // callback").c_str()); throw OperationFailedException("Error occured in MATLAB callback");
+                    // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occurred in MATLAB
+                    // callback").c_str()); throw OperationFailedException("Error occurred in MATLAB callback");
                     std::string errmsg = mxToString(mxGetProperty(ret2, 0, "message"));
                     ::mexWarnMsgTxt(errmsg.c_str());
                     throw OperationFailedException(errmsg);
@@ -7887,8 +7887,8 @@ void MexServiceSkel::ProcessRequests()
                     mxArray* ret2 = NULL;
                     if ((ret2 = ::mexCallMATLABWithTrap(0, NULL, (int)args2.size(), &args2[0], "feval")))
                     {
-                        // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occured in MATLAB
-                        // callback").c_str()); throw OperationFailedException("Error occured in MATLAB callback");
+                        // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occurred in MATLAB
+                        // callback").c_str()); throw OperationFailedException("Error occurred in MATLAB callback");
                         std::string errmsg = mxToString(mxGetProperty(ret2, 0, "message"));
                         ::mexWarnMsgTxt(errmsg.c_str());
                         throw OperationFailedException(errmsg);
@@ -7900,7 +7900,7 @@ void MexServiceSkel::ProcessRequests()
                     mxArray* ret2 = NULL;
                     if ((ret2 = ::mexCallMATLABWithTrap(1, lhs, (int)args2.size(), &args2[0], "feval")))
                     {
-                        // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occured in MATLAB
+                        // mexWarnMsgTxt(std::string("Warning: error dispatching event: error occurred in MATLAB
                         // callback").c_str());
                         std::string errmsg = mxToString(mxGetProperty(ret2, 0, "message"));
                         ::mexWarnMsgTxt(errmsg.c_str());

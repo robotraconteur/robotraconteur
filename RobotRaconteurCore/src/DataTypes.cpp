@@ -586,7 +586,7 @@ RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector
 
 std::vector<std::string> RRListToStringVector(const RR_INTRUSIVE_PTR<RRList<RRArray<char> > >& list)
 {
-    rr_null_check(list, "Unexected null string list");
+    rr_null_check(list, "Unexpected null string list");
     std::vector<std::string> o;
     BOOST_FOREACH (const RR_INTRUSIVE_PTR<RRArray<char> >& e, *list)
     {
