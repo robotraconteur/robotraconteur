@@ -57,5 +57,5 @@ repos:
     name: dos2unix
     entry: dos2unix
     args: ["-n", "-o"]
-    files: '\.(c|cpp|h|hpp|java|cs|i|m|cmake|txt|css|js|ts|html|md|txt|py|yaml|yml|csproj|rst|py\.in|csproj\.in)$'
+    files: '\.(c|cpp|h|hpp|java|cs|i|m|cmake|txt|css|js|ts|html|md|txt|py|yaml|yml|csproj|rst|py\.in|csproj\.in|xml|xml\.in|cmake\.in)$'
     language: system
