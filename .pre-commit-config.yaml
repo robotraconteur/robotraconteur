@@ -64,13 +64,12 @@ repos:
   rev: v9.2.0
   hooks:
   - id: cspell   # Spell check changed files
-    name: check spelling
     args:
     - --no-progress
-    - --allow-compound-words
-    - --ignore-case
-    stages: [commit, push]
-    always_run: true
+    - --no-summary
+    - --gitignore
+    - --unique
+    - --files
   - id: cspell   # Spell check the commit message
     name: check commit message spelling
     args:
