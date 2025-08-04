@@ -2,6 +2,8 @@ from RobotRaconteur.Client import *
 import sys
 import time
 
+# cSpell: ignore rrid
+
 
 def main():
     rrid = RR.NodeID(sys.argv[1])

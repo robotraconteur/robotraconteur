@@ -1,8 +1,8 @@
 # Exceptions {#exceptions}
 
-Robot Raconteur uses exceptions in the event of an error or unexpected occurance. Exceptions interupt the normal flow of execution, and are either "caught" by the program, caught by the Robot Raconteur framework, or terminate the program with an error condition. Many programming languages support exceptions; consult the documentation for the programming language of interest for more details on exceptions.
+Robot Raconteur uses exceptions in the event of an error or unexpected occurrence. Exceptions interupt the normal flow of execution, and are either "caught" by the program, caught by the Robot Raconteur framework, or terminate the program with an error condition. Many programming languages support exceptions; consult the documentation for the programming language of interest for more details on exceptions.
 
-Robot Raconteur understands exceptions, and will forward an exception thrown on a remote node back to the caller during a request. The remote node will pack the exception into the resonse message, and the calling node will unpack and re-throw the exception. All response messages are capable of forwarding exceptions to the caller. Packets do not carry exceptions. See \ref message_object_protocol for a discussion of requests, responses, and packets.
+Robot Raconteur understands exceptions, and will forward an exception thrown on a remote node back to the caller during a request. The remote node will pack the exception into the response message, and the calling node will unpack and re-throw the exception. All response messages are capable of forwarding exceptions to the caller. Packets do not carry exceptions. See \ref message_object_protocol for a discussion of requests, responses, and packets.
 
 ## Robot Raconteur Built-in Exception Table
 

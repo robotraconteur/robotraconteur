@@ -14,6 +14,8 @@ from . import lfsr
 
 ca = nptest.assert_allclose
 
+# cSpell: ignore lstruct, myind
+
 
 class ServiceTestClient:
     def __init__(self):
@@ -839,7 +841,7 @@ class ServiceTestClient:
 
     def TestObjectLock(self, url):
         # Run a test, check 6 things:
-        # 1. Exclusive username lock works as expected (user with lock can acces, other user can't)
+        # 1. Exclusive username lock works as expected (user with lock can access, other user can't)
         # 2. Check that session-level lock works as expected (only one session can access the locked object)
         # 3. Check that "sub-tree" objects lock as expected
         # 5. Object lock release works
@@ -945,7 +947,7 @@ class ServiceTestClient:
         RRN.DisconnectService(r5)
 
     def TestMonitorLock(self, url):
-        # The monitor lock aquires an exclusive sock to a single thread on the client.
+        # The monitor lock acquires an exclusive sock to a single thread on the client.
         # This lock is for a single thread, and works for all clients and the service if
         # it is checking for monitor locks.
         r1 = RRN.ConnectService(url)

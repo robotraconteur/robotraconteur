@@ -20,6 +20,8 @@
 #endif
 #pragma once
 
+// cSpell: ignore XINCREF
+
 namespace RobotRaconteur
 {
 #ifdef RR_PYTHON

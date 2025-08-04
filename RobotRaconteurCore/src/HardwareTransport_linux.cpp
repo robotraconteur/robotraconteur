@@ -25,6 +25,8 @@
 #include <linux/netlink.h>
 #include <boost/range/as_array.hpp>
 
+// cSpell: ignore bdaddr, sysfs, hcid
+
 namespace RobotRaconteur
 {
 namespace detail

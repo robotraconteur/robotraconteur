@@ -19,7 +19,7 @@ function c=RobotRaconteurGenerator(objecttype,stubid)
 %    Generators can be terminated with either the Close() or Abort() functions. Close() should be
 %    used to cleanly close the generator, and is not considered an error condition. Next(), if called
 %    after close, should throw StopIterationException. Abort() is considered an error condition, and
-%    will cause any action assosciated with the generator to be aborted as quickly as possible (ie faulting
+%    will cause any action associated with the generator to be aborted as quickly as possible (ie faulting
 %    a robot). If Next() is called after Abort(), OperationAbortedException should be thrown. async_Close()
 %    and async_Abort() are also available for asynchronous operation.
 %

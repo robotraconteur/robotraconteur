@@ -15,6 +15,8 @@ except NameError:
 
 ca = nptest.assert_allclose
 
+# cSpell: ignore mdat, mdat, lstruct
+
 
 class testroot_impl(object):
 
@@ -784,6 +786,7 @@ class testroot_impl(object):
         return self._o1, "com.robotraconteur.testing.TestService1.sub1"
 
     def get_o2(self, ind):
+        # cSpell: ignore iind
         iind = int(ind)
         with self._o2_lock:
             if (not iind in self._o2):

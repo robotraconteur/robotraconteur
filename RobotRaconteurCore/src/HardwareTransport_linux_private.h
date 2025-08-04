@@ -48,6 +48,7 @@ typedef int (*dbus_message_iter_get_arg_type_t)(DBusMessageIter* iter);
 typedef void (*dbus_message_iter_recurse_t)(DBusMessageIter* iter, DBusMessageIter* sub);
 typedef void (*dbus_message_iter_get_basic_t)(DBusMessageIter* iter, void* value);
 
+// cSpell: ignore bdaddr, strn
 typedef int (*str2ba_t)(const char* str, bdaddr_t* ba);
 typedef sdp_session_t* (*sdp_connect_t)(const bdaddr_t* src, const bdaddr_t* dst, uint32_t flags);
 typedef int (*sdp_close_t)(sdp_session_t* session);

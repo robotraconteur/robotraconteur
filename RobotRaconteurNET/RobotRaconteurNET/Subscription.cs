@@ -520,7 +520,7 @@ public class ServiceSubscription
     }
 
     /// <summary>
-    /// Release a client previously clamed with ClaimClient()
+    /// Release a client previously claimed with ClaimClient()
     /// </summary>
     /// <remarks>
     /// Lifecycle management is returned to the subscription

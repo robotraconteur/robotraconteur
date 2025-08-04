@@ -360,6 +360,7 @@ MultiDimArray_CalculateCopyIndicesIter::~MultiDimArray_CalculateCopyIndicesIter(
 class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_CalculateCopyIndicesIter
 {
   protected:
+    // cSpell: ignore stridea, strideb, mema_dims, memb_dims, mema_pos, memb_pos
     std::vector<uint32_t> mema_dims;
     std::vector<uint32_t> memb_dims;
     std::vector<uint32_t> mema_pos;

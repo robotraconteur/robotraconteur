@@ -63,7 +63,7 @@
 
 %include "NodeIDNET.i"
 
-#define RR_MESSAEGE_ELEMENT_DATA_UTIL_EXTRAS
+#define RR_MESSAGE_ELEMENT_DATA_UTIL_EXTRAS
 %include "MessageNET.i"
 
 %include "AsyncHandlerDirector.i"

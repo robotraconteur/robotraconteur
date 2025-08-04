@@ -171,7 +171,7 @@ RobotRaconteurVersion::operator bool() const { return *this != RobotRaconteurVer
 
 #define RR_NAME_REGEX "[a-zA-Z](?:\\w*[a-zA-Z0-9])?"
 #define RR_TYPE_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)*"
-#define RR_QUAIFIED_TYPE_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)+"
+#define RR_QUALIFIED_TYPE_REGEX "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)+"
 #define RR_TYPE2_REGEX                                                                                                 \
     "(?:[a-zA-Z](?:\\w*[a-zA-Z0-9])?)(?:\\.[a-zA-Z](?:\\w*[a-zA-Z0-9])?)*(?:\\[[0-9\\,\\*\\-]*\\])?(?:\\{\\w{1,16}\\}" \
     ")?"
@@ -1258,7 +1258,7 @@ std::string ServiceEntryDefinition::ResolveQualifiedName()
 }
 
 // Parser helper functions
-class MemberDefiniton_ParseResults
+class MemberDefinition_ParseResults
 {
   public:
     std::string MemberType;
@@ -1340,7 +1340,7 @@ static std::string MemberDefinition_ModifiersToString(const std::vector<std::str
     return " [" + boost::join(modifiers, ",") + "]";
 }
 
-static bool MemberDefinition_ParseFormat_common(boost::string_ref s, MemberDefiniton_ParseResults& res)
+static bool MemberDefinition_ParseFormat_common(boost::string_ref s, MemberDefinition_ParseResults& res)
 {
     static boost::regex r("^[ \\t]*([a-zA-Z]+)[ \\t]+(?:([a-zA-Z][\\w\\{\\}\\[\\]\\*\\,\\-\\.]*)[ \\t]+)?(\\w+)(?:[ "
                           "\\t]*(\\(([^)]*)\\)))?(?:[ \\t]+\\[([^\\]]*)\\])?[ \\t]*$");
@@ -1392,7 +1392,7 @@ static bool MemberDefinition_ParseFormat_common(boost::string_ref s, MemberDefin
     return true;
 }
 
-static void MemberDefinition_FromStringFormat_common(MemberDefiniton_ParseResults& parse_res, boost::string_ref s1,
+static void MemberDefinition_FromStringFormat_common(MemberDefinition_ParseResults& parse_res, boost::string_ref s1,
                                                      const std::vector<std::string>& member_types,
                                                      const RR_SHARED_PTR<MemberDefinition>& def,
                                                      const ServiceDefinitionParseInfo& parse_info)
@@ -1418,7 +1418,7 @@ static void MemberDefinition_FromStringFormat1(boost::string_ref s1, const std::
                                                RR_SHARED_PTR<TypeDefinition>& type,
                                                const ServiceDefinitionParseInfo& parse_info)
 {
-    MemberDefiniton_ParseResults parse_res;
+    MemberDefinition_ParseResults parse_res;
     MemberDefinition_FromStringFormat_common(parse_res, s1, member_types, def, parse_info);
 
     if (!parse_res.DataType || parse_res.Parameters)
@@ -1491,7 +1491,7 @@ static void MemberDefinition_FromStringFormat2(boost::string_ref s1, boost::stri
     std::vector<std::string> member_types;
     member_types.push_back(member_type.to_string());
 
-    MemberDefiniton_ParseResults parse_res;
+    MemberDefinition_ParseResults parse_res;
     MemberDefinition_FromStringFormat_common(parse_res, s1, member_types, def, parse_info);
 
     if (!parse_res.DataType || !parse_res.Parameters)
@@ -1532,7 +1532,7 @@ static void MemberDefinition_FromStringFormat3(boost::string_ref s1, boost::stri
     std::vector<std::string> member_types;
     member_types.push_back(RR_MOVE(member_type.to_string()));
 
-    MemberDefiniton_ParseResults parse_res;
+    MemberDefinition_ParseResults parse_res;
     MemberDefinition_FromStringFormat_common(parse_res, s1, member_types, def, parse_info);
 
     if (parse_res.DataType || !parse_res.Parameters)
@@ -2588,7 +2588,7 @@ void UsingDefinition::FromString(boost::string_ref s, const ServiceDefinitionPar
     if (ParseInfo.Line.empty())
         ParseInfo.Line = s.to_string();
 
-    static boost::regex r("^[ \\t]*using[ \\t]+(" RR_QUAIFIED_TYPE_REGEX ")(?:[ \\t]+as[ \\t](" RR_NAME_REGEX
+    static boost::regex r("^[ \\t]*using[ \\t]+(" RR_QUALIFIED_TYPE_REGEX ")(?:[ \\t]+as[ \\t](" RR_NAME_REGEX
                           "))?[ \\t]*$");
 
     ref_match r_match;
@@ -3513,7 +3513,7 @@ void VerifyUsing(UsingDefinition& e, const RR_SHARED_PTR<ServiceDefinition>& def
                  std::vector<RR_SHARED_PTR<ServiceDefinition> >& importeddefs)
 {
     VerifyName(e.UnqualifiedName, def, e.ParseInfo);
-    static boost::regex r(RR_QUAIFIED_TYPE_REGEX);
+    static boost::regex r(RR_QUALIFIED_TYPE_REGEX);
     if (!boost::regex_match(e.QualifiedName, r))
     {
         throw ServiceDefinitionVerifyException("Using \"" + e.QualifiedName + "\" is invalid", e.ParseInfo);
@@ -4026,6 +4026,7 @@ std::string VerifyMember(const RR_SHARED_PTR<MemberDefinition>& m, const RR_SHAR
     }
 }
 
+// cSpell: ignore rrimplements, rrimports
 struct rrimplements
 {
     std::string name;

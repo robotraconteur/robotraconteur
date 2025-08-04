@@ -29,6 +29,8 @@
 #include <boost/bind/bind.hpp>
 #include <boost/bind/placeholders.hpp>
 
+// cSpell: ignore ecount, datin, rdat, sdat
+
 namespace RobotRaconteur
 {
 

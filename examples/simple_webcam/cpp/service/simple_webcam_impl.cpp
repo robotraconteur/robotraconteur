@@ -93,6 +93,8 @@ cam::WebcamImage_sizePtr Webcam_impl::capture_frame_to_buffer()
 
     m_buffer = image->data;
 
+    // cSpell: ignore mdbuf
+
     // Rearrange the data into the correct format for MATLAB arrays
     RR::RRMultiDimArrayPtr<uint8_t> mdbuf =
         RR::AllocateEmptyRRMultiDimArray<uint8_t>({(uint32_t)image->height, (uint32_t)image->width, 3});
@@ -138,7 +140,7 @@ RR::MultiDimArrayMemoryPtr<uint8_t> Webcam_impl::get_multidimbuffer()
 }
 
 // Override the RRServiceObjectInit function to set the maximum backlog for the FrameStream
-// RRSerivceObjectInit is called after the service object is initialized by the Robot Raconteur node
+// RRServiceObjectInit is called after the service object is initialized by the Robot Raconteur node
 void Webcam_impl::RRServiceObjectInit(RR_WEAK_PTR<RR::ServerContext> ctx, const std::string& service_path)
 {
     this->rrvar_frame_stream->SetMaxBacklog(3);

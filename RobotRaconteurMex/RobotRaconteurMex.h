@@ -20,6 +20,9 @@
 
 // NOLINTBEGIN(cppcoreguidelines-pro-type-cstyle-cast,cppcoreguidelines-avoid-c-arrays)
 
+// cSpell: ignore mxobj, skelid, servicesubscriptionid, wiresubscriptionid, pipesubscriptionid, mexobjecttype
+// cSpell: ignore subobjectsubscriptionid, skelscount
+
 using namespace RobotRaconteur;
 
 enum RobotRaconteurMexObjectTypes

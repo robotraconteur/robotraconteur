@@ -52,6 +52,7 @@ namespace RobotRaconteur
 public partial class RobotRaconteurNode
 {
     private static RobotRaconteurNode csharp_s = null;
+    // cSpell: ignore exhelp
     static private WrappedRobotRaconteurExceptionHelper exhelp;
 
     /// <summary>
@@ -2123,7 +2124,7 @@ public partial class RobotRaconteurNode
     /// <remarks>
     /// UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
     /// of the system clock being updated by the user. For a real-time systems,
-    /// this is unaccetpable and can lead to system instability. The "node time" used by Robot Raconteur
+    /// this is unacceptable and can lead to system instability. The "node time" used by Robot Raconteur
     /// is synchronized to UTC at startup, and is then steadily increasing from that initial time.
     /// It will ignore changes to the system clock, and will also ignore corrections like leap
     /// seconds.
@@ -2186,7 +2187,7 @@ public partial class RobotRaconteurNode
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Robot Raconteur service object types are polymorphic using inheritence,
+    /// Robot Raconteur service object types are polymorphic using inheritance,
     /// meaning that an object may be represented using multiple object types.
     /// `objref` will attempt to return the relevant type, but it is sometimes
     /// necessary to request a specific type for an objref.
@@ -2295,7 +2296,7 @@ public partial class RobotRaconteurNode
     /// </remarks>
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
-    /// <returns>The fully qaulified object type</returns>
+    /// <returns>The fully qualified object type</returns>
     public string FindObjectType(object obj, string objref)
     {
         if (!(obj is ServiceStub))
@@ -2319,7 +2320,7 @@ public partial class RobotRaconteurNode
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
-    /// <returns>The fully qaulified object type</returns>
+    /// <returns>The fully qualified object type</returns>
     public string FindObjectType(object obj, string objref, string index)
     {
         if (!(obj is ServiceStub))
@@ -2338,7 +2339,7 @@ public partial class RobotRaconteurNode
     /// <param name="obj">The object with the desired `objref`</param>
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout</param>
-    /// <returns>A task that upon completion returns the fully qaulified object type</returns>
+    /// <returns>A task that upon completion returns the fully qualified object type</returns>
     public async Task<string> AsyncFindObjectType(object obj, string objref, int timeout = RR_TIMEOUT_INFINITE)
     {
         if (!(obj is ServiceStub))
@@ -2361,7 +2362,7 @@ public partial class RobotRaconteurNode
     /// <param name="objref">The name of the `objref` member</param>
     /// <param name="index">The index for the `objref`, convert int to string for int32 index type</param>
     /// <param name="timeout">Timeout in milliseconds, or RR_TIMEOUT_INFINITE for no timeout</param>
-    /// <returns>A task that upon completion returns the fully qaulified object type</returns>
+    /// <returns>A task that upon completion returns the fully qualified object type</returns>
     public async Task<string> AsyncFindObjectType(object obj, string objref, string index,
                                                   int timeout = RR_TIMEOUT_INFINITE)
     {
@@ -2500,7 +2501,7 @@ public partial class RobotRaconteurNode
     /// </summary>
     /// <remarks>None</remarks>
     /// <param name="name">Name to split</param>
-    /// <returns>Tulpe containing service definition name and unqualified name</returns>
+    /// <returns>Tuple containing service definition name and unqualified name</returns>
     public static Tuple<string, string> SplitQualifiedName(string name)
     {
         int pos = name.LastIndexOf('.');

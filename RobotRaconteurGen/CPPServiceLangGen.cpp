@@ -30,6 +30,8 @@
 
 using namespace RobotRaconteur;
 
+// cSpell: ignore noteq, dforc
+
 // NOLINTBEGIN(bugprone-macro-parentheses)
 #define MEMBER_ITER(TYPE)                                                                                              \
     {                                                                                                                  \
@@ -2546,7 +2548,7 @@ void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition* d,
     }
 }
 
-std::string dforc(const std::string& definition, const std::string& clas)
+std::string dforc(const std::string& definition, const std::string& class_)
 {
     std::string res1_1 = boost::replace_first_copy(definition, "virtual", "");
     std::string res1_2 = boost::replace_last_copy(res1_1, "RR_OVERRIDE", "");
@@ -2577,7 +2579,7 @@ std::string dforc(const std::string& definition, const std::string& clas)
     if (function.length() == 0)
         throw InternalErrorException("Internal error");
 
-    return boost::trim_copy(rettype) + " " + clas + "::" + boost::trim_copy(function);
+    return boost::trim_copy(rettype) + " " + class_ + "::" + boost::trim_copy(function);
 }
 
 static std::string CPPServiceLangGen_unreliable_str(bool unreliable) { return unreliable ? "true" : "false"; }
@@ -4258,7 +4260,7 @@ std::string CPPServiceLangGen::convert_constant(ConstantDefinition* c,
         {
             RR_SHARED_PTR<ConstantDefinition> c3 = TryFindByName(c2, f2.ConstantRefName);
             if (!c3)
-                throw ServiceException("Invalid structure cosntant " + c->Name);
+                throw ServiceException("Invalid structure constant " + c->Name);
             o += convert_constant(c3.get(), c2, def) + " ";
         }
 
@@ -4317,7 +4319,7 @@ bool CPPServiceLangGen::is_member_override(MemberDefinition* m,
         throw InternalErrorException("Failure in is_member_override");
     RR_SHARED_PTR<ServiceDefinition> parent_def = obj_def->ServiceDefinition_.lock();
     if (!parent_def)
-        throw InternalErrorException("Faisure in is_member_override");
+        throw InternalErrorException("Failure in is_member_override");
     BOOST_FOREACH (const std::string& implements_str, obj_def->Implements)
     {
         if (!boost::contains(implements_str, "."))

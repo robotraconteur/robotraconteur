@@ -738,7 +738,7 @@ RR_SHARED_PTR<RobotRaconteurNode> ServiceSubscription::GetNode()
     return n;
 }
 
-static RR_SHARED_PTR<detail::ServiceSubscription_client> SeviceSubscription_FindClient(
+static RR_SHARED_PTR<detail::ServiceSubscription_client> ServiceSubscription_FindClient(
     std::map<ServiceSubscriptionClientID, RR_SHARED_PTR<detail::ServiceSubscription_client> >& clients,
     const RR_SHARED_PTR<RRObject>& client)
 {
@@ -780,7 +780,7 @@ void ServiceSubscription::ClaimClient(const RR_SHARED_PTR<RRObject>& client)
         if (!active)
             throw InvalidOperationException("Service closed");
 
-        RR_SHARED_PTR<detail::ServiceSubscription_client> sub = SeviceSubscription_FindClient(clients, client);
+        RR_SHARED_PTR<detail::ServiceSubscription_client> sub = ServiceSubscription_FindClient(clients, client);
 
         if (!sub)
             throw InvalidArgumentException("Invalid client for ClaimClient");
@@ -816,7 +816,7 @@ void ServiceSubscription::ReleaseClient(const RR_SHARED_PTR<RRObject>& client)
             {}
         }
 
-        RR_SHARED_PTR<detail::ServiceSubscription_client> sub = SeviceSubscription_FindClient(clients, client);
+        RR_SHARED_PTR<detail::ServiceSubscription_client> sub = ServiceSubscription_FindClient(clients, client);
 
         if (!sub)
             return;

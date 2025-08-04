@@ -254,8 +254,8 @@ TAB_SIZE               = 4
 ALIASES                =
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
-# A mapping has the form "name=value". For example adding "class=itcl::class"
-# will allow you to use the command class in the itcl::class meaning.
+# A mapping has the form "name=value". For example adding "class=a::class"
+# will allow you to use the command class in the a::class meaning.
 
 TCL_SUBST              =
 
@@ -1418,7 +1418,7 @@ TOC_EXPAND             = NO
 
 # If the GENERATE_QHP tag is set to YES and both QHP_NAMESPACE and
 # QHP_VIRTUAL_FOLDER are set, an additional index file will be generated that
-# can be used as input for Qt's qhelpgenerator to generate a Qt Compressed Help
+# can be used as input for Qt's  to generate a Qt Compressed Help
 # (.qch) of the generated HTML documentation.
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
@@ -1473,7 +1473,7 @@ QHP_CUST_FILTER_ATTRS  =
 QHP_SECT_FILTER_ATTRS  =
 
 # The QHG_LOCATION tag can be used to specify the location of Qt's
-# qhelpgenerator. If non-empty doxygen will try to run qhelpgenerator on the
+# . If non-empty doxygen will try to run  on the
 # generated .qhp file.
 # This tag requires that the tag GENERATE_QHP is set to YES.
 
@@ -1661,7 +1661,7 @@ SERVER_BASED_SEARCH    = NO
 #
 # Doxygen ships with an example indexer (doxyindexer) and search engine
 # (doxysearch.cgi) which are based on the open source search engine library
-# Xapian (see: https://xapian.org/).
+#
 #
 # See the section "External Indexing and Searching" for details.
 # The default value is: NO.
@@ -1674,7 +1674,7 @@ EXTERNAL_SEARCH        = NO
 #
 # Doxygen ships with an example indexer (doxyindexer) and search engine
 # (doxysearch.cgi) which are based on the open source search engine library
-# Xapian (see: https://xapian.org/). See the section "External Indexing and
+#  . See the section "External Indexing and
 # Searching" for details.
 # This tag requires that the tag SEARCHENGINE is set to YES.
 
@@ -1776,8 +1776,6 @@ PAPER_TYPE             = a4
 # by its name or with the correct syntax as to be used with the LaTeX
 # \usepackage command. To get the times font for instance you can specify :
 # EXTRA_PACKAGES=times or EXTRA_PACKAGES={times}
-# To use the option intlimits with the amsmath package you can specify:
-# EXTRA_PACKAGES=[intlimits]{amsmath}
 # If left blank no extra packages will be included.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
@@ -1873,7 +1871,7 @@ LATEX_HIDE_INDICES     = NO
 LATEX_SOURCE_CODE      = NO
 
 # The LATEX_BIB_STYLE tag can be used to specify the style to use for the
-# bibliography, e.g. plainnat, or ieeetr. See
+# bibliography, e.g. plainnat, or . See
 # https://en.wikipedia.org/wiki/BibTeX and \cite for more info.
 # The default value is: plain.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
@@ -2450,9 +2448,7 @@ DIRECTORY_GRAPH        = YES
 # Note: If you choose svg you need to set HTML_FILE_EXTENSION to xhtml in order
 # to make the SVG files visible in IE 9+ (other browsers do not have this
 # requirement).
-# Possible values are: png, jpg, gif, svg, png:gd, png:gd:gd, png:cairo,
-# png:cairo:gd, png:cairo:cairo, png:cairo:gdiplus, png:gdiplus and
-# png:gdiplus:gdiplus.
+# Possible values are: png, jpg, gif, svg, png:gd, png:gd:gd, png:cairo,.
 # The default value is: png.
 # This tag requires that the tag HAVE_DOT is set to YES.
 

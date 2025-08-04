@@ -1,13 +1,3 @@
-# -------------------------------------------------------------------------------
-# Name:        module1
-# Purpose:
-#
-# Author:      wasonj
-#
-# Created:     17/10/2014
-# Copyright:   (c) wasonj 2014
-# Licence:     <your licence>
-# -------------------------------------------------------------------------------
 
 import RobotRaconteur as RR
 RRN = RR.RobotRaconteurNode.s

@@ -2,7 +2,7 @@
 Logging and Taps
 ================
 
-Logging is configured using environmental variblase or command line option
+Logging is configured using environmental variables or command line option
 ``--robotraconteur-log-level=`` with the node setup classes, or using the
 RobotRaconteur.SetLogLevel() with the RobotRaconteur.LogLevel_* enum values.
 
@@ -117,7 +117,7 @@ LogComponent Enum
 .. data:: RobotRaconteur.LogComponent_Unpack
    :value: 8
 
-   data message unpacknig component
+   data message unpacking component
 
 .. data:: RobotRaconteur.LogComponent_ServiceDefinition
    :value: 9

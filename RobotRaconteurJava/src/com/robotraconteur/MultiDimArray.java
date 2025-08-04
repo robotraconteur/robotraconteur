@@ -22,6 +22,7 @@ public class MultiDimArray
 
     public void retrieveSubArray(int[] memorypos, MultiDimArray buffer, int[] bufferpos, int[] count)
     {
+        // cSpell: ignore mema, memb
 
         MultiDimArray mema = this;
         MultiDimArray memb = buffer;

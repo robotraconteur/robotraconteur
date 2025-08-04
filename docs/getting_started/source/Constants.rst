@@ -128,4 +128,4 @@ Example code excerpts demonstrating the use of constants:
 
             auto drive_straight = experimental::create3::experimental__create3Constants::Create::DRIVE_STRAIGHT;
             auto spin_clockwise = experimental::create3::experimental__create3Constants::Create::SPIN_CLOCKWISE;
-            auto spin_counterclockwise = experimental::create3::experimental__create3Constants::Create::SPIN_COUNTERCCLOCKWISE;
+            auto spin_counterclockwise = experimental::create3::experimental__create3Constants::Create::SPIN_COUNTERCLOCKWISE;

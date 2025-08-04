@@ -82,6 +82,7 @@ TEST(RobotRaconteurMisc, EncodeServicePathIndexTest)
 
 TEST(RobotRaconteurMisc, BuildServicePathTest)
 {
+    // cSpell: disable
     std::vector<ServicePathSegment> segments;
     segments.push_back(ServicePathSegment("alpha"));
     segments.push_back(ServicePathSegment("be2_ta"));
@@ -109,6 +110,7 @@ TEST(RobotRaconteurMisc, BuildServicePathTest)
 
     std::string path2 = BuildServicePath(segments3);
     EXPECT_EQ(boost::to_lower_copy(path2), boost::to_lower_copy(path2_str));
+    // cSpell: enable
 }
 
 TEST(RobotRaconteurMisc, CreateIdentifierAttributeFilterTest)

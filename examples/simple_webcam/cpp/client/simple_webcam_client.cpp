@@ -11,7 +11,7 @@ namespace cam = ::experimental::simplewebcam3;
 // Simple client to read images from a Webcam server
 // and display the images
 
-// This exmaple expects the simple_webcam_service_multi multi camera service to be running
+// This example expects the simple_webcam_service_multi multi camera service to be running
 
 // Convert WebcamImage to OpenCV format
 cv::Mat webcam_image_to_mat(cam::WebcamImagePtr image)

@@ -19,6 +19,7 @@
 #include <boost/range/adaptors.hpp>
 //#include <Python.h>
 
+// cSpell: ignore objectheapid, XINCREF, sphandler, WAMCU, WMDAMCU, rrerr
 namespace RobotRaconteur
 {
 

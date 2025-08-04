@@ -1,5 +1,7 @@
 find_package(SWIG REQUIRED)
 
+# cSpell: ignore DSWIG
+
 function(package_source_swig_net SWIG_NET_EXTRA_ARGS SWIG_NET_OUTDIR outfiles)
     include(${CMAKE_SOURCE_DIR}/RobotRaconteurNET/NETSwigVars.cmake)
     add_custom_command(

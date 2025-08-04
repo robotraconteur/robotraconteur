@@ -61,6 +61,7 @@ class Create_impl(object):
         self._create_state_type = RRN.GetStructureType("experimental.create3.CreateState")
         self._create_constants = RRN.GetConstants("experimental.create3")
         self._create_state_flags = self._create_constants["CreateStateFlags"]
+        # cSpell: disable-next-line
         self._packet_unpack = struct.Struct(">xBBBBBBB4xBhh6xHH14x4xhhhh")
 
         self._wires_ready = False

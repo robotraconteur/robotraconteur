@@ -425,6 +425,7 @@ void RobotRaconteurNode::Shutdown()
             services.clear();
         }
 
+        // cSpell: ignore endpointsv
         std::vector<RR_SHARED_PTR<Endpoint> > endpointsv;
         {
             boost::mutex::scoped_lock lock(endpoint_lock);
@@ -455,6 +456,7 @@ void RobotRaconteurNode::Shutdown()
             }
         }
 
+        // cSpell: ignore transportsv
         std::vector<RR_SHARED_PTR<Transport> > transportsv;
         {
             boost::unique_lock<boost::shared_mutex> lock(transports_lock);

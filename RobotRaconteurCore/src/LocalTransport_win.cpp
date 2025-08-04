@@ -343,6 +343,7 @@ RR_SHARED_PTR<std::fstream> HandleToStream(HANDLE h)
     return RR_SHARED_PTR<std::fstream>(f, &CloseAndDeleteStream<std::fstream>);
 }
 
+// cspell:disable
 bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_)
 {
     SECURITY_ATTRIBUTES sa;
@@ -383,6 +384,7 @@ bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_)
     }
     return true;
 }
+// cspell : enable
 } // namespace LocalTransportUtil
 
 } // namespace detail

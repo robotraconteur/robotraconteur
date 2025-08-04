@@ -31,6 +31,8 @@ namespace RobotRaconteur
 
 %include "Timer.i"
 
+// cSpell: ignore sphandler
+
 %extend RobotRaconteur::WallTimer
 {
 	WallTimer(const boost::posix_time::time_duration& period, bool oneshot, const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node, RobotRaconteur::AsyncTimerEventReturnDirector* handler, int32_t id )

@@ -303,6 +303,7 @@ if(WIN32)
                     OpenSSL::Crypto)
         target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
     else()
+        # cSpell: disable
         target_link_libraries(
             RobotRaconteurCore
             PRIVATE Mswsock.lib
@@ -313,6 +314,7 @@ if(WIN32)
                     Secur32.lib
                     Bcrypt.lib)
         target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_SCHANNEL)
+        # cSpell: enable
     endif()
 
     if(CMAKE_COMPILER_IS_GNUCXX)

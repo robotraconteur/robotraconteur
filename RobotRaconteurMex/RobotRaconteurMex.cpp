@@ -25,6 +25,11 @@
 
 // NOLINTBEGIN(cppcoreguidelines-pro-type-cstyle-cast,cppcoreguidelines-avoid-c-arrays)
 
+// cSpell: ignore mxobj, skelid, servicesubscriptionid, wiresubscriptionid, pipesubscriptionid, mexobjecttype
+// cSpell: ignore subobjectsubscriptionid, skelscount, mret, numel, WAMCU, WMDAMCU, mema
+// cSpell: ignore nlhs, plhs, nrhs, prhs, mxtypeid, mxdat, mxreal, mxcount, mxdata, mxkey odef, ostub, mxstub
+// cSpell: ignore ppdef, mxindex, wdef, ninds, pind, urlc, urln, skelsp, mxskelid, mxret
+
 bool isinit = false;
 
 void rrAtExit()
@@ -960,7 +965,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
         {
             if (nlhs != 1 || nrhs != 2)
                 throw InvalidArgumentException(
-                    "RobotRaconteurMex FindNadeByName requires 2 input and 1 output arguments");
+                    "RobotRaconteurMex FindNodeByName requires 2 input and 1 output arguments");
             plhs[0] = FindNodeByName(prhs[1]);
         }
         else if (command == "UpdateDetectedNodes")
@@ -8826,7 +8831,7 @@ void MexPipeSubscription::subsasgn(const mxArray* S, const mxArray* value)
 }
 
 // Predicate would result in threading error. Disable until problem resolved.
-/*bool MexServiceSubsrciptionPredicate(const boost::shared_ptr<mxArray>& mxFunc, const ServiceInfo2& info)
+/*bool MexServiceSubscriptionPredicate(const boost::shared_ptr<mxArray>& mxFunc, const ServiceInfo2& info)
 {
     try
     {
@@ -9158,7 +9163,7 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
         {
             /*boost::shared_ptr<mxArray> mx_predicate = boost::shared_ptr<mxArray>(mxDuplicateArray(filter_predicate1),
             ::mxDestroyArray); mexMakeArrayPersistent(mx_predicate.get()); filter2->Predicate =
-            boost::bind(&MexServiceSubsrciptionPredicate, mx_predicate, RR_BOOST_PLACEHOLDERS(_1));*/
+            boost::bind(&MexServiceSubscriptionPredicate, mx_predicate, RR_BOOST_PLACEHOLDERS(_1));*/
             throw InvalidArgumentException("ServiceSubscriptionFilter.Predicate not supported in MATLAB");
         }
 

@@ -23,6 +23,7 @@ if(NOT ANDROID)
 
     add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS})
 
+    # cSpell: disable
     add_custom_target(
         RobotRaconteurJavaTest ALL
         "${Java_JAVAC_EXECUTABLE}"
@@ -43,6 +44,7 @@ if(NOT ANDROID)
         "${CMAKE_BINARY_DIR}/RobotRaconteurJava/bin"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test")
     add_dependencies(RobotRaconteurJavaTest RobotRaconteurJava RobotRaconteurJavaTest_gen)
+    # cSpell: enable
 
     add_custom_command(
         TARGET RobotRaconteurJavaTest

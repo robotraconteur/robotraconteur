@@ -2,6 +2,8 @@ from RobotRaconteur.Client import *
 import sys
 import time
 
+# cSpell: ignore rrname
+
 
 def main():
     rrname = sys.argv[1]

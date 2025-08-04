@@ -75,7 +75,7 @@ public class MultiDimArray
     /// <param name="count">Count of data to retrieve</param>
     public virtual void RetrieveSubArray(uint[] memorypos, MultiDimArray buffer, uint[] bufferpos, uint[] count)
     {
-
+        // cSpell: ignore mema, memb
         MultiDimArray mema = this;
         MultiDimArray memb = buffer;
 

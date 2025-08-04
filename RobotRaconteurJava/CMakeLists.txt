@@ -67,6 +67,7 @@ endif()
 rrsettargetdirs(RobotRaconteurJavaNative "Java" "Java")
 
 if(NOT ANDROID)
+    # cSpell: disable
     add_custom_target(
         RobotRaconteurJava ALL
         "${Java_JAVAC_EXECUTABLE}"
@@ -89,7 +90,9 @@ if(NOT ANDROID)
         POST_BUILD
         COMMAND "${Java_JAR_EXECUTABLE}" cf "$<TARGET_FILE_DIR:RobotRaconteurJavaNative>/RobotRaconteur.jar" *
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+    # cSpell: enable
 else()
+    # cSpell: disable
     set(ANDROID_JAR "" CACHE FILEPATH "Android system Jar file")
     add_custom_target(
         RobotRaconteurJava ALL
@@ -115,6 +118,7 @@ else()
         POST_BUILD
         COMMAND "${Java_JAR_EXECUTABLE}" cf "$<TARGET_FILE_DIR:RobotRaconteurJavaNative>/RobotRaconteurAndroid.jar" *
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+    # cSpell: enable
 endif()
 
 include(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake)

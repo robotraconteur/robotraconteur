@@ -2,6 +2,8 @@ classdef ServiceTest2_test_sequence_gen < handle
     %SERVICETEST2_TEST_SEQUENCE_GEN Summary of this class goes here
     %   Detailed explanation goes here
 
+    % cSpell: ignore numel
+
     properties
         counter
         step

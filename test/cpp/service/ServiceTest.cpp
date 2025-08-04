@@ -15,6 +15,8 @@ using std::exception;
 
 using namespace RobotRaconteur::test;
 
+// cSpell: ignore lstruct, numa, structa
+
 namespace RobotRaconteurTest
 {
 

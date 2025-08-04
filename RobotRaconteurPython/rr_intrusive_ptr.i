@@ -9,13 +9,13 @@
 
 %include <intrusive_ptr.i>
 
-// Language specific macro implementing all the customisations for handling the smart pointer
+// Language specific macro implementing all the customizations for handling the smart pointer
 %define SWIG_INTRUSIVE_PTR_TYPEMAPS_IMPLEMENTATION(PTRCTOR_VISIBILITY, CPTR_VISIBILITY, CONST, TYPE...)
 
 // %naturalvar is as documented for member variables
 %naturalvar TYPE;
 %naturalvar SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE >;
-// destructor wrapper customisation
+// destructor wrapper customization
 %feature("unref") TYPE "(void)arg1; delete smartarg1;"
 
 %typemap(in) SWIG_INTRUSIVE_PTR_QNAMESPACE::intrusive_ptr< CONST TYPE > (void* argp, int res = 0, int newmem = 0) %{

@@ -347,7 +347,7 @@ MessageEntryType Enum
 .. data:: RobotRaconteur.MessageEntryType_EndpointCheckCapabilityRet
    :value: 502
 
-   Get endpoint capabalitiy response
+   Get endpoint capability response
 
 .. data:: RobotRaconteur.MessageEntryType_ServiceCheckCapabilityReq
    :value: 1101

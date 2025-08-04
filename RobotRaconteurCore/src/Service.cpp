@@ -37,6 +37,7 @@
 
 #undef SendMessage
 
+// cSpell: ignore endpt
 namespace RobotRaconteur
 {
 static void rr_context_emptyhandler(const RR_SHARED_PTR<RobotRaconteurException>&) {}

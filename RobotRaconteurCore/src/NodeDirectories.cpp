@@ -31,8 +31,10 @@ namespace detail
 {
 
 #ifdef __GNUG__
+// cSpell: disable
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
+// cSpell: enable
 #endif
 static boost::filesystem::path replace_default_val_with_env(const boost::filesystem::path& default_val,
                                                             const std::string& rr_env_var)
@@ -141,6 +143,7 @@ static boost::filesystem::path user_apple_run_dir(const std::string& rr_env_var)
 #endif
 
 #ifdef ROBOTRACONTEUR_WINDOWS
+// cSpell: disable
 static boost::filesystem::path get_user_localappdata()
 {
     const char* rr_user_local_appdata = std::getenv("ROBOTRACONTEUR_USER_LOCALAPPDATA");
@@ -176,11 +179,14 @@ static boost::filesystem::path get_common_appdata()
     boost::filesystem::path sysdata_path(sysdata_path1.get());
     return sysdata_path;
 }
+// cSpell: enable
 #endif
 
 #ifdef __GNUG__
+// cSpell: disable
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
+// cSpell: enable
 #endif
 static bool is_sub_dir(boost::filesystem::path p, const boost::filesystem::path& root)
 {

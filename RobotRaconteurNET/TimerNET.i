@@ -16,8 +16,8 @@ struct WallTimer_initstruct
 
 %extend RobotRaconteur::WallTimer
 {
+// cSpell: ignore sphandler
 %csmethodmodifiers WallTimer "internal";
-
 WallTimer(const boost::posix_time::time_duration& period, bool oneshot, const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node, WallTimer_initstruct init )
 {
 	boost::shared_ptr<AsyncTimerEventReturnDirector> sphandler(init.handler,boost::bind(&ReleaseDirector<AsyncTimerEventReturnDirector>,RR_BOOST_PLACEHOLDERS(_1),init.id));

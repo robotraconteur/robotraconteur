@@ -1,3 +1,5 @@
+// cSpell: ignore sphandler
+
 %typemap(javaclassmodifiers) WallTimer_initstruct "class";
 
 %inline {

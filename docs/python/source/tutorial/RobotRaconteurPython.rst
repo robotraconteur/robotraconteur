@@ -122,7 +122,7 @@ Python Reference to Functions
 
 Robot Raconteur frequently uses function references (called function handles or function pointers) to implement
 callbacks for events and other situations where the library needs to notify the software. In Python, this is
-accomplished using function references (also called function objecs depending on the author). Consider a simple module
+accomplished using function references (also called function objects depending on the author). Consider a simple module
 “MyModule" shown in the following example:
 
 ::

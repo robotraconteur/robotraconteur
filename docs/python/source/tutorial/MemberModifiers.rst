@@ -4,7 +4,7 @@ Member Modifiers
 ================
 
 Member modifiers change the way a member behaves. Modifiers are specified between square brackets following the member
-definition. The members ``distance_traveled``, ``angle_traveled``, ``bumbers``, and ``create_state`` in
+definition. The members ``distance_traveled``, ``angle_traveled``, ``bumpers``, and ``create_state`` in
 "experimental.create." all use the ``readonly`` modifier. This means that the client can get these
 values but cannot set them. The available member modifiers are as follows:
 
