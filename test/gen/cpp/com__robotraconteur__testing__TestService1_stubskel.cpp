@@ -32,7 +32,7 @@ std::string out(
 "#Refer to the reference implementation for details\n"
 "#on these behaviors.  New implementations of\n"
 "#Robot Raconteur should test against the reference\n"
-"#client and server to determine compatibilty.\n"
+"#client and server to determine compatibility.\n"
 "\n"
 "service com.robotraconteur.testing.TestService1\n"
 "\n"
