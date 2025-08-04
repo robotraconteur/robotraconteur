@@ -220,3 +220,7 @@ memb
 destrrarray
 assignin
 lstruct
+eret
+mret
+mmret
+rrexp
