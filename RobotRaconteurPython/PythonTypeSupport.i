@@ -26,6 +26,8 @@ boost::intrusive_ptr<MessageElement>  PackMessageElement(PyObject* data, const b
 PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element, const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<WrappedServiceStub>& stub, const boost::shared_ptr<RobotRaconteurNode>& node);
 PyObject* UnpackMessageElement(const boost::intrusive_ptr<MessageElement>& element, const boost::shared_ptr<TypeDefinition>& type1, const boost::shared_ptr<ServerContext>& obj, const boost::shared_ptr<RobotRaconteurNode>& node);
 
+// cSpell: ignore destrrarray
+
 %rename(_PackToRRArray) PackToRRArray;
 boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1,const boost::intrusive_ptr<RRBaseArray>& destrrarray);
 

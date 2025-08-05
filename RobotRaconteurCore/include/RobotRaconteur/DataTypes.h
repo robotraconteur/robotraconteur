@@ -121,7 +121,7 @@ struct ROBOTRACONTEUR_CORE_API cfloat
 struct ROBOTRACONTEUR_CORE_API rr_bool
 {
     /**
-     * @brief The vaue of the boolean
+     * @brief The value of the boolean
      *
      * 0 for `false`, >0 for `true`
      */
@@ -719,7 +719,7 @@ class RRArray : public RRBaseArray
     /**
      * @brief Assign one value to all elements
      *
-     * Synonynm for fill()
+     * Synonym for fill()
      *
      * @param value The value to assign all elements
      */
@@ -1120,7 +1120,7 @@ static RR_INTRUSIVE_PTR<RRArray<T> > AttachRRArrayCopy(const T* data, const size
  *
  * @param type The type code
  * @param length The length of the returned array (element count)
- * @return RR_INRUSIVE_PTR<RRBaseArray> The allocated array
+ * @return RR_INTRUSIVE_PTR<RRBaseArray> The allocated array
  */
 ROBOTRACONTEUR_CORE_API RR_INTRUSIVE_PTR<RRBaseArray> AllocateRRArrayByType(DataTypes type, size_t length);
 
@@ -1569,6 +1569,7 @@ ROBOTRACONTEUR_CORE_API class MultiDimArray_CalculateCopyIndicesIter
     virtual ~MultiDimArray_CalculateCopyIndicesIter();
 };
 
+// cSpell: ignore mema, memb
 ROBOTRACONTEUR_CORE_API RR_SHARED_PTR<MultiDimArray_CalculateCopyIndicesIter>
 MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_dims,
                                             const std::vector<uint32_t>& mema_pos,
@@ -2545,7 +2546,7 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
  *
  * @tparam T The type of the array elements
  * @param length The length of the returned array (element count)
- * @return RR_INTRUSIVE_PTR<RRNamedrray<T> > The allocated array
+ * @return RR_INTRUSIVE_PTR<RRNamedArray<T> > The allocated array
  */
 template <typename T>
 static RR_INTRUSIVE_PTR<RRNamedArray<T> > AllocateEmptyRRNamedArray(size_t length)

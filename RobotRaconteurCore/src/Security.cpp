@@ -233,6 +233,7 @@ RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser
 std::string PasswordFileUserAuthenticator::MD5Hash(boost::string_ref text)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
+    // cSpell: ignore hcryptprov
     HCRYPTPROV hProv = 0;
     HCRYPTPROV hHash = 0;
 

@@ -510,7 +510,7 @@ statement can be used to alias an imported type.
 
 “as” can be used to change the name locally.
 
-``using exmaple.importeddef.obj1 as another_obj1``
+``using example.importeddef.obj1 as another_obj1``
 
 Robot Raconteur naming
 ----------------------

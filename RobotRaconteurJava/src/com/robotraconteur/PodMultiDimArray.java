@@ -20,6 +20,7 @@ public class PodMultiDimArray
 
     public void retrieveSubArray(int[] memorypos, PodMultiDimArray buffer, int[] bufferpos, int[] count)
     {
+        // cSpell: ignore mema, memb
         PodMultiDimArray mema = this;
         PodMultiDimArray memb = buffer;
 

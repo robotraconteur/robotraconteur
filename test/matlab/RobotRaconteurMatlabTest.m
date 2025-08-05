@@ -3,6 +3,8 @@ function RobotRaconteurMatlabTest(url)
 
 c=RobotRaconteur.Connect(url);
 
+% cSpell: ignore lstruct
+
 c.d1 = 3.456;
 assert (c.d1 == 12.345)
 

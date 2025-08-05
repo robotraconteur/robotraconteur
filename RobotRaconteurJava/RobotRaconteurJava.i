@@ -4,6 +4,7 @@
 
 %{
 #if defined(__clang__)
+// cSpell: disable-next-line
 #pragma clang diagnostic ignored "-Wunused-function"
 #endif
 
@@ -106,7 +107,7 @@
 %include "ServiceDefinitionJava.i"
 %include "NodeIDJava.i"
 
-#define RR_MESSAEGE_ELEMENT_DATA_UTIL_EXTRAS
+#define RR_MESSAGE_ELEMENT_DATA_UTIL_EXTRAS
 %include "MessageJava.i"
 
 %include "AsyncHandlerDirector.i"

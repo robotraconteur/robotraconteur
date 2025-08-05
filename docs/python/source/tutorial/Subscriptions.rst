@@ -13,7 +13,7 @@ connection is lost.
 Wires and Pipes can be subscribed once a ``ServiceSubscription`` is created. The ``SubscribeWire`` function takes the
 name of the member and returns a ``WireSubscription`` that can be used to interact with all connected wires. The
 ``InValue`` property will return the “most recent” value received from all wires. The ``OutValue`` property will set all
-wires to the specified value. For pipes, the ``SubscripePipe`` is used, and retuns a ``PipeSubscription``. This function
+wires to the specified value. For pipes, the ``SubscribePipe`` is used, and retuns a ``PipeSubscription``. This function
 can receive packets using the ``ReceivePacket`` or ``TryReceivePacket`` functions. The received packets are not sorted
 and all received packets are retrieved in the order they arrived. The ``SendPacket`` function can be used to send
 packets to all connected services. Note that currently the Wire and Pipe subscriptions can only be made to the root

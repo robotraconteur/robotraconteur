@@ -142,7 +142,7 @@ namespace RobotRaconteur
 
 
 
-
+	// cSpell: ignore asptrfromn
 	%typemaps_asptrfromn(%checkcode(STDSTRING),MessageStringPtr)
 }
 

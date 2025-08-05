@@ -9,6 +9,9 @@ import java.util.Random;
 import com.robotraconteur.testing.TestService1.*;
 import com.robotraconteur.testing.TestService2.*;
 import com.robotraconteur.testing.TestService3.*;
+
+// cSpell: ignore tschemes
+
 public class RobotRaconteurJavaTest
 {
 

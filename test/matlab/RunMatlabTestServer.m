@@ -8,6 +8,8 @@
 RobotRaconteur.StartLocalServer('example.MatlabTestServer');
 RobotRaconteur.StartTcpServer(4343);
 
+%cSpell: ignore testva
+
 %Define a service definition
 servicedef1=['service example.MatlabTestService\n\n' ...
     'struct MatlabTestStruct\n' ...

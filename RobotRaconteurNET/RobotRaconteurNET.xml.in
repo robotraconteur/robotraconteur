@@ -378,7 +378,7 @@
       <summary>Get endpoint capability request</summary>
     </member>
     <member name="F:RobotRaconteur.MessageEntryType.EndpointCheckCapabilityRet">
-      <summary>Get endpoint capabalitiy response</summary>
+      <summary>Get endpoint capability response</summary>
     </member>
     <member name="F:RobotRaconteur.MessageEntryType.ServiceCheckCapabilityReq">
       <summary>Get service capability request</summary>
@@ -823,7 +823,7 @@
       <summary>data message packing component</summary>
     </member>
     <member name="F:RobotRaconteur.LogComponent.LogComponent_Unpack">
-      <summary>data message unpacknig component</summary>
+      <summary>data message unpacking component</summary>
     </member>
     <member name="F:RobotRaconteur.LogComponent.LogComponent_ServiceDefinition">
       <summary>service definition parser component</summary>
@@ -898,7 +898,7 @@
       <remarks>
         <para>
           Service discovery will often return a list of candidate URLs to
-          use to connect to a node. This function uses hueristics to select
+          use to connect to a node. This function uses heuristics to select
           the "best" URL to use. The selection criteria ranks URLs in roughly
           the following order, lower number being better:
         </para>
@@ -927,7 +927,7 @@
       </summary>
       <remarks>
         This function is not recommended as the results can be
-        unpredicatle
+        unpredictable
       </remarks>
       <param name="type">The type to unregister</param>
     </member>
@@ -1193,7 +1193,7 @@
       <remarks>
         <para>
           This error is thrown when a specified service path
-          does not have an assosciate object. The object may
+          does not have an associated object. The object may
           have been released by the service, or the service
           path is invalid
         </para>
@@ -1303,7 +1303,7 @@
       <remarks>
         <para>
           ServiceException is a catch-all error for exceptions on services.
-          See the message field for an explanation of the error that occured.
+          See the message field for an explanation of the error that occurred.
         </para>
         <para>
           Error code MessageErrorType_ServiceError (8)
@@ -1422,7 +1422,7 @@
       </summary>
       <remarks>
         <para>
-          This exeception is thrown when the provide data cannot be serialized.
+          This exception is thrown when the provide data cannot be serialized.
           This typically occurs inside a transport.
         </para>
         <para>
@@ -1644,7 +1644,7 @@
         Exception thrown when a system resource has been exhausted
       </summary>
       <remarks>
-        Error code MessageErrorType_OutOfsystemResource (23)
+        Error code MessageErrorType_OutOfSystemResource (23)
       </remarks>
     </member>
     <member name="M:RobotRaconteur.OutOfSystemResourceException.#ctor(System.String,System.String,System.Object)">
@@ -1757,7 +1757,7 @@
 
     <member name="T:RobotRaconteur.OutOfRangeException">
       <summary>
-        Exception thrown when an attempt to acces an array or container
+        Exception thrown when an attempt to access an array or container
         index is out of range
       </summary>
       <remarks>
@@ -3575,7 +3575,7 @@
         </para>
       </remarks>
       <param name="servicepath">The service path to release lock</param>
-      <param name="username">The username requsting the lock release</param>
+      <param name="username">The username requesting the lock release</param>
       <param name="override_">If False, only the creating username can release the lock. If True,
         any username can release the lock</param>
     </member>
@@ -4103,7 +4103,7 @@
           PipeBroadcaster and WireBroadcaster must be added to the downsampler
           using AddPipeBroadcaster() and AddWireBroadcaster(), respectively.
           It is recommended that these functions be called within
-          the RRServiceObjectInit(context,servicepath) function thit is called
+          the RRServiceObjectInit(context,servicepath) function that is called
           by the node when a service object is initialized.
         </para>
         <para>

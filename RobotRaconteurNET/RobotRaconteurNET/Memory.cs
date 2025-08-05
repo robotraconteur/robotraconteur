@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+// cSpell: ignore objectheapid
+
 namespace RobotRaconteur
 {
 /// <summary>

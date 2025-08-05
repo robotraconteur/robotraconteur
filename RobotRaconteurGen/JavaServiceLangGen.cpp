@@ -3097,7 +3097,7 @@ std::string JavaServiceLangGen::convert_constant(ConstantDefinition* c,
         {
             RR_SHARED_PTR<ConstantDefinition> c3 = TryFindByName(c2, f2.ConstantRefName);
             if (!c3)
-                throw ServiceException("Invalid structure cosntant " + c->Name);
+                throw ServiceException("Invalid structure constant " + c->Name);
             o += convert_constant(c3.get(), c2, def) + " ";
         }
 

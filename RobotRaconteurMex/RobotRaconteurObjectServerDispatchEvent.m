@@ -1,3 +1,4 @@
+% cSpell: ignore evnt
 function RobotRaconteurObjectServerDispatchEvent(skelid,eventname,evnt)
 
 p={};

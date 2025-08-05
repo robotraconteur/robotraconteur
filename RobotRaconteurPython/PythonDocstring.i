@@ -101,7 +101,7 @@
 %feature("docstring") MessageEntryType_ConnectClientCombined "Connect client combined operation request";
 %feature("docstring") MessageEntryType_ConnectClientCombinedRet "Connect client combined operation response";
 %feature("docstring") MessageEntryType_EndpointCheckCapability "Get endpoint capability request";
-%feature("docstring") MessageEntryType_EndpointCheckCapabilityRet "Get endpoint capabalitiy response";
+%feature("docstring") MessageEntryType_EndpointCheckCapabilityRet "Get endpoint capability response";
 %feature("docstring") MessageEntryType_ServiceCheckCapabilityReq "Get service capability request";
 %feature("docstring") MessageEntryType_ServiceCheckCapabilityRet "Get service capability response";
 %feature("docstring") MessageEntryType_ClientKeepAliveReq "Client keep alive request";
@@ -258,7 +258,7 @@
 %feature("docstring") RobotRaconteur_LogComponent_Service "service component";
 %feature("docstring") RobotRaconteur_LogComponent_Member "member component";
 %feature("docstring") RobotRaconteur_LogComponent_Pack "data message packing component";
-%feature("docstring") RobotRaconteur_LogComponent_Unpack "data message unpacknig component";
+%feature("docstring") RobotRaconteur_LogComponent_Unpack "data message unpacking component";
 %feature("docstring") RobotRaconteur_LogComponent_ServiceDefinition "service definition parser component";
 %feature("docstring") RobotRaconteur_LogComponent_Discovery "node/service discovery component";
 %feature("docstring") RobotRaconteur_LogComponent_Subscription "subscription component";
@@ -311,7 +311,7 @@ Construct a new Robot Raconteur node.
 
 This function must be called to initialize background tasks before
 using the node. It is called automatically by the
-singleton accesors, so the user only needs to call this function
+singleton accessors, so the user only needs to call this function
 when not using the singleton. If a custom thread pool is being
 used, the thread pool factory must be specified before
 calling init.
@@ -336,7 +336,7 @@ Register a transport for use by the node
 Select the \"best\" URL from a std::vector of candidates
 
 Service discovery will often return a list of candidate URLs to
-use to connect to a node. This function uses hueristics to select
+use to connect to a node. This function uses heuristics to select
 the \"best\" URL to use. The selection criteria ranks URLs in roughly
 the following order, lower number being better:
 
@@ -1393,7 +1393,7 @@ the \"objectlockoverride\" permission.
 
 :param servicepath: The service path to release lock
 :type str:
-:param username: The username requsting the lock release
+:param username: The username requesting the lock release
 :type username:
 :param override_: If False, only the creating username can release the lock. If True,
  any username can release the lock
@@ -1547,7 +1547,7 @@ an example of an authenticator. The valid options for Policies are as follows:
 |                  |                 |                 | request object  |
 |                  |                 |                 | locks.          |
 |                  |                 |                 | r               |
-|                  |                 |                 | equirevaliduser |
+|                  |                 |                 | requirevaliduser |
 |                  |                 |                 | most also be    |
 |                  |                 |                 | \"true\"          |
 +------------------+-----------------+-----------------+-----------------+
@@ -1670,7 +1670,7 @@ made available to the client using a property member.
 PipeBroadcaster and WireBroadcaster must be added to the downsampler
 using AddPipeBroadcaster() and AddWireBroadcaster(), respectively.
 It is recommended that these functions be called within
-the RRServiceObjectInit(context,servicepath) function thit is called
+the RRServiceObjectInit(context,servicepath) function that is called
 by the node when a service object is initialized.
 
 BeginStep() and EndStep() must be called for each iteration of the

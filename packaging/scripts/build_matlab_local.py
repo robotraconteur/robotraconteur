@@ -8,6 +8,8 @@ import glob
 import argparse
 
 
+# cSpell: disable
+
 def main():
 
     parser = argparse.ArgumentParser(description="Build MATLAB locally")

@@ -62,7 +62,7 @@ public class Webcam_impl : Webcam_default_impl, IRRServiceObject
         _Name = cameraname;
     }
 
-    // Set fream_stream to set MaximumBacklog
+    // Set frame_stream to set MaximumBacklog
     public void RRServiceObjectInit(ServerContext ctx, string service_path)
     {
         rrvar_frame_stream.MaxBacklog = 3;
@@ -163,6 +163,7 @@ public class Webcam_impl : Webcam_default_impl, IRRServiceObject
 
         // Rearrange the data into the correct format for MATLAB arrays
         byte[] mdata = new byte[image.height * image.width * 3];
+        // cSpell: ignore mdbuf
         MultiDimArray mdbuf = new MultiDimArray(new uint[] { (uint)image.height, (uint)image.width, 3 }, mdata);
         for (int channel = 0; channel < 3; channel++)
         {

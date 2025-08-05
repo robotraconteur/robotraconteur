@@ -1261,7 +1261,7 @@ class PipeBroadcaster : public PipeBroadcasterBase
     }
 
     /**
-     * @brief Get the assosciated pipe
+     * @brief Get the associated pipe
      *
      * @return RR_SHARED_PTR<Pipe<T> >
      */

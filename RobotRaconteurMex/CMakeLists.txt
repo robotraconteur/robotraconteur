@@ -17,6 +17,7 @@ endif()
 # include(FindMatlab)
 find_package(Matlab COMPONENTS MX_LIBRARY REQUIRED)
 
+# cSpell: ignore DMATLAB
 add_definitions(-DMATLAB_MEX_FILE -DMATLAB_DEFAULT_RELEASE=R2018a)
 
 set(Boost_USE_MULTITHREADED ON)

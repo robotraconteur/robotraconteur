@@ -277,7 +277,7 @@ class ServiceNotFoundException : public RobotRaconteurException
  * be found
  *
  * This error is thrown when a specified service path
- * does not have an assosciate object. The object may
+ * does not have an associate object. The object may
  * have been released by the service, or the service
  * path is invalid
  *
@@ -382,7 +382,7 @@ class NodeNotFoundException : public RobotRaconteurException
  * an operation on a service
  *
  * ServiceException is a catch-all error for exceptions on services.
- * See the message field for an explanation of the error that occured.
+ * See the message field for an explanation of the error that occurred.
  *
  * Error code MessageErrorType_ServiceError (8)
  *
@@ -500,7 +500,7 @@ class DataTypeException : public RobotRaconteurException
 /**
  * @brief Exception thrown when data cannot be serialized
  *
- * This exeception is thrown when the provide data cannot be serialized.
+ * This exception is thrown when the provide data cannot be serialized.
  * This typically occurs inside a transport.
  *
  * Check that the provided data matches the types supported by
@@ -736,7 +736,7 @@ class SystemResourcePermissionDeniedException : public RobotRaconteurException
 /**
  * @brief Exception thrown when a system resource has been exhausted
  *
- * Error code MessageErrorType_OutOfsystemResource (23)
+ * Error code MessageErrorType_OutOfSystemResource (23)
  *
  */
 class OutOfSystemResourceException : public RobotRaconteurException
@@ -859,7 +859,7 @@ class ServiceDefinitionException : public RobotRaconteurException
 };
 
 /**
- * @brief Exception thrown when an attempt to acces an array or container
+ * @brief Exception thrown when an attempt to access an array or container
  * index is out of range
  *
  * Error code MessageErrorType_OutOfRange (29)
@@ -1458,7 +1458,7 @@ using OperationTimeoutExceptionConstPtr = RR_SHARED_PTR<const OperationTimeoutEx
 /** @brief Convenience alias for OperationCancelledException shared_ptr */
 using OperationCancelledExceptionPtr = RR_SHARED_PTR<OperationCancelledException>();
 /** @brief Convenience alias for OperationCancelledException const shared_ptr */
-using OperationCancelledExceptionConstPtr = RR_SHARED_PTR<const OperationCacnelledException>();
+using OperationCancelledExceptionConstPtr = RR_SHARED_PTR<const OperationCancelledException>();
 #endif
 
 #endif // GENERATING_DOCUMENTATION

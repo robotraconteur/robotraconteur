@@ -712,7 +712,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
     virtual void ClaimClient(const RR_SHARED_PTR<RRObject>& client);
 
     /**
-     * @brief Release a client previously clamed with ClaimClient()
+     * @brief Release a client previously claimed with ClaimClient()
      *
      * Lifecycle management is returned to the subscription
      *

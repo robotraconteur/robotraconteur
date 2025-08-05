@@ -34,7 +34,7 @@ An example of a `main()` function using the `ClientNodeSetup`:
         }
         catch (std::exception& exp)
         {
-            std::cerr << "Error occured in client: " << string(exp.what()) << std::endl;
+            std::cerr << "Error occurred in client: " << string(exp.what()) << std::endl;
             return -1;
         }
     }
@@ -67,7 +67,7 @@ RobotRaconteur::ServerNodeSetup and RobotRaconteur::SecureServerNodeSetup are si
         }
         catch (std::exception& exp)
         {
-            std::cerr << "Error occured in service: " << string(exp.what()) << std::endl;
+            std::cerr << "Error occurred in service: " << string(exp.what()) << std::endl;
             return -1;
         }
     }

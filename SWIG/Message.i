@@ -121,7 +121,6 @@ public:
 	std::vector<uint8_t> Extended;
 	uint32_t DataCount;
 	MessageElement();
-	//MessageElement(const std::string& name, const boost::intrusive_ptr<RobotRaconteur::MessageElementData>& datin);
 
 
 	RR_MAKE_METHOD_PRIVATE(GetData);
@@ -172,7 +171,7 @@ public:
 	}
 
 
-#ifdef RR_MESSAEGE_ELEMENT_DATA_UTIL_EXTRAS
+#ifdef RR_MESSAGE_ELEMENT_DATA_UTIL_EXTRAS
 	static std::string RRBaseArrayToString(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		return RRArrayToString(rr_cast<RRArray<char> >(rrarray));

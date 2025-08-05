@@ -21,6 +21,7 @@
 #include <boost/algorithm/string.hpp>
 #include <dlfcn.h>
 
+// cSpell: ignore SYSFS, Wunused
 #define SYSFS_MOUNT_PATH "/sys"
 #define SYSFS_DEVICE_PATH SYSFS_MOUNT_PATH "/bus/usb/devices"
 #define USB_MAX_DEPTH 7

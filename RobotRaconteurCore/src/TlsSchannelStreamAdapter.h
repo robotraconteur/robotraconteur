@@ -64,7 +64,7 @@ class TlsSchannelAsyncStreamAdapterContext : boost::noncopyable
 {
   private:
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
-
+    // cSpell: disable
     HCERTSTORE activestore;
     PCCERT_CONTEXT activecertificate;
     CredHandle server_credentials;
@@ -75,7 +75,7 @@ class TlsSchannelAsyncStreamAdapterContext : boost::noncopyable
     PCCERT_CONTEXT rootcertificate2020;
     bool use_root_cert_2015;
     bool use_root_cert_2020;
-
+// cSpell: enable
 #endif
     boost::mutex mylock;
     NodeID nodeid;
@@ -104,7 +104,7 @@ class TlsSchannelAsyncStreamAdapterContext : boost::noncopyable
 
 class TlsSchannelAsyncStreamAdapter;
 
-// This class is necessary due to the infurating behavior of ASIO templates
+// This class is necessary due to the infuriating behavior of ASIO templates
 class TlsSchannelAsyncStreamAdapter_ASIO_adapter
 {
     TlsSchannelAsyncStreamAdapter& next_layer_;
@@ -239,6 +239,7 @@ class TlsSchannelAsyncStreamAdapter : public boost::enable_shared_from_this<TlsS
     static void release_context(PCtxtHandle phContext);
     static void release_credentials(PCredHandle phContext);
 
+    // cSpell: ignore doread
     void do_handshake1(const boost::system::error_code& error, size_t bytes_transferred,
                        boost::function<void(const boost::system::error_code&)> handler);
     void do_handshake2(const boost::system::error_code& error, size_t bytes_transferred,

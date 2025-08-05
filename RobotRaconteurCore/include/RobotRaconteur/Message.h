@@ -213,6 +213,7 @@ class ROBOTRACONTEUR_CORE_API MessageElement : public RRValue
   public:
     MessageElement();
 
+    // cSpell: ignore datin
     MessageElement(MessageStringRef name, const RR_INTRUSIVE_PTR<MessageElementData>& datin);
 
     RR_INTRUSIVE_PTR<MessageElementData> GetData();
@@ -466,6 +467,7 @@ RR_INTRUSIVE_PTR<RRMultiDimArray<T> > MessageElement_UnpackMultiDimArray(RR_WEAK
 
 #ifdef __GNUG__
 #pragma GCC diagnostic push
+// cSpell: disable-next-line
 #pragma GCC diagnostic ignored "-Wunused-function"
 #endif
 static std::string MessageElement_UnpackString(const RR_INTRUSIVE_PTR<MessageElement>& m)

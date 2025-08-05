@@ -984,7 +984,7 @@ void WireServerBase::ClientDisconnected(const RR_SHARED_PTR<ServerContext>& cont
                     c.push_back(ee->second);
                     ee = connections.erase(ee);
                     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep, service_path, m_MemberName,
-                                                            "Client disconected, closing connection");
+                                                            "Client disconnected, closing connection");
                 }
                 else
                 {

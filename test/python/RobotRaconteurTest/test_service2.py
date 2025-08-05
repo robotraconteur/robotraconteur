@@ -63,7 +63,7 @@ def test_named_arrays(test_server_node_config):
     _member_test(lambda c: c.TestNamedArrays(), test_server_node_config)
 
 
-def test_named_array_memmories(test_server_node_config):
+def test_named_array_memories(test_server_node_config):
     _member_test(lambda c: c.TestNamedArrayMemories(), test_server_node_config)
 
 

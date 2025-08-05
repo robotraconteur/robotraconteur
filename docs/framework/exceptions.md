@@ -1,8 +1,8 @@
 # Exceptions {#exceptions}
 
-Robot Raconteur uses exceptions in the event of an error or unexpected occurance. Exceptions interupt the normal flow of execution, and are either "caught" by the program, caught by the Robot Raconteur framework, or terminate the program with an error condition. Many programming languages support exceptions; consult the documentation for the programming language of interest for more details on exceptions.
+Robot Raconteur uses exceptions in the event of an error or unexpected occurrence. Exceptions interupt the normal flow of execution, and are either "caught" by the program, caught by the Robot Raconteur framework, or terminate the program with an error condition. Many programming languages support exceptions; consult the documentation for the programming language of interest for more details on exceptions.
 
-Robot Raconteur understands exceptions, and will forward an exception thrown on a remote node back to the caller during a request. The remote node will pack the exception into the resonse message, and the calling node will unpack and re-throw the exception. All response messages are capable of forwarding exceptions to the caller. Packets do not carry exceptions. See \ref message_object_protocol for a discussion of requests, responses, and packets.
+Robot Raconteur understands exceptions, and will forward an exception thrown on a remote node back to the caller during a request. The remote node will pack the exception into the response message, and the calling node will unpack and re-throw the exception. All response messages are capable of forwarding exceptions to the caller. Packets do not carry exceptions. See \ref message_object_protocol for a discussion of requests, responses, and packets.
 
 ## Robot Raconteur Built-in Exception Table
 
@@ -34,7 +34,7 @@ Robot Raconteur has a number of built-in exceptions. These exceptions are each a
 | InternalError | 21 | RobotRaconteur.InternalError | An unexpected internal error has occurred in the Robot Raconteur implementation |
 | SystemResourcePermissionDenied | 22 | RobotRaconteur.SystemResourcePermissionDenied | Permission has been denied to a system resource such as file or device |
 | OutOfSystemResource | 23 | RobotRaconteur.OutOfSystemResource | A system resource such as memory has been exhausted |
-| SystemResourceError | 24 | RobotRaconteur.SystemResourceError | A system resource error has occured |
+| SystemResourceError | 24 | RobotRaconteur.SystemResourceError | A system resource error has occurred |
 | ResourceNotFound | 25 | RobotRaconteur.ResourceNotFound | A requested system resource was not found |
 | IOError | 26 | RobotRaconteur.IOError | A generic IO error has occurred |
 | BufferLimitViolation | 27 | RobotRaconteur.BufferLimitViolation | A buffer overrun has occurred in a transport |
@@ -69,7 +69,7 @@ Each exception contains a human readable message describing the exception.
 
 ## Error sub-name
 
-An optional error sub-name may be included in the exception to further specify the type of exception that occured. The error sub-name is a string that should follow the naming rules of service definition members.
+An optional error sub-name may be included in the exception to further specify the type of exception that occurred. The error sub-name is a string that should follow the naming rules of service definition members.
 
 ## Error parameter
 

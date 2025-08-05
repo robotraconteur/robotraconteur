@@ -18,11 +18,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        // string path =
-        // @"C:\Users\wasonj\Documents\RobotRaconteur2\bin_devel\out_debug\NET\Native\RobotRaconteurNETNative.dll";
-
-        // Environment.SetEnvironmentVariable("PATH", Path.GetDirectoryName(path) + ";" +
-        // Environment.GetEnvironmentVariable("PATH"));
 
         string exepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
         MultiDimArrayTest.testdatapath = System.IO.Path.Combine(exepath, System.IO.Path.Combine("..", "testdata"));
@@ -313,6 +308,7 @@ class Program
             RobotRaconteurNode.s.SetLogLevelFromEnvVariable();
 
             string type = args[1];
+            // cSpell: ignore tschemes
             string[] tschemes = args[2].Split(new char[] { ',' });
 
             TcpTransport t = new TcpTransport();
@@ -1163,7 +1159,7 @@ class Program
         }
     }
 
-    /*static void sevicetest1(object obj, Exception exp)
+    /*static void servicetest1(object obj, Exception exp)
     {
         if (exp != null)
         {

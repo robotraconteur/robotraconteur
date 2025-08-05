@@ -208,6 +208,7 @@ void StringTable::MessageElementReplaceStringsWithCodes(const RR_INTRUSIVE_PTR<M
     case DataTypes_pod_multidimarray_t:
     case DataTypes_namedarray_array_t:
     case DataTypes_namedarray_multidimarray_t: {
+        // cSpell: ignore sdat
         RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat = e->CastDataToNestedList();
         if (sdat)
         {

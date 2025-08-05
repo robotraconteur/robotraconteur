@@ -187,8 +187,8 @@ namespace RobotRaconteur
 	class WrappedServiceSubscriptionDirector
 	{
 	public:
-		virtual void ClientConnected(const boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& slient) = 0;
-		virtual void ClientDisconnected(const boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& slient) = 0;
+		virtual void ClientConnected(const boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& silent) = 0;
+		virtual void ClientDisconnected(const boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& silent) = 0;
 		virtual void ClientConnectFailed(const boost::shared_ptr<RobotRaconteur::WrappedServiceSubscription>& subscription, const ServiceSubscriptionClientID& id, const std::vector<std::string>& url, HandlerErrorInfo& error) = 0;
 
 		virtual ~WrappedServiceSubscriptionDirector() {}

@@ -12,7 +12,7 @@ namespace cam = ::experimental::simplewebcam3;
 // and display the image.  This example uses the "memory"
 // member type
 
-// This exmaple expects the simple_webcam_service single camera service to be running
+// This example expects the simple_webcam_service single camera service to be running
 
 int main(int argc, char* argv[])
 {
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     }
     catch (std::exception& e)
     {
-        std::cout << "Error occured in client: " << std::string(e.what()) << std::endl;
+        std::cout << "Error occurred in client: " << std::string(e.what()) << std::endl;
         return 1;
     }
 }
