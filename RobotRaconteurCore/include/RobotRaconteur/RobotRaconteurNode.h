@@ -302,7 +302,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @brief Unregister a previously registered service type
      *
      * This function is not recommended as the results can be
-     * unpredicate
+     * unpredictable
      *
      * @param type
      */
