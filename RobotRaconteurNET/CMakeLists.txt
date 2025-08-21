@@ -66,6 +66,11 @@ else()
                                                                                       "${CMAKE_SHARED_MODULE_PREFIX}")
 endif()
 
+option(ROBOTRACONTEUR_SKIP_RPATH "Skip RPATH for shared libraries" OFF)
+if(ROBOTRACONTEUR_SKIP_RPATH)
+    set_target_properties(${SWIG_MODULE_RobotRaconteurNETNative_REAL_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE)
+endif()
+
 set(RR_NET_INSTALL_NATIVE_LIB OFF CACHE BOOL "Install .NET Native lib")
 mark_as_advanced(RR_NET_INSTALL_NATIVE_LIB)
 
