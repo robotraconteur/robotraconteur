@@ -11,7 +11,6 @@ if(NOT EMSCRIPTEN)
         Boost
         COMPONENTS date_time
                    filesystem
-                   system
                    regex
                    chrono
                    atomic
@@ -20,16 +19,7 @@ if(NOT EMSCRIPTEN)
                    program_options
         REQUIRED)
 else()
-    find_package(
-        Boost
-        COMPONENTS date_time
-                   filesystem
-                   system
-                   regex
-                   chrono
-                   random
-                   program_options
-        REQUIRED)
+    find_package(Boost COMPONENTS date_time filesystem regex chrono random program_options REQUIRED)
 endif()
 
 if(WIN32 AND ROBOTRACONTEUR_USE_OPENSSL)
@@ -261,7 +251,6 @@ if(NOT EMSCRIPTEN)
                Boost::disable_autolinking
                Boost::date_time
                Boost::filesystem
-               Boost::system
                Boost::regex
                Boost::chrono
                Boost::atomic
@@ -275,7 +264,6 @@ else()
                Boost::disable_autolinking
                Boost::date_time
                Boost::filesystem
-               Boost::system
                Boost::regex
                Boost::chrono
                Boost::random

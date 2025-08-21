@@ -9,7 +9,6 @@ if(NOT EMSCRIPTEN)
         Boost
         COMPONENTS date_time
                    filesystem
-                   system
                    regex
                    chrono
                    atomic
@@ -18,16 +17,7 @@ if(NOT EMSCRIPTEN)
                    program_options
         REQUIRED)
 else()
-    find_package(
-        Boost
-        COMPONENTS date_time
-                   filesystem
-                   system
-                   regex
-                   chrono
-                   random
-                   program_options
-        REQUIRED)
+    find_package(Boost COMPONENTS date_time filesystem regex chrono random program_options REQUIRED)
 endif()
 
 add_subdirectory(robdef)

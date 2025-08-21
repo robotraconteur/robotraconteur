@@ -8,7 +8,7 @@ endif()
 
 include(CMakeFindDependencyMacro)
 
-find_package(Boost COMPONENTS date_time filesystem system regex chrono atomic thread random program_options REQUIRED)
+find_package(Boost COMPONENTS date_time filesystem regex chrono atomic thread random program_options REQUIRED)
 
 if(NOT WIN32)
 find_package(OpenSSL REQUIRED)
