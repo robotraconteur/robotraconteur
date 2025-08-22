@@ -954,7 +954,7 @@ jobs:
     - name: copy bluez headers
       run: |
         mkdir -p bluez/include/bluetooth
-        cp -r bluez-src/lib/*.h bluez/include/bluetooth/
+        cp -r bluez-src/lib/bluetooth/*.h bluez/include/bluetooth/
         echo CXXFLAGS="$CXXFLAGS -I$GITHUB_WORKSPACE/bluez/include" >> $GITHUB_ENV
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
