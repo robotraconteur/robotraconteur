@@ -47,7 +47,7 @@ configure_file(${CMAKE_SOURCE_DIR}/cmake/rrversion.txt.in ${CMAKE_BINARY_DIR}/rr
 include(GNUInstallDirs)
 
 find_package(Doxygen)
-option(BUILD_DOCUMENTATION "Build documentation using Doxygen" ${DOXYGEN_FOUND})
+option(BUILD_DOCUMENTATION "Build documentation using Doxygen" OFF)
 
 if(APPLE)
     set(CMAKE_CXX_STANDARD 11)
