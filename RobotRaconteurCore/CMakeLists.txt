@@ -407,6 +407,11 @@ if(ROBOTRACONTEURCORE_SOVERSION_MAJOR_ONLY)
     set_target_properties(RobotRaconteurCore PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 endif()
 
+option(ROBOTRACONTEUR_SKIP_RPATH "Skip RPATH for shared libraries" OFF)
+if(ROBOTRACONTEUR_SKIP_RPATH)
+    set_target_properties(RobotRaconteurCore PROPERTIES SKIP_BUILD_RPATH TRUE)
+endif()
+
 file(COPY "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" DESTINATION "${CMAKE_BINARY_DIR}/out/")
 if(WIN32)
     file(COPY "${CMAKE_SOURCE_DIR}/RobotRaconteurCore/include" DESTINATION "${CMAKE_BINARY_DIR}/out_debug/")

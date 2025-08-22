@@ -38,6 +38,11 @@ endif()
 target_link_libraries(RobotRaconteurGen RobotRaconteurCore)
 # endif()
 
+option(ROBOTRACONTEUR_SKIP_RPATH "Skip RPATH for shared libraries" OFF)
+if(ROBOTRACONTEUR_SKIP_RPATH)
+    set_target_properties(RobotRaconteurGen PROPERTIES SKIP_BUILD_RPATH TRUE)
+endif()
+
 rrsettargetdirs(RobotRaconteurGen "bin" "lib")
 
 rrconfiguretest(gen_prog "${CMAKE_BINARY_DIR}/@OUT_DIR_NAME@/bin/RobotRaconteurGen" "test_prog" NOCTEST)

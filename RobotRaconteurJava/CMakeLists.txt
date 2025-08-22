@@ -170,6 +170,11 @@ if(ANDROID)
 
 endif()
 
+option(ROBOTRACONTEUR_SKIP_RPATH "Skip RPATH for shared libraries" OFF)
+if(ROBOTRACONTEUR_SKIP_RPATH)
+    set_target_properties(RobotRaconteurJavaNative PROPERTIES SKIP_BUILD_RPATH TRUE)
+endif()
+
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Manifest.txt.in" "${CMAKE_CURRENT_BINARY_DIR}/bin/Manifest.txt" @ONLY)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/JavaExceptions.cmake")
