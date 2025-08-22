@@ -26,7 +26,7 @@ class build_ext(build_ext_orig):
       pass
 
 
-setup(name='RobotRaconteur',
+setup(name='robotraconteur',
       version='@ROBOTRACONTEUR_VERSION_PY@',
       description='Robot Raconteur Python Library',
       author='John Wason',
