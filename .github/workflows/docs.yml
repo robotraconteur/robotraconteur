@@ -51,7 +51,7 @@ jobs:
         mv build2/docs/getting_started doc/doc/core/latest/getting_started
         cp robotraconteur/docs/github_pages/index.html doc/index.html
     - name: archive docs
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v4
       with:
         path: doc
   # Deploy job
