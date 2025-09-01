@@ -39,6 +39,7 @@ handler when all the sensors have been queried.
        ret=[None]*N
        err=[None]*N
 
+       # cSpell:ignore erri
        def h(key, d, erri):
            done=False
            with keys_lock:

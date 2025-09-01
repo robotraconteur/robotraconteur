@@ -11,7 +11,7 @@ classdef RobotRaconteur
     %   of the Robot Raconteur framework. The toolbox can be installed
     %   using the Add-On manager, by downloading from the MATLAB file
     %   exchange, or by downloading from the Robot Raconteur GitHub
-    %   Releases page. The prefered method to install is using the
+    %   Releases page. The preferred method to install is using the
     %   integrated Add-Ons manager. Click Add-Ons -> Search for
     %   "Robot Raconteur" -> select "Robot Raconteur Matlab" ->
     %   click "Add from Github". Robot Raconteur will be automatically
@@ -42,7 +42,7 @@ classdef RobotRaconteur
     %   <a href="matlab:help RobotRaconteur.ProcessRequests">RobotRaconteur.ProcessRequests</a> - Process asynchronous ops such as events, callbacks, and async handlers
     %   <a href="matlab:help RobotRaconteur.RequestObjectLock">RobotRaconteur.RequestObjectLock</a> - Lock a client object
     %   <a href="matlab:help RobotRaconteur.ReleaseObjectLock">RobotRaconteur.ReleaseObjectLock</a> - Release a client object lock
-    %   <a href="matlab:help RobotRaconteur.MonitorEnter">RobotRaconteur.MonitorEntor</a> - Create a monitor lock
+    %   <a href="matlab:help RobotRaconteur.MonitorEnter">RobotRaconteur.MonitorEnter</a> - Create a monitor lock
     %   <a href="matlab:help RobotRaconteur.MonitorLock">RobotRaconteur.MonitorExit</a> - Release a monitor lock
     %   <a href="matlab:help RobotRaconteur.SubscribeServiceInfo2">RobotRaconteur.SubscribeServiceInfo2</a> - Create a ServiceInfo2Subscription
     %   <a href="matlab:help RobotRaconteur.SubscribeService">RobotRaconteur.SubscribeService</a> - Create a ServiceSubscription using a URL
@@ -198,7 +198,7 @@ classdef RobotRaconteur
         %       url = 'rr+tcp://localhost:2355?service=Webcam'
         %       c = RobotRaconteur.ConnectService(url)
         %
-        %       % Enable receiveng events
+        %       % Enable receiving events
         %       RobotRaconteur.EnableEvents(obj)
         %
         %       function Bump()
@@ -272,7 +272,7 @@ classdef RobotRaconteur
         %       % nodes
         %       RobotRaconter.UpdateDetectedNodes();
         %
-        %       % Find the available webcames
+        %       % Find the available webcams
         %       services =
         %       RobotRaconteur.FindServiceByType('experimental.createwebcam2.WebcamHost');
         %
@@ -389,7 +389,7 @@ classdef RobotRaconteur
         %
         %    Robot Raconteur mantains a cache of the nodes detected on the
         %    local network. When a discovery or subscription request
-        %    occurrs, the nodes are interrogated to find what services are
+        %    occurs, the nodes are interrogated to find what services are
         %    available. RobotRaconteur.GetDetectedNodes() returns the
         %    NodeID of the nodes currently in the detected nodes cache. Use
         %    RobotRaconteur.FindNodeById to return more information about a
@@ -446,7 +446,7 @@ classdef RobotRaconteur
         %
         %   obj must be a object returned by RobotRaconteur.ConnectClient or
         %   an objref. type must be either 'User' or 'Client'. If type is
-        %   ommitted, a 'User' lock in created.
+        %   omitted, a 'User' lock in created.
         %
         %   Example:
         %
@@ -653,22 +653,26 @@ classdef RobotRaconteur
         %       disp(t);
         %
 			ts=RobotRaconteurMex('NowUTC');
+            % cSpell: disable-next-line
 			t=datenum(datevec(ts,'yyyymmddTHHMMSS.FFF'));
 		end
 
 		function t=clockUTC()
         % clockUTC Deprecated, use nowUTC
 			ts=RobotRaconteurMex('NowUTC');
+            % cSpell: disable-next-line
 			t=datevec(ts,'yyyymmddTHHMMSS.FFF');
 		end
 
 		function t=NowNodeTime()
 			ts=RobotRaconteurMex('NowNodeTime');
+            % cSpell: disable-next-line
 			t=datenum(datevec(ts,'yyyymmddTHHMMSS.FFF'));
 		end
 
 		function t=NodeSyncTimeUTC()
 			ts=RobotRaconteurMex('NodeSyncTimeUTC');
+            % cSpell: disable-next-line
 			t=datenum(datevec(ts,'yyyymmddTHHMMSS.FFF'));
 		end
 
@@ -705,7 +709,7 @@ classdef RobotRaconteur
         %   Example:
         %
         %       % Create the rate with a frequency of 10 Hz
-        %       r = RobotRacontur.CreateRate(10)
+        %       r = RobotRaconteur.CreateRate(10)
         %
         %       while true
         %           % Sleep on the rate to stabilize frequency
@@ -834,7 +838,7 @@ classdef RobotRaconteur
         %    robust connections to specific members. Use
         %    subscription.GetDefaultClient() or
         %    subscription.GetDefaultClientWait(t) to retrieve the client
-        %    object for use. Do not save this object, since it may cange if
+        %    object for use. Do not save this object, since it may change if
         %    the subscription needs to create a new connection.
         %
         %    The arguments for RobotRaconteur.SubscribeService are the same

@@ -9,6 +9,8 @@ using System.Threading;
 using System.IO;
 using System.Threading.Tasks;
 
+// cSpell: ignore lstruct, myind, testmdarray
+
 namespace RobotRaconteurNETTest
 {
 public class ServiceTestClient
@@ -2677,7 +2679,7 @@ public class ServiceTestClient
     public void TestObjectLock(string url)
     {
         // Run a test, check 6 things:
-        // 1. Exclusive username lock works as expected (user with lock can acces, other user can't)
+        // 1. Exclusive username lock works as expected (user with lock can access, other user can't)
         // 2. Check that session-level lock works as expected (only one session can access the locked object)
         // 3. Check that "sub-tree" objects lock as expected
         // 5. Object lock release works
@@ -2792,7 +2794,7 @@ public class ServiceTestClient
     public void TestMonitorLock(string url)
     {
 
-        // The monitor lock aquires an exclusive sock to a single thread on the client.
+        // The monitor lock acquires an exclusive sock to a single thread on the client.
         // This lock is for a single thread, and works for all clients and the service if
         // it is checking for monitor locks.
 
@@ -2821,7 +2823,7 @@ public class ServiceTestClient
         // AutoResetEvent e2 = new AutoResetEvent(false);
 
         bool threaderr = false;
-            Thread t = new Thread(delegate()
+            Thread t = new Thread(delegate ()
             {
                 try
                 {

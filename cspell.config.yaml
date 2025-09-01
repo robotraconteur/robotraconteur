@@ -1,0 +1,50 @@
+version: "0.2"
+allowCompoundWords: true
+ignorePaths:
+- build
+- generated_src
+- install
+- .gitlab
+- .github/workflows
+- RobotRaconteurCore/src/HardwareTransport_win.cpp
+- RobotRaconteurCore/src/HardwareTransport_win_private.h
+- RobotRaconteurCore/src/TlsSchannelStreamAdapter.cpp
+- RobotRaconteurNET/swiglib_patched/csharp.swg
+- RobotRaconteurCore/src/HardwareTransport_win_private.h
+- RobotRaconteurJava/swiglib_patched/javahead.swg
+- "*.svg"
+- ".gitignore"
+- ".cmake-format.yml"
+- ".clang-tidy"
+- ".clang-format"
+- packaging/scripts/build_ios_xcframework.py
+- tools/build_files/packaging/packaging_test.py
+- packaging/matlab/RobotRaconteurMatlab.prj.in
+- ".cmake-format.yaml"
+- docs/python/make.bat
+- tools/actions/build_python_ver
+- packaging/ios/Info.plist
+- tools/build_files/packaging
+- docs/getting_started/make.bat
+dictionaryDefinitions:
+- name: custom-dictionary
+  path: ./.cspell/custom-dictionary.txt
+  addWords: true
+dictionaries:
+- custom-dictionary
+- companies
+- softwareTerms
+- programmingTerms
+- misc
+- python
+- cpp
+- markdown
+- java
+- matlab
+- public-licenses
+- git
+- en_us
+- csharp
+words: []
+ignoreWords: []
+import: []

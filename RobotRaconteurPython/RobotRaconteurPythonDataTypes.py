@@ -49,12 +49,12 @@ class EventHook(object):
         self.__handlers.remove(handler)
         return self
 
-    def fire(self, *args, **keywargs):
+    def fire(self, *args, **kwargs):
         """
         Fires the event
         """
         for handler in self.__handlers:
-            handler(*args, **keywargs)
+            handler(*args, **kwargs)
 
     def clearObjectHandlers(self, inObject):
         for theHandler in self.__handlers:

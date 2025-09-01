@@ -18,7 +18,7 @@ The following are examples of valid NodeIDs:
     66a56a8c-b49b-4fc7-878a-076ca88b1d55
     8edcf923-c94e-4484-9933-7b1df940b493
 
-NodeIDs are typcially generated randomly for clients, but must be static for services so clients can correctly address the service. The \ref local_transport is typically used to handle assigning a fixed "NodeID" based on a "NodeName". The "NodeID" is generated on the first request, and stored on the filesystem to be reused.
+NodeIDs are typically generated randomly for clients, but must be static for services so clients can correctly address the service. The \ref local_transport is typically used to handle assigning a fixed "NodeID" based on a "NodeName". The "NodeID" is generated on the first request, and stored on the filesystem to be reused.
 
 "NodeName"s are a human-readable string used to name the node. They follow the same naming rules as Service Definition names. See \ref service_definition for more information on Service Definition names. Unlike NodeIDs, NodeNames are not guaranteed to be unique, but are instead intended to be a convenience for connection to a node when there is no ambiguity. (It is recommended that NodeID be used in production environments). When the Local Transport is used to assign a NodeID based on NodeName, the NodeName must be unique on the local system.
 
@@ -134,7 +134,7 @@ Wires are used to transmit a "most recent" value. The value can be sent either c
 
 Connecting a wire initiates data streaming. The client creates the connection by sending a connect request. The service sends a response, or an exception response. Once connected, either wire connection can set its "out value". The wire connection generates a packet, with the value and timestamp packed into the message. The receiving wire connection unpacks the packet, and if the timestamp is newer, sets its "in value" to the received value. The transport may discard wire packets if the value is older, or for flow control. Wire connections are closed by the client sending a close request, with the service sending a response, or an exception response. Unlike pipes, wires are not indexed, so there can only be one wire connection per client.
 
-"Peek" and "poke" operations can be used when a client does not require a streaming interface, but only needs an instaneous value. The client can "peek" both "in value" and "out value". The direction corresponds to the client. For peek, the client sends a peek request to the service. The service sends a response with its current value and the timestamp of the value, or an exception response. For poke, the client sends a poke request with the new value and timestamp packed into the message. The service sends a response, or an exception response.
+"Peek" and "poke" operations can be used when a client does not require a streaming interface, but only needs an instantaneous value. The client can "peek" both "in value" and "out value". The direction corresponds to the client. For peek, the client sends a peek request to the service. The service sends a response with its current value and the timestamp of the value, or an exception response. For poke, the client sends a poke request with the new value and timestamp packed into the message. The service sends a response, or an exception response.
 
 ##### `memory` Member
 
@@ -160,7 +160,7 @@ The following transports are currently supported:
 
 ### TCP Transport
 
-The TCP Transport provides communication between nodes over a TCP/IP LAN network or over the internet. It also implements discovery on a LAN network. TCP Transport can be used with the loopback adapter if both nodes are on the same system, but Local Transport is recomended in this configuration. TCP Transport supports WebSockets for use with web browsers and/or web servers. It also supports TLS encryption for secure communication.
+The TCP Transport provides communication between nodes over a TCP/IP LAN network or over the internet. It also implements discovery on a LAN network. TCP Transport can be used with the loopback adapter if both nodes are on the same system, but Local Transport is recommended in this configuration. TCP Transport supports WebSockets for use with web browsers and/or web servers. It also supports TLS encryption for secure communication.
 
 URL Schemes: `rr+tcp`, `rr+ws`, `rrs+tcp`, `rrs+ws`, `rr+wss`, `rrs+wss`
 

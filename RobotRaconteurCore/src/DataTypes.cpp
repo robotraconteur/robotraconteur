@@ -360,6 +360,7 @@ MultiDimArray_CalculateCopyIndicesIter::~MultiDimArray_CalculateCopyIndicesIter(
 class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_CalculateCopyIndicesIter
 {
   protected:
+    // cSpell: ignore stridea, strideb, mema_dims, memb_dims, mema_pos, memb_pos
     std::vector<uint32_t> mema_dims;
     std::vector<uint32_t> memb_dims;
     std::vector<uint32_t> mema_pos;
@@ -586,7 +587,7 @@ RR_INTRUSIVE_PTR<RRList<RRArray<char> > > stringVectorToRRList(const std::vector
 
 std::vector<std::string> RRListToStringVector(const RR_INTRUSIVE_PTR<RRList<RRArray<char> > >& list)
 {
-    rr_null_check(list, "Unexected null string list");
+    rr_null_check(list, "Unexpected null string list");
     std::vector<std::string> o;
     BOOST_FOREACH (const RR_INTRUSIVE_PTR<RRArray<char> >& e, *list)
     {

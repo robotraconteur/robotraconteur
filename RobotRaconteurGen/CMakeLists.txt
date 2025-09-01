@@ -5,7 +5,6 @@ if(NOT EMSCRIPTEN)
         Boost
         COMPONENTS date_time
                    filesystem
-                   system
                    regex
                    chrono
                    atomic
@@ -14,16 +13,7 @@ if(NOT EMSCRIPTEN)
                    program_options
         REQUIRED)
 else()
-    find_package(
-        Boost
-        COMPONENTS date_time
-                   filesystem
-                   system
-                   regex
-                   chrono
-                   random
-                   program_options
-        REQUIRED)
+    find_package(Boost COMPONENTS date_time filesystem regex chrono random program_options REQUIRED)
 endif()
 
 set(RobotRaconteurGen_src
@@ -47,6 +37,11 @@ endif()
 # target_compile_definitions(RobotRaconteurGen PRIVATE ROBOTRACONTEUR_ROS) else()
 target_link_libraries(RobotRaconteurGen RobotRaconteurCore)
 # endif()
+
+option(ROBOTRACONTEUR_SKIP_RPATH "Skip RPATH for shared libraries" OFF)
+if(ROBOTRACONTEUR_SKIP_RPATH)
+    set_target_properties(RobotRaconteurGen PROPERTIES SKIP_BUILD_RPATH TRUE)
+endif()
 
 rrsettargetdirs(RobotRaconteurGen "bin" "lib")
 

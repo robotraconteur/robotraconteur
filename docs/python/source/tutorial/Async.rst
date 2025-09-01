@@ -27,7 +27,7 @@ The asynchronous equivalent would be:
        if (err is not None):
            # If "err" is not None it means that an exception occurred.
            # "err" contains the exception object
-           print "An error occured! " + str(err)
+           print "An error occurred! " + str(err)
            return
        print "Got the connection!"
        # Now "c" is ready for use

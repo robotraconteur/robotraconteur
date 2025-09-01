@@ -13,7 +13,7 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %
 %    Robot Raconteur MATLAB dynamically creates object references on demand
 %    based on the information provided by the service. The "thunk" source
-%    is uneccesary because of this capability. Two helper functions, "type"
+%    is unnecessary because of this capability. Two helper functions, "type"
 %    and "members" returns the Robot Raconteur type of the object and
 %    prints out the definition of the object type, respectively:
 %
@@ -79,7 +79,7 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %      argument to the function if there is an index. This can be accessed
 %      using the "dot" notation.
 %
-%        obj2 = webojb.get_Webcams(0);
+%        obj2 = webobj.get_Webcams(0);
 %
 %    pipe
 %
@@ -87,7 +87,7 @@ function c=RobotRaconteurObject(objecttype,stubid)
 %      RobotRaconteurPipeEndpoint objects. Replace FrameStream with the
 %      name of the pipe being connected. pe is the connected
 %      RobotRaconteurPipeEndpoint. The -1 can be replaced with a desired
-%      endpoind index, if desired. In most cases -1 is used to allow
+%      endpoint index, if desired. In most cases -1 is used to allow
 %      the service to automatically select a pipe endpoint index.
 %
 %        pe = obj2.FrameStream.Connect(-1)

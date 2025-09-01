@@ -15,6 +15,8 @@ using namespace RobotRaconteur::test;
 
 using std::exception;
 
+// cSpell: ignore mydat, lstruct, numa, structa, myind, dimsa
+
 namespace RobotRaconteurTest
 {
 
@@ -3059,7 +3061,7 @@ void ServiceTestClient::TestObjectLock(string url)
 
 void ServiceTestClient::TestMonitorLock(string url)
 {
-    // The monitor lock aquires an exclusive sock to a single thread on the client.
+    // The monitor lock acquires an exclusive sock to a single thread on the client.
     // This lock is for a single thread, and works for all clients and the service if
     // it is checking for monitor locks.
 

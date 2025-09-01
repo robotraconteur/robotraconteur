@@ -2372,7 +2372,7 @@ public class WireBroadcaster<T>
     }
 
     /// <summary>
-    /// Get the assosciated wire
+    /// Get the associated wire
     /// </summary>
     /// <remarks>None</remarks>
     public Wire<T> Wire

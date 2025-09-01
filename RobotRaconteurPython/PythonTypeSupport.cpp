@@ -18,6 +18,8 @@
 #include <boost/range/algorithm.hpp>
 #include <boost/range/numeric.hpp>
 
+// cSpell: ignore rrutil, rrstructtype, NDIM, XINCREF, destrrarray
+
 namespace RobotRaconteur
 {
 template <typename T>
@@ -183,7 +185,7 @@ PyObject* GetStructureType(const std::string& type, const boost::shared_ptr<Robo
     PyObject* rrutil_module = PyDict_GetItemString(modules_dict, "RobotRaconteur.RobotRaconteurPythonUtil");
     if (rrutil_module == NULL)
     {
-        throw InternalErrorException("Could not load RobotRaconeturPythonUtil module");
+        throw InternalErrorException("Could not load RobotRaconteurPythonUtil module");
     }
 
     if (!node)
@@ -218,13 +220,13 @@ PyObject* GetStructureType(const std::string& type, const boost::shared_ptr<Robo
     PyAutoPtr<PyObject> new_struct_type_func(PyObject_GetAttrString(rrutil_module, "CreateStructureType"));
     if (new_struct_type_func.get() == NULL)
     {
-        throw InternalErrorException("Could not load RobotRaconeturPythonUtil.CreateStructureType function");
+        throw InternalErrorException("Could not load RobotRaconteurPythonUtil.CreateStructureType function");
     }
 
     PyAutoPtr<PyObject> create_zero_array_func(PyObject_GetAttrString(rrutil_module, "CreateZeroArray"));
     if (create_zero_array_func.get() == NULL)
     {
-        throw InternalErrorException("Could not load RobotRaconeturPythonUtil.CreateZeroArray function");
+        throw InternalErrorException("Could not load RobotRaconteurPythonUtil.CreateZeroArray function");
     }
 
     PyAutoPtr<PyObject> fields(PyDict_New());

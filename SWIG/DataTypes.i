@@ -136,6 +136,7 @@ public:
 	virtual ~MultiDimArray_CalculateCopyIndicesIter();
 };
 
+// cSpell: ignore mema, memb
 boost::shared_ptr<MultiDimArray_CalculateCopyIndicesIter> MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_dims, const std::vector<uint32_t>& mema_pos, const std::vector<uint32_t>& memb_dims, const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count);
 }
 }

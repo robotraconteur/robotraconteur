@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 using OpenCvSharp;
 using DrekarLaunchProcess;
 
+// cSpell: ignore mdbuf
+
 namespace SimpleWebcamService
 {
 // This program provides a simple Robot Raconteur server for viewing multiple webcams.
@@ -18,7 +20,7 @@ class Program
     static void Main(string[] args)
     {
         // Create a tuple list with the camera index/camera name and
-        // then initalize the host, which in turn initializes the cameras
+        // then initialize the host, which in turn initializes the cameras
         Tuple<int, string>[] webcamnames =
             new Tuple<int, string>[] { new Tuple<int, string>(0, "Left"), new Tuple<int, string>(1, "Right") };
         WebcamHost_impl host = new WebcamHost_impl(webcamnames);
@@ -130,7 +132,7 @@ public class Webcam_impl : Webcam_default_impl, IRRServiceObject
         _Name = cameraname;
     }
 
-    // Set fream_stream to set MaximumBacklog
+    // Set frame_stream to set MaximumBacklog
     public void RRServiceObjectInit(ServerContext ctx, string service_path)
     {
         rrvar_frame_stream.MaxBacklog = 3;

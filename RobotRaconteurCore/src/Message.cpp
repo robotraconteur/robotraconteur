@@ -29,6 +29,8 @@
 #include <boost/bind/bind.hpp>
 #include <boost/bind/placeholders.hpp>
 
+// cSpell: ignore ecount, datin, rdat, sdat
+
 namespace RobotRaconteur
 {
 
@@ -241,7 +243,7 @@ void MessageHeader::Read(ArrayBinaryReader& r)
     MessageSize = r.ReadNumber<uint32_t>();
     uint16_t version = r.ReadNumber<uint16_t>();
     if (version != 2)
-        throw ProtocolException("Uknown protocol version");
+        throw ProtocolException("Unknown protocol version");
 
     HeaderSize = r.ReadNumber<uint16_t>();
 

@@ -242,7 +242,7 @@ def GetPulledServiceTypes(self,obj):
     names of these pulled service types. Use GetPulledServiceType()
     to retrieve the ServiceFactory for a specific type.
 
-    :param obj: Client object referenece returned by ConnectService() or AsyncConnectService()
+    :param obj: Client object reference returned by ConnectService() or AsyncConnectService()
     :return: The names of the pulled service types
     :rtype: List[str]
     """
@@ -260,7 +260,7 @@ def GetPulledServiceType(self,obj,servicetype):
     generated ServiceFactory. Use GetPulledServiceTypes() to
     return a list of available service types.
 
-    :param obj: Client object referenece returned by ConnectService() or AsyncConnectService()
+    :param obj: Client object reference returned by ConnectService() or AsyncConnectService()
     :param servicetype: The name of the service type
     :type servicetype: str
     :return: The pulled service factory
@@ -397,7 +397,7 @@ class ScopedMonitorLock(object):
         """
         Relock the object after calling unlock()
 
-        :param timeou:t The timeout in seconds to acquire the monitor lock,
+        :param timeout The timeout in seconds to acquire the monitor lock,
          or -1 for infinite
         :type timeout: float
         """
@@ -904,7 +904,7 @@ def NowNodeTime(self):
 
     UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
     of the system clock being updated by the user. For a real-time systems,
-	this is unaccetpable and can lead to system instability. The "node time" used by Robot Raconteur
+	this is unacceptable and can lead to system instability. The "node time" used by Robot Raconteur
 	is synchronized to UTC at startup, and is then steadily increasing from that initial time.
 	It will ignore changes to the system clock, and will also ignore corrections like leap
 	seconds.

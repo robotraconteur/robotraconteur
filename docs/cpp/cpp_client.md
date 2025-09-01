@@ -109,7 +109,7 @@ The `objecttype` optional parameter can be used to specify the fully qualified o
 
 ## Disconnecting Clients {#cpp_client_disconnect}
 
-Clients are automatically disconnected when the node is shut down, so it is normally not necessary to disconnect client connections. If closing client connections is necessary, RobotRaconteur::RobotRaconteurNode::DisconnectServiceor RobotRaconteur::RobotRaconteurNode::AsyncDisconnectService can be used.
+Clients are automatically disconnected when the node is shut down, so it is normally not necessary to disconnect client connections. If closing client connections is necessary, RobotRaconteur::RobotRaconteurNode::DisconnectService or RobotRaconteur::RobotRaconteurNode::AsyncDisconnectService can be used.
 
 ## Subscriptions {#cpp_client_subscriptions}
 
@@ -131,7 +131,7 @@ For example, the property definition:
 
     property double my_property
 
-Would generate the two access functions in the C++ abtract interface:
+Would generate the two access functions in the C++ abstract interface:
 
     virtual double get_my_property();
     virtual void set_my_property(double val);
@@ -206,13 +206,13 @@ Assuming that `c` is a client connection to an object that has the member `addTw
 
 An example function definition with no parameters and void return:
 
-    functon void do_something()
+    function void do_something()
 
 Would generate the C++ function in the abstract interface:
 
     virtual void do_something();
 
-Functions may also be invoked asynchronously. Like properties, the asynchronous form is in the `async_` abstract interface. The asynchronous version of the function is the member name prefixed with `async_`. Examples of asynchronous function invocatons:
+Functions may also be invoked asynchronously. Like properties, the asynchronous form is in the `async_` abstract interface. The asynchronous version of the function is the member name prefixed with `async_`. Examples of asynchronous function invocations:
 
     // Assume "c" is a connected synchronous client object
     using namespace example::my_service;
@@ -235,7 +235,7 @@ Functions may also be invoked asynchronously. Like properties, the asynchronous 
         {
             if (err)
             {
-                std::cout << "Error occured invoking function: " << err->what() << std::endl;
+                std::cout << "Error occurred invoking function: " << err->what() << std::endl;
             }
 
             std::cout << "do_something() invocation successful" << std::endl;
@@ -418,7 +418,7 @@ ObjRefs may also be invoked asynchronously. Like properties, the asynchronous fo
         {
             if (err)
             {
-                std::cout << "Error occured invoking objref: " << err->what() << std::endl;
+                std::cout << "Error occurred invoking objref: " << err->what() << std::endl;
                 return;
             }
 
@@ -428,7 +428,7 @@ ObjRefs may also be invoked asynchronously. Like properties, the asynchronous fo
                 {
                     if (err)
                     {
-                        std::cout << "Error occured invoking function: " << err->what() << std::endl;
+                        std::cout << "Error occurred invoking function: " << err->what() << std::endl;
                     }
                 }
             )
@@ -448,7 +448,7 @@ Results in the following functions being generated in the abstract interface:
     virtual PipePtr<RRArrayPtr<double>> get_sensordata();
     virtual void set_sensordata(PipePtr<RRArrayPtr<double>> pipe);
 
-A get acessor prefixed with `get_` and a set accesor prefixed with `set_` are generated. These are used to get and set the pipe member object in the service. For the client, only the get accessor is used.
+A get accessor prefixed with `get_` and a set accessor prefixed with `set_` are generated. These are used to get and set the pipe member object in the service. For the client, only the get accessor is used.
 
 The `get_` accessor is used to retrieve the pipe so it can be used. An example of using a pipe client:
 
@@ -527,7 +527,7 @@ Results in the following functions being generated in the abstract interface:
     virtual CallbackPtr<boost::function<double (int32_t, double)> > get_addTwoNumbersOnClient();
     virtual void set_addTwoNumbersOnClient(CallbackPtr<boost::function<double (int32_t, double)> > callback);
 
-A get acessor prefixed with `get_` and a set accesor prefixed with `set_` are generated. These are used to get and set the callback member object in the service. For the client, only the get accessor is used.
+A get accessor prefixed with `get_` and a set accessor prefixed with `set_` are generated. These are used to get and set the callback member object in the service. For the client, only the get accessor is used.
 
 The calback member object is a RobotRaconteur::Callback used to set the callback function on the client, and get the callback proxy on the service.
 
@@ -563,7 +563,7 @@ Results in the following functions being generated in the abstract interface:
     virtual WirePtr<RRArrayPtr<double>> get_currentposition();
     virtual void set_currentposition(WirePtr<RRArrayPtr<double>> wire);
 
-A get acessor prefixed with `get_` and a set accesor prefixed with `set_` are generated. These are used to get and set the wire member object in the service. For the client, only the get accessor is used.
+A get accessor prefixed with `get_` and a set accessor prefixed with `set_` are generated. These are used to get and set the wire member object in the service. For the client, only the get accessor is used.
 
 The `get_` accessor is used to retrieve the wire so it can be used. An example of using a wire client in streaming operation:
 
@@ -680,7 +680,7 @@ An example of using the array memory client:
 
 The array memory clients do not support asynchronous operations.
 
-It is recommended that clients aquire a monitor lock before memory operations. See \ref cpp_client_monitor_locks.
+It is recommended that clients acquire a monitor lock before memory operations. See \ref cpp_client_monitor_locks.
 
 ## Object Locking {#cpp_client_object_locking}
 
@@ -702,7 +702,7 @@ Users locks are requested using the RobotRaconteur::RobotRaconteurNode::RequestO
 
     RobotRaconteurNode::s()->ReleaseObjectLock(c);
 
-Asynchronous versions of the lock and unlock functions are available. See RobotRaconteur::RobootRaconteurNode::AsyncRequestObjectLock() and RobotRaconteur::RobotRaconteurNode::AsyncReleaseObjectLock().
+Asynchronous versions of the lock and unlock functions are available. See RobotRaconteur::RobotRaconteurNode::AsyncRequestObjectLock() and RobotRaconteur::RobotRaconteurNode::AsyncReleaseObjectLock().
 
 ### Client Locks {#cpp_client_client_locks}
 
@@ -720,7 +720,7 @@ Client locks are requested using the RobotRaconteur::RobotRaconteurNode::Request
 
     RobotRaconteurNode::s()->ReleaseObjectLock(c);
 
-Asynchronous versions of the lock and unlock functions are available. See RobotRaconteur::RobootRaconteurNode::AsyncRequestObjectLock() and RobotRaconteur::RobotRaconteurNode::AsyncReleaseObjectLock().
+Asynchronous versions of the lock and unlock functions are available. See RobotRaconteur::RobotRaconteurNode::AsyncRequestObjectLock() and RobotRaconteur::RobotRaconteurNode::AsyncReleaseObjectLock().
 
 ### Monitor Locks {#cpp_client_monitor_locks}
 

@@ -32,6 +32,8 @@
 #define SOCKET_ERROR (-1)
 #endif
 
+// cSpell: ignore btaddr
+
 namespace RobotRaconteur
 {
 namespace detail

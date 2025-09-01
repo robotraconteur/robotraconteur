@@ -116,7 +116,7 @@ Strings cannot be stored in an array or multidimarray. They can be stored in `li
 
 ### String Boxing
 
-`std::string` cannot be stored in container types since it does not inheret from RobotRaconteur::RRValue. The boxed type for strings is `RobotRaconteur::RRArrayPtr<char>`. Use RobotRaconteur::stringToRRArray() and RobotRaconteur::RRArrayToString() to box and unbox `std::string`.
+`std::string` cannot be stored in container types since it does not inherit from RobotRaconteur::RRValue. The boxed type for strings is `RobotRaconteur::RRArrayPtr<char>`. Use RobotRaconteur::stringToRRArray() and RobotRaconteur::RRArrayToString() to box and unbox `std::string`.
 
 Strings are non-nullable, meaning that `RRArrayPtr<char>` cannot be `nullptr`. If a `nullptr` of this type is passed to a member, it will result in an error.
 
@@ -219,9 +219,9 @@ Because unions are stack allocated, they cannot be stored in containers or passe
 
 Containers are used to store other values in a map or a list. They can store any valid Robot Raconteur value type, except for other containers. For example, `string{list}{list}` is invalid because it contains a container of a container. (The exception to this rule is if the container is used as a `varvalue`, see below.) The value type is always a `boost::intrusive_ptr` type. Stack allocated scalar types must be "boxed" to convert them to a form that can be stored in containers. See the individual types for more information.
 
-Maps are stored using RobotRaconteur::RRMap. This type must always be stored in a `boost::intrusive_ptr`, optionally using the convenience alias RobotRaconteur::RRMapPtr. RobotRaconteur::RRMap is a template type, taking a key and a value. The key must be either `int32_t` or `std::string`. RobotRaconteur::RRMap is roughly equevalent to `std::map`. It can be allocated using RobotRaconteur::AllocateEmptyRRMap().
+Maps are stored using RobotRaconteur::RRMap. This type must always be stored in a `boost::intrusive_ptr`, optionally using the convenience alias RobotRaconteur::RRMapPtr. RobotRaconteur::RRMap is a template type, taking a key and a value. The key must be either `int32_t` or `std::string`. RobotRaconteur::RRMap is roughly equivalent to `std::map`. It can be allocated using RobotRaconteur::AllocateEmptyRRMap().
 
-Lists are stored using RobotRaconteur::RRList. This type must always be stored in a `boost::intrusive_ptr`, optionally using the convenience alias RobotRaconteur::RRListPtr. RobotRaconteur::RRList is a template type with a single value type template parameter.RobotRaconteur::RRMap is roughly equevalent to `std::list`. It can be allocated using RobotRaconteur::AllocateEmptyRRList().
+Lists are stored using RobotRaconteur::RRList. This type must always be stored in a `boost::intrusive_ptr`, optionally using the convenience alias RobotRaconteur::RRListPtr. RobotRaconteur::RRList is a template type with a single value type template parameter.RobotRaconteur::RRMap is roughly equivalent to `std::list`. It can be allocated using RobotRaconteur::AllocateEmptyRRList().
 
 ## Varvalue Type {#cpp_varvalue_type}
 
@@ -255,4 +255,4 @@ The RobotRaconteur::RRValue must be downcasted to be used. This can be accomplis
 | `varvalue{int32}`    | `RRMapPtr<int32_t,RRValue>` |
 | `varvalue{string}`   | `RRMapPtr<string,RRValue>` |
 
-Containers passed with `varvalue` may contain other containers. The prohibiton of containers containing other containers is only for declared types.
+Containers passed with `varvalue` may contain other containers. The prohibition of containers containing other containers is only for declared types.

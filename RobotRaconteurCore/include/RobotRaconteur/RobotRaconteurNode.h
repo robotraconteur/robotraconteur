@@ -151,7 +151,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * This function must be called to initialize background tasks before
      * using the node. It is called automatically by the `s()` and `sp()`
-     * singleton accesors, so the user only needs to call this function
+     * singleton accessors, so the user only needs to call this function
      * when not using the singleton. If a custom thread pool is being
      * used, the thread pool factory must be specified before
      * calling init.
@@ -302,7 +302,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @brief Unregister a previously registered service type
      *
      * This function is not recommended as the results can be
-     * unpredicatle
+     * unpredictable
      *
      * @param type
      */
@@ -928,7 +928,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param m The original message
      * @param err The error code
      * @param errname The name of the error
-     * @param errdesc A human readible description
+     * @param errdesc A human readable description
      * @return RR_INTRUSIVE_PTR<Message>
      */
     RR_INTRUSIVE_PTR<Message> GenerateErrorReturnMessage(const RR_INTRUSIVE_PTR<Message>& m, MessageErrorType err,
@@ -1539,7 +1539,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @brief Select the "best" URL from a std::vector of candidates
      *
      * Service discovery will often return a list of candidate URLs to
-     * use to connect to a node. This function uses hueristics to select
+     * use to connect to a node. This function uses heuristics to select
      * the "best" URL to use. The selection criteria ranks URLs in roughly
      * the following order, lower number being better:
      *
@@ -1757,7 +1757,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
 
       public:
         /**
-         * @brief Get the Node assosciated with the lock
+         * @brief Get the Node associated with the lock
          *
          * @return RR_SHARED_PTR<RobotRaconteurNode>
          */
@@ -1840,7 +1840,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     /**
      * @brief Returns an objref as a specific type
      *
-     * Robot Raconteur service object types are polymorphic using inheritence,
+     * Robot Raconteur service object types are polymorphic using inheritance,
      * meaning that an object may be represented using multiple object types.
      * `objref` will attempt to return the relevant type, but it is sometimes
      * necessary to request a specific type for an objref.
@@ -1918,7 +1918,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * @param obj The object with the desired `objref`
      * @param objref The name of the `objref` member
-     * @return std::string The fully qaulified object type
+     * @return std::string The fully qualified object type
      */
     std::string FindObjectType(const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref);
 
@@ -1932,7 +1932,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @param obj The object with the desired `objref`
      * @param objref The name of the `objref` member
      * @param index The index for the `objref`, convert int to string for int32 index type
-     * @return std::string The fully qaulified object type
+     * @return std::string The fully qualified object type
      */
     std::string FindObjectType(const RR_SHARED_PTR<RRObject>& obj, boost::string_ref objref, boost::string_ref index);
 
@@ -2086,7 +2086,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     }
 
     /**
-     * @brief Shuts down and releases the node thred pool
+     * @brief Shuts down and releases the node thread pool
      * Do not call ReleaseThreadPool unless you really know what
      * you are doing. In most cases it will be destroyed automatically.
      */
@@ -2116,7 +2116,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * names of these pulled service types. Use GetPulledServiceType()
      * to retrieve the ServiceFactory for a specific type.
      *
-     * @param obj Client object referenece returned by ConnectService() or
+     * @param obj Client object reference returned by ConnectService() or
      * AsyncConnectService()
      * @return std::vector<std::string> The names of the pulled service types
      */
@@ -2131,7 +2131,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * generated ServiceFactory. Use GetPulledServiceTypes() to
      * return a list of available service types.
      *
-     * @param obj Client object referenece returned by ConnectService() or
+     * @param obj Client object reference returned by ConnectService() or
      * AsyncConnectService()
      * @param type The name of the service type
      * @return RR_SHARED_PTR<ServiceFactory> The pulled service factory
@@ -2220,7 +2220,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * UTC time is not monotonic, due to the introduction of leap-seconds, and the possibility
      * of the system clock being updated by the user. For a real-time systems,
-     * this is unaccetpable and can lead to system instability. The "node time" used by Robot Raconteur
+     * this is unacceptable and can lead to system instability. The "node time" used by Robot Raconteur
      * is synchronized to UTC at startup, and is then steadily increasing from that initial time.
      * It will ignore changes to the system clock, and will also ignore corrections like leap
      * seconds.

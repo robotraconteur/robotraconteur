@@ -919,9 +919,10 @@ class websocket_stream : private boost::noncopyable
     {
 
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
-
+        // cSpell: disable
         HCRYPTPROV hProv = 0;
         HCRYPTPROV hHash = 0;
+        // cSpell: enable
 
         if (!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
         {

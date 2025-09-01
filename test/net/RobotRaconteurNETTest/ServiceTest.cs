@@ -7,6 +7,7 @@ using com.robotraconteur.testing.TestService1;
 using com.robotraconteur.testing.TestService2;
 using System.Threading;
 
+// cSpell: ignore mydat, lstruct
 namespace RobotRaconteurNETTest
 {
 

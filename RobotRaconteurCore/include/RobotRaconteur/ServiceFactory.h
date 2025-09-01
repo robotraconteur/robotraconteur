@@ -152,7 +152,7 @@ class ROBOTRACONTEUR_CORE_API DynamicServiceFactory
      *
      * Factory should return a service factory implementing the provided service definition string.
      *
-     * @param def The service definiton as a string
+     * @param def The service definition as a string
      * @return RR_SHARED_PTR<ServiceFactory> The generated service factory
      */
     virtual RR_SHARED_PTR<ServiceFactory> CreateServiceFactory(boost::string_ref def) = 0;
@@ -163,7 +163,7 @@ class ROBOTRACONTEUR_CORE_API DynamicServiceFactory
      * Factory should return a vector service factory implementing the provided vector of service definition string.
      * Clients will provide related service definitions at the same time so they can be verified.
      *
-     * @param def The collection of service definiton strings
+     * @param def The collection of service definition strings
      * @return RR_SHARED_PTR<ServiceFactory> The generated service factories
      */
     virtual std::vector<RR_SHARED_PTR<ServiceFactory> > CreateServiceFactories(const std::vector<std::string>& def) = 0;

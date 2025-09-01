@@ -1306,7 +1306,7 @@ public class ServiceSkelUtil
 
         if (parentinterfaces.Count != 1)
             throw new DataTypeException(
-                "Robot Raconteur types can only directly inheret one Robot Raconteur interface type");
+                "Robot Raconteur types can only directly inherit one Robot Raconteur interface type");
 
         return parentinterfaces[0];
     }

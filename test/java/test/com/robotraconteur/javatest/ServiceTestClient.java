@@ -12,6 +12,8 @@ import java.util.concurrent.*;
 
 // import java.nio.file.*;
 
+// cSpell: ignore lstruct, myind, testmdarray
+
 public class ServiceTestClient
 {
     public final void ca(double[] v1, double[] v2)
@@ -2871,6 +2873,7 @@ public class ServiceTestClient
         MultiDimArray m5 =
             MultiDimArrayTest.LoadDoubleArrayFromFile(MultiDimArrayTest.testdatapath + "/testmdarray5.bin");
 
+        // cSpell: ignore m1_dimi
         long[] m1_dimi = new long[5];
         for (int i = 0; i < 5; i++)
             m1_dimi[i] = (long)(m1.dims[i]);
@@ -2978,7 +2981,7 @@ public class ServiceTestClient
     public final void TestObjectLock(String url)
     {
         // Run a test, check 6 things:
-        // 1. Exclusive username lock works as expected (user with lock can acces, other user can't)
+        // 1. Exclusive username lock works as expected (user with lock can access, other user can't)
         // 2. Check that session-level lock works as expected (only one session can access the locked object)
         // 3. Check that "sub-tree" objects lock as expected
         // 5. Object lock release works
@@ -3120,7 +3123,7 @@ public class ServiceTestClient
     public final void TestMonitorLock(String url)
     {
 
-        // The monitor lock aquires an exclusive sock to a single thread on the client.
+        // The monitor lock acquires an exclusive sock to a single thread on the client.
         // This lock is for a single thread, and works for all clients and the service if
         // it is checking for monitor locks.
 

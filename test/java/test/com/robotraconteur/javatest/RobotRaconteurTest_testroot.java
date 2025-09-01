@@ -6,6 +6,8 @@ import com.robotraconteur.testing.TestService2.*;
 
 import java.util.*;
 
+// cSpell: ignore lstruct, fireev, addev, removeev
+
 public class RobotRaconteurTest_testroot implements testroot
 {
     public RobotRaconteurTest_testroot(TcpTransport tcptransport)

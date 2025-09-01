@@ -42,6 +42,9 @@ import numpy
 if (sys.version_info > (3, 5)):
     import asyncio
 
+# cSpell: ignore subdtype, ascontiguousarray, odef, outerm, innerep, rrmultidim, rrinnerstub
+# cSpell: ignore destrrarray, innerw, outerw, tdims
+
 _traceback_requested = str(os.environ.get('ROBOTRACONTEUR_PYTHON_TRACEBACK_PRINT_EXC', "0")
                            ).lower() in ("1", "true", "yes", "on")
 
@@ -3452,7 +3455,7 @@ class WireBroadcaster(object):
     @property
     def PeekInValueCallback(self):
         """
-        Set the PeekInValue callback function for the WireBrodcaster.
+        Set the PeekInValue callback function for the WireBroadcaster.
         Overrides the default callback that returns the last set
         OutValue.
 

@@ -37,6 +37,7 @@
 
 #undef SendMessage
 
+// cSpell: ignore endpt
 namespace RobotRaconteur
 {
 static void rr_context_emptyhandler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
@@ -374,26 +375,26 @@ void ServiceSkel::SendWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint3
 void ServiceSkel::DispatchPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m_ServicePath, m->MemberName,
-                                            "Pipe packet received for nonexistant member");
+                                            "Pipe packet received for nonexistent member");
 }
 
 void ServiceSkel::DispatchWireMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m_ServicePath, m->MemberName,
-                                            "Wire packet received for nonexistant member");
+                                            "Wire packet received for nonexistent member");
 }
 
 RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallPipeFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m_ServicePath, m->MemberName,
-                                            "Pipe command received for nonexistant member");
+                                            "Pipe command received for nonexistent member");
     throw MemberNotFoundException("Pipe " + m->MemberName.str() + " not found");
 }
 
 RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallWireFunction(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e, m_ServicePath, m->MemberName,
-                                            "Wire command received for nonexistant member");
+                                            "Wire command received for nonexistent member");
     throw MemberNotFoundException("Wire " + m->MemberName.str() + " not found");
 }
 
@@ -408,7 +409,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ServiceSkel::CallMemoryFunction(const RR_INTRUSIV
                                                                const RR_SHARED_PTR<Endpoint>& e)
 {
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, e->GetLocalEndpoint(), m_ServicePath, m->MemberName,
-                                            "Memory request received for nonexistant member");
+                                            "Memory request received for nonexistent member");
     throw MemberNotFoundException("Memory " + m->MemberName.str() + " not found");
 }
 
@@ -1350,7 +1351,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
             ret = CreateMessageEntry((static_cast<MessageEntryType>(m->EntryType + 1)), m->MemberName);
             ret->Error = MessageErrorType_RemoteError;
             ret->AddElement("errorname", stringToRRArray("std::exception"));
-            ret->AddElement("errorstring", stringToRRArray("Unknown exception occured in remote service"));
+            ret->AddElement("errorstring", stringToRRArray("Unknown exception occurred in remote service"));
         }
         else
         {

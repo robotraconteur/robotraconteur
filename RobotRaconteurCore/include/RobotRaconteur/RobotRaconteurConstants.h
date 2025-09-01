@@ -281,7 +281,7 @@ enum MessageEntryType
     MessageEntryType_ConnectClientCombinedRet,
     /** @brief Get endpoint capability request */
     MessageEntryType_EndpointCheckCapability = 501,
-    /** @brief Get endpoint capabalitiy response */
+    /** @brief Get endpoint capability response */
     MessageEntryType_EndpointCheckCapabilityRet,
     /** @brief Get service capability request */
     MessageEntryType_ServiceCheckCapabilityReq = 1101,
@@ -647,7 +647,7 @@ enum RobotRaconteur_LogComponent
     RobotRaconteur_LogComponent_Member,
     /** @brief data message packing component */
     RobotRaconteur_LogComponent_Pack,
-    /** @brief data message unpacknig component */
+    /** @brief data message unpacking component */
     RobotRaconteur_LogComponent_Unpack,
     /** @brief service definition parser component */
     RobotRaconteur_LogComponent_ServiceDefinition,

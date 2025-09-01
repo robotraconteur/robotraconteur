@@ -24,7 +24,7 @@ since the page is served by `http`, the hostname is `localhost`, and the port is
 python -m reynard_the_robot --robotraconteur-tcp-ws-add-origin=http://localhost:8000
 ```
 
-Now open another terminal, and navigate to the `examples/reynard_the_robot/pydoide` directory. Run:
+Now open another terminal, and navigate to the `examples/reynard_the_robot/pyodide` directory. Run:
 
 ```
 python -m http.server

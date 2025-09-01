@@ -117,6 +117,8 @@ public class Webcam_impl extends Webcam_default_impl implements Webcam, IRRServi
         WebcamImage image = capture_frame();
         m_buffer = image.data;
 
+        // cSpell: ignore mdbuf
+
         // Rearrange the data into the correct format for MATLAB arrays
         UnsignedBytes mdata = new UnsignedBytes(new byte[image.height * image.width * 3]);
         MultiDimArray mdbuf = new MultiDimArray(new int[] {image.height, image.width, 3}, mdata);

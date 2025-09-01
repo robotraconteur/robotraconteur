@@ -10,7 +10,7 @@ namespace cam = ::experimental::simplewebcam3;
 // Simple client to read streaming images from the Webcam pipe to show
 // a live view from the cameras
 
-// This exmaple expects the simple_webcam_service single camera service to be running
+// This example expects the simple_webcam_service single camera service to be running
 
 // Convert WebcamImage to OpenCV format
 cv::Mat webcam_image_to_mat(cam::WebcamImagePtr image)
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
     }
     catch (std::exception& e)
     {
-        std::cout << "Error occured in client: " << std::string(e.what()) << std::endl;
+        std::cout << "Error occurred in client: " << std::string(e.what()) << std::endl;
         return -1;
     }
 }

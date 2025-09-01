@@ -327,7 +327,7 @@ void ServerContext_MonitorObjectSkel::thread_func()
         {
             if (!monitor_thread_event->WaitOne(30000))
             {
-                // Timout occured in the lock
+                // Timout occurred in the lock
                 maintain_lock = false;
             }
         }

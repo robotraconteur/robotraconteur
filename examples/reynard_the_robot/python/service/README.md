@@ -2,7 +2,7 @@
 
 Examples are provided for creating Robot Raconteur services to control Reynard the Robot. These examples
 communicate with Reynard using HTTP REST, ASCII Sockets, or the Python API. These examples are intended to be
-representative of the types of drevires that are used with real industrial robots and devices.
+representative of the types of devices that are used with real industrial robots and devices.
 
 The `reynard_robotraconteur_service_http_rest.py` example demonstrates a service that uses HTTP REST to communicate
 with Reynard. The `reynard_robotraconteur_service_ascii_socket.py` example demonstrates a service that uses an ASCII

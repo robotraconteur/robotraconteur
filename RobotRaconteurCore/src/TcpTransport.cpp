@@ -69,6 +69,8 @@
 #define RR_BOOST_ASIO_IP_ADDRESS_FROM_STRING boost::asio::ip::make_address
 #endif
 
+// cSpell: ignore addra
+
 namespace RobotRaconteur
 {
 
@@ -6680,6 +6682,7 @@ void TcpTransportPortSharerClient::client_thread()
                 }
 
 #ifdef ROBOTRACONTEUR_WINDOWS
+                // cSpell: disable
                 boost::array<uint8_t, 4096> buf = {};
                 int bytes_read = (int32_t)l->read_some(boost::asio::buffer(buf.data(), 4096));
 
@@ -6718,6 +6721,7 @@ void TcpTransportPortSharerClient::client_thread()
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(
                         node, Transport, -1, "TcpTransport port sharer socket handoff failed: " << exp2.what());
                 }
+                // cSpell: enable
 #else
 
                 int sock = 0;

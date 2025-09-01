@@ -19,6 +19,8 @@
 
 #pragma once
 
+// cSpell: ignore btaddr
+
 namespace RobotRaconteur
 {
 namespace detail

@@ -223,6 +223,7 @@ void LinuxLocalTransportDiscovery::run()
 
         struct pollfd shutdown_evt_poll = {};
         shutdown_evt_poll.fd = shutdown_evt->fd();
+        // cSpell: ignore POLLRDHUP
         shutdown_evt_poll.events = POLLIN | POLLERR | POLLRDHUP;
         shutdown_evt_poll.revents = 0;
         poll_fds.push_back(shutdown_evt_poll);

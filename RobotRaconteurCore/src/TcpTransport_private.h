@@ -605,7 +605,7 @@ class TcpTransportPortSharerClient : public RR_ENABLE_SHARED_FROM_THIS<TcpTransp
     void IncomingSocket(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket);
 };
 #ifndef ROBOTRACONTEUR_WINDOWS
-
+// cSpell: ignore recvfd
 namespace TcpTransportUtil
 {
 ssize_t read_fd(int fd, void* ptr, size_t nbytes, int* recvfd);

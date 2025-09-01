@@ -73,6 +73,7 @@ public class DataTypeUtil
             return DataTypes.DataTypes_uint64_t;
         if (stype.equals("class java.lang.String"))
             return DataTypes.DataTypes_string_t;
+        // cSpell: ignore Lcom
         if (stype.equals("class com.robotraconteur.CDouble") || stype.equals("class [Lcom.robotraconteur.CDouble"))
             return DataTypes.DataTypes_cdouble_t;
         if (stype.equals("class com.robotraconteur.CSingle") || stype.equals("class [Lcom.robotraconteur.CSingle"))

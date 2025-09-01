@@ -64,6 +64,7 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<T> > GetMultiDimArraySub(
     RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<T> > source, std::vector<uint32_t> srcpos,
     std::vector<uint32_t> count)
 {
+    // cSpell: ignore srcdims
     std::vector<uint32_t> srcdims = RobotRaconteur::RRArrayToVector<uint32_t>(source->Dims);
     std::vector<uint32_t> pos(srcdims.size());
     std::vector<uint32_t> step(srcdims.size());
@@ -119,6 +120,7 @@ template <typename T>
 void SetMultiDimArraySub(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<T> > dest, std::vector<uint32_t> destpos,
                          RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<T> > source)
 {
+    // cSpell: ignore destdims
     std::vector<uint32_t> count = RRArrayToVector<uint32_t>(source->Dims);
     std::vector<uint32_t> destdims = RobotRaconteur::RRArrayToVector<uint32_t>(dest->Dims);
     std::vector<uint32_t> pos(destdims.size());

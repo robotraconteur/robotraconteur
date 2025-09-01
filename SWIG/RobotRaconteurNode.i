@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// cSpell: ignore sphandler, objectheapid
+
 %shared_ptr(RobotRaconteur::RobotRaconteurNode);
 
 %feature("director") ClientServiceListenerDirector;

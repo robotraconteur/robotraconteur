@@ -1705,7 +1705,7 @@ void PipeBroadcasterBase::SetMaxBacklog(int32_t maximum_backlog)
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
             node, Member, -1, service_path, member_name,
             "PipeBroadcaster cannot change maximum backlong while endpoints are connected");
-        throw InvalidOperationException("Cannot change maxmimum_backlog while endpoints are connected");
+        throw InvalidOperationException("Cannot change maximum_backlog while endpoints are connected");
     }
     this->maximum_backlog = maximum_backlog;
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, -1, service_path, member_name,

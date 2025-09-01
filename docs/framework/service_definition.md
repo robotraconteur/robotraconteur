@@ -291,7 +291,7 @@ To reduce the clutter in a service definition file, the `using` statement can be
 
 `as` can be used to change the name locally.
 
-    using exmaple.importeddef.obj1 as another_obj1
+    using example.importeddef.obj1 as another_obj1
 
 ## Conventions {#conventions}
 

@@ -19,6 +19,7 @@ class MultiDimArrayTest
 
     public static void TestDouble()
     {
+        // cSpell: ignore testmdarray
         MultiDimArray m1 = LoadDoubleArrayFromFile(Path.Combine(testdatapath, "testmdarray1.bin"));
         MultiDimArray m2 = LoadDoubleArrayFromFile(Path.Combine(testdatapath, "testmdarray2.bin"));
         MultiDimArray m3 = LoadDoubleArrayFromFile(Path.Combine(testdatapath, "testmdarray3.bin"));

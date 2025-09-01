@@ -32,7 +32,7 @@ Packages are available from pip for Python 3.6 and later for Windows (x86,x64), 
 
 Use `python3` instead of `python` if you are using Ubuntu or other Linux distributions.
 
-It may be neccessary to update `pip` before installing on older Linux distributions:
+It may be necessary to update `pip` before installing on older Linux distributions:
 
 ```bash
 sudo python3 -m pip install --upgrade pip

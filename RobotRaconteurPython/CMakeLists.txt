@@ -1,3 +1,5 @@
+# cSpell: ignore ndarrayobject
+
 set(Python_ADDITIONAL_VERSIONS 2.7)
 if((CMAKE_VERSION VERSION_GREATER 3.14 OR CMAKE_VERSION VERSION_EQUAL 3.14) AND NOT EMSCRIPTEN)
     if(PYTHON_EXECUTABLE)
@@ -101,6 +103,11 @@ set_target_properties(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PROPERTIES O
 
 if(NOT DEFINED RobotRaconteur_DIR)
     add_dependencies(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} RobotRaconteurCore)
+endif()
+
+option(ROBOTRACONTEUR_SKIP_RPATH "Skip RPATH for shared libraries" OFF)
+if(ROBOTRACONTEUR_SKIP_RPATH)
+    set_target_properties(${SWIG_MODULE_RobotRaconteurPython_REAL_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE)
 endif()
 
 add_custom_command(

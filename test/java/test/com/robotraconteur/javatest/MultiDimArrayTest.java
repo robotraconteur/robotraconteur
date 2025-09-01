@@ -17,6 +17,7 @@ public class MultiDimArrayTest
 
     public static void TestDouble()
     {
+        // cSpell: ignore testmdarray
         MultiDimArray m1 = LoadDoubleArrayFromFile(testdatapath + "/testmdarray1.bin");
         MultiDimArray m2 = LoadDoubleArrayFromFile(testdatapath + "/testmdarray2.bin");
         MultiDimArray m3 = LoadDoubleArrayFromFile(testdatapath + "/testmdarray3.bin");

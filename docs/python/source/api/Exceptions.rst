@@ -234,7 +234,7 @@ Other Exceptions
    be found
 
    This error is thrown when a specified service path
-   does not have an assosciate object. The object may
+   does not have an associated object. The object may
    have been released by the service, or the service
    path is invalid
 
@@ -466,7 +466,7 @@ Other Exceptions
    an operation on a service
 
    ServiceException is a catch-all error for exceptions on services.
-   See the message field for an explanation of the error that occured.
+   See the message field for an explanation of the error that occurred.
 
    Error code MessageErrorType_ServiceError (8)
 
@@ -743,7 +743,7 @@ Other Exceptions
 
    Exception thrown when data cannot be serialized
 
-   This exeception is thrown when the provide data cannot be serialized.
+   This exception is thrown when the provide data cannot be serialized.
    This typically occurs inside a transport.
 
    Check that the provided data matches the types supported by
@@ -1330,7 +1330,7 @@ Other Exceptions
 
    Exception thrown when a system resource has been exhausted
 
-   Error code MessageErrorType_OutOfsystemResource (23)
+   Error code MessageErrorType_OutOfSystemResource (23)
 
 
    Construct a OutOfSystemResourceException
@@ -1645,7 +1645,7 @@ Other Exceptions
 
 .. class:: RobotRaconteur.OutOfRangeException(message=,subname=None,param_=None)
 
-   Exception thrown when an attempt to acces an array or container
+   Exception thrown when an attempt to access an array or container
    index is out of range
 
    Error code MessageErrorType_OutOfRange (29)

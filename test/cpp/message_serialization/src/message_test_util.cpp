@@ -833,6 +833,7 @@ void CompareMessageEntry(RR_INTRUSIVE_PTR<MessageEntry> m1, RR_INTRUSIVE_PTR<Mes
 static void MessageSerializationTest_CompareSubElements(RR_INTRUSIVE_PTR<MessageElement> m1,
                                                         RR_INTRUSIVE_PTR<MessageElement> m2)
 {
+    // cSpell: ignore sdat
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat1 = m1->CastDataToNestedList();
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> sdat2 = m1->CastDataToNestedList();
 

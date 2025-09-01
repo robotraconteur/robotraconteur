@@ -18,28 +18,28 @@ static void RRExceptionToPythonError(RobotRaconteurException& rrexp)
 	PyObject* modules_dict= PyImport_GetModuleDict();
 	if (modules_dict==NULL)
 	{
-		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconeturPythonError module");
+		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconteurPythonError module");
 		return;
 	}
 
 	PyObject* err_module=PyDict_GetItemString(modules_dict, "RobotRaconteur.RobotRaconteurPythonError");
 	if (err_module==NULL)
 	{
-		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconeturPythonError module");
+		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconteurPythonError module");
 		return;
 	}
 
 	swig::SwigVar_PyObject exceptionUtil=PyObject_GetAttrString(err_module, "RobotRaconteurExceptionUtil");
 	if (exceptionUtil==NULL)
 	{
-		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconeturPythonError.RobotRaconteurExceptionUtil class");
+		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconteurPythonError.RobotRaconteurExceptionUtil class");
 		return;
 	}
 
 	swig::SwigVar_PyObject errorCodeToException=PyObject_GetAttrString(exceptionUtil, "ErrorInfoToException");
 	if (errorCodeToException==NULL)
 	{
-		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconeturExceptionUtil.ErrorInfoToException function");
+		PyErr_SetString(PyExc_Exception, "Could not load RobotRaconteurExceptionUtil.ErrorInfoToException function");
 		return;
 	}
 
@@ -138,19 +138,19 @@ static void ThrowPythonError()
 	PyObject* modules_dict= PyImport_GetModuleDict();
 	if (modules_dict==NULL)
 	{
-		throw InternalErrorException("Could not load RobotRaconeturPythonError module");
+		throw InternalErrorException("Could not load RobotRaconteurPythonError module");
 	}
 
 	PyObject* err_module=PyDict_GetItemString(modules_dict, "RobotRaconteur.RobotRaconteurPythonError");
 	if (err_module==NULL)
 	{
-		throw InternalErrorException("Could not load RobotRaconeturPythonError module");
+		throw InternalErrorException("Could not load RobotRaconteurPythonError module");
 	}
 
 	swig::SwigVar_PyObject rr_py_RobotRaconteurException=PyObject_GetAttrString(err_module, "RobotRaconteurException");
 	if (rr_py_RobotRaconteurException==NULL)
 	{
-		throw InternalErrorException("Could not load RobotRaconeturPythonError.RobotRaconteurException type");
+		throw InternalErrorException("Could not load RobotRaconteurPythonError.RobotRaconteurException type");
 	}
 
 	if (PyErr_GivenExceptionMatches(exc,rr_py_RobotRaconteurException))

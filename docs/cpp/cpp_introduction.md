@@ -8,7 +8,7 @@ The C++ library uses the [Boost C++ Libraries](https://www.boost.org/), in parti
 
 Robot Raconteur Core uses [CMake](https://cmake.org) for its build system. CMake files are provided for use with `find_package()`. It is recommended that projects use CMake with Robot Raconteur.
 
-The Robot Raconteur Core library has been designed to have very few dependencies. These dependencies are typically limited to [Boost C++ Libraryis](https://boost.org), [OpenSSL](https://openssl.org) on non-Windows platforms, and a handful of device-driver related packages on Linux when the HardwareTransport is built. (These device-driver related packages are not required at runtime unless the HardwareTransport is being used.) Having a limited number of dependencies makes Robot Raconteur highly portable and easy to embed in other programs as a plugin.
+The Robot Raconteur Core library has been designed to have very few dependencies. These dependencies are typically limited to [Boost C++ Libraries](https://boost.org), [OpenSSL](https://openssl.org) on non-Windows platforms, and a handful of device-driver related packages on Linux when the HardwareTransport is built. (These device-driver related packages are not required at runtime unless the HardwareTransport is being used.) Having a limited number of dependencies makes Robot Raconteur highly portable and easy to embed in other programs as a plugin.
 
 Robot Raconteur Core is written using the C++98 standard. This choice was made to ease porting to industrial operating systems that may not support C++11. C++11 convenience template aliases are provided for many types when C++11 is available, and their use is recommended.
 

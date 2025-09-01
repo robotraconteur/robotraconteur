@@ -278,7 +278,7 @@ void RobotRaconteurNode::UnregisterServiceType(boost::string_ref type)
     if (e1 == service_factories.end())
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1,
-                                           "Cannot unregister nonexistant service type \"" << type << "\"");
+                                           "Cannot unregister nonexistent service type \"" << type << "\"");
         throw InvalidArgumentException("Service type not registered");
     }
     service_factories.erase(e1);
@@ -425,6 +425,7 @@ void RobotRaconteurNode::Shutdown()
             services.clear();
         }
 
+        // cSpell: ignore endpointsv
         std::vector<RR_SHARED_PTR<Endpoint> > endpointsv;
         {
             boost::mutex::scoped_lock lock(endpoint_lock);
@@ -455,6 +456,7 @@ void RobotRaconteurNode::Shutdown()
             }
         }
 
+        // cSpell: ignore transportsv
         std::vector<RR_SHARED_PTR<Transport> > transportsv;
         {
             boost::unique_lock<boost::shared_mutex> lock(transports_lock);

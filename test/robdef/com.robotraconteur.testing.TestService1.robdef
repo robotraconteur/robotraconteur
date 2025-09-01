@@ -6,7 +6,7 @@
 #Refer to the reference implementation for details
 #on these behaviors.  New implementations of
 #Robot Raconteur should test against the reference
-#client and server to determine compatibilty.
+#client and server to determine compatibility.
 
 service com.robotraconteur.testing.TestService1
 

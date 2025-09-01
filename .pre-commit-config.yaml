@@ -57,5 +57,28 @@ repos:
     name: dos2unix
     entry: dos2unix
     args: ["-n", "-o"]
-    files: '\.(c|cpp|h|hpp|java|cs|i|m|cmake|txt|css|js|ts|html|md|txt|py|yaml|yml|csproj|rst|py\.in|csproj\.in)$'
+    files: '\.(c|cpp|h|hpp|java|cs|i|m|cmake|txt|css|js|ts|html|md|txt|py|yaml|yml|csproj|rst|py\.in|csproj\.in|xml|xml\.in|cmake\.in)$'
     language: system
+
+- repo: https://github.com/streetsidesoftware/cspell-cli
+  rev: v9.2.0
+  hooks:
+  - id: cspell   # Spell check changed files
+    args:
+    - --no-progress
+    - --no-summary
+    - --gitignore
+    - --unique
+    - --files
+  - id: cspell   # Spell check the commit message
+    name: check commit message spelling
+    args:
+    - --no-must-find-files
+    - --no-progress
+    - --no-summary
+    - --files
+    - --allow-compound-words
+    - --ignore-case
+    - .git/COMMIT_EDITMSG
+    stages: [commit-msg]
+    always_run: true
