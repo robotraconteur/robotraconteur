@@ -76,9 +76,9 @@ repos:
     - --no-must-find-files
     - --no-progress
     - --no-summary
-    - --files
     - --allow-compound-words
     - --ignore-case
     - .git/COMMIT_EDITMSG
+    - --files
     stages: [commit-msg]
     always_run: true
