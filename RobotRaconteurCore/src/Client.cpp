@@ -2342,9 +2342,10 @@ void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
             }
         }
 
+        RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceStub> > stubs_temp_storage;
         {
             boost::mutex::scoped_lock lock(stubs_lock);
-            stubs.clear();
+            stubs.swap(stubs_temp_storage);
         }
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
