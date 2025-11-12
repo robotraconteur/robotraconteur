@@ -781,6 +781,10 @@ void PipeClientBase::AsyncClose(const RR_SHARED_PTR<PipeEndpointBase>& endpoint,
     RR_UNUSED(ee);
     if (!remote)
     {
+        {
+            boost::mutex::scoped_lock lock(pipeendpoints_lock);
+            pipeendpoints.erase(endpoint->GetIndex());
+        }
         RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PipeDisconnectReq, GetMemberName());
         m->AddElement("index", ScalarToRRArray(endpoint->GetIndex()));
         GetStub()->AsyncProcessRequest(m, boost::bind(handler, RR_BOOST_PLACEHOLDERS(_2)), timeout);
