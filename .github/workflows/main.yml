@@ -278,7 +278,7 @@ jobs:
     - name: config
       run: >-
         cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
         cmake --build build --config Release
