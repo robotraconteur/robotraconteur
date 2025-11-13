@@ -372,7 +372,7 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
-    - uses: actions/setup-java@v4
+    - uses: actions/setup-java@v5
       with:
         java-version: 8
         java-package: jdk
