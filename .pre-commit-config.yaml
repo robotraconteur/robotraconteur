@@ -65,6 +65,7 @@ repos:
   hooks:
   - id: cspell   # Spell check changed files
     args:
+    - --no-must-find-files
     - --no-progress
     - --no-summary
     - --gitignore
@@ -78,7 +79,7 @@ repos:
     - --no-summary
     - --allow-compound-words
     - --ignore-case
-    - .git/COMMIT_EDITMSG
     - --files
+    - .git/COMMIT_EDITMSG
     stages: [commit-msg]
     always_run: true
