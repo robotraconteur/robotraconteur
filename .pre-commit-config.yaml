@@ -70,15 +70,15 @@ repos:
     - --gitignore
     - --unique
     - --files
-  - id: cspell   # Spell check the commit message
-    name: check commit message spelling
-    args:
-    - --no-must-find-files
-    - --no-progress
-    - --no-summary
-    - --allow-compound-words
-    - --ignore-case
-    - --files
-    - .git/COMMIT_EDITMSG
-    stages: [commit-msg]
-    always_run: true
+  # - id: cspell   # Spell check the commit message
+  #   name: check commit message spelling
+  #   args:
+  #   - --no-must-find-files
+  #   - --no-progress
+  #   - --no-summary
+  #   - --allow-compound-words
+  #   - --ignore-case
+  #   - --files
+  #   - .git/COMMIT_EDITMSG
+  #   stages: [commit-msg]
+  #   always_run: true

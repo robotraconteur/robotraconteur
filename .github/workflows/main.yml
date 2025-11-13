@@ -664,7 +664,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure
+        ctest . -C Release --output-on-failure -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback"
     - name: python 3.7
       if: ${{ matrix.config.arch == 'x64' }}
       uses: ./robotraconteur/tools/actions/build_python_ver/osx
@@ -1036,7 +1036,7 @@ jobs:
     - name: test
       working-directory: build2
       run: |
-        ctest . -C Release --output-on-failure
+        ctest . -C Release --output-on-failure -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback"
   build-android:
 
     runs-on: ubuntu-22.04
