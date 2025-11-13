@@ -78,7 +78,7 @@ repos:
     - --no-summary
     - --allow-compound-words
     - --ignore-case
-    - .git/COMMIT_EDITMSG
     - --files
+    - .git/COMMIT_EDITMSG
     stages: [commit-msg]
     always_run: true
