@@ -606,7 +606,7 @@ jobs:
           arch: x64
           homebrew_root: /usr/local
           py-version: '3.8'
-          cmake-args: -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_JAVA=ON -DBUILD_NET=ON
+          cmake-args: -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_JAVA=ON -DBUILD_NET=OFF
         - runner: macos-15
           vcpkg_triplet: arm64-osx-dynamic-release
           arch: arm64
