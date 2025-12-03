@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>robotraconteur</name>
-  <version>1.2.6</version>
+  <version>1.2.7</version>
   <description>The robotraconteur package</description>
 
   <maintainer email="wason@wasontech.com">John Wason</maintainer>
