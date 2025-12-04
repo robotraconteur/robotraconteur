@@ -385,7 +385,7 @@ jobs:
       run: |
         C:\python27\python -m pip install --upgrade pip
         C:\python27\python -m pip install numpy setuptools wheel pytest
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       id: python3
       with:
         python-version: '3.8'
@@ -625,7 +625,7 @@ jobs:
     - name: brew
       run: |
         brew install swig boost openssl googletest icu4c
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       id: python3
       with:
         python-version: ${{ matrix.config.py-version }}
@@ -1372,7 +1372,7 @@ jobs:
       SKIP: no-commit-to-branch
     steps:
     - uses: actions/checkout@v5
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
     - name: apt
       run: |
         sudo apt update
