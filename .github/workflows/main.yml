@@ -1249,7 +1249,7 @@ jobs:
       working-directory: pyodide_src
       run: |
         make all-but-packages
-        pip install ./pyodide-build --break-system-packages --root-user-action ignore
+        pip install pyodide-build --break-system-packages --root-user-action ignore
     - name: build pregenerated_src
       run: |
         cmake -S $GITHUB_WORKSPACE/robotraconteur -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF
