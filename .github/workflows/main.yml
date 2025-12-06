@@ -1220,6 +1220,7 @@ jobs:
       with:
         repository: pyodide/pyodide-recipes
         path: pyodide_recipes_src
+        submodules: true
     # - name: ccache deps
     #   uses: actions/cache@v3
     #   with:
