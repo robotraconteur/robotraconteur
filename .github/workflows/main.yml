@@ -1233,15 +1233,15 @@ jobs:
     - uses: conda-incubator/setup-miniconda@v3
       with:
         activate-environment: pyodide-env
-        environment-file: pyodide_recipe_src/environment.yml
+        environment-file: pyodide_recipes_src/environment.yml
         channels: conda-forge
     - name: pip-install
-      working-directory: pyodide_recipe_src
+      working-directory: pyodide_recipes_src
       run: |
         pip install -r requirements.txt
         pip install numpy
     - name: deps build
-      working-directory: pyodide_recipe_src
+      working-directory: pyodide_recipes_src
       run: |
         pip install pyodide-build --break-system-packages --root-user-action ignore
         python tools/install_and_patch_emscripten.py
@@ -1253,7 +1253,7 @@ jobs:
         cmake --build gen_src --config Release -j4
         python -m pip install $GITHUB_WORKSPACE/gen_src/out/Python3
     - name: build
-      working-directory: pyodide_recipe_src
+      working-directory: pyodide_recipes_src
       # env:
       #   CCACHE_DIR: /tmp/ccache
       run: |
@@ -1265,13 +1265,13 @@ jobs:
         j2 $GITHUB_WORKSPACE/robotraconteur/tools/build_files/pyodide-recipes/RobotRaconteur/meta.yaml.j2 > $GITHUB_WORKSPACE/pyodide_recipes_src/packages/RobotRaconteur/meta.yaml
         pyodide build-recipes --recipe-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/packages --install $PYODIDE_PACKAGES
     - name: test
-      working-directory: pyodide_recipe_src
-      run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_recipe_src/dist
+      working-directory: pyodide_recipes_src
+      run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/dist
     - name: archive dist
       uses: actions/upload-artifact@v4
       with:
         name: 'pyodide-dist'
-        path: pyodide_recipe_src/dist/*
+        path: pyodide_recipes_src/dist/*
     - name: archive package logs
       if: failure()
       uses: actions/upload-artifact@v4
