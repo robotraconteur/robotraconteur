@@ -3,8 +3,8 @@
   - [Installation](#installation)
     - [Windows](#windows)
     - [Ubuntu Xenial, Bionic, Focal, Jammy, and Noble](#ubuntu-xenial-bionic-focal-jammy-and-noble)
-    - [Debian 10, 11, 12 (buster, bullseye, bookworm)](#debian-10-11-12-buster-bullseye-bookworm)
-    - [Raspbian 10, 11, 12](#raspbian-10-11-12)
+    - [Debian 10, 11, 12, 13 (buster, bullseye, bookworm, trixie)](#debian-10-11-12-13-buster-bullseye-bookworm-trixie)
+    - [Raspbian 10, 11, 12, 13](#raspbian-10-11-12-13)
     - [Mac OSX](#mac-osx)
     - [iOS](#ios)
     - [Android](#android)
@@ -80,7 +80,7 @@ sudo apt-get install librobotraconteur-net-native
 
 Java must be built from source on Linux.
 
-### Debian 10, 11, 12 (buster, bullseye, bookworm)
+### Debian 10, 11, 12, 13 (buster, bullseye, bookworm, trixie)
 
 An apt repository is available for Debian. Packages are available for amd64, armhf, and arm64. See below for raspbian setup. To use, run:
 
@@ -118,7 +118,7 @@ sudo apt-get install librobotraconteur-net-native
 
 Java must be built from source on Linux.
 
-### Raspbian 10, 11, 12
+### Raspbian 10, 11, 12, 13
 
 The Raspberry Pi OS (raspbian) for armhf 32-bit processors is slightly different than the main debian armhf distributions. It uses ARMv6 instructions, instead of the ARMv7 instructions used by the main debian installation. Use the following to set up the raspbian repository, and see the debian section for the rest of the instructions.
 
