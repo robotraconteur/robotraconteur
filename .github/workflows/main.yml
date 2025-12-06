@@ -1218,11 +1218,6 @@ jobs:
         path: robotraconteur
     - uses: actions/checkout@v5
       with:
-        repository: pyodide/pyodide
-        path: pyodide_src
-        submodules: recursive
-    - uses: actions/checkout@v5
-      with:
         repository: pyodide/pyodide-recipes
         path: pyodide_recipes_src
     # - name: ccache deps
@@ -1238,18 +1233,18 @@ jobs:
     - uses: conda-incubator/setup-miniconda@v3
       with:
         activate-environment: pyodide-env
-        environment-file: pyodide_src/environment.yml
+        environment-file: pyodide_recipe_src/environment.yml
         channels: conda-forge
     - name: pip-install
-      working-directory: pyodide_src
+      working-directory: pyodide_recipe_src
       run: |
         pip install -r requirements.txt
         pip install numpy
     - name: deps build
-      working-directory: pyodide_src
+      working-directory: pyodide_recipe_src
       run: |
-        make all-but-packages
         pip install pyodide-build --break-system-packages --root-user-action ignore
+        python tools/install_and_patch_emscripten.py
     - name: build pregenerated_src
       run: |
         cmake -S $GITHUB_WORKSPACE/robotraconteur -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF
@@ -1258,24 +1253,25 @@ jobs:
         cmake --build gen_src --config Release -j4
         python -m pip install $GITHUB_WORKSPACE/gen_src/out/Python3
     - name: build
-      working-directory: pyodide_src
+      working-directory: pyodide_recipe_src
       # env:
       #   CCACHE_DIR: /tmp/ccache
       run: |
         # mkdir -p /tmp/ccache
+        source emsdk/emsdk_env.sh
         export version=$(sed -n 's/^#define[ \t]*ROBOTRACONTEUR_VERSION_TEXT[ \t]*"\([^"]*\)".*/\1/p' $GITHUB_WORKSPACE/robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h)
         export rr_src_path=$GITHUB_WORKSPACE/robotraconteur
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,libboost,pytest,pyyaml,RobotRaconteur"
         j2 $GITHUB_WORKSPACE/robotraconteur/tools/build_files/pyodide-recipes/RobotRaconteur/meta.yaml.j2 > $GITHUB_WORKSPACE/pyodide_recipes_src/packages/RobotRaconteur/meta.yaml
         pyodide build-recipes --recipe-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/packages --install $PYODIDE_PACKAGES
     - name: test
-      working-directory: pyodide_src
-      run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_src/dist
+      working-directory: pyodide_recipe_src
+      run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_recipe_src/dist
     - name: archive dist
       uses: actions/upload-artifact@v4
       with:
         name: 'pyodide-dist'
-        path: pyodide_src/dist/*
+        path: pyodide_recipe_src/dist/*
     - name: archive package logs
       if: failure()
       uses: actions/upload-artifact@v4
