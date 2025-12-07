@@ -1246,6 +1246,7 @@ jobs:
       run: |
         pip install pyodide-build --break-system-packages --root-user-action ignore
         python tools/install_and_patch_emscripten.py
+        ./tools/copy_pyodide_runtime.sh
     - name: build pregenerated_src
       run: |
         cmake -S $GITHUB_WORKSPACE/robotraconteur -B gen_src -DPACKAGE_SWIG_SOURCE_ALL=ON -DBUILD_PYTHON3=ON -DBUILD_TESTING=OFF
