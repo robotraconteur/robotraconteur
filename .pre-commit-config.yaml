@@ -61,10 +61,11 @@ repos:
     language: system
 
 - repo: https://github.com/streetsidesoftware/cspell-cli
-  rev: v9.2.0
+  rev: v9.3.0
   hooks:
   - id: cspell   # Spell check changed files
     args:
+    - --no-must-find-files
     - --no-progress
     - --no-summary
     - --gitignore
@@ -76,9 +77,9 @@ repos:
     - --no-must-find-files
     - --no-progress
     - --no-summary
-    - --files
     - --allow-compound-words
     - --ignore-case
+    - --files
     - .git/COMMIT_EDITMSG
     stages: [commit-msg]
     always_run: true
