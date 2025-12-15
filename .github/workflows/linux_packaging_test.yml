@@ -68,7 +68,7 @@ jobs:
     - name: List out dir
       run: ls -lR out || true
     - name: Upload packages
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: out-linux-packaging-${{ matrix.config.os }}-${{ matrix.config.arch }}
         path: |
