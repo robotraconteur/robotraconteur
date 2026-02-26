@@ -289,7 +289,13 @@ jobs:
         --output-on-failure
   build-fedora:
     runs-on: ubuntu-latest
-    container: fedora:latest
+    container: ${{ matrix.config.container }}
+    strategy:
+      matrix:
+        config:
+        - container: fedora:latest
+        - container: fedora:rawhide
+
     steps:
     - uses: actions/checkout@v5
       with:
