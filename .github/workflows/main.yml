@@ -242,13 +242,13 @@ jobs:
         mv build2/out .
     - name: archive out
       if: ${{ matrix.config.os != 'ubuntu-16.04' &&  matrix.config.os != 'ubuntu-18.04' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'out-${{ matrix.config.os }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
@@ -540,13 +540,13 @@ jobs:
         copy robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'out-win-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'build-artifacts-win-${{ matrix.config.arch }}'
         path: build2/*
@@ -595,7 +595,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'build-artifacts-win-shared'
         path: build2/*
@@ -720,13 +720,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'out-osx-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'build-artifacts-osx-${{ matrix.config.arch }}'
         path: build2/*
@@ -817,13 +817,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'out-matlab'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'build-artifacts-matlab'
         path: build2/*
@@ -919,13 +919,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'out-matlab-osx-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'build-artifacts-matlab-osx-${{ matrix.config.arch }}'
         path: build2/*
@@ -1156,13 +1156,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'out-android-${{ matrix.config.android_abi }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'build-artifacts-android-${{ matrix.config.android_abi }}'
         path: build2/*
@@ -1198,13 +1198,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'out-ios-arm64'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'build-artifacts-ios-arm64'
         path: build2/*
@@ -1276,13 +1276,13 @@ jobs:
       working-directory: pyodide_recipes_src
       run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/dist
     - name: archive dist
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'pyodide-dist'
         path: pyodide_recipes_src/dist/*
     - name: archive package logs
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'pyodide-package-logs'
         path: pyodide_recipes_src/packages/build-logs/*
@@ -1322,7 +1322,7 @@ jobs:
       run: |
         mv build-matlab-toolbox/build/*.mltbx ${{github.workspace}}
     - name: upload matlab toolbox
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: out-matlab-toolbox
         path: "*.mltbx"
@@ -1358,7 +1358,7 @@ jobs:
     - name: build android package
       run: python robotraconteur/packaging/scripts/build_android_package.py
     - name: archive distfiles
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: 'distfiles'
         path: distfiles/*
@@ -1487,7 +1487,7 @@ jobs:
         gcovr -r . --config=test/codecov/gcovr/gcovr.cfg --html-details -o build/codecov/codecov.html build
         gcovr -r . --config=test/codecov/gcovr/gcovr.cfg -s build
     - name: upload codecov
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: codecov
         path: build/codecov
@@ -1551,7 +1551,7 @@ jobs:
         ./disttest_cpp
       # Archive all logs
     - name: Archive all logs
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       if: always()
       with:
         name: logs
@@ -2097,7 +2097,7 @@ jobs:
     - name: copy deb
       run: cp src/*.deb .
     - name: upload deb
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
         path: "*.deb"
