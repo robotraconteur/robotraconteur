@@ -76,7 +76,7 @@ jobs:
       run: |
         sed -i 's|http://archive.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
         sed -i 's|http://security.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: install sudo and tzdata
@@ -257,7 +257,7 @@ jobs:
     runs-on: ubuntu-latest
     container: gentoo/stage3:latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -297,7 +297,7 @@ jobs:
         - container: fedora:rawhide
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -326,7 +326,7 @@ jobs:
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -364,7 +364,7 @@ jobs:
           vcpkg_triplet: x86-windows-static-md-release-vc142
           cmake_arch: Win32
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
@@ -555,7 +555,7 @@ jobs:
   build-win-shared:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -623,7 +623,7 @@ jobs:
     env:
       LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
@@ -738,7 +738,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt
@@ -852,7 +852,7 @@ jobs:
     runs-on: ${{ matrix.config.runner }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
@@ -934,7 +934,7 @@ jobs:
   build-conda-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
@@ -968,10 +968,10 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: bluez-src
         repository: bluez/bluez
@@ -1019,7 +1019,7 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
@@ -1063,7 +1063,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
@@ -1170,7 +1170,7 @@ jobs:
   build-ios:
     runs-on: macos-15
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -1219,10 +1219,10 @@ jobs:
       run:
         shell: bash -el {0}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: pyodide/pyodide-recipes
         path: pyodide_recipes_src
@@ -1294,7 +1294,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         path: robotraconteur
     - uses: actions/download-artifact@v6
@@ -1337,7 +1337,7 @@ jobs:
     - build-matlab-toolbox
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - uses: nuget/setup-nuget@v2
@@ -1375,7 +1375,7 @@ jobs:
     env:
       SKIP: no-commit-to-branch
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: actions/setup-python@v6
     - name: apt
       run: |
@@ -1385,7 +1385,7 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt update
@@ -1421,7 +1421,7 @@ jobs:
   cppcheck:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt update
@@ -1450,7 +1450,7 @@ jobs:
   codecov:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1495,7 +1495,7 @@ jobs:
   vcpkg-test-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v7
       id: vcpkg
@@ -1523,7 +1523,7 @@ jobs:
     env:
       VCPKG_MAX_CONCURRENCY: 2
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1561,7 +1561,7 @@ jobs:
   vcpkg-test-osx:
     runs-on: macos-15-intel
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v7
       id: vcpkg
@@ -1594,7 +1594,7 @@ jobs:
         - arch: x86
           wheel_arch: win32
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: Download distfiles
@@ -1636,7 +1636,7 @@ jobs:
     - build-dist
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt
@@ -1693,7 +1693,7 @@ jobs:
           wheel_arch: arm64
     runs-on: ${{ matrix.config.runner }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: Download distfiles
@@ -1776,7 +1776,7 @@ jobs:
       run: |
         apt-get update
         apt-get install git -y
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: clone robotraconteur_companion
@@ -1877,10 +1877,10 @@ jobs:
   companion-build-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: robotraconteur/robotraconteur_companion
         submodules: recursive
@@ -1951,7 +1951,7 @@ jobs:
         - kilted
         - rolling
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
     - name: apt update
@@ -1984,7 +1984,7 @@ jobs:
         - kilted
         - rolling
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
     - name: apt update
@@ -2023,10 +2023,10 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: robotraconteur/robotraconteur_companion
         submodules: recursive
@@ -2057,7 +2057,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
     - name: apt update
@@ -2150,7 +2150,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: workspace/src/robotraconteur
     - name: apt update
@@ -2191,7 +2191,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: workspace/src/robotraconteur
     - name: apt update
@@ -2234,7 +2234,7 @@ jobs:
   #     run:
   #       shell: cmd /C CALL {0}
   #   steps:
-  #   - uses: actions/checkout@v5
+  #   - uses: actions/checkout@v6
   #     with:
   #       path: workspace/src/robotraconteur
   #   - name: miniconda
@@ -2281,7 +2281,7 @@ jobs:
   #     run:
   #       shell: bash -el {0}
   #   steps:
-  #   - uses: actions/checkout@v5
+  #   - uses: actions/checkout@v6
   #     with:
   #       path: workspace/src/robotraconteur
   #   - name: miniconda
@@ -2320,7 +2320,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: workspace/src/robotraconteur
     - name: update brew
