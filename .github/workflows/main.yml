@@ -1297,11 +1297,11 @@ jobs:
       uses: actions/checkout@v5
       with:
         path: robotraconteur
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@v7
       with:
         path: artifacts/main
         pattern: "out-matlab*"
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@v7
       with:
         path: artifacts/main
         pattern: out-win-x64
@@ -1342,7 +1342,7 @@ jobs:
         path: robotraconteur
     - uses: nuget/setup-nuget@v2
     - name: Download CI artifacts
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: artifacts/main
     - name: collect source
@@ -1598,7 +1598,7 @@ jobs:
       with:
         path: robotraconteur
     - name: Download distfiles
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: artifacts/distfiles
         name: distfiles
@@ -1644,12 +1644,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libboost-all-dev libssl-dev zlib1g-dev -y
     - name: Download distfiles
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: artifacts/distfiles
         name: distfiles
     - name: Download distfiles out-ubuntu
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: artifacts/out-ubuntu
         name: out-ubuntu-22.04
@@ -1697,12 +1697,12 @@ jobs:
       with:
         path: robotraconteur
     - name: Download distfiles
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: artifacts/distfiles
         name: distfiles
     - name: Download distfiles out-osx
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: artifacts/out-osx
         name: out-osx-${{ matrix.config.arch }}
@@ -2119,7 +2119,7 @@ jobs:
         shell: bash
     steps:
     - name: download deb
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
     - name: apt update
