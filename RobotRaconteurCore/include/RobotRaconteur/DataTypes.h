@@ -1144,7 +1144,7 @@ static RR_INTRUSIVE_PTR<RRArray<T> > AllocateEmptyRRArray(size_t length)
     RR_INTRUSIVE_PTR<RRArray<T> > o = AllocateRRArray<T>(length);
     if (length > 0)
     {
-        memset(o->data(), 0, length * sizeof(T));
+        memset(static_cast<void*>(o->data()), 0, length * sizeof(T));
     }
     return o;
 }
