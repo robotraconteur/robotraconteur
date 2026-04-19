@@ -333,14 +333,14 @@ jobs:
     - name: install-pkgs
       run: >-
         pacman -Syu --noconfirm boost cmake ninja
-        gcc  make openssl dbus
+        gcc  make openssl dbus boost-libs
         libusb bluez-libs gtest
         python python-pip python-numpy
         python-pytest zlib swig
     - name: config
       run: >-
         cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE=Release
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
