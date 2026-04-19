@@ -1274,6 +1274,7 @@ jobs:
       run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/dist
     - name: archive dist
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: 'pyodide-dist'
         path: pyodide_recipes_src/dist/*
