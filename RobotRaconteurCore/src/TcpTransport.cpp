@@ -1746,13 +1746,13 @@ void TcpWSSWebSocketConnector::Connect(
 
         if (url_res.scheme == "rr+wss")
         {
-            std::string url1 = RR_MOVE(url.to_string());
+            std::string url1 = url.to_string();
             ws_url = boost::replace_first_copy(url1, "rr+wss", "wss");
         }
 
         if (url_res.scheme == "rrs+wss")
         {
-            std::string url1 = RR_MOVE(url.to_string());
+            std::string url1 = url.to_string();
             ws_url = boost::replace_first_copy(url1, "rrs+wss", "wss");
         }
 
