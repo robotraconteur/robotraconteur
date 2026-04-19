@@ -90,8 +90,16 @@
 
 #ifndef ROBOTRACONTEUR_EMSCRIPTEN
 #include <boost/thread.hpp>
+#ifndef BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#define BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#define RR_BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#endif
 #include <boost/asio/version.hpp>
 #include <boost/asio/strand.hpp>
+#ifdef RR_BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#undef RR_BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#undef BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#endif
 #endif
 
 #ifdef ROBOTRACONTEUR_WINDOWS
