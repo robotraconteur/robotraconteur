@@ -1264,7 +1264,6 @@ jobs:
       #   CCACHE_DIR: /tmp/ccache
       run: |
         # mkdir -p /tmp/ccache
-        source emsdk/emsdk_env.sh
         export version=$(sed -n 's/^#define[ \t]*ROBOTRACONTEUR_VERSION_TEXT[ \t]*"\([^"]*\)".*/\1/p' $GITHUB_WORKSPACE/robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h)
         export rr_src_path=$GITHUB_WORKSPACE/robotraconteur
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,libboost,pytest,pyyaml,RobotRaconteur"
