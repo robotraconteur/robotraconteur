@@ -1739,7 +1739,7 @@ class ROBOTRACONTEUR_CORE_API EnumDefinitionValue
     /** @brief Value is represented using a hex literal */
     bool HexValue;
 
-    /** @brief Documentations tring for the enum value */
+    /** @brief Documentations string for the enum value */
     std::string DocString;
 };
 
