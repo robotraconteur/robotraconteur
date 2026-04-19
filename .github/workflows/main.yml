@@ -316,7 +316,7 @@ jobs:
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
-        cmake --build build --config Release
+        cmake --build build --config Release --parallel 1
     - name: test
       run: >-
         ctest --test-dir build -C Release
