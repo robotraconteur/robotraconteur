@@ -1250,8 +1250,7 @@ jobs:
     - name: deps build
       working-directory: pyodide_recipes_src
       run: |
-        pip install pyodide-build --break-system-packages --root-user-action ignore
-        python tools/install_and_patch_emscripten.py
+        ./tools/prepare_pyodide_build.sh
         ./tools/copy_pyodide_runtime.sh
     - name: build pregenerated_src
       run: |
@@ -1266,7 +1265,6 @@ jobs:
       #   CCACHE_DIR: /tmp/ccache
       run: |
         # mkdir -p /tmp/ccache
-        source emsdk/emsdk_env.sh
         export version=$(sed -n 's/^#define[ \t]*ROBOTRACONTEUR_VERSION_TEXT[ \t]*"\([^"]*\)".*/\1/p' $GITHUB_WORKSPACE/robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h)
         export rr_src_path=$GITHUB_WORKSPACE/robotraconteur
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,libboost,pytest,pyyaml,RobotRaconteur"
@@ -1277,6 +1275,7 @@ jobs:
       run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/dist
     - name: archive dist
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: 'pyodide-dist'
         path: pyodide_recipes_src/dist/*
