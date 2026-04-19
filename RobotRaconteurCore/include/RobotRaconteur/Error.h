@@ -32,9 +32,11 @@ namespace RobotRaconteur
 
 class ROBOTRACONTEUR_CORE_API RRValue;
 
+// cSpell: ignore Woverloaded
+
 #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Woverloaded-virtual"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #endif
 
 /**
@@ -139,7 +141,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
 };
 
 #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 #endif
 
 // clang-format off
