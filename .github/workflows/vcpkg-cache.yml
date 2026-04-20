@@ -27,6 +27,10 @@ env:
 jobs:
   build-win:
     runs-on: windows-2022
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'push' && github.event.created == true)
     strategy:
       fail-fast: false
       matrix:
@@ -53,6 +57,10 @@ jobs:
 
   build-win-shared:
     runs-on: windows-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'push' && github.event.created == true)
     steps:
     - uses: actions/checkout@v5
       with:
@@ -69,6 +77,10 @@ jobs:
   build-matlab:
 
     runs-on: ubuntu-22.04
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'push' && github.event.created == true)
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -99,6 +111,11 @@ jobs:
 
   build-matlab-osx:
 
+    runs-on: ${{ matrix.config.runner }}
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'push' && github.event.created == true)
     strategy:
       fail-fast: false
       matrix:
@@ -117,8 +134,6 @@ jobs:
           cmake-args: -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
           matlab-plat-suffix: maca64
           matlab-ver: R2023b
-    runs-on: ${{ matrix.config.runner }}
-
     steps:
     - uses: actions/checkout@v5
       with:
@@ -136,6 +151,10 @@ jobs:
 
   build-ios:
     runs-on: macos-15
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'push' && github.event.created == true)
     steps:
     - uses: actions/checkout@v5
       with:
@@ -152,6 +171,10 @@ jobs:
 
   companion-build-win:
     runs-on: windows-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'push' && github.event.created == true)
     steps:
     - uses: actions/checkout@v5
       with:
