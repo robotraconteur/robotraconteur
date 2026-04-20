@@ -218,7 +218,7 @@
 #include "RobotRaconteurEmscripten.h"
 #endif
 
-#ifdef __CPPCHECK__
+#ifdef __cppcheck__
 // Simplified versions for Cppcheck parsing
 #define RR_GCC_DISABLE_WARNING(warning_name)
 #define RR_GCC_ENABLE_WARNING()
