@@ -1043,7 +1043,7 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
     WireClient(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
                boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN)
-        : WireClientBase(name, stub, direction), Wire<T>(verify)
+        : Wire<T>(verify), WireClientBase(name, stub, direction)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
     }
