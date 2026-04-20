@@ -218,6 +218,11 @@
 #include "RobotRaconteurEmscripten.h"
 #endif
 
+#ifdef __CPPCHECK__
+// Simplified versions for Cppcheck parsing
+#define RR_GCC_DISABLE_WARNING(warning_name)
+#define RR_GCC_ENABLE_WARNING()
+#else
 #if defined(__GNUC__) || defined(__clang__)
 #define RR_GCC_DISABLE_WARNING_TO_PRAGMA(x) _Pragma(#x)
 #define RR_GCC_DISABLE_WARNING_IGNORE_HELPER(w) RR_GCC_DISABLE_WARNING_TO_PRAGMA(GCC diagnostic ignored w)
@@ -227,4 +232,5 @@
 #else
 #define RR_GCC_DISABLE_WARNING(warning_name)
 #define RR_GCC_ENABLE_WARNING()
+#endif
 #endif
