@@ -465,18 +465,14 @@ RR_INTRUSIVE_PTR<RRMultiDimArray<T> > MessageElement_UnpackMultiDimArray(RR_WEAK
     return a;
 }
 
-#ifdef __GNUG__
-#pragma GCC diagnostic push
-// cSpell: disable-next-line
-#pragma GCC diagnostic ignored "-Wunused-function"
-#endif
+// cSpell: ignore Wunused
+RR_GCC_DISABLE_WARNING("-Wunused-function")
+
 static std::string MessageElement_UnpackString(const RR_INTRUSIVE_PTR<MessageElement>& m)
 {
     return RRArrayToString(m->CastData<RRArray<char> >());
 }
-#ifdef __GNUG__
-#pragma GCC diagnostic pop
-#endif
+RR_GCC_ENABLE_WARNING()
 
 template <typename T, typename N>
 RR_INTRUSIVE_PTR<T> MessageElement_UnpackStructure(RR_WEAK_PTR<N> node, const RR_INTRUSIVE_PTR<MessageElement>& m)
