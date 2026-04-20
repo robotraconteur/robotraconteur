@@ -32,6 +32,13 @@ namespace RobotRaconteur
 
 class ROBOTRACONTEUR_CORE_API RRValue;
 
+// cSpell: ignore Woverloaded
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
+#endif
+
 /**
  * @brief Base class for Robot Raconteur exceptions
  *
@@ -132,6 +139,10 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
   private:
     std::string what_string;
 };
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 
 // clang-format off
 #define RR_EXCEPTION_TYPES_INIT(M,M2) \
