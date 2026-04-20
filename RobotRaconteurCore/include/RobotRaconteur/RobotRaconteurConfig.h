@@ -217,3 +217,14 @@
 #ifdef ROBOTRACONTEUR_EMSCRIPTEN
 #include "RobotRaconteurEmscripten.h"
 #endif
+
+#if defined(__GNUC__) || defined(__clang__)
+#define RR_GCC_DISABLE_WARNING_TO_PRAGMA(x) _Pragma(#x)
+#define RR_GCC_DISABLE_WARNING_IGNORE_HELPER(w) RR_GCC_DISABLE_WARNING_TO_PRAGMA(GCC diagnostic ignored w)
+#define RR_GCC_DISABLE_WARNING(warning_name)                                                                           \
+    _Pragma("GCC diagnostic push") RR_GCC_DISABLE_WARNING_IGNORE_HELPER(warning_name)
+#define RR_GCC_ENABLE_WARNING() _Pragma("GCC diagnostic pop")
+#else
+#define RR_GCC_DISABLE_WARNING(warning_name)
+#define RR_GCC_ENABLE_WARNING()
+#endif
