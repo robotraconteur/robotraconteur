@@ -55,28 +55,36 @@ uint32_t robotraconteur_test_lfsr_next_uint8(uint32_t lfsr, uint8_t* val_out)
 uint32_t robotraconteur_test_lfsr_next_int16(uint32_t lfsr, int16_t* val_out)
 {
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
-    *val_out = *((int16_t*)&lfsr2);
+    int16_t val_out1;
+    memcpy(&val_out1, &lfsr2, sizeof(int16_t));
+    *val_out = val_out1;
     return lfsr2;
 }
 
 uint32_t robotraconteur_test_lfsr_next_uint16(uint32_t lfsr, uint16_t* val_out)
 {
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
-    *val_out = *((int16_t*)&lfsr2);
+    uint16_t val_out1;
+    memcpy(&val_out1, &lfsr2, sizeof(uint16_t));
+    *val_out = val_out1;
     return lfsr2;
 }
 
 uint32_t robotraconteur_test_lfsr_next_int32(uint32_t lfsr, int32_t* val_out)
 {
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
-    *val_out = *((int32_t*)&lfsr2);
+    int32_t val_out1;
+    memcpy(&val_out1, &lfsr2, sizeof(int32_t));
+    *val_out = val_out1;
     return lfsr2;
 }
 
 uint32_t robotraconteur_test_lfsr_next_uint32(uint32_t lfsr, uint32_t* val_out)
 {
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
-    *val_out = *((uint32_t*)&lfsr2);
+    uint32_t val_out1;
+    memcpy(&val_out1, &lfsr2, sizeof(uint32_t));
+    *val_out = val_out1;
     return lfsr2;
 }
 
@@ -84,7 +92,9 @@ uint32_t robotraconteur_test_lfsr_next_int64(uint32_t lfsr, int64_t* val_out)
 {
     uint64_t val_out1;
     uint32_t lfsr2 = robotraconteur_test_lfsr_next_uint64(lfsr, &val_out1);
-    *val_out = *((int64_t*)&val_out1);
+    int64_t val_out2;
+    memcpy(&val_out2, &val_out1, sizeof(int64_t));
+    *val_out = val_out2;
     return lfsr2;
 }
 
@@ -101,7 +111,9 @@ uint32_t robotraconteur_test_lfsr_next_uint64(uint32_t lfsr, uint64_t* val_out)
 uint32_t robotraconteur_test_lfsr_next_float(uint32_t lfsr, float* val_out)
 {
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
-    *val_out = *((float*)&lfsr2);
+    float val_out1;
+    memcpy(&val_out1, &lfsr2, sizeof(float));
+    *val_out = val_out1;
     return lfsr2;
 }
 
@@ -109,7 +121,9 @@ uint32_t robotraconteur_test_lfsr_next_double(uint32_t lfsr, double* val_out)
 {
     uint64_t val_out1;
     uint32_t lfsr2 = robotraconteur_test_lfsr_next_uint64(lfsr, &val_out1);
-    *val_out = *((double*)&val_out1);
+    double val_out2;
+    memcpy(&val_out2, &val_out1, sizeof(double));
+    *val_out = val_out2;
     return lfsr2;
 }
 
