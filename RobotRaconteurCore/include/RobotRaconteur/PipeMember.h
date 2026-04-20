@@ -892,7 +892,7 @@ class PipeClient : public virtual Pipe<T>, public virtual PipeClientBase
     PipeClient(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub, bool unreliable = false,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
                boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN)
-        : PipeClientBase(name, stub, unreliable, direction), Pipe<T>(verify)
+        : Pipe<T>(verify), PipeClientBase(name, stub, unreliable, direction)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
     }
