@@ -1024,6 +1024,10 @@ class WrappedGeneratorClient : public GeneratorClientBase
 
     RR_INTRUSIVE_PTR<MessageElement> Next(const RR_INTRUSIVE_PTR<MessageElement>& v);
     WrappedGeneratorClient_TryGetNextResult TryNext(const RR_INTRUSIVE_PTR<MessageElement>& v);
+
+    using GeneratorClientBase::AsyncAbort;
+    using GeneratorClientBase::AsyncClose;
+
     void AsyncNext(const RR_INTRUSIVE_PTR<MessageElement>& v, int32_t timeout, AsyncRequestDirector* handler,
                    int32_t id);
 
