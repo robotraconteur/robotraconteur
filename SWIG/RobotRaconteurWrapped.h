@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <RobotRaconteur.h>
-
 #ifdef RR_PYTHON
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #endif
+
+#include <RobotRaconteur.h>
+
 #pragma once
 
 // cSpell: ignore XINCREF
