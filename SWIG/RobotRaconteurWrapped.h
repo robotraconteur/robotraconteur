@@ -1853,7 +1853,7 @@ class WrappedServiceSubscriptionFilter
     uint32_t MaxConnections;
 
     WrappedServiceSubscriptionFilter()
-        : MaxConnections(0), AttributesMatchOperation(ServiceSubscriptionFilterAttributeGroupOperation_AND)
+        : AttributesMatchOperation(ServiceSubscriptionFilterAttributeGroupOperation_AND), MaxConnections(0)
     {}
 };
 
