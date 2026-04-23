@@ -156,12 +156,12 @@ void VerifyMultiDimArrayLength(const boost::intrusive_ptr<MessageElementNestedEl
         throw DataTypeException("Invalid MultDimArray");
     if (type1->ArrayLength.size() != data_dims->size())
         throw DataTypeException("Array dimension mismatch");
-    int32_t count = 1;
+    size_t count = 1;
 
-    for (int32_t i = 0; i < data_dims->size(); i++)
+    for (size_t i = 0; i < data_dims->size(); i++)
     {
         count *= data_dims->data()[i];
-        if (data_dims->data()[i] != type1->ArrayLength[i])
+        if (boost::numeric_cast<int32_t>(data_dims->data()[i]) != type1->ArrayLength[i])
             throw DataTypeException("Array dimension mismatch");
     }
 
@@ -1444,12 +1444,12 @@ class UnpackMessageElementImpl
 
             if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
             {
-                if (i != el1->ElementNumber)
+                if (boost::numeric_cast<int32_t>(i) != el1->ElementNumber)
                     throw DataTypeException("Invalid pod array specified for " + element->ElementName.str());
             }
             else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
             {
-                if (i != boost::lexical_cast<int32_t>(el1->ElementName.str()))
+                if (boost::numeric_cast<int32_t>(i) != boost::lexical_cast<int32_t>(el1->ElementName.str()))
                     throw DataTypeException("Invalid list specified for " + element->ElementName.str());
             }
             else
@@ -1766,12 +1766,13 @@ class UnpackMessageElementImpl
 
                             if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
                             {
-                                if (i != el1->ElementNumber)
+                                if (boost::numeric_cast<int32_t>(i) != el1->ElementNumber)
                                     throw DataTypeException("Invalid list");
                             }
                             else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
                             {
-                                if (i != boost::lexical_cast<int32_t>(el1->ElementName.str()))
+                                if (boost::numeric_cast<int32_t>(i) !=
+                                    boost::lexical_cast<int32_t>(el1->ElementName.str()))
                                     throw DataTypeException("Invalid list");
                             }
                             else
@@ -1960,12 +1961,12 @@ class UnpackMessageElementImpl
                 push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", type2);
                 if (el1->ElementFlags & MessageElementFlags_ELEMENT_NUMBER)
                 {
-                    if (i != el1->ElementNumber)
+                    if (boost::numeric_cast<int32_t>(i) != el1->ElementNumber)
                         throw DataTypeException("Invalid list specified");
                 }
                 else if (el1->ElementFlags & MessageElementFlags_ELEMENT_NAME_STR)
                 {
-                    if (i != boost::lexical_cast<int32_t>(el1->ElementName.str()))
+                    if (boost::numeric_cast<int32_t>(i) != boost::lexical_cast<int32_t>(el1->ElementName.str()))
                         throw DataTypeException("Invalid list specified for " + type1->Name);
                 }
                 else
@@ -2641,12 +2642,12 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::s
         {
             if (!type1->ArrayVarLength)
             {
-                if (type1->ArrayLength.at(0) != bytearray_size)
+                if (type1->ArrayLength.at(0) != boost::numeric_cast<int32_t>(bytearray_size))
                     throw DataTypeException("Invalid array length for PackToRRArray");
             }
             else if (type1->ArrayLength.at(0) != 0)
             {
-                if (type1->ArrayLength.at(0) < bytearray_size)
+                if (type1->ArrayLength.at(0) < boost::numeric_cast<int32_t>(bytearray_size))
                     throw DataTypeException("Array to long for PackToRRArray");
             }
         }
@@ -2683,12 +2684,12 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::s
     {
         if (!type1->ArrayVarLength)
         {
-            if (type1->ArrayLength.at(0) != seq_size)
+            if (type1->ArrayLength.at(0) != boost::numeric_cast<int32_t>(seq_size))
                 throw DataTypeException("Invalid array length for PackToRRArray");
         }
         else if (type1->ArrayLength.at(0) != 0)
         {
-            if (type1->ArrayLength.at(0) < seq_size)
+            if (type1->ArrayLength.at(0) < boost::numeric_cast<int32_t>(seq_size))
                 throw DataTypeException("Array too long for PackToRRArray");
         }
     }
@@ -2756,12 +2757,12 @@ PyObject* UnpackFromRRArray(const boost::intrusive_ptr<RRBaseArray>& rrarray,
             {
                 if (!type1->ArrayVarLength)
                 {
-                    if (rrarray->size() != type1->ArrayLength.at(0))
+                    if (boost::numeric_cast<int32_t>(rrarray->size()) != type1->ArrayLength.at(0))
                         throw DataTypeException("Array length mismatch");
                 }
                 else if (type1->ArrayLength.at(0) != 0)
                 {
-                    if (rrarray->size() > type1->ArrayLength.at(0))
+                    if (boost::numeric_cast<int32_t>(rrarray->size()) > type1->ArrayLength.at(0))
                         throw DataTypeException("Array length to long");
                 }
             }
@@ -2793,7 +2794,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, const bo
 
     if (destrrarray)
     {
-        if (destrrarray->size() != len)
+        if (boost::numeric_cast<npy_intp>(destrrarray->size()) != len)
             throw DataTypeException("Invalid destrrarray specified for PackRRArray");
     }
     else
@@ -2840,7 +2841,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, const bo
     if (array2.get() == NULL)
         throw DataTypeException("Internal error");
 
-    if (PyArray_NBYTES(array2.get()) != destrrarray->size() * destrrarray->ElementSize())
+    if (boost::numeric_cast<size_t>(PyArray_NBYTES(array2.get())) != destrrarray->size() * destrrarray->ElementSize())
         throw DataTypeException("numpy data size error in PackToRRArray");
 
     memcpy(destrrarray->void_ptr(), PyArray_DATA(array2.get()), PyArray_NBYTES(array2.get()));
@@ -2871,7 +2872,7 @@ PyObject* UnpackFromRRArray_numpy(const boost::intrusive_ptr<RRBaseArray>& rrarr
         {
             if (!type1->ArrayVarLength)
             {
-                if (rrarray->size() != type1->ArrayLength.at(0))
+                if (boost::numeric_cast<int32_t>(rrarray->size()) != type1->ArrayLength.at(0))
                     throw DataTypeException("Invalid length for fixed length array in UnpackFromRRArray");
             }
         }
@@ -2934,7 +2935,7 @@ boost::tuple<boost::intrusive_ptr<RRBaseArray>, boost::intrusive_ptr<RRBaseArray
 
         if (PyArray_IS_F_CONTIGUOUS(array1))
         {
-            if (PyArray_NBYTES(array1) != ret->ElementSize() * count)
+            if (boost::numeric_cast<size_t>(PyArray_NBYTES(array1)) != ret->ElementSize() * count)
                 throw DataTypeException("MultiDimArray type mismatch");
             memcpy(ret->void_ptr(), PyArray_BYTES(array1), PyArray_NBYTES(array1));
             return boost::make_tuple(ret, boost::intrusive_ptr<RRBaseArray>());
