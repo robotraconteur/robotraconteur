@@ -218,7 +218,7 @@ static void ThrowPythonError()
 							}
 
 						}
-						catch (std::exception)
+						catch (std::exception&)
 						{
 							//TODO: log error
 						}
