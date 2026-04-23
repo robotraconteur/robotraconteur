@@ -2163,9 +2163,6 @@ RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(
     const boost::intrusive_ptr<MessageElementData>& credentials = boost::intrusive_ptr<MessageElementData>(),
     const std::string& objecttype = "");
 
-static RR_SHARED_PTR<ServiceSubscriptionFilter> WrappedSubscribeService_LoadFilter(
-    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter);
-
 // ServiceSubscriptionManager
 
 struct WrappedServiceSubscriptionManagerDetails

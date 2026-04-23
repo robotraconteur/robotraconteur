@@ -2726,15 +2726,6 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::s
     }
 }
 
-static PyObject* RR_PyInt_FromLong(long ival)
-{
-#if (PY_MAJOR_VERSION == 2)
-    return PyInt_FromLong(ival);
-#else
-    return PyLong_FromLong(ival);
-#endif
-}
-
 PyObject* UnpackFromRRArray(const boost::intrusive_ptr<RRBaseArray>& rrarray,
                             const boost::shared_ptr<TypeDefinition>& type1)
 {
@@ -2806,7 +2797,6 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray_numpy(PyObject* array_, const bo
 
     int ndim = PyArray_NDIM(array1);
     npy_intp* dims = PyArray_DIMS(array1);
-    npy_intp* shape = PyArray_SHAPE(array1);
 
     if (ndim > 1)
     {
