@@ -359,7 +359,7 @@ class IOContextThreadPool_AsyncResultAdapter
             _io_context.run_one();
         }
 
-        result_type res;
+        result_type res = result_type();
         RR_SHARED_PTR<RobotRaconteurException> exp;
         RR_SWAP(res, _data->_result.data());
         exp = _data->_exp;
