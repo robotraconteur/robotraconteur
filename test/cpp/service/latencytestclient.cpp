@@ -37,10 +37,6 @@ int main(int argc, char* argv[])
     RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService1Factory>());
     RobotRaconteurNode::s()->RegisterServiceType(RR_MAKE_SHARED<com__robotraconteur__testing__TestService2Factory>());
 
-    uint32_t servicetest_count = 0;
-    uint32_t servicetest_connectcount = 0;
-    bool servicetest_keepgoing = true;
-
     // RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue>
     // >(),NULL,"",&servicetest1);
     // RobotRaconteurNode::s()->AsyncConnectService(url1,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue>
@@ -56,7 +52,6 @@ int main(int argc, char* argv[])
     RR_SHARED_PTR<sub1> o3 = o2->get_o1();
 
     RR_INTRUSIVE_PTR<RRArray<double> > d = AllocateRRArray<double>(10);
-    uint32_t latencyitercount = 0;
     RR_SHARED_PTR<AutoResetEvent> latency_event = RR_MAKE_SHARED<AutoResetEvent>();
 
     boost::posix_time::ptime t1;

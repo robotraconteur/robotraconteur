@@ -888,7 +888,9 @@ void CompareMessageElement(RR_INTRUSIVE_PTR<MessageElement> m1, RR_INTRUSIVE_PTR
     EXPECT_EQ(m1->DataCount, m2->DataCount);
 
     if (m1->ElementType == DataTypes_void_t)
+    {
         EXPECT_EQ(m1->DataCount, 0);
+    }
 
     switch (m1->ElementType)
     {
