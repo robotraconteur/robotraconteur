@@ -33,6 +33,7 @@ class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3_
 // NOLINTBEGIN
 namespace com__robotraconteur__testing__TestService3Constants 
 {
+RR_GCC_DISABLE_WARNING("-Wunused-variable")
     static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81";
     static const int32_t int32const=3856384;
     static const int32_t int32const_array[]={182476, 56483, -2947};
@@ -46,6 +47,7 @@ namespace com__robotraconteur__testing__TestService3Constants
     {
     static const char* unknown_modifier_hello="hello world!";
     }
+RR_GCC_ENABLE_WARNING()
 }
     namespace testenum1
     {

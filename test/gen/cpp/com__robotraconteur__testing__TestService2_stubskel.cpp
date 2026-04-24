@@ -68,7 +68,6 @@ return out;
 RR_SHARED_PTR<RobotRaconteur::StructureStub> com__robotraconteur__testing__TestService2Factory::FindStructureStub(boost::string_ref s)
 {
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(s);
-boost::string_ref servicetype=res.get<0>();
 boost::string_ref objecttype=res.get<1>();
 if (objecttype=="ostruct2") return RobotRaconteur::rr_cast<RobotRaconteur::StructureStub>(RR_MAKE_SHARED<ostruct2_stub>(GetNode()));
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
@@ -77,7 +76,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraco
 {
 std::string type=structin->RRType();boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackStructure(structin);
 RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);
 return stub->PackStructure(structin);
@@ -88,7 +86,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> com__robotraconteur__testing__TestServ
 RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackStructure(mstructin);
 RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type.str());
 return stub->UnpackStructure(mstructin);
@@ -99,7 +96,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraco
 boost::string_ref type=structin->RRElementTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackPodArray(structin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
@@ -108,7 +104,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseArray> com__robotraconteur__testing__T
 RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackPodArray(mstructin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
@@ -117,7 +112,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraco
 boost::string_ref type=structin->RRElementTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackPodMultiDimArray(structin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
@@ -126,7 +120,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRPodBaseMultiDimArray> com__robotraconteur__te
 RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackPodMultiDimArray(mstructin);
 throw RobotRaconteur::ServiceException("Invalid pod type.");
 }
@@ -135,7 +128,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraco
 boost::string_ref type=structin->RRElementTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackNamedArray(structin);
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
@@ -144,7 +136,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseArray> com__robotraconteur__testing_
 RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackNamedArray(mstructin);
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
@@ -153,7 +144,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraco
 boost::string_ref type=structin->RRElementTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->PackNamedMultiDimArray(structin);
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
@@ -162,7 +152,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedBaseMultiDimArray> com__robotraconteur__
 RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService2") return GetNode()->UnpackNamedMultiDimArray(mstructin);
 throw RobotRaconteur::ServiceException("Invalid namedarray type.");
 }
@@ -416,7 +405,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0.0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-double rr_ret;
+double rr_ret=double();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -465,7 +454,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -517,7 +506,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0.0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-double rr_ret;
+double rr_ret=double();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
@@ -607,7 +596,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0.0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-double rr_ret;
+double rr_ret=double();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
