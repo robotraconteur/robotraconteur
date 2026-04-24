@@ -1765,11 +1765,12 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> " << factory_name << "::FindStructureStub(boost::string_ref s)"
        << std::endl
        << "{" << std::endl;
-    w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(s);" << std::endl;
 
-    // w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
     if (!d->Structures.empty())
     {
+        w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(s);"
+           << std::endl;
+        // w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
         w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     }
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin();
