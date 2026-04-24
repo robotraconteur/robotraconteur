@@ -72,8 +72,8 @@ class testroot3_impl(object):
 
         def in_value_changed(val, ts, ep):
             print("In value changed: " + str(val) + " ep: " + str(ep))
-            print(self._pokewire_r.InValue)
-            print(self._pokewire_r.TryGetInValue())
+            # print(self._pokewire_r.InValue)
+            # print(self._pokewire_r.TryGetInValue())
 
         self._pokewire_r.InValueChanged += in_value_changed
 
@@ -689,7 +689,6 @@ def ServiceTest2_verify_teststruct3(v, seed):
 
     assert v.s13 is not None
     s13 = v.s13.data[0]
-    print(s13)
     ServiceTest2_verify_testpod1(s13.data[0], gen.get_uint32())
 
     assert (v.s14 is not None)
