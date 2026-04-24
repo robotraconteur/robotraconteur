@@ -1767,8 +1767,11 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << "{" << std::endl;
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(s);" << std::endl;
 
-    w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    // w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
+    if (!d->Structures.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin();
          e != d->Structures.end(); ++e)
     {
@@ -1787,7 +1790,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    // w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackStructure(structin);" << std::endl;
     w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);" << std::endl;
     w2 << "return stub->PackStructure(structin);" << std::endl;
@@ -1804,7 +1807,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    // w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackStructure(mstructin);" << std::endl;
     w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type.str());" << std::endl;
     w2 << "return stub->UnpackStructure(mstructin);" << std::endl;
@@ -1819,7 +1822,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->Pods.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackPodArray(structin);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end();
          ++e)
@@ -1839,7 +1845,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());"
        << std::endl;
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->Pods.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackPodArray(mstructin);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end();
          ++e)
@@ -1858,7 +1867,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);"
        << std::endl;
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->Pods.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackPodMultiDimArray(structin);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end();
          ++e)
@@ -1879,7 +1891,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());"
        << std::endl;
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->Pods.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackPodMultiDimArray(mstructin);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Pods.begin(); e != d->Pods.end();
          ++e)
@@ -1898,7 +1913,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->NamedArrays.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackNamedArray(structin);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin();
          e != d->NamedArrays.end(); ++e)
@@ -1919,7 +1937,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());"
        << std::endl;
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->NamedArrays.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackNamedArray(mstructin);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin();
          e != d->NamedArrays.end(); ++e)
@@ -1938,7 +1959,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);"
        << std::endl;
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->NamedArrays.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackNamedMultiDimArray(structin);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin();
          e != d->NamedArrays.end(); ++e)
@@ -1961,7 +1985,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());"
        << std::endl;
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->NamedArrays.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackNamedMultiDimArray(mstructin);"
        << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->NamedArrays.begin();
@@ -1984,7 +2011,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->Objects.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name
        << "\") return GetNode()->GetServiceType(servicetype)->CreateStub(type,path,context);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin();
@@ -2008,7 +2038,10 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    if (!d->Objects.empty())
+    {
+        w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
+    }
     w2 << "if (servicetype != \"" << d->Name
        << "\") return GetNode()->GetServiceType(servicetype)->CreateSkel(type,path,obj,context);" << std::endl;
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Objects.begin();
@@ -3156,7 +3189,8 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
                << ",RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));" << std::endl;
             w2 << "return;" << std::endl;
             w2 << "}" << std::endl;
-            w2 << get_variable_type(*m->Type).cpp_type << " rr_ret;" << std::endl;
+            w2 << get_variable_type(*m->Type).cpp_type << " rr_ret=" << get_variable_type(*m->Type).cpp_type << "();"
+               << std::endl;
             w2 << "try" << std::endl;
             w2 << "{" << std::endl;
             w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement(\"value\");" << std::endl;
@@ -3287,7 +3321,8 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
             }
             else
             {
-                w2 << get_variable_type(*m->ReturnType).cpp_type << " rr_ret;" << std::endl;
+                w2 << get_variable_type(*m->ReturnType).cpp_type
+                   << " rr_ret=" << get_variable_type(*m->ReturnType).cpp_type << "();" << std::endl;
                 w2 << "try" << std::endl;
                 w2 << "{" << std::endl;
                 w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement(\"return\");" << std::endl;
@@ -3339,7 +3374,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
             w2 << "return;" << std::endl;
             w2 << "}" << std::endl;
 
-            w2 << "int32_t index;" << std::endl;
+            w2 << "int32_t index=0;" << std::endl;
             w2 << "try" << std::endl;
             w2 << "{" << std::endl;
             w2 << "index=RobotRaconteur::RRArrayToScalar(m->FindElement(\"index\")->CastData<RobotRaconteur::RRArray<"
@@ -4391,7 +4426,8 @@ void CPPServiceLangGen::GenerateConstants(ServiceDefinition* d, std::ostream* w)
     w2 << "// NOLINTBEGIN" << std::endl;
     w2 << "namespace " << boost::replace_all_copy(fix_name(d->Name), ".", "__") << "Constants " << std::endl
        << "{" << std::endl;
-
+    // cSpell: ignore Wunused
+    w2 << "RR_GCC_DISABLE_WARNING(\"-Wunused-variable\")" << std::endl;
     for (std::vector<std::string>::iterator e = d->Options.begin(); e != d->Options.end(); ++e)
     {
         if (boost::starts_with(*e, "constant"))
@@ -4446,7 +4482,7 @@ void CPPServiceLangGen::GenerateConstants(ServiceDefinition* d, std::ostream* w)
             w2 << "    }" << std::endl;
         }
     }
-
+    w2 << "RR_GCC_ENABLE_WARNING()" << std::endl;
     w2 << "}" << std::endl;
 
     BOOST_FOREACH (RR_SHARED_PTR<EnumDefinition>& e, d->Enums)

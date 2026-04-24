@@ -32,11 +32,13 @@ class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService1_
 // NOLINTBEGIN
 namespace com__robotraconteur__testing__TestService1Constants 
 {
+RR_GCC_DISABLE_WARNING("-Wunused-variable")
     namespace testroot
     {
     static const double doubleconst[]={3.4, 4.8, 14372.8};
     static const char* strconst="This is a constant";
     }
+RR_GCC_ENABLE_WARNING()
 }
 // NOLINTEND
 

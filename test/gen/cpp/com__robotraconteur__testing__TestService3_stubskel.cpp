@@ -293,7 +293,6 @@ return out;
 RR_SHARED_PTR<RobotRaconteur::StructureStub> com__robotraconteur__testing__TestService3Factory::FindStructureStub(boost::string_ref s)
 {
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(s);
-boost::string_ref servicetype=res.get<0>();
 boost::string_ref objecttype=res.get<1>();
 if (objecttype=="teststruct3") return RobotRaconteur::rr_cast<RobotRaconteur::StructureStub>(RR_MAKE_SHARED<teststruct3_stub>(GetNode()));
 throw RobotRaconteur::ServiceException("Invalid structure stub type.");
@@ -302,7 +301,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::MessageElementNestedElementList> com__robotraco
 {
 std::string type=structin->RRType();boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type);
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService3") return GetNode()->PackStructure(structin);
 RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);
 return stub->PackStructure(structin);
@@ -313,7 +311,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> com__robotraconteur__testing__TestServ
 RobotRaconteur::MessageStringPtr type=mstructin->GetTypeString();
 boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(type.str());
 boost::string_ref servicetype=res.get<0>();
-boost::string_ref objecttype=res.get<1>();
 if (servicetype != "com.robotraconteur.testing.TestService3") return GetNode()->UnpackStructure(mstructin);
 RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type.str());
 return stub->UnpackStructure(mstructin);
@@ -1483,7 +1480,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t rr_ret;
+int32_t rr_ret=int32_t();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1532,7 +1529,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t rr_ret;
+int32_t rr_ret=int32_t();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1581,7 +1578,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(testenum1::testenum1(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-testenum1::testenum1 rr_ret;
+testenum1::testenum1 rr_ret=testenum1::testenum1();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1630,7 +1627,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(testpod1(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-testpod1 rr_ret;
+testpod1 rr_ret=testpod1();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1679,7 +1676,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<teststruct3 >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<teststruct3 > rr_ret;
+RR_INTRUSIVE_PTR<teststruct3 > rr_ret=RR_INTRUSIVE_PTR<teststruct3 >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1728,7 +1725,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1777,7 +1774,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1826,7 +1823,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1875,7 +1872,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<double >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1924,7 +1921,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -1973,7 +1970,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRMultiDimArray<double >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2022,7 +2019,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(vector3(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-vector3 rr_ret;
+vector3 rr_ret=vector3();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2071,7 +2068,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(transform(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-transform rr_ret;
+transform rr_ret=transform();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2120,7 +2117,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedArray<transform> >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2169,7 +2166,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2218,7 +2215,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRNamedMultiDimArray<transform> >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2267,7 +2264,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RobotRaconteur::cdouble(0.0,0.0),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RobotRaconteur::cdouble rr_ret;
+RobotRaconteur::cdouble rr_ret=RobotRaconteur::cdouble();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2316,7 +2313,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2365,7 +2362,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2414,7 +2411,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2463,7 +2460,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cdouble >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2512,7 +2509,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cdouble >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2561,7 +2558,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RobotRaconteur::cfloat(0.0,0.0),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RobotRaconteur::cfloat rr_ret;
+RobotRaconteur::cfloat rr_ret=RobotRaconteur::cfloat();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2610,7 +2607,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2659,7 +2656,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2708,7 +2705,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2757,7 +2754,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::cfloat >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2806,7 +2803,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::cfloat >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2855,7 +2852,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RobotRaconteur::rr_bool(0),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RobotRaconteur::rr_bool rr_ret;
+RobotRaconteur::rr_bool rr_ret=RobotRaconteur::rr_bool();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2904,7 +2901,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -2953,7 +2950,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3002,7 +2999,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3051,7 +3048,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<RobotRaconteur::rr_bool >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3100,7 +3097,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<RobotRaconteur::rr_bool >  > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3171,7 +3168,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(testpod1(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-testpod1 rr_ret;
+testpod1 rr_ret=testpod1();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
@@ -3201,7 +3198,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_SHARED_PTR<RobotRaconteur::Generator<double,void > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t index;
+int32_t index=0;
 try
 {
 index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
@@ -3231,7 +3228,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >,void > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t index;
+int32_t index=0;
 try
 {
 index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
@@ -3261,7 +3258,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_SHARED_PTR<RobotRaconteur::Generator<void,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t index;
+int32_t index=0;
 try
 {
 index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
@@ -3290,7 +3287,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > >,RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t > > > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t index;
+int32_t index=0;
 try
 {
 index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
@@ -3319,7 +3316,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_SHARED_PTR<RobotRaconteur::Generator<RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 >,RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService1::teststruct2 > > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t index;
+int32_t index=0;
 try
 {
 index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
@@ -3388,7 +3385,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,void > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t index;
+int32_t index=0;
 try
 {
 index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
@@ -3419,7 +3416,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_SHARED_PTR<RobotRaconteur::Generator<testenum1::testenum1,testenum1::testenum1 > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t index;
+int32_t index=0;
 try
 {
 index=RobotRaconteur::RRArrayToScalar(m->FindElement("index")->CastData<RobotRaconteur::RRArray<int32_t> >());
@@ -3516,7 +3513,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3624,7 +3621,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3732,7 +3729,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >(),RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret;
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > > rr_ret=RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double > >();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3873,7 +3870,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler("",RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-std::string rr_ret;
+std::string rr_ret=std::string();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3922,7 +3919,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t rr_ret;
+int32_t rr_ret=int32_t();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -3971,7 +3968,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler("",RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-std::string rr_ret;
+std::string rr_ret=std::string();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -4237,7 +4234,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0.0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-double rr_ret;
+double rr_ret=double();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -4286,7 +4283,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0.0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-double rr_ret;
+double rr_ret=double();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -4335,7 +4332,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0.0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-double rr_ret;
+double rr_ret=double();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("value");
@@ -4385,7 +4382,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t rr_ret;
+int32_t rr_ret=int32_t();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
@@ -4415,7 +4412,7 @@ if (m->Error != RobotRaconteur::MessageErrorType_None)
 handler(0,RobotRaconteur::RobotRaconteurExceptionUtil::MessageEntryToException(m));
 return;
 }
-int32_t rr_ret;
+int32_t rr_ret=int32_t();
 try
 {
 RR_INTRUSIVE_PTR<RobotRaconteur::MessageElement> me=m->FindElement("return");
