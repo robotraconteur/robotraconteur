@@ -42,7 +42,7 @@ jobs:
           vcpkg_triplet: x86-windows-static-md-release-vc142
           cmake_arch: Win32
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -62,7 +62,7 @@ jobs:
       github.event_name == 'schedule' ||
       (github.event_name == 'push' && github.event.created == true)
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -84,7 +84,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt
@@ -135,7 +135,7 @@ jobs:
           matlab-plat-suffix: maca64
           matlab-ver: R2023b
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -156,7 +156,7 @@ jobs:
       github.event_name == 'schedule' ||
       (github.event_name == 'push' && github.event.created == true)
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -176,7 +176,7 @@ jobs:
       github.event_name == 'schedule' ||
       (github.event_name == 'push' && github.event.created == true)
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
