@@ -54,6 +54,11 @@ if(MSVC)
     target_compile_options(${SWIG_MODULE_RobotRaconteurJavaNative_REAL_NAME} PRIVATE "/bigobj")
 endif()
 
+if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+    target_compile_options(${SWIG_MODULE_RobotRaconteurJavaNative_REAL_NAME} PRIVATE -Wno-unused-variable
+                                                                                     -Wno-unused-function)
+endif()
+
 target_compile_definitions(${SWIG_MODULE_RobotRaconteurJavaNative_REAL_NAME}
                            PRIVATE SWIG_TYPE_TABLE=robotraconteur_java)
 
