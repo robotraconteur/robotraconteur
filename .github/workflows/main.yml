@@ -140,6 +140,7 @@ jobs:
         -DBUILD_PYTHON_WHEEL=OFF
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
+        -DCMAKE_C_FLAGS="-Wall" -DCMAKE_CXX_FLAGS="-Wall"
         -DCMAKE_VERBOSE_MAKEFILE=ON
         ../robotraconteur
     - name: configure python2.7
