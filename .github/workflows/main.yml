@@ -143,6 +143,7 @@ jobs:
         -DBUILD_PYTHON_WHEEL=OFF
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }}
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         ../robotraconteur
     - name: configure python2.7
       if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
@@ -279,6 +280,7 @@ jobs:
       run: >-
         cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
         -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3
+        -DCMAKE_VERBOSE_MAKEFILE=ON
     - name: build
       run: >-
         cmake --build build --config Release
@@ -313,7 +315,8 @@ jobs:
         eval $(rpm --eval '%{set_build_flags}')
         cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON \
         -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release \
-        -DPYTHON3_EXECUTABLE=/usr/bin/python3
+        -DPYTHON3_EXECUTABLE=/usr/bin/python3 \
+        -DCMAKE_VERBOSE_MAKEFILE=ON
     - name: build
       run: >-
         cmake --build build --config Release --parallel 2
@@ -343,6 +346,7 @@ jobs:
         cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
         -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE=Release
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
+        -DCMAKE_VERBOSE_MAKEFILE=ON
     - name: build
       run: >-
         cmake --build build --config Release
@@ -442,6 +446,7 @@ jobs:
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
         ${{ env.CMAKE_CACHE_ARGS }} ${{ env.CMAKE_MATLAB_ARGS }}
         -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -585,6 +590,7 @@ jobs:
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
         ${{ env.CMAKE_CACHE_ARGS }}
         -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -663,6 +669,7 @@ jobs:
         -DPYTHON3_EXECUTABLE="${{ steps.python3.outputs.python-path }}"
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ env.CMAKE_CACHE_ARGS }} ${{ matrix.config.cmake-args }}
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -790,6 +797,7 @@ jobs:
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
         ${{ env.CMAKE_CACHE_ARGS }}
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -892,6 +900,7 @@ jobs:
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
         ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
         ${{ env.CMAKE_CACHE_ARGS }}
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -951,6 +960,7 @@ jobs:
       run: >
         cmake -GNinja -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE:STRING=Release
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -S robotraconteur -B build2
       shell: cmd /C call {0}
     - name: build
@@ -1089,6 +1099,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -O0"
         -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -O0"
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         ../robotraconteur
     - name: build_host
       working-directory: build2_host
@@ -1144,6 +1155,7 @@ jobs:
         -DRobotRaconteurGen_EXECUTABLE=$GITHUB_WORKSPACE/build2_host/out/bin/RobotRaconteurGen
         -DSWIG_JAVA_EXTRA_ARGS_OVERRIDE=${{ matrix.config.swig_args }}
         -DANDROID_JAR=$ANDROID_HOME/platforms/android-24/Android.jar
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         ../robotraconteur
     - name: build
       env:
@@ -1412,6 +1424,7 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON  -DBUILD_TESTING=OFF -DCMAKE_CXX_STANDARD=11
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON -DCMAKE_CXX_CLANG_TIDY=clang-tidy-14
         -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         ../robotraconteur
     - name: build
       working-directory: build2
@@ -1441,6 +1454,7 @@ jobs:
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DCMAKE_CXX_CPPCHECK="/usr/bin/cppcheck;--enable=warning;--inconclusive;--force;--inline-suppr;-D__cppcheck__;-DBOOST_ASIO_MOVE_ARG(a)=;--error-exitcode=1;--std=c++03;RobotRaconteurCore;RobotRaconteurGen"
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         ../robotraconteur
     - name: build
       working-directory: build2
@@ -1472,6 +1486,7 @@ jobs:
         -DCMAKE_EXE_LINKER_FLAGS="--coverage"
         -DCMAKE_CXX_FLAGS_RELEASE="-g"
         -DCMAKE_C_FLAGS_RELEASE="-g"
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON ..
     - name: build
       working-directory: build
@@ -1511,7 +1526,7 @@ jobs:
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
-        cmake -G "NMake Makefiles" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -S . -B build
+        cmake -G "NMake Makefiles" ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=ON -S . -B build
         cmake --build build --config Release -j 4
     - name: run-build-disttest-cpp
       working-directory: test/dist/cpp/build
@@ -1849,6 +1864,7 @@ jobs:
         -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         ../robotraconteur
     - name: build
       working-directory: build2
@@ -1864,6 +1880,7 @@ jobs:
         -DRobotRaconteur_DIR=$GITHUB_WORKSPACE/build2  -DBUILD_TESTING=ON
         -DROBOTRACONTEUR_GEN_EXECUTABLE=$GITHUB_WORKSPACE/build2/out/bin/RobotRaconteurGen
         -DEigen3_DIR=/usr/lib/cmake/eigen3
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         ../robotraconteur_companion
     - name: build-companion
       working-directory: build2_companion
@@ -1914,6 +1931,7 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
         -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
@@ -1930,6 +1948,7 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release
         -DRobotRaconteur_DIR=${{ github.workspace }}/build2
         -DROBOTRACONTEUR_GEN_EXECUTABLE=${{ github.workspace }}/build2/out/bin/RobotRaconteurGen
+        -DCMAKE_VERBOSE_MAKEFILE=ON
         -S robotraconteur_companion -B build2_companion
     - name: build-companion
       working-directory: build2_companion
