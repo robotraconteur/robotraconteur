@@ -114,7 +114,7 @@ jobs:
         sudo apt-get update && sudo apt-get install -y --no-install-recommends libpcre3-dev \
           || sudo apt-get install -y --no-install-recommends libpcre2-dev
     - name: apt python2.7
-      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' && matrix.config.os != 'ubuntu-26.04' && matrix.config.os != 'debian-14' }}
       run: >
         sudo apt-get install python-dev python-numpy python-setuptools python-pytest -qq
     - name: install gtest
