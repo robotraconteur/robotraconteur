@@ -1340,7 +1340,7 @@ jobs:
     - uses: actions/checkout@v5
       with:
         path: robotraconteur
-    - uses: nuget/setup-nuget@v2
+    - uses: nuget/setup-nuget@v4
     - name: Download CI artifacts
       uses: actions/download-artifact@v6
       with:
