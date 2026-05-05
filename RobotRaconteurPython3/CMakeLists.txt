@@ -117,6 +117,11 @@ if(MSVC)
     target_compile_options(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PRIVATE "/bigobj")
 endif()
 
+if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+    target_compile_options(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} PRIVATE -Wno-unused-variable
+                                                                                  -Wno-unused-function)
+endif()
+
 rrsettargetdirs(${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} "Python3/RobotRaconteur" "Python3/RobotRaconteur")
 
 if(WIN32)
