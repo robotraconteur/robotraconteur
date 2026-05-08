@@ -937,7 +937,7 @@ jobs:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       with:
         miniconda-version: "latest"
         channels: conda-forge,robotraconteur
@@ -988,7 +988,7 @@ jobs:
       run: |
         sudo apt update -qq
         sudo apt install --no-install-recommends libbluetooth-dev -qq
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       with:
         miniconda-version: "latest"
         channels: conda-forge
@@ -1022,7 +1022,7 @@ jobs:
         path: robotraconteur
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       with:
         miniconda-version: "latest"
         channels: conda-forge,robotraconteur
@@ -1235,7 +1235,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev j2cli
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       with:
         activate-environment: pyodide-env
         environment-file: pyodide_recipes_src/environment.yml
@@ -2235,7 +2235,7 @@ jobs:
   #     with:
   #       path: workspace/src/robotraconteur
   #   - name: miniconda
-  #     uses: conda-incubator/setup-miniconda@v3
+  #     uses: conda-incubator/setup-miniconda@v4
   #     with:
   #       miniconda-version: "latest"
   #       channels: conda-forge,robostack-jazzy
@@ -2282,7 +2282,7 @@ jobs:
   #     with:
   #       path: workspace/src/robotraconteur
   #   - name: miniconda
-  #     uses: conda-incubator/setup-miniconda@v3
+  #     uses: conda-incubator/setup-miniconda@v4
   #     with:
   #       miniconda-version: "latest"
   #       channels: conda-forge,robostack-jazzy
