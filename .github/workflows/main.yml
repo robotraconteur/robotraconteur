@@ -403,7 +403,7 @@ jobs:
     - name: install matlab
       if: ${{ matrix.config.arch == 'x64' }}
       id: setup-matlab
-      uses: matlab-actions/setup-matlab@v2
+      uses: matlab-actions/setup-matlab@v3
       with:
         release: R2022b
     - name: matlab cmake args
@@ -754,7 +754,7 @@ jobs:
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v2
+      uses: matlab-actions/setup-matlab@v3
       with:
         release: R2022b
     - name: vcpkg build
@@ -856,7 +856,7 @@ jobs:
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v2
+      uses: matlab-actions/setup-matlab@v3
       with:
         release: ${{ matrix.config.matlab-ver }}
     - name: vcpkg build
@@ -1304,7 +1304,7 @@ jobs:
         pattern: out-win-x64
     - name: install matlab
       id: setup-matlab
-      uses: matlab-actions/setup-matlab@v2
+      uses: matlab-actions/setup-matlab@v3
       with:
         release: R2022b
     - name: prepare matlab toolbox
