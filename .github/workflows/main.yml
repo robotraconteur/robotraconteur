@@ -1950,8 +1950,8 @@ jobs:
           OS_CODE_NAME: noble
         - ROS_DISTRO: kilted
           OS_CODE_NAME: noble
-        - ROS_DISTRO: rolling
-          OS_CODE_NAME: resolute
+        # - ROS_DISTRO: rolling
+        #   OS_CODE_NAME: resolute
     steps:
     - uses: actions/checkout@v6
       with:
