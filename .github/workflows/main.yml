@@ -120,7 +120,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-${{ matrix.config.os }}-build-main-ccache
     - name: cmake cache args
@@ -640,7 +640,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-build-main-ccache-${{ matrix.config.arch }}
     - name: cmake cache args
@@ -770,7 +770,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-matlab-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}
     - name: cmake cache args
@@ -872,7 +872,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-matlab-osx-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}-${{ matrix.config.arch }}
     - name: cmake cache args
@@ -1826,7 +1826,7 @@ jobs:
       run: sudo apt-get install swig -qq -y
     - name: cache-build
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-${{ matrix.config.os }}-build-companion-ccache
     - name: cmake cache args
