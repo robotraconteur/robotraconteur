@@ -517,7 +517,7 @@ jobs:
         echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: matlab test
       if: ${{ matrix.config.arch == 'x64' }}
-      uses: matlab-actions/run-command@v2
+      uses: matlab-actions/run-command@v3
       with:
         command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: build matlab zip
@@ -799,7 +799,7 @@ jobs:
         echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
         echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
     - name: test
-      uses: matlab-actions/run-command@v2
+      uses: matlab-actions/run-command@v3
       with:
         command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: matlab out tar
@@ -901,7 +901,7 @@ jobs:
         echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
         echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
     - name: test
-      uses: matlab-actions/run-command@v2
+      uses: matlab-actions/run-command@v3
       with:
         command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: matlab out tar
@@ -1310,7 +1310,7 @@ jobs:
     - name: prepare matlab toolbox
       run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox2.py
     - name: build matlab toolbox
-      uses: matlab-actions/run-command@v2
+      uses: matlab-actions/run-command@v3
       with:
         command: cd('${{github.workspace}}/build-matlab-toolbox/build'); matlab.addons.toolbox.packageToolbox('RobotRaconteurMatlab.prj','RobotRaconteurMatlab');
     - name: finish matlab toolbox
