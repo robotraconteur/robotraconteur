@@ -61,6 +61,7 @@ class ServiceTestClient2:
         self.DisconnectService()
 
     def ConnectService(self, url):
+        RRN.RequestTimeout = 30
         self._r = RRN.ConnectService(url)
 
     def DisconnectService(self):
