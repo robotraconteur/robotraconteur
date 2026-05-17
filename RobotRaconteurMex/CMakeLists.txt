@@ -39,6 +39,9 @@ find_package(
 
 include_directories(${Matlab_INCLUDE_DIRS})
 
+# Workaround for bugs in CMake FindMatlab.cmake
+set(Matlab_HAS_CPP_API FALSE)
+
 matlab_add_mex(
     NAME RobotRaconteurMex
     MODULE
