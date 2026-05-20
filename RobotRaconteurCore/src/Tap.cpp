@@ -14,11 +14,6 @@
 
 #include "boost_asio_win_unix_sockets_backport.h"
 
-#include <boost/bind/placeholders.hpp>
-#include <boost/asio.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/shared_array.hpp>
-
 #include "RobotRaconteur/RobotRaconteurNode.h"
 
 #include "NodeDirectories_private.h"
@@ -26,6 +21,11 @@
 #include "RobotRaconteur/Tap.h"
 
 #include "RobotRaconteur/IOUtils.h"
+
+#include <boost/bind/placeholders.hpp>
+#include <boost/asio.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/shared_array.hpp>
 
 namespace RobotRaconteur
 {

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "RobotRaconteur/RobotRaconteurConfig.h"
 #include <boost/asio/ssl.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>

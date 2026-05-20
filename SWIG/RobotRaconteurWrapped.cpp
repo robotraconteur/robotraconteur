@@ -30,6 +30,10 @@ RRNativeObjectHeapSupport* RRNativeObjectHeapSupport::support = NULL;
 bool RRNativeDirectorSupport::running = false;
 boost::shared_mutex RRNativeDirectorSupport::running_lock;
 #endif
+
+static RR_SHARED_PTR<ServiceSubscriptionFilter> WrappedSubscribeService_LoadFilter(
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter);
+
 // Wrapped Service Factory
 
 WrappedServiceFactory::WrappedServiceFactory(const std::string& defstring)

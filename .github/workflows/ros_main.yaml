@@ -21,20 +21,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ROS_DISTRO:
-        - noetic
-        - humble
-        - jazzy
-        - kilted
-        - rolling
+        config:
+        - ROS_DISTRO: noetic
+          OS_CODE_NAME: focal
+        - ROS_DISTRO: humble
+          OS_CODE_NAME: jammy
+        - ROS_DISTRO: jazzy
+          OS_CODE_NAME: noble
+        - ROS_DISTRO: kilted
+          OS_CODE_NAME: noble
+        # - ROS_DISTRO: rolling
+        #   OS_CODE_NAME: resolute
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
       env:
-        ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
+        ROS_DISTRO: ${{ matrix.config.ROS_DISTRO }}
+        OS_CODE_NAME: ${{ matrix.config.OS_CODE_NAME }}
         ROS_REPO: main
         CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3
 
@@ -43,19 +49,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ROS_DISTRO:
-        - humble
-        - jazzy
-        - kilted
-        - rolling
+        config:
+        - ROS_DISTRO: humble
+          OS_CODE_NAME: jammy
+        - ROS_DISTRO: jazzy
+          OS_CODE_NAME: noble
+        - ROS_DISTRO: kilted
+          OS_CODE_NAME: noble
+        - ROS_DISTRO: rolling
+          OS_CODE_NAME: resolute
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
       env:
-        ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
+        ROS_DISTRO: ${{ matrix.config.ROS_DISTRO }}
+        OS_CODE_NAME: ${{ matrix.config.OS_CODE_NAME }}
         ROS_REPO: main
         PRERELEASE: true
         CMAKE_ARGS: -DPYTHON3_EXECUTABLE=/usr/bin/python3

@@ -76,7 +76,7 @@ jobs:
       run: |
         sed -i 's|http://archive.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
         sed -i 's|http://security.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: install sudo and tzdata
@@ -113,17 +113,14 @@ jobs:
         cmake --build .
         sudo cmake --build . --target install
     - name: build-swig
-      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
       uses: johnwason/swig-build-action@v1.2
       with:
         cache-key: ${{ matrix.config.os }}
-    - name: apt-swig
-      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
-      run: sudo apt-get install swig -qq -y
+        version: "4.4.1"
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-${{ matrix.config.os }}-build-main-ccache
     - name: cmake cache args
@@ -242,13 +239,13 @@ jobs:
         mv build2/out .
     - name: archive out
       if: ${{ matrix.config.os != 'ubuntu-16.04' &&  matrix.config.os != 'ubuntu-18.04' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'out-${{ matrix.config.os }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'build-artifacts-${{ matrix.config.os }}'
         path: build2/*
@@ -257,7 +254,7 @@ jobs:
     runs-on: ubuntu-latest
     container: gentoo/stage3:latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -289,9 +286,15 @@ jobs:
         --output-on-failure
   build-fedora:
     runs-on: ubuntu-latest
-    container: fedora:latest
+    container: ${{ matrix.config.container }}
+    strategy:
+      matrix:
+        config:
+        - container: fedora:latest
+        - container: fedora:rawhide
+
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
@@ -301,15 +304,16 @@ jobs:
         gcc gcc-c++ make openssl-devel dbus-devel
         libusb1-devel bluez-libs-devel gtest-devel
         python3-devel python3-pip python3-numpy
-        python3-pytest zlib-devel swig
+        python3-pytest zlib-devel swig redhat-rpm-config
     - name: config
-      run: >-
-        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
+      run: |
+        eval $(rpm --eval '%{set_build_flags}')
+        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON \
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release \
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
-        cmake --build build --config Release
+        cmake --build build --config Release --parallel 2
     - name: test
       run: >-
         ctest --test-dir build -C Release
@@ -320,21 +324,21 @@ jobs:
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
         repository: robotraconteur/robotraconteur
     - name: install-pkgs
       run: >-
         pacman -Syu --noconfirm boost cmake ninja
-        gcc  make openssl dbus
+        gcc  make openssl dbus boost-libs
         libusb bluez-libs gtest
         python python-pip python-numpy
         python-pytest zlib swig
     - name: config
       run: >-
         cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE=Release
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
@@ -358,13 +362,13 @@ jobs:
           vcpkg_triplet: x86-windows-static-md-release-vc142
           cmake_arch: Win32
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -399,7 +403,7 @@ jobs:
     - name: install matlab
       if: ${{ matrix.config.arch == 'x64' }}
       id: setup-matlab
-      uses: matlab-actions/setup-matlab@v2
+      uses: matlab-actions/setup-matlab@v3
       with:
         release: R2022b
     - name: matlab cmake args
@@ -513,7 +517,7 @@ jobs:
         echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: matlab test
       if: ${{ matrix.config.arch == 'x64' }}
-      uses: matlab-actions/run-command@v2
+      uses: matlab-actions/run-command@v3
       with:
         command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: build matlab zip
@@ -534,13 +538,13 @@ jobs:
         copy robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'out-win-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'build-artifacts-win-${{ matrix.config.arch }}'
         path: build2/*
@@ -549,11 +553,11 @@ jobs:
   build-win-shared:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -589,7 +593,7 @@ jobs:
         ctest . -C Release --output-on-failure
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'build-artifacts-win-shared'
         path: build2/*
@@ -617,7 +621,7 @@ jobs:
     env:
       LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
@@ -636,7 +640,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-build-main-ccache-${{ matrix.config.arch }}
     - name: cmake cache args
@@ -714,13 +718,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'out-osx-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'build-artifacts-osx-${{ matrix.config.arch }}'
         path: build2/*
@@ -732,7 +736,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt
@@ -750,11 +754,11 @@ jobs:
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v2
+      uses: matlab-actions/setup-matlab@v3
       with:
         release: R2022b
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -766,7 +770,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-matlab-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}
     - name: cmake cache args
@@ -795,7 +799,7 @@ jobs:
         echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
         echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
     - name: test
-      uses: matlab-actions/run-command@v2
+      uses: matlab-actions/run-command@v3
       with:
         command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: matlab out tar
@@ -811,13 +815,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'out-matlab'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'build-artifacts-matlab'
         path: build2/*
@@ -846,17 +850,17 @@ jobs:
     runs-on: ${{ matrix.config.runner }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v2
+      uses: matlab-actions/setup-matlab@v3
       with:
         release: ${{ matrix.config.matlab-ver }}
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }}
@@ -868,7 +872,7 @@ jobs:
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-matlab-osx-build-main-ccache-${{ steps.vcpkg.outputs.vcpkg-cache-hash }}-${{ matrix.config.arch }}
     - name: cmake cache args
@@ -897,7 +901,7 @@ jobs:
         echo ROBOTRACONTEUR_ROBDEF_PATH=${{ github.workspace }}/robotraconteur/test/robdef >> $GITHUB_ENV
         echo MATLABPATH=${{ github.workspace }}/build2/out/Matlab >> $GITHUB_ENV
     - name: test
-      uses: matlab-actions/run-command@v2
+      uses: matlab-actions/run-command@v3
       with:
         command: cd('${{github.workspace}}/robotraconteur/test/matlab'); RobotRaconteurMatlabTestLoopback
     - name: matlab out tar
@@ -913,13 +917,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'out-matlab-osx-${{ matrix.config.arch }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'build-artifacts-matlab-osx-${{ matrix.config.arch }}'
         path: build2/*
@@ -928,12 +932,12 @@ jobs:
   build-conda-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
       run: python robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       with:
         miniconda-version: "latest"
         channels: conda-forge,robotraconteur
@@ -962,10 +966,10 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: bluez-src
         repository: bluez/bluez
@@ -984,7 +988,7 @@ jobs:
       run: |
         sudo apt update -qq
         sudo apt install --no-install-recommends libbluetooth-dev -qq
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       with:
         miniconda-version: "latest"
         channels: conda-forge
@@ -1013,12 +1017,12 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
       run: python3 robotraconteur/packaging/scripts/actions_semver.py --github-env
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       with:
         miniconda-version: "latest"
         channels: conda-forge,robotraconteur
@@ -1057,7 +1061,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: semver
@@ -1150,13 +1154,13 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'out-android-${{ matrix.config.android_abi }}'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'build-artifacts-android-${{ matrix.config.android_abi }}'
         path: build2/*
@@ -1164,11 +1168,11 @@ jobs:
   build-ios:
     runs-on: macos-15
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: openssl ${{ env.VCPKG_PKGS }}
@@ -1192,13 +1196,13 @@ jobs:
         cp build2/rrversion.txt build2/out/
         mv build2/out .
     - name: archive out
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'out-ios-arm64'
         path: out/*
     - name: build artifacts
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'build-artifacts-ios-arm64'
         path: build2/*
@@ -1213,10 +1217,10 @@ jobs:
       run:
         shell: bash -el {0}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: pyodide/pyodide-recipes
         path: pyodide_recipes_src
@@ -1231,7 +1235,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y build-essential libboost-all-dev zlib1g-dev libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev j2cli
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       with:
         activate-environment: pyodide-env
         environment-file: pyodide_recipes_src/environment.yml
@@ -1244,8 +1248,7 @@ jobs:
     - name: deps build
       working-directory: pyodide_recipes_src
       run: |
-        pip install pyodide-build --break-system-packages --root-user-action ignore
-        python tools/install_and_patch_emscripten.py
+        ./tools/prepare_pyodide_build.sh
         ./tools/copy_pyodide_runtime.sh
     - name: build pregenerated_src
       run: |
@@ -1260,7 +1263,6 @@ jobs:
       #   CCACHE_DIR: /tmp/ccache
       run: |
         # mkdir -p /tmp/ccache
-        source emsdk/emsdk_env.sh
         export version=$(sed -n 's/^#define[ \t]*ROBOTRACONTEUR_VERSION_TEXT[ \t]*"\([^"]*\)".*/\1/p' $GITHUB_WORKSPACE/robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h)
         export rr_src_path=$GITHUB_WORKSPACE/robotraconteur
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,libboost,pytest,pyyaml,RobotRaconteur"
@@ -1270,13 +1272,14 @@ jobs:
       working-directory: pyodide_recipes_src
       run: pytest $GITHUB_WORKSPACE/robotraconteur/test/pyodide --runtime=chrome --runner=selenium -s --dist-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/dist
     - name: archive dist
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
+      if: always()
       with:
         name: 'pyodide-dist'
         path: pyodide_recipes_src/dist/*
     - name: archive package logs
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'pyodide-package-logs'
         path: pyodide_recipes_src/packages/build-logs/*
@@ -1288,26 +1291,26 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         path: robotraconteur
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@v8
       with:
         path: artifacts/main
         pattern: "out-matlab*"
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@v8
       with:
         path: artifacts/main
         pattern: out-win-x64
     - name: install matlab
       id: setup-matlab
-      uses: matlab-actions/setup-matlab@v2
+      uses: matlab-actions/setup-matlab@v3
       with:
         release: R2022b
     - name: prepare matlab toolbox
       run: python3 robotraconteur/packaging/scripts/build_matlab_toolbox2.py
     - name: build matlab toolbox
-      uses: matlab-actions/run-command@v2
+      uses: matlab-actions/run-command@v3
       with:
         command: cd('${{github.workspace}}/build-matlab-toolbox/build'); matlab.addons.toolbox.packageToolbox('RobotRaconteurMatlab.prj','RobotRaconteurMatlab');
     - name: finish matlab toolbox
@@ -1316,7 +1319,7 @@ jobs:
       run: |
         mv build-matlab-toolbox/build/*.mltbx ${{github.workspace}}
     - name: upload matlab toolbox
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: out-matlab-toolbox
         path: "*.mltbx"
@@ -1331,12 +1334,12 @@ jobs:
     - build-matlab-toolbox
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
-    - uses: nuget/setup-nuget@v2
+    - uses: nuget/setup-nuget@v4
     - name: Download CI artifacts
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         path: artifacts/main
     - name: collect source
@@ -1352,13 +1355,13 @@ jobs:
     - name: build android package
       run: python robotraconteur/packaging/scripts/build_android_package.py
     - name: archive distfiles
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'distfiles'
         path: distfiles/*
     - name: make release
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         token: ${{ secrets.BOT_GITHUB_TOKEN }}
         draft: true
@@ -1369,7 +1372,7 @@ jobs:
     env:
       SKIP: no-commit-to-branch
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: actions/setup-python@v6
     - name: apt
       run: |
@@ -1379,7 +1382,7 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt update
@@ -1415,7 +1418,7 @@ jobs:
   cppcheck:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt update
@@ -1434,7 +1437,7 @@ jobs:
       run: >
         cmake -G "Unix Makefiles" -DBUILD_GEN=ON -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
-        -DCMAKE_CXX_CPPCHECK="/usr/bin/cppcheck;--enable=warning;--inconclusive;--force;--inline-suppr;-DBOOST_ASIO_MOVE_ARG(a)=;--error-exitcode=1;--std=c++03;RobotRaconteurCore;RobotRaconteurGen"
+        -DCMAKE_CXX_CPPCHECK="/usr/bin/cppcheck;--enable=warning;--inconclusive;--force;--inline-suppr;-D__cppcheck__;-DBOOST_ASIO_MOVE_ARG(a)=;--error-exitcode=1;--std=c++03;RobotRaconteurCore;RobotRaconteurGen"
         ../robotraconteur
     - name: build
       working-directory: build2
@@ -1444,7 +1447,7 @@ jobs:
   codecov:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1481,7 +1484,7 @@ jobs:
         gcovr -r . --config=test/codecov/gcovr/gcovr.cfg --html-details -o build/codecov/codecov.html build
         gcovr -r . --config=test/codecov/gcovr/gcovr.cfg -s build
     - name: upload codecov
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: codecov
         path: build/codecov
@@ -1489,9 +1492,9 @@ jobs:
   vcpkg-test-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1517,7 +1520,7 @@ jobs:
     env:
       VCPKG_MAX_CONCURRENCY: 2
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1526,7 +1529,7 @@ jobs:
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
         git cmake g++ make curl libgtest-dev -qq
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1545,7 +1548,7 @@ jobs:
         ./disttest_cpp
       # Archive all logs
     - name: Archive all logs
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: always()
       with:
         name: logs
@@ -1555,9 +1558,9 @@ jobs:
   vcpkg-test-osx:
     runs-on: macos-15-intel
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: robotraconteur
@@ -1588,11 +1591,11 @@ jobs:
         - arch: x86
           wheel_arch: win32
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: Download distfiles
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         path: artifacts/distfiles
         name: distfiles
@@ -1630,7 +1633,7 @@ jobs:
     - build-dist
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: apt
@@ -1638,12 +1641,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libboost-all-dev libssl-dev zlib1g-dev -y
     - name: Download distfiles
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         path: artifacts/distfiles
         name: distfiles
     - name: Download distfiles out-ubuntu
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         path: artifacts/out-ubuntu
         name: out-ubuntu-22.04
@@ -1687,16 +1690,16 @@ jobs:
           wheel_arch: arm64
     runs-on: ${{ matrix.config.runner }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: Download distfiles
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         path: artifacts/distfiles
         name: distfiles
     - name: Download distfiles out-osx
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         path: artifacts/out-osx
         name: out-osx-${{ matrix.config.arch }}
@@ -1770,7 +1773,7 @@ jobs:
       run: |
         apt-get update
         apt-get install git -y
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
     - name: clone robotraconteur_companion
@@ -1823,7 +1826,7 @@ jobs:
       run: sudo apt-get install swig -qq -y
     - name: cache-build
       id: cache-build
-      uses: hendrikmuhs/ccache-action@v1.2.20
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}-${{ matrix.config.os }}-build-companion-ccache
     - name: cmake cache args
@@ -1871,16 +1874,16 @@ jobs:
   companion-build-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: robotraconteur
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: robotraconteur/robotraconteur_companion
         submodules: recursive
         path: robotraconteur_companion
     - name: vcpkg build
-      uses: johnwason/vcpkg-action@v7
+      uses: johnwason/vcpkg-action@v8
       id: vcpkg
       with:
         pkgs: ${{ env.VCPKG_PKGS }} yaml-cpp eigen3 opencv
@@ -1938,14 +1941,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ROS_DISTRO:
-        - noetic
-        - humble
-        - jazzy
-        - kilted
-        - rolling
+        config:
+        - ROS_DISTRO: noetic
+          OS_CODE_NAME: focal
+        - ROS_DISTRO: humble
+          OS_CODE_NAME: jammy
+        - ROS_DISTRO: jazzy
+          OS_CODE_NAME: noble
+        - ROS_DISTRO: kilted
+          OS_CODE_NAME: noble
+        # - ROS_DISTRO: rolling
+        #   OS_CODE_NAME: resolute
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
     - name: apt update
@@ -1964,7 +1972,8 @@ jobs:
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
       env:
-        ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
+        ROS_DISTRO: ${{ matrix.config.ROS_DISTRO }}
+        OS_CODE_NAME: ${{ matrix.config.OS_CODE_NAME }}
         ROS_REPO: main
 
   build-ros-prerelease:
@@ -1972,13 +1981,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ROS_DISTRO:
-        - humble
-        - jazzy
-        - kilted
-        - rolling
+        config:
+        - ROS_DISTRO: humble
+          OS_CODE_NAME: jammy
+        - ROS_DISTRO: jazzy
+          OS_CODE_NAME: noble
+        - ROS_DISTRO: kilted
+          OS_CODE_NAME: noble
+        - ROS_DISTRO: rolling
+          OS_CODE_NAME: resolute
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
     - name: apt update
@@ -1997,7 +2010,8 @@ jobs:
     - name: ros industrial-ci
       uses: ros-industrial/industrial_ci@master
       env:
-        ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
+        ROS_DISTRO: ${{ matrix.config.ROS_DISTRO }}
+        OS_CODE_NAME: ${{ matrix.config.OS_CODE_NAME }}
         ROS_REPO: main
         PRERELEASE: true
         ROSDEP_SKIP_KEYS: python3-setuptools
@@ -2017,10 +2031,10 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: robotraconteur/robotraconteur_companion
         submodules: recursive
@@ -2051,7 +2065,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: src/robotraconteur
     - name: apt update
@@ -2091,7 +2105,7 @@ jobs:
     - name: copy deb
       run: cp src/*.deb .
     - name: upload deb
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
         path: "*.deb"
@@ -2113,7 +2127,7 @@ jobs:
         shell: bash
     steps:
     - name: download deb
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v8
       with:
         name: robotraconteur-ros-${{ matrix.ROS_DISTRO }}-deb
     - name: apt update
@@ -2144,7 +2158,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: workspace/src/robotraconteur
     - name: apt update
@@ -2185,7 +2199,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: workspace/src/robotraconteur
     - name: apt update
@@ -2228,11 +2242,11 @@ jobs:
   #     run:
   #       shell: cmd /C CALL {0}
   #   steps:
-  #   - uses: actions/checkout@v5
+  #   - uses: actions/checkout@v6
   #     with:
   #       path: workspace/src/robotraconteur
   #   - name: miniconda
-  #     uses: conda-incubator/setup-miniconda@v3
+  #     uses: conda-incubator/setup-miniconda@v4
   #     with:
   #       miniconda-version: "latest"
   #       channels: conda-forge,robostack-jazzy
@@ -2275,11 +2289,11 @@ jobs:
   #     run:
   #       shell: bash -el {0}
   #   steps:
-  #   - uses: actions/checkout@v5
+  #   - uses: actions/checkout@v6
   #     with:
   #       path: workspace/src/robotraconteur
   #   - name: miniconda
-  #     uses: conda-incubator/setup-miniconda@v3
+  #     uses: conda-incubator/setup-miniconda@v4
   #     with:
   #       miniconda-version: "latest"
   #       channels: conda-forge,robostack-jazzy
@@ -2314,7 +2328,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         path: workspace/src/robotraconteur
     - name: update brew

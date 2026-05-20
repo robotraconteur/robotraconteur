@@ -2,6 +2,7 @@
 
   - [Installation](#installation)
     - [Windows](#windows)
+    - [Ubuntu Resolute and Debian Forky](#ubuntu-resolute-and-debian-forky)
     - [Ubuntu Xenial, Bionic, Focal, Jammy, and Noble](#ubuntu-xenial-bionic-focal-jammy-and-noble)
     - [Debian 10, 11, 12, 13 (buster, bullseye, bookworm, trixie)](#debian-10-11-12-13-buster-bullseye-bookworm-trixie)
     - [Raspbian 10, 11, 12, 13](#raspbian-10-11-12-13)
@@ -43,6 +44,28 @@ The C\# library is available on NuGet. Search for "RobotRaconteurNET".
 #### Java
 
 A zip file is available on the releases page on github. Download the zip file and extract it to a directory in your classpath.
+
+### Ubuntu Resolute and Debian Forky
+
+C++ and Python are now included in the default apt sources. Robot Raconteur is in the "main" source for Debian
+and the "universe" source for Ubuntu.
+
+#### C++
+
+```
+sudo apt-get install robotraconteur-dev
+```
+
+#### Python
+```
+sudo apt-get install python3-robotraconteur
+```
+
+The Python can also be installed using `pip` and pypi.org: https://pypi.org/project/robotraconteur/
+
+#### C\# and Java
+
+C\# and Java must be built from source.
 
 ### Ubuntu Xenial, Bionic, Focal, Jammy, and Noble
 

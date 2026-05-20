@@ -14,10 +14,6 @@
 
 #include "boost_asio_win_unix_sockets_backport.h"
 
-#include <boost/bind/placeholders.hpp>
-#include <boost/asio.hpp>
-#include <boost/assign/list_of.hpp>
-
 #ifdef ROBOTRACONTEUR_CORE_USE_STDAFX
 #include "stdafx.h"
 #endif
@@ -31,6 +27,9 @@
 
 #include <boost/scope_exit.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/bind/placeholders.hpp>
+#include <boost/asio.hpp>
+#include <boost/assign/list_of.hpp>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
 #include <Shlobj.h>

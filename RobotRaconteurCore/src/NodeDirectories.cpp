@@ -30,12 +30,8 @@ namespace RobotRaconteur
 namespace detail
 {
 
-#ifdef __GNUG__
-// cSpell: disable
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-// cSpell: enable
-#endif
+// cSpell: ignore Wunused
+RR_GCC_DISABLE_WARNING("-Wunused-function")
 static boost::filesystem::path replace_default_val_with_env(const boost::filesystem::path& default_val,
                                                             const std::string& rr_env_var)
 {
@@ -46,9 +42,7 @@ static boost::filesystem::path replace_default_val_with_env(const boost::filesys
     }
     return default_val;
 }
-#ifdef __GNUG__
-#pragma GCC diagnostic pop
-#endif
+RR_GCC_ENABLE_WARNING()
 
 #ifndef ROBOTRACONTEUR_WINDOWS
 static boost::filesystem::path user_unix_home_dir(const std::string& default_rel_dir, const std::string& xdg_env,
@@ -182,12 +176,7 @@ static boost::filesystem::path get_common_appdata()
 // cSpell: enable
 #endif
 
-#ifdef __GNUG__
-// cSpell: disable
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-// cSpell: enable
-#endif
+RR_GCC_DISABLE_WARNING("-Wunused-function")
 static bool is_sub_dir(boost::filesystem::path p, const boost::filesystem::path& root)
 {
     while (p != boost::filesystem::path())
@@ -200,9 +189,7 @@ static bool is_sub_dir(boost::filesystem::path p, const boost::filesystem::path&
     }
     return false;
 }
-#ifdef __GNUG__
-#pragma GCC diagnostic pop
-#endif
+RR_GCC_ENABLE_WARNING()
 
 } // namespace detail
 
