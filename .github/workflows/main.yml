@@ -68,6 +68,16 @@ jobs:
           container: ""
           arch: arm64
           wheel_platform: manylinux_2_35_aarch64
+        - os: debian-testing
+          runs_on: ubuntu-latest
+          container: debian:testing-slim
+          arch: x64
+          wheel_platform: manylinux_2_41_x86_64
+        - os: debian-testing-arm
+          runs_on: ubuntu-latest
+          container: debian:testing-slim
+          arch: arm64
+          wheel_platform: manylinux_2_41_aarch64
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
