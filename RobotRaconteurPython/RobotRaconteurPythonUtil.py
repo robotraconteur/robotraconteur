@@ -1639,7 +1639,7 @@ class Wire(object):
     value.
 
     Wire connections are created using the Connect() or AsyncConnect() functions. Services receive
-    incoming connection requests through a callback function. Thes callback is configured using
+    incoming connection requests through a callback function. This callback is configured using
     the SetWireConnectCallback() function. Services may also use the WireBroadcaster class
     or WireUnicastReceiver class to automate managing wire connection lifecycles. WireBroadcaster
     is used to send values to all connected clients. WireUnicastReceiver is used to receive the

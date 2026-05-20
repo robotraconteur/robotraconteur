@@ -1746,13 +1746,13 @@ void TcpWSSWebSocketConnector::Connect(
 
         if (url_res.scheme == "rr+wss")
         {
-            std::string url1 = RR_MOVE(url.to_string());
+            std::string url1 = url.to_string();
             ws_url = boost::replace_first_copy(url1, "rr+wss", "wss");
         }
 
         if (url_res.scheme == "rrs+wss")
         {
-            std::string url1 = RR_MOVE(url.to_string());
+            std::string url1 = url.to_string();
             ws_url = boost::replace_first_copy(url1, "rrs+wss", "wss");
         }
 
@@ -4511,9 +4511,15 @@ void TcpTransportConnection::do_starttls7(const boost::system::error_code& error
         }
     }
     mret->entries.push_back(mmret);
+    // False positive for maybe_uninitialized
+    // cSpell: ignore Wmaybe
+    RR_GCC_DISABLE_WARNING("-Wmaybe-uninitialized")
+
     boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h = boost::bind(
         &TcpTransportConnection::do_starttls8, RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()),
         RR_BOOST_PLACEHOLDERS(_1), request);
+    RR_GCC_ENABLE_WARNING()
+
     BeginSendMessage(mret, h);
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, m_LocalEndpoint, "Server sending STARTTLS");

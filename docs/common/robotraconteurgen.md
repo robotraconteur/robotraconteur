@@ -50,7 +50,7 @@ The `--string-table` command is used to list all the qualified names defined in 
 
     RobotRaconteurGen --newnodeid
 
-The `--newnodeid` command generates and prints a new random gen 4 UUUID to stdout.
+The `--newnodeid` command generates and prints a new random gen 4 UUID to stdout.
 
 ## `RobotRaconteurGen --md5passwordhash`
 

@@ -80,7 +80,7 @@ public class RobotRaconteurException extends RuntimeException
     public Object errorParam = null;
 
     /**
-     Returns as tring representation of this exception
+     Returns as string representation of this exception
 
      @return The string representation
     */

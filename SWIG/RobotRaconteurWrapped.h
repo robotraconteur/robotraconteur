@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <RobotRaconteur.h>
-
 #ifdef RR_PYTHON
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #endif
+
+#include <RobotRaconteur.h>
+
 #pragma once
 
 // cSpell: ignore XINCREF
@@ -1023,6 +1024,10 @@ class WrappedGeneratorClient : public GeneratorClientBase
 
     RR_INTRUSIVE_PTR<MessageElement> Next(const RR_INTRUSIVE_PTR<MessageElement>& v);
     WrappedGeneratorClient_TryGetNextResult TryNext(const RR_INTRUSIVE_PTR<MessageElement>& v);
+
+    using GeneratorClientBase::AsyncAbort;
+    using GeneratorClientBase::AsyncClose;
+
     void AsyncNext(const RR_INTRUSIVE_PTR<MessageElement>& v, int32_t timeout, AsyncRequestDirector* handler,
                    int32_t id);
 
@@ -1848,7 +1853,7 @@ class WrappedServiceSubscriptionFilter
     uint32_t MaxConnections;
 
     WrappedServiceSubscriptionFilter()
-        : MaxConnections(0), AttributesMatchOperation(ServiceSubscriptionFilterAttributeGroupOperation_AND)
+        : AttributesMatchOperation(ServiceSubscriptionFilterAttributeGroupOperation_AND), MaxConnections(0)
     {}
 };
 
@@ -2157,9 +2162,6 @@ RR_SHARED_PTR<WrappedServiceSubscription> WrappedSubscribeService(
     const RR_SHARED_PTR<RobotRaconteurNode>& node, const std::string& url, const std::string& username = "",
     const boost::intrusive_ptr<MessageElementData>& credentials = boost::intrusive_ptr<MessageElementData>(),
     const std::string& objecttype = "");
-
-static RR_SHARED_PTR<ServiceSubscriptionFilter> WrappedSubscribeService_LoadFilter(
-    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<WrappedServiceSubscriptionFilter>& filter);
 
 // ServiceSubscriptionManager
 

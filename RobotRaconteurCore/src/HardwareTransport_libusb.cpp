@@ -83,10 +83,7 @@ static void libusb_status_to_ec(libusb_transfer_status err, boost::system::error
     }
 }
 
-#ifdef __GNUG__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-#endif
+RR_GCC_DISABLE_WARNING("-Wunused-function")
 static void libusb_error_to_ec(int err, boost::system::error_code& ec)
 {
     if (err >= 0)
@@ -112,9 +109,7 @@ static void libusb_error_to_ec(int err, boost::system::error_code& ec)
         break;
     }
 }
-#ifdef __GNUG__
-#pragma GCC diagnostic pop
-#endif
+RR_GCC_ENABLE_WARNING()
 
 // LibUsb_Transfer
 

@@ -3053,7 +3053,7 @@ static std::string JavaServiceLangGen_EscapeString_Formatter(const boost::smatch
     std::basic_string<char16_t> v = boost::locale::conv::utf_to_utf<char16_t>(i);
     BOOST_FOREACH (const char16_t& v3, v)
     {
-        v2 << std::setw(0) << "\\u" << std::setw(4) << v3;
+        v2 << std::setw(0) << "\\u" << std::setw(4) << static_cast<int>(v3);
     }
 #else
     std::basic_string<uint16_t> v = boost::locale::conv::utf_to_utf<uint16_t>(i);

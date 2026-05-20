@@ -146,7 +146,7 @@ void RRArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const RR_INT
     if (!i)
         throw NullValueException("Pod array must not be null");
     v.resize(i->size());
-    memcpy(&v[0], i->data(), sizeof(T) * i->size());
+    memcpy((void*)&v[0], (void*)i->data(), sizeof(T) * i->size());
 }
 
 // NOLINTBEGIN(bugprone-macro-parentheses)
@@ -214,7 +214,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
     if (!i)
         throw NullValueException("Pod array must not be null");
     v.resize(i->size());
-    memcpy(&v[0], i->GetNumericArray()->data(), sizeof(T) * i->size());
+    memcpy((void*)&v[0], (void*)i->GetNumericArray()->data(), sizeof(T) * i->size());
 }
 
 // NOLINTBEGIN(bugprone-macro-parentheses)
@@ -245,7 +245,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
                 MessageElement::FindElement(m->Elements, "array")->CastData<RRArray<element_type> >();                 \
             if (a->size() != RRPrimUtil<type>::GetElementArrayCount())                                                 \
                 throw DataTypeException("Invalid namedarray");                                                         \
-            memcpy(&v, a->void_ptr(), sizeof(v));                                                                      \
+            memcpy((void*)&v, a->void_ptr(), sizeof(v));                                                               \
         }                                                                                                              \
     };                                                                                                                 \
                                                                                                                        \
@@ -273,7 +273,7 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
             RR_INTRUSIVE_PTR<RRArray<element_type> > a1 =                                                              \
                 MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >();        \
             v.resize(a1->size() / RRPrimUtil<type>::GetElementArrayCount());                                           \
-            memcpy(&v, a1->data(), a1->size() * sizeof(element_type));                                                 \
+            memcpy((void*)&v, (void*)a1->data(), a1->size() * sizeof(element_type));                                   \
         }                                                                                                              \
     };
 // NOLINTEND(bugprone-macro-parentheses)
@@ -417,7 +417,7 @@ RR_INTRUSIVE_PTR<RRPodArray<T> > PodStub_UnpackPodArray(const RR_INTRUSIVE_PTR<M
             throw DataTypeException("Invalid pod array format");
         }
 
-        if (key != i)
+        if (key != boost::numeric_cast<int32_t>(i))
             throw DataTypeException("Invalid pod array format");
         PodStub<T>::UnpackFromMessageElementPod(o->at(i), m->CastDataToNestedList());
     }
@@ -568,7 +568,7 @@ RR_INTRUSIVE_PTR<MessageElementNestedElementList> NamedArrayStub_PackNamedArrayT
 {
     typedef typename RRPrimUtil<T>::ElementArrayType element_type;
     RR_INTRUSIVE_PTR<RRArray<element_type> > a = AllocateRRArray<element_type>(RRPrimUtil<T>::GetElementArrayCount());
-    memcpy(a->void_ptr(), &v, sizeof(T));
+    memcpy(a->void_ptr(), (void*)&v, sizeof(T));
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > a1;
     a1.push_back(CreateMessageElement("array", a));
     return CreateMessageElementNestedElementList(DataTypes_namedarray_array_t, RRPrimUtil<T>::GetElementTypeString(),

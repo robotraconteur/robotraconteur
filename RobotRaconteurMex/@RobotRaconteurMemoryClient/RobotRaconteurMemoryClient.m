@@ -23,7 +23,7 @@ function c=RobotRaconteurMemoryClient(objecttype,stubid,membername)
 %        my_memory(:) = 1
 %
 %        % Get the entire memory
-%        my_memory_conents = my_memory(:)
+%        my_memory_contents = my_memory(:)
 %
 %    See also RobotRaconteurObject, RobotRaconteur.ConnectService, length, ndims,
 %        numel, size

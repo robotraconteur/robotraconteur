@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <RobotRaconteur.h>
 #include "RobotRaconteurWrapped.h"
+#include <RobotRaconteur.h>
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 

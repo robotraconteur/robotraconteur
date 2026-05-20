@@ -25,8 +25,8 @@
 
 #ifndef ROBOTRACONTEUR_VERSION
 // Boost Style Version Number
-#define ROBOTRACONTEUR_VERSION 100207
-#define ROBOTRACONTEUR_VERSION_TEXT "1.2.7"
+#define ROBOTRACONTEUR_VERSION 100208
+#define ROBOTRACONTEUR_VERSION_TEXT "1.2.8"
 #endif
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ == 7)
@@ -90,8 +90,16 @@
 
 #ifndef ROBOTRACONTEUR_EMSCRIPTEN
 #include <boost/thread.hpp>
+#ifndef BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#define BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#define RR_BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#endif
 #include <boost/asio/version.hpp>
 #include <boost/asio/strand.hpp>
+#ifdef RR_BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#undef RR_BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#undef BOOST_ASIO_DISABLE_DEPRECATED_MSG
+#endif
 #endif
 
 #ifdef ROBOTRACONTEUR_WINDOWS
@@ -208,4 +216,21 @@
 
 #ifdef ROBOTRACONTEUR_EMSCRIPTEN
 #include "RobotRaconteurEmscripten.h"
+#endif
+
+#ifdef __cppcheck__
+// Simplified versions for Cppcheck parsing
+#define RR_GCC_DISABLE_WARNING(warning_name)
+#define RR_GCC_ENABLE_WARNING()
+#else
+#if defined(__GNUC__) || defined(__clang__)
+#define RR_GCC_DISABLE_WARNING_TO_PRAGMA(x) _Pragma(#x)
+#define RR_GCC_DISABLE_WARNING_IGNORE_HELPER(w) RR_GCC_DISABLE_WARNING_TO_PRAGMA(GCC diagnostic ignored w)
+#define RR_GCC_DISABLE_WARNING(warning_name)                                                                           \
+    _Pragma("GCC diagnostic push") RR_GCC_DISABLE_WARNING_IGNORE_HELPER(warning_name)
+#define RR_GCC_ENABLE_WARNING() _Pragma("GCC diagnostic pop")
+#else
+#define RR_GCC_DISABLE_WARNING(warning_name)
+#define RR_GCC_ENABLE_WARNING()
+#endif
 #endif

@@ -627,7 +627,7 @@ class ROBOTRACONTEUR_CORE_API WireBase : public RR_ENABLE_SHARED_FROM_THIS<WireB
  * value.
  *
  * Wire connections are created using the Connect() or AsyncConnect() functions. Services receive
- * incoming connection requests through a callback function. Thes callback is configured using
+ * incoming connection requests through a callback function. This callback is configured using
  * the SetWireConnectCallback() function. Services may also use the WireBroadcaster class
  * or WireUnicastReceiver class to automate managing wire connection lifecycles. WireBroadcaster
  * is used to send values to all connected clients. WireUnicastReceiver is used to receive the
@@ -1043,7 +1043,7 @@ class WireClient : public virtual Wire<T>, public virtual WireClientBase
     WireClient(boost::string_ref name, const RR_SHARED_PTR<ServiceStub>& stub,
                MemberDefinition_Direction direction = MemberDefinition_Direction_both,
                boost::function<void(const RR_INTRUSIVE_PTR<RRValue>&)> verify = RR_NULL_FN)
-        : WireClientBase(name, stub, direction), Wire<T>(verify)
+        : Wire<T>(verify), WireClientBase(name, stub, direction)
     {
         rawelements = (boost::is_same<T, RR_INTRUSIVE_PTR<MessageElement> >::value);
     }

@@ -15,9 +15,19 @@ author = 'John Wason'
 
 extensions = [
     'sphinx_rtd_theme',
-    'sphinx_toolbox.collapse',
     'sphinx_tabs.tabs'
 ]
+
+try:
+    import sphinx_toolbox.collapse
+    extensions.append('sphinx_toolbox.collapse')
+except ImportError:
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives.body import Container
+
+    def setup(app):
+        # Maps 'collapse' to the standard 'container' directive
+        app.add_directive('collapse', Container)
 
 templates_path = ['templates']
 exclude_patterns = []
