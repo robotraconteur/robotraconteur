@@ -1277,6 +1277,15 @@ jobs:
       with:
         name: 'pyodide-dist'
         path: pyodide_recipes_src/dist/*
+    - name: prepare archive wheel
+      run: |
+        mkdir wheels
+        cp pyodide_recipes_src/dist/robotraconteur* wheels/
+    - name: archive wheel
+      uses: actions/upload-artifact@v7
+      with:
+        name: 'out-pyodide'
+        path: wheels/
     - name: archive package logs
       if: failure()
       uses: actions/upload-artifact@v7
@@ -1332,6 +1341,7 @@ jobs:
     - build-matlab-osx
     - build-android
     - build-matlab-toolbox
+    - build-pyodide
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v6
