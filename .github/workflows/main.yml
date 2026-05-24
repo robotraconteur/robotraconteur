@@ -1279,13 +1279,13 @@ jobs:
         path: pyodide_recipes_src/dist/*
     - name: prepare archive wheel
       run: |
-        mkdir wheels
-        cp pyodide_recipes_src/dist/robotraconteur* wheels/
+        mkdir -p out/wheels
+        cp pyodide_recipes_src/dist/robotraconteur* out/wheels/
     - name: archive wheel
       uses: actions/upload-artifact@v7
       with:
         name: 'out-pyodide'
-        path: wheels/
+        path: out/
     - name: archive package logs
       if: failure()
       uses: actions/upload-artifact@v7
