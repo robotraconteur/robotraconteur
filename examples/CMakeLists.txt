@@ -3,7 +3,7 @@
 # This file is not relevant to using the examples in your project. It is only used to build the examples as part of the
 # main project build.
 
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.12...3.99)
 project(robotraconteur_examples)
 
 if(NOT ROBOTRACONTEUR_GENERATE_THUNK)
