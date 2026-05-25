@@ -113,7 +113,7 @@ jobs:
         cmake --build .
         sudo cmake --build . --target install
     - name: build-swig
-      uses: johnwason/swig-build-action@v1.2
+      uses: johnwason/swig-build-action@v1.3
       with:
         cache-key: ${{ matrix.config.os }}
         version: "4.4.1"
@@ -1828,7 +1828,7 @@ jobs:
         sudo make install
     - name: build-swig
       if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
-      uses: johnwason/swig-build-action@v1.2
+      uses: johnwason/swig-build-action@v1.3
       with:
         cache-key: ${{ matrix.config.os }}
     - name: apt-swig
@@ -2089,7 +2089,7 @@ jobs:
         automake libtool bison libpcre3-dev curl libgtest-dev devscripts debhelper python3-bloom -qq
     - name: install swig
       if: ${{ matrix.ROS_DISTRO == 'noetic' }}
-      uses: johnwason/swig-build-action@v1.2
+      uses: johnwason/swig-build-action@v1.3
       with:
         cache-key: ros-package-python-path-${{ matrix.ROS_DISTRO }}-swig
     - name: apt-swig
@@ -2225,7 +2225,7 @@ jobs:
         rosdep install --from-paths src --ignore-src -y
       working-directory: workspace
     - name: build swig
-      uses: johnwason/swig-build-action@v1.2
+      uses: johnwason/swig-build-action@v1.3
       with:
         cache-key: ros-catkin-${{ matrix.ROS_DISTRO }}-swig
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
