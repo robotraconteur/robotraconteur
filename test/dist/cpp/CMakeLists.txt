@@ -1,6 +1,6 @@
 # Minimal CMakeLists.txt to build disttest_cpp.cpp using RobotRaconteur package
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.12...3.31)
 project(disttest_cpp)
 
 find_package(RobotRaconteur REQUIRED)
