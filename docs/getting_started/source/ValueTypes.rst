@@ -156,8 +156,10 @@ The examples below show how to use strings in Python, MATLAB, LabView, C\#, and 
 Structure Types
 ===============
 
-Structures are a collection of fields that can contain any value type, including itself. Structures
-are defined using the Robot Raconteur "Service Definitions" format. Structures are nullable. The following examples
+Structures are a collection of fields that can contain any value type. Structures
+are defined using the Robot Raconteur "Service Definitions" format. Structures are nullable.
+Structures may contain themselves (recursive), but some field values must be null to prevent
+infinite recursion. The following examples
 demonstrate using the ``experimental.value_types.MyStructure`` structure type:
 
 .. literalinclude:: ../../../examples/features/value_types/robdef/experimental.value_types.robdef
@@ -214,7 +216,18 @@ field types including numbers, arrays, namedarrays, and other pods. See the
 `Robot Raconteur Framework Service Definition Documentation <https://robotraconteur.github.io/robotraconteur/doc/core/latest/cpp/service_definition.html>`_
 for more information about the allowed contents of pods. Unlike structures, pods store all their
 data within the pod itself in contiguous memory, and do not contain pointers to other data. They are guaranteed
-to have a maximum binary size. The following examples
+to have a maximum binary size.
+
+.. note::
+
+    Pods differ from structures in how data is stored. In a structure, most fields "point" to data
+    that is allocated elsewhere in memory. In a pod, all the data is stored within the pod itself.
+    For an example of the different in memory storage, consider `uint8[100]` and `uint8* a=malloc(100)` in C.
+    The first stores the data in the array itself on the "stack", while the second stores a pointer to
+    the data in the heap. The first has memory structure similar to a pod, while the second has memory
+    structure similar to a structure, although this is a very crude analogy.
+
+The following examples
 demonstrate using the ``experimental.value_types.MyPod`` pod type:
 
 .. literalinclude:: ../../../examples/features/value_types/robdef/experimental.value_types.robdef
@@ -282,6 +295,11 @@ for namedarray types:
 
 .. literalinclude:: ../../../examples/features/value_types/robdef/experimental.value_types.robdef
     :lines: 74-78
+
+.. notes::
+
+    Namedarrays are more efficient than structures or PODs. It is recommended they
+    be used when transferring large segments of data such as log recordings or sensor data.
 
 The examples below show how to use namedarrays in Python, MATLAB, LabView, C\#, and C++.
 
