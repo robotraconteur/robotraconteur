@@ -25,6 +25,7 @@ ignorePaths:
 - tools/actions/build_python_ver
 - packaging/ios/Info.plist
 - tools/build_files/packaging
+- tools/build_files/pyodide-recipes
 - docs/getting_started/make.bat
 dictionaryDefinitions:
 - name: custom-dictionary

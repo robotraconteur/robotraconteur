@@ -1233,6 +1233,7 @@ jobs:
         repository: pyodide/pyodide-recipes
         path: pyodide_recipes_src
         submodules: true
+        fetch-depth: 0
     # - name: ccache deps
     #   uses: actions/cache@v3
     #   with:
@@ -1251,12 +1252,15 @@ jobs:
     - name: pip-install
       working-directory: pyodide_recipes_src
       run: |
-        pip install -r requirements.txt
-        pip install numpy
+        pip install numpy pytest pytest-xdist pytest-pyodide pytest-httpserver pytest-benchmark pytest-asyncio
     - name: deps build
       working-directory: pyodide_recipes_src
       run: |
-        ./tools/prepare_pyodide_build.sh
+        whereis python
+        python --version
+        python -m pip install ./pyodide-build/
+        pyodide --version
+        pyodide xbuildenv install
         ./tools/copy_pyodide_runtime.sh
     - name: build pregenerated_src
       run: |
@@ -1274,6 +1278,7 @@ jobs:
         export version=$(sed -n 's/^#define[ \t]*ROBOTRACONTEUR_VERSION_TEXT[ \t]*"\([^"]*\)".*/\1/p' $GITHUB_WORKSPACE/robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h)
         export rr_src_path=$GITHUB_WORKSPACE/robotraconteur
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,libboost,pytest,pyyaml,RobotRaconteur"
+        cp -vr $GITHUB_WORKSPACE/robotraconteur/tools/build_files/pyodide-recipes/* $GITHUB_WORKSPACE/pyodide_recipes_src/packages/
         j2 $GITHUB_WORKSPACE/robotraconteur/tools/build_files/pyodide-recipes/RobotRaconteur/meta.yaml.j2 > $GITHUB_WORKSPACE/pyodide_recipes_src/packages/RobotRaconteur/meta.yaml
         pyodide build-recipes --recipe-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/packages --install $PYODIDE_PACKAGES
     - name: test
