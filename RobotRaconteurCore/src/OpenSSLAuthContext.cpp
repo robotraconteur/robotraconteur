@@ -21,6 +21,12 @@
 #include "RobotRaconteurNodeRootCA.h"
 #include <boost/shared_array.hpp>
 
+#if defined(OPENSSL_VERSION_MAJOR) && OPENSSL_VERSION_MAJOR >= 4
+#define OPENSSL4_CONST const
+#else
+#define OPENSSL4_CONST
+#endif
+
 namespace RobotRaconteur
 {
 namespace detail
@@ -106,8 +112,8 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
         return false;
     }
 
-    X509_NAME* sub_name = X509_get_subject_name(cert);
-    X509_NAME* iss_name = X509_get_issuer_name(cert);
+    OPENSSL4_CONST X509_NAME* sub_name = X509_get_subject_name(cert);
+    OPENSSL4_CONST X509_NAME* iss_name = X509_get_issuer_name(cert);
 
     bool isroot = false;
 
@@ -124,12 +130,12 @@ bool verify_callback(bool preverified, boost::asio::ssl::verify_context& ctx)
 
         for (int i = 0; i < ext_count; i++)
         {
-            X509_EXTENSION* e = X509_get_ext(cert, i);
+            OPENSSL4_CONST X509_EXTENSION* e = X509_get_ext(cert, i);
             if (!e)
                 return false;
             if (::X509_EXTENSION_get_critical(e))
             {
-                ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
+                OPENSSL4_CONST ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
                 if (!obj)
                     return false;
                 boost::array<char, 64> buf = {};
@@ -483,12 +489,12 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
 
     for (int i = 0; i < ext_count; i++)
     {
-        X509_EXTENSION* e = X509_get_ext(cert, i);
+        OPENSSL4_CONST X509_EXTENSION* e = X509_get_ext(cert, i);
         if (!e)
             return false;
         if (::X509_EXTENSION_get_critical(e))
         {
-            ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
+            OPENSSL4_CONST ASN1_OBJECT* obj = ::X509_EXTENSION_get_object(e);
             if (!obj)
                 return false;
             boost::array<char, 64> buf3 = {};
