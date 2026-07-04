@@ -27,6 +27,7 @@ ignorePaths:
 - tools/build_files/packaging
 - tools/build_files/pyodide-recipes
 - docs/getting_started/make.bat
+- tools/build_files/guru
 dictionaryDefinitions:
 - name: custom-dictionary
   path: ./.cspell/custom-dictionary.txt
