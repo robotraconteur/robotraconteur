@@ -42,9 +42,15 @@ bool LibUsb_Functions::LoadFunctions()
 {
     if (lib_handle)
         throw InvalidOperationException("libusb functions already loaded");
-    lib_handle = dlopen("libusb-1.0.so", RTLD_LAZY);
+    lib_handle = dlopen("libusb-1.0.so.0", RTLD_LAZY);
+    if (!lib_handle)
+    {
+        lib_handle = dlopen("libusb-1.0.so", RTLD_LAZY);
+    }
     if (!lib_handle)
         return false;
+    else
+        dlerror();
 
     LIBUSB_FUNCTIONS_INIT(LIBUSB_FUNCTIONS_PTR_INIT);
 
