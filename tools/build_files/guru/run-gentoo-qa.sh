@@ -45,9 +45,36 @@ echo 'FEATURES="test"' > /etc/portage/env/qa-tests.conf
 echo "dev-cpp/robotraconteur qa-tests.conf" > /etc/portage/package.env/robotraconteur
 
 echo ">>> Pre-installing dependencies..."
-emerge --onlydeps --getbinpkg dev-cpp/robotraconteur
+emerge --onlydeps --getbinpkg --quiet-build dev-cpp/robotraconteur
 
 echo ">>> Executing emerge QA build against Git HEAD..."
 export EGIT_OVERRIDE_REPO_ROBOTRACONTEUR="${REPO_ROOT}"
 
 FEATURES="test" emerge -v =dev-cpp/robotraconteur-9999
+
+echo ">>> Checking Portage logs strictly for robotraconteur QA Notices..."
+ELOG_DIR="/var/log/portage/elog"
+
+# 1. Use find to safely check if any log files for your package exist
+if [ -d "${ELOG_DIR}" ] && find "${ELOG_DIR}" -type f -name "*robotraconteur*" | grep -q .; then
+
+    # 2. Files exist, so parse them for strict failures
+    if grep -Eiq "QA Notice:|WARN:|ERROR:" "${ELOG_DIR}"/*robotraconteur*; then
+        echo "===================================================="
+        echo "  CRITICAL: GURU QA Violations Detected in Framework! "
+        echo "===================================================="
+
+        # Display the exact errors
+        grep -Ehi "QA Notice:|WARN:|ERROR:" "${ELOG_DIR}"/*robotraconteur*
+
+        echo "===================================================="
+        echo "Failing build: Fix the ebuild QA notices above."
+        exit 1
+    fi
+    echo ">>> Build completed. Logs inspected and no critical QA violations found."
+else
+    # 3. No files found means the build was flawlessly clean!
+    echo "===================================================="
+    echo ">>> Perfect Build! No QA warnings or logs generated. <<<"
+    echo "===================================================="
+fi

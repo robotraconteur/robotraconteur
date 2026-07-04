@@ -2,11 +2,10 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_11 python3_12 python3_13 python3_14 )
 
-inherit cmake git-r3 python-single-r1
+inherit cmake python-single-r1
 
 DESCRIPTION="Robot Raconteur communication framework"
 HOMEPAGE="https://robotraconteur.com"
-EGIT_REPO_URI="https://github.com/robotraconteur/robotraconteur.git"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -25,9 +24,32 @@ DEPEND="${PYTHON_DEPS}
 	dev-cpp/gtest
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
+		dev-python/pytest[${PYTHON_USEDEP}]
 	')"
+
 RDEPEND="${DEPEND}"
 BDEPEND="dev-lang/swig"
+
+S="/workspace"
+
+pkg_setup() {
+    python-single-r1_pkg_setup
+}
+
+src_unpack() {
+    if [[ ! -d ${S} ]]; then
+        die "CRITICAL CI FAILURE: Local source path '${S}' does not exist!"
+    fi
+
+    einfo "Copying local CI repository from ${S} into Portage sandbox..."
+
+    # Creates the transient build folder and copies the source files safely
+    mkdir -p "${WORKDIR}/${P}" || die
+    cp -R "${S}/." "${WORKDIR}/${P}/" || die
+
+    # Re-point S to the safe, sandboxed location for the compilation phases
+    S="${WORKDIR}/${P}"
+}
 
 src_configure() {
 	local mycmakeargs=(
@@ -37,4 +59,13 @@ src_configure() {
 		-DPYTHON3_EXECUTABLE="${PYTHON}"
 	)
 	cmake_src_configure
+}
+
+src_test() {
+
+	cd "${BUILD_DIR}" || die "Failed to enter build directory"
+
+	ctest -C RelWithDebInfo \
+        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback" \
+        --output-on-failure || die "Tests failure"
 }
