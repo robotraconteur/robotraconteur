@@ -37,17 +37,18 @@ pkg_setup() {
 }
 
 src_unpack() {
-    if [[ ! -d ${S} ]]; then
-        die "CRITICAL CI FAILURE: Local source path '${S}' does not exist!"
+    # Fallback to the current directory if CI_WORKSPACE_PATH isn't explicitly provided
+    local src_path="${CI_WORKSPACE_PATH:-${PWD}}"
+
+    if [[ ! -d ${src_path} ]]; then
+        die "CRITICAL CI FAILURE: Local source path '${src_path}' does not exist!"
     fi
 
-    einfo "Copying local CI repository from ${S} into Portage sandbox..."
+    einfo "Copying local CI repository from ${src_path} into Portage sandbox..."
 
-    # Creates the transient build folder and copies the source files safely
     mkdir -p "${WORKDIR}/${P}" || die
-    cp -R "${S}/." "${WORKDIR}/${P}/" || die
+    cp -R "${src_path}/." "${WORKDIR}/${P}/" || die
 
-    # Re-point S to the safe, sandboxed location for the compilation phases
     S="${WORKDIR}/${P}"
 }
 

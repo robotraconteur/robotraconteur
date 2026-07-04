@@ -49,6 +49,7 @@ emerge --onlydeps --getbinpkg --quiet-build dev-cpp/robotraconteur
 
 echo ">>> Executing emerge QA build against Git HEAD..."
 export EGIT_OVERRIDE_REPO_ROBOTRACONTEUR="${REPO_ROOT}"
+export CI_WORKSPACE_PATH="${GITHUB_WORKSPACE:-/workspace}"
 
 FEATURES="test" emerge -v =dev-cpp/robotraconteur-9999
 
