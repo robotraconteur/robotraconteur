@@ -443,8 +443,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                                 {
                                     break;
                                 }
-                                std::vector<uint8_t> desc(sysfs_bos_desc.begin() + (p + 4),
-                                                          sysfs_bos_desc.begin() + (p + len));
+                                std::vector<uint8_t> desc(&sysfs_bos_desc[0] + p + 4U, &sysfs_bos_desc[0] + p + len);
                                 platform_bos_desc.push_back(desc);
                             }
                             p += len;
