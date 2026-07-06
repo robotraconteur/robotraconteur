@@ -43,9 +43,15 @@ bool DBus_Functions::LoadFunctions()
 {
     if (lib_handle)
         throw InvalidOperationException("dbus functions already loaded");
-    lib_handle = dlopen("libdbus-1.so", RTLD_LAZY);
+    lib_handle = dlopen("libdbus-1.so.3", RTLD_LAZY);
+    if (!lib_handle)
+    {
+        lib_handle = dlopen("libdbus-1.so", RTLD_LAZY);
+    }
     if (!lib_handle)
         return false;
+    else
+        dlerror();
 
     DBUS_FUNCTIONS_INIT(DBUS_FUNCTIONS_PTR_INIT);
 
@@ -73,9 +79,15 @@ bool Sdp_Functions::LoadFunctions()
 {
     if (lib_handle)
         throw InvalidOperationException("sdp functions already loaded");
-    lib_handle = dlopen("libbluetooth.so", RTLD_LAZY);
+    lib_handle = dlopen("libbluetooth.so.3", RTLD_LAZY);
+    if (!lib_handle)
+    {
+        lib_handle = dlopen("libbluetooth.so", RTLD_LAZY);
+    }
     if (!lib_handle)
         return false;
+    else
+        dlerror();
 
     SDP_FUNCTIONS_INIT(SDP_FUNCTIONS_PTR_INIT);
 
