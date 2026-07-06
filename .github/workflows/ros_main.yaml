@@ -33,7 +33,7 @@ jobs:
         # - ROS_DISTRO: rolling
         #   OS_CODE_NAME: resolute
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: src/robotraconteur
     - name: ros industrial-ci
@@ -60,7 +60,7 @@ jobs:
         - ROS_DISTRO: rolling
           OS_CODE_NAME: resolute
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: src/robotraconteur
     - name: ros industrial-ci
