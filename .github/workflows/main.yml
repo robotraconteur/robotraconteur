@@ -2087,7 +2087,7 @@ jobs:
       working-directory: src/robotraconteur
     - run: DEB_BUILD_OPTIONS=nocheck debuild -us -uc -b
       working-directory: src/robotraconteur
-    - run: sudo dpkg -i ../*robotraconteur_*.deb
+    - run: sudo dpkg -i ../*robotraconteur_*.deb || sudo apt-get install -f -y
       working-directory: src/robotraconteur
     - name: test python path
       run: |
