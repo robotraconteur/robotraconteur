@@ -934,6 +934,7 @@ jobs:
       run: >
         cmake -GNinja -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE:STRING=Release
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        -DPython3_EXECUTABLE=%CONDA_PREFIX%\python.exe
         -S robotraconteur -B build2
     - name: build
       working-directory: build2
