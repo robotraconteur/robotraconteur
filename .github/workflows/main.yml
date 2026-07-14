@@ -914,6 +914,9 @@ jobs:
 
   build-conda-win:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: cmd /C call {0}
     steps:
     - uses: actions/checkout@v7
       with:
@@ -931,17 +934,22 @@ jobs:
       run: >
         cmake -GNinja -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE:STRING=Release
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        -DPython3_EXECUTABLE=%CONDA_PREFIX%\python.exe
         -S robotraconteur -B build2
-      shell: cmd /C call {0}
     - name: build
       working-directory: build2
       run: cmake --build . --config Release -j 4
-      shell: cmd /C call {0}
     - name: test
       working-directory: build2
       run: |
         ctest . -C Release --output-on-failure
-      shell: cmd /C call {0}
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: 'build-artifacts-conda-win'
+        path: build2/*
+        retention-days: 2
 
   build-conda-linux:
     runs-on: ubuntu-latest
