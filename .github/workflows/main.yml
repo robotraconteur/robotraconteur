@@ -271,7 +271,6 @@ jobs:
     runs-on: ubuntu-latest
     container: ${{ matrix.config.container }}
     strategy:
-      fail-fast: false
       matrix:
         config:
         - container: fedora:latest
@@ -281,6 +280,7 @@ jobs:
     - uses: actions/checkout@v7
       with:
         path: robotraconteur
+        repository: robotraconteur/robotraconteur
     - name: install-pkgs
       run: >-
         yum install -y boost-devel cmake ninja-build
@@ -310,6 +310,7 @@ jobs:
     - uses: actions/checkout@v7
       with:
         path: robotraconteur
+        repository: robotraconteur/robotraconteur
     - name: install-pkgs
       run: >-
         pacman -Syu --noconfirm boost cmake ninja

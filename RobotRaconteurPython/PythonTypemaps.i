@@ -62,14 +62,12 @@
 
 %typemap(in) boost::posix_time::time_duration (boost::posix_time::time_duration tmpDur, int64_t pyinputval2=0, double pyinputval=0) %{
 
-#if (PY_MAJOR_VERSION == 2)
+
 	if (PyInt_Check($input))
 	{
 		pyinputval=boost::lexical_cast<double>(PyInt_AsLong($input));
 	}
-	else
-#endif
-    if (PyLong_Check($input))
+	else if (PyLong_Check($input))
 	{
 		pyinputval=boost::lexical_cast<double>(PyLong_AsLong($input));
 	}
