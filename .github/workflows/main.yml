@@ -58,11 +58,11 @@ jobs:
           container: ""
           arch: x64
           wheel_platform: manylinux_2_39_x86_64
-        - os: debian-11
+        - os: debian-12
           runs_on: ubuntu-latest
-          container: debian:bullseye-slim
+          container: debian:bookworm-slim
           arch: x64
-          wheel_platform: manylinux_2_31_x86_64
+          wheel_platform: manylinux_2_35_x86_64
         - os: ubuntu-22.04-arm
           runs_on: ubuntu-22.04-arm
           container: ""
@@ -1764,9 +1764,9 @@ jobs:
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
-        - os: debian-11
+        - os: debian-12
           runs_on: ubuntu-latest
-          container: debian:bullseye-slim
+          container: debian:bookworm-slim
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -1818,12 +1818,12 @@ jobs:
         cmake ..
         sudo make install
     - name: build-swig
-      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-12' && matrix.config.os != 'ubuntu-24.04' }}
       uses: johnwason/swig-build-action@v1.3
       with:
         cache-key: ${{ matrix.config.os }}
     - name: apt-swig
-      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-12' || matrix.config.os == 'ubuntu-24.04' }}
       run: sudo apt-get install swig -qq -y
     - name: cache-build
       id: cache-build
