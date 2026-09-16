@@ -302,12 +302,17 @@ Example code excerpts demonstrating the use of objrefs:
 pipe Member
 ===========
 
-The ``pipe`` member provides reliable in-order streaming data transfer between the client and service. Pipes
+The ``pipe`` member provides reliable in-order first-in-first-out (FIFO) data transfer between the client and service. Pipes
 are full duplex, so data can be sent in both directions. Pipes are "connected" to create connections
 between clients and services. A single pipe
 member can have multiple connections between the same client and service. A pipe can also be modified to be
 ``[readonly]`` or ``[writeonly]``. Pipes can also be modified to be ``[unreliable]`` to provide faster
 data transfer with no guarantees of delivery, where packets may be dropped or arrive out of order.
+
+.. note::
+
+    Pipes are intended for FIFO data, and are not intended for high update rate data. High update real-time
+    data should use ``wire`` members instead of pipes.
 
 Example pipes from the ``experimental.simplewebcam3.Webcam`` object:
 
@@ -412,6 +417,12 @@ Wires are normally "connected" to create a real-time streaming connection betwee
 can also be "Peeked" and "Poked" using the ``PeekInValue()``, ``PeekOutValue()`` and ``PokeOutValue()``
 functions. These functions work like properties where a request is sent to the service to get or set the value rather
 than using a streaming connection.
+
+.. note::
+
+        Wires are intended for real-time time exchange of a value, where only the most recent value is important.
+        Use ``pipe`` members first-in-first-out (FIFO) data streaming instead of wires. Also use
+        pipes for large packets such as images or video frames.
 
 Example wire from the ``experimental.reynard_the_robot.Reynard`` object:
 
