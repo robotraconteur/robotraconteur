@@ -148,11 +148,17 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
     message(STATUS "Detected system processor ${CMAKE_SYSTEM_PROCESSOR}")
 
-    if(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm.*")
-        # Assume hard float for arm
-        set_target_properties(RobotRaconteurJavaNative PROPERTIES OUTPUT_NAME "RobotRaconteurJavaNative-linux-armhf")
-    elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
-        set_target_properties(RobotRaconteurJavaNative PROPERTIES OUTPUT_NAME "RobotRaconteurJavaNative-linux-arm64")
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm|aarch64)")
+        # Use pointer size rather than the kernel-reported processor, so a 32-bit build on a 64-bit kernel (e.g. armhf
+        # container on a Pi 5) is named armhf
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            set_target_properties(RobotRaconteurJavaNative PROPERTIES OUTPUT_NAME
+                                                                      "RobotRaconteurJavaNative-linux-arm64")
+        else()
+            # Assume hard float for 32-bit arm
+            set_target_properties(RobotRaconteurJavaNative PROPERTIES OUTPUT_NAME
+                                                                      "RobotRaconteurJavaNative-linux-armhf")
+        endif()
     else()
 
         if(CMAKE_SIZEOF_VOID_P EQUAL 8)
