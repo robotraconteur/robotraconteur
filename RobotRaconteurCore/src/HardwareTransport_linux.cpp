@@ -576,7 +576,8 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
                         boost::bind(&HardwareTransport_linux_discovery::OnDeviceChanged,
                                     RR_STATIC_POINTER_CAST<HardwareTransport_linux_discovery>(shared_from_this()),
                                     RR_BOOST_PLACEHOLDERS(_1)));
-                    return;
+                    // Break instead of return so the netlink receive below is restarted
+                    break;
                 }
 
                 if (l[1] == "misc" || l[1] == "robotraconteur")
@@ -588,7 +589,7 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
                         node, boost::bind(&HardwareTransport_linux_discovery::OnDeviceChanged,
                                           RR_STATIC_POINTER_CAST<HardwareTransport_linux_discovery>(shared_from_this()),
                                           devices1));
-                    return;
+                    break;
                 }
             }
         }
