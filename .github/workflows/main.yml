@@ -54,7 +54,7 @@ jobs:
           arch: x64
           wheel_platform: manylinux_2_35_x86_64
         - os: ubuntu-24.04
-          runs_on: ubuntu-22.04
+          runs_on: ubuntu-24.04
           container: ""
           arch: x64
           wheel_platform: manylinux_2_39_x86_64
@@ -74,7 +74,7 @@ jobs:
           arch: x64
           wheel_platform: manylinux_2_41_x86_64
         - os: debian-testing-arm
-          runs_on: ubuntu-latest
+          runs_on: ubuntu-24.04-arm
           container: debian:testing-slim
           arch: arm64
           wheel_platform: manylinux_2_41_aarch64
@@ -292,7 +292,7 @@ jobs:
       run: |
         eval $(rpm --eval '%{set_build_flags}')
         cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON \
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release \
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE=Release \
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
@@ -553,6 +553,13 @@ jobs:
       uses: mikehardy/buildcache-action@v2
       with:
         cache_key: win64-shared-build-main-buildcache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" | Out-File -FilePath $env:GITHUB_ENV
+        -Encoding utf8 -Append
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
@@ -789,7 +796,7 @@ jobs:
     - name: matlab out tar
       run: >
         export RR_VER=`cat build2/rrversion.txt`
-        && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz
+        && tar -czf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz
         --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
         --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
         build2/out/Matlab robotraconteur/LICENSE.txt
@@ -894,7 +901,7 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/Matlab
         cd build2/out
         cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
-        tar -cf RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}.tar.gz RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
+        tar -czf RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}.tar.gz RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
     - name: move out
       run: |
         cp robotraconteur/LICENSE.txt build2/out/
