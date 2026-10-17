@@ -25,6 +25,10 @@
 #include <dlfcn.h>
 #include <linux/netlink.h>
 #include <boost/range/as_array.hpp>
+#include <boost/lexical_cast.hpp>
+#include <fstream>
+#include <sys/stat.h>
+#include <sys/sysmacros.h>
 
 // cSpell: ignore bdaddr, sysfs, hcid
 
@@ -660,13 +664,74 @@ static std::vector<boost::filesystem::path> HardwareTransport_linux_driver_devic
     return o;
 }
 
+// Find the device node for a sysfs device directory. The kernel reports the node path relative to /dev as
+// DEVNAME in the uevent attribute, which is the name devtmpfs and udev use. Drivers may place the node in a
+// subdirectory or give it a different name than the sysfs entry, so the sysfs entry name is only a fallback.
+static boost::optional<std::string> HardwareTransport_linux_device_node_path(const boost::filesystem::path& dev_path)
+{
+    std::string devname = dev_path.filename().string();
+
+    std::ifstream uevent((dev_path / "uevent").c_str());
+    std::string line;
+    while (std::getline(uevent, line))
+    {
+        if (boost::starts_with(line, "DEVNAME="))
+        {
+            devname = boost::trim_copy(line.substr(8));
+            break;
+        }
+    }
+
+    std::string node_path = "/dev/" + devname;
+
+    // Verify the node is this device by comparing device numbers. On a normal host /dev is devtmpfs and always
+    // matches sysfs, but in a container /sys shows the host's devices while /dev only contains devices passed in,
+    // possibly renamed, so the node at this path may be missing or belong to a different device.
+    std::string dev_num;
+    try
+    {
+        dev_num = HardwareTransport_read_sysfs_attr(dev_path / "dev");
+    }
+    catch (std::exception&)
+    {
+        // No device number to check against
+        return node_path;
+    }
+
+    // The dev attribute is "major:minor"
+    boost::smatch dev_num_match;
+    if (!boost::regex_match(dev_num, dev_num_match, boost::regex("^(\\d+):(\\d+)$")))
+    {
+        return node_path;
+    }
+
+    unsigned int dev_major = 0;
+    unsigned int dev_minor = 0;
+    try
+    {
+        dev_major = boost::lexical_cast<unsigned int>(dev_num_match[1].str());
+        dev_minor = boost::lexical_cast<unsigned int>(dev_num_match[2].str());
+    }
+    catch (boost::bad_lexical_cast&)
+    {
+        return node_path;
+    }
+
+    struct stat st = {};
+    if (stat(node_path.c_str(), &st) != 0 || !S_ISCHR(st.st_mode) || st.st_rdev != makedev(dev_major, dev_minor))
+    {
+        return boost::optional<std::string>();
+    }
+
+    return node_path;
+}
+
 boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost::string_ref transport_type,
                                                                           const NodeID& nodeid,
                                                                           boost::string_ref nodename)
 {
     BOOST_FOREACH (const boost::filesystem::path& dev_path, HardwareTransport_linux_driver_device_paths())
     {
-        std::string dev_name = "/dev/" + dev_path.filename().string();
         NodeID dev_nodeid;
         std::string dev_nodename;
 
@@ -728,7 +793,11 @@ boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost:
 
         if (match)
         {
-            return dev_name;
+            boost::optional<std::string> node_path = HardwareTransport_linux_device_node_path(dev_path);
+            if (node_path)
+            {
+                return node_path;
+            }
         }
     }
 
