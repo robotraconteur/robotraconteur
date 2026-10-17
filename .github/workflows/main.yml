@@ -124,7 +124,7 @@ jobs:
     - name: build-swig
       uses: johnwason/swig-build-action@v1.3
       with:
-        cache-key: ${{ matrix.config.os }}
+        cache-key: ${{ matrix.config.os }}-${{ matrix.config.arch }}
         version: "4.4.1"
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
