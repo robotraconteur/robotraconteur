@@ -822,18 +822,20 @@ boost::optional<std::string> HardwareTransport_linux_find_bluetooth(const NodeID
 std::list<boost::tuple<NodeID, std::string> > HardwareTransport_linux_find_deviceinterfaces(
     boost::string_ref transport_type)
 {
-    RR_UNUSED(transport_type);
     std::list<boost::tuple<NodeID, std::string> > o;
 
     BOOST_FOREACH (const boost::filesystem::path& dev_path, HardwareTransport_linux_driver_device_paths())
     {
-        std::string dev_name = "/dev/" + dev_path.filename().string();
         NodeID dev_nodeid;
         std::string dev_nodename;
 
         try
         {
             std::string dev_transport = HardwareTransport_read_sysfs_attr((dev_path / "transport"));
+            if (dev_transport != transport_type)
+            {
+                continue;
+            }
         }
         catch (std::exception&)
         {
