@@ -22,8 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - ROS_DISTRO: noetic
-          OS_CODE_NAME: focal
         - ROS_DISTRO: humble
           OS_CODE_NAME: jammy
         - ROS_DISTRO: jazzy
