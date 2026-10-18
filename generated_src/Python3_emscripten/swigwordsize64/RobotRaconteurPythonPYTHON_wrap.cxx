@@ -101139,12 +101139,14 @@ SWIGINTERN PyObject *_wrap_Timer_SetPeriod(PyObject *self, PyObject *args) {
   }
   
   
-  
+#if (PY_MAJOR_VERSION == 2)
   if (PyInt_Check(swig_obj[1]))
   {
     pyinputval2=boost::lexical_cast<double>(PyInt_AsLong(swig_obj[1]));
   }
-  else if (PyLong_Check(swig_obj[1]))
+  else
+#endif
+  if (PyLong_Check(swig_obj[1]))
   {
     pyinputval2=boost::lexical_cast<double>(PyLong_AsLong(swig_obj[1]));
   }
@@ -101564,12 +101566,14 @@ SWIGINTERN PyObject *_wrap_WallTimer_SetPeriod(PyObject *self, PyObject *args) {
   }
   
   
-  
+#if (PY_MAJOR_VERSION == 2)
   if (PyInt_Check(swig_obj[1]))
   {
     pyinputval2=boost::lexical_cast<double>(PyInt_AsLong(swig_obj[1]));
   }
-  else if (PyLong_Check(swig_obj[1]))
+  else
+#endif
+  if (PyLong_Check(swig_obj[1]))
   {
     pyinputval2=boost::lexical_cast<double>(PyLong_AsLong(swig_obj[1]));
   }
@@ -101753,12 +101757,14 @@ SWIGINTERN PyObject *_wrap_new_WallTimer(PyObject *self, PyObject *args) {
   if (!SWIG_Python_UnpackTuple(args, "new_WallTimer", 5, 5, swig_obj)) SWIG_fail;
   
   
-  
+#if (PY_MAJOR_VERSION == 2)
   if (PyInt_Check(swig_obj[0]))
   {
     pyinputval1=boost::lexical_cast<double>(PyInt_AsLong(swig_obj[0]));
   }
-  else if (PyLong_Check(swig_obj[0]))
+  else
+#endif
+  if (PyLong_Check(swig_obj[0]))
   {
     pyinputval1=boost::lexical_cast<double>(PyLong_AsLong(swig_obj[0]));
   }
@@ -185082,12 +185088,14 @@ SWIGINTERN PyObject *_wrap_RobotRaconteurNode_Sleep(PyObject *self, PyObject *ar
   }
   
   
-  
+#if (PY_MAJOR_VERSION == 2)
   if (PyInt_Check(swig_obj[1]))
   {
     pyinputval2=boost::lexical_cast<double>(PyInt_AsLong(swig_obj[1]));
   }
-  else if (PyLong_Check(swig_obj[1]))
+  else
+#endif
+  if (PyLong_Check(swig_obj[1]))
   {
     pyinputval2=boost::lexical_cast<double>(PyLong_AsLong(swig_obj[1]));
   }
@@ -185176,12 +185184,14 @@ SWIGINTERN PyObject *_wrap_RobotRaconteurNode__CreateTimer(PyObject *self, PyObj
   }
   
   
-  
+#if (PY_MAJOR_VERSION == 2)
   if (PyInt_Check(swig_obj[1]))
   {
     pyinputval2=boost::lexical_cast<double>(PyInt_AsLong(swig_obj[1]));
   }
-  else if (PyLong_Check(swig_obj[1]))
+  else
+#endif
+  if (PyLong_Check(swig_obj[1]))
   {
     pyinputval2=boost::lexical_cast<double>(PyLong_AsLong(swig_obj[1]));
   }
