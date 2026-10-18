@@ -15,6 +15,7 @@
 #include "HardwareTransport_linux_private.h"
 #include "HardwareTransport_private.h"
 #include <boost/foreach.hpp>
+#include <boost/assign/list_of.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/adaptors.hpp>
 #include <boost/locale.hpp>
@@ -24,6 +25,10 @@
 #include <dlfcn.h>
 #include <linux/netlink.h>
 #include <boost/range/as_array.hpp>
+#include <boost/lexical_cast.hpp>
+#include <fstream>
+#include <sys/stat.h>
+#include <sys/sysmacros.h>
 
 // cSpell: ignore bdaddr, sysfs, hcid
 
@@ -43,9 +48,15 @@ bool DBus_Functions::LoadFunctions()
 {
     if (lib_handle)
         throw InvalidOperationException("dbus functions already loaded");
-    lib_handle = dlopen("libdbus-1.so", RTLD_LAZY);
+    lib_handle = dlopen("libdbus-1.so.3", RTLD_LAZY);
+    if (!lib_handle)
+    {
+        lib_handle = dlopen("libdbus-1.so", RTLD_LAZY);
+    }
     if (!lib_handle)
         return false;
+    else
+        dlerror();
 
     DBUS_FUNCTIONS_INIT(DBUS_FUNCTIONS_PTR_INIT);
 
@@ -73,9 +84,15 @@ bool Sdp_Functions::LoadFunctions()
 {
     if (lib_handle)
         throw InvalidOperationException("sdp functions already loaded");
-    lib_handle = dlopen("libbluetooth.so", RTLD_LAZY);
+    lib_handle = dlopen("libbluetooth.so.3", RTLD_LAZY);
+    if (!lib_handle)
+    {
+        lib_handle = dlopen("libbluetooth.so", RTLD_LAZY);
+    }
     if (!lib_handle)
         return false;
+    else
+        dlerror();
 
     SDP_FUNCTIONS_INIT(SDP_FUNCTIONS_PTR_INIT);
 
@@ -563,10 +580,11 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
                         boost::bind(&HardwareTransport_linux_discovery::OnDeviceChanged,
                                     RR_STATIC_POINTER_CAST<HardwareTransport_linux_discovery>(shared_from_this()),
                                     RR_BOOST_PLACEHOLDERS(_1)));
-                    return;
+                    // Break instead of return so the netlink receive below is restarted
+                    break;
                 }
 
-                if (l[1] == "robotraconteur")
+                if (l[1] == "misc" || l[1] == "robotraconteur")
                 {
                     std::vector<NodeDiscoveryInfo> devices = GetDriverDevices();
                     RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> > devices1 =
@@ -575,7 +593,7 @@ void HardwareTransport_linux_discovery::NetlinkMessageReceived(const boost::syst
                         node, boost::bind(&HardwareTransport_linux_discovery::OnDeviceChanged,
                                           RR_STATIC_POINTER_CAST<HardwareTransport_linux_discovery>(shared_from_this()),
                                           devices1));
-                    return;
+                    break;
                 }
             }
         }
@@ -608,30 +626,118 @@ static std::string HardwareTransport_read_sysfs_attr(const boost::filesystem::pa
     close(f1);
     if (rv < 0)
         throw ConnectionException("Could not read attribute");
-    return std::string(attr_buf.data(), strnlen(attr_buf.data(), sizeof(attr_buf)));
+    // Drivers may terminate the value with a NUL and/or a trailing newline
+    std::string o(attr_buf.data(), static_cast<size_t>(rv));
+    boost::trim_if(o, boost::is_space() || boost::is_cntrl());
+    return o;
+}
+
+// Robot Raconteur kernel drivers register misc devices with a "robotraconteur" marker attribute, along with
+// "transport", "nodeid", and "nodename" sysfs attributes. The legacy "robotraconteur" class is also scanned for
+// older drivers, which do not have the marker attribute.
+static std::vector<boost::filesystem::path> HardwareTransport_linux_driver_device_paths()
+{
+    std::vector<boost::filesystem::path> o;
+    typedef std::pair<std::string, std::string> class_dir_type;
+    // Pairs of sysfs class directory and the attribute that identifies a Robot Raconteur device
+    std::vector<class_dir_type> class_dirs = boost::assign::map_list_of<std::string, std::string>(
+        "/sys/class/misc", "robotraconteur")("/sys/class/robotraconteur", "transport");
+    BOOST_FOREACH (const class_dir_type& class_dir, class_dirs)
+    {
+        boost::system::error_code ec;
+        if (!boost::filesystem::is_directory(class_dir.first, ec))
+        {
+            continue;
+        }
+
+        boost::filesystem::directory_iterator end_iter;
+        for (boost::filesystem::directory_iterator dir_itr(class_dir.first, ec); !ec && dir_itr != end_iter;
+             dir_itr.increment(ec))
+        {
+            boost::system::error_code ec2;
+            if (boost::filesystem::exists(dir_itr->path() / class_dir.second, ec2))
+            {
+                o.push_back(dir_itr->path());
+            }
+        }
+    }
+    return o;
+}
+
+// Find the device node for a sysfs device directory. The kernel reports the node path relative to /dev as
+// DEVNAME in the uevent attribute, which is the name devtmpfs and udev use. Drivers may place the node in a
+// subdirectory or give it a different name than the sysfs entry, so the sysfs entry name is only a fallback.
+static boost::optional<std::string> HardwareTransport_linux_device_node_path(const boost::filesystem::path& dev_path)
+{
+    std::string devname = dev_path.filename().string();
+
+    std::ifstream uevent((dev_path / "uevent").c_str());
+    std::string line;
+    while (std::getline(uevent, line))
+    {
+        if (boost::starts_with(line, "DEVNAME="))
+        {
+            devname = boost::trim_copy(line.substr(8));
+            break;
+        }
+    }
+
+    std::string node_path = "/dev/" + devname;
+
+    // Verify the node is this device by comparing device numbers. On a normal host /dev is devtmpfs and always
+    // matches sysfs, but in a container /sys shows the host's devices while /dev only contains devices passed in,
+    // possibly renamed, so the node at this path may be missing or belong to a different device.
+    std::string dev_num;
+    try
+    {
+        dev_num = HardwareTransport_read_sysfs_attr(dev_path / "dev");
+    }
+    catch (std::exception&)
+    {
+        // No device number to check against
+        return node_path;
+    }
+
+    // The dev attribute is "major:minor"
+    boost::smatch dev_num_match;
+    if (!boost::regex_match(dev_num, dev_num_match, boost::regex("^(\\d+):(\\d+)$")))
+    {
+        return node_path;
+    }
+
+    unsigned int dev_major = 0;
+    unsigned int dev_minor = 0;
+    try
+    {
+        dev_major = boost::lexical_cast<unsigned int>(dev_num_match[1].str());
+        dev_minor = boost::lexical_cast<unsigned int>(dev_num_match[2].str());
+    }
+    catch (boost::bad_lexical_cast&)
+    {
+        return node_path;
+    }
+
+    struct stat st = {};
+    if (stat(node_path.c_str(), &st) != 0 || !S_ISCHR(st.st_mode) || st.st_rdev != makedev(dev_major, dev_minor))
+    {
+        return boost::optional<std::string>();
+    }
+
+    return node_path;
 }
 
 boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost::string_ref transport_type,
                                                                           const NodeID& nodeid,
                                                                           boost::string_ref nodename)
 {
-    boost::filesystem::path rr_class = "/sys/class/robotraconteur";
-
-    if (!boost::filesystem::is_directory(rr_class))
+    BOOST_FOREACH (const boost::filesystem::path& dev_path, HardwareTransport_linux_driver_device_paths())
     {
-        return boost::optional<std::string>();
-    }
-
-    boost::filesystem::directory_iterator end_iter;
-    for (boost::filesystem::directory_iterator dir_itr(rr_class); dir_itr != end_iter; dir_itr++)
-    {
-        std::string dev_name = "/dev/" + dir_itr->path().filename().string();
         NodeID dev_nodeid;
         std::string dev_nodename;
 
         try
         {
-            std::string dev_transport = HardwareTransport_read_sysfs_attr((dir_itr->path() / "transport"));
+            std::string dev_transport = HardwareTransport_read_sysfs_attr((dev_path / "transport"));
             if (dev_transport != transport_type)
             {
                 continue;
@@ -644,7 +750,7 @@ boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost:
 
         try
         {
-            std::string dev_nodeid_str = HardwareTransport_read_sysfs_attr((dir_itr->path() / "nodeid"));
+            std::string dev_nodeid_str = HardwareTransport_read_sysfs_attr((dev_path / "nodeid"));
             dev_nodeid = NodeID(dev_nodeid_str);
         }
         catch (std::exception&)
@@ -652,9 +758,7 @@ boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost:
 
         try
         {
-            dev_nodename = HardwareTransport_read_sysfs_attr((dir_itr->path() / "nodename"));
-
-            boost::trim(dev_nodename);
+            dev_nodename = HardwareTransport_read_sysfs_attr((dev_path / "nodename"));
         }
         catch (std::exception&)
         {}
@@ -689,7 +793,11 @@ boost::optional<std::string> HardwareTransport_linux_find_deviceinterface(boost:
 
         if (match)
         {
-            return dev_name;
+            boost::optional<std::string> node_path = HardwareTransport_linux_device_node_path(dev_path);
+            if (node_path)
+            {
+                return node_path;
+            }
         }
     }
 
@@ -714,53 +822,47 @@ boost::optional<std::string> HardwareTransport_linux_find_bluetooth(const NodeID
 std::list<boost::tuple<NodeID, std::string> > HardwareTransport_linux_find_deviceinterfaces(
     boost::string_ref transport_type)
 {
-    RR_UNUSED(transport_type);
     std::list<boost::tuple<NodeID, std::string> > o;
 
-    boost::filesystem::path rr_class = "/sys/class/robotraconteur";
-
-    if (boost::filesystem::is_directory(rr_class))
+    BOOST_FOREACH (const boost::filesystem::path& dev_path, HardwareTransport_linux_driver_device_paths())
     {
-        boost::filesystem::directory_iterator end_iter;
-        for (boost::filesystem::directory_iterator dir_itr(rr_class); dir_itr != end_iter; dir_itr++)
+        NodeID dev_nodeid;
+        std::string dev_nodename;
+
+        try
         {
-            std::string dev_name = "/dev/" + dir_itr->path().filename().string();
-            NodeID dev_nodeid;
-            std::string dev_nodename;
-
-            try
-            {
-                std::string dev_transport = HardwareTransport_read_sysfs_attr((dir_itr->path() / "transport"));
-            }
-            catch (std::exception&)
+            std::string dev_transport = HardwareTransport_read_sysfs_attr((dev_path / "transport"));
+            if (dev_transport != transport_type)
             {
                 continue;
             }
-
-            try
-            {
-                std::string dev_nodeid_str = HardwareTransport_read_sysfs_attr((dir_itr->path() / "nodeid"));
-                dev_nodeid = NodeID(dev_nodeid_str);
-            }
-            catch (std::exception&)
-            {}
-
-            try
-            {
-                dev_nodename = HardwareTransport_read_sysfs_attr((dir_itr->path() / "nodename"));
-
-                boost::trim(dev_nodename);
-            }
-            catch (std::exception&)
-            {}
-
-            if (dev_nodeid.IsAnyNode() && dev_nodename.empty())
-            {
-                continue;
-            }
-
-            o.push_back(boost::make_tuple(dev_nodeid, dev_nodename));
         }
+        catch (std::exception&)
+        {
+            continue;
+        }
+
+        try
+        {
+            std::string dev_nodeid_str = HardwareTransport_read_sysfs_attr((dev_path / "nodeid"));
+            dev_nodeid = NodeID(dev_nodeid_str);
+        }
+        catch (std::exception&)
+        {}
+
+        try
+        {
+            dev_nodename = HardwareTransport_read_sysfs_attr((dev_path / "nodename"));
+        }
+        catch (std::exception&)
+        {}
+
+        if (dev_nodeid.IsAnyNode() && dev_nodename.empty())
+        {
+            continue;
+        }
+
+        o.push_back(boost::make_tuple(dev_nodeid, dev_nodename));
     }
 
     return o;

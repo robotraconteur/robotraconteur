@@ -43,6 +43,12 @@ class RobotRaconteurNativeLoader
                 return;
             }
 
+            if (arch.indexOf("aarch64") >= 0 || arch.indexOf("arm64") >= 0)
+            {
+                System.loadLibrary("RobotRaconteurJavaNative-linux-arm64");
+                return;
+            }
+
             if (arch.indexOf("arm") >= 0)
             {
                 try
@@ -54,12 +60,6 @@ class RobotRaconteurNativeLoader
                 {}
 
                 System.loadLibrary("RobotRaconteurJavaNative-linux-armhf");
-                return;
-            }
-
-            if (arch.indexOf("aarch64") >= 0 || arch.indexOf("arm64") >= 0)
-            {
-                System.loadLibrary("RobotRaconteurJavaNative-linux-arm64");
                 return;
             }
         }

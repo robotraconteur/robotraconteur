@@ -54,20 +54,30 @@ jobs:
           arch: x64
           wheel_platform: manylinux_2_35_x86_64
         - os: ubuntu-24.04
-          runs_on: ubuntu-22.04
+          runs_on: ubuntu-24.04
           container: ""
           arch: x64
           wheel_platform: manylinux_2_39_x86_64
-        - os: debian-11
+        - os: debian-12
           runs_on: ubuntu-latest
-          container: debian:bullseye-slim
+          container: debian:bookworm-slim
           arch: x64
-          wheel_platform: manylinux_2_31_x86_64
+          wheel_platform: manylinux_2_35_x86_64
         - os: ubuntu-22.04-arm
           runs_on: ubuntu-22.04-arm
           container: ""
           arch: arm64
           wheel_platform: manylinux_2_35_aarch64
+        - os: debian-testing
+          runs_on: ubuntu-latest
+          container: debian:testing-slim
+          arch: x64
+          wheel_platform: manylinux_2_41_x86_64
+        - os: debian-testing-arm
+          runs_on: ubuntu-24.04-arm
+          container: debian:testing-slim
+          arch: arm64
+          wheel_platform: manylinux_2_41_aarch64
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -76,7 +86,7 @@ jobs:
       run: |
         sed -i 's|http://archive.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
         sed -i 's|http://security.ubuntu.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: install sudo and tzdata
@@ -96,11 +106,10 @@ jobs:
         sudo apt-get install default-jdk default-jdk-headless default-jre default-jre-headless
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf
-        automake libtool bison libpcre3-dev python3-dev python3-numpy python3-setuptools python3-wheel
+        git cmake g++ make libboost-all-dev python3-dev python3-numpy python3-setuptools python3-wheel
         python3-pytest mono-devel curl libgtest-dev -qq
     - name: apt python2.7
-      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-16.04' || matrix.config.os == 'ubuntu-18.04' }}
       run: >
         sudo apt-get install python-dev python-numpy python-setuptools python-pytest -qq
     - name: install gtest
@@ -113,9 +122,9 @@ jobs:
         cmake --build .
         sudo cmake --build . --target install
     - name: build-swig
-      uses: johnwason/swig-build-action@v1.2
+      uses: johnwason/swig-build-action@v1.3
       with:
-        cache-key: ${{ matrix.config.os }}
+        cache-key: ${{ matrix.config.os }}-${{ matrix.config.arch }}
         version: "4.4.1"
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -142,7 +151,7 @@ jobs:
         ${{ env.CMAKE_CACHE_ARGS }}
         ../robotraconteur
     - name: configure python2.7
-      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
+      if: ${{ matrix.config.os == 'ubuntu-16.04' || matrix.config.os == 'ubuntu-18.04' }}
       working-directory: build2
       run: cmake . -DBUILD_PYTHON=ON
     - name: build
@@ -232,6 +241,14 @@ jobs:
         arch: ${{ matrix.config.arch }}
         wheel_platform: ${{ matrix.config.wheel_platform }}
         rr_build_dir: ${{ env.RR_BUILD_DIR }}
+    - name: python 3.15
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') }}
+      uses: ./robotraconteur/tools/actions/build_python_ver/linux
+      with:
+        python_version: "3.15"
+        arch: ${{ matrix.config.arch }}
+        wheel_platform: ${{ matrix.config.wheel_platform }}
+        rr_build_dir: ${{ env.RR_BUILD_DIR }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -254,50 +271,24 @@ jobs:
     runs-on: ubuntu-latest
     container: gentoo/stage3:latest
     steps:
-    - uses: actions/checkout@v6
-      with:
-        path: robotraconteur
-        repository: robotraconteur/robotraconteur
-    - name: getuto
-      run: |
-        getuto
-    - name: sync-portage
-      run: |
-        emerge-webrsync --quiet
-    - name: install-deps
-      run: >-
-        emerge --getbinpkg --usepkg
-        dev-libs/boost dev-libs/openssl
-        sys-apps/dbus dev-libs/libusb net-wireless/bluez
-        dev-cpp/gtest dev-lang/python dev-python/numpy
-        dev-python/pip dev-python/pytest dev-build/cmake
-        dev-build/ninja dev-lang/swig
-    - name: config
-      run: >-
-        cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release -DPYTHON3_EXECUTABLE=/usr/bin/python3
-    - name: build
-      run: >-
-        cmake --build build --config Release
-    - name: test
-      run: >-
-        ctest --test-dir build -C Release
-        -E "robotraconteur_test_discovery_loopback|RobotRaconteurService.DiscoveryLoopback"
-        --output-on-failure
+    - uses: actions/checkout@v7
+
+    - name: Run Portage QA Scanner
+      run: tools/build_files/guru/run-gentoo-qa.sh
   build-fedora:
     runs-on: ubuntu-latest
     container: ${{ matrix.config.container }}
     strategy:
+      fail-fast: false
       matrix:
         config:
         - container: fedora:latest
         - container: fedora:rawhide
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
-        repository: robotraconteur/robotraconteur
     - name: install-pkgs
       run: >-
         yum install -y boost-devel cmake ninja-build
@@ -309,7 +300,7 @@ jobs:
       run: |
         eval $(rpm --eval '%{set_build_flags}')
         cmake -GNinja -S robotraconteur -B build -DBUILD_TESTING=ON -DBUILD_GEN=ON \
-        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_CONFIG=Release \
+        -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE=Release \
         -DPYTHON3_EXECUTABLE=/usr/bin/python3
     - name: build
       run: >-
@@ -324,10 +315,9 @@ jobs:
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
-        repository: robotraconteur/robotraconteur
     - name: install-pkgs
       run: >-
         pacman -Syu --noconfirm boost cmake ninja
@@ -362,7 +352,7 @@ jobs:
           vcpkg_triplet: x86-windows-static-md-release-vc142
           cmake_arch: Win32
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: semver
@@ -508,6 +498,12 @@ jobs:
         python_version: "3.14"
         arch: ${{ matrix.config.arch }}
         vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
+    - name: python 3.15
+      uses: ./robotraconteur/tools/actions/build_python_ver/win
+      with:
+        python_version: "3.15"
+        arch: ${{ matrix.config.arch }}
+        vcpkg_triplet: ${{ matrix.config.vcpkg_triplet }}
     - name: set matlab test env
       if: ${{ matrix.config.arch == 'x64' }}
       run: |
@@ -553,7 +549,7 @@ jobs:
   build-win-shared:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -571,6 +567,13 @@ jobs:
       uses: mikehardy/buildcache-action@v2
       with:
         cache_key: win64-shared-build-main-buildcache
+    - name: cmake cache args
+      id: cmake-cache-args
+      if: startsWith(github.ref, 'refs/tags/v') != true
+      run: >
+        echo "CMAKE_CACHE_ARGS=-DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON" | Out-File -FilePath $env:GITHUB_ENV
+        -Encoding utf8 -Append
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
@@ -621,7 +624,7 @@ jobs:
     env:
       LIBRARY_PATH: ${{ matrix.config.homebrew_root }}/opt/icu4c/lib
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: semver
@@ -712,6 +715,11 @@ jobs:
       with:
         python_version: "3.14"
         arch: ${{ matrix.config.arch }}
+    - name: python 3.15
+      uses: ./robotraconteur/tools/actions/build_python_ver/osx
+      with:
+        python_version: "3.15"
+        arch: ${{ matrix.config.arch }}
     - name: move out
       run: |
         cp build2/rrversion.txt build2/out/
@@ -736,9 +744,11 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
+    - name: apt update
+      run: sudo apt update
     - name: apt
       run: >
         sudo apt-get install zlib1g zlib1g-dev libusb-1.0-0 python3 wget curl
@@ -805,7 +815,7 @@ jobs:
     - name: matlab out tar
       run: >
         export RR_VER=`cat build2/rrversion.txt`
-        && tar -cf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz
+        && tar -czf build2/out/RobotRaconteur-$RR_VER-MATLAB-glnxa64.tar.gz
         --transform "flags=r;s|^build2/out/Matlab|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
         --transform "flags=r;s|^robotraconteur|RobotRaconteur-$RR_VER-MATLAB-glnxa64|"
         build2/out/Matlab robotraconteur/LICENSE.txt
@@ -850,7 +860,7 @@ jobs:
     runs-on: ${{ matrix.config.runner }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: semver
@@ -910,7 +920,7 @@ jobs:
         cp robotraconteur/LICENSE.txt build2/out/Matlab
         cd build2/out
         cp -r Matlab RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
-        tar -cf RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}.tar.gz RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
+        tar -czf RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}.tar.gz RobotRaconteur-$RR_VER-MATLAB-${{ matrix.config.matlab-plat-suffix }}
     - name: move out
       run: |
         cp robotraconteur/LICENSE.txt build2/out/
@@ -931,8 +941,11 @@ jobs:
 
   build-conda-win:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: cmd /C call {0}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: semver
@@ -943,22 +956,27 @@ jobs:
         channels: conda-forge,robotraconteur
     - name: conda install
       run: >
-        conda install git cmake libboost-devel python swig numpy pytest ninja pip vs2019_win-64 vs2015_runtime gtest gmock
+        conda install git cmake libboost-devel python libpython swig numpy pytest ninja pip vs2019_win-64 vs2015_runtime gtest gmock
     - name: configure
       run: >
         cmake -GNinja -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DCMAKE_BUILD_TYPE:STRING=Release
         -DROBOTRACONTEUR_VERSION_SEMVER="${{ env.ROBOTRACONTEUR_SEMVER }}"
+        -DPython3_EXECUTABLE=%CONDA_PREFIX%\python.exe
         -S robotraconteur -B build2
-      shell: cmd /C call {0}
     - name: build
       working-directory: build2
       run: cmake --build . --config Release -j 4
-      shell: cmd /C call {0}
     - name: test
       working-directory: build2
       run: |
         ctest . -C Release --output-on-failure
-      shell: cmd /C call {0}
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: 'build-artifacts-conda-win'
+        path: build2/*
+        retention-days: 2
 
   build-conda-linux:
     runs-on: ubuntu-latest
@@ -966,10 +984,10 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: bluez-src
         repository: bluez/bluez
@@ -994,7 +1012,7 @@ jobs:
         channels: conda-forge
     - name: conda install
       run: >
-        conda install git cmake libboost-devel python swig numpy pytest pip dbus make zlib openssl libusb compilers gcc_impl_linux-64 gtest gmock
+        conda install git cmake libboost-devel python libpython swig numpy pytest pip dbus make zlib openssl libusb compilers gcc_impl_linux-64 gtest gmock
     - name: printenv
       run: printenv
     - name: configure
@@ -1017,7 +1035,7 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: semver
@@ -1028,7 +1046,7 @@ jobs:
         channels: conda-forge,robotraconteur
     - name: conda install
       run: >
-        conda install git cmake libboost-devel python swig numpy pytest pip dbus clang clangxx compiler-rt openssl gtest gmock
+        conda install git cmake libboost-devel python libpython swig numpy pytest pip dbus clang clangxx compiler-rt openssl gtest gmock
     - name: configure
       run: >
         cmake -DBUILD_GEN=ON -DBUILD_PYTHON3=ON -DRR_NET_BUILD_NATIVE_ONLY=ON -DCMAKE_BUILD_TYPE:STRING=Release
@@ -1061,7 +1079,7 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: semver
@@ -1073,8 +1091,7 @@ jobs:
         sudo apt-get install
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf
-        automake libtool bison libpcre3-dev default-jdk default-jdk-headless default-jre
+        git cmake g++ make libboost-all-dev default-jdk default-jdk-headless default-jre
         default-jre-headless libgtest-dev swig -qq
     - name: mkdir build2_host
       run: mkdir -p build2_host
@@ -1168,7 +1185,7 @@ jobs:
   build-ios:
     runs-on: macos-15
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: vcpkg build
@@ -1180,6 +1197,7 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-arm64-ios-vcpkg
         token: ${{ github.token }}
+        revision: 2026.06.01
     - name: configure
       run: >
         cmake -DBUILD_TESTING=OFF -DBUILD_GEN=OFF -S robotraconteur -B build2
@@ -1217,14 +1235,15 @@ jobs:
       run:
         shell: bash -el {0}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         repository: pyodide/pyodide-recipes
         path: pyodide_recipes_src
         submodules: true
+        fetch-depth: 0
     # - name: ccache deps
     #   uses: actions/cache@v3
     #   with:
@@ -1239,16 +1258,20 @@ jobs:
       with:
         activate-environment: pyodide-env
         environment-file: pyodide_recipes_src/environment.yml
+        miniforge-version: latest
         channels: conda-forge
     - name: pip-install
       working-directory: pyodide_recipes_src
       run: |
-        pip install -r requirements.txt
-        pip install numpy
+        pip install numpy pytest pytest-xdist pytest-pyodide pytest-httpserver pytest-benchmark pytest-asyncio
     - name: deps build
       working-directory: pyodide_recipes_src
       run: |
-        ./tools/prepare_pyodide_build.sh
+        whereis python
+        python --version
+        python -m pip install ./pyodide-build/
+        pyodide --version
+        pyodide xbuildenv install
         ./tools/copy_pyodide_runtime.sh
     - name: build pregenerated_src
       run: |
@@ -1266,6 +1289,7 @@ jobs:
         export version=$(sed -n 's/^#define[ \t]*ROBOTRACONTEUR_VERSION_TEXT[ \t]*"\([^"]*\)".*/\1/p' $GITHUB_WORKSPACE/robotraconteur/RobotRaconteurCore/include/RobotRaconteur/RobotRaconteurConfig.h)
         export rr_src_path=$GITHUB_WORKSPACE/robotraconteur
         export PYODIDE_PACKAGES="tag:core,micropip,pyparsing,packaging,Jinja2,regex,pytz,numpy,libboost,pytest,pyyaml,RobotRaconteur"
+        cp -vr $GITHUB_WORKSPACE/robotraconteur/tools/build_files/pyodide-recipes/RobotRaconteur $GITHUB_WORKSPACE/pyodide_recipes_src/packages/
         j2 $GITHUB_WORKSPACE/robotraconteur/tools/build_files/pyodide-recipes/RobotRaconteur/meta.yaml.j2 > $GITHUB_WORKSPACE/pyodide_recipes_src/packages/RobotRaconteur/meta.yaml
         pyodide build-recipes --recipe-dir=$GITHUB_WORKSPACE/pyodide_recipes_src/packages --install $PYODIDE_PACKAGES
     - name: test
@@ -1277,6 +1301,15 @@ jobs:
       with:
         name: 'pyodide-dist'
         path: pyodide_recipes_src/dist/*
+    - name: prepare archive wheel
+      run: |
+        mkdir -p out/wheels
+        cp pyodide_recipes_src/dist/robotraconteur* out/wheels/
+    - name: archive wheel
+      uses: actions/upload-artifact@v7
+      with:
+        name: 'out-pyodide'
+        path: out/
     - name: archive package logs
       if: failure()
       uses: actions/upload-artifact@v7
@@ -1291,7 +1324,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         path: robotraconteur
     - uses: actions/download-artifact@v8
@@ -1332,9 +1365,10 @@ jobs:
     - build-matlab-osx
     - build-android
     - build-matlab-toolbox
+    - build-pyodide
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - uses: nuget/setup-nuget@v4
@@ -1372,7 +1406,7 @@ jobs:
     env:
       SKIP: no-commit-to-branch
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - uses: actions/setup-python@v6
     - name: apt
       run: |
@@ -1382,7 +1416,7 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: apt update
@@ -1392,8 +1426,7 @@ jobs:
         sudo apt-get install
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
-        git cmake g++ make libboost-all-dev autoconf
-        automake libtool bison libpcre3-dev curl libgtest-dev -qq
+        git cmake g++ make libboost-all-dev curl libgtest-dev -qq
     - name: pip
       run: sudo python3 -m pip install autopep8 cmakelang
     - name: clang-tidy-14
@@ -1418,7 +1451,7 @@ jobs:
   cppcheck:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: apt update
@@ -1428,8 +1461,7 @@ jobs:
         sudo apt-get install
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
-        git cmake g++ make libboost-all-dev autoconf
-        automake libtool bison libpcre3-dev curl libgtest-dev cppcheck swig -qq
+        git cmake g++ make libboost-all-dev curl libgtest-dev cppcheck swig -qq
     - name: mkdir build2
       run: mkdir -p build2
     - name: configure
@@ -1447,7 +1479,7 @@ jobs:
   codecov:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1455,8 +1487,7 @@ jobs:
         sudo apt-get install
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev
-        git cmake g++ make libboost-all-dev autoconf
-        automake libtool bison libpcre3-dev curl libgtest-dev gcovr swig
+        git cmake g++ make libboost-all-dev curl libgtest-dev gcovr swig
         python3-dev python3-numpy python3-setuptools python3-wheel python3-pytest -qq
     - name: mkdir build
       run: mkdir -p build
@@ -1492,7 +1523,7 @@ jobs:
   vcpkg-test-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v8
       id: vcpkg
@@ -1520,7 +1551,7 @@ jobs:
     env:
       VCPKG_MAX_CONCURRENCY: 2
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: apt update
       run: sudo apt update
     - name: apt
@@ -1558,7 +1589,7 @@ jobs:
   vcpkg-test-osx:
     runs-on: macos-15-intel
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v8
       id: vcpkg
@@ -1591,7 +1622,7 @@ jobs:
         - arch: x86
           wheel_arch: win32
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: Download distfiles
@@ -1633,7 +1664,7 @@ jobs:
     - build-dist
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: apt
@@ -1690,7 +1721,7 @@ jobs:
           wheel_arch: arm64
     runs-on: ${{ matrix.config.runner }}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: Download distfiles
@@ -1746,6 +1777,11 @@ jobs:
         python_version: "3.14"
         wheel_filename: RobotRaconteur-*-cp314-cp314-macosx*${{ matrix.config.wheel_arch }}.whl
         arch: ${{ matrix.config.arch }}
+    - uses: ./robotraconteur/test/dist/python/action/osx
+      with:
+        python_version: "3.15"
+        wheel_filename: RobotRaconteur-*-cp315-cp315-macosx*${{ matrix.config.wheel_arch }}.whl
+        arch: ${{ matrix.config.arch }}
     # - name: .net test
     #   uses: ./robotraconteur/test/dist/net/action/osx
 
@@ -1762,9 +1798,9 @@ jobs:
         - os: ubuntu-22.04
           runs_on: ubuntu-22.04
           container: ""
-        - os: debian-11
+        - os: debian-12
           runs_on: ubuntu-latest
-          container: debian:bullseye-slim
+          container: debian:bookworm-slim
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -1773,7 +1809,7 @@ jobs:
       run: |
         apt-get update
         apt-get install git -y
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
     - name: clone robotraconteur_companion
@@ -1791,8 +1827,7 @@ jobs:
         sudo apt-get install
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf
-        automake libtool bison libpcre3-dev curl libgtest-dev
+        git cmake g++ make libboost-all-dev  curl libgtest-dev
         libyaml-cpp-dev libopencv-dev -qq
     - name: install gtest
       if: ${{ matrix.config.os == 'ubuntu-16.04' || matrix.config.os == 'ubuntu-18.04' }}
@@ -1817,12 +1852,12 @@ jobs:
         cmake ..
         sudo make install
     - name: build-swig
-      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-11' && matrix.config.os != 'ubuntu-24.04' }}
-      uses: johnwason/swig-build-action@v1.2
+      if: ${{ !startsWith(matrix.config.os, 'ubuntu-22.04') && matrix.config.os != 'debian-12' && matrix.config.os != 'ubuntu-24.04' }}
+      uses: johnwason/swig-build-action@v1.3
       with:
         cache-key: ${{ matrix.config.os }}
     - name: apt-swig
-      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-11' || matrix.config.os == 'ubuntu-24.04' }}
+      if: ${{ startsWith(matrix.config.os, 'ubuntu-22.04') || matrix.config.os == 'debian-12' || matrix.config.os == 'ubuntu-24.04' }}
       run: sudo apt-get install swig -qq -y
     - name: cache-build
       id: cache-build
@@ -1874,10 +1909,10 @@ jobs:
   companion-build-win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: robotraconteur
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         repository: robotraconteur/robotraconteur_companion
         submodules: recursive
@@ -1953,7 +1988,7 @@ jobs:
         # - ROS_DISTRO: rolling
         #   OS_CODE_NAME: resolute
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: src/robotraconteur
     - name: apt update
@@ -1963,8 +1998,7 @@ jobs:
         sudo apt-get install
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf
-        automake libtool bison libpcre3-dev curl libgtest-dev -qq
+        git cmake g++ make libboost-all-dev curl libgtest-dev -qq
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
@@ -1991,7 +2025,7 @@ jobs:
         - ROS_DISTRO: rolling
           OS_CODE_NAME: resolute
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: src/robotraconteur
     - name: apt update
@@ -2001,8 +2035,7 @@ jobs:
         sudo apt-get install
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf
-        automake libtool bison libpcre3-dev curl libgtest-dev -qq
+        git cmake g++ make libboost-all-dev curl libgtest-dev -qq
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
       working-directory: src/robotraconteur
     - run: cp tools/build_files/ros/cmake_config_options.cmake .
@@ -2031,10 +2064,10 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: src/robotraconteur
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         repository: robotraconteur/robotraconteur_companion
         submodules: recursive
@@ -2065,7 +2098,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: src/robotraconteur
     - name: apt update
@@ -2075,11 +2108,11 @@ jobs:
         apt-get install -y
         zlib1g zlib1g-dev libssl-dev libusb-1.0-0 python3-dev python3-numpy
         libusb-1.0-0-dev libdbus-1-3 libdbus-1-dev libbluetooth3 libbluetooth-dev zlib1g zlib1g-dev
-        git cmake g++ make libboost-all-dev autoconf fakeroot
-        automake libtool bison libpcre3-dev curl libgtest-dev devscripts debhelper python3-bloom -qq
+        git cmake g++ make libboost-all-dev fakeroot
+        curl libgtest-dev devscripts debhelper python3-bloom -qq
     - name: install swig
       if: ${{ matrix.ROS_DISTRO == 'noetic' }}
-      uses: johnwason/swig-build-action@v1.2
+      uses: johnwason/swig-build-action@v1.3
       with:
         cache-key: ros-package-python-path-${{ matrix.ROS_DISTRO }}-swig
     - name: apt-swig
@@ -2095,7 +2128,7 @@ jobs:
       working-directory: src/robotraconteur
     - run: DEB_BUILD_OPTIONS=nocheck debuild -us -uc -b
       working-directory: src/robotraconteur
-    - run: sudo dpkg -i ../*robotraconteur_*.deb
+    - run: sudo dpkg -i ../*robotraconteur_*.deb || sudo apt-get install -f -y
       working-directory: src/robotraconteur
     - name: test python path
       run: |
@@ -2158,7 +2191,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: workspace/src/robotraconteur
     - name: apt update
@@ -2167,7 +2200,7 @@ jobs:
       run: >
         apt-get install -y
         git cmake g++ make autoconf fakeroot swig
-        automake libtool bison libpcre3-dev curl python3-colcon-common-extensions -qq
+        curl python3-colcon-common-extensions -qq
     - name: rosdep install
       run: |
         rosdep update --include-eol-distros
@@ -2199,7 +2232,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: workspace/src/robotraconteur
     - name: apt update
@@ -2207,15 +2240,15 @@ jobs:
     - name: apt
       run: >
         apt-get install -y
-        git cmake g++ make libboost-all-dev autoconf fakeroot
-        automake libtool bison libpcre3-dev curl libgtest-dev  -qq
+        git cmake g++ make libboost-all-dev fakeroot
+        curl libgtest-dev  -qq
     - name: rosdep install
       run: |
         rosdep update --include-eol-distros
         rosdep install --from-paths src --ignore-src -y
       working-directory: workspace
     - name: build swig
-      uses: johnwason/swig-build-action@v1.2
+      uses: johnwason/swig-build-action@v1.3
       with:
         cache-key: ros-catkin-${{ matrix.ROS_DISTRO }}-swig
     - run: ./tools/build_files/generated_src/populate_generated_src.bash
@@ -2242,7 +2275,7 @@ jobs:
   #     run:
   #       shell: cmd /C CALL {0}
   #   steps:
-  #   - uses: actions/checkout@v6
+  #   - uses: actions/checkout@v7
   #     with:
   #       path: workspace/src/robotraconteur
   #   - name: miniconda
@@ -2289,7 +2322,7 @@ jobs:
   #     run:
   #       shell: bash -el {0}
   #   steps:
-  #   - uses: actions/checkout@v6
+  #   - uses: actions/checkout@v7
   #     with:
   #       path: workspace/src/robotraconteur
   #   - name: miniconda
@@ -2328,7 +2361,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         path: workspace/src/robotraconteur
     - name: update brew

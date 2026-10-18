@@ -42,9 +42,15 @@ bool LibUsb_Functions::LoadFunctions()
 {
     if (lib_handle)
         throw InvalidOperationException("libusb functions already loaded");
-    lib_handle = dlopen("libusb-1.0.so", RTLD_LAZY);
+    lib_handle = dlopen("libusb-1.0.so.0", RTLD_LAZY);
+    if (!lib_handle)
+    {
+        lib_handle = dlopen("libusb-1.0.so", RTLD_LAZY);
+    }
     if (!lib_handle)
         return false;
+    else
+        dlerror();
 
     LIBUSB_FUNCTIONS_INIT(LIBUSB_FUNCTIONS_PTR_INIT);
 
@@ -403,6 +409,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                 int f_bos = open(bos_path.c_str(), O_RDONLY);
                 if (f_bos >= 0)
                 {
+                    sysfs_bos_desc.clear();
                     sysfs_bos_desc.resize(UINT16_MAX);
                     int bos_len = (int)read(f_bos, &sysfs_bos_desc[0], UINT16_MAX);
                     if (bos_len > 0)
@@ -436,7 +443,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                                 {
                                     break;
                                 }
-                                std::vector<uint8_t> desc(&sysfs_bos_desc[p + 4], &sysfs_bos_desc[p + len]);
+                                std::vector<uint8_t> desc(&sysfs_bos_desc[0] + p + 4U, &sysfs_bos_desc[0] + p + len);
                                 platform_bos_desc.push_back(desc);
                             }
                             p += len;

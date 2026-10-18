@@ -21,6 +21,7 @@
 #include "RobotRaconteur/RobotRaconteurNode.h"
 
 #ifdef ROBOTRACONTEUR_WINDOWS
+#include <boost/thread/once.hpp>
 #ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
 #define CREATE_WAITABLE_TIMER_HIGH_RESOLUTION 0x00000002
 #endif
@@ -35,6 +36,53 @@
 
 namespace RobotRaconteur
 {
+
+#ifdef ROBOTRACONTEUR_WINDOWS
+namespace detail
+{
+// CreateWaitableTimerExA is not available on Windows XP, so load it dynamically
+typedef HANDLE(WINAPI* FPCreateWaitableTimerExA)(LPSECURITY_ATTRIBUTES, LPCSTR, DWORD, DWORD);
+static boost::once_flag create_waitable_timer_ex_once = BOOST_ONCE_INIT;
+static FPCreateWaitableTimerExA create_waitable_timer_ex_ptr = NULL;
+
+static void InitCreateWaitableTimerExA()
+{
+    const HMODULE lib = GetModuleHandleW(L"kernel32.dll");
+    if (lib != NULL)
+    {
+        create_waitable_timer_ex_ptr =
+            reinterpret_cast<FPCreateWaitableTimerExA>(::GetProcAddress(lib, "CreateWaitableTimerExA"));
+    }
+}
+
+static FPCreateWaitableTimerExA GetCreateWaitableTimerExA()
+{
+    boost::call_once(create_waitable_timer_ex_once, &InitCreateWaitableTimerExA);
+    return create_waitable_timer_ex_ptr;
+}
+
+static HANDLE CreateHighResolutionWaitableTimer()
+{
+    FPCreateWaitableTimerExA create_waitable_timer_ex = GetCreateWaitableTimerExA();
+    if (create_waitable_timer_ex != NULL)
+    {
+        HANDLE timer = create_waitable_timer_ex(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
+        if (timer == NULL)
+        {
+            // Try again without high resolution
+            timer = create_waitable_timer_ex(NULL, NULL, 0, TIMER_ALL_ACCESS);
+        }
+        if (timer != NULL)
+        {
+            return timer;
+        }
+    }
+
+    // Fall back to standard resolution synchronization timer
+    return CreateWaitableTimerA(NULL, FALSE, NULL);
+}
+} // namespace detail
+#endif
 
 TimerEvent::TimerEvent() { stopped = false; }
 
@@ -231,12 +279,7 @@ WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& no
     }
     this->period = boost::posix_time::microseconds(boost::lexical_cast<int64_t>(1000000.0 / frequency));
 #ifdef ROBOTRACONTEUR_WINDOWS
-    HANDLE timer = CreateWaitableTimerExA(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
-    if (timer == NULL)
-    {
-        // Try again without high resolution
-        timer = CreateWaitableTimerExA(NULL, NULL, 0, TIMER_ALL_ACCESS);
-    }
+    HANDLE timer = detail::CreateHighResolutionWaitableTimer();
 
     if (timer == NULL)
     {
@@ -319,12 +362,7 @@ void WallRate::Sleep()
 void HighResolutionSleep(const boost::posix_time::time_duration& duration)
 {
 #ifdef ROBOTRACONTEUR_WINDOWS
-    HANDLE timer = CreateWaitableTimerExA(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
-    if (timer == NULL)
-    {
-        // Try again without high resolution
-        timer = CreateWaitableTimerExA(NULL, NULL, 0, TIMER_ALL_ACCESS);
-    }
+    HANDLE timer = detail::CreateHighResolutionWaitableTimer();
 
     if (timer == NULL)
     {

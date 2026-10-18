@@ -547,6 +547,7 @@ class ROBOTRACONTEUR_CORE_API GeneratorServerBase : private boost::noncopyable
         if (err2)
         {
             GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), err2, index, m, ep);
+            return;
         }
 
         RR_INTRUSIVE_PTR<MessageElement> v3 =
@@ -569,6 +570,7 @@ class ROBOTRACONTEUR_CORE_API GeneratorServerBase : private boost::noncopyable
         if (err2)
         {
             GeneratorServerBase::EndAsyncCallNext(skel, RR_INTRUSIVE_PTR<MessageElement>(), err2, index, m, ep);
+            return;
         }
 
         RR_INTRUSIVE_PTR<MessageElement> v3;

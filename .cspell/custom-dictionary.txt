@@ -287,3 +287,6 @@ stest
 dtype
 myobj
 mklink
+ENISA
+CSIRTs
+devtmpfs

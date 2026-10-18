@@ -468,11 +468,8 @@ class RRPrimUtil<std::string>
     static DataTypes GetTypeID() { return DataTypes_string_t; }
     static MessageStringPtr GetElementTypeString() { return MessageStringPtr(""); }
     static boost::string_ref GetRRElementTypeString() { return ""; }
-    static RR_INTRUSIVE_PTR<RRValue> PrePack(boost::string_ref val) { return rr_cast<RRValue>(stringToRRArray(val)); }
-    static std::string PreUnpack(const RR_INTRUSIVE_PTR<RRValue>& val)
-    {
-        return RRArrayToString(rr_cast<RRArray<char> >(val));
-    }
+    static RR_INTRUSIVE_PTR<RRValue> PrePack(boost::string_ref val);
+    static std::string PreUnpack(const RR_INTRUSIVE_PTR<RRValue>& val);
 
     virtual ~RRPrimUtil(){};
 
@@ -487,7 +484,7 @@ class RRPrimUtil<std::string>
         static DataTypes GetTypeID() { return code; }                                                                  \
         static MessageStringPtr GetElementTypeString() { return MessageStringPtr(""); }                                \
         static boost::string_ref GetRRElementTypeString() { return ""; }                                               \
-        static RR_INTRUSIVE_PTR<RRArray<x> > PrePack(const x& val) { return ScalarToRRArray(val); }                    \
+        static RR_INTRUSIVE_PTR<RRArray<x> > PrePack(const x& val);                                                    \
         template <typename U>                                                                                          \
         static x PreUnpack(const U& val)                                                                               \
         {                                                                                                              \
@@ -745,6 +742,38 @@ class RRArray : public RRBaseArray
     size_t element_count;
     bool owned;
 };
+
+// RRPrimUtil members that create or destroy RR_INTRUSIVE_PTR<RRArray<T> > are defined here, after RRArray is
+// complete, so intrusive_ptr_release can be found by ADL when ~intrusive_ptr is instantiated (C++20 constexpr)
+inline RR_INTRUSIVE_PTR<RRValue> RRPrimUtil<std::string>::PrePack(boost::string_ref val)
+{
+    return rr_cast<RRValue>(stringToRRArray(val));
+}
+
+inline std::string RRPrimUtil<std::string>::PreUnpack(const RR_INTRUSIVE_PTR<RRValue>& val)
+{
+    return RRArrayToString(rr_cast<RRArray<char> >(val));
+}
+
+#define RRPrimUtilNumericPrePack(x)                                                                                    \
+    inline RR_INTRUSIVE_PTR<RRArray<x> > RRPrimUtil<x>::PrePack(const x& val) { return ScalarToRRArray(val); }
+
+RRPrimUtilNumericPrePack(double);
+RRPrimUtilNumericPrePack(float);
+RRPrimUtilNumericPrePack(int8_t);
+RRPrimUtilNumericPrePack(uint8_t);
+RRPrimUtilNumericPrePack(int16_t);
+RRPrimUtilNumericPrePack(uint16_t);
+RRPrimUtilNumericPrePack(int32_t);
+RRPrimUtilNumericPrePack(uint32_t);
+RRPrimUtilNumericPrePack(int64_t);
+RRPrimUtilNumericPrePack(uint64_t);
+RRPrimUtilNumericPrePack(char);
+RRPrimUtilNumericPrePack(cdouble);
+RRPrimUtilNumericPrePack(cfloat);
+RRPrimUtilNumericPrePack(rr_bool);
+
+#undef RRPrimUtilNumericPrePack
 
 template <typename T>
 class RRMap_keytype
