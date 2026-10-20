@@ -140,6 +140,12 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS)
             message(FATAL_ERROR "RobotRaconteurGen not found")
         endif()
         set(RobotRaconteurGen_EXECUTABLE "$<TARGET_FILE:RobotRaconteurGen>")
+        if(UNIX AND NOT APPLE AND TARGET RobotRaconteurCore)
+            # RobotRaconteurGen may be built without RPATH (ROBOTRACONTEUR_SKIP_RPATH)
+            set(RobotRaconteurGen_EXECUTABLE
+                ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:RobotRaconteurCore>:$ENV{LD_LIBRARY_PATH}"
+                ${RobotRaconteurGen_EXECUTABLE})
+        endif()
         set(RR_GEN_DEPENDS RobotRaconteurGen)
     endif()
 
