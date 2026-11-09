@@ -92,4 +92,11 @@ std::vector<T> GetTestVector(const std::string& name)
     throw std::runtime_error("Test vector not found: " + name);
 }
 
+// Returns a new RRArray holding the named vector. T must match the type stored in the blob.
+template <typename T>
+RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> > GetTestRRArray(const std::string& name)
+{
+    return RobotRaconteur::VectorToRRArray<T>(GetTestVector<T>(name));
+}
+
 } // namespace RobotRaconteurTest

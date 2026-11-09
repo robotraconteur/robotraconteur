@@ -611,8 +611,8 @@ class ServiceTest2_test_sequence_gen
 {
     private uint counter;
     private uint step;
-    static readonly double[] double_constants = TestVectors.GetDoubles("seq.double_constants");
-    static readonly uint[] uint32_constants = TestVectors.GetUInt32s("seq.uint32_constants");
+    static readonly double[] double_constants = TestVectors.Get<double>("seq.double_constants");
+    static readonly uint[] uint32_constants = TestVectors.Get<uint>("seq.uint32_constants");
 
     public ServiceTest2_test_sequence_gen(uint seed)
     {

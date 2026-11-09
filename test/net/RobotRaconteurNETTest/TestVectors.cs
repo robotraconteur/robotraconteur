@@ -8,28 +8,79 @@ static class TestVectors
     private const int HeaderSize = 24;
     private const int EntrySize = 64;
     private const int NameSize = 48;
-    private const uint TypeDouble = 1;
-    private const uint TypeUInt32 = 8;
     private static readonly byte[] Blob = Load();
 
-    public static double[] GetDoubles(string name)
+    // Returns a copy of the named vector. T must match the type stored in the blob.
+    public static T[] Get<T>(string name)
+        where T : struct
     {
+        uint type;
+        int elementSize;
+        GetTypeInfo(typeof(T), out type, out elementSize);
         int offset;
         int count;
-        Find(name, TypeDouble, 8, out offset, out count);
-        var result = new double[count];
-        Buffer.BlockCopy(Blob, offset, result, 0, count * 8);
+        Find(name, type, elementSize, out offset, out count);
+        var result = new T[count];
+        Buffer.BlockCopy(Blob, offset, result, 0, count * elementSize);
         return result;
     }
 
-    public static uint[] GetUInt32s(string name)
+    private static void GetTypeInfo(Type t, out uint type, out int elementSize)
     {
-        int offset;
-        int count;
-        Find(name, TypeUInt32, 4, out offset, out count);
-        var result = new uint[count];
-        Buffer.BlockCopy(Blob, offset, result, 0, count * 4);
-        return result;
+        if (t == typeof(double))
+        {
+            type = 1;
+            elementSize = 8;
+        }
+        else if (t == typeof(float))
+        {
+            type = 2;
+            elementSize = 4;
+        }
+        else if (t == typeof(sbyte))
+        {
+            type = 3;
+            elementSize = 1;
+        }
+        else if (t == typeof(byte))
+        {
+            type = 4;
+            elementSize = 1;
+        }
+        else if (t == typeof(short))
+        {
+            type = 5;
+            elementSize = 2;
+        }
+        else if (t == typeof(ushort))
+        {
+            type = 6;
+            elementSize = 2;
+        }
+        else if (t == typeof(int))
+        {
+            type = 7;
+            elementSize = 4;
+        }
+        else if (t == typeof(uint))
+        {
+            type = 8;
+            elementSize = 4;
+        }
+        else if (t == typeof(long))
+        {
+            type = 9;
+            elementSize = 8;
+        }
+        else if (t == typeof(ulong))
+        {
+            type = 10;
+            elementSize = 8;
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported test vector type: " + t);
+        }
     }
 
     private static void Find(string name, uint type, int elementSize, out int offset, out int count)

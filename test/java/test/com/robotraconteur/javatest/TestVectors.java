@@ -14,7 +14,15 @@ final class TestVectors
     private static final int ENTRY_SIZE = 64;
     private static final int NAME_SIZE = 48;
     private static final int TYPE_DOUBLE = 1;
+    private static final int TYPE_SINGLE = 2;
+    private static final int TYPE_INT8 = 3;
+    private static final int TYPE_UINT8 = 4;
+    private static final int TYPE_INT16 = 5;
+    private static final int TYPE_UINT16 = 6;
+    private static final int TYPE_INT32 = 7;
     private static final int TYPE_UINT32 = 8;
+    private static final int TYPE_INT64 = 9;
+    private static final int TYPE_UINT64 = 10;
     private static final ByteBuffer BLOB = load();
 
     private TestVectors()
@@ -22,16 +30,68 @@ final class TestVectors
 
     static double[] getDoubles(String name)
     {
-        ByteBuffer data = find(name, TYPE_DOUBLE);
+        ByteBuffer data = find(name, TYPE_DOUBLE, 8);
         double[] result = new double[data.remaining() / 8];
         data.asDoubleBuffer().get(result);
         return result;
     }
 
+    static float[] getFloats(String name)
+    {
+        ByteBuffer data = find(name, TYPE_SINGLE, 4);
+        float[] result = new float[data.remaining() / 4];
+        data.asFloatBuffer().get(result);
+        return result;
+    }
+
+    static byte[] getBytes(String name)
+    {
+        return bytes(find(name, TYPE_INT8, 1));
+    }
+
+    /** Returns uint8 values with the same bits as a signed byte. */
+    static byte[] getUInt8s(String name)
+    {
+        return bytes(find(name, TYPE_UINT8, 1));
+    }
+
+    static short[] getShorts(String name)
+    {
+        return shorts(find(name, TYPE_INT16, 2));
+    }
+
+    /** Returns uint16 values with the same bits as a signed short. */
+    static short[] getUInt16s(String name)
+    {
+        return shorts(find(name, TYPE_UINT16, 2));
+    }
+
+    static int[] getInts(String name)
+    {
+        return ints(find(name, TYPE_INT32, 4));
+    }
+
+    /** Returns uint32 values with the same bits as a signed int. */
+    static int[] getUInt32s(String name)
+    {
+        return ints(find(name, TYPE_UINT32, 4));
+    }
+
+    static long[] getLongs(String name)
+    {
+        return longs(find(name, TYPE_INT64, 8));
+    }
+
+    /** Returns uint64 values with the same bits as a signed long. */
+    static long[] getUInt64s(String name)
+    {
+        return longs(find(name, TYPE_UINT64, 8));
+    }
+
     /** Returns uint32 values widened to long so they keep their unsigned value. */
     static long[] getUInt32AsLongs(String name)
     {
-        ByteBuffer data = find(name, TYPE_UINT32);
+        ByteBuffer data = find(name, TYPE_UINT32, 4);
         long[] result = new long[data.remaining() / 4];
         for (int i = 0; i < result.length; i++)
         {
@@ -40,7 +100,35 @@ final class TestVectors
         return result;
     }
 
-    private static ByteBuffer find(String name, int type)
+    private static byte[] bytes(ByteBuffer data)
+    {
+        byte[] result = new byte[data.remaining()];
+        data.get(result);
+        return result;
+    }
+
+    private static short[] shorts(ByteBuffer data)
+    {
+        short[] result = new short[data.remaining() / 2];
+        data.asShortBuffer().get(result);
+        return result;
+    }
+
+    private static int[] ints(ByteBuffer data)
+    {
+        int[] result = new int[data.remaining() / 4];
+        data.asIntBuffer().get(result);
+        return result;
+    }
+
+    private static long[] longs(ByteBuffer data)
+    {
+        long[] result = new long[data.remaining() / 8];
+        data.asLongBuffer().get(result);
+        return result;
+    }
+
+    private static ByteBuffer find(String name, int type, int elementSize)
     {
         ByteBuffer blob = BLOB.duplicate().order(ByteOrder.LITTLE_ENDIAN);
         int entryCount = blob.getInt(16);
@@ -57,7 +145,7 @@ final class TestVectors
             }
             int count = blob.getInt(entry + 52);
             int offset = blob.getInt(entry + 56);
-            long byteCount = ((long)count) * (type == TYPE_DOUBLE ? 8 : 4);
+            long byteCount = ((long)count) * elementSize;
             if (count < 0 || offset < 0 || offset + byteCount > blob.capacity())
             {
                 throw new IllegalStateException("Test vector out of bounds: " + name);
