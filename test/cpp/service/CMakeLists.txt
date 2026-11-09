@@ -16,6 +16,16 @@ robotraconteur_generate_thunk(
     INCLUDE_DIRS
     ${ROBOTRACONTEUR_TEST_ROBDEF_DIR})
 
+rr_test_embed_binary(
+    INPUT
+    "${ROBOTRACONTEUR_TEST_VECTORS_BIN}"
+    OUTPUT
+    "${CMAKE_CURRENT_BINARY_DIR}/test_vectors_data.cpp"
+    NAMESPACE
+    RobotRaconteurTest
+    NAME
+    test_vectors_data)
+
 rr_service_test_add_lib(
     service_lib
     SRC
@@ -27,6 +37,7 @@ rr_service_test_add_lib(
     ServiceTestClient3.cpp
     CompareArray.cpp
     service_test_utils.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/test_vectors_data.cpp"
     ${RR_THUNK_SRCS})
 
 rr_service_test_add_test(service SRC service_test.cpp ${RR_THUNK_SRCS})

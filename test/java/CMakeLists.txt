@@ -49,6 +49,8 @@ if(NOT ANDROID)
     add_custom_command(
         TARGET RobotRaconteurJavaTest
         POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy "${ROBOTRACONTEUR_TEST_VECTORS_BIN}"
+                "${CMAKE_CURRENT_BINARY_DIR}/test/test_vectors.bin"
         COMMAND
             ${CMAKE_COMMAND} -E make_directory
             "${CMAKE_BINARY_DIR}/test/$<$<CONFIG:debug>:out_debug>$<$<CONFIG:release>:out>$<$<CONFIG:relwithdebinfo>:out_reldebug>/Java"

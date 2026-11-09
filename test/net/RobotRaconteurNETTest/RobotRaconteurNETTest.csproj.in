@@ -161,6 +161,12 @@
   <Compile Include="$(RRSourceDir)\LFSRSeqGen.cs">
 		<Link>LFSRSeqGen.cs</Link>
 	</Compile>
+  <Compile Include="$(RRSourceDir)\TestVectors.cs">
+		<Link>TestVectors.cs</Link>
+	</Compile>
+  <EmbeddedResource Include="@ROBOTRACONTEUR_TEST_VECTORS_BIN@">
+		<LogicalName>test_vectors.bin</LogicalName>
+	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(RRSourceDir)\app.config">
