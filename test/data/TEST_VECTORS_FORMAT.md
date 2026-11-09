@@ -6,8 +6,8 @@ A test vector blob is one binary file that holds named numeric arrays for tests.
 often in different languages, must agree on the same large set of values. It replaces long array literals copied into
 each language, and keeps one copy of the data.
 
-Keep short, readable fixtures as ordinary literals. A blob is worthwhile when the data is long, opaque, or shared across
-languages.
+A blob is worthwhile when the data is long or opaque, or whenever several languages must agree on it, however short it
+is. Fixtures used by only one program can stay as ordinary literals.
 
 The blob is frozen test data. Changing a value breaks interoperability with test programs built against the old data,
 so add new vectors instead of editing existing ones.
@@ -104,8 +104,8 @@ The codes match the Robot Raconteur `DataTypes` enumeration.
 Arrays are stored as flat, packed elements. Writers pad between arrays with zero bytes so each array starts on an 8-byte
 boundary. Readers must copy values out instead of casting into the blob.
 
-Multidimensional arrays are stored flat. Their dimensions stay in the test code, and the test code defines the storage
-order.
+Multidimensional arrays are stored flat. Store their dimensions as a separate `uint32` vector named `<name>.dims`. The
+test code defines the storage order.
 
 ## Naming convention
 
@@ -116,6 +116,7 @@ Use dot-separated lowercase names in the form `<group>.<property>[.<direction>]`
 | `seq.double_constants` | Lookup table for a sequence generator              |
 | `ts1.i16_2.to_service` | Value that a client writes to a service property   |
 | `ts1.i16_2.to_client`  | Value that a service returns from a property       |
+| `ts1.d5.to_client.dims` | Dimensions of the multidimensional vector `ts1.d5.to_client` |
 
 ## Reader requirements
 

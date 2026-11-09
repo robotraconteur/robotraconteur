@@ -55,26 +55,23 @@ class ServiceTestClient:
         assert self._r.d1 == 12.345
         self._r.d2 = get_test_vector("ts1.d2.to_service", "double")
         ca(self._r.d2, get_test_vector("ts1.d2.to_client", "double"))
-        self._r.d3 = [9.025110e-18, 3.567231e+17, 2.594489e+01, 2.311708e-04, 7.345164e+13, 6.550284e-01, 1.969554e+12, 9.451979e-05,
-                      5.900637e-09, 9.975667e+03, 6.549533e-17, 2.227145e-13, 2.822132e+18, 4.332600e+18, 1.485466e+05, 5.844952e-14]
-        ca(self._r.d3, [2.047398e-20, 2.091541e-20, 9.084241e+14, 1.583413e+01, 5.168067e-02, 1.360920e-11, 9.818531e-21,
-           6.293083e+07, 4.406956e-14, 8.540213e-09, 7.329310e-03, 5.566796e+00, 3.968358e-08, 4.928656e-08, 5.994301e-20, 8.281551e-21])
-        self._r.d4 = [-4.207179e-09, -3.611333e+11, -4.155626e-06, -2.458459e+10, 2.826045e-11, 3.511191e-08,
-                      4.759250e-07, 2.455883e+09, 4.182578e+11, 4.732337e-14, -2.967313e+02, -4.139188e+14, 6.287269e+03]
-        ca(self._r.d4, [2.864760e-08, 3.900663e+13, 9.105789e+11,
-           2.943743e-15, -2.823159e-16, -3.481261e+19])
-        d5_1 = np.array(get_test_vector("ts1.d5.to_service", "double")).reshape([8, 6, 2], order="F")
+        self._r.d3 = get_test_vector("ts1.d3.to_service", "double")
+        ca(self._r.d3, get_test_vector("ts1.d3.to_client", "double"))
+        self._r.d4 = get_test_vector("ts1.d4.to_service", "double")
+        ca(self._r.d4, get_test_vector("ts1.d4.to_client", "double"))
+        d5_1 = np.array(get_test_vector("ts1.d5.to_service", "double")).reshape(
+            get_test_vector("ts1.d5.to_service.dims", "uint32"), order="F")
         self._r.d5 = d5_1
         d5_2 = self._r.d5
         nptest.assert_allclose(d5_2, np.array(get_test_vector(
-            "ts1.d5.to_client", "double")).reshape((5, 6, 5), order="F"))
+            "ts1.d5.to_client", "double")).reshape(get_test_vector("ts1.d5.to_client.dims", "uint32"), order="F"))
 
-        d6_1 = np.array([-5.528040e-08, 3.832644e-01, -9.139211e-22, -4.919312e-05, 3.809620e-11,
-                        1.751983e-09, 2.207872e-21, 1.432794e+09, -1.970313e+11]).reshape((3, 3), order="F")
+        d6_1 = np.array(get_test_vector("ts1.d6.to_service", "double")).reshape(
+            get_test_vector("ts1.d6.to_service.dims", "uint32"), order="F")
         self._r.d6 = d6_1
         d6_2 = self._r.d6
-        nptest.assert_allclose(d6_2, np.array([4.427272e-10, -1.149547e-08, -1.134096e+16, -4.932974e-03, -
-                               7.702447e-01, -3.468374e-03, -5.037849e-14, -4.140513e-08, 4.553774e+03]).reshape((3, 3), order="F"))
+        nptest.assert_allclose(d6_2, np.array(get_test_vector("ts1.d6.to_client", "double")).reshape(
+            get_test_vector("ts1.d6.to_client.dims", "uint32"), order="F"))
 
         self._r.s1 = 3847.9283
         val = self._r.s1
@@ -89,12 +86,13 @@ class ServiceTestClient:
         assert self._r.u8_1 == 222
         self._r.u8_2 = get_test_vector("ts1.u8_2.to_service", "uint8")
         nptest.assert_array_equal(self._r.u8_2, get_test_vector("ts1.u8_2.to_client", "uint8"))
-        u8_3_1 = np.array(get_test_vector("ts1.u8_3.to_service", "uint8"), dtype=np.uint8).reshape([30, 10], order="F")
+        u8_3_1 = np.array(get_test_vector("ts1.u8_3.to_service", "uint8"), dtype=np.uint8).reshape(
+            get_test_vector("ts1.u8_3.to_service.dims", "uint32"), order="F")
         self._r.u8_3 = u8_3_1
         u8_3_2 = self._r.u8_3
 
         nptest.assert_array_equal(u8_3_2, np.array(get_test_vector("ts1.u8_3.to_client",
-                                  "uint8"), dtype=np.uint8).reshape([10, 20], order="F"))
+                                  "uint8"), dtype=np.uint8).reshape(get_test_vector("ts1.u8_3.to_client.dims", "uint32"), order="F"))
 
         self._r.i16_1 = 2387
         assert self._r.i16_1 == -13428
@@ -150,10 +148,9 @@ class ServiceTestClient:
         ca(s1.struct1.mydat, get_test_vector("ts1.struct1.struct1_mydat.to_client", "double"))
         assert len(s1.dstruct2) == 2
         ca(s1.dstruct2["test1"].mydat, get_test_vector("ts1.struct1.dstruct2_1.to_client", "double"))
-        ca(s1.dstruct2["anothertest"].mydat, [4.856615e+15, 5.981566e-22, 1.433616e+14, 1.747102e-09, 2.850376e+06, -3.748685e-08, -4.969544e-21, 2.530419e-01,
-           4.393913e-09, 3.837331e+04, -4.315065e-04, -1.073834e-17, 1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13, -1.937982e+02])
+        ca(s1.dstruct2["anothertest"].mydat, get_test_vector("ts1.struct1.dstruct2_3.to_client", "double"))
         nptest.assert_allclose(s1.multidimarray, np.array(get_test_vector(
-            "ts1.struct1.multidimarray.to_client", "double")).reshape((10, 10), order="F"))
+            "ts1.struct1.multidimarray.to_client", "double")).reshape(get_test_vector("ts1.struct1.multidimarray.to_client.dims", "uint32"), order="F"))
         assert s1.var3.data == "This is a vartype string"
         print(s1)
         s2 = RRN.NewStructure(
@@ -192,9 +189,8 @@ class ServiceTestClient:
         s2_ls3_2.mydat = get_test_vector("ts1.struct1.dstruct2_2.to_service", "double")
         s2.lstruct3 = [s2_ls3_1, s2_ls3_2]
         s2.multidimarray = np.array(get_test_vector("ts1.struct1.multidimarray.to_service",
-                                    "double")).reshape([10, 10], order="F")
-        s2.var3 = RR.VarValue([6.404176e-12, 9.258110e-03, 8.657620e-03, -2.064381e+00, 5.182360e-16, 4.167658e-16, -4.533051e-19,
-                              5.357520e+18, -4.990383e-13, 2.286982e+08, -4.727256e-18, 1.465299e-17, 3.000340e-10, -2.304453e-04], "double[]")
+                                    "double")).reshape(get_test_vector("ts1.struct1.multidimarray.to_service.dims", "uint32"), order="F")
+        s2.var3 = RR.VarValue(get_test_vector("ts1.struct1.var3.to_service", "double"), "double[]")
         self._r.struct1 = s2
         s3 = RRN.NewStructure(
             "com.robotraconteur.testing.TestService1.teststruct2", self._r)
@@ -222,34 +218,27 @@ class ServiceTestClient:
         self._r.is_d2 = is_d2_2
         is_d3_1 = self._r.is_d3
         assert len(is_d3_1) == 2
-        ca(is_d3_1[12], [8.609080e-13, 3.946603e+03, 2.994203e-10, 3.200877e+14, 1.747361e-09, 2.827056e-16, -3.676613e-18, 1.886901e-14, -9.970511e-12,
-           1.932468e-18, -3.629253e-05, 4.903023e-12, -3.919949e-10, 4.982164e+07, 3.823096e-20, -4.044068e-13, 3.114078e+09, 7.572697e-12, -2.619929e+04, -3.882046e+01])
-        ca(is_d3_1[832], [4.750899e+00, 3.924377e+18, -2.735066e+17, 4.095362e-21, -2.407932e+09, 4.059499e+10, 1.376975e-10, -8.547220e-21, -1.344568e-20,
-           2.809398e+03, 2.118944e-06, 2.435328e-03, -1.410999e-12, 9.907226e-04, -9.745948e-20, 1.270118e+15, -2.833333e+05, 1.032636e-10, 5.312574e+13, -2.651512e+02])
+        ca(is_d3_1[12], get_test_vector("ts1.is_d3.to_client.a", "double"))
+        ca(is_d3_1[832], get_test_vector("ts1.is_d3.to_client.b", "double"))
         is_d3_2 = {}
-        is_d3_2[47] = [4.335907e-08, -3.270294e-03, 1.752801e-01, 1.235219e-20, -4.348647e+02, -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13, -
-                       3.380846e-05, 4.350998e+03, 4.539570e+11, 8.981827e+09, 3.326114e+01, 2.975688e+06, -1.017456e-12, 2.989498e-03, 2.842392e-03, -1.258677e-21, 1.068563e-15]
-        is_d3_2[324] = [3.239279e+12, 1.047689e+17, -1.236114e+17, -4.002822e-17, 2.657374e-03, 7.383907e-19, -5.067889e-13, -4.195122e-12, 3.642885e-01, -
-                        2.946040e+14, 5.522403e-08, 6.603132e+04, 1.464154e+05, -1.851534e-08, 2.808294e-13, -2.702278e-11, 3.850704e-06, -2.453957e+02, -3.015401e-02, 1.654070e+05]
+        is_d3_2[47] = get_test_vector("ts1.is_d3.to_service.a", "double")
+        is_d3_2[324] = get_test_vector("ts1.is_d3.to_service.b", "double")
         self._r.is_d3 = is_d3_2
         is_d4_1 = self._r.is_d4
         assert len(is_d4_1) == 2
-        ca(is_d4_1["testval1"], [1.113851e-04, 3.830104e+07, 4.571169e-21, -4.064180e-05, 2.889736e+01, -1.790060e-06, 4.608538e+00, 4.687713e-04, 1.387717e-08,
-           3.914187e-18, -5.618118e-06, 1.530811e+05, -5.848922e-11, -3.397558e-20, -6.597368e-08, -3.779049e-06, 2.406033e-19, 2.507939e-10, 3.246113e-20, 1.341205e+16])
-        ca(is_d4_1["testval2"], [-3.088190e-13, -4.033334e-20, 4.150103e-21, -6.610855e+17, 3.688824e-13, -3.208025e+13, -5.034888e-11, -4.098363e-06, -1.272830e-03,
-           2.748392e-03, -2.644272e-06, -4.810065e-18, 4.629861e-19, -5.444015e-03, 4.046008e+17, -3.548079e+12, -3.455290e+16, -3.668946e-12, -3.522178e-01, -1.537583e+14])
+        ca(is_d4_1["testval1"], get_test_vector("ts1.is_d4.to_client.a", "double"))
+        ca(is_d4_1["testval2"], get_test_vector("ts1.is_d4.to_client.b", "double"))
         is_d4_2 = {}
-        is_d4_2["testval3"] = [1.771838e+06, 3.037284e-01, -1.739742e-02, 1.399508e-20, 3.605232e-21, 3.517522e+14, 4.887514e+14, 3.505442e-03, -3.968972e+18,
-                               1.422037e-20, 2.596937e-21, 4.852833e-11, 6.852955e-17, 4.765526e-12, -3.445954e+16, 2.322531e-14, -1.755122e-12, 3.941875e+00, 8.877046e-13, 2.818923e-02]
-        is_d4_2["testval4"] = [4.146439e+16, 2.923439e-07, 3.549608e+16, -1.664891e-01, -4.192309e-15, 3.857317e+05, -1.101076e+00, 1.213105e+19, 3.237584e-14, -
-                               2.421219e-06, -4.603196e-05, -3.719535e-10, 1.124961e+06, 2.032849e+10, 4.639704e-22, 3.946835e+01, -9.267263e+01, -4.456188e+11, 3.470487e+08, 7.918764e+10]
+        is_d4_2["testval3"] = get_test_vector("ts1.is_d4.to_service.a", "double")
+        is_d4_2["testval4"] = get_test_vector("ts1.is_d4.to_service.b", "double")
         self._r.is_d4 = is_d4_2
         is_d5_1 = self._r.is_d5
         assert len(is_d5_1) == 1
         is_d5_1_1 = is_d5_1[564]
         nptest.assert_allclose(is_d5_1_1, np.array(get_test_vector(
-            "ts1.is_d5.to_client", "double")).reshape([10, 10], order="F"))
-        is_d5_2_1 = np.array(get_test_vector("ts1.is_d5.to_service", "double")).reshape([10, 20], order="F")
+            "ts1.is_d5.to_client", "double")).reshape(get_test_vector("ts1.is_d5.to_client.dims", "uint32"), order="F"))
+        is_d5_2_1 = np.array(get_test_vector("ts1.is_d5.to_service", "double")).reshape(
+            get_test_vector("ts1.is_d5.to_service.dims", "uint32"), order="F")
         is_d5_2 = {}
         is_d5_2[328] = is_d5_2_1
         self._r.is_d5 = is_d5_2
@@ -258,8 +247,9 @@ class ServiceTestClient:
         is_d6_1_1 = is_d6_1["testval1"]
 
         nptest.assert_allclose(is_d6_1_1, np.array(get_test_vector(
-            "ts1.is_d6.to_client", "double")).reshape([5, 10], order="F"))
-        is_d6_2_1 = np.array(get_test_vector("ts1.is_d6.to_service", "double")).reshape([8, 10], order="F")
+            "ts1.is_d6.to_client", "double")).reshape(get_test_vector("ts1.is_d6.to_client.dims", "uint32"), order="F"))
+        is_d6_2_1 = np.array(get_test_vector("ts1.is_d6.to_service", "double")).reshape(
+            get_test_vector("ts1.is_d6.to_service.dims", "uint32"), order="F")
         is_d6_2 = {}
         is_d6_2["testval2"] = is_d6_2_1
         self._r.is_d6 = is_d6_2
@@ -276,23 +266,19 @@ class ServiceTestClient:
         is_str2_2["testval2"] = "Hello client"
         self._r.is_str2 = is_str2_2
         is_struct1_1 = self._r.is_struct1
-        ca(is_struct1_1[748].mydat, [-9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03,
-           3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21])
+        ca(is_struct1_1[748].mydat, get_test_vector("ts1.is_struct1.to_client", "double"))
         is_struct1_2 = {}
         is_struct1_2_1 = RRN.NewStructure(
             "com.robotraconteur.testing.TestService1.teststruct2", self._r)
-        is_struct1_2_1.mydat = [-2.101948e-07, -2.594836e-08, 2.515710e+01, -3.834127e-14, -3.088095e+06, -3.256612e-02, -1.855481e-19, 3.801916e+07, 2.145894e+09,
-                                4.487676e+12, 1.351202e-02, -1.125124e-16, 1.369826e-20, -2.290673e+00, 1.786029e-20, -4.991515e+08, 4.006107e-10, -4.947871e-11, -2.737020e-08, 4.123759e-20]
+        is_struct1_2_1.mydat = get_test_vector("ts1.is_struct1.to_service", "double")
         is_struct1_2[372] = is_struct1_2_1
         self._r.is_struct1 = is_struct1_2
         is_struct2_1 = self._r.is_struct2
-        ca(is_struct2_1["testval1"].mydat, [-4.489570e+13, 9.574895e-05, 4.081711e+06, 5.612839e-18, -1.078604e+05, 3.658139e+08, -4.748975e+05, -2.606481e+01, 3.016739e+15,
-           3.174709e+19, -4.572549e+17, 1.980389e-04, -3.551911e-10, 3.598401e-07, 2.659416e-12, -3.606157e+06, 2.059674e+17, -9.362336e-20, -3.299256e+17, -2.245745e+16])
+        ca(is_struct2_1["testval1"].mydat, get_test_vector("ts1.is_struct2.to_client", "double"))
         is_struct2_2 = {}
         is_struct2_2_1 = RRN.NewStructure(
             "com.robotraconteur.testing.TestService1.teststruct2", self._r)
-        is_struct2_2_1.mydat = [6.931327e-21, 4.527137e-02, 1.260822e-18, 3.592805e-12, 1.088317e-05, 3.305865e+03, -9.798828e-20, 1.497504e+18, -3.653592e+01,
-                                1.473952e+10, -1.003612e-20, 1.302159e+18, -8.544326e+05, 1.038521e+16, -2.845746e-18, -3.899909e-04, 4.785560e-02, -7.203365e-12, -1.500022e-14, -1.892753e-17]
+        is_struct2_2_1.mydat = get_test_vector("ts1.is_struct2.to_service", "double")
         is_struct2_2["testval2"] = is_struct2_2_1
         self._r.is_struct2 = is_struct2_2
 
@@ -304,23 +290,18 @@ class ServiceTestClient:
         list_d1_2 = [4.074501e-07, -4.535303e+05, -2.956241e-20]
         self._r.list_d1 = list_d1_2
 
-        ca(self._r.struct3.a1, [-8.483090e-19, -4.401548e-08, 3.908118e+00, 2.063513e-18, 4.237047e+18, -1.124681e-16, 3.924541e-01, -2.184335e-10, -1.978950e+11,
-           1.586365e+18, 1.712393e+00, -6.314723e+00, 1.196777e-16, -2.748704e-08, -1.289967e+02, -4.051137e+17, -1.902860e+10, -2.070486e+08, 3.622651e+06, 1.315398e+17])
+        ca(self._r.struct3.a1, get_test_vector("ts1.struct3.to_client", "double"))
         struct3_1 = RRN.NewStructure(
             "com.robotraconteur.testing.TestService2.ostruct2", self._r)
-        struct3_1.a1 = [-2.426765e+05, -9.410735e+01, -1.667915e+12, -4.084240e-05, 3.199460e+03, 8.256717e-12, -4.772119e-11, -1.061407e-13, 2.759750e+02, -
-                        1.212549e+10, 7.012690e+15, 3.953354e+04, -2.617985e-07, 1.104408e-21, -3.889366e+00, 4.549493e+16, -1.376791e+15, -3.445205e-21, 2.137830e-14, 4.620179e+18]
+        struct3_1.a1 = get_test_vector("ts1.struct3.to_service", "double")
         self._r.struct3 = struct3_1
 
         list_d3_1 = self._r.list_d3
         assert len(list_d3_1) == 2
-        ca(list_d3_1[0], [8.609080e-13, 3.946603e+03, 2.994203e-10, 3.200877e+14, 1.747361e-09, 2.827056e-16, -3.676613e-18, 1.886901e-14, -9.970511e-12,
-           1.932468e-18, -3.629253e-05, 4.903023e-12, -3.919949e-10, 4.982164e+07, 3.823096e-20, -4.044068e-13, 3.114078e+09, 7.572697e-12, -2.619929e+04, -3.882046e+01])
-        ca(list_d3_1[1], [4.750899e+00, 3.924377e+18, -2.735066e+17, 4.095362e-21, -2.407932e+09, 4.059499e+10, 1.376975e-10, -8.547220e-21, -1.344568e-20,
-           2.809398e+03, 2.118944e-06, 2.435328e-03, -1.410999e-12, 9.907226e-04, -9.745948e-20, 1.270118e+15, -2.833333e+05, 1.032636e-10, 5.312574e+13, -2.651512e+02])
+        ca(list_d3_1[0], get_test_vector("ts1.is_d3.to_client.a", "double"))
+        ca(list_d3_1[1], get_test_vector("ts1.is_d3.to_client.b", "double"))
         list_d3_2 = [
-            [4.335907e-08, -3.270294e-03, 1.752801e-01, 1.235219e-20, -4.348647e+02, -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13, -3.380846e-05, 4.350998e+03, 4.539570e+11, 8.981827e+09, 3.326114e+01, 2.975688e+06, -1.017456e-12, 2.989498e-03, 2.842392e-03, -1.258677e-21, 1.068563e-15], [
-                3.239279e+12, 1.047689e+17, -1.236114e+17, -4.002822e-17, 2.657374e-03, 7.383907e-19, -5.067889e-13, -4.195122e-12, 3.642885e-01, -2.946040e+14, 5.522403e-08, 6.603132e+04, 1.464154e+05, -1.851534e-08, 2.808294e-13, -2.702278e-11, 3.850704e-06, -2.453957e+02, -3.015401e-02, 1.654070e+05]
+            get_test_vector("ts1.is_d3.to_service.a", "double"), get_test_vector("ts1.is_d3.to_service.b", "double")
         ]
         self._r.list_d3 = list_d3_2
 
@@ -328,36 +309,31 @@ class ServiceTestClient:
         assert len(list_d5_1) == 1
         list_d5_1_1 = list_d5_1[0]
         nptest.assert_allclose(list_d5_1_1, np.array(get_test_vector(
-            "ts1.is_d5.to_client", "double")).reshape([10, 10], order="F"))
-        list_d5_2_1 = np.array(get_test_vector("ts1.is_d5.to_service", "double")).reshape([10, 20], order="F")
+            "ts1.is_d5.to_client", "double")).reshape(get_test_vector("ts1.is_d5.to_client.dims", "uint32"), order="F"))
+        list_d5_2_1 = np.array(get_test_vector("ts1.is_d5.to_service", "double")).reshape(
+            get_test_vector("ts1.is_d5.to_service.dims", "uint32"), order="F")
         list_d5_2 = [list_d5_2_1]
         self._r.list_d5 = list_d5_2
 
         list_struct2_1 = self._r.list_struct1
-        ca(list_struct2_1[0].mydat, [-9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03,
-           3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21])
+        ca(list_struct2_1[0].mydat, get_test_vector("ts1.is_struct1.to_client", "double"))
         list_struct2_2 = []
         list_struct2_2_1 = RRN.NewStructure(
             "com.robotraconteur.testing.TestService1.teststruct2", self._r)
-        list_struct2_2_1.mydat = [-2.101948e-07, -2.594836e-08, 2.515710e+01, -3.834127e-14, -3.088095e+06, -3.256612e-02, -1.855481e-19, 3.801916e+07, 2.145894e+09,
-                                  4.487676e+12, 1.351202e-02, -1.125124e-16, 1.369826e-20, -2.290673e+00, 1.786029e-20, -4.991515e+08, 4.006107e-10, -4.947871e-11, -2.737020e-08, 4.123759e-20]
+        list_struct2_2_1.mydat = get_test_vector("ts1.is_struct1.to_service", "double")
         list_struct2_2.append(list_struct2_2_1)
         self._r.list_struct1 = list_struct2_2
 
         # varvalue types (TODO: finish these...)
 
-        ca(self._r.var_num.data, [-1680284833, -54562307, 732107275, 1470526962, -1389452949, 256801409,
-           261288152, 1728150828, 1322531658, -1640628174, 1036878614, 511108054, 2057847386, 288780916, 996595759])
-        self._r.var_num = RR.VarValue([-1046369769, 1950632347, 1140727074, -1277424443,
-                                      163999900, 970815027, 545593183, 514305170, 1896372264, 1385916382], "int32[]")
+        nptest.assert_array_equal(self._r.var_num.data, get_test_vector("ts1.var_num.to_client", "int32"))
+        self._r.var_num = RR.VarValue(get_test_vector("ts1.var_num.to_service", "int32"), "int32[]")
         assert self._r.var_str.data == "Hello Client!"
         self._r.var_str = RR.VarValue("Hello Server!", "string")
-        ca((self._r.var_struct.data).mydat, [-9.052731e+13, 4.151705e-17, -4.004463e+19, -2.838274e+03, 9.983314e+12, 2.764122e+10, -1.131486e+03, 2.418899e+12, 1.323675e-05, -
-           4.602174e+13, 2.717530e+01, 1.193887e-10, -4.137578e+16, -1.246990e-19, 4.244315e-18, -2.833005e-08, 1.956266e-04, 4.130129e-21, 1.641708e-11, -4.488158e-19])
+        ca((self._r.var_struct.data).mydat, get_test_vector("ts1.var_struct.to_client", "double"))
         var_struct_1 = RRN.NewStructure(
             "com.robotraconteur.testing.TestService1.teststruct2", self._r)
-        var_struct_1.mydat = [-4.945426e-20, 1.763386e+13, 3.431578e-04, 4.411409e+17, -2.690201e+03, 3.025939e-10, -3.659846e+11, -4.780435e-10, -3.246816e+14, -
-                              1.815578e+04, 2.236455e+10, -4.639041e+14, 1.767930e+10, -1.636094e+05, -4.392462e-01, 2.225260e+04, -5.250245e+18, 8.755282e-12, 2.005819e-10, 2.702210e+04]
+        var_struct_1.mydat = get_test_vector("ts1.var_struct.to_service", "double")
         self._r.var_struct = RR.VarValue(
             var_struct_1, "com.robotraconteur.testing.TestService1.teststruct2")
         assert ((self._r.var_vector.data)[10].data) == "Hello Client!"
@@ -373,10 +349,10 @@ class ServiceTestClient:
         var_list_1 = [RR.VarValue("Hello Server!", "string")]
         self._r.var_list = RR.VarValue(var_list_1, "varvalue{list}")
         var_a_1 = self._r.var_multidimarray.data
-        nptest.assert_allclose(var_a_1, np.array([-4.915597e-01, 3.892823e+00, 2.622325e+08, -7.150935e+04, 9.418756e+00, 3.633879e+18, 3.522383e-03, -4.989811e+05, 2.027383e-03, -3.153241e+12, -
-                               6.948245e-21, -3.198577e+14, 6.172905e+09, 3.849430e+15, 8.600383e+13, 4.079437e-17, 3.194775e+06, 4.222550e-18, 1.758122e+17, -1.018308e+03]).reshape([5, 4], order="F"))
-        self._r.var_multidimarray = RR.VarValue(np.array([3.792953e+00, 2.968121e-17, -3.976413e-15, 4.392986e+19, 2.197463e+10, -2.627743e-14, -2.184665e+17, 1.972257e-17, 9.929684e-03, -3.096821e+17,
-                                                3.598051e+11, -6.266015e-18, 1.811985e-11, 2.815232e-07, 7.469467e-06, 6.141798e+13, 3.105763e+09, -1.697809e-10, -4.141707e-17, 4.391634e+13]).reshape([5, 4], order="F"), "double[*]")
+        nptest.assert_allclose(var_a_1, np.array(get_test_vector("ts1.var_multidimarray.to_client", "double")).reshape(
+            get_test_vector("ts1.var_multidimarray.to_client.dims", "uint32"), order="F"))
+        self._r.var_multidimarray = RR.VarValue(np.array(get_test_vector("ts1.var_multidimarray.to_service", "double")).reshape(
+            get_test_vector("ts1.var_multidimarray.to_service.dims", "uint32"), order="F"), "double[*]")
 
         # Test error passing
         with pytest.raises(Exception):
@@ -450,18 +426,12 @@ class ServiceTestClient:
         o2_10_o2_1_32 = o2_10.get_o2_2(32)
         o2_10_o2_1_32_o3_ind1 = o2_10_o2_1_32.get_o3_1("ind1")
         o2_10_o2_1_32_o3_ind2 = o2_10_o2_1_32.get_o3_1("ind2")
-        o1.d1 = [-2.086627e+06, 3.092642e+04, -1.981667e+02, 1.963286e-20, 4.264052e-08,
-                 3.594320e+12, -4.820517e-02, -3.629590e+06, 6.037089e-07, 3.328419e+06]
-        o2_10.d1 = [4.978178e-14, 2.867603e-17, 4.471047e-21, -2.002902e+15, -2.910881e-03, -
-                    2.601092e-03, -3.043199e+16, -3.257109e-12, 1.834255e-11, -3.383015e+00]
-        o2_34.d1 = [4.661927e-02, 2.334444e+02, 3.985567e+12, -2.324843e+01, -
-                    3.315866e+03, -4.442404e+10, 3.280626e-02, 2.334668e-12, -3.374202e-14, 4.809260e+02]
-        o3_1.d1 = [-1.882441e-04, 2.065458e+14, -6.309214e-16, -3.181637e-07, -9.906616e+02,
-                   1.684926e-14, 1.672252e+15, -3.950901e+01, -3.295950e-17, -3.080902e+13]
-        o4_myind.d1 = [2.997950e-14, -1.077977e+17, 3.721399e-09, -1.289619e+18,
-                       4.494844e+06, -4.918719e-15, 2.194759e+13, 2.554572e-09, 4.166299e-06, -1.409589e+04]
-        o4_specialind.d1 = [3.404179e-08, -1.749189e-18, -3.219593e-09, 1.313794e+01, -
-                            4.193673e+10, -2.479829e+07, -2.617068e+04, 8.181730e+15, -2.003653e+18, -1.833401e+19]
+        o1.d1 = get_test_vector("ts1.client.o_d1a", "double")
+        o2_10.d1 = get_test_vector("ts1.client.o_d1b", "double")
+        o2_34.d1 = get_test_vector("ts1.client.o_d1c", "double")
+        o3_1.d1 = get_test_vector("ts1.client.o_d1d", "double")
+        o4_myind.d1 = get_test_vector("ts1.client.o_d1e", "double")
+        o4_specialind.d1 = get_test_vector("ts1.client.o_d1f", "double")
         o2_10_o2_1_32.data = "Hello world!"
         o2_10_o2_1_32_o3_ind1.data2 = "Test string 1"
         o2_10_o2_1_32_o3_ind2.data2 = "Test string 2"
@@ -506,7 +476,7 @@ class ServiceTestClient:
         with self._pipe_ack_lock:
             self._packetnum = e1.SendPacket([1, 2, 3, 4])
         e1.SendPacket([5, 6, 7, 8])
-        e1.SendPacket([-1, -2, -3, -5.32])
+        e1.SendPacket(get_test_vector("ts1.client.d3", "double"))
         e2.SendPacket([3.21])
         e2.SendPacket([4.72])
         e2.SendPacket([72.34])
@@ -525,7 +495,7 @@ class ServiceTestClient:
 
         ca(e1.ReceivePacket(), [1, 2, 3, 4])
         ca(e1.ReceivePacketWait(1), [5, 6, 7, 8])
-        ca(e1.ReceivePacketWait(1), [-1, -2, -3, -5.32])
+        ca(e1.ReceivePacketWait(1), get_test_vector("ts1.client.d3", "double"))
         ca(e2.ReceivePacket(), [3.21])
         ca(e2.ReceivePacketWait(1), [4.72])
         ca(e2.ReceivePacketWait(1), [72.34])
@@ -629,39 +599,33 @@ class ServiceTestClient:
         w2.OutValue = s1
         a1 = np.zeros((1, 1), np.int32)
         w3.OutValue = a1
-        w1.OutValue = [-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -
-                       1.570323e+03, -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11]
+        w1.OutValue = get_test_vector("ts1.client.d1", "double")
         s2 = RRN.NewStructure(
             "com.robotraconteur.testing.TestService1.teststruct2", self._r)
-        s2.mydat = [-1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21, -
-                    1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10]
+        s2.mydat = get_test_vector("ts1.client.d2", "double")
         w2.OutValue = s2
-        a2 = np.array([2058500854, -611248192, 197490486, -517717939, -513450368, 296469979,
-                      645365194, 2043654604, -1672941174, 710030901], np.int32).reshape([2, 5], order="F")
+        a2 = np.array(get_test_vector("ts1.client.i3", "int32"), np.int32).reshape(
+            get_test_vector("ts1.client.i3.dims", "uint32"), order="F")
         w3.OutValue = a2
         time.sleep(.5)
         in1 = w1.InValue
-        ca(in1, [-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -
-           4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11])
+        ca(in1, get_test_vector("ts1.client.d1", "double"))
         in2 = w2.InValue
-        ca(in2.mydat, [-1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20,
-           4.277621e-21, -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10])
+        ca(in2.mydat, get_test_vector("ts1.client.d2", "double"))
         in3 = w3.InValue
-        nptest.assert_allclose(in3, np.array([2058500854, -611248192, 197490486, -517717939, -513450368,
-                               296469979, 645365194, 2043654604, -1672941174, 710030901]).reshape([2, 5], order="F"))
+        nptest.assert_array_equal(in3, np.array(get_test_vector("ts1.client.i3", "int32")).reshape(
+            get_test_vector("ts1.client.i3.dims", "uint32"), order="F"))
         assert self._w1_called
         assert self._w2_called
         assert self._w3_called
 
         (res, in1_2, in1_2_ts) = w1.TryGetInValue()
         assert res
-        ca(in1_2, [-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -
-           4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11])
+        ca(in1_2, get_test_vector("ts1.client.d1", "double"))
 
         (res, out1_2, out1_2_ts) = w1.TryGetOutValue()
         assert res
-        ca(out1_2, [-2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -
-           1.570323e+03, -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11])
+        ca(out1_2, get_test_vector("ts1.client.d1", "double"))
 
         assert self._r.w1.Direction == RR.MemberDefinition_Direction_both
 
@@ -694,10 +658,8 @@ class ServiceTestClient:
         assert self._r.m1.Length == 100
         m1_1 = [0] * 11
         self._r.m1.Read(10, m1_1, 1, 10)
-        ca(m1_1, [0, -1.478723e-16, 1.507042e-05, -2.046271e+13, 4.014775e+06, 4.140740e+10,
-           1.318907e+16, -2.312403e+17, 4.463696e-13, 9.173421e-04, 6.169183e-21])
-        m1_2 = [3.462892e+10, -1.149841e-18, 4.649317e-15, -3.632280e-19, -5.252280e+07, 1.800453e-07,
-                3.772468e-04, -1.911891e+09, -3.018967e-14, 4.835062e-06, 5.269663e+13, 4.946221e+03]
+        ca(m1_1, get_test_vector("ts1.client.m1_1a", "double"))
+        m1_2 = get_test_vector("ts1.client.m1_2a", "double")
         self._r.m1.Write(20, m1_2, 2, 8)
         m1_3 = [0] * 100
         self._r.m1.Read(0, m1_3, 0, 100)

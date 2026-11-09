@@ -102,39 +102,37 @@ class testroot_impl(object):
 
     @property
     def d3(self):
-        return [2.047398e-20, 2.091541e-20, 9.084241e+14, 1.583413e+01, 5.168067e-02, 1.360920e-11, 9.818531e-21, 6.293083e+07, 4.406956e-14, 8.540213e-09, 7.329310e-03, 5.566796e+00, 3.968358e-08, 4.928656e-08, 5.994301e-20, 8.281551e-21]
+        return get_test_vector("ts1.d3.to_client", "double")
 
     @d3.setter
     def d3(self, value):
-        ca(value, [9.025110e-18, 3.567231e+17, 2.594489e+01, 2.311708e-04, 7.345164e+13, 6.550284e-01, 1.969554e+12, 9.451979e-05,
-           5.900637e-09, 9.975667e+03, 6.549533e-17, 2.227145e-13, 2.822132e+18, 4.332600e+18, 1.485466e+05, 5.844952e-14])
+        ca(value, get_test_vector("ts1.d3.to_service", "double"))
 
     @property
     def d4(self):
-        return [2.864760e-08, 3.900663e+13, 9.105789e+11, 2.943743e-15, -2.823159e-16, -3.481261e+19]
+        return get_test_vector("ts1.d4.to_client", "double")
 
     @d4.setter
     def d4(self, value):
-        ca(value, [-4.207179e-09, -3.611333e+11, -4.155626e-06, -2.458459e+10, 2.826045e-11, 3.511191e-08,
-           4.759250e-07, 2.455883e+09, 4.182578e+11, 4.732337e-14, -2.967313e+02, -4.139188e+14, 6.287269e+03])
+        ca(value, get_test_vector("ts1.d4.to_service", "double"))
 
     @property
     def d5(self):
-        return np.array(get_test_vector("ts1.d5.to_client", "double")).reshape([5, 6, 5], order="F")
+        return np.array(get_test_vector("ts1.d5.to_client", "double")).reshape(get_test_vector("ts1.d5.to_client.dims", "uint32"), order="F")
 
     @d5.setter
     def d5(self, value):
         np.testing.assert_allclose(value, np.array(get_test_vector(
-            "ts1.d5.to_service", "double")).reshape([8, 6, 2], order="F"))
+            "ts1.d5.to_service", "double")).reshape(get_test_vector("ts1.d5.to_service.dims", "uint32"), order="F"))
 
     @property
     def d6(self):
-        return np.array([4.427272e-10, -1.149547e-08, -1.134096e+16, -4.932974e-03, -7.702447e-01, -3.468374e-03, -5.037849e-14, -4.140513e-08, 4.553774e+03]).reshape([3, 3], order="F")
+        return np.array(get_test_vector("ts1.d6.to_client", "double")).reshape(get_test_vector("ts1.d6.to_client.dims", "uint32"), order="F")
 
     @d6.setter
     def d6(self, value):
-        np.testing.assert_allclose(value, np.array([-5.528040e-08, 3.832644e-01, -9.139211e-22, -4.919312e-05,
-                                   3.809620e-11, 1.751983e-09, 2.207872e-21, 1.432794e+09, -1.970313e+11]).reshape([3, 3], order="F"))
+        np.testing.assert_allclose(value, np.array(get_test_vector("ts1.d6.to_service", "double")).reshape(
+            get_test_vector("ts1.d6.to_service.dims", "uint32"), order="F"))
 
     @property
     def s1(self):
@@ -186,13 +184,13 @@ class testroot_impl(object):
 
     @property
     def u8_3(self):
-        return np.array(get_test_vector("ts1.u8_3.to_client", "uint8"), dtype=np.uint8).reshape([10, 20], order="F")
+        return np.array(get_test_vector("ts1.u8_3.to_client", "uint8"), dtype=np.uint8).reshape(get_test_vector("ts1.u8_3.to_client.dims", "uint32"), order="F")
 
     @u8_3.setter
     def u8_3(self, value):
 
         nptest.assert_array_equal(value, np.array(get_test_vector(
-            "ts1.u8_3.to_service", "uint8")).reshape([30, 10], order="F"))
+            "ts1.u8_3.to_service", "uint8")).reshape(get_test_vector("ts1.u8_3.to_service.dims", "uint32"), order="F"))
 
     @property
     def i16_1(self):
@@ -327,17 +325,15 @@ class testroot_impl(object):
         s1_dstruct2_1 = self._teststruct2_type()
         s1_dstruct2_1.mydat = get_test_vector("ts1.struct1.dstruct2_1.to_client", "double")
         s1_dstruct2_2 = self._teststruct2_type()
-        s1_dstruct2_2.mydat = [4.856615e+15, 5.981566e-22, 1.433616e+14, 1.747102e-09, 2.850376e+06, -3.748685e-08, -4.969544e-21, 2.530419e-01,
-                               4.393913e-09, 3.837331e+04, -4.315065e-04, -1.073834e-17, 1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13, -1.937982e+02]
+        s1_dstruct2_2.mydat = get_test_vector("ts1.struct1.dstruct2_3.to_client", "double")
         s1.dstruct2 = {"test1": s1_dstruct2_1, "anothertest": s1_dstruct2_2}
         s1_lstruct3_1 = self._teststruct2_type()
         s1_lstruct3_1.mydat = get_test_vector("ts1.struct1.dstruct2_1.to_client", "double")
         s1_lstruct3_2 = self._teststruct2_type()
-        s1_lstruct3_2.mydat = [4.856615e+15, 5.981566e-22, 1.433616e+14, 1.747102e-09, 2.850376e+06, -3.748685e-08, -4.969544e-21, 2.530419e-01,
-                               4.393913e-09, 3.837331e+04, -4.315065e-04, -1.073834e-17, 1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13, -1.937982e+02]
+        s1_lstruct3_2.mydat = get_test_vector("ts1.struct1.dstruct2_3.to_client", "double")
         s1.lstruct3 = [s1_dstruct2_1, s1_dstruct2_2]
         s1.multidimarray = np.array(get_test_vector("ts1.struct1.multidimarray.to_client",
-                                    "double")).reshape([10, 10], order="F")
+                                    "double")).reshape(get_test_vector("ts1.struct1.multidimarray.to_client.dims", "uint32"), order="F")
         s1.var3 = RR.VarValue("This is a vartype string", "string")
         return s1
 
@@ -362,9 +358,8 @@ class testroot_impl(object):
         ca(value.lstruct3[1].mydat, get_test_vector("ts1.struct1.dstruct2_2.to_service", "double"))
 
         np.testing.assert_allclose(value.multidimarray, np.array(get_test_vector(
-            "ts1.struct1.multidimarray.to_service", "double")).reshape([10, 10], order="F"))
-        ca(value.var3.data, [6.404176e-12, 9.258110e-03, 8.657620e-03, -2.064381e+00, 5.182360e-16, 4.167658e-16, -
-           4.533051e-19, 5.357520e+18, -4.990383e-13, 2.286982e+08, -4.727256e-18, 1.465299e-17, 3.000340e-10, -2.304453e-04])
+            "ts1.struct1.multidimarray.to_service", "double")).reshape(get_test_vector("ts1.struct1.multidimarray.to_service.dims", "uint32"), order="F"))
+        ca(value.var3.data, get_test_vector("ts1.struct1.var3.to_service", "double"))
 
     @property
     def struct2(self):
@@ -379,14 +374,12 @@ class testroot_impl(object):
     @property
     def struct3(self):
         out = self._ostruct2_type()
-        out.a1 = [-8.483090e-19, -4.401548e-08, 3.908118e+00, 2.063513e-18, 4.237047e+18, -1.124681e-16, 3.924541e-01, -2.184335e-10, -1.978950e+11, 1.586365e+18,
-                  1.712393e+00, -6.314723e+00, 1.196777e-16, -2.748704e-08, -1.289967e+02, -4.051137e+17, -1.902860e+10, -2.070486e+08, 3.622651e+06, 1.315398e+17]
+        out.a1 = get_test_vector("ts1.struct3.to_client", "double")
         return out
 
     @struct3.setter
     def struct3(self, value):
-        ca(value.a1, [-2.426765e+05, -9.410735e+01, -1.667915e+12, -4.084240e-05, 3.199460e+03, 8.256717e-12, -4.772119e-11, -1.061407e-13, 2.759750e+02, -
-           1.212549e+10, 7.012690e+15, 3.953354e+04, -2.617985e-07, 1.104408e-21, -3.889366e+00, 4.549493e+16, -1.376791e+15, -3.445205e-21, 2.137830e-14, 4.620179e+18])
+        ca(value.a1, get_test_vector("ts1.struct3.to_service", "double"))
 
     @property
     def is_d1(self):
@@ -412,41 +405,34 @@ class testroot_impl(object):
     @property
     def is_d3(self):
         out = {}
-        out[12] = [8.609080e-13, 3.946603e+03, 2.994203e-10, 3.200877e+14, 1.747361e-09, 2.827056e-16, -3.676613e-18, 1.886901e-14, -9.970511e-12, 1.932468e-18, -
-                   3.629253e-05, 4.903023e-12, -3.919949e-10, 4.982164e+07, 3.823096e-20, -4.044068e-13, 3.114078e+09, 7.572697e-12, -2.619929e+04, -3.882046e+01]
-        out[832] = [4.750899e+00, 3.924377e+18, -2.735066e+17, 4.095362e-21, -2.407932e+09, 4.059499e+10, 1.376975e-10, -8.547220e-21, -1.344568e-20, 2.809398e+03,
-                    2.118944e-06, 2.435328e-03, -1.410999e-12, 9.907226e-04, -9.745948e-20, 1.270118e+15, -2.833333e+05, 1.032636e-10, 5.312574e+13, -2.651512e+02]
+        out[12] = get_test_vector("ts1.is_d3.to_client.a", "double")
+        out[832] = get_test_vector("ts1.is_d3.to_client.b", "double")
         return out
 
     @is_d3.setter
     def is_d3(self, value):
         assert len(value) == 2
-        ca(value[47], [4.335907e-08, -3.270294e-03, 1.752801e-01, 1.235219e-20, -4.348647e+02, -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13, -
-           3.380846e-05, 4.350998e+03, 4.539570e+11, 8.981827e+09, 3.326114e+01, 2.975688e+06, -1.017456e-12, 2.989498e-03, 2.842392e-03, -1.258677e-21, 1.068563e-15])
-        ca(value[324], [3.239279e+12, 1.047689e+17, -1.236114e+17, -4.002822e-17, 2.657374e-03, 7.383907e-19, -5.067889e-13, -4.195122e-12, 3.642885e-01, -
-           2.946040e+14, 5.522403e-08, 6.603132e+04, 1.464154e+05, -1.851534e-08, 2.808294e-13, -2.702278e-11, 3.850704e-06, -2.453957e+02, -3.015401e-02, 1.654070e+05])
+        ca(value[47], get_test_vector("ts1.is_d3.to_service.a", "double"))
+        ca(value[324], get_test_vector("ts1.is_d3.to_service.b", "double"))
 
     @property
     def is_d4(self):
         out = {}
-        out["testval1"] = [1.113851e-04, 3.830104e+07, 4.571169e-21, -4.064180e-05, 2.889736e+01, -1.790060e-06, 4.608538e+00, 4.687713e-04, 1.387717e-08,
-                           3.914187e-18, -5.618118e-06, 1.530811e+05, -5.848922e-11, -3.397558e-20, -6.597368e-08, -3.779049e-06, 2.406033e-19, 2.507939e-10, 3.246113e-20, 1.341205e+16]
-        out["testval2"] = [-3.088190e-13, -4.033334e-20, 4.150103e-21, -6.610855e+17, 3.688824e-13, -3.208025e+13, -5.034888e-11, -4.098363e-06, -1.272830e-03,
-                           2.748392e-03, -2.644272e-06, -4.810065e-18, 4.629861e-19, -5.444015e-03, 4.046008e+17, -3.548079e+12, -3.455290e+16, -3.668946e-12, -3.522178e-01, -1.537583e+14]
+        out["testval1"] = get_test_vector("ts1.is_d4.to_client.a", "double")
+        out["testval2"] = get_test_vector("ts1.is_d4.to_client.b", "double")
         return out
 
     @is_d4.setter
     def is_d4(self, value):
         assert len(value) == 2
-        ca(value["testval3"], [1.771838e+06, 3.037284e-01, -1.739742e-02, 1.399508e-20, 3.605232e-21, 3.517522e+14, 4.887514e+14, 3.505442e-03, -3.968972e+18,
-           1.422037e-20, 2.596937e-21, 4.852833e-11, 6.852955e-17, 4.765526e-12, -3.445954e+16, 2.322531e-14, -1.755122e-12, 3.941875e+00, 8.877046e-13, 2.818923e-02])
-        ca(value["testval4"], [4.146439e+16, 2.923439e-07, 3.549608e+16, -1.664891e-01, -4.192309e-15, 3.857317e+05, -1.101076e+00, 1.213105e+19, 3.237584e-14, -
-           2.421219e-06, -4.603196e-05, -3.719535e-10, 1.124961e+06, 2.032849e+10, 4.639704e-22, 3.946835e+01, -9.267263e+01, -4.456188e+11, 3.470487e+08, 7.918764e+10])
+        ca(value["testval3"], get_test_vector("ts1.is_d4.to_service.a", "double"))
+        ca(value["testval4"], get_test_vector("ts1.is_d4.to_service.b", "double"))
 
     @property
     def is_d5(self):
         out = {}
-        out1 = np.array(get_test_vector("ts1.is_d5.to_client", "double")).reshape([10, 10], order="F")
+        out1 = np.array(get_test_vector("ts1.is_d5.to_client", "double")).reshape(
+            get_test_vector("ts1.is_d5.to_client.dims", "uint32"), order="F")
         out[564] = out1
         return out
 
@@ -455,12 +441,13 @@ class testroot_impl(object):
         assert len(value) == 1
         in1 = value[328]
         np.testing.assert_allclose(in1, np.array(get_test_vector(
-            "ts1.is_d5.to_service", "double")).reshape((10, 20), order="F"))
+            "ts1.is_d5.to_service", "double")).reshape(get_test_vector("ts1.is_d5.to_service.dims", "uint32"), order="F"))
 
     @property
     def is_d6(self):
         out = {}
-        out1 = np.array(get_test_vector("ts1.is_d6.to_client", "double")).reshape([5, 10], order="F")
+        out1 = np.array(get_test_vector("ts1.is_d6.to_client", "double")).reshape(
+            get_test_vector("ts1.is_d6.to_client.dims", "uint32"), order="F")
         out["testval1"] = out1
         return out
 
@@ -470,7 +457,7 @@ class testroot_impl(object):
             return Exception()
         in1 = value["testval2"]
         np.testing.assert_allclose(in1, np.array(get_test_vector(
-            "ts1.is_d6.to_service", "double")).reshape([8, 10], order="F"))
+            "ts1.is_d6.to_service", "double")).reshape(get_test_vector("ts1.is_d6.to_service.dims", "uint32"), order="F"))
 
     @property
     def is_str1(self):
@@ -494,31 +481,27 @@ class testroot_impl(object):
     def is_struct1(self):
         out = {}
         out1 = self._teststruct2_type()
-        out1.mydat = [-9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03,
-                      3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21]
+        out1.mydat = get_test_vector("ts1.is_struct1.to_client", "double")
         out[748] = out1
         return out
 
     @is_struct1.setter
     def is_struct1(self, value):
         assert len(value) == 1
-        ca(value[372].mydat, [-2.101948e-07, -2.594836e-08, 2.515710e+01, -3.834127e-14, -3.088095e+06, -3.256612e-02, -1.855481e-19, 3.801916e+07, 2.145894e+09,
-           4.487676e+12, 1.351202e-02, -1.125124e-16, 1.369826e-20, -2.290673e+00, 1.786029e-20, -4.991515e+08, 4.006107e-10, -4.947871e-11, -2.737020e-08, 4.123759e-20])
+        ca(value[372].mydat, get_test_vector("ts1.is_struct1.to_service", "double"))
 
     @property
     def is_struct2(self):
         out = {}
         out1 = self._teststruct2_type()
-        out1.mydat = [-4.489570e+13, 9.574895e-05, 4.081711e+06, 5.612839e-18, -1.078604e+05, 3.658139e+08, -4.748975e+05, -2.606481e+01, 3.016739e+15,
-                      3.174709e+19, -4.572549e+17, 1.980389e-04, -3.551911e-10, 3.598401e-07, 2.659416e-12, -3.606157e+06, 2.059674e+17, -9.362336e-20, -3.299256e+17, -2.245745e+16]
+        out1.mydat = get_test_vector("ts1.is_struct2.to_client", "double")
         out["testval1"] = out1
         return out
 
     @is_struct2.setter
     def is_struct2(self, value):
         assert len(value) == 1
-        ca(value["testval2"].mydat, [6.931327e-21, 4.527137e-02, 1.260822e-18, 3.592805e-12, 1.088317e-05, 3.305865e+03, -9.798828e-20, 1.497504e+18, -3.653592e+01,
-           1.473952e+10, -1.003612e-20, 1.302159e+18, -8.544326e+05, 1.038521e+16, -2.845746e-18, -3.899909e-04, 4.785560e-02, -7.203365e-12, -1.500022e-14, -1.892753e-17])
+        ca(value["testval2"].mydat, get_test_vector("ts1.is_struct2.to_service", "double"))
 
     @property
     def list_d1(self):
@@ -534,24 +517,21 @@ class testroot_impl(object):
     @property
     def list_d3(self):
         out = []
-        out.append([8.609080e-13, 3.946603e+03, 2.994203e-10, 3.200877e+14, 1.747361e-09, 2.827056e-16, -3.676613e-18, 1.886901e-14, -9.970511e-12, 1.932468e-18, -
-                   3.629253e-05, 4.903023e-12, -3.919949e-10, 4.982164e+07, 3.823096e-20, -4.044068e-13, 3.114078e+09, 7.572697e-12, -2.619929e+04, -3.882046e+01])
-        out.append([4.750899e+00, 3.924377e+18, -2.735066e+17, 4.095362e-21, -2.407932e+09, 4.059499e+10, 1.376975e-10, -8.547220e-21, -1.344568e-20, 2.809398e+03,
-                   2.118944e-06, 2.435328e-03, -1.410999e-12, 9.907226e-04, -9.745948e-20, 1.270118e+15, -2.833333e+05, 1.032636e-10, 5.312574e+13, -2.651512e+02])
+        out.append(get_test_vector("ts1.is_d3.to_client.a", "double"))
+        out.append(get_test_vector("ts1.is_d3.to_client.b", "double"))
         return out
 
     @list_d3.setter
     def list_d3(self, value):
         assert len(value) == 2
-        ca(value[0], [4.335907e-08, -3.270294e-03, 1.752801e-01, 1.235219e-20, -4.348647e+02, -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13, -
-           3.380846e-05, 4.350998e+03, 4.539570e+11, 8.981827e+09, 3.326114e+01, 2.975688e+06, -1.017456e-12, 2.989498e-03, 2.842392e-03, -1.258677e-21, 1.068563e-15])
-        ca(value[1], [3.239279e+12, 1.047689e+17, -1.236114e+17, -4.002822e-17, 2.657374e-03, 7.383907e-19, -5.067889e-13, -4.195122e-12, 3.642885e-01, -2.946040e+14,
-           5.522403e-08, 6.603132e+04, 1.464154e+05, -1.851534e-08, 2.808294e-13, -2.702278e-11, 3.850704e-06, -2.453957e+02, -3.015401e-02, 1.654070e+05])
+        ca(value[0], get_test_vector("ts1.is_d3.to_service.a", "double"))
+        ca(value[1], get_test_vector("ts1.is_d3.to_service.b", "double"))
 
     @property
     def list_d5(self):
         out = []
-        out1 = np.array(get_test_vector("ts1.is_d5.to_client", "double")).reshape([10, 10], order="F")
+        out1 = np.array(get_test_vector("ts1.is_d5.to_client", "double")).reshape(
+            get_test_vector("ts1.is_d5.to_client.dims", "uint32"), order="F")
         out.append(out1)
         return out
 
@@ -560,7 +540,7 @@ class testroot_impl(object):
         assert len(value) == 1
         in1 = value[0]
         np.testing.assert_allclose(in1, np.array(get_test_vector(
-            "ts1.is_d5.to_service", "double")).reshape([10, 20], order="F"))
+            "ts1.is_d5.to_service", "double")).reshape(get_test_vector("ts1.is_d5.to_service.dims", "uint32"), order="F"))
 
     @property
     def list_str1(self):
@@ -575,37 +555,32 @@ class testroot_impl(object):
     def list_struct1(self):
         out = []
         out1 = self._teststruct2_type()
-        out1.mydat = [-9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03,
-                      3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21]
+        out1.mydat = get_test_vector("ts1.is_struct1.to_client", "double")
         out.append(out1)
         return out
 
     @list_struct1.setter
     def list_struct1(self, value):
         assert len(value) == 1
-        ca(value[0].mydat, [-2.101948e-07, -2.594836e-08, 2.515710e+01, -3.834127e-14, -3.088095e+06, -3.256612e-02, -1.855481e-19, 3.801916e+07, 2.145894e+09,
-           4.487676e+12, 1.351202e-02, -1.125124e-16, 1.369826e-20, -2.290673e+00, 1.786029e-20, -4.991515e+08, 4.006107e-10, -4.947871e-11, -2.737020e-08, 4.123759e-20])
+        ca(value[0].mydat, get_test_vector("ts1.is_struct1.to_service", "double"))
 
     @property
     def is_struct3(self):
         out = self._ostruct2_type()
-        out.a1 = [-8.483090e-19, -4.401548e-08, 3.908118e+00, 2.063513e-18, 4.237047e+18, -1.124681e-16, 3.924541e-01, -2.184335e-10, -1.978950e+11, 1.586365e+18,
-                  1.712393e+00, -6.314723e+00, 1.196777e-16, -2.748704e-08, -1.289967e+02, -4.051137e+17, -1.902860e+10, -2.070486e+08, 3.622651e+06, 1.315398e+17]
+        out.a1 = get_test_vector("ts1.struct3.to_client", "double")
         return out
 
     @is_struct3.setter
     def is_struct3(self, value):
-        ca(value.a1, [-2.426765e+05, -9.410735e+01, -1.667915e+12, -4.084240e-05, 3.199460e+03, 8.256717e-12, -4.772119e-11, -1.061407e-13, 2.759750e+02, -
-           1.212549e+10, 7.012690e+15, 3.953354e+04, -2.617985e-07, 1.104408e-21, -3.889366e+00, 4.549493e+16, -1.376791e+15, -3.445205e-21, 2.137830e-14, 4.620179e+18])
+        ca(value.a1, get_test_vector("ts1.struct3.to_service", "double"))
 
     @property
     def var_num(self):
-        return RR.VarValue([-1680284833, -54562307, 732107275, 1470526962, -1389452949, 256801409, 261288152, 1728150828, 1322531658, -1640628174, 1036878614, 511108054, 2057847386, 288780916, 996595759], "int32[]")
+        return RR.VarValue(get_test_vector("ts1.var_num.to_client", "int32"), "int32[]")
 
     @var_num.setter
     def var_num(self, value):
-        ca(value.data, [-1046369769, 1950632347, 1140727074, -1277424443,
-           163999900, 970815027, 545593183, 514305170, 1896372264, 1385916382])
+        nptest.assert_array_equal(value.data, get_test_vector("ts1.var_num.to_service", "int32"))
 
     @property
     def var_str(self):
@@ -618,14 +593,12 @@ class testroot_impl(object):
     @property
     def var_struct(self):
         out = self._teststruct2_type()
-        out.mydat = [-9.052731e+13, 4.151705e-17, -4.004463e+19, -2.838274e+03, 9.983314e+12, 2.764122e+10, -1.131486e+03, 2.418899e+12, 1.323675e-05, -4.602174e+13,
-                     2.717530e+01, 1.193887e-10, -4.137578e+16, -1.246990e-19, 4.244315e-18, -2.833005e-08, 1.956266e-04, 4.130129e-21, 1.641708e-11, -4.488158e-19]
+        out.mydat = get_test_vector("ts1.var_struct.to_client", "double")
         return RR.VarValue(out, "com.robotraconteur.testing.TestService1.teststruct2")
 
     @var_struct.setter
     def var_struct(self, value):
-        ca(value.data.mydat, [-4.945426e-20, 1.763386e+13, 3.431578e-04, 4.411409e+17, -2.690201e+03, 3.025939e-10, -3.659846e+11, -4.780435e-10, -3.246816e+14, -
-           1.815578e+04, 2.236455e+10, -4.639041e+14, 1.767930e+10, -1.636094e+05, -4.392462e-01, 2.225260e+04, -5.250245e+18, 8.755282e-12, 2.005819e-10, 2.702210e+04])
+        ca(value.data.mydat, get_test_vector("ts1.var_struct.to_service", "double"))
 
     @property
     def var_vector(self):
@@ -661,12 +634,12 @@ class testroot_impl(object):
 
     @property
     def var_multidimarray(self):
-        return RR.VarValue(np.array([-4.915597e-01, 3.892823e+00, 2.622325e+08, -7.150935e+04, 9.418756e+00, 3.633879e+18, 3.522383e-03, -4.989811e+05, 2.027383e-03, -3.153241e+12, -6.948245e-21, -3.198577e+14, 6.172905e+09, 3.849430e+15, 8.600383e+13, 4.079437e-17, 3.194775e+06, 4.222550e-18, 1.758122e+17, -1.018308e+03]).reshape([5, 4], order="F"), "double[*]")
+        return RR.VarValue(np.array(get_test_vector("ts1.var_multidimarray.to_client", "double")).reshape(get_test_vector("ts1.var_multidimarray.to_client.dims", "uint32"), order="F"), "double[*]")
 
     @var_multidimarray.setter
     def var_multidimarray(self, value):
-        np.testing.assert_allclose(value.data, np.array([3.792953e+00, 2.968121e-17, -3.976413e-15, 4.392986e+19, 2.197463e+10, -2.627743e-14, -2.184665e+17, 1.972257e-17, 9.929684e-03, -
-                                   3.096821e+17, 3.598051e+11, -6.266015e-18, 1.811985e-11, 2.815232e-07, 7.469467e-06, 6.141798e+13, 3.105763e+09, -1.697809e-10, -4.141707e-17, 4.391634e+13]).reshape([5, 4], order="F"))
+        np.testing.assert_allclose(value.data, np.array(get_test_vector("ts1.var_multidimarray.to_service", "double")).reshape(
+            get_test_vector("ts1.var_multidimarray.to_service.dims", "uint32"), order="F"))
 
     @property
     def errtest(self):

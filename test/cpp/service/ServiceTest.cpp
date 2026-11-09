@@ -71,53 +71,47 @@ void RobotRaconteurTest_testroot::set_d2(const RR_INTRUSIVE_PTR<RobotRaconteur::
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > RobotRaconteurTest_testroot::get_d3()
 {
-    double d3_b[] = {2.047398e-20, 2.091541e-20, 9.084241e+14, 1.583413e+01, 5.168067e-02, 1.360920e-11,
-                     9.818531e-21, 6.293083e+07, 4.406956e-14, 8.540213e-09, 7.329310e-03, 5.566796e+00,
-                     3.968358e-08, 4.928656e-08, 5.994301e-20, 8.281551e-21};
-    return (AttachRRArrayCopy(d3_b, 16));
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > d3_b = GetTestRRArray<double>("ts1.d3.to_client");
+    return (d3_b);
 }
 
 void RobotRaconteurTest_testroot::set_d3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value)
 {
     ThrowIfFailures thrower;
-    double d3_a[] = {9.025110e-18, 3.567231e+17, 2.594489e+01, 2.311708e-04, 7.345164e+13, 6.550284e-01,
-                     1.969554e+12, 9.451979e-05, 5.900637e-09, 9.975667e+03, 6.549533e-17, 2.227145e-13,
-                     2.822132e+18, 4.332600e+18, 1.485466e+05, 5.844952e-14};
-    EXPECT_RRARRAY_EQ(AttachRRArray(d3_a, 16, false), value);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > d3_a = GetTestRRArray<double>("ts1.d3.to_service");
+    EXPECT_RRARRAY_EQ(d3_a, value);
     thrower.Throw();
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > RobotRaconteurTest_testroot::get_d4()
 {
-    double d4_b[] = {2.864760e-08, 3.900663e+13, 9.105789e+11, 2.943743e-15, -2.823159e-16, -3.481261e+19};
-    return (AttachRRArrayCopy(d4_b, 6));
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > d4_b = GetTestRRArray<double>("ts1.d4.to_client");
+    return (d4_b);
 }
 
 void RobotRaconteurTest_testroot::set_d4(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> >& value)
 {
     ThrowIfFailures thrower;
-    double d4_a[] = {-4.207179e-09, -3.611333e+11, -4.155626e-06, -2.458459e+10, 2.826045e-11,
-                     3.511191e-08,  4.759250e-07,  2.455883e+09,  4.182578e+11,  4.732337e-14,
-                     -2.967313e+02, -4.139188e+14, 6.287269e+03};
-    EXPECT_RRARRAY_EQ(AttachRRArray(d4_a, 13, false), value);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > d4_a = GetTestRRArray<double>("ts1.d4.to_service");
+    EXPECT_RRARRAY_EQ(d4_a, value);
     thrower.Throw();
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> > RobotRaconteurTest_testroot::get_d5()
 {
 
-    uint32_t d5_b1[] = {5, 6, 5};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > d5_b1 = GetTestRRArray<uint32_t>("ts1.d5.to_client.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > d5_b2 = GetTestRRArray<double>("ts1.d5.to_client");
-    return (AllocateRRMultiDimArray<double>(AttachRRArrayCopy(d5_b1, 3), d5_b2));
+    return (AllocateRRMultiDimArray<double>(d5_b1, d5_b2));
 }
 
 void RobotRaconteurTest_testroot::set_d5(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> >& value)
 {
     ThrowIfFailures thrower;
-    uint32_t d5_a1[] = {8, 6, 2};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > d5_a1 = GetTestRRArray<uint32_t>("ts1.d5.to_service.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > d5_a2 = GetTestRRArray<double>("ts1.d5.to_service");
-    // r->set_d5(AllocateRRMultiDimArray<double>(AttachRRArray(d5_a1,3,false),d5_a2,AttachRRArray(d5_a3,96,false)));
-    EXPECT_RRARRAY_EQ(value->Dims, AttachRRArray(d5_a1, 3, false));
+    // r->set_d5(AllocateRRMultiDimArray<double>(d5_a1,d5_a2,AttachRRArray(d5_a3,96,false)));
+    EXPECT_RRARRAY_EQ(value->Dims, d5_a1);
     EXPECT_RRARRAY_EQ(value->Array, d5_a2);
     thrower.Throw();
 }
@@ -125,23 +119,21 @@ void RobotRaconteurTest_testroot::set_d5(const RR_INTRUSIVE_PTR<RobotRaconteur::
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> > RobotRaconteurTest_testroot::get_d6()
 {
 
-    uint32_t d5_b1[] = {3, 3};
-    double d5_b2[] = {4.427272e-10,  -1.149547e-08, -1.134096e+16, -4.932974e-03, -7.702447e-01,
-                      -3.468374e-03, -5.037849e-14, -4.140513e-08, 4.553774e+03};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > d5_b1 = GetTestRRArray<uint32_t>("ts1.d6.to_client.dims");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > d5_b2 = GetTestRRArray<double>("ts1.d6.to_client");
 
-    return (AllocateRRMultiDimArray<double>(AttachRRArrayCopy(d5_b1, 2), AttachRRArrayCopy(d5_b2, 9)));
+    return (AllocateRRMultiDimArray<double>(d5_b1, d5_b2));
 }
 
 void RobotRaconteurTest_testroot::set_d6(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<double> >& value)
 {
     ThrowIfFailures thrower;
-    uint32_t d5_a1[] = {3, 3};
-    double d5_a2[] = {-5.528040e-08, 3.832644e-01, -9.139211e-22, -4.919312e-05, 3.809620e-11,
-                      1.751983e-09,  2.207872e-21, 1.432794e+09,  -1.970313e+11};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > d5_a1 = GetTestRRArray<uint32_t>("ts1.d6.to_service.dims");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > d5_a2 = GetTestRRArray<double>("ts1.d6.to_service");
 
-    // r->set_d5(AllocateRRMultiDimArray<double>(AttachRRArray(d5_a1,3,false),AttachRRArray(d5_a2,96,false),AttachRRArray(d5_a3,96,false)));
-    EXPECT_RRARRAY_EQ(value->Dims, AttachRRArray(d5_a1, 2, false));
-    EXPECT_RRARRAY_EQ(value->Array, AttachRRArray(d5_a2, 9, false));
+    // r->set_d5(AllocateRRMultiDimArray<double>(d5_a1,d5_a2,AttachRRArray(d5_a3,96,false)));
+    EXPECT_RRARRAY_EQ(value->Dims, d5_a1);
+    EXPECT_RRARRAY_EQ(value->Array, d5_a2);
     thrower.Throw();
 }
 
@@ -216,18 +208,19 @@ void RobotRaconteurTest_testroot::set_u8_2(const RR_INTRUSIVE_PTR<RobotRaconteur
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t> > RobotRaconteurTest_testroot::get_u8_3()
 {
-    uint32_t u8_3_1b1[] = {10, 20};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > u8_3_1b1 = GetTestRRArray<uint32_t>("ts1.u8_3.to_client.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t> > u8_3_1b2 = GetTestRRArray<uint8_t>("ts1.u8_3.to_client");
-    return AllocateRRMultiDimArray<uint8_t>(AttachRRArrayCopy(u8_3_1b1, 2), u8_3_1b2);
+    return AllocateRRMultiDimArray<uint8_t>(u8_3_1b1, u8_3_1b2);
 }
 
 void RobotRaconteurTest_testroot::set_u8_3(const RR_INTRUSIVE_PTR<RobotRaconteur::RRMultiDimArray<uint8_t> >& value)
 {
     ThrowIfFailures thrower;
-    uint32_t u8_3_1a1[] = {30, 10};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > u8_3_1a1 =
+        GetTestRRArray<uint32_t>("ts1.u8_3.to_service.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t> > u8_3_1a2 = GetTestRRArray<uint8_t>("ts1.u8_3.to_service");
-    // r->set_u8_3(AllocateRRMultiDimArray<uint8_t>(AttachRRArray(u8_3_1a1,2,false),u8_3_1a2));
-    EXPECT_RRARRAY_EQ(value->Dims, AttachRRArray(u8_3_1a1, 2, false));
+    // r->set_u8_3(AllocateRRMultiDimArray<uint8_t>(u8_3_1a1,u8_3_1a2));
+    EXPECT_RRARRAY_EQ(value->Dims, u8_3_1a1);
     EXPECT_RRARRAY_EQ(value->Array, u8_3_1a2);
     thrower.Throw();
 }
@@ -438,10 +431,9 @@ RR_INTRUSIVE_PTR<teststruct1> RobotRaconteurTest_testroot::get_struct1()
     ts1->mydat = s1_d1a;
     s1->dstruct2->insert(make_pair("test1", ts1));
     RR_INTRUSIVE_PTR<teststruct2> ts2(new teststruct2());
-    double s1_d1b[] = {4.856615e+15,  5.981566e-22, 1.433616e+14,  1.747102e-09, 2.850376e+06,  -3.748685e-08,
-                       -4.969544e-21, 2.530419e-01, 4.393913e-09,  3.837331e+04, -4.315065e-04, -1.073834e-17,
-                       1.244057e-15,  3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13,  -1.937982e+02};
-    ts2->mydat = AttachRRArrayCopy(s1_d1b, 18);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > s1_d1b =
+        GetTestRRArray<double>("ts1.struct1.dstruct2_3.to_client");
+    ts2->mydat = s1_d1b;
     s1->dstruct2->insert(make_pair("anothertest", ts2));
 
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > s1_d1a_2 =
@@ -451,16 +443,16 @@ RR_INTRUSIVE_PTR<teststruct1> RobotRaconteurTest_testroot::get_struct1()
     ts1_2->mydat = s1_d1a_2;
     s1->lstruct3->push_back(ts1_2);
     RR_INTRUSIVE_PTR<teststruct2> ts2_2 = (new teststruct2());
-    double s1_d1b_2[] = {4.856615e+15,  5.981566e-22, 1.433616e+14,  1.747102e-09, 2.850376e+06,  -3.748685e-08,
-                         -4.969544e-21, 2.530419e-01, 4.393913e-09,  3.837331e+04, -4.315065e-04, -1.073834e-17,
-                         1.244057e-15,  3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13,  -1.937982e+02};
-    ts2_2->mydat = AttachRRArrayCopy(s1_d1b_2, 18);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > s1_d1b_2 =
+        GetTestRRArray<double>("ts1.struct1.dstruct2_3.to_client");
+    ts2_2->mydat = s1_d1b_2;
     s1->lstruct3->push_back(ts2_2);
 
-    uint32_t s1_mul_a[] = {10, 10};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > s1_mul_a =
+        GetTestRRArray<uint32_t>("ts1.struct1.multidimarray.to_client.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > s1_mul_b =
         GetTestRRArray<double>("ts1.struct1.multidimarray.to_client");
-    s1->multidimarray = AllocateRRMultiDimArray<double>(AttachRRArrayCopy(s1_mul_a, 2), s1_mul_b);
+    s1->multidimarray = AllocateRRMultiDimArray<double>(s1_mul_a, s1_mul_b);
 
     s1->var3 = stringToRRArray("This is a vartype string");
 
@@ -511,17 +503,16 @@ void RobotRaconteurTest_testroot::set_struct1(const RR_INTRUSIVE_PTR<teststruct1
         GetTestRRArray<double>("ts1.struct1.dstruct2_2.to_service");
     EXPECT_RRARRAY_EQ((*(++s2->lstruct3->begin()))->mydat, s2_ls3_2a);
 
-    uint32_t s2_mda[] = {10, 10};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > s2_mda =
+        GetTestRRArray<uint32_t>("ts1.struct1.multidimarray.to_service.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > s2_mdb =
         GetTestRRArray<double>("ts1.struct1.multidimarray.to_service");
-    // s2->multidimarray=AllocateRRMultiDimArray<double>(AttachRRArray(s2_mda,2,false),s2_mdb);
-    EXPECT_RRARRAY_EQ(AttachRRArray(s2_mda, 2, false), s2->multidimarray->Dims);
+    // s2->multidimarray=AllocateRRMultiDimArray<double>(s2_mda,s2_mdb);
+    EXPECT_RRARRAY_EQ(s2_mda, s2->multidimarray->Dims);
     EXPECT_RRARRAY_EQ(s2_mdb, s2->multidimarray->Array);
 
-    double s2_var3a[] = {6.404176e-12,  9.258110e-03,  8.657620e-03, -2.064381e+00, 5.182360e-16,
-                         4.167658e-16,  -4.533051e-19, 5.357520e+18, -4.990383e-13, 2.286982e+08,
-                         -4.727256e-18, 1.465299e-17,  3.000340e-10, -2.304453e-04};
-    EXPECT_RRARRAY_EQ(rr_cast<RRArray<double> >(s2->var3), AttachRRArray(s2_var3a, 14, false));
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > s2_var3a = GetTestRRArray<double>("ts1.struct1.var3.to_service");
+    EXPECT_RRARRAY_EQ(rr_cast<RRArray<double> >(s2->var3), s2_var3a);
     thrower.Throw();
 }
 
@@ -590,16 +581,12 @@ void RobotRaconteurTest_testroot::set_is_d2(
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > > RobotRaconteurTest_testroot::
     get_is_d3()
 {
-    double a[] = {8.609080e-13, 3.946603e+03,  2.994203e-10, 3.200877e+14,  1.747361e-09,  2.827056e-16,  -3.676613e-18,
-                  1.886901e-14, -9.970511e-12, 1.932468e-18, -3.629253e-05, 4.903023e-12,  -3.919949e-10, 4.982164e+07,
-                  3.823096e-20, -4.044068e-13, 3.114078e+09, 7.572697e-12,  -2.619929e+04, -3.882046e+01};
-    double b[] = {4.750899e+00,  3.924377e+18,  -2.735066e+17, 4.095362e-21, -2.407932e+09, 4.059499e+10,  1.376975e-10,
-                  -8.547220e-21, -1.344568e-20, 2.809398e+03,  2.118944e-06, 2.435328e-03,  -1.410999e-12, 9.907226e-04,
-                  -9.745948e-20, 1.270118e+15,  -2.833333e+05, 1.032636e-10, 5.312574e+13,  -2.651512e+02};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > a = GetTestRRArray<double>("ts1.is_d3.to_client.a");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > b = GetTestRRArray<double>("ts1.is_d3.to_client.b");
 
     RR_INTRUSIVE_PTR<RRMap<int32_t, RRArray<double> > > o = AllocateEmptyRRMap<int32_t, RRArray<double> >();
-    o->insert(make_pair(12, AttachRRArrayCopy(a, 20)));
-    o->insert(make_pair(832, AttachRRArrayCopy(b, 20)));
+    o->insert(make_pair(12, a));
+    o->insert(make_pair(832, b));
     return o;
 }
 
@@ -607,39 +594,27 @@ void RobotRaconteurTest_testroot::set_is_d3(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRArray<double> > >& value)
 {
     ThrowIfFailures thrower;
-    double is_d3_2a[] = {4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
-                         -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
-                         4.350998e+03,  4.539570e+11,  8.981827e+09,  3.326114e+01,  2.975688e+06,
-                         -1.017456e-12, 2.989498e-03,  2.842392e-03,  -1.258677e-21, 1.068563e-15};
-    double is_d3_2b[] = {3.239279e+12,  1.047689e+17,  -1.236114e+17, -4.002822e-17, 2.657374e-03,
-                         7.383907e-19,  -5.067889e-13, -4.195122e-12, 3.642885e-01,  -2.946040e+14,
-                         5.522403e-08,  6.603132e+04,  1.464154e+05,  -1.851534e-08, 2.808294e-13,
-                         -2.702278e-11, 3.850704e-06,  -2.453957e+02, -3.015401e-02, 1.654070e+05};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d3_2a = GetTestRRArray<double>("ts1.is_d3.to_service.a");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d3_2b = GetTestRRArray<double>("ts1.is_d3.to_service.b");
 
     EXPECT_TRUE(value);
     thrower.Throw();
     EXPECT_EQ(value->size(), 2);
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at(47), AttachRRArray(is_d3_2a, 20, false)));
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at(324), AttachRRArray(is_d3_2b, 20, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at(47), is_d3_2a));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at(324), is_d3_2b));
     thrower.Throw();
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > > RobotRaconteurTest_testroot::
     get_is_d4()
 {
-    double is_d4_1a[] = {1.113851e-04,  3.830104e+07, 4.571169e-21,  -4.064180e-05, 2.889736e+01,
-                         -1.790060e-06, 4.608538e+00, 4.687713e-04,  1.387717e-08,  3.914187e-18,
-                         -5.618118e-06, 1.530811e+05, -5.848922e-11, -3.397558e-20, -6.597368e-08,
-                         -3.779049e-06, 2.406033e-19, 2.507939e-10,  3.246113e-20,  1.341205e+16};
-    double is_d4_1b[] = {-3.088190e-13, -4.033334e-20, 4.150103e-21,  -6.610855e+17, 3.688824e-13,
-                         -3.208025e+13, -5.034888e-11, -4.098363e-06, -1.272830e-03, 2.748392e-03,
-                         -2.644272e-06, -4.810065e-18, 4.629861e-19,  -5.444015e-03, 4.046008e+17,
-                         -3.548079e+12, -3.455290e+16, -3.668946e-12, -3.522178e-01, -1.537583e+14};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d4_1a = GetTestRRArray<double>("ts1.is_d4.to_client.a");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d4_1b = GetTestRRArray<double>("ts1.is_d4.to_client.b");
 
     RR_INTRUSIVE_PTR<RRMap<string, RRArray<double> > > o = AllocateEmptyRRMap<string, RRArray<double> >();
 
-    o->insert(make_pair("testval1", AttachRRArrayCopy(is_d4_1a, 20)));
-    o->insert(make_pair("testval2", AttachRRArrayCopy(is_d4_1b, 20)));
+    o->insert(make_pair("testval1", is_d4_1a));
+    o->insert(make_pair("testval2", is_d4_1b));
 
     return o;
 }
@@ -648,31 +623,25 @@ void RobotRaconteurTest_testroot::set_is_d4(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRArray<double> > >& value)
 {
     ThrowIfFailures thrower;
-    double is_d4_2a[] = {1.771838e+06, 3.037284e-01,  -1.739742e-02, 1.399508e-20,  3.605232e-21,
-                         3.517522e+14, 4.887514e+14,  3.505442e-03,  -3.968972e+18, 1.422037e-20,
-                         2.596937e-21, 4.852833e-11,  6.852955e-17,  4.765526e-12,  -3.445954e+16,
-                         2.322531e-14, -1.755122e-12, 3.941875e+00,  8.877046e-13,  2.818923e-02};
-    double is_d4_2b[] = {4.146439e+16,  2.923439e-07,  3.549608e+16,  -1.664891e-01, -4.192309e-15,
-                         3.857317e+05,  -1.101076e+00, 1.213105e+19,  3.237584e-14,  -2.421219e-06,
-                         -4.603196e-05, -3.719535e-10, 1.124961e+06,  2.032849e+10,  4.639704e-22,
-                         3.946835e+01,  -9.267263e+01, -4.456188e+11, 3.470487e+08,  7.918764e+10};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d4_2a = GetTestRRArray<double>("ts1.is_d4.to_service.a");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d4_2b = GetTestRRArray<double>("ts1.is_d4.to_service.b");
 
     EXPECT_TRUE(value);
     thrower.Throw();
     EXPECT_EQ(value->size(), 2);
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at("testval3"), AttachRRArray(is_d4_2a, 20, false)));
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at("testval4"), AttachRRArray(is_d4_2b, 20, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at("testval3"), is_d4_2a));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at("testval4"), is_d4_2b));
     thrower.Throw();
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double> > >
 RobotRaconteurTest_testroot::get_is_d5()
 {
-    uint32_t is_d5_1_1a[] = {10, 10};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > is_d5_1_1a =
+        GetTestRRArray<uint32_t>("ts1.is_d5.to_client.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d5_1_1b = GetTestRRArray<double>("ts1.is_d5.to_client");
 
-    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a =
-        AllocateRRMultiDimArray<double>(AttachRRArrayCopy(is_d5_1_1a, 2), is_d5_1_1b);
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a = AllocateRRMultiDimArray<double>(is_d5_1_1a, is_d5_1_1b);
     RR_INTRUSIVE_PTR<RRMap<int, RRMultiDimArray<double> > > o = AllocateEmptyRRMap<int, RRMultiDimArray<double> >();
     o->insert(make_pair(564, a));
     return o;
@@ -682,13 +651,14 @@ void RobotRaconteurTest_testroot::set_is_d5(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteur::RRMultiDimArray<double> > >& value)
 {
     ThrowIfFailures thrower;
-    uint32_t is_d5_2_1a[] = {10, 20};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > is_d5_2_1a =
+        GetTestRRArray<uint32_t>("ts1.is_d5.to_service.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d5_2_1b = GetTestRRArray<double>("ts1.is_d5.to_service");
 
     EXPECT_EQ(value->size(), 1);
     thrower.Throw();
     RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a = value->at(328);
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Dims, AttachRRArray(is_d5_2_1a, 2, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Dims, is_d5_2_1a));
     EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Array, is_d5_2_1b));
     thrower.Throw();
 }
@@ -696,11 +666,11 @@ void RobotRaconteurTest_testroot::set_is_d5(
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRMultiDimArray<double> > >
 RobotRaconteurTest_testroot::get_is_d6()
 {
-    uint32_t is_d6_1_1a[] = {5, 10};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > is_d6_1_1a =
+        GetTestRRArray<uint32_t>("ts1.is_d6.to_client.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d6_1_1b = GetTestRRArray<double>("ts1.is_d6.to_client");
 
-    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a =
-        AllocateRRMultiDimArray<double>(AttachRRArrayCopy(is_d6_1_1a, 2), is_d6_1_1b);
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a = AllocateRRMultiDimArray<double>(is_d6_1_1a, is_d6_1_1b);
     RR_INTRUSIVE_PTR<RRMap<string, RRMultiDimArray<double> > > o =
         AllocateEmptyRRMap<string, RRMultiDimArray<double> >();
     o->insert(make_pair("testval1", a));
@@ -710,7 +680,8 @@ RobotRaconteurTest_testroot::get_is_d6()
 void RobotRaconteurTest_testroot::set_is_d6(
     const RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, RobotRaconteur::RRMultiDimArray<double> > >& value)
 {
-    uint32_t is_d6_2_1a[] = {8, 10};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > is_d6_2_1a =
+        GetTestRRArray<uint32_t>("ts1.is_d6.to_service.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d6_2_1b = GetTestRRArray<double>("ts1.is_d6.to_service");
 
     ThrowIfFailures thrower;
@@ -719,7 +690,7 @@ void RobotRaconteurTest_testroot::set_is_d6(
     EXPECT_EQ(value->size(), 1);
     RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a;
     EXPECT_NO_THROW(a = value->at("testval2"));
-    EXPECT_RRARRAY_EQ(a->Dims, AttachRRArray(is_d6_2_1a, 2, false));
+    EXPECT_RRARRAY_EQ(a->Dims, is_d6_2_1a);
     EXPECT_RRARRAY_EQ(a->Array, is_d6_2_1b);
     thrower.Throw();
 }
@@ -766,11 +737,9 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, teststruct2> > RobotRaconteurTes
 {
     RR_INTRUSIVE_PTR<RRMap<int32_t, teststruct2> > o = AllocateEmptyRRMap<int32_t, teststruct2>();
     RR_INTRUSIVE_PTR<teststruct2> s(new teststruct2());
-    double is_struct1_1a[] = {-9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20,  5.147581e-14,
-                              -3.773975e+15, 2.336430e-21,  1.597144e-18,  -2.609059e-03, 3.557639e-21,
-                              -1.666575e-16, -4.242788e-07, 2.686206e+07,  -3.200902e-05, -1.549754e-06,
-                              -3.010796e-12, 4.638418e+01,  2.664397e-14,  -2.689174e+01, 4.564584e-21};
-    s->mydat = AttachRRArrayCopy(is_struct1_1a, 20);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_struct1_1a =
+        GetTestRRArray<double>("ts1.is_struct1.to_client");
+    s->mydat = is_struct1_1a;
     o->insert(make_pair(748, s));
     return o;
 }
@@ -781,12 +750,10 @@ void RobotRaconteurTest_testroot::set_is_struct1(
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    double is_struct1_2_1a[] = {-2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
-                                -3.256612e-02, -1.855481e-19, 3.801916e+07,  2.145894e+09,  4.487676e+12,
-                                1.351202e-02,  -1.125124e-16, 1.369826e-20,  -2.290673e+00, 1.786029e-20,
-                                -4.991515e+08, 4.006107e-10,  -4.947871e-11, -2.737020e-08, 4.123759e-20};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_struct1_2_1a =
+        GetTestRRArray<double>("ts1.is_struct1.to_service");
     EXPECT_NO_THROW(EXPECT_EQ(value->size(), 1));
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at(372)->mydat, AttachRRArray(is_struct1_2_1a, 20, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at(372)->mydat, is_struct1_2_1a));
     thrower.Throw();
 }
 
@@ -794,11 +761,9 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<std::string, teststruct2> > RobotRaconteu
 {
     RR_INTRUSIVE_PTR<RRMap<string, teststruct2> > o = AllocateEmptyRRMap<string, teststruct2>();
     RR_INTRUSIVE_PTR<teststruct2> s(new teststruct2());
-    double is_struct2_1a[] = {-4.489570e+13, 9.574895e-05,  4.081711e+06,  5.612839e-18,  -1.078604e+05,
-                              3.658139e+08,  -4.748975e+05, -2.606481e+01, 3.016739e+15,  3.174709e+19,
-                              -4.572549e+17, 1.980389e-04,  -3.551911e-10, 3.598401e-07,  2.659416e-12,
-                              -3.606157e+06, 2.059674e+17,  -9.362336e-20, -3.299256e+17, -2.245745e+16};
-    s->mydat = AttachRRArrayCopy(is_struct2_1a, 20);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_struct2_1a =
+        GetTestRRArray<double>("ts1.is_struct2.to_client");
+    s->mydat = is_struct2_1a;
     o->insert(make_pair("testval1", s));
     return o;
 }
@@ -809,12 +774,10 @@ void RobotRaconteurTest_testroot::set_is_struct2(
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    double is_struct2_2_1a[] = {6.931327e-21,  4.527137e-02,  1.260822e-18,  3.592805e-12,  1.088317e-05,
-                                3.305865e+03,  -9.798828e-20, 1.497504e+18,  -3.653592e+01, 1.473952e+10,
-                                -1.003612e-20, 1.302159e+18,  -8.544326e+05, 1.038521e+16,  -2.845746e-18,
-                                -3.899909e-04, 4.785560e-02,  -7.203365e-12, -1.500022e-14, -1.892753e-17};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_struct2_2_1a =
+        GetTestRRArray<double>("ts1.is_struct2.to_service");
     EXPECT_NO_THROW(EXPECT_EQ(value->size(), 1));
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at("testval2")->mydat, AttachRRArray(is_struct2_2_1a, 20, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->at("testval2")->mydat, is_struct2_2_1a));
     thrower.Throw();
 }
 
@@ -844,16 +807,12 @@ void RobotRaconteurTest_testroot::set_list_d1(
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRArray<double> > > RobotRaconteurTest_testroot::get_list_d3()
 {
-    double a[] = {8.609080e-13, 3.946603e+03,  2.994203e-10, 3.200877e+14,  1.747361e-09,  2.827056e-16,  -3.676613e-18,
-                  1.886901e-14, -9.970511e-12, 1.932468e-18, -3.629253e-05, 4.903023e-12,  -3.919949e-10, 4.982164e+07,
-                  3.823096e-20, -4.044068e-13, 3.114078e+09, 7.572697e-12,  -2.619929e+04, -3.882046e+01};
-    double b[] = {4.750899e+00,  3.924377e+18,  -2.735066e+17, 4.095362e-21, -2.407932e+09, 4.059499e+10,  1.376975e-10,
-                  -8.547220e-21, -1.344568e-20, 2.809398e+03,  2.118944e-06, 2.435328e-03,  -1.410999e-12, 9.907226e-04,
-                  -9.745948e-20, 1.270118e+15,  -2.833333e+05, 1.032636e-10, 5.312574e+13,  -2.651512e+02};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > a = GetTestRRArray<double>("ts1.is_d3.to_client.a");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > b = GetTestRRArray<double>("ts1.is_d3.to_client.b");
 
     RR_INTRUSIVE_PTR<RRList<RRArray<double> > > o = AllocateEmptyRRList<RRArray<double> >();
-    o->push_back(AttachRRArrayCopy(a, 20));
-    o->push_back(AttachRRArrayCopy(b, 20));
+    o->push_back(a);
+    o->push_back(b);
     return o;
 }
 
@@ -863,30 +822,24 @@ void RobotRaconteurTest_testroot::set_list_d3(
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    double is_d3_2a[] = {4.335907e-08,  -3.270294e-03, 1.752801e-01,  1.235219e-20,  -4.348647e+02,
-                         -4.503864e-21, -3.316231e+15, -2.080056e+17, 1.813854e+13,  -3.380846e-05,
-                         4.350998e+03,  4.539570e+11,  8.981827e+09,  3.326114e+01,  2.975688e+06,
-                         -1.017456e-12, 2.989498e-03,  2.842392e-03,  -1.258677e-21, 1.068563e-15};
-    double is_d3_2b[] = {3.239279e+12,  1.047689e+17,  -1.236114e+17, -4.002822e-17, 2.657374e-03,
-                         7.383907e-19,  -5.067889e-13, -4.195122e-12, 3.642885e-01,  -2.946040e+14,
-                         5.522403e-08,  6.603132e+04,  1.464154e+05,  -1.851534e-08, 2.808294e-13,
-                         -2.702278e-11, 3.850704e-06,  -2.453957e+02, -3.015401e-02, 1.654070e+05};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d3_2a = GetTestRRArray<double>("ts1.is_d3.to_service.a");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d3_2b = GetTestRRArray<double>("ts1.is_d3.to_service.b");
 
     EXPECT_NO_THROW(EXPECT_EQ(value->size(), 2));
     thrower.Throw();
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->front(), AttachRRArray(is_d3_2a, 20, false)));
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(*(++value->begin()), AttachRRArray(is_d3_2b, 20, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->front(), is_d3_2a));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(*(++value->begin()), is_d3_2b));
     thrower.Throw();
 }
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRList<RobotRaconteur::RRMultiDimArray<double> > > RobotRaconteurTest_testroot::
     get_list_d5()
 {
-    uint32_t is_d5_1_1a[] = {10, 10};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > is_d5_1_1a =
+        GetTestRRArray<uint32_t>("ts1.is_d5.to_client.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d5_1_1b = GetTestRRArray<double>("ts1.is_d5.to_client");
 
-    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a =
-        AllocateRRMultiDimArray<double>(AttachRRArrayCopy(is_d5_1_1a, 2), is_d5_1_1b);
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a = AllocateRRMultiDimArray<double>(is_d5_1_1a, is_d5_1_1b);
     RR_INTRUSIVE_PTR<RRList<RRMultiDimArray<double> > > o = AllocateEmptyRRList<RRMultiDimArray<double> >();
     o->push_back(a);
     return o;
@@ -898,12 +851,13 @@ void RobotRaconteurTest_testroot::set_list_d5(
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    uint32_t is_d5_2_1a[] = {10, 20};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > is_d5_2_1a =
+        GetTestRRArray<uint32_t>("ts1.is_d5.to_service.dims");
     RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_d5_2_1b = GetTestRRArray<double>("ts1.is_d5.to_service");
 
     EXPECT_NO_THROW(EXPECT_EQ(value->size(), 1));
     RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a = value->front();
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Dims, AttachRRArray(is_d5_2_1a, 2, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Dims, is_d5_2_1a));
     EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Array, is_d5_2_1b));
     thrower.Throw();
 }
@@ -930,11 +884,9 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRList<teststruct2> > RobotRaconteurTest_testro
 {
     RR_INTRUSIVE_PTR<RRList<teststruct2> > o = AllocateEmptyRRList<teststruct2>();
     RR_INTRUSIVE_PTR<teststruct2> s(new teststruct2());
-    double is_struct1_1a[] = {-9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20,  5.147581e-14,
-                              -3.773975e+15, 2.336430e-21,  1.597144e-18,  -2.609059e-03, 3.557639e-21,
-                              -1.666575e-16, -4.242788e-07, 2.686206e+07,  -3.200902e-05, -1.549754e-06,
-                              -3.010796e-12, 4.638418e+01,  2.664397e-14,  -2.689174e+01, 4.564584e-21};
-    s->mydat = AttachRRArrayCopy(is_struct1_1a, 20);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_struct1_1a =
+        GetTestRRArray<double>("ts1.is_struct1.to_client");
+    s->mydat = is_struct1_1a;
     o->push_back(s);
     return o;
 }
@@ -944,13 +896,11 @@ void RobotRaconteurTest_testroot::set_list_struct1(const RR_INTRUSIVE_PTR<RobotR
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    double is_struct1_2_1a[] = {-2.101948e-07, -2.594836e-08, 2.515710e+01,  -3.834127e-14, -3.088095e+06,
-                                -3.256612e-02, -1.855481e-19, 3.801916e+07,  2.145894e+09,  4.487676e+12,
-                                1.351202e-02,  -1.125124e-16, 1.369826e-20,  -2.290673e+00, 1.786029e-20,
-                                -4.991515e+08, 4.006107e-10,  -4.947871e-11, -2.737020e-08, 4.123759e-20};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > is_struct1_2_1a =
+        GetTestRRArray<double>("ts1.is_struct1.to_service");
     EXPECT_NO_THROW(EXPECT_EQ(value->size(), 1));
     thrower.Throw();
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->front()->mydat, AttachRRArray(is_struct1_2_1a, 20, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->front()->mydat, is_struct1_2_1a));
     thrower.Throw();
 }
 
@@ -961,11 +911,8 @@ RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2> RobotRaco
     RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService2::ostruct2> o(
         new com::robotraconteur::testing::TestService2::ostruct2());
 
-    double struct3a[] = {-8.483090e-19, -4.401548e-08, 3.908118e+00,  2.063513e-18,  4.237047e+18,
-                         -1.124681e-16, 3.924541e-01,  -2.184335e-10, -1.978950e+11, 1.586365e+18,
-                         1.712393e+00,  -6.314723e+00, 1.196777e-16,  -2.748704e-08, -1.289967e+02,
-                         -4.051137e+17, -1.902860e+10, -2.070486e+08, 3.622651e+06,  1.315398e+17};
-    o->a1 = AttachRRArrayCopy(struct3a, 20);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > struct3a = GetTestRRArray<double>("ts1.struct3.to_client");
+    o->a1 = struct3a;
 
     return o;
 }
@@ -976,11 +923,8 @@ void RobotRaconteurTest_testroot::set_struct3(
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    double struct3_1a[] = {-2.426765e+05, -9.410735e+01, -1.667915e+12, -4.084240e-05, 3.199460e+03,
-                           8.256717e-12,  -4.772119e-11, -1.061407e-13, 2.759750e+02,  -1.212549e+10,
-                           7.012690e+15,  3.953354e+04,  -2.617985e-07, 1.104408e-21,  -3.889366e+00,
-                           4.549493e+16,  -1.376791e+15, -3.445205e-21, 2.137830e-14,  4.620179e+18};
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->a1, AttachRRArray(struct3_1a, 20, false)));
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > struct3_1a = GetTestRRArray<double>("ts1.struct3.to_service");
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(value->a1, struct3_1a));
     thrower.Throw();
 }
 
@@ -1001,10 +945,8 @@ void RobotRaconteurTest_testroot::set_var2(
 
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_num()
 {
-    int32_t var_numa[] = {-1680284833, -54562307, 732107275,  1470526962, -1389452949,
-                          256801409,   261288152, 1728150828, 1322531658, -1640628174,
-                          1036878614,  511108054, 2057847386, 288780916,  996595759};
-    return (AttachRRArrayCopy(var_numa, 15));
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > var_numa = GetTestRRArray<int32_t>("ts1.var_num.to_client");
+    return (var_numa);
 }
 
 void RobotRaconteurTest_testroot::set_var_num(const RR_INTRUSIVE_PTR<RobotRaconteur::RRValue>& value)
@@ -1012,9 +954,8 @@ void RobotRaconteurTest_testroot::set_var_num(const RR_INTRUSIVE_PTR<RobotRacont
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    int32_t var_numb[] = {-1046369769, 1950632347, 1140727074, -1277424443, 163999900,
-                          970815027,   545593183,  514305170,  1896372264,  1385916382};
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(rr_cast<RRArray<int32_t> >(value), AttachRRArray(var_numb, 10, false)));
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > var_numb = GetTestRRArray<int32_t>("ts1.var_num.to_service");
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(rr_cast<RRArray<int32_t> >(value), var_numb));
     thrower.Throw();
 }
 
@@ -1036,11 +977,8 @@ void RobotRaconteurTest_testroot::set_var_str(const RR_INTRUSIVE_PTR<RobotRacont
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_struct()
 {
     RR_INTRUSIVE_PTR<teststruct2> o(new teststruct2());
-    double var_structa[] = {-9.052731e+13, 4.151705e-17,  -4.004463e+19, -2.838274e+03, 9.983314e+12,
-                            2.764122e+10,  -1.131486e+03, 2.418899e+12,  1.323675e-05,  -4.602174e+13,
-                            2.717530e+01,  1.193887e-10,  -4.137578e+16, -1.246990e-19, 4.244315e-18,
-                            -2.833005e-08, 1.956266e-04,  4.130129e-21,  1.641708e-11,  -4.488158e-19};
-    o->mydat = AttachRRArrayCopy(var_structa, 20);
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > var_structa = GetTestRRArray<double>("ts1.var_struct.to_client");
+    o->mydat = var_structa;
     return o;
 }
 
@@ -1049,11 +987,9 @@ void RobotRaconteurTest_testroot::set_var_struct(const RR_INTRUSIVE_PTR<RobotRac
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    double var_struct1_1a[] = {-4.945426e-20, 1.763386e+13,  3.431578e-04,  4.411409e+17,  -2.690201e+03,
-                               3.025939e-10,  -3.659846e+11, -4.780435e-10, -3.246816e+14, -1.815578e+04,
-                               2.236455e+10,  -4.639041e+14, 1.767930e+10,  -1.636094e+05, -4.392462e-01,
-                               2.225260e+04,  -5.250245e+18, 8.755282e-12,  2.005819e-10,  2.702210e+04};
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(rr_cast<teststruct2>(value)->mydat, AttachRRArray(var_struct1_1a, 20, false)));
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > var_struct1_1a =
+        GetTestRRArray<double>("ts1.var_struct.to_service");
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(rr_cast<teststruct2>(value)->mydat, var_struct1_1a));
     thrower.Throw();
 }
 
@@ -1114,13 +1050,11 @@ void RobotRaconteurTest_testroot::set_var_list(const RR_INTRUSIVE_PTR<RobotRacon
 RR_INTRUSIVE_PTR<RobotRaconteur::RRValue> RobotRaconteurTest_testroot::get_var_multidimarray()
 {
 
-    uint32_t var_a_1a[] = {5, 4};
-    double var_a_1b[] = {-4.915597e-01, 3.892823e+00,  2.622325e+08,  -7.150935e+04, 9.418756e+00,
-                         3.633879e+18,  3.522383e-03,  -4.989811e+05, 2.027383e-03,  -3.153241e+12,
-                         -6.948245e-21, -3.198577e+14, 6.172905e+09,  3.849430e+15,  8.600383e+13,
-                         4.079437e-17,  3.194775e+06,  4.222550e-18,  1.758122e+17,  -1.018308e+03};
-    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > var_a_1 =
-        AllocateRRMultiDimArray<double>(AttachRRArrayCopy(var_a_1a, 2), AttachRRArrayCopy(var_a_1b, 20));
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > var_a_1a =
+        GetTestRRArray<uint32_t>("ts1.var_multidimarray.to_client.dims");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > var_a_1b =
+        GetTestRRArray<double>("ts1.var_multidimarray.to_client");
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > var_a_1 = AllocateRRMultiDimArray<double>(var_a_1a, var_a_1b);
 
     return var_a_1;
 }
@@ -1130,15 +1064,14 @@ void RobotRaconteurTest_testroot::set_var_multidimarray(const RR_INTRUSIVE_PTR<R
     ThrowIfFailures thrower;
     EXPECT_TRUE(value);
     thrower.Throw();
-    uint32_t var_a_2a[] = {5, 4};
-    double var_a_2b[] = {3.792953e+00,  2.968121e-17,  -3.976413e-15, 4.392986e+19,  2.197463e+10,
-                         -2.627743e-14, -2.184665e+17, 1.972257e-17,  9.929684e-03,  -3.096821e+17,
-                         3.598051e+11,  -6.266015e-18, 1.811985e-11,  2.815232e-07,  7.469467e-06,
-                         6.141798e+13,  3.105763e+09,  -1.697809e-10, -4.141707e-17, 4.391634e+13};
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > var_a_2a =
+        GetTestRRArray<uint32_t>("ts1.var_multidimarray.to_service.dims");
+    RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > var_a_2b =
+        GetTestRRArray<double>("ts1.var_multidimarray.to_service");
 
     RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a = rr_cast<RRMultiDimArray<double> >(value);
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Dims, AttachRRArray(var_a_2a, 2, false)));
-    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Array, AttachRRArray(var_a_2b, 20, false)));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Dims, var_a_2a));
+    EXPECT_NO_THROW(EXPECT_RRARRAY_EQ(a->Array, var_a_2b));
     thrower.Throw();
 }
 
