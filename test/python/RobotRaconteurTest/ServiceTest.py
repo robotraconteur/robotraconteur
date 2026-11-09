@@ -299,7 +299,7 @@ class testroot_impl(object):
 
     @u64_2.setter
     def u64_2(self, value):
-        nptest.assert_array_equal(value, get_test_vector("ts1.u64_2.to_service", "uint64"))
+        nptest.assert_array_equal(value, np.array(get_test_vector("ts1.u64_2.to_service", "uint64"), dtype=np.uint64))
 
     @property
     def str1(self):

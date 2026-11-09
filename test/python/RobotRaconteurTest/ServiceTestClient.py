@@ -129,7 +129,8 @@ class ServiceTestClient:
         self._r.u64_1 = 1465640522145789825
         assert self._r.u64_1 == 13389861970863644378
         self._r.u64_2 = get_test_vector("ts1.u64_2.to_service", "uint64")
-        nptest.assert_array_equal(self._r.u64_2, get_test_vector("ts1.u64_2.to_client", "uint64"))
+        nptest.assert_array_equal(self._r.u64_2, np.array(
+            get_test_vector("ts1.u64_2.to_client", "uint64"), dtype=np.uint64))
         self._r.str1 = "Hello Server!"
         assert self._r.str1 == "Hello Client!"
 
