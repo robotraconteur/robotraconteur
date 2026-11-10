@@ -49,6 +49,14 @@ WrappedServiceFactory::WrappedServiceFactory(const boost::shared_ptr<RobotRacont
     servicedef = def;
 }
 
+// Keeps the original text of a definition registered from a string, so clients receive it as written
+WrappedServiceFactory::WrappedServiceFactory(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def,
+                                             const std::string& defstring)
+{
+    this->defstring = defstring;
+    servicedef = def;
+}
+
 std::string WrappedServiceFactory::GetServiceName() { return servicedef->Name; }
 
 std::string WrappedServiceFactory::DefString() { return defstring; }

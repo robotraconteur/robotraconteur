@@ -227,6 +227,8 @@ class WrappedServiceFactory : public virtual RobotRaconteur::ServiceFactory
   public:
     WrappedServiceFactory(const std::string& defstring);
     WrappedServiceFactory(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def);
+    WrappedServiceFactory(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def,
+                          const std::string& defstring);
     RR_OVIRTUAL ~WrappedServiceFactory() RR_OVERRIDE {}
 
     RR_OVIRTUAL std::string GetServiceName() RR_OVERRIDE;

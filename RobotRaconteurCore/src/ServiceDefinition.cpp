@@ -364,6 +364,21 @@ static void ServiceDefinition_FindBlock(boost::string_ref current_line, std::ist
     throw ServiceDefinitionParseException("Block end not found", init_parse_info);
 }
 
+// Documentation comments as ## lines, so they survive ToString() and FromString()
+static std::string ServiceDefinition_DocStringLines(const std::string& docstring, const std::string& indent)
+{
+    if (docstring.empty())
+        return "";
+    std::vector<std::string> lines;
+    boost::split(lines, docstring, boost::is_any_of("\n"));
+    std::string o;
+    BOOST_FOREACH (const std::string& l, lines)
+    {
+        o += indent + "##" + l + "\n";
+    }
+    return o;
+}
+
 std::string ServiceDefinition::ToString()
 {
     std::ostringstream o;
@@ -373,6 +388,7 @@ std::string ServiceDefinition::ToString()
 
 void ServiceDefinition::ToStream(std::ostream& o) const
 {
+    o << ServiceDefinition_DocStringLines(DocString, "");
     o << "service " << Name << "\n\n";
 
     if (StdVer)
@@ -438,7 +454,7 @@ void ServiceDefinition::ToStream(std::ostream& o) const
 
     BOOST_FOREACH (const RR_SHARED_PTR<ConstantDefinition>& c, Constants)
     {
-        o << c->ToString() << "\n";
+        o << ServiceDefinition_DocStringLines(c->DocString, "") << c->ToString() << "\n";
     }
 
     if (!Constants.empty())
@@ -446,7 +462,7 @@ void ServiceDefinition::ToStream(std::ostream& o) const
 
     BOOST_FOREACH (const RR_SHARED_PTR<EnumDefinition>& e, Enums)
     {
-        o << e->ToString() << "\n";
+        o << ServiceDefinition_DocStringLines(e->DocString, "") << e->ToString() << "\n";
     }
 
     if (!Enums.empty())
@@ -454,7 +470,8 @@ void ServiceDefinition::ToStream(std::ostream& o) const
 
     BOOST_FOREACH (const RR_SHARED_PTR<ExceptionDefinition>& exception, Exceptions)
     {
-        o << exception->ToString() << "\n"; // replace_all_copy((*option),"\"", "\"\"") + "\n";
+        o << ServiceDefinition_DocStringLines(exception->DocString, "") << exception->ToString()
+          << "\n"; // replace_all_copy((*option),"\"", "\"\"") + "\n";
     }
 
     if (!Exceptions.empty())
@@ -856,6 +873,7 @@ static std::string ServiceEntryDefinition_UnqualifyTypeWithUsing(const ServiceEn
 
 void ServiceEntryDefinition::ToStream(std::ostream& o) const
 {
+    o << ServiceDefinition_DocStringLines(DocString, "");
 
     switch (EntryType)
     {
@@ -887,6 +905,7 @@ void ServiceEntryDefinition::ToStream(std::ostream& o) const
 
     BOOST_FOREACH (const RR_SHARED_PTR<ConstantDefinition>& constant, Constants)
     {
+        o << ServiceDefinition_DocStringLines(constant->DocString, "    ");
         o << "    " << constant->ToString() << "\n";
     }
 
@@ -897,6 +916,7 @@ void ServiceEntryDefinition::ToStream(std::ostream& o) const
         {
             boost::replace_first(d1, "property", "field");
         }
+        o << ServiceDefinition_DocStringLines(d->DocString, "    ");
         o << "    " << d1 << "\n";
     }
 
@@ -2996,15 +3016,16 @@ std::string EnumDefinition::ToString()
 
     BOOST_FOREACH (const EnumDefinitionValue& e, Values)
     {
+        std::string doc = ServiceDefinition_DocStringLines(e.DocString, "    ");
         if (e.ImplicitValue)
         {
-            values.push_back("    " + e.Name);
+            values.push_back(doc + "    " + e.Name);
         }
         else
         {
             if (!e.HexValue)
             {
-                values.push_back("    " + e.Name + " = " + boost::lexical_cast<std::string>(e.Value));
+                values.push_back(doc + "    " + e.Name + " = " + boost::lexical_cast<std::string>(e.Value));
             }
             else
             {
@@ -3012,13 +3033,13 @@ std::string EnumDefinition::ToString()
                 {
                     std::stringstream ss;
                     ss << std::hex << e.Value;
-                    values.push_back("    " + e.Name + " = 0x" + ss.str());
+                    values.push_back(doc + "    " + e.Name + " = 0x" + ss.str());
                 }
                 else
                 {
                     std::stringstream ss;
                     ss << std::hex << -e.Value;
-                    values.push_back("    " + e.Name + " = -0x" + ss.str());
+                    values.push_back(doc + "    " + e.Name + " = -0x" + ss.str());
                 }
             }
         }
