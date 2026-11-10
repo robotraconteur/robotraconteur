@@ -374,7 +374,10 @@ static std::string ServiceDefinition_DocStringLines(const std::string& docstring
     std::string o;
     BOOST_FOREACH (const std::string& l, lines)
     {
-        o += indent + "##" + l + "\n";
+        o += indent;
+        o += "##";
+        o += l;
+        o += "\n";
     }
     return o;
 }
