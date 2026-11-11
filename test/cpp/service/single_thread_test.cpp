@@ -22,7 +22,9 @@ static std::string service_url;
 
 RR_SHARED_PTR<TestServerNodeConfig> test_server_node_config;
 
-static RR_BOOST_ASIO_IO_CONTEXT asio_io_context;
+// Never destroyed. The node singleton is not shut down and is destroyed after main returns, and its
+// timers still refer to this io_context, so it must outlive the singleton.
+static RR_BOOST_ASIO_IO_CONTEXT& asio_io_context = *new RR_BOOST_ASIO_IO_CONTEXT();
 
 class ServiceTest : public testing::Test
 {
