@@ -244,7 +244,7 @@ RR_KEEP_GIL()
 
 		VerifyServiceDefinitions(defs);
 
-		$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def2));
+		$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def2, def));
 	}
 
 	void RegisterServiceTypes(const std::vector<std::string>& defs_str)
@@ -268,9 +268,9 @@ RR_KEEP_GIL()
 
 		VerifyServiceDefinitions(defs2);
 
-		BOOST_FOREACH(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def, defs)
+		for (size_t i = 0; i < defs.size(); i++)
 		{
-			$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def));
+			$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(defs[i], defs_str[i]));
 		}
 	}
 
