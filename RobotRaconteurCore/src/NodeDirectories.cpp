@@ -285,7 +285,7 @@ NodeDirectories NodeDirectoriesUtil::GetDefaultNodeDirectories(const RR_SHARED_P
                                                                            "ROBOTRACONTEUR_USER_CONFIG_DIR"),
                           "user_config_dir");
         CATCH_DIR_RESOLVE(ret.user_state_dir = detail::user_unix_home_dir(
-                              ".local/state/RobotRaconteur", "XDG_STATE_HOME", "ROBOTRACONTEUR_USER_CONFIG_DIR"),
+                              ".local/state/RobotRaconteur", "XDG_STATE_HOME", "ROBOTRACONTEUR_USER_STATE_DIR"),
                           "user_state_dir");
         CATCH_DIR_RESOLVE(ret.user_cache_dir = detail::user_unix_home_dir(".cache/RobotRaconteur", "XDG_CACHE_HOME",
                                                                           "ROBOTRACONTEUR_USER_CACHE_DIR"),
