@@ -1770,7 +1770,6 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     {
         w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(s);"
            << std::endl;
-        // w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
         w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     }
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin();
@@ -1791,7 +1790,6 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    // w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackStructure(structin);" << std::endl;
     w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);" << std::endl;
     w2 << "return stub->PackStructure(structin);" << std::endl;
@@ -1808,7 +1806,6 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    // w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackStructure(mstructin);" << std::endl;
     w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type.str());" << std::endl;
     w2 << "return stub->UnpackStructure(mstructin);" << std::endl;

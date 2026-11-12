@@ -153,8 +153,6 @@ void GenerateCSharpFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::s
 
 void GenerateVBNETFiles(const boost::shared_ptr<ServiceDefinition>& d, const std::string& str)
 {
-
-    // VBNETServiceLangGen::GenerateFiles(d,str);
 }
 
 void GenerateJavaFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::string& def_str,
