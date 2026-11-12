@@ -252,7 +252,7 @@ RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFun
 
             RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
             ret->AddElement("memorypos", memorypos);
-            ret->AddElement("count", memorypos);
+            ret->AddElement("count", count);
             ret->AddElement("data", data);
             return ret;
         }

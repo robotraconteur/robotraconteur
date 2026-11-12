@@ -291,6 +291,28 @@ TEST_F(ServiceTest, MemoryWriteReplyTypeTest)
     node->DisconnectService(r);
 }
 
+TEST_F(ServiceTest, MultiDimMemoryReadReplyCountTest)
+{
+    // The "count" element of a multidimensional MemoryRead reply must echo the requested count
+    RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r =
+        rr_cast<com::robotraconteur::testing::TestService1::testroot>(node->ConnectService(service_url));
+    RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(r);
+
+    std::vector<uint64_t> pos(5, 1);
+    std::vector<uint64_t> count(5, 2);
+    RR_INTRUSIVE_PTR<MessageEntry> rd = CreateMessageEntry(MessageEntryType_MemoryRead, "m2");
+    rd->AddElement("memorypos", VectorToRRArray<uint64_t>(pos));
+    rd->AddElement("count", VectorToRRArray<uint64_t>(count));
+    RR_INTRUSIVE_PTR<MessageEntry> ret = stub->ProcessRequest(rd);
+    std::vector<uint64_t> ret_pos = RRArrayToVector<uint64_t>(ret->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
+    std::vector<uint64_t> ret_count = RRArrayToVector<uint64_t>(ret->FindElement("count")->CastData<RRArray<uint64_t> >());
+    EXPECT_EQ(ret_pos, pos);
+    EXPECT_EQ(ret_count, count);
+
+    node->DisconnectService(r);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
