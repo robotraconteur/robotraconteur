@@ -289,6 +289,14 @@ TEST(RobotRaconteurMisc, WallRateDefaultNode)
     EXPECT_NO_THROW(rate->Sleep());
 }
 
+TEST(RobotRaconteurMisc, ParseConnectionURLTcpNoPath)
+{
+    EXPECT_THROW(ParseConnectionURL("tcp://localhost:1234"), ConnectionException);
+    ParseConnectionURLResult r = ParseConnectionURL("tcp://localhost:1234/MyNode/MyService");
+    EXPECT_EQ(r.nodename, "MyNode");
+    EXPECT_EQ(r.service, "MyService");
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

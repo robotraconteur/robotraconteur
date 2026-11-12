@@ -144,7 +144,7 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
             throw ConnectionException("Invalid Connection URL");
 
         std::string ap = url_result[4];
-        if (ap.at(0) == '/')
+        if (!ap.empty() && ap.at(0) == '/')
             ap = ap.erase(0, 1);
 
         std::vector<std::string> s;
