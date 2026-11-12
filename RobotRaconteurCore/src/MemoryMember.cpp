@@ -143,7 +143,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(co
             uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
             RR_INTRUSIVE_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
             DoWrite(memorypos, data, 0, boost::numeric_cast<size_t>(count), mem);
-            RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
+            RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryWriteRet, GetMemberName());
             ret->AddElement("memorypos", ScalarToRRArray(memorypos));
             ret->AddElement("count", ScalarToRRArray(count));
             return ret;
@@ -287,7 +287,7 @@ RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFun
 
             DoWrite(RRArrayToVector<uint64_t>(memorypos), data, std::vector<uint64_t>(count->size()),
                     RRArrayToVector<uint64_t>(count), elemcount, mem);
-            RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
+            RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryWriteRet, GetMemberName());
             ret->AddElement("memorypos", memorypos);
             ret->AddElement("count", count);
 

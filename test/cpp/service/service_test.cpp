@@ -254,6 +254,43 @@ TEST_F(ServiceTest, MultiDimMemoryRequestOverflowTest)
     node->DisconnectService(r);
 }
 
+TEST_F(ServiceTest, MemoryWriteReplyTypeTest)
+{
+    // MemoryWrite requests must be answered with MemoryWriteRet
+    RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r =
+        rr_cast<com::robotraconteur::testing::TestService1::testroot>(node->ConnectService(service_url));
+    RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(r);
+
+    // Array memory: read element 0 and write the same value back
+    RR_INTRUSIVE_PTR<MessageEntry> rd = CreateMessageEntry(MessageEntryType_MemoryRead, "m1");
+    rd->AddElement("memorypos", ScalarToRRArray<uint64_t>(0));
+    rd->AddElement("count", ScalarToRRArray<uint64_t>(1));
+    RR_INTRUSIVE_PTR<MessageEntry> rd_ret = stub->ProcessRequest(rd);
+    RR_INTRUSIVE_PTR<MessageEntry> wr = CreateMessageEntry(MessageEntryType_MemoryWrite, "m1");
+    wr->AddElement("memorypos", ScalarToRRArray<uint64_t>(0));
+    wr->AddElement("count", ScalarToRRArray<uint64_t>(1));
+    wr->AddElement("data", rd_ret->FindElement("data")->GetData());
+    RR_INTRUSIVE_PTR<MessageEntry> wr_ret = stub->ProcessRequest(wr);
+    EXPECT_EQ(wr_ret->EntryType, MessageEntryType_MemoryWriteRet);
+
+    // Multidimensional memory: read one element and write the same value back
+    std::vector<uint64_t> pos(5, 0);
+    std::vector<uint64_t> count(5, 1);
+    RR_INTRUSIVE_PTR<MessageEntry> rd2 = CreateMessageEntry(MessageEntryType_MemoryRead, "m2");
+    rd2->AddElement("memorypos", VectorToRRArray<uint64_t>(pos));
+    rd2->AddElement("count", VectorToRRArray<uint64_t>(count));
+    RR_INTRUSIVE_PTR<MessageEntry> rd2_ret = stub->ProcessRequest(rd2);
+    RR_INTRUSIVE_PTR<MessageEntry> wr2 = CreateMessageEntry(MessageEntryType_MemoryWrite, "m2");
+    wr2->AddElement("memorypos", VectorToRRArray<uint64_t>(pos));
+    wr2->AddElement("count", VectorToRRArray<uint64_t>(count));
+    wr2->AddElement("data", rd2_ret->FindElement("data")->GetData());
+    RR_INTRUSIVE_PTR<MessageEntry> wr2_ret = stub->ProcessRequest(wr2);
+    EXPECT_EQ(wr2_ret->EntryType, MessageEntryType_MemoryWriteRet);
+
+    node->DisconnectService(r);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
