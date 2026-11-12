@@ -1389,11 +1389,11 @@ void WireBroadcasterBase::SetOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value
                 ep_endpoint = c->GetEndpoint();
                 if (predicate)
                 {
-                    ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(
-                        node, Member, ep_endpoint, service_path, member_name,
-                        "WireBroadcaster skipping send out value: predicate is false");
                     if (!predicate(this_, c->GetEndpoint()))
                     {
+                        ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(
+                            node, Member, ep_endpoint, service_path, member_name,
+                            "WireBroadcaster skipping send out value: predicate is false");
                         ee++;
                         continue;
                     }
