@@ -200,13 +200,11 @@ WrappedServiceStub::WrappedServiceStub(boost::string_ref path, const RR_SHARED_P
     : RobotRaconteur::ServiceStub(path, c)
 {
     RR_objecttype = type;
-    // this->RR_Director=0;
     this->objectheapid = 0;
     director_closed = false;
 #ifdef RR_PYTHON
     pystub = NULL;
     pystub_closed = false;
-    // DIRECTOR_CALL2(Py_XINCREF(pystub));
 #endif
 }
 
@@ -817,8 +815,6 @@ RR_SHARED_PTR<WireClientBase> WrappedServiceStub::RRGetWireClient(boost::string_
 
 void WrappedServiceStub::RRClose()
 {
-    // DIRECTOR_CALL2(DIRECTOR_DELETE( RR_Director));
-
     boost::shared_ptr<WrappedServiceStubDirector> director1;
 
     {
@@ -860,8 +856,6 @@ void WrappedServiceStub::RRClose()
             pystub = NULL;
         }
     }
-#else
-    // RR_Director=NULL;
 #endif
 }
 
@@ -880,10 +874,6 @@ std::string WrappedServiceStub::RRType()
 
 WrappedServiceStub::~WrappedServiceStub()
 {
-    // DIRECTOR_CALL2(DIRECTOR_DELETE( this->RR_Director));
-#ifdef RR_PYTHON
-    // DIRECTOR_CALL2(Py_XDECREF(pystub));
-#endif
 }
 
 bool WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int32_t id)
@@ -990,8 +980,6 @@ WrappedPipeEndpoint::WrappedPipeEndpoint(const RR_SHARED_PTR<PipeBase>& parent, 
     : PipeEndpointBase(parent, index, endpoint, unreliable, direction)
 {
     this->Type = type;
-    // this->RR_Director=0;
-    // this->objectheapid=0;
 }
 
 void WrappedPipeEndpoint::fire_PipeEndpointClosedCallback()
@@ -1110,7 +1098,6 @@ void WrappedPipeEndpoint::AsyncClose_handler(const RR_SHARED_PTR<RobotRaconteurE
 
 WrappedPipeEndpoint::~WrappedPipeEndpoint()
 {
-    // DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
 }
 
 void WrappedPipeEndpoint::SetPipeBroadcaster(const RR_SHARED_PTR<WrappedPipeBroadcaster>& broadcaster,
@@ -1196,13 +1183,10 @@ WrappedPipeServer::WrappedPipeServer(const std::string& name, const RR_SHARED_PT
 {
     this->Type = Type;
     this->rawelements = true;
-    // this->objectheapid=0;
-    // this->RR_Director=0;
 }
 
 WrappedPipeServer::~WrappedPipeServer()
 {
-    // DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
 }
 
 void WrappedPipeServer::Shutdown()
@@ -1341,8 +1325,6 @@ WrappedWireConnection::WrappedWireConnection(const RR_SHARED_PTR<WireBase>& pare
     : WireConnectionBase(parent, endpoint, direction)
 {
     this->Type = Type;
-    // this->RR_Director=0;
-    // this->objectheapid=0;
 }
 
 void WrappedWireConnection::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time)
@@ -1413,7 +1395,6 @@ RR_SHARED_PTR<WrappedServiceStub> WrappedWireConnection::GetStub()
 
 WrappedWireConnection::~WrappedWireConnection()
 {
-    // DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
 }
 
 void WrappedWireConnection::Close()
@@ -1659,13 +1640,10 @@ WrappedWireServer::WrappedWireServer(const std::string& name, const RR_SHARED_PT
 {
     this->Type = Type;
     this->rawelements = true;
-    // this->objectheapid=0;
-    // this->RR_Director=0;
 }
 
 WrappedWireServer::~WrappedWireServer()
 {
-    // DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
 }
 
 RR_SHARED_PTR<WireConnectionBase> WrappedWireServer::CreateNewWireConnection(uint32_t endpoint,
@@ -2161,14 +2139,6 @@ void WrappedGeneratorServer::CallNext(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 RR_INTRUSIVE_PTR<RRBaseArray> WrappedArrayMemoryClientUtil::Read(const RR_SHARED_PTR<ArrayMemoryBase>& mem,
                                                                  uint64_t memorypos, uint64_t count)
 {
-    /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
-    if (i8)
-    {
-        RR_SHARED_PTR<RRArray<int8_t> > dat=AllocateRRArray<int8_t>(count);
-        i8->Read(memorypos,dat,bufferpos,count);
-        return dat;
-    }*/
-
     RR_WAMCU_READ_TYPE(int8_t);
     RR_WAMCU_READ_TYPE(uint8_t);
     RR_WAMCU_READ_TYPE(int16_t);
@@ -2198,13 +2168,6 @@ void WrappedArrayMemoryClientUtil::Write(const RR_SHARED_PTR<ArrayMemoryBase>& m
                                          const RR_INTRUSIVE_PTR<RRBaseArray>& buffer, uint64_t bufferpos,
                                          uint64_t count)
 {
-    /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
-    if (i8)
-    {
-        i8->Write(memorypos,rr_cast<RRArray<int8_t> >(buffer),bufferpos,count);
-
-    }*/
-
     RR_WAMCU_WRITE_TYPE(int8_t);
     RR_WAMCU_WRITE_TYPE(uint8_t);
     RR_WAMCU_WRITE_TYPE(int16_t);
@@ -2279,34 +2242,6 @@ RR_SHARED_PTR<RRMultiDimArrayUntyped> WrappedMultiDimArrayMemoryClientUtil::Read
         elems *= boost::numeric_cast<size_t>(*e);
     }
 
-    /*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
-    if (i8)
-    {
-        RR_SHARED_PTR<RRArray<int8_t> > realdat=AllocateRRArray<int8_t>(elems);
-        RR_SHARED_PTR<RRArray<int8_t> > imagdat;
-        if (i8->Complex())
-        {
-            imagdat=AllocateRRArray<int8_t>(elems);
-        }
-
-        RR_SHARED_PTR<RRMultiDimArray<int8_t> > dat=RR_MAKE_SHARED<RRMultiDimArray<int8_t>
-    >(VectorToRRArray<int32_t>(count),realdat,imagdat);
-
-        std::vector<uint64_t> bufferpos(count.size());
-        std::fill(bufferpos.begin(),bufferpos.end(),0);
-
-        i8->Read(memorypos,dat,bufferpos,count);
-
-        RR_SHARED_PTR<RRMultiDimArrayUntyped> dat2=RR_MAKE_SHARED<RRMultiDimArrayUntyped>();
-        dat2->DimCount=dat->DimCount;
-        dat2->Dims=dat->Dims;
-        dat2->Complex=dat->Complex;
-        dat2->Real=dat->Real;
-        dat2->Imag=dat->Imag;
-
-        return dat2;
-    }*/
-
     RR_WMDAMCU_READ_TYPE(int8_t);
     RR_WMDAMCU_READ_TYPE(uint8_t);
     RR_WMDAMCU_READ_TYPE(int16_t);
@@ -2340,14 +2275,6 @@ void WrappedMultiDimArrayMemoryClientUtil::Write(const RR_SHARED_PTR<MultiDimArr
                                                  const RR_SHARED_PTR<RRMultiDimArrayUntyped>& buffer,
                                                  std::vector<uint64_t> bufferpos, std::vector<uint64_t> count)
 {
-    /*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
-    if (i8)
-    {
-        RR_SHARED_PTR<RRMultiDimArray<int8_t> > buffer2=RR_MAKE_SHARED<RRMultiDimArray<int8_t>
-    >(buffer->Dims,rr_cast<RRMultiDimArray<int8_t> >(buffer->Real),rr_cast<RRMultiDimArray<int8_t> >(buffer->Imag));
-        i8->Write(memorypos,buffer2,bufferpos,count);
-    }*/
-
     RR_WMDAMCU_WRITE_TYPE(int8_t);
     RR_WMDAMCU_WRITE_TYPE(uint8_t);
     RR_WMDAMCU_WRITE_TYPE(int16_t);
@@ -3051,7 +2978,6 @@ void WrappedServiceSkel::ReleaseCastObject()
     }
 
     DIRECTOR_CALL(WrappedServiceSkelDirector, RR_Director2->ReleaseCastObject());
-    // castobj.reset();
 }
 
 RR_SHARED_PTR<RobotRaconteur::WrappedPipeServer> WrappedServiceSkel::GetPipe(const std::string& membername)
@@ -3630,7 +3556,6 @@ void WrappedNamedMultiDimArrayMemoryServiceSkel::DoWrite(const std::vector<uint6
 WrappedRRObject::WrappedRRObject(const std::string& type, WrappedServiceSkelDirector* RR_Director, int32_t id)
 {
     this->Type = type;
-    // std::cout  << "objid=" << id << std::endl;
     this->RR_Director.reset(RR_Director,
                             boost::bind(&ReleaseDirector<WrappedServiceSkelDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 }

@@ -1538,7 +1538,6 @@ class UnpackMessageElementImpl
                         throw DataTypeException("Could not set pod field");
                     }
 
-                    // if (el->DataCount > 0)
                     {
 
                         PyArray_Dims el4_dims;
@@ -2958,8 +2957,6 @@ boost::tuple<boost::intrusive_ptr<RRBaseArray>, boost::intrusive_ptr<RRBaseArray
 boost::intrusive_ptr<MessageElementNestedElementList> PackToRRMultiDimArray_numpy(
     PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1)
 {
-    // if (!_NumPyAvailable) throw InvalidOperationException("NumPy is not available");
-
     if (PyArray_Check(array_))
     {
         PyArrayObject* array1 = (PyArrayObject*)array_;
@@ -3151,32 +3148,6 @@ PyArray_Descr* RRTypeIdToNumPyDataType(DataTypes rr_type)
         throw DataTypeException("Unknown numpy data type");
     }
 }
-
-/*void RRInitPrimitiveTypes()
-{
-    PyAutoPtr<PyArray_Descr> bool_descr(PyArray_DescrFromType(NPY_UINT8));
-    int bool_code = PyArray_RegisterDataType(bool_descr.get());
-    if (PyErr_Occurred() != NULL)
-    {
-        return;
-    }
-
-    bool_numpy_dtype_code = bool_code;
-    bool_numpy_dtype = bool_descr.detach();
-
-    PyAutoPtr<PyObject> datetime_descr_list(PyList_New(2));
-    PyList_SetItem(datetime_descr_list.get(), 0, Py_BuildValue("(s,s)", "secs", "i8"));
-    PyList_SetItem(datetime_descr_list.get(), 1, Py_BuildValue("(s,s)", "nsecs", "i8"));
-    if (PyErr_Occurred() != NULL)
-    {
-        bool_numpy_dtype_code = -1;
-        bool_numpy_dtype = NULL;
-    }
-
-    PyAutoPtr<PyArray_Descr> datetime_descr(PyArray_DescrNew();
-
-
-}*/
 
 DataTypes GetNamedTypeEntryType(const boost::shared_ptr<RobotRaconteur::TypeDefinition>& type1,
                                 const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
