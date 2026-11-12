@@ -596,7 +596,7 @@ size_t ArrayBinaryWriter::CurrentLimit() { return limits.back(); }
 void ArrayBinaryWriter::PushRelativeLimit(size_t limit)
 {
     if ((Position() + limit) > CurrentLimit())
-        throw BufferLimitViolationException("Binary reader error");
+        throw BufferLimitViolationException("Binary writer error");
 
     limits.push_back(Position() + limit);
 }
@@ -604,7 +604,7 @@ void ArrayBinaryWriter::PushRelativeLimit(size_t limit)
 void ArrayBinaryWriter::PushAbsoluteLimit(size_t limit)
 {
     if ((limit) > CurrentLimit())
-        throw BufferLimitViolationException("Binary reader error");
+        throw BufferLimitViolationException("Binary writer error");
     limits.push_back(limit);
 }
 
