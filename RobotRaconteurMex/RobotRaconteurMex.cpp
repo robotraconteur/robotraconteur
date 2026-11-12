@@ -50,8 +50,6 @@ void rrAtExit()
         {}
         catch (...)
         {}
-        // mexPrintf("Unload!\n");
-        // boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
     }
 }
 
@@ -832,8 +830,6 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                     mxSetCell(o2, i, mxCreateString(types.at(i).c_str()));
                 }
                 plhs[0] = o2;
-                // std::string type=o->RR_objecttype->ServiceDefinition_.lock()->Name + "." + o->RR_objecttype->Name;
-                // plhs[0]= mxCreateString(type.c_str());
             }
             else
                 throw InvalidArgumentException("Unknown RobotRaconteur object type");
@@ -862,8 +858,6 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                 std::string def = RobotRaconteurNode::s()->GetPulledServiceType(o, type)->DefString();
                 mxArray* o2 = mxCreateString(def.c_str());
                 plhs[0] = o2;
-                // std::string type=o->RR_objecttype->ServiceDefinition_.lock()->Name + "." + o->RR_objecttype->Name;
-                // plhs[0]= mxCreateString(type.c_str());
             }
             else
                 throw InvalidArgumentException("Unknown RobotRaconteur object type");
@@ -2481,7 +2475,6 @@ class PackMxArrayToMessageElementImpl
                     array_type->ArrayLength.clear();
                     array_type->ArrayVarLength = true;
                     array_type->Name = "array";
-                    // type1->Name = "real";
 
                     map_vec.push_back(
                         CreateMessageElement("array", PackMxArrayToMessageElement_pod(pm, array_type, stub)));
@@ -3215,10 +3208,7 @@ class UnpackMessageElementToMxArrayImpl
                         mxArray* mxkey = mxCreateString(key1.c_str());
                         mxSetFieldByNumber(subs, 0, 1, mxkey);
 
-                        // mxSetCell(k,count,mxkey);
-
                         mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
-                        // mxSetCell(v,count,mxdata);
 
                         mxArray* prhs2[3];
                         prhs2[0] = o;
@@ -3335,10 +3325,7 @@ class UnpackMessageElementToMxArrayImpl
                     mxArray* mxkey = mxCreateString(key1.c_str());
                     mxSetFieldByNumber(subs, 0, 1, mxkey);
 
-                    // mxSetCell(k,count,mxkey);
-
                     mxArray* mxdata = UnpackMessageElementToMxArray(e, tdef2, stub);
-                    // mxSetCell(v,count,mxdata);
 
                     mxArray* prhs2[3];
                     prhs2[0] = o;
@@ -3924,7 +3911,6 @@ MexServiceStub::MexServiceStub(boost::string_ref path, const RR_SHARED_PTR<Servi
 {
     RR_objecttype = type;
     stubid = 0;
-    // stubptr=NULL;
     EnableEvents = false;
     eventconnections_count = 10;
 }
@@ -4173,8 +4159,6 @@ void MexServiceStub::PropertySet(const std::string& PropertyName, const mxArray*
 
 mxArray* CreateGeneratorClientMxArray(int32_t id)
 {
-    // boost::recursive_mutex::scoped_lock lock(pipeendpoints_lock);
-    // pipeendpoints_count++;
     mxArray* lhs[1];
     mxArray* rhs[2];
     rhs[0] = CreateInt32Scalar(RR_MEX_GENERATOR_CLIENT);
@@ -4526,8 +4510,6 @@ RR_SHARED_PTR<WireClientBase> MexServiceStub::RRGetWireClient(boost::string_ref 
 
 mxArray* CreatePipeEndpointMxArray(int32_t id)
 {
-    // boost::recursive_mutex::scoped_lock lock(pipeendpoints_lock);
-    // pipeendpoints_count++;
     mxArray* lhs[1];
     mxArray* rhs[2];
     rhs[0] = CreateInt32Scalar(RR_MEX_PIPE_ENDPOINT);
@@ -4542,8 +4524,6 @@ mxArray* CreatePipeEndpointMxArray(int32_t id)
 
 mxArray* CreateWireConnectionMxArray(int32_t id)
 {
-    // boost::recursive_mutex::scoped_lock lock(pipeendpoints_lock);
-    // pipeendpoints_count++;
     mxArray* lhs[1];
     mxArray* rhs[2];
     rhs[0] = CreateInt32Scalar(RR_MEX_WIRE_CONNECTION);
@@ -4611,7 +4591,6 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, 2));
             }
 
-            // mexPrintf("async_get: %s\n",membername.c_str());
             RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args, 0)), rr_mxDestroyArray);
             RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args, 1)), rr_mxDestroyArray);
 
@@ -4647,7 +4626,6 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, 3));
             }
 
-            // mexPrintf("async_get: %s\n",membername.c_str());
             RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args, 1)), rr_mxDestroyArray);
             RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args, 2)), rr_mxDestroyArray);
 
@@ -4687,7 +4665,6 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, pcount + 2));
             }
 
-            // mexPrintf("async_get: %s\n",membername.c_str());
             std::vector<const mxArray*> params;
             for (size_t i = 0; i < pcount; i++)
             {
@@ -5448,7 +5425,6 @@ void MexServiceStub::deletelistener(const mxArray* eventid)
     boost::recursive_mutex::scoped_lock lock(eventconnections_lock);
     if (eventconnections.find(ieventid) != eventconnections.end())
     {
-        // mxDestroyArray(eventconnections.at(ieventid)->functionhandle);
         eventconnections.erase(ieventid);
     }
     else
@@ -7755,7 +7731,6 @@ void MexServiceSkel::ProcessRequests()
                 std::vector<mxArray*> args2;
                 args2.push_back(obj->mxobj.get());
                 args2.push_back(S);
-                // args2.push_back(val);
 
                 mxArray* ret2 = NULL;
                 mxArray* mxret = NULL;
@@ -7768,7 +7743,6 @@ void MexServiceSkel::ProcessRequests()
                     throw OperationFailedException(errmsg);
                 }
 
-                // mxArray* mxret=mxGetProperty(obj->mxobj.get(),0,pg.get<0>()->MemberName.c_str());
                 ret = PackMxArrayToMessageElement(mxret, def->Type, RR_SHARED_PTR<ServiceStub>());
 
                 EndAsyncCallGetProperty(shared_from_this(), ret, boost::shared_ptr<RobotRaconteurException>(),
@@ -7833,8 +7807,6 @@ void MexServiceSkel::ProcessRequests()
                     ::mexWarnMsgTxt(errmsg.c_str());
                     throw OperationFailedException(errmsg);
                 }
-
-                // mxSetProperty(obj->mxobj.get(),0,ps.get<0>()->MemberName.c_str(),val);
 
                 EndAsyncCallSetProperty(shared_from_this(), boost::shared_ptr<RobotRaconteurException>(), ps.get<0>(),
                                         ps.get<1>());
