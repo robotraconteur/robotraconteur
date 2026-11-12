@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "RobotRaconteur/Service.h"
+#include <boost/atomic.hpp>
 
 #pragma once
 
@@ -57,9 +58,11 @@ class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
     uint32_t local_endpoint;
     int32_t timeout;
     RR_SHARED_PTR<RobotRaconteurException> monitor_acquire_exception;
-    bool monitor_acquired;
+    // Coordination flags shared between the monitor-lock worker thread (thread_func) and the request
+    // threads (MonitorEnter/MonitorExit/IsLocked); atomic to avoid a data race on the plain bool
+    boost::atomic<bool> monitor_acquired;
     RR_SHARED_PTR<AutoResetEvent> monitor_thread_event;
-    bool maintain_lock;
+    boost::atomic<bool> maintain_lock;
     RR_WEAK_PTR<ServiceSkel> skel;
 
   public:
