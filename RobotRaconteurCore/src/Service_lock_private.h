@@ -51,7 +51,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
     : public RR_ENABLE_SHARED_FROM_THIS<ServerContext_MonitorObjectSkel>
 {
   private:
-    // RR_SHARED_PTR<boost::thread> wait_thread;
     RR_SHARED_PTR<AutoResetEvent> wait_event;
     bool wait_started;
     RR_WEAK_PTR<IRobotRaconteurMonitorObject> obj;
@@ -62,7 +61,6 @@ class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
     RR_SHARED_PTR<AutoResetEvent> monitor_thread_event;
     bool maintain_lock;
     RR_WEAK_PTR<ServiceSkel> skel;
-    // boost::mutex monitorlocks_lock;
 
   public:
     uint32_t GetLocalEndpoint() const;

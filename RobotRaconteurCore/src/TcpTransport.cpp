@@ -4390,7 +4390,6 @@ void TcpTransportConnection::do_starttls5(const boost::system::error_code& error
                                           "TcpTransport TLS activated on client connection to "
                                               << TcpTransport_socket_remote_endpoint(socket) << " from "
                                               << TcpTransport_socket_local_endpoint(socket));
-        // starttls_handler1(RR_SHARED_PTR<RobotRaconteurException>());
         return;
     }
     catch (std::exception& e)
@@ -4406,7 +4405,6 @@ void TcpTransportConnection::do_starttls5_1(
     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
 {
     RR_UNUSED(parameter);
-    // std::cout << "AsyncAttachStream1" << std::endl;
     if (err)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint,
@@ -5361,8 +5359,6 @@ void TcpTransportConnection::ForceClose()
 
         if (is_tls)
         {
-            // tls_socket.shutdown();
-            // tls_socket.reset();
             is_tls = false;
         }
     }
@@ -5517,8 +5513,6 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
             return false;
         }
 
-        // lock2.unlock();
-
         RR_SHARED_PTR<TcpTransport> p = parent.lock();
         if (!p)
             throw InvalidOperationException("Transport shutdown");
@@ -5550,8 +5544,6 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
         {
             return false;
         }
-
-        // lock2.unlock();
 
         RR_SHARED_PTR<TcpTransport> p = parent.lock();
         if (!p)
@@ -5675,8 +5667,6 @@ void IPNodeDiscovery::start_listen_sockets2(int32_t key, const boost::system::er
 
         ip4_listen->open(boost::asio::ip::udp::v4());
 
-        // ip4_listen->set_option(boost::asio::ip::udp::socket::linger(false,10));
-
         ip4_listen->set_option(boost::asio::ip::udp::socket::reuse_address(true));
 #ifdef ROBOTRACONTEUR_WINDOWS
         u_long exclusiveaddruse = 0;
@@ -5750,9 +5740,7 @@ void IPNodeDiscovery::start_ipv6_listen_socket(const boost::asio::ip::udp::endpo
     ::setsockopt(ip6_listen1->native_handle(), SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (const char*)&exclusiveaddruse,
                  sizeof(exclusiveaddruse));
 #endif
-    // ip6_listen->set_option(boost::asio::ip::udp::socket::broadcast(true));
 
-    // ip6_listen->set_option(boost::asio::ip::udp::socket::linger(false,10));
     ip6_listen1->bind(ep);
 
     ip6_listen1->set_option(boost::asio::ip::multicast::enable_loopback(true));
@@ -5808,8 +5796,6 @@ void IPNodeDiscovery::StartListeningForNodes(uint32_t flags)
             throw InvalidOperationException("Already listening for nodes");
         }
 
-        // if (!flags & IPNodeDiscoveryFlags_IPV4_BROADCAST)
-        //	flags |= IPNodeDiscoveryFlags_IPV4_BROADCAST;
         listening = true;
         listen_flags = flags;
 
@@ -6107,7 +6093,6 @@ void IPNodeDiscovery::handle_broadcast_timer(const boost::system::error_code& er
     {
 
         std::vector<std::string> tcpschemes;
-        // tcpschemes.push_back("tcp");
 
         tcpschemes.push_back("rr+tcp");
 
@@ -6181,8 +6166,6 @@ void IPNodeDiscovery::broadcast_discovery_packet(const boost::asio::ip::address&
         s.open(boost::asio::ip::udp::v6());
     }
 
-    // s.set_option(boost::asio::ip::udp::socket::linger(false,10));
-
     RR_SHARED_PTR<std::string> shared_message = RR_MAKE_SHARED<std::string>(packet.to_string());
 
     s.set_option(boost::asio::ip::udp::socket::reuse_address(true));
@@ -6207,7 +6190,6 @@ void IPNodeDiscovery::broadcast_discovery_packet(const boost::asio::ip::address&
             boost::asio::ip::udp::endpoint dest_ep(boost::asio::ip::address_v4::broadcast(), ANNOUNCE_PORT);
             s.set_option(boost::asio::ip::multicast::enable_loopback(true));
             s.set_option(boost::asio::ip::udp::socket::broadcast(true));
-            // s.async_send_to(boost::asio::buffer(*shared_message),dest_ep,boost::bind(&IPNodeDiscovery::handle_send,shared_from_this(),boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,shared_message));
             s.send_to(boost::asio::buffer(*shared_message), dest_ep, 0, ec2);
         }
     }
@@ -6225,7 +6207,6 @@ void IPNodeDiscovery::broadcast_discovery_packet(const boost::asio::ip::address&
             ip6addra.scope_id(e6.scope_id());
             boost::asio::ip::udp::endpoint dest_ep(ip6addra, ANNOUNCE_PORT);
 
-            // s.async_send_to(boost::asio::buffer(*shared_message),dest_ep,boost::bind(&IPNodeDiscovery::handle_send,shared_from_this(),boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,shared_message));
             s.send_to(boost::asio::buffer(*shared_message), dest_ep, 0, ec2);
         }
 
@@ -6242,7 +6223,6 @@ void IPNodeDiscovery::broadcast_discovery_packet(const boost::asio::ip::address&
                 boost::asio::ip::address_v6 ip6addra = RR_BOOST_ASIO_IP_ADDRESS_V6_FROM_STRING("FF02::BA86");
                 ip6addra.scope_id(e6.scope_id());
                 boost::asio::ip::udp::endpoint dest_ep(ip6addra, ANNOUNCE_PORT);
-                // s.async_send_to(boost::asio::buffer(*shared_message),dest_ep,boost::bind(&IPNodeDiscovery::handle_send,shared_from_this(),boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,shared_message));
                 s.send_to(boost::asio::buffer(*shared_message), dest_ep, 0, ec2);
             }
 
@@ -6254,7 +6234,6 @@ void IPNodeDiscovery::broadcast_discovery_packet(const boost::asio::ip::address&
                 boost::asio::ip::address_v6 ip6addra = RR_BOOST_ASIO_IP_ADDRESS_V6_FROM_STRING("FF05::BA86");
                 ip6addra.scope_id(e6.scope_id());
                 boost::asio::ip::udp::endpoint dest_ep(ip6addra, ANNOUNCE_PORT);
-                // s.async_send_to(boost::asio::buffer(*shared_message),dest_ep,boost::bind(&IPNodeDiscovery::handle_send,shared_from_this(),boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,shared_message));
                 s.send_to(boost::asio::buffer(*shared_message), dest_ep, 0, ec2);
             }
         }

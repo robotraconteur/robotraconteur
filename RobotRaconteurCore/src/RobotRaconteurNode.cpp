@@ -64,7 +64,6 @@ RobotRaconteurNode::RobotRaconteurNode()
 
     log_level = RobotRaconteur_LogLevel_Warning;
 
-    // ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "RobotRaconteurNode created");
 }
 
 void RobotRaconteurNode::Init()
@@ -554,7 +553,6 @@ void RobotRaconteurNode::ReleaseThreadPool()
 
 RobotRaconteurNode::~RobotRaconteurNode()
 {
-    // Shutdown();
 }
 
 static std::string RobotRaconteurNode_log_msg_servicepath(const RR_INTRUSIVE_PTR<Message>& m)

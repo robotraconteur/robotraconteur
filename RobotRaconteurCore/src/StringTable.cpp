@@ -430,22 +430,6 @@ void StringTable::AddCodesCSV_p(const std::string& csv, const std::vector<uint32
 
 StringTable::~StringTable()
 {
-    // Diagnostic table dump
-
-    /*boost::posix_time::ptime n = boost::posix_time::microsec_clock::local_time();
-    std::string n1 = boost::posix_time::to_iso_string(n) + ".txt";
-
-    std::ofstream f(n1, std::ofstream::out);
-
-
-    typedef RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> >::value_type e_type;
-
-    BOOST_FOREACH(const e_type& e, code_table)
-    {
-        f << e.first << " " << e.second->value << std::endl;
-    }
-
-    f.close();*/
 }
 
 std::vector<uint32_t> StringTable::GetTableFlags()

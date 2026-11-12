@@ -104,14 +104,6 @@ TlsSchannelAsyncStreamAdapterContext::TlsSchannelAsyncStreamAdapterContext(const
     if (!r2)
         throw InternalErrorException("Internal error");
 
-    // PCCERT_CONTEXT rootcert2015 = CertFindCertificateInStore(root, X509_ASN_ENCODING, 0, CERT_FIND_EXISTING,
-    // rootcert2015_1, NULL); if (!rootcert2015) throw InternalErrorException("Internal error"); rootcertificate2015 =
-    // rootcert2015;
-
-    // PCCERT_CONTEXT rootcert2020 = CertFindCertificateInStore(root, X509_ASN_ENCODING, 0, CERT_FIND_EXISTING,
-    // rootcert2020_1, NULL); if (!rootcert2020) throw InternalErrorException("Internal error"); rootcertificate2020 =
-    // rootcert2020;
-
     char default_env[256];
     char default_env_2015[256];
     char default_env_2020[256];
@@ -279,11 +271,8 @@ CredHandle TlsSchannelAsyncStreamAdapterContext::GetServerCredentials()
 
         SchannelCred.dwFlags |= SCH_CRED_MANUAL_CRED_VALIDATION;
 
-        // SchannelCred.dwFlags |= SCH_CRED_NO_DEFAULT_CREDS ;
-        // SchannelCred.dwFlags |= SCH_CRED_MANUAL_CRED_VALIDATION | SCH_SEND_ROOT_CERT;
         SchannelCred.cCreds = 1;
         SchannelCred.paCred = &activecertificate;
-        // SchannelCred.hRootStore=store;
 
         CredHandle phCreds;
         ZeroMemory(&phCreds, sizeof(CredHandle));
@@ -326,9 +315,7 @@ CredHandle TlsSchannelAsyncStreamAdapterContext::GetClientCredentials()
         }
         else
         {
-            // SchannelCred.dwFlags |= SCH_CRED_USE_DEFAULT_CREDS;
         }
-        // SchannelCred.hRootStore=store;
         CredHandle phCreds;
         ZeroMemory(&phCreds, sizeof(CredHandle));
         TimeStamp tsExpiry_cred;
@@ -588,7 +575,6 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCER
     ZeroMemory(&cec, sizeof(cec));
     cec.cbSize = sizeof(cec);
     cec.cAdditionalStore = 0;
-    // cec.rghAdditionalStore=&store;
 
     HCERTCHAINENGINE hc;
     if (!CertCreateCertificateChainEngine(&cec, &hc))

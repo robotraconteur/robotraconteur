@@ -1082,9 +1082,6 @@ UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
         return Error;
     }
 
-    // f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
-    // f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
-
     device_handle = dev_h1;
     return Open;
 }
@@ -1106,9 +1103,6 @@ void LibUsbDevice_Claim::DrawDownRequests(boost::function<void()> handler)
         return;
 
     // TODO: Draw down active requests
-
-    // f->libusb_(device_handle.get(), settings->in_pipe_id);
-    // f->WinUsb_AbortPipe(device_handle.get(), settings->out_pipe_id);
 
     RR_SHARED_PTR<LibUsbDeviceManager> m;
     try

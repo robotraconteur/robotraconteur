@@ -255,11 +255,6 @@ void ASIOStreamBaseTransport::AsyncSendMessage(
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Begin sending message");
 
-    // Clear flags that should not be sent from the node layer
-    // if (m->header->MessageFlags & MessageFlags_TRANSPORT_SPECIFIC) m->header->TransportSpecific.clear();
-    // m->header->MessageFlags &= ~(MessageFlags_SUBSTREAM_SEQUENCE_NUMBER | MessageFlags_TRANSPORT_SPECIFIC);
-    // End clear flags
-
     bool send_4 = send_version4.load();
 
     // TODO: find more elegant solution for this
@@ -921,24 +916,6 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
                     }
                 }
             }
-
-            /*
-            if (size > recvbuf_len)
-            {
-                delete recvbuf;
-                recvbuf=new uint8_t[size];
-                recvbuf_len=size;
-            }
-
-            memcpy(recvbuf,streammagic,8);
-
-            recv_message_size=size;
-
-            async_read(*stream,buffer(recvbuf+8, recv_message_size-8),
-                boost::bind(&ASIOStreamBaseTransport::EndReceiveMessage3,
-                RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
-                boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred));*/
 
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(),
                                                "Receiving message size " << size << " bytes");

@@ -345,7 +345,6 @@ void PipeEndpointBase::PipePacketReceived(const RR_INTRUSIVE_PTR<RRValue>& packe
                 {
                     recv_packets_wait.notify_all();
 
-                    // if (PacketReceivedEvent != 0)
                     {
                         try
                         {
