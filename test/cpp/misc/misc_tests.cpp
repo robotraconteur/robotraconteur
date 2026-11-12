@@ -281,6 +281,14 @@ TEST(RobotRaconteurMisc, ThreadPoolShutdownReleasesThreads)
     EXPECT_EQ(pool->GetThreadObjectCount(), 0u);
 }
 
+TEST(RobotRaconteurMisc, WallRateDefaultNode)
+{
+    // WallRate with the default (null) node argument should use RobotRaconteurNode::sp()
+    RR_SHARED_PTR<WallRate> rate;
+    ASSERT_NO_THROW(rate = RR_MAKE_SHARED<WallRate>(1000.0));
+    EXPECT_NO_THROW(rate->Sleep());
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
