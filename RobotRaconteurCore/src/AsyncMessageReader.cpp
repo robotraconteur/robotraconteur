@@ -450,6 +450,7 @@ void AsyncMessageReaderImpl::Reset()
     while (!read_messages.empty())
         read_messages.pop();
     state_stack.clear();
+    nested_depth = 0;
 
     state_data s;
     RR_INTRUSIVE_PTR<Message> m = CreateMessage();
@@ -822,6 +823,9 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             uint32_t l = el->ElementSize;
             el->SetData(s);
             el->ElementSize = l;
+            if (nested_depth >= detail::MessageMaxNestingDepth)
+                throw ProtocolException("Message element nesting depth exceeds maximum");
+            nested_depth++;
             push_state(MessageElement_readnested2, MessageElement_finishreaddata, limit() - message_pos, s,
                        el->DataCount);
         }
@@ -829,6 +833,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             MessageElementNestedElementList* s = data<MessageElementNestedElementList>();
             if (s->Elements.size() >= param1())
             {
+                nested_depth--;
                 DO_POP_STATE();
             }
 
@@ -1433,6 +1438,9 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             uint32_t l = el->ElementSize;
             el->SetData(s);
             el->ElementSize = l;
+            if (nested_depth >= detail::MessageMaxNestingDepth)
+                throw ProtocolException("Message element nesting depth exceeds maximum");
+            nested_depth++;
             push_state(MessageElement_readnested2, MessageElement_finishreaddata, limit() - message_pos, s,
                        el->DataCount);
         }
@@ -1440,6 +1448,7 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             MessageElementNestedElementList* s = data<MessageElementNestedElementList>();
             if (s->Elements.size() >= param1())
             {
+                nested_depth--;
                 DO_POP_STATE();
             }
 

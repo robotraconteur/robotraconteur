@@ -25,6 +25,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range.hpp>
+#include <boost/thread/tss.hpp>
+#include "AsyncMessageReader.h"
 #include <boost/range/algorithm.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/bind/placeholders.hpp>
@@ -33,6 +35,26 @@
 
 namespace RobotRaconteur
 {
+
+namespace
+{
+// Nesting depth of the message element lists currently being read by MessageElement::Read/Read4 on this thread
+boost::thread_specific_ptr<size_t> message_read_nested_depth;
+
+class MessageReadNestedDepthGuard
+{
+  public:
+    MessageReadNestedDepthGuard()
+    {
+        if (!message_read_nested_depth.get())
+            message_read_nested_depth.reset(new size_t(0));
+        if (*message_read_nested_depth >= detail::MessageMaxNestingDepth)
+            throw ProtocolException("Message element nesting depth exceeds maximum");
+        (*message_read_nested_depth)++;
+    }
+    ~MessageReadNestedDepthGuard() { (*message_read_nested_depth)--; }
+};
+} // namespace
 
 Message::Message() { entries.clear(); }
 
@@ -1288,6 +1310,7 @@ void MessageElement::Read(ArrayBinaryReader& r)
     case DataTypes_pod_multidimarray_t:
     case DataTypes_namedarray_array_t:
     case DataTypes_namedarray_multidimarray_t: {
+        MessageReadNestedDepthGuard depth_guard;
         std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
         l.reserve(DataCount);
         for (size_t i = 0; i < DataCount; i++)
@@ -1671,6 +1694,7 @@ void MessageElement::Read4(ArrayBinaryReader& r)
     case DataTypes_pod_multidimarray_t:
     case DataTypes_namedarray_array_t:
     case DataTypes_namedarray_multidimarray_t: {
+        MessageReadNestedDepthGuard depth_guard;
         std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
         l.reserve(DataCount);
         for (size_t i = 0; i < DataCount; i++)
