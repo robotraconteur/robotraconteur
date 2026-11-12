@@ -1813,7 +1813,7 @@ void UsbDevice::AsyncCreateTransportConnection(
         }
     }
 
-    if (!settings || (status != Busy && status != Ready && status != Error && status != Closed && status != Error))
+    if (!settings || (status != Busy && status != Ready && status != Error && status != Closed))
     {
         RobotRaconteurNode::TryPostToThreadPool(
             node,
