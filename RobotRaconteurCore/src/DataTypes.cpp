@@ -709,7 +709,7 @@ void MessageStringPtr::reset() { _str_ptr = detail::MessageStringData_static_str
 
 bool MessageStringPtr::operator==(MessageStringRef b) const { return this->str() == b.str(); }
 bool MessageStringPtr::operator!=(MessageStringRef b) const { return this->str() != b.str(); }
-bool MessageStringPtr::operator<(MessageStringRef b) const { return this->str() <= b.str(); }
+bool MessageStringPtr::operator<(MessageStringRef b) const { return this->str() < b.str(); }
 
 MessageStringRef::MessageStringRef(const std::string& str)
 {

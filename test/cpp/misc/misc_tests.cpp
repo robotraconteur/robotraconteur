@@ -157,6 +157,17 @@ TEST(RobotRaconteurMisc, CreateIdentifierAttributeFilterTest)
     EXPECT_FALSE(attr5.IsMatch("identifier_1.with.do_ts|cbfea7a4-0361-41ad-95bb-d4dcd967047a"));
 }
 
+TEST(RobotRaconteurMisc, MessageStringPtrLessThan)
+{
+    MessageStringPtr a(std::string("alpha"));
+    MessageStringPtr a2(std::string("alpha"));
+    MessageStringPtr b(std::string("beta"));
+    EXPECT_TRUE(a < b);
+    EXPECT_FALSE(b < a);
+    EXPECT_FALSE(a < a2);
+    EXPECT_FALSE(a2 < a);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
