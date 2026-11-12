@@ -122,9 +122,9 @@ bool AutoResetEvent::WaitOne(int32_t timeout)
 
     boost::system_time const timeout1 =
         boost::posix_time::microsec_clock::universal_time() + boost::posix_time::milliseconds(timeout);
+    boost::unique_lock<boost::mutex> lock(m_mutex);
     while (!m_bSet)
     {
-        boost::unique_lock<boost::mutex> lock(m_mutex);
         m_setCondition.timed_wait(lock, timeout1);
         if (!m_bSet && boost::posix_time::microsec_clock::universal_time() > timeout1)
             return false;

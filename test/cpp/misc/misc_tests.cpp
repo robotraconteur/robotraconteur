@@ -1,6 +1,7 @@
 #include <boost/shared_array.hpp>
 
 #include <gtest/gtest.h>
+#include <boost/atomic.hpp>
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
 
@@ -174,6 +175,89 @@ TEST(RobotRaconteurMisc, MessageStringPtrLessThan)
     EXPECT_FALSE(b < a);
     EXPECT_FALSE(a < a2);
     EXPECT_FALSE(a2 < a);
+}
+
+static void AutoResetEventTest_waiter(AutoResetEvent* ev, boost::atomic<bool>* stop, boost::atomic<int>* successes)
+{
+    while (!stop->load())
+    {
+        if (ev->WaitOne(1))
+        {
+            (*successes)++;
+        }
+    }
+}
+
+static void AutoResetEventTest_set_after(AutoResetEvent* ev, int ms)
+{
+    boost::this_thread::sleep(boost::posix_time::milliseconds(ms));
+    ev->Set();
+}
+
+TEST(RobotRaconteurMisc, AutoResetEventTimedWait)
+{
+    AutoResetEvent ev;
+
+    // Timed wait with no Set() must time out, not hang
+    boost::posix_time::ptime t1 = boost::posix_time::microsec_clock::universal_time();
+    EXPECT_FALSE(ev.WaitOne(50));
+    boost::posix_time::time_duration d1 = boost::posix_time::microsec_clock::universal_time() - t1;
+    EXPECT_GE(d1.total_milliseconds(), 40);
+    EXPECT_LT(d1.total_milliseconds(), 2000);
+
+    // Set() from another thread must release a blocked timed wait promptly
+    boost::thread t(boost::bind(&AutoResetEventTest_set_after, &ev, 20));
+    boost::posix_time::ptime t2 = boost::posix_time::microsec_clock::universal_time();
+    EXPECT_TRUE(ev.WaitOne(5000));
+    boost::posix_time::time_duration d2 = boost::posix_time::microsec_clock::universal_time() - t2;
+    EXPECT_LT(d2.total_milliseconds(), 2000);
+    t.join();
+
+    // Event is auto-reset: the Set() was consumed
+    EXPECT_FALSE(ev.WaitOne(10));
+}
+
+TEST(RobotRaconteurMisc, AutoResetEventTimedWaitMultipleWaiters)
+{
+    // Several threads in timed WaitOne() with repeated Set() must not deadlock, and each Set() must
+    // wake exactly one waiter
+    AutoResetEvent ev;
+    boost::atomic<bool> stop(false);
+    boost::atomic<int> successes(0);
+    const int set_count = 2000;
+
+    std::vector<RR_SHARED_PTR<boost::thread> > threads;
+    for (size_t i = 0; i < 8; i++)
+    {
+        threads.push_back(
+            RR_MAKE_SHARED<boost::thread>(boost::bind(&AutoResetEventTest_waiter, &ev, &stop, &successes)));
+    }
+
+    bool timed_out = false;
+    for (int i = 0; i < set_count && !timed_out; i++)
+    {
+        ev.Set();
+        boost::posix_time::ptime deadline =
+            boost::posix_time::microsec_clock::universal_time() + boost::posix_time::seconds(5);
+        while (successes.load() < i + 1)
+        {
+            if (boost::posix_time::microsec_clock::universal_time() > deadline)
+            {
+                timed_out = true;
+                break;
+            }
+            boost::this_thread::yield();
+        }
+    }
+
+    stop.store(true);
+    BOOST_FOREACH (RR_SHARED_PTR<boost::thread>& t, threads)
+    {
+        t->join();
+    }
+
+    EXPECT_FALSE(timed_out);
+    EXPECT_EQ(successes.load(), set_count);
 }
 
 int main(int argc, char* argv[])
