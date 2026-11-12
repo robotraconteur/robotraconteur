@@ -95,6 +95,7 @@ ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membern
     this->direction = direction;
     this->element_type = element_type;
     this->element_size = element_size;
+    this->service_path = skel->GetServicePath();
 }
 
 ArrayMemoryServiceSkelBase::~ArrayMemoryServiceSkelBase() {}
