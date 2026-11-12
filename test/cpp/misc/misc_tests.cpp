@@ -260,6 +260,27 @@ TEST(RobotRaconteurMisc, AutoResetEventTimedWaitMultipleWaiters)
     EXPECT_EQ(successes.load(), set_count);
 }
 
+class ThreadPoolShutdownTestPool : public ThreadPool
+{
+  public:
+    ThreadPoolShutdownTestPool(const RR_SHARED_PTR<RobotRaconteurNode>& node) : ThreadPool(node) {}
+    size_t GetThreadObjectCount()
+    {
+        boost::mutex::scoped_lock lock(queue_mutex);
+        return threads.size();
+    }
+};
+
+TEST(RobotRaconteurMisc, ThreadPoolShutdownReleasesThreads)
+{
+    RR_SHARED_PTR<ThreadPoolShutdownTestPool> pool =
+        RR_MAKE_SHARED<ThreadPoolShutdownTestPool>(RobotRaconteurNode::sp());
+    pool->SetThreadPoolCount(2);
+    EXPECT_EQ(pool->GetThreadObjectCount(), 2u);
+    pool->Shutdown();
+    EXPECT_EQ(pool->GetThreadObjectCount(), 0u);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

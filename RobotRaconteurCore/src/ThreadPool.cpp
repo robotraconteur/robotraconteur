@@ -162,7 +162,7 @@ void ThreadPool::Shutdown()
         }
 
         boost::mutex::scoped_lock lock(queue_mutex);
-        threads.clear();
+        this->threads.clear();
     }
 }
 
