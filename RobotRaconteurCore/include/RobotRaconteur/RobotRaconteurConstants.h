@@ -311,9 +311,9 @@ enum MessageEntryType
     MessageEntryType_FunctionCallReq = 1121,
     /** @brief Function member call response */
     MessageEntryType_FunctionCallRes,
-    /** @brief Generater next call request */
+    /** @brief Generator next call request */
     MessageEntryType_GeneratorNextReq,
-    /** @brief Generater next call response */
+    /** @brief Generator next call response */
     MessageEntryType_GeneratorNextRes,
     /** @brief Event member notification */
     MessageEntryType_EventReq = 1131,
@@ -635,7 +635,7 @@ enum RobotRaconteur_LogComponent
     RobotRaconteur_LogComponent_Default,
     /** @brief Robot Raconteur Node component */
     RobotRaconteur_LogComponent_Node,
-    /** @brief tranport component */
+    /** @brief transport component */
     RobotRaconteur_LogComponent_Transport,
     /** @brief message or message serialization component */
     RobotRaconteur_LogComponent_Message,

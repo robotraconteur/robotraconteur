@@ -658,7 +658,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     /**
      * @brief Set the monitor lock thread pool count
      *
-     * Monitor looks use a thread pool to manage tho lock. Each lock takes ownership of a thread,
+     * Monitor locks use a thread pool to manage the lock. Each lock takes ownership of a thread,
      * and this thread is used to enforce single thread at a time access. By default 3 threads are
      * activated, allowing for 3 concurrent monitor locks. Use SetMonitorThreadPoolCount() to enable
      * more monitor locks if necessary.

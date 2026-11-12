@@ -717,7 +717,7 @@ void ASIOStreamBaseTransport::EndSendMessage1()
 
     if (!send_queue.empty() && c && !send_pause_request)
     {
-        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Dequeing next message");
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Dequeuing next message");
         message_queue_entry m = send_queue.front();
         send_queue.pop_front();
         try

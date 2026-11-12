@@ -367,7 +367,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * @brief Get the default heartbeat period
      *
      * The heartbeat is used to keep the connection alive
-     * if no communication is occuring between nodes.
+     * if no communication is occurring between nodes.
      *
      * Default: 5 seconds
      *
@@ -378,7 +378,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * @brief Set the default heartbeat period
      *
      * The heartbeat is used to keep the connection alive
-     * if no communication is occuring between nodes.
+     * if no communication is occurring between nodes.
      *
      * Default: 5 seconds
      *
@@ -520,7 +520,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      *
      * Default: true
      *
-     * @return true The tranport will accept WebSocket connections
+     * @return true The transport will accept WebSocket connections
      * @return false The transport will reject WebSocket connections
      */
     virtual bool GetAcceptWebSockets();

@@ -85,7 +85,7 @@ class LocalMessageTapImpl;
  * @brief Local message tap
  *
  * The LocalMessageTap works by creating a UNIX domain socket in an operating
- * system dependant directory, and writes messages to the socket. Log records
+ * system dependent directory, and writes messages to the socket. Log records
  * are encoded as messages and sent interleaved with messages from the transport.
  * UTC timestamps are added to the MetaData header field of the message.
  *

@@ -924,7 +924,7 @@ class RRMap : public RRValue
     iterator find(const key_type& x) { return map.find(x); }
     /** @brief finds element with the specified key */
     const_iterator find(const key_type& x) const { return map.find(x); }
-    /** @brief returns the number of elemnts matching the specified key */
+    /** @brief returns the number of elements matching the specified key */
     size_type count(const key_type& x) const { return map.count(x); }
 
     /**
@@ -1957,7 +1957,7 @@ class RRPodArray : public RRPodBaseArray
 
     /** @brief returns an iterator to the beginning */
     iterator begin() { return pod_array.begin(); }
-    /** @brief retuns an iterator to the beginning */
+    /** @brief returns an iterator to the beginning */
     const_iterator begin() const { return pod_array.begin(); }
     /** @brief returns an iterator to the end */
     iterator end() { return pod_array.end(); }

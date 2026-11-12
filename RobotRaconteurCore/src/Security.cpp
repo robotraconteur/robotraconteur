@@ -202,7 +202,7 @@ RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser
 
         if (!local_t && !intra_t && !tcp_t)
         {
-            throw AuthenticationException("Selected transport does not suppert client verification");
+            throw AuthenticationException("Selected transport does not support client verification");
         }
 
         if (!client_verified)

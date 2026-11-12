@@ -488,7 +488,7 @@ void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>
         {
 
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
-                node, Discovery, -1, "FindServiceByType connectted to " << url << ", begin getting ServiceInfo2");
+                node, Discovery, -1, "FindServiceByType connected to " << url << ", begin getting ServiceInfo2");
 
             int32_t key2 = 0;
             {
