@@ -897,7 +897,7 @@ bool IsStringIdentifier(boost::string_ref str)
     const std::string uuid_regex_str =
         "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?";
 
-    const std::string combined_regex_str = "(" + name_regex_str + ")\\|(" + uuid_regex_str + ")?";
+    const std::string combined_regex_str = "(" + name_regex_str + ")\\|(" + uuid_regex_str + ")";
 
     static boost::regex combined_regex(combined_regex_str);
     if (boost::regex_match(str.begin(), str.end(), combined_regex))
@@ -905,7 +905,7 @@ bool IsStringIdentifier(boost::string_ref str)
         return true;
     }
 
-    return (IsStringName(str) || IsStringUUID(str));
+    return (IsStringScopedName(str) || IsStringUUID(str));
 }
 
 } // namespace RobotRaconteur

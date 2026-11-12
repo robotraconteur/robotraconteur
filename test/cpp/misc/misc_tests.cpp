@@ -322,6 +322,21 @@ TEST(RobotRaconteurMisc, TransportCapabilityPageMaskAlias)
     EXPECT_EQ(TranspartCapabilityCode_PAGE_MASK, TransportCapabilityCode_PAGE_MASK);
 }
 
+TEST(RobotRaconteurMisc, IsStringIdentifier)
+{
+    EXPECT_TRUE(IsStringIdentifier("identifier_1"));
+    EXPECT_TRUE(IsStringIdentifier("identifier_1.with.dots"));
+    EXPECT_TRUE(IsStringIdentifier("cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_TRUE(IsStringIdentifier("{cbfea7a4-0361-4aad-95bb-d4dcd967047a}"));
+    EXPECT_TRUE(IsStringIdentifier("identifier_1|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_TRUE(IsStringIdentifier("identifier_1|{cbfea7a4-0361-4aad-95bb-d4dcd967047a}"));
+    // A '|' must be followed by a UUID
+    EXPECT_FALSE(IsStringIdentifier("identifier_1|"));
+    EXPECT_FALSE(IsStringIdentifier("|cbfea7a4-0361-4aad-95bb-d4dcd967047a"));
+    EXPECT_FALSE(IsStringIdentifier("identifier_1|not_a_uuid"));
+    EXPECT_FALSE(IsStringIdentifier(""));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
