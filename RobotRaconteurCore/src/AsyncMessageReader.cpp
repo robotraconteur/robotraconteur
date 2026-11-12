@@ -420,6 +420,9 @@ bool AsyncMessageReaderImpl::read_string4(MessageStringPtr& str, state_type next
     uint32_t l = 0;
     if (!read_uint_x(l))
         return false;
+    // Check the length (from the wire) before allocating the string
+    if (l > distance_from_limit())
+        throw ProtocolException("Message string exceeds message limit");
     std::string s;
     s.resize(l);
 
@@ -741,6 +744,9 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
 
         case MessageElement_readarray1: {
             MessageElement* el = data<MessageElement>();
+            // Check that the element can hold the data before allocating (DataCount comes from the wire)
+            if (static_cast<uint64_t>(RRArrayElementSize(el->ElementType)) * el->DataCount > distance_from_limit())
+                throw ProtocolException("Message element data exceeds element size");
             RR_INTRUSIVE_PTR<RRBaseArray> a = AllocateRRArrayByType(el->ElementType, el->DataCount);
             size_t n = a->ElementSize() * a->size();
             size_t p = read_some_bytes(a->void_ptr(), n);
@@ -816,6 +822,9 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
         // Read nested element list
         case MessageElement_readnested1: {
             MessageElement* el = data<MessageElement>();
+            // Every child element takes at least one byte, so a larger count is malformed
+            if (el->DataCount > distance_from_limit())
+                throw ProtocolException("Message element count exceeds element size");
             std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
             v.reserve(el->DataCount);
             RR_INTRUSIVE_PTR<MessageElementNestedElementList> s =
@@ -1055,6 +1064,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             }
             uint32_t n = 0;
             R(read_uint_x(n));
+            if (n > distance_from_limit())
+                throw ProtocolException("Message extended data exceeds message limit");
             h->Extended.resize(n);
             state() = MessageHeader_extended2;
         }
@@ -1177,6 +1188,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             }
             uint32_t n = 0;
             R(read_uint_x(n));
+            if (n > distance_from_limit())
+                throw ProtocolException("Message extended data exceeds message limit");
             ee->Extended.resize(n);
             state() = MessageEntry_extended2;
         }
@@ -1192,6 +1205,9 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             MessageEntry* ee = data<MessageEntry>();
             uint32_t c = 0;
             R(read_uint_x(c));
+            // Every element takes at least one byte, so a larger count is malformed
+            if (c > distance_from_limit())
+                throw ProtocolException("Message entry element count exceeds message limit");
             param1() = c;
             ee->elements.reserve(c);
             state() = MessageEntry_readelements;
@@ -1291,6 +1307,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             }
             uint32_t n = 0;
             R(read_uint_x(n));
+            if (n > distance_from_limit())
+                throw ProtocolException("Message extended data exceeds message limit");
             ee->Extended.resize(n);
             state() = MessageElement_extended2;
         }
@@ -1356,6 +1374,9 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
 
         case MessageElement_readarray1: {
             MessageElement* el = data<MessageElement>();
+            // Check that the element can hold the data before allocating (DataCount comes from the wire)
+            if (static_cast<uint64_t>(RRArrayElementSize(el->ElementType)) * el->DataCount > distance_from_limit())
+                throw ProtocolException("Message element data exceeds element size");
             RR_INTRUSIVE_PTR<RRBaseArray> a = AllocateRRArrayByType(el->ElementType, el->DataCount);
             size_t n = a->ElementSize() * a->size();
             size_t p = read_some_bytes(a->void_ptr(), n);
@@ -1431,6 +1452,9 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
         // Read nested elements
         case MessageElement_readnested1: {
             MessageElement* el = data<MessageElement>();
+            // Every child element takes at least one byte, so a larger count is malformed
+            if (el->DataCount > distance_from_limit())
+                throw ProtocolException("Message element count exceeds element size");
             std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
             v.reserve(el->DataCount);
             RR_INTRUSIVE_PTR<MessageElementNestedElementList> s =

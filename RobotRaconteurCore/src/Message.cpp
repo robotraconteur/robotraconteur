@@ -558,6 +558,8 @@ void MessageHeader::Read4(ArrayBinaryReader& r)
     if (MessageFlags & MessageFlags_EXTENDED)
     {
         size_t l = r.ReadUintX();
+        if (l > static_cast<size_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message extended data exceeds message limit");
         Extended.resize(l);
         if (l != 0)
         {
@@ -981,6 +983,8 @@ void MessageEntry::Read4(ArrayBinaryReader& r)
     if (EntryFlags & MessageFlags_EXTENDED)
     {
         size_t l = r.ReadUintX();
+        if (l > static_cast<size_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message extended data exceeds message limit");
         Extended.resize(l);
         if (l != 0)
         {
@@ -989,6 +993,9 @@ void MessageEntry::Read4(ArrayBinaryReader& r)
     }
 
     uint32_t ecount = r.ReadUintX();
+    // Every element takes at least one byte, so a larger count is malformed
+    if (ecount > static_cast<uint32_t>(r.DistanceFromLimit()))
+        throw ProtocolException("Message entry element count exceeds message limit");
 
     elements = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
     elements.reserve(ecount);
@@ -1312,6 +1319,9 @@ void MessageElement::Read(ArrayBinaryReader& r)
     case DataTypes_namedarray_multidimarray_t: {
         MessageReadNestedDepthGuard depth_guard;
         std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
+        // Every child element takes at least one byte, so a larger count is malformed
+        if (DataCount > static_cast<uint32_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message element count exceeds element size");
         l.reserve(DataCount);
         for (size_t i = 0; i < DataCount; i++)
         {
@@ -1647,6 +1657,8 @@ void MessageElement::Read4(ArrayBinaryReader& r)
     if (ElementFlags & MessageElementFlags_EXTENDED)
     {
         size_t l = r.ReadUintX();
+        if (l > static_cast<size_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message extended data exceeds message limit");
         Extended.resize(l);
         if (l != 0)
         {
@@ -1696,6 +1708,9 @@ void MessageElement::Read4(ArrayBinaryReader& r)
     case DataTypes_namedarray_multidimarray_t: {
         MessageReadNestedDepthGuard depth_guard;
         std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
+        // Every child element takes at least one byte, so a larger count is malformed
+        if (DataCount > static_cast<uint32_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message element count exceeds element size");
         l.reserve(DataCount);
         for (size_t i = 0; i < DataCount; i++)
         {

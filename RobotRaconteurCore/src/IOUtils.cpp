@@ -159,6 +159,11 @@ void ArrayBinaryReader::ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 
 MessageStringPtr ArrayBinaryReader::ReadString8(size_t length)
 {
+    // Check the length before allocating; Read() would only check it after the string was allocated
+    if (length > CurrentLimit() - position)
+    {
+        throw BufferLimitViolationException("Range outside of buffer");
+    }
     std::string strin;
     strin.resize(length);
     Read(&strin[0], 0, length);

@@ -44,3 +44,11 @@ rr_test_add_executable(
     DEPS
     RobotRaconteurCore
     GTest::Main)
+
+rr_test_add_executable(
+    robotraconteur_element_count_test
+    SRC
+    src/element_count_test.cpp
+    DEPS
+    RobotRaconteurCore
+    GTest::Main)
