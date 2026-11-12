@@ -116,8 +116,8 @@
 %feature("docstring") MessageEntryType_PropertySetRes "Property member set response";
 %feature("docstring") MessageEntryType_FunctionCallReq "Function member call request";
 %feature("docstring") MessageEntryType_FunctionCallRes "Function member call response";
-%feature("docstring") MessageEntryType_GeneratorNextReq "Generater next call request";
-%feature("docstring") MessageEntryType_GeneratorNextRes "Generater next call response";
+%feature("docstring") MessageEntryType_GeneratorNextReq "Generator next call request";
+%feature("docstring") MessageEntryType_GeneratorNextRes "Generator next call response";
 %feature("docstring") MessageEntryType_EventReq "Event member notification";
 %feature("docstring") MessageEntryType_EventRes "(reserved)";
 %feature("docstring") MessageEntryType_PipePacket "Pipe member packet";
@@ -252,7 +252,7 @@
 // RobotRaconteur_LogComponent Enum
 %feature("docstring") RobotRaconteur_LogComponent_Default "default component";
 %feature("docstring") RobotRaconteur_LogComponent_Node "Robot Raconteur Node component";
-%feature("docstring") RobotRaconteur_LogComponent_Transport "tranport component";
+%feature("docstring") RobotRaconteur_LogComponent_Transport "transport component";
 %feature("docstring") RobotRaconteur_LogComponent_Message "message or message serialization component";
 %feature("docstring") RobotRaconteur_LogComponent_Client "client component";
 %feature("docstring") RobotRaconteur_LogComponent_Service "service component";
@@ -1248,7 +1248,7 @@ Test if NodeID is not equal
 %feature("docstring") RobotRaconteur::NodeID::IsAnyNode() """
 Is the NodeID UUID all zeros
 
-The all zero UUID respresents \"any\" node, or an unset NodeID
+The all zero UUID represents \"any\" node, or an unset NodeID
 
 :return: True The NodeID UUID is all zeros, representing any node, False The NodeID UUID is not all zeros
 :rtype: bool

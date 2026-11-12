@@ -293,7 +293,7 @@ def GetStructureType(self,structtype,obj=None):
     :param obj: The client connection object reference to be used with this structure.
       This is necessary because each client maintains type information.  A client must be provided from
       which type information can be queried. For services this parameter is unnecessary.
-    :return: The constructer for the structure type
+    :return: The constructor for the structure type
     :rtype: Callable[[],<structtype>]
     """
     from .RobotRaconteurPythonUtil import GetStructureType
@@ -442,7 +442,7 @@ def RequestObjectLock(self,obj,flags):
 
 def ReleaseObjectLock(self,obj):
     """
-    Release an excluse access lock previously locked with RequestObjectLock()
+    Release an exclusive access lock previously locked with RequestObjectLock()
     or AsyncRequestObjectLock()
 
     Object must have previously been locked using RequestObjectLock() or
@@ -506,7 +506,7 @@ def AsyncRequestObjectLock(self,obj,flags,handler,timeout=RR_TIMEOUT_INFINITE):
 
 def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE):
     """
-    Asynchronously release an excluse access lock previously locked
+    Asynchronously release an exclusive access lock previously locked
     with RequestObjectLock() or AsyncRequestObjectLock()
 
     Same as ReleaseObjectLock() but returns asynchronously
@@ -517,7 +517,7 @@ def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE):
     :param handler: Handler to call on completion
     :type handler: Callable[[str,Exception],None]
     :param timeout: Timeout in seconds, or -1 for infinite
-    :type timout: float
+    :type timeout: float
     """
     from .RobotRaconteurPythonUtil import async_call, adjust_timeout, AsyncStringReturnDirectorImpl
     return async_call(self._AsyncReleaseObjectLock,(obj.rrinnerstub,adjust_timeout(timeout)),AsyncStringReturnDirectorImpl,handler)
@@ -720,7 +720,7 @@ def GetConstants(self,servicetype, obj=None):
 
     :param servicetype: The name of the service definition
     :type servicetype: str
-    :param obj: The client connection object reference to be used with to retrive service types.
+    :param obj: The client connection object reference to be used with to retrieve service types.
             This is necessary because each client maintains type information.  A client must be provided from
             which type information can be queried. For services this parameter is unnecessary.
     :rtype: Dict[str,Any]
@@ -739,7 +739,7 @@ def GetExceptionType(self, exceptionname, obj=None):
 
     :param exceptionname: The fully qualified name of the exception type
     :type exceptionname: str
-    :param obj: The client connection object reference to be used with to retrive service types.
+    :param obj: The client connection object reference to be used with to retrieve service types.
             This is necessary because each client maintains type information.  A client must be provided from
             which type information can be queried. For services this parameter is unnecessary.
     :return: Exception type
@@ -997,7 +997,7 @@ def SubscribeService(self,*args):
     Subscribe to a service using one or more URL. Used to create robust connections to services
 
     Creates a ServiceSubscription assigned to a service with one or more candidate connection URLs. The
-    subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.
+    subscription will attempt to maintain a persistent connection, reconnecting if the connection is lost.
 
     :param url: One or more candidate connection urls
     :type url: Union[str,List[str]]

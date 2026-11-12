@@ -1078,7 +1078,7 @@ class Pipe(object):
 
         Creates a connected pipe endpoint pair, and returns the local endpoint. Use to create the streaming data
         connection to the service. Pipe endpoints are indexed, meaning that Connect() may be called multiple
-        times for the same client connection to create multple pipe endpoint pairs. For most cases Pipe.ANY_INDEX
+        times for the same client connection to create multiple pipe endpoint pairs. For most cases Pipe.ANY_INDEX
         (-1) can be used to automatically select an available index.
 
         Only valid on clients. Will throw InvalidOperationException on the service side.
@@ -3958,7 +3958,7 @@ class ServiceSubscriptionFilterNode(object):
         self.NodeID = None
         """(RobotRaconteur.NodeID) The NodeID to match. All zero NodeID will match any NodeID."""
         self.NodeName = None
-        """(str) The NodeName to match. Emtpy NodeName will match any NodeName."""
+        """(str) The NodeName to match. Empty NodeName will match any NodeName."""
         self.Username = None
         """(str) The username to use for authentication. Should only be used with secure transports and verified NodeID"""
         self.Credentials = None
@@ -4415,7 +4415,7 @@ class ServiceSubscription(object):
         for RobotRaconteurNode.SubscribeService()
 
         Clients using GetDefaultClient() should not store a reference to the client. It should instead
-        call GetDefaultClient() right before using the client to make sure the most recenty connection
+        call GetDefaultClient() right before using the client to make sure the most recent connection
         is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
         of pipes and wires can be managed automatically.
 
@@ -4447,7 +4447,7 @@ class ServiceSubscription(object):
         for RobotRaconteurNode.SubscribeService()
 
         Clients using GetDefaultClient() should not store a reference to the client. It should instead
-        call GetDefaultClient() right before using the client to make sure the most recenty connection
+        call GetDefaultClient() right before using the client to make sure the most recent connection
         is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
         of pipes and wires can be managed automatically.
 

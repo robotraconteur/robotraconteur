@@ -31,7 +31,7 @@ def FindServiceByType(self,servicetype,transportschemes):
 
 def AsyncFindServiceByType(self,servicetype,transportschemes,handler,timeout=5):
 	"""
-	Asynchronously use discovery to find availabe services by service type
+	Asynchronously use discovery to find available services by service type
 
 	Same as FindServiceByType() but returns asynchronously
 
