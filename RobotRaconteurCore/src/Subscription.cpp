@@ -431,7 +431,8 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
 
         if (e != clients.end())
         {
-            // If we are already dected, ignore
+            // If we are already detected, ignore this service and continue checking the
+            // other services advertised by the node
 
             ServiceInfo2& info2 = e->second->service_info2;
 
@@ -451,7 +452,7 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
 
             e->second->last_node_update = n->NowNodeTime();
 
-            return;
+            continue;
         }
 
         std::vector<std::string> urls;
@@ -989,9 +990,10 @@ void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorag
 
         if (e != clients.end())
         {
-            // If we are already connected, ignore
+            // If we are already connected, ignore this service and continue checking the
+            // other services advertised by the node
             if (e->second->client.lock())
-                return;
+                continue;
         }
 
         std::vector<std::string> urls;
