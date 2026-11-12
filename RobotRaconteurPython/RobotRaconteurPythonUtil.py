@@ -621,7 +621,6 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
         try:
             type1 = FindMemberByName(
                 self.innerstub.RR_objecttype.Members, name)
-            # type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
             args = []
             type2 = RobotRaconteurPython.MemberDefinitionUtil.ToEvent(type1)
             for p in type2.Parameters:
@@ -637,7 +636,6 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
         try:
             type1 = FindMemberByName(
                 self.innerstub.RR_objecttype.Members, name)
-            # type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
             args = []
 
             type2 = RobotRaconteurPython.MemberDefinitionUtil.ToCallback(type1)
@@ -2443,7 +2441,6 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _CallGetProperty(self, name, async_adapter):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToProperty(type1)
         try:
             async_getter = getattr(self.obj, "async_get_" + name)
@@ -2481,7 +2478,6 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _CallSetProperty(self, name, value, async_adapter):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToProperty(type1)
         a = UnpackMessageElement(value, type2.Type, node=self.skel.RRGetNode())
 
@@ -2579,7 +2575,6 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _GetSubObj(self, name, index):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToObjRef(type1)
         if (type2.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array or (type2.ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_map_int32)):
             obj, objecttype = getattr(self.obj, 'get_' + name)(str(index))

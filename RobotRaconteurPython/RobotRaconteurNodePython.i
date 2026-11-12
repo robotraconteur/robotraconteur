@@ -482,7 +482,6 @@ def MonitorExit(self,obj):
 
     :param obj: The object previously locked by MonitorEnter()
     """
-    #obj.rrlock.release()
     self._MonitorExit(obj.rrinnerstub)
 
 def AsyncRequestObjectLock(self,obj,flags,handler,timeout=RR_TIMEOUT_INFINITE):
