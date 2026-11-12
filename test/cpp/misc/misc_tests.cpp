@@ -80,6 +80,14 @@ TEST(RobotRaconteurMisc, EncodeServicePathIndexTest)
     EXPECT_TRUE(boost::regex_match(epsilon_encoded, re));
 }
 
+TEST(RobotRaconteurMisc, EncodeServicePathIndexNonAsciiTest)
+{
+    std::string utf8_index = "caf\xc3\xa9";
+    std::string encoded = EncodeServicePathIndex(utf8_index);
+    EXPECT_EQ(encoded, "caf%c3%a9");
+    EXPECT_EQ(DecodeServicePathIndex(encoded), utf8_index);
+}
+
 TEST(RobotRaconteurMisc, BuildServicePathTest)
 {
     // cSpell: disable

@@ -511,7 +511,7 @@ ROBOTRACONTEUR_CORE_API std::string encode_index(boost::string_ref index)
 
     for (size_t i = 0; i < index.length(); i++)
     {
-        char c = index[i];
+        unsigned char c = static_cast<unsigned char>(index[i]);
         if (std::isalnum(c))
         {
             out << std::dec << c;
