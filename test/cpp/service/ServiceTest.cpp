@@ -1652,8 +1652,10 @@ void sub1_impl::RobotRaconteurMonitorEnter(int32_t timeout)
     if (timeout == -1)
         RobotRaconteurMonitorEnter();
     else
-
-        rrlock.timed_lock(boost::posix_time::milliseconds(timeout));
+    {
+        if (!rrlock.timed_lock(boost::posix_time::milliseconds(timeout)))
+            throw RequestTimeoutException("Monitor lock timed out");
+    }
 }
 
 void sub1_impl::RobotRaconteurMonitorExit() { rrlock.unlock(); }

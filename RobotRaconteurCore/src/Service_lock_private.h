@@ -56,7 +56,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext_MonitorObjectSkel
     RR_WEAK_PTR<IRobotRaconteurMonitorObject> obj;
     uint32_t local_endpoint;
     int32_t timeout;
-    RR_SHARED_PTR<std::exception> monitor_acquire_exception;
+    RR_SHARED_PTR<RobotRaconteurException> monitor_acquire_exception;
     bool monitor_acquired;
     RR_SHARED_PTR<AutoResetEvent> monitor_thread_event;
     bool maintain_lock;

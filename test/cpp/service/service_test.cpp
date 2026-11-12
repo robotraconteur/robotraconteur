@@ -207,6 +207,26 @@ TEST_F(ServiceTest, MonitorLockTest)
     ASSERT_NO_THROW(c.TestMonitorLock(service_url));
 }
 
+TEST_F(ServiceTest, MonitorLockTimeoutErrorTest)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r1 =
+        rr_cast<com::robotraconteur::testing::TestService1::testroot>(node->ConnectService(service_url));
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r2 =
+        rr_cast<com::robotraconteur::testing::TestService1::testroot>(node->ConnectService(service_url));
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1> o1 = r1->get_o1();
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::sub1> o2 = r2->get_o1();
+
+    ASSERT_NO_THROW(node->MonitorEnter(o1));
+    // The service object throws RequestTimeoutException when the monitor lock times out.
+    // The exception must be returned to the client, not replaced by an unknown error.
+    EXPECT_THROW(node->MonitorEnter(o2, 200), RequestTimeoutException);
+    EXPECT_NO_THROW(node->MonitorExit(o1));
+
+    node->DisconnectService(r1);
+    node->DisconnectService(r2);
+}
+
 TEST_F(ServiceTest, AsyncTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
