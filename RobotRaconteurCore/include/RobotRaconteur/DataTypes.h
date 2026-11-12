@@ -1604,6 +1604,9 @@ MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_di
                                             const std::vector<uint32_t>& mema_pos,
                                             const std::vector<uint32_t>& memb_dims,
                                             const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count);
+
+// Throws InvalidArgumentException if the element count of dims is larger than array_size
+ROBOTRACONTEUR_CORE_API void MultiDimArray_CheckArraySize(const std::vector<uint32_t>& dims, size_t array_size);
 } // namespace detail
 
 /**
@@ -1663,6 +1666,8 @@ class RRMultiDimArray : public RRMultiDimBaseArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, Array->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->Array->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -1691,6 +1696,8 @@ class RRMultiDimArray : public RRMultiDimBaseArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, Array->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->Array->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -2101,6 +2108,8 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, PodArray->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->PodArray->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -2132,6 +2141,8 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, PodArray->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->PodArray->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -2516,6 +2527,8 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, NamedArray->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->NamedArray->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -2547,6 +2560,8 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, NamedArray->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->NamedArray->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 

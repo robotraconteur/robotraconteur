@@ -237,9 +237,14 @@ RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFun
             RR_INTRUSIVE_PTR<RRArray<uint64_t> > memorypos =
                 m->FindElement("memorypos")->CastData<RRArray<uint64_t> >();
             RR_INTRUSIVE_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
-            uint32_t elemcount = 1;
+            uint64_t elemcount64 = 1;
             for (size_t i = 0; i < count->size(); i++)
-                elemcount *= boost::numeric_cast<uint32_t>((*count)[i]);
+            {
+                elemcount64 *= boost::numeric_cast<uint32_t>((*count)[i]);
+                if (elemcount64 > std::numeric_limits<uint32_t>::max())
+                    throw InvalidArgumentException("Memory request count too large");
+            }
+            uint32_t elemcount = static_cast<uint32_t>(elemcount64);
 
             RR_INTRUSIVE_PTR<MessageElementData> data =
                 DoRead(RRArrayToVector<uint64_t>(memorypos), std::vector<uint64_t>(count->size()),
@@ -269,9 +274,14 @@ RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFun
             RR_INTRUSIVE_PTR<RRArray<uint64_t> > memorypos =
                 m->FindElement("memorypos")->CastData<RRArray<uint64_t> >();
             RR_INTRUSIVE_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
-            uint32_t elemcount = 1;
+            uint64_t elemcount64 = 1;
             for (size_t i = 0; i < count->size(); i++)
-                elemcount *= boost::numeric_cast<uint32_t>((*count)[i]);
+            {
+                elemcount64 *= boost::numeric_cast<uint32_t>((*count)[i]);
+                if (elemcount64 > std::numeric_limits<uint32_t>::max())
+                    throw InvalidArgumentException("Memory request count too large");
+            }
+            uint32_t elemcount = static_cast<uint32_t>(elemcount64);
 
             RR_INTRUSIVE_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
 

@@ -1,6 +1,7 @@
 #include <boost/shared_array.hpp>
 
 #include <gtest/gtest.h>
+#include <boost/assign/list_of.hpp>
 #include <RobotRaconteur/ServiceDefinition.h>
 #include <RobotRaconteur/RobotRaconteurNode.h>
 
@@ -233,6 +234,24 @@ TEST_F(ServiceTest, AsyncTest)
 
     ServiceTestClient c;
     ASSERT_NO_THROW(c.TestAsync(service_auth_url));
+}
+
+TEST_F(ServiceTest, MultiDimMemoryRequestOverflowTest)
+{
+    // A crafted MemoryRead whose count wraps 32-bit arithmetic must be rejected by the service
+    RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r =
+        rr_cast<com::robotraconteur::testing::TestService1::testroot>(node->ConnectService(service_url));
+    RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(r);
+
+    std::vector<uint64_t> memorypos = boost::assign::list_of(1)(1);
+    std::vector<uint64_t> count = boost::assign::list_of(0xFFFFFFFFu)(0xFFFFFFFFu);
+    RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryRead, "m2");
+    m->AddElement("memorypos", VectorToRRArray<uint64_t>(memorypos));
+    m->AddElement("count", VectorToRRArray<uint64_t>(count));
+    EXPECT_THROW(stub->ProcessRequest(m), InvalidArgumentException);
+
+    node->DisconnectService(r);
 }
 
 int main(int argc, char* argv[])

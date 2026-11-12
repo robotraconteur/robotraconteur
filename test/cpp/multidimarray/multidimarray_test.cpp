@@ -174,6 +174,42 @@ TEST(MultiDimArrayTest, TestInvalidPosLength)
     EXPECT_THROW(a->AssignSubArray(pos, b, short_pos, count), InvalidArgumentException);
 }
 
+TEST(MultiDimArrayTest, TestCopyRangeOverflow)
+{
+    // pos + count must not wrap around in 32 bits and pass the range check
+    uint32_t dims_a[] = {10};
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a =
+        AllocateRRMultiDimArray<double>(AttachRRArray(dims_a, 1, false), AllocateRRArray<double>(10));
+    uint32_t dims_b[] = {10};
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > b =
+        AllocateRRMultiDimArray<double>(AttachRRArray(dims_b, 1, false), AllocateRRArray<double>(10));
+
+    std::vector<uint32_t> pos = boost::assign::list_of(1);
+    std::vector<uint32_t> count = boost::assign::list_of(0xFFFFFFFFu);
+
+    EXPECT_THROW(a->RetrieveSubArray(pos, b, pos, count), InvalidArgumentException);
+    EXPECT_THROW(a->AssignSubArray(pos, b, pos, count), InvalidArgumentException);
+}
+
+TEST(MultiDimArrayTest, TestArraySizeMismatch)
+{
+    // Dims that claim more elements than the array holds must be rejected before copying
+    uint32_t dims_a[] = {10};
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > a =
+        AllocateRRMultiDimArray<double>(AttachRRArray(dims_a, 1, false), AllocateRRArray<double>(10));
+    uint32_t dims_b[] = {10};
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > b_short =
+        AllocateRRMultiDimArray<double>(AttachRRArray(dims_b, 1, false), AllocateRRArray<double>(1));
+
+    std::vector<uint32_t> zero = boost::assign::list_of(0);
+    std::vector<uint32_t> count = boost::assign::list_of(10);
+
+    EXPECT_THROW(a->RetrieveSubArray(zero, b_short, zero, count), InvalidArgumentException);
+    EXPECT_THROW(a->AssignSubArray(zero, b_short, zero, count), InvalidArgumentException);
+    EXPECT_THROW(b_short->RetrieveSubArray(zero, a, zero, count), InvalidArgumentException);
+    EXPECT_THROW(b_short->AssignSubArray(zero, a, zero, count), InvalidArgumentException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
