@@ -334,7 +334,10 @@ void ASIOStreamBaseTransport::AsyncSendMessage(
                 {
                     if (ee->message->entries.at(0)->EntryType == MessageEntryType_ConnectionTest &&
                         m->entries.at(0)->EntryType == MessageEntryType_ConnectionTest)
+                    {
+                        detail::PostHandler(node, callback, true, false);
                         return;
+                    }
 
                     if (ee->message->entries.at(0)->EntryType == MessageEntryType_WirePacket &&
                         m->entries.at(0)->EntryType == MessageEntryType_WirePacket)
