@@ -5,6 +5,11 @@
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
 
+#ifndef _WIN32
+#include <pwd.h>
+#include <unistd.h>
+#endif
+
 using namespace RobotRaconteur;
 
 TEST(RobotRaconteurMisc, LogMacros)
@@ -64,6 +69,22 @@ TEST(RobotRaconteurMisc, NodeDirectories)
     std::cout << "user_cache_dir: " << dirs.user_cache_dir << std::endl;
     std::cout << "user_run_dir: " << dirs.user_run_dir << std::endl;
 }
+
+#ifndef _WIN32
+TEST(RobotRaconteurMisc, GetLogonUserName)
+{
+    // Run as a UID with no passwd entry (e.g. podman run --user 54321) to exercise the error path
+    struct passwd* pw = getpwuid(getuid());
+    if (pw == NULL || std::string(pw->pw_name).empty())
+    {
+        EXPECT_THROW(NodeDirectoriesUtil::GetLogonUserName(), SystemResourceException);
+    }
+    else
+    {
+        EXPECT_EQ(NodeDirectoriesUtil::GetLogonUserName(), std::string(pw->pw_name));
+    }
+}
+#endif
 
 TEST(RobotRaconteurMisc, EncodeServicePathIndexTest)
 {

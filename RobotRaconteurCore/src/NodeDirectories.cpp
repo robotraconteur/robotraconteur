@@ -322,11 +322,11 @@ std::string NodeDirectoriesUtil::GetLogonUserName()
     struct passwd* passwd = NULL;
     passwd = getpwuid(getuid());
     if (passwd == NULL)
-        throw ConnectionException("Could not determine current user");
+        throw SystemResourceException("Could not determine current user");
 
     std::string o(passwd->pw_name);
     if (o.empty())
-        throw ConnectionException("Could not determine current user");
+        throw SystemResourceException("Could not determine current user");
 
     return o;
 
