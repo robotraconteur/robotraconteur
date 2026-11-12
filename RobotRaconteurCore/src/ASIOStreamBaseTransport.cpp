@@ -2339,8 +2339,8 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(
                 for (size_t i = 0; i < caps_array->size(); i++)
                 {
                     uint32_t cap = (*caps_array)[i];
-                    uint32_t cap_page = cap & TranspartCapabilityCode_PAGE_MASK;
-                    uint32_t cap_value = cap & ~TranspartCapabilityCode_PAGE_MASK;
+                    uint32_t cap_page = cap & TransportCapabilityCode_PAGE_MASK;
+                    uint32_t cap_value = cap & ~TransportCapabilityCode_PAGE_MASK;
                     if (cap_page == TransportCapabilityCode_MESSAGE2_BASIC_PAGE)
                     {
                         message2_basic_caps = (cap_value & (TransportCapabilityCode_MESSAGE2_BASIC_ENABLE |
@@ -2621,8 +2621,8 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(const RR
             for (size_t i = 0; i < caps_array->size(); i++)
             {
                 uint32_t cap = (*caps_array)[i];
-                uint32_t cap_page = cap & TranspartCapabilityCode_PAGE_MASK;
-                uint32_t cap_value = cap & ~TranspartCapabilityCode_PAGE_MASK;
+                uint32_t cap_page = cap & TransportCapabilityCode_PAGE_MASK;
+                uint32_t cap_value = cap & ~TransportCapabilityCode_PAGE_MASK;
                 if (cap_page == TransportCapabilityCode_MESSAGE2_BASIC_PAGE)
                 {
                     if (!(cap_value & TransportCapabilityCode_MESSAGE2_BASIC_ENABLE))
@@ -2799,22 +2799,22 @@ void ASIOStreamBaseTransport::SetDisableStringTable(bool d) { disable_string_tab
 
 bool ASIOStreamBaseTransport::CheckCapabilityActive(uint32_t cap)
 {
-    uint32_t cap_page = cap & TranspartCapabilityCode_PAGE_MASK;
-    uint32_t cap_value = cap & (~TranspartCapabilityCode_PAGE_MASK);
+    uint32_t cap_page = cap & TransportCapabilityCode_PAGE_MASK;
+    uint32_t cap_value = cap & (~TransportCapabilityCode_PAGE_MASK);
 
     if (cap_page == TransportCapabilityCode_MESSAGE2_BASIC_PAGE)
     {
-        return (cap_value & (active_capabilities_message2_basic & (~TranspartCapabilityCode_PAGE_MASK))) != 0;
+        return (cap_value & (active_capabilities_message2_basic & (~TransportCapabilityCode_PAGE_MASK))) != 0;
     }
 
     if (cap_page == TransportCapabilityCode_MESSAGE4_BASIC_PAGE)
     {
-        return (cap_value & (active_capabilities_message4_basic & (~TranspartCapabilityCode_PAGE_MASK))) != 0;
+        return (cap_value & (active_capabilities_message4_basic & (~TransportCapabilityCode_PAGE_MASK))) != 0;
     }
 
     if (cap_page == TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE)
     {
-        return (cap_value & (active_capabilities_message4_stringtable & (~TranspartCapabilityCode_PAGE_MASK))) != 0;
+        return (cap_value & (active_capabilities_message4_stringtable & (~TransportCapabilityCode_PAGE_MASK))) != 0;
     }
 
     return false;

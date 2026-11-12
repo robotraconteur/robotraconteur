@@ -574,7 +574,12 @@ enum MemberDefinition_NoLock
 #define RR_VALUE_LIFESPAN_INFINITE (-1)
 
 /** @brief Page mask for transport capability code */
-const uint32_t TranspartCapabilityCode_PAGE_MASK = 0xFFF00000;
+const uint32_t TransportCapabilityCode_PAGE_MASK = 0xFFF00000;
+/** @brief Page mask for transport capability code
+ *
+ * @deprecated Misspelled name kept for compatibility. Use TransportCapabilityCode_PAGE_MASK.
+ */
+const uint32_t TranspartCapabilityCode_PAGE_MASK = TransportCapabilityCode_PAGE_MASK;
 /** @brief Message Version 2 transport capability page code */
 const uint32_t TransportCapabilityCode_MESSAGE2_BASIC_PAGE = 0x02000000;
 /** @brief Enable Message Version 2 transport capability flag */

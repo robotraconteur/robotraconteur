@@ -315,6 +315,13 @@ TEST(RobotRaconteurMisc, RobotRaconteurExceptionInnerExceptionWhat)
     EXPECT_NE(std::string(e.what()).find("outer message"), std::string::npos);
 }
 
+TEST(RobotRaconteurMisc, TransportCapabilityPageMaskAlias)
+{
+    // The misspelled TranspartCapabilityCode_PAGE_MASK is kept as an alias for compatibility
+    EXPECT_EQ(TransportCapabilityCode_PAGE_MASK, 0xFFF00000u);
+    EXPECT_EQ(TranspartCapabilityCode_PAGE_MASK, TransportCapabilityCode_PAGE_MASK);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

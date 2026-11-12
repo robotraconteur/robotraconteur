@@ -444,9 +444,9 @@ void StringTable::SetTableFlags(std::vector<uint32_t> flags_)
     boost::mutex::scoped_lock lock(this_lock);
     BOOST_FOREACH (uint32_t f, flags_)
     {
-        if ((f & TranspartCapabilityCode_PAGE_MASK) == TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE)
+        if ((f & TransportCapabilityCode_PAGE_MASK) == TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE)
         {
-            flags = (f & (~TranspartCapabilityCode_PAGE_MASK));
+            flags = (f & (~TransportCapabilityCode_PAGE_MASK));
         }
     }
 

@@ -228,7 +228,8 @@
 %feature("docstring") RR_VALUE_LIFESPAN_INFINITE "Set wire values to have infinite lifespan and will not expire";
 
 // TransportCapabilityCode flags
-%feature("docstring") TranspartCapabilityCode_PAGE_MASK "Page mask for transport capability code";
+%feature("docstring") TransportCapabilityCode_PAGE_MASK "Page mask for transport capability code";
+%feature("docstring") TranspartCapabilityCode_PAGE_MASK "Page mask for transport capability code (deprecated misspelled name, use TransportCapabilityCode_PAGE_MASK)";
 %feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_PAGE2000000 "Message Version 2 transport capability page code";
 %feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_ENABLE "Enable Message Version 2 transport capability flag";
 %feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED2 "Enable Message Version 2 connect combined transport capability flag";

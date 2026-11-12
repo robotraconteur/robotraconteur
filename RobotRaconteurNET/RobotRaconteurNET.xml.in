@@ -238,8 +238,11 @@
     <member name="F:RobotRaconteur.RobotRaconteurNET.RR_VALUE_LIFESPAN_INFINITE">
       <summary>Set wire values to have infinite lifespan and will not expire</summary>
     </member>
-    <member name="P:RobotRaconteur.RobotRaconteurNET.TranspartCapabilityCode_PAGE_MASK">
+    <member name="P:RobotRaconteur.RobotRaconteurNET.TransportCapabilityCode_PAGE_MASK">
       <summary>Page mask for transport capability code</summary>
+    </member>
+    <member name="P:RobotRaconteur.RobotRaconteurNET.TranspartCapabilityCode_PAGE_MASK">
+      <summary>Page mask for transport capability code (deprecated misspelled name, use TransportCapabilityCode_PAGE_MASK)</summary>
     </member>
     <member name="P:RobotRaconteur.RobotRaconteurNET.TransportCapabilityCode_MESSAGE2_BASIC_PAGE">
       <summary>Message Version 2 transport capability page code</summary>
