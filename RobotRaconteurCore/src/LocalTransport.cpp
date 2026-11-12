@@ -1967,13 +1967,23 @@ void LocalTransportDiscovery::Refresh()
 
     boost::posix_time::ptime now = node1->NowNodeTime();
 
-    if (private_path)
+    // Take a stable snapshot of the paths under the lock; the discovery poll thread may rewrite them. The
+    // directory scans below run on the copies so the lock is not held during filesystem I/O.
+    boost::optional<boost::filesystem::path> private_path1;
+    boost::optional<boost::filesystem::path> public_path1;
+    {
+        boost::mutex::scoped_lock lock(path_lock);
+        private_path1 = private_path;
+        public_path1 = public_path;
+    }
+
+    if (private_path1)
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
-            node, Transport, -1, "LocalTransport discovery searching private path \"" << *private_path << "\"");
+            node, Transport, -1, "LocalTransport discovery searching private path \"" << *private_path1 << "\"");
 
         std::vector<NodeDiscoveryInfo> nodeinfo;
-        LocalTransportUtil::FindNodesInDirectory(nodeinfo, *private_path, "rr+local", now,
+        LocalTransportUtil::FindNodesInDirectory(nodeinfo, *private_path1, "rr+local", now,
                                                  boost::optional<std::string>());
         BOOST_FOREACH (NodeDiscoveryInfo& n, nodeinfo)
         {
@@ -1981,14 +1991,15 @@ void LocalTransportDiscovery::Refresh()
         }
     }
 
-    if (public_path)
+    if (public_path1)
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
-                                           "LocalTransport discovery searching public path \"" << *public_path << "\"");
+                                           "LocalTransport discovery searching public path \"" << *public_path1
+                                                                                               << "\"");
         try
         {
             boost::filesystem::directory_iterator end_iter;
-            for (boost::filesystem::directory_iterator dir_itr(*public_path); dir_itr != end_iter; dir_itr++)
+            for (boost::filesystem::directory_iterator dir_itr(*public_path1); dir_itr != end_iter; dir_itr++)
             {
                 try
                 {

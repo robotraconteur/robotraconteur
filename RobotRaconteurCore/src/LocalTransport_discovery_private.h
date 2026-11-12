@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <boost/filesystem.hpp>
+#include <boost/thread/mutex.hpp>
 
 #pragma once
 
@@ -33,6 +34,9 @@ class LocalTransportDiscovery
   protected:
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
+    // Protects private_path and public_path, which are written by the platform discovery poll thread
+    // (e.g. LinuxLocalTransportDiscovery::run/update_public) and read by Refresh() on the transport thread
+    boost::mutex path_lock;
     boost::optional<boost::filesystem::path> private_path;
     boost::optional<boost::filesystem::path> public_path;
 };
