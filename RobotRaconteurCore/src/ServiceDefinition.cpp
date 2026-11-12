@@ -648,7 +648,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
                 }
                 else
                 {
-                    throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater",
+                    throw ServiceDefinitionParseException("option keyword is not supported in stdver 0.9.2 or greater",
                                                           working_info);
                 }
                 continue;
@@ -718,7 +718,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
                     RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
                 struct_def->FromString(block.str(), warnings, &init_info);
                 if (stdver_version >= RobotRaconteurVersion(0, 9, 2) && !struct_def->Options.empty())
-                    throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater",
+                    throw ServiceDefinitionParseException("option keyword is not supported in stdver 0.9.2 or greater",
                                                           working_info);
                 struct_def->DocString = docstring;
                 Structures.push_back(struct_def);
@@ -734,7 +734,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
                     RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
                 object_def->FromString(block.str(), warnings, &init_info);
                 if (stdver_version >= RobotRaconteurVersion(0, 9, 2) && !object_def->Options.empty())
-                    throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater",
+                    throw ServiceDefinitionParseException("option keyword is not supported in stdver 0.9.2 or greater",
                                                           working_info);
                 object_def->DocString = docstring;
                 Objects.push_back(object_def);
@@ -750,7 +750,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
                     RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
                 struct_def->FromString(block.str(), warnings, &init_info);
                 if (stdver_version >= RobotRaconteurVersion(0, 9, 2) && !struct_def->Options.empty())
-                    throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater",
+                    throw ServiceDefinitionParseException("option keyword is not supported in stdver 0.9.2 or greater",
                                                           working_info);
                 struct_def->DocString = docstring;
                 Pods.push_back(struct_def);
@@ -766,7 +766,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
                     RR_MAKE_SHARED<ServiceEntryDefinition>(shared_from_this());
                 struct_def->FromString(block.str(), warnings, &init_info);
                 if (stdver_version >= RobotRaconteurVersion(0, 9, 2) && !struct_def->Options.empty())
-                    throw ServiceDefinitionParseException("option keyword is not support in stdver 0.9.2 or greater",
+                    throw ServiceDefinitionParseException("option keyword is not supported in stdver 0.9.2 or greater",
                                                           working_info);
                 struct_def->DocString = docstring;
                 NamedArrays.push_back(struct_def);
@@ -2617,7 +2617,7 @@ void UsingDefinition::FromString(boost::string_ref s, const ServiceDefinitionPar
     ref_match r_match;
     if (!boost::regex_match(s.begin(), s.end(), r_match, r))
     {
-        throw ServiceDefinitionParseException("Format error for using  definition", ParseInfo);
+        throw ServiceDefinitionParseException("Format error for using definition", ParseInfo);
     }
 
     if (!r_match[2].matched)

@@ -42,7 +42,7 @@ RR_INTRUSIVE_PTR<MessageEntry> Message::FindEntry(MessageStringRef name)
         boost::find_if(entries, boost::bind(&MessageEntry::MemberName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
     if (m == entries.end())
-        throw MessageEntryNotFoundException("Element " + name.str() + " not found.");
+        throw MessageEntryNotFoundException("Entry " + name.str() + " not found.");
 
     return *m;
 }
