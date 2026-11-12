@@ -1348,8 +1348,6 @@ void HardwareTransport_win_discovery::OnDeviceChanged_win(GUID guid, DWORD evt)
 
         if (IsEqualGUID(guid, GUID_BTHPORT_DEVICE_INTERFACE))
         {
-            std::cout << "Got a refresh adapter notification" << std::endl;
-
             hBtNotify.clear();
 
             RR_SHARED_PTR<void> bt_notify1;
