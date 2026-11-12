@@ -3399,13 +3399,11 @@ class UnpackMessageElementToMxArrayImpl
                 {
                     if (tdef->ArrayVarLength)
                     {
-                        // if (data)
                         if (data->size() > tdef->ArrayLength.at(0))
                             throw DataTypeException("Array exceeds maximum length");
                     }
                     else
                     {
-                        // if (!data) throw DataTypeException("Array " + tdef->Name + " must not be null");
                         if (data->size() != tdef->ArrayLength.at(0))
                             throw DataTypeException("Array length mismatch");
                     }
