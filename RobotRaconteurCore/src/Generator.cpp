@@ -35,6 +35,7 @@ GeneratorClientBase::GeneratorClientBase(boost::string_ref name, int32_t id, con
     this->name = RR_MOVE(name.to_string());
     this->id = id;
     this->stub = stub;
+    this->service_path = stub->ServicePath;
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, name,
                                             "Created generator with id " << id);
 }
