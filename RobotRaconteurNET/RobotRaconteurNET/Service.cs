@@ -274,7 +274,7 @@ public class Pipe<T>
     /// <para>
     /// Creates a connected pipe endpoint pair, and returns the local endpoint. Use to create the streaming data
     /// connection to the service. Pipe endpoints are indexed, meaning that Connect() may be called multiple
-    /// times for the same client connection to create multple pipe endpoint pairs. For most cases Pipe.ANY_INDEX
+    /// times for the same client connection to create multiple pipe endpoint pairs. For most cases Pipe.ANY_INDEX
     /// (-1) can be used to automatically select an available index.
     /// </para>
     /// <para>

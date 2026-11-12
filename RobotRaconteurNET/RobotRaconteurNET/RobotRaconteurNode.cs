@@ -1467,7 +1467,7 @@ public partial class RobotRaconteurNode
     }
 
     /// <summary>
-    /// Release an excluse access lock previously locked with RequestObjectLock()
+    /// Release an exclusive access lock previously locked with RequestObjectLock()
     /// or AsyncRequestObjectLock()
     /// </summary>
     /// <remarks>
@@ -1514,7 +1514,7 @@ public partial class RobotRaconteurNode
     }
 
     /// <summary>
-    /// Asynchronously release an excluse access lock previously locked
+    /// Asynchronously release an exclusive access lock previously locked
     /// with RequestObjectLock() or AsyncRequestObjectLock()
     /// </summary>
     /// <remarks>
@@ -1886,7 +1886,7 @@ public partial class RobotRaconteurNode
     public const int RR_TIMEOUT_INFINITE = -1;
 
     /// <summary>
-    /// Asynchronously use discovery to find availabe services by service type
+    /// Asynchronously use discovery to find available services by service type
     /// </summary>
     /// <remarks>
     ///  Same as FindServiceByType() but async
