@@ -354,12 +354,22 @@ int main(int argc, char* argv[])
         {
             command = "thunksource";
         }
-        else if (verify_robdef)
+        if (verify_robdef)
         {
+            if (!command.empty())
+            {
+                std::cout << "RobotRaconteurGen: fatal error: more than one command specified" << std::endl;
+                return 1;
+            }
             command = "verify-robdef";
         }
-        else if (string_table)
+        if (string_table)
         {
+            if (!command.empty())
+            {
+                std::cout << "RobotRaconteurGen: fatal error: more than one command specified" << std::endl;
+                return 1;
+            }
             command = "string-table";
         }
         if (newnodeid)
