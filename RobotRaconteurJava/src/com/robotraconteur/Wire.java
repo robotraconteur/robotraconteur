@@ -39,7 +39,6 @@ public class Wire<T>
     {
         if (innerwire instanceof WrappedWireServer)
         {
-            //((WrappedWireServer)innerwire).setRR_Director(null);
         }
     }
 
@@ -357,7 +356,6 @@ public class Wire<T>
 
         protected void finalize() throws Throwable
         {
-            // innerwire.setRR_Director(null);
         }
 
         public final long getEndpoint()

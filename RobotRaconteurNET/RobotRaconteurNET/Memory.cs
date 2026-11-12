@@ -856,8 +856,6 @@ public class WrappedArrayMemoryDirectorNET<T> : WrappedArrayMemoryDirector
 {
     ArrayMemory<T> mem;
 
-    // public int memoryid = 0;
-
     public WrappedArrayMemoryDirectorNET(ArrayMemory<T> mem)
     {
         this.mem = mem;
@@ -929,8 +927,6 @@ public class WrappedArrayMemoryDirectorNET<T> : WrappedArrayMemoryDirector
 public class WrappedMultiDimArrayMemoryDirectorNET<T> : WrappedMultiDimArrayMemoryDirector
 {
     MultiDimArrayMemory<T> mem;
-
-    // public int memoryid = 0;
 
     public WrappedMultiDimArrayMemoryDirectorNET(MultiDimArrayMemory<T> mem)
     {
@@ -1083,8 +1079,6 @@ public class WrappedPodArrayMemoryDirectorNET<T> : WrappedPodArrayMemoryDirector
 {
     PodArrayMemory<T> mem;
 
-    // public int memoryid = 0;
-
     public WrappedPodArrayMemoryDirectorNET(PodArrayMemory<T> mem)
     {
         this.mem = mem;
@@ -1155,8 +1149,6 @@ public class WrappedPodMultiDimArrayMemoryDirectorNET<T> : WrappedPodMultiDimArr
     where T : struct
 {
     PodMultiDimArrayMemory<T> mem;
-
-    // public int memoryid = 0;
 
     public WrappedPodMultiDimArrayMemoryDirectorNET(PodMultiDimArrayMemory<T> mem)
     {
@@ -1628,8 +1620,6 @@ public class WrappedNamedArrayMemoryDirectorNET<T> : WrappedNamedArrayMemoryDire
 {
     NamedArrayMemory<T> mem;
 
-    // public int memoryid = 0;
-
     public WrappedNamedArrayMemoryDirectorNET(NamedArrayMemory<T> mem)
     {
         this.mem = mem;
@@ -1700,8 +1690,6 @@ public class WrappedNamedMultiDimArrayMemoryDirectorNET<T> : WrappedNamedMultiDi
     where T : struct
 {
     NamedMultiDimArrayMemory<T> mem;
-
-    // public int memoryid = 0;
 
     public WrappedNamedMultiDimArrayMemoryDirectorNET(NamedMultiDimArrayMemory<T> mem)
     {

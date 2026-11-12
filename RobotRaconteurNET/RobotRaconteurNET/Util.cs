@@ -107,7 +107,6 @@ public class RRObjectHeap
 
             int i = objectcount;
             objects.Add(i, o);
-            // Console.WriteLine(objects.Count);
             return i;
         }
     }
@@ -119,12 +118,10 @@ public class RRObjectHeap
             try
             {
                 objects.Remove(id);
-                // Console.WriteLine(objects.Count);
             }
             catch
             {
 
-                // Console.WriteLine(e.ToString());
             }
         }
     }

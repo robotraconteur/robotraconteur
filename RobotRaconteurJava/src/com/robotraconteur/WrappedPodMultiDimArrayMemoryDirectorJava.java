@@ -8,8 +8,6 @@ public class WrappedPodMultiDimArrayMemoryDirectorJava<T> extends WrappedPodMult
 
     PodMultiDimArrayMemory<T> mem;
 
-    // public int memoryid = 0;
-
     private static long[] vector_uint64_to_long(vector_uint64_t v)
     {
         long[] o = new long[v.size()];

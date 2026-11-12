@@ -1057,7 +1057,6 @@ internal class AsyncGeneratorClientReturnDirectorImpl : AsyncGeneratorClientRetu
 
     public override void handler(WrappedGeneratorClient m, HandlerErrorInfo error)
     {
-        // using (m)
         {
             try
             {

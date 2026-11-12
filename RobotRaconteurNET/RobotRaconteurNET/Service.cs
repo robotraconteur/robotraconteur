@@ -241,8 +241,6 @@ public class Pipe<T>
     {
         if (innerpipe is WrappedPipeServer)
         {
-            // ((WrappedPipeServer)innerpipe).SetRRDirector(null);
-            // RRObjectHeap.DeleteObject(director_id);
         }
     }
 
@@ -376,14 +374,6 @@ public class Pipe<T>
         return await h.Task;
     }
 
-    // public delegate void PipeConnectCallbackFunction(PipeEndpoint newpipe);
-
-    // public delegate void PipeDisconnectCallbackFunction(PipeEndpoint closedpipe);
-
-    // public delegate void PipePacketReceivedCallbackFunction(PipeEndpoint e);
-
-    // public delegate void PipePacketAckReceivedCallbackFunction(PipeEndpoint e, uint packetnum);
-
     /// <summary>
     /// Set the pipe endpoint connected callback function
     /// </summary>
@@ -505,7 +495,6 @@ public class Pipe<T>
         public event Action<PipeEndpoint, uint> PacketAckReceivedEvent;
 
         directorclass director;
-        // int director_id;
 
         public PipeEndpoint(WrappedPipeEndpoint innerpipe)
         {
@@ -513,13 +502,10 @@ public class Pipe<T>
             director = new directorclass(this);
 
             innerpipe.SetRRDirector(director, RRObjectHeap.AddObject(this));
-            // director_id = RRObjectHeap.AddObject(innerpipe);
         }
 
         ~PipeEndpoint()
         {
-            // innerpipe.SetRRDirector(null);
-            // RRObjectHeap.DeleteObject(director_id);
         }
 
         /// <summary>
@@ -1242,7 +1228,6 @@ public class Wire<T>
     {
         this.innerwire = innerwire;
         m_Membername = innerwire.GetMemberName();
-        // director_id = RRObjectHeap.AddObject(director);
         direction = innerwire.Direction();
     }
 
@@ -1250,8 +1235,6 @@ public class Wire<T>
     {
         if (innerwire is WrappedWireServer)
         {
-            // ((WrappedWireServer)innerwire).SetRRDirector(null);
-            // RRObjectHeap.DeleteObject(director_id);
         }
     }
 
@@ -1842,26 +1825,19 @@ public class Wire<T>
         WrappedWireConnection innerwire;
 
         directorclass director;
-        // int director_id = 0;
 
         public WireConnection(WrappedWireConnection innerwire)
         {
             this.innerwire = innerwire;
             director = new directorclass(this);
-            // director_id = RRObjectHeap.AddObject(director);
-            // RRObjectHeap.AddObject(innerwire);
 
             innerwire.SetRRDirector(director, RRObjectHeap.AddObject(this));
         }
 
         ~WireConnection()
         {
-            /// innerwire.SetRRDirector(null);
-            // RRObjectHeap.DeleteObject(director_id);
             try
             {
-
-                // innerwire.Close();
             }
             catch
             {}

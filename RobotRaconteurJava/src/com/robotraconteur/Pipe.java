@@ -38,7 +38,6 @@ public class Pipe<T>
     {
         if (innerpipe instanceof WrappedPipeServer)
         {
-            //((WrappedPipeServer)innerpipe).setRR_Director(null);
         }
     }
 
@@ -187,7 +186,6 @@ public class Pipe<T>
 
         protected void finalize() throws Throwable
         {
-            // innerpipe.setRR_Director(null);
         }
 
         public final int getIndex()

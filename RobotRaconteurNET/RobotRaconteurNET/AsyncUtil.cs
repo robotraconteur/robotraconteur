@@ -41,7 +41,6 @@ internal class AsyncRequestDirectorImpl : AsyncRequestDirector
 
     public override void handler(MessageElement m, HandlerErrorInfo error)
     {
-        // using (m)
         {
             try
             {

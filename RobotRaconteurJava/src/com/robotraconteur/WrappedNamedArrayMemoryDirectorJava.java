@@ -9,7 +9,6 @@ public class WrappedNamedArrayMemoryDirectorJava<T> extends WrappedNamedArrayMem
     NamedArrayMemory<T> mem;
 
     Class<?> mem_type;
-    // public int memoryid = 0;
 
     public WrappedNamedArrayMemoryDirectorJava(NamedArrayMemory<T> mem, Class<?> mem_type)
     {

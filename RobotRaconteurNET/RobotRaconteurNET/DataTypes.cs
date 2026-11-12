@@ -169,7 +169,6 @@ public class DataTypeUtil
             return 1;
         }
         throw new ArgumentException();
-        // return 0;
     }
 
     public static DataTypes TypeIDFromString(string stype)
