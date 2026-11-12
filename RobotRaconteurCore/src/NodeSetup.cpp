@@ -622,7 +622,7 @@ void CommandLineConfigParser::FillOptionsDescription(boost::program_options::opt
     h.add<bool>("require-tls", "require TLS for network communication", RobotRaconteurNodeSetupFlags_REQUIRE_TLS);
 
     h.add<std::string>("nodename", "node name to use for node", RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE);
-    h.add<std::string>("nodeid", "node id to use fore node", RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE);
+    h.add<std::string>("nodeid", "node id to use for node", RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE);
     h.add<int32_t>("tcp-port", "port to listen on for TCP server", RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE);
 
     h.add<std::string>("log-level", "log level for node");

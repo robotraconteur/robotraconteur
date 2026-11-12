@@ -57,7 +57,7 @@ void AutoResetEvent::Reset()
 {
     if (!::ResetEvent(*((HANDLE*)ev)))
     {
-        throw InternalErrorException("Internal error setting event");
+        throw InternalErrorException("Internal error resetting event");
     }
 }
 

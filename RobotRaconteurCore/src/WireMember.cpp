@@ -305,7 +305,7 @@ void WireConnectionBase::SetOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value)
     if (direction == MemberDefinition_Direction_readonly)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
-                                                "Attempt to get OutValue of read only wire");
+                                                "Attempt to set OutValue of read only wire");
         throw ReadOnlyMemberException("Read only member");
     }
 
