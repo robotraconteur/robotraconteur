@@ -3357,7 +3357,7 @@ bool ServiceSubscriptionFilterAttributeGroup::IsMatch(boost::string_ref value) c
     else
     {
         std::vector<std::string> value_v;
-        boost::split(value_v, value, boost::is_any_of(","));
+        boost::split(value_v, value, boost::is_from_range(SplitStringDelimiter, SplitStringDelimiter));
         return IsMatch(value_v);
     }
 }

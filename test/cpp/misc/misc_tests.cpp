@@ -297,6 +297,15 @@ TEST(RobotRaconteurMisc, ParseConnectionURLTcpNoPath)
     EXPECT_EQ(r.service, "MyService");
 }
 
+TEST(RobotRaconteurMisc, FilterAttributeGroupSplitStringDelimiter)
+{
+    ServiceSubscriptionFilterAttributeGroup group(ServiceSubscriptionFilterAttributeGroupOperation_OR);
+    group.Attributes.push_back(ServiceSubscriptionFilterAttribute("beta"));
+    group.SplitStringDelimiter = ';';
+    EXPECT_TRUE(group.IsMatch(boost::string_ref("alpha;beta")));
+    EXPECT_FALSE(group.IsMatch(boost::string_ref("alpha,beta")));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
