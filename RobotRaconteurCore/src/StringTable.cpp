@@ -264,8 +264,8 @@ void StringTable::MessageElementReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<M
         {
             BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, sdat->Elements)
                 MessageElementReplaceCodesWithStrings(ee, local_table);
+            sdat->TypeName = e->ElementTypeName;
         }
-        sdat->TypeName = e->ElementTypeName;
         break;
     }
 
