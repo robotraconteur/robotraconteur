@@ -402,6 +402,7 @@ uint32_t ArrayMemoryClientBase::GetMaxTransferSize()
             m->AddElement("parameter", stringToRRArray("MaxTransferSize"));
             RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
             remote_max_size = RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint32_t> >());
+            max_size_read = true;
         }
         uint32_t my_max_size = GetNode()->GetMemoryMaxTransferSize();
         if (remote_max_size > my_max_size)
@@ -630,6 +631,7 @@ uint32_t MultiDimArrayMemoryClientBase::GetMaxTransferSize()
             m->AddElement("parameter", stringToRRArray("MaxTransferSize"));
             RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
             remote_max_size = RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint32_t> >());
+            max_size_read = true;
         }
         uint32_t my_max_size = GetNode()->GetMemoryMaxTransferSize();
         if (remote_max_size > my_max_size)

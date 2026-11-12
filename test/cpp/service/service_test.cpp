@@ -131,6 +131,58 @@ TEST_F(ServiceTest, MemoryTest)
     ASSERT_NO_THROW(c.DisconnectService());
 }
 
+class MemoryGetParamCounterTap : public MessageTap
+{
+  public:
+    boost::mutex lock;
+    int count;
+    MemoryGetParamCounterTap() : count(0) {}
+    RR_OVIRTUAL void Open() RR_OVERRIDE {}
+    RR_OVIRTUAL void Close() RR_OVERRIDE {}
+    RR_OVIRTUAL void RecordLogRecord(const RRLogRecord& log_record) RR_OVERRIDE { RR_UNUSED(log_record); }
+    RR_OVIRTUAL void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message) RR_OVERRIDE
+    {
+        boost::mutex::scoped_lock l(lock);
+        BOOST_FOREACH (const RR_INTRUSIVE_PTR<MessageEntry>& e, message->entries)
+        {
+            if (e->EntryType == MessageEntryType_MemoryGetParam && e->MemberName == "m1")
+            {
+                count++;
+            }
+        }
+    }
+    int GetCount()
+    {
+        boost::mutex::scoped_lock l(lock);
+        return count;
+    }
+};
+
+TEST_F(ServiceTest, MemoryMaxTransferSizeCachedTest)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r =
+        rr_cast<com::robotraconteur::testing::TestService1::testroot>(node->ConnectService(service_url));
+
+    RR_SHARED_PTR<MemoryGetParamCounterTap> tap = RR_MAKE_SHARED<MemoryGetParamCounterTap>();
+    RR_SHARED_PTR<MessageTap> old_tap = node->GetMessageTap();
+    node->SetMessageTap(tap);
+
+    RR_INTRUSIVE_PTR<RRArray<double> > buf = AllocateRRArray<double>(10);
+    EXPECT_NO_THROW(r->get_m1()->Read(0, buf, 0, 10));
+    int first_count = tap->GetCount();
+    EXPECT_NO_THROW(r->get_m1()->Read(0, buf, 0, 10));
+    EXPECT_NO_THROW(r->get_m1()->Read(0, buf, 0, 10));
+    int final_count = tap->GetCount();
+
+    node->SetMessageTap(old_tap);
+    node->DisconnectService(r);
+
+    // MaxTransferSize should only be requested once per memory client
+    EXPECT_GT(first_count, 0);
+    EXPECT_EQ(final_count, first_count);
+}
+
 TEST_F(ServiceTest, AuthenticationTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
