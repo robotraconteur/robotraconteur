@@ -565,7 +565,7 @@ bool LocalTransport::IsLocalTransportSupported()
             sockaddr_un tmpaddr;
             tmpaddr.sun_family = AF_UNIX;
             std::string tmpfile_str = tmpfile.string();
-            if (tmpfile_str.size() - 1 < UNIX_PATH_MAX)
+            if (tmpfile_str.size() < UNIX_PATH_MAX)
             {
                 strcpy(tmpaddr.sun_path, tmpfile_str.c_str());
                 if (::bind(sock, (SOCKADDR*)&tmpaddr, sizeof(tmpaddr)) == SOCKET_ERROR)
