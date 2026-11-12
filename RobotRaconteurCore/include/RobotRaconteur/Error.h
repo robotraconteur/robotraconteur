@@ -75,7 +75,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
     /**
      * @brief Construct a RobotRaconteurException based on an existing exception
      *
-     * This will result in an exception with error code MessageErrorType_UnknownException
+     * This will result in an exception with error code MessageErrorType_UnknownError
      *
      * @param message A message to pass to the user
      * @param innerexception The existing exception

@@ -306,6 +306,15 @@ TEST(RobotRaconteurMisc, FilterAttributeGroupSplitStringDelimiter)
     EXPECT_FALSE(group.IsMatch(boost::string_ref("alpha,beta")));
 }
 
+TEST(RobotRaconteurMisc, RobotRaconteurExceptionInnerExceptionWhat)
+{
+    std::runtime_error inner("inner error");
+    RobotRaconteurException e("outer message", inner);
+    EXPECT_EQ(e.Message, "outer message");
+    EXPECT_EQ(e.ErrorCode, MessageErrorType_UnknownError);
+    EXPECT_NE(std::string(e.what()).find("outer message"), std::string::npos);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
