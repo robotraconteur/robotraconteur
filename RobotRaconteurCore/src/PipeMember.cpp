@@ -1513,13 +1513,18 @@ void PipeBroadcasterBase::PacketAckReceivedBase(const RR_SHARED_PTR<detail::Pipe
     boost::mutex::scoped_lock lock(endpoints_lock);
     try
     {
-        if (std::count(ep->backlog.begin(), ep->backlog.end(), id) == 0)
+        // backlog and forward_backlog are only maintained when a maximum backlog is set (see handle_send);
+        // with the default of -1, acks would otherwise accumulate in forward_backlog forever
+        if (maximum_backlog > -1)
         {
-            ep->forward_backlog.push_back(id);
-        }
-        else
-        {
-            ep->backlog.remove(id);
+            if (std::count(ep->backlog.begin(), ep->backlog.end(), id) == 0)
+            {
+                ep->forward_backlog.push_back(id);
+            }
+            else
+            {
+                ep->backlog.remove(id);
+            }
         }
     }
     catch (std::exception&)
