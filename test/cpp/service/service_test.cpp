@@ -313,6 +313,29 @@ TEST_F(ServiceTest, MultiDimMemoryReadReplyCountTest)
     node->DisconnectService(r);
 }
 
+TEST_F(ServiceTest, MonitorEnterFailureReleasesStubLock)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r1 =
+        rr_cast<com::robotraconteur::testing::TestService1::testroot>(node->ConnectService(service_url));
+
+    // testroot is not monitor lockable, so the service rejects MonitorEnter.
+    EXPECT_ANY_THROW(node->MonitorEnter(r1, 200));
+
+    // A failed MonitorEnter must not leave the stub's client-side monitor mutex held by this thread.
+    RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(r1);
+    bool acquired = false;
+    boost::thread t([&]() {
+        acquired = s->RRMutex->try_lock();
+        if (acquired)
+            s->RRMutex->unlock();
+    });
+    t.join();
+    EXPECT_TRUE(acquired);
+
+    node->DisconnectService(r1);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

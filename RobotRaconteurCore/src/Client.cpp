@@ -2928,7 +2928,9 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
         {
 
             RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
-            s->RRMutex->lock();
+            // Held until MonitorExit on success; released on any failure, including exceptions
+            // thrown by ProcessRequest (e.g. a service-side timeout or error).
+            boost::unique_lock<boost::recursive_mutex> rrmutex_lock(*s->RRMutex);
 
             bool keep_trying = true;
             RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ClientSessionOpReq, "MonitorEnter");
@@ -2943,6 +2945,7 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
                                                    "MonitorEnter for successful for servicepath \"" << s->ServicePath
                                                                                                     << "\"");
+                rrmutex_lock.release();
                 return "OK";
             }
             if (retcode == "Continue")
@@ -2963,21 +2966,19 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
                         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
                                                            "MonitorEnter for successful for servicepath \""
                                                                << s->ServicePath << "\"");
+                        rrmutex_lock.release();
                         return "OK";
                     }
                     if (retcode1 != "Continue")
                     {
-                        s->RRMutex->unlock();
                         throw ProtocolException("Unknown return code");
                     }
                 }
             }
             else
             {
-                s->RRMutex->unlock();
                 throw ProtocolException("Unknown return code");
             }
-            s->RRMutex->unlock();
         }
 
         throw ProtocolException("Unknown return code");
@@ -3015,7 +3016,7 @@ void ClientContext::MonitorExit(const RR_SHARED_PTR<RRObject>& obj)
             std::string retcode = ret->FindElement("return")->CastDataToString();
             if (retcode != "OK")
             {
-                s->RRMutex->unlock();
+                // lock2 releases its own lock; the MonitorEnter lock is released below.
                 throw ProtocolException("Unknown return code");
             }
         }
