@@ -2216,7 +2216,7 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
                         return;
                     if (lock->GetRootServicePath() == path1)
                     {
-                        active_object_locks.erase(lock->GetUsername());
+                        active_object_locks.erase(path1);
                         lock2.unlock();
                         lock->ReleaseLock();
                     }
