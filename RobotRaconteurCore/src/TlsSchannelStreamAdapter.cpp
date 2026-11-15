@@ -22,7 +22,7 @@
 #include <boost/asio.hpp>
 #include <boost/bind/protect.hpp>
 #include <boost/shared_array.hpp>
-#include <WinInet.h>
+#include <wininet.h>
 #include <boost/algorithm/string.hpp>
 
 #include "RobotRaconteurNodeRootCA.h"
