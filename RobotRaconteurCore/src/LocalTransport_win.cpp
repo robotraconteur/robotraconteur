@@ -268,6 +268,8 @@ boost::optional<std::wstring> GetSIDStringForName(std::wstring name)
     return sid;
 }
 
+#ifdef _MSC_VER
+// std::fstream(FILE*) is an MSVC extension
 template <typename T>
 void CloseAndDeleteStream(T* t)
 {
@@ -342,6 +344,8 @@ RR_SHARED_PTR<std::fstream> HandleToStream(HANDLE h)
     std::fstream* f = new std::fstream(file);
     return RR_SHARED_PTR<std::fstream>(f, &CloseAndDeleteStream<std::fstream>);
 }
+
+#endif
 
 // cspell:disable
 bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_)

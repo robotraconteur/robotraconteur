@@ -19,14 +19,14 @@
 #include <boost/filesystem.hpp>
 
 #include <boost/system/windows_error.hpp>
-#include <Sddl.h>
+#include <sddl.h>
 #include <io.h>
-#include <FCNTL.h>
+#include <fcntl.h>
 
 #pragma once
 
-// Workaround for missing definition in MinGW.
-#ifdef __MINGW32__
+// Workaround for missing definition in old MinGW (current MinGW-w64 sddl.h declares these).
+#if defined(__MINGW32__) && !defined(SDDL_REVISION_1)
 
 BOOL WINAPI ConvertStringSecurityDescriptorToSecurityDescriptorA(_In_ LPCSTR StringSecurityDescriptor,
                                                                  _In_ DWORD StringSDRevision,
@@ -61,9 +61,12 @@ bool IsPipeSameUserOrService(HANDLE pipe, bool allow_service);
 BOOL GetNamedPipeServerProcessId(HANDLE pipe, PULONG pid, PBOOL available);
 bool IsPipeUser(HANDLE pipe, const std::string& username);
 
+#ifdef _MSC_VER
+// std::fstream(FILE*) is an MSVC extension; these helpers are unused elsewhere.
 RR_SHARED_PTR<std::ifstream> HandleToIStream(HANDLE h);
 RR_SHARED_PTR<std::ofstream> HandleToOStream(HANDLE h);
 RR_SHARED_PTR<std::fstream> HandleToStream(HANDLE h);
+#endif
 
 bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_);
 } // namespace LocalTransportUtil
