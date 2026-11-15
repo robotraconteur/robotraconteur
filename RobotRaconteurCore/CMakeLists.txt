@@ -279,30 +279,45 @@ endif()
 
 if(WIN32)
     target_compile_definitions(RobotRaconteurCore PUBLIC _WIN32_WINNT=0x0600 NOMINMAX=1)
-    if(ROBOTRACONTEUR_USE_OPENSSL)
-        target_link_libraries(
-            RobotRaconteurCore
-            PRIVATE Mswsock.lib
-                    ws2_32.lib
-                    IPHLPAPI.lib
-                    Bcrypt.lib
-                    Crypt32.lib
-                    OpenSSL::SSL
-                    OpenSSL::Crypto)
-        target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+    if(MINGW)
+        # MinGW-w64 import libraries: lowercase names without .lib; libraries MSVC pulls
+        # in through #pragma comment(lib) or by default are listed explicitly (uuid: the
+        # Bluetooth GUIDs used by HardwareTransport_win.cpp).
+        # cSpell: disable
+        set(RobotRaconteurCore_win_libs
+            mswsock
+            ws2_32
+            iphlpapi
+            bcrypt
+            crypt32
+            advapi32
+            user32
+            shell32
+            uuid)
+        if(NOT ROBOTRACONTEUR_USE_OPENSSL)
+            list(APPEND RobotRaconteurCore_win_libs secur32)
+        endif()
+        # cSpell: enable
+    elseif(ROBOTRACONTEUR_USE_OPENSSL)
+        set(RobotRaconteurCore_win_libs Mswsock.lib ws2_32.lib IPHLPAPI.lib Bcrypt.lib Crypt32.lib)
     else()
         # cSpell: disable
-        target_link_libraries(
-            RobotRaconteurCore
-            PRIVATE Mswsock.lib
-                    ws2_32.lib
-                    IPHLPAPI.lib
-                    Bcrypt.lib
-                    Crypt32.lib
-                    Secur32.lib
-                    Bcrypt.lib)
-        target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_SCHANNEL)
+        set(RobotRaconteurCore_win_libs
+            Mswsock.lib
+            ws2_32.lib
+            IPHLPAPI.lib
+            Bcrypt.lib
+            Crypt32.lib
+            Secur32.lib
+            Bcrypt.lib)
         # cSpell: enable
+    endif()
+    if(ROBOTRACONTEUR_USE_OPENSSL)
+        target_link_libraries(RobotRaconteurCore PRIVATE ${RobotRaconteurCore_win_libs} OpenSSL::SSL OpenSSL::Crypto)
+        target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+    else()
+        target_link_libraries(RobotRaconteurCore PRIVATE ${RobotRaconteurCore_win_libs})
+        target_compile_definitions(RobotRaconteurCore PRIVATE ROBOTRACONTEUR_USE_SCHANNEL)
     endif()
 
     if(CMAKE_COMPILER_IS_GNUCXX)
