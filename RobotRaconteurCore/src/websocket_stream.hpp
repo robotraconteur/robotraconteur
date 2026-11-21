@@ -664,8 +664,8 @@ class websocket_stream : private boost::noncopyable
             next_layer_.async_write_some(boost::asio::buffer(data2->c_str(), data2->size()),
                                          boost::bind(&websocket_stream::async_client_handshake2, this,
                                                      boost::asio::placeholders::error,
-                                                     boost::asio::placeholders::bytes_transferred, data, url, protocol,
-                                                     key, boost::protect(handler)));
+                                                     boost::asio::placeholders::bytes_transferred, data2, url,
+                                                     protocol, key, boost::protect(handler)));
             return;
         }
 
