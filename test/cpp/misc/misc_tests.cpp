@@ -1564,6 +1564,39 @@ TEST(RobotRaconteurMisc, SetLogLevelFromStringInvalid)
     node->Shutdown();
 }
 
+// Announces for a known node must not grow its candidate URL list without bound
+TEST(RobotRaconteurMisc, DiscoveryURLCap)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    NodeID id = NodeID::NewUniqueID();
+    for (int i = 0; i < 500; i++)
+    {
+        NodeDiscoveryInfo info;
+        info.NodeID = id;
+        info.NodeName = "discovery_url_cap";
+        NodeDiscoveryInfoURL u;
+        u.URL = "rr+tcp://127.0.0.1:" + boost::lexical_cast<std::string>(10000 + i) +
+                "/?nodeid=" + id.ToString("D") + "&service=RobotRaconteurServiceIndex";
+        u.LastAnnounceTime = node->NowNodeTime();
+        info.URLs.push_back(u);
+        node->NodeDetected(info);
+    }
+    std::vector<NodeDiscoveryInfo> nodes = node->GetDetectedNodes();
+    bool found = false;
+    BOOST_FOREACH (NodeDiscoveryInfo& n, nodes)
+    {
+        if (n.NodeID == id)
+        {
+            found = true;
+            EXPECT_GE(n.URLs.size(), 1u);
+            EXPECT_LE(n.URLs.size(), 64u);
+        }
+    }
+    EXPECT_TRUE(found);
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

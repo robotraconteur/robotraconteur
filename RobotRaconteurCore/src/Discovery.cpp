@@ -61,6 +61,8 @@ ServiceInfo2::ServiceInfo2(const RobotRaconteurServiceIndex::ServiceInfo& info,
 
 namespace detail
 {
+// Maximum number of candidate URLs stored per discovered node
+static const size_t max_DiscoveredNodeURLs = 64;
 
 Discovery_updatediscoverednodes::Discovery_updatediscoverednodes(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
@@ -1198,6 +1200,11 @@ void Discovery::NodeDetected(const NodeDiscoveryInfo& info)
                 }
             }
 
+            if (info2->URLs.size() > max_DiscoveredNodeURLs)
+            {
+                info2->URLs.resize(max_DiscoveredNodeURLs);
+            }
+
             if (info2->URLs.empty())
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
@@ -1256,6 +1263,15 @@ void Discovery::NodeDetected(const NodeDiscoveryInfo& info)
                 {
                     if (e.URL.size() > 256)
                     {
+                        continue;
+                    }
+                    if (i->URLs.size() >= max_DiscoveredNodeURLs)
+                    {
+                        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Discovery, -1,
+                                                           "Node detected NodeID " << info.NodeID.ToString()
+                                                                                   << " has too many candidate URLs, "
+                                                                                      "ignoring URL: "
+                                                                                   << e.URL);
                         continue;
                     }
                     try
