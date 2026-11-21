@@ -681,6 +681,8 @@ void LibUsbDeviceManager::submit_transfer(boost::intrusive_ptr<LibUsb_Transfer>&
             transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
             RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer),
                                                     true);
+            // Drop the reference FillTransfer took for libusb, the transfer is never submitted
+            intrusive_ptr_release(transfer.get());
             return;
         }
 
@@ -692,6 +694,7 @@ void LibUsbDeviceManager::submit_transfer(boost::intrusive_ptr<LibUsb_Transfer>&
                 transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
                 RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer),
                                                         true);
+                intrusive_ptr_release(transfer.get());
                 return;
             }
         }
@@ -703,7 +706,9 @@ void LibUsbDeviceManager::submit_transfer(boost::intrusive_ptr<LibUsb_Transfer>&
     {
         transfer->transfer->actual_length = 0;
         transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
-        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer), true);
+        // libusb will not call the completion callback. Complete it here so the transfer is removed from
+        // manager_transfer_list, a pending DrawDownRequests is finished, and the libusb reference is released
+        transfer_complete(transfer->transfer);
     }
 }
 
