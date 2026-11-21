@@ -9,6 +9,7 @@
 
 #include "RobotRaconteur/TcpTransport.h"
 #include "websocket_stream.hpp"
+#include "websocket_test_compat.h"
 
 namespace
 {
@@ -28,7 +29,7 @@ class websocket_stream_test : public RobotRaconteur::detail::websocket_stream<bo
 
 TEST(WebSocketStream, HttpHeaderEndIsEarliestTerminator)
 {
-    boost::asio::io_context ioc;
+    RR_BOOST_ASIO_IO_CONTEXT ioc;
     boost::asio::ip::tcp::socket sock(ioc);
     websocket_stream_test ws(sock);
 
