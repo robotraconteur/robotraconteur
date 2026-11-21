@@ -5,6 +5,7 @@
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem.hpp>
 #include <fstream>
 #ifndef ROBOTRACONTEUR_WINDOWS
 #include <sys/stat.h>
@@ -549,6 +550,53 @@ TEST(RobotRaconteurMisc, NodeDirectoriesReadInfoFileLimits)
     }
     EXPECT_TRUE(finished);
 
+    boost::filesystem::remove_all(base);
+}
+#endif
+
+#if defined(ROBOTRACONTEUR_LINUX) && !defined(ROBOTRACONTEUR_ANDROID)
+static NodeDirectories bughunt_discovery_node_dirs(const boost::filesystem::path& base)
+{
+    NodeDirectories d;
+    d.system_data_dir = base / "sys_data";
+    d.system_config_dir = base / "sys_config";
+    d.system_state_dir = base / "sys_state";
+    d.system_cache_dir = base / "sys_cache";
+    d.system_run_dir = base / "sys_run";
+    d.user_data_dir = base / "user_data";
+    d.user_config_dir = base / "user_config";
+    d.user_state_dir = base / "user_state";
+    d.user_cache_dir = base / "user_cache";
+    d.user_run_dir = base / "user_run";
+    return d;
+}
+
+// Removing the private by-nodeid directory while LocalTransport discovery runs must not terminate the process
+TEST(RobotRaconteurMisc, LocalTransportDiscoveryPrivateDirRemoved)
+{
+    boost::filesystem::path base = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
+    boost::filesystem::create_directories(base);
+
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->SetNodeDirectories(bughunt_discovery_node_dirs(base));
+    RR_SHARED_PTR<LocalTransport> t = RR_MAKE_SHARED<LocalTransport>(node);
+    node->RegisterTransport(t);
+    t->EnableNodeDiscoveryListening();
+
+    boost::filesystem::path bynodeid = base / "user_run" / "transport" / "local" / "by-nodeid";
+    for (int i = 0; i < 50 && !boost::filesystem::exists(bynodeid); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+    }
+    ASSERT_TRUE(boost::filesystem::exists(bynodeid));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+
+    boost::filesystem::remove_all(bynodeid);
+    boost::this_thread::sleep(boost::posix_time::milliseconds(2000));
+
+    t->DisableNodeDiscoveryListening();
+    node->Shutdown();
     boost::filesystem::remove_all(base);
 }
 #endif

@@ -304,9 +304,14 @@ void LinuxLocalTransportDiscovery::run()
             }
         }
 
-        refresh_public();
+        try
+        {
+            refresh_public();
 
-        Refresh();
+            Refresh();
+        }
+        catch (std::exception&)
+        {}
     }
 }
 

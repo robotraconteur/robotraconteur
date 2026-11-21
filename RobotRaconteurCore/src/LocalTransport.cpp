@@ -1983,13 +1983,18 @@ void LocalTransportDiscovery::Refresh()
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
             node, Transport, -1, "LocalTransport discovery searching private path \"" << *private_path1 << "\"");
 
-        std::vector<NodeDiscoveryInfo> nodeinfo;
-        LocalTransportUtil::FindNodesInDirectory(nodeinfo, *private_path1, "rr+local", now,
-                                                 boost::optional<std::string>());
-        BOOST_FOREACH (NodeDiscoveryInfo& n, nodeinfo)
+        try
         {
-            node1->NodeDetected(n);
+            std::vector<NodeDiscoveryInfo> nodeinfo;
+            LocalTransportUtil::FindNodesInDirectory(nodeinfo, *private_path1, "rr+local", now,
+                                                     boost::optional<std::string>());
+            BOOST_FOREACH (NodeDiscoveryInfo& n, nodeinfo)
+            {
+                node1->NodeDetected(n);
+            }
         }
+        catch (std::exception&)
+        {}
     }
 
     if (public_path1)
