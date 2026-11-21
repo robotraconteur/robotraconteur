@@ -1755,6 +1755,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     {
         std::string l = boost::replace_all_copy(*e, "\\", "\\\\");
         boost::replace_all(l, "\"", "\\\"");
+        boost::replace_all(l, "?", "\\?");
         boost::trim_if(l, boost::is_any_of("\r\n"));
         w2 << "\"" << l << "\\n\"" << std::endl;
     }
@@ -4235,15 +4236,19 @@ static std::string CPPServiceLang_convert_constant_EscapeString_Formatter(const 
         return "\\r";
     if (i == "\t")
         return "\\t";
+    // Escape '?' so "??x" is not read as a trigraph
+    if (i == "?")
+        return "\\?";
 
     std::string& v = i;
 
+    // Fixed width octal escapes; a \x escape would also consume following hex digit characters
     std::stringstream v2;
-    v2 << std::hex << std::setfill('0');
+    v2 << std::oct << std::setfill('0');
     BOOST_FOREACH (const uint8_t& v3, v)
     {
         uint32_t v4 = v3;
-        v2 << std::setw(0) << "\\x" << std::setw(2) << v4;
+        v2 << std::setw(0) << "\\" << std::setw(3) << v4;
     }
 
     return v2.str();
@@ -4271,7 +4276,7 @@ std::string CPPServiceLangGen::convert_constant(ConstantDefinition* c,
     if (t->Type == DataTypes_string_t)
     {
         const std::string v1 = c->ValueToString();
-        boost::regex r_replace("(\"|\\\\|[\\x00-\\x1F]|\\x7F|[\\x80-\\xFF]+)");
+        boost::regex r_replace("(\"|\\\\|\\?|[\\x00-\\x1F]|\\x7F|[\\x80-\\xFF]+)");
 
         std::ostringstream t2(std::ios::out | std::ios::binary);
         std::ostream_iterator<char, char> oi(t2);
