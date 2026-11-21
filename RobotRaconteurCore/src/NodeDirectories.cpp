@@ -505,10 +505,18 @@ void NodeDirectoriesFD::open_read(const boost::filesystem::path& path, boost::sy
 
     fd = h;
 #else
-    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDONLY);
+    // O_NONBLOCK: do not block on a FIFO swapped in after the caller's is_regular_file() check
+    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDONLY | O_NONBLOCK);
     if (fd1 < 0)
     {
         err = boost::system::error_code(errno, boost::system::system_category());
+        return;
+    }
+    struct stat st = {};
+    if (fstat(fd1, &st) < 0 || !S_ISREG(st.st_mode))
+    {
+        close(fd1);
+        err = boost::system::error_code(boost::system::errc::invalid_argument, boost::system::generic_category());
         return;
     }
     fd = fd1;
@@ -591,6 +599,8 @@ bool NodeDirectoriesFD::read(std::string& data) // NOLINT(readability-make-membe
     if (len < 0)
         return false;
     if (lseek(fd, 0, SEEK_SET) < 0)
+        return false;
+    if (len > 16 * 1024)
         return false;
 
     std::string ret;

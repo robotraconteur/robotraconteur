@@ -6,6 +6,13 @@
 #include <RobotRaconteur/NodeDirectories.h>
 #include <boost/filesystem.hpp>
 #include <fstream>
+#ifndef ROBOTRACONTEUR_WINDOWS
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#endif
+#include <boost/filesystem.hpp>
+#include <fstream>
 #include <sstream>
 #include <boost/filesystem.hpp>
 #ifndef ROBOTRACONTEUR_WINDOWS
@@ -491,6 +498,56 @@ TEST(RobotRaconteurMisc, NodeDirectoriesPidInfoFileNoFollow)
     RR_SHARED_PTR<NodeDirectoriesFD> h_pid2;
     EXPECT_NO_THROW(h_pid2 = NodeDirectoriesUtil::CreatePidFile(base / "node2.pid"));
     h_pid2.reset();
+
+    boost::filesystem::remove_all(base);
+}
+#endif
+
+#ifndef ROBOTRACONTEUR_WINDOWS
+static void bughunt_read_info_thread(boost::filesystem::path p, bool* done)
+{
+    std::map<std::string, std::string> info;
+    NodeDirectoriesUtil::ReadInfoFile(p, info);
+    *done = true;
+}
+
+// ReadInfoFile must cap the file size (like the Windows branch) and must not block on a FIFO
+TEST(RobotRaconteurMisc, NodeDirectoriesReadInfoFileLimits)
+{
+    boost::filesystem::path base = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
+    boost::filesystem::create_directories(base);
+
+    boost::filesystem::path small_info = base / "small.info";
+    {
+        std::ofstream f(small_info.string().c_str());
+        f << "nodename: bughunt\n";
+    }
+    std::map<std::string, std::string> info;
+    EXPECT_TRUE(NodeDirectoriesUtil::ReadInfoFile(small_info, info));
+    EXPECT_EQ(info["nodename"], "bughunt");
+
+    boost::filesystem::path big_info = base / "big.info";
+    {
+        std::ofstream f(big_info.string().c_str());
+        f << "nodename: " << std::string(32 * 1024, 'a') << "\n";
+    }
+    std::map<std::string, std::string> info2;
+    EXPECT_FALSE(NodeDirectoriesUtil::ReadInfoFile(big_info, info2));
+
+    boost::filesystem::path fifo_info = base / "fifo.info";
+    ASSERT_EQ(mkfifo(fifo_info.c_str(), 0600), 0);
+    bool done = false;
+    boost::thread t(boost::bind(&bughunt_read_info_thread, fifo_info, &done));
+    bool finished = t.timed_join(boost::posix_time::seconds(2));
+    if (!finished)
+    {
+        // Unblock the reader stuck in open()
+        int w = open(fifo_info.c_str(), O_WRONLY | O_NONBLOCK);
+        if (w >= 0)
+            close(w);
+        t.join();
+    }
+    EXPECT_TRUE(finished);
 
     boost::filesystem::remove_all(base);
 }
