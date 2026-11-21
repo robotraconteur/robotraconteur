@@ -619,6 +619,7 @@ void IntraTransportConnection::AcceptMessage(const RR_INTRUSIVE_PTR<Message>& m)
     recv_queue.push_back(m);
     if (!recv_queue_post_requested)
     {
+        recv_queue_post_requested = true;
         RR_WEAK_PTR<IntraTransportConnection> c = shared_from_this();
         RobotRaconteurNode::TryPostToThreadPool(node,
                                                 boost::bind(&IntraTransportConnection::ProcessNextRecvMessage, c));
