@@ -5345,7 +5345,7 @@ void TcpTransportConnection::Close1(const boost::system::error_code& ec)
 bool TcpTransportConnection::IsClosed()
 {
     boost::mutex::scoped_lock lock(socket_lock);
-    return socket->is_open();
+    return !socket->is_open();
 }
 
 void TcpTransportConnection::ForceClose()
