@@ -1112,7 +1112,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName,
                                                         "Client requested type of an invalid service path")
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ObjectNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ObjectNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Object not found"));
                 eret->Error = MessageErrorType_ObjectNotFound;
             }
@@ -1173,7 +1173,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
                     weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath, e->MemberName,
                     "Client requested type of an invalid service type: \"" << name << "\"")
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
             }
@@ -1204,7 +1204,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
             {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error connecting client: " << exp.what())
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
             }
@@ -1252,7 +1252,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
             {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error disconnecting client: " << exp.what())
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
             }
@@ -1328,7 +1328,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error connecting client: " << exp.what())
                 eret->elements.clear();
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
                 break;
@@ -1416,7 +1416,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error connecting client: " << exp.what())
                 eret->elements.clear();
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service factory configuration error"));
                 eret->Error = MessageErrorType_ServiceNotFound;
                 break;
@@ -1464,7 +1464,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error connecting client: " << exp.what())
                 eret->elements.clear();
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
                 break;

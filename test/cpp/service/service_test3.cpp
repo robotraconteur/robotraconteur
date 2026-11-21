@@ -204,6 +204,29 @@ TEST(ServiceTest3Node, CloseServiceUpdatesNonce)
     cfg.Shutdown();
 }
 
+TEST(ServiceTest3Node, SpecialRequestErrorName)
+{
+    // Special request error replies must use the standard error name, not the C++ class name.
+    // Core clients map these replies by error code, so the name is checked on the raw reply.
+    TestServerNodeConfig cfg("unit_special_request_error_name_test");
+    if (!cfg.node)
+        return;
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    m->header->ReceiverNodeID = NodeID::GetAny();
+    m->header->SenderNodeID = NodeID::NewUniqueID();
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ObjectTypeName, "");
+    e->ServicePath = "NoSuchService";
+    m->entries.push_back(e);
+
+    RR_INTRUSIVE_PTR<Message> ret = cfg.node->SpecialRequest(m, 0, RR_SHARED_PTR<ITransportConnection>());
+    ASSERT_TRUE(ret);
+    ASSERT_EQ(ret->entries.size(), 1u);
+    EXPECT_EQ(ret->entries[0]->Error, MessageErrorType_ObjectNotFound);
+    EXPECT_EQ(ret->entries[0]->FindElement("errorname")->CastDataToString(), "RobotRaconteur.ObjectNotFound");
+    cfg.Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
