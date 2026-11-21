@@ -11,6 +11,7 @@
 
 #include "RobotRaconteur/TcpTransport.h"
 #include "websocket_stream.hpp"
+#include "websocket_test_compat.h"
 
 using boost::asio::ip::tcp;
 
@@ -21,7 +22,7 @@ typedef RobotRaconteur::detail::websocket_stream<tcp::socket&> ws_t;
 // Connected loopback socket pair: raw is the test's raw peer, ws is wrapped by websocket_stream
 struct socket_pair
 {
-    boost::asio::io_context ioc;
+    RR_BOOST_ASIO_IO_CONTEXT ioc;
     tcp::socket raw;
     tcp::socket ws;
     socket_pair() : raw(ioc), ws(ioc)
@@ -34,14 +35,7 @@ struct socket_pair
     }
 };
 
-void run_until(boost::asio::io_context& ioc, const bool& done, int timeout_ms = 2000)
-{
-    for (int i = 0; i < timeout_ms / 50 && !done; i++)
-    {
-        ioc.restart();
-        ioc.run_for(boost::asio::chrono::milliseconds(50));
-    }
-}
+using websocket_test::run_until;
 
 template <typename Stream>
 struct ws_reader
@@ -57,7 +51,7 @@ struct ws_reader
     void start()
     {
         ws.async_read_some(boost::asio::buffer(buf.get(), 1024),
-                           boost::bind(&ws_reader::handler, this, boost::placeholders::_1, boost::placeholders::_2));
+                           boost::bind(&ws_reader::handler, this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
     }
     void handler(const boost::system::error_code& e, size_t n)
     {
