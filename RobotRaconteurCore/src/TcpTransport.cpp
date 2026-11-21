@@ -5507,6 +5507,7 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
         X509* cert = SSL_get_peer_certificate(tls_socket->native_handle());
         if (!cert)
             return false;
+        RR_SHARED_PTR<X509> cert_cleanup(cert, &::X509_free);
 
         boost::array<char, 256> buf = {};
         memset(buf.data(), 0, 256);
@@ -5539,6 +5540,7 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
         X509* cert = SSL_get_peer_certificate(tls_websocket->native_handle());
         if (!cert)
             return false;
+        RR_SHARED_PTR<X509> cert_cleanup(cert, &::X509_free);
 
         boost::array<char, 256> buf = {};
         memset(buf.data(), 0, 256);
@@ -5571,6 +5573,7 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
         X509* cert = SSL_get_peer_certificate(tls_wss_websocket->native_handle());
         if (!cert)
             return false;
+        RR_SHARED_PTR<X509> cert_cleanup(cert, &::X509_free);
 
         boost::array<char, 256> buf = {};
         memset(buf.data(), 0, 256);
