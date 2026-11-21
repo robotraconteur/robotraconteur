@@ -39,7 +39,13 @@ LinuxLocalTransportDiscovery_dir::LinuxLocalTransportDiscovery_dir()
     bynodename_wd = -1;
 }
 
-LinuxLocalTransportDiscovery_dir::~LinuxLocalTransportDiscovery_dir() {}
+LinuxLocalTransportDiscovery_dir::~LinuxLocalTransportDiscovery_dir()
+{
+    if (notify_fd >= 0)
+    {
+        close(notify_fd);
+    }
+}
 
 bool LinuxLocalTransportDiscovery_dir::Init(const boost::filesystem::path& path)
 {
@@ -52,7 +58,7 @@ bool LinuxLocalTransportDiscovery_dir::Init(const boost::filesystem::path& path)
 
     int dir_wd1 = LinuxLocalTransportDiscovery_add_watch(notify_fd1, (path).c_str());
 
-    if (!dir_wd1)
+    if (dir_wd1 < 0)
     {
         close(notify_fd1);
         return false;

@@ -6,6 +6,7 @@
 #include <RobotRaconteur/NodeDirectories.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem.hpp>
 #include <fstream>
 #ifndef ROBOTRACONTEUR_WINDOWS
 #include <sys/stat.h>
@@ -594,6 +595,64 @@ TEST(RobotRaconteurMisc, LocalTransportDiscoveryPrivateDirRemoved)
 
     boost::filesystem::remove_all(bynodeid);
     boost::this_thread::sleep(boost::posix_time::milliseconds(2000));
+
+    t->DisableNodeDiscoveryListening();
+    node->Shutdown();
+    boost::filesystem::remove_all(base);
+}
+#endif
+
+#if defined(ROBOTRACONTEUR_LINUX) && !defined(ROBOTRACONTEUR_ANDROID)
+static size_t bughunt_count_open_fds()
+{
+    size_t n = 0;
+    for (boost::filesystem::directory_iterator it("/proc/self/fd"); it != boost::filesystem::directory_iterator();
+         ++it)
+    {
+        n++;
+    }
+    return n;
+}
+
+// LocalTransport discovery must close the inotify fd of each per-user public directory watcher it drops
+TEST(RobotRaconteurMisc, LocalTransportDiscoveryInotifyFdLeak)
+{
+    boost::filesystem::path base = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
+    boost::filesystem::path pub = base / "sys_run" / "transport" / "local";
+    boost::filesystem::create_directories(pub);
+
+    NodeDirectories d;
+    d.system_data_dir = base / "sys_data";
+    d.system_config_dir = base / "sys_config";
+    d.system_state_dir = base / "sys_state";
+    d.system_cache_dir = base / "sys_cache";
+    d.system_run_dir = base / "sys_run";
+    d.user_data_dir = base / "user_data";
+    d.user_config_dir = base / "user_config";
+    d.user_state_dir = base / "user_state";
+    d.user_cache_dir = base / "user_cache";
+    d.user_run_dir = base / "user_run";
+
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->SetNodeDirectories(d);
+    RR_SHARED_PTR<LocalTransport> t = RR_MAKE_SHARED<LocalTransport>(node);
+    node->RegisterTransport(t);
+    t->EnableNodeDiscoveryListening();
+    boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+
+    size_t fds_before = bughunt_count_open_fds();
+    const int cycles = 5;
+    for (int i = 0; i < cycles; i++)
+    {
+        boost::filesystem::path user_dir = pub / ("bughunt_user" + boost::lexical_cast<std::string>(i));
+        boost::filesystem::create_directory(user_dir);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(800));
+        boost::filesystem::remove_all(user_dir);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(800));
+    }
+    size_t fds_after = bughunt_count_open_fds();
+    EXPECT_LT(fds_after, fds_before + 2) << "fds before: " << fds_before << " after: " << fds_after;
 
     t->DisableNodeDiscoveryListening();
     node->Shutdown();
