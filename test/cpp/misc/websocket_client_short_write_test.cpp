@@ -122,17 +122,29 @@ std::string read_http_header(tcp::socket& s)
 
 namespace
 {
+// Keeps the copied buffer alive until the write completes
+struct write_handler
+{
+    boost::shared_ptr<std::vector<uint8_t> > d;
+    boost::function<void(const boost::system::error_code&, size_t)> h;
+    void operator()(const boost::system::error_code& ec, size_t n) const { h(ec, n); }
+};
+
 // Stream wrapper that writes at most max_write bytes per async_write_some, to exercise partial-write paths
 class short_write_socket
 {
   public:
     typedef tcp::socket::lowest_layer_type lowest_layer_type;
-    typedef tcp::socket::executor_type executor_type;
 
     short_write_socket(tcp::socket& s, size_t max_write) : s_(s), max_write_(max_write) {}
 
     lowest_layer_type& lowest_layer() { return s_.lowest_layer(); }
+#if BOOST_ASIO_VERSION >= 101200
+    typedef tcp::socket::executor_type executor_type;
     executor_type get_executor() { return s_.get_executor(); }
+#else
+    RR_BOOST_ASIO_IO_CONTEXT& get_io_service() { return s_.get_io_service(); }
+#endif
 
     template <typename MutableBufferSequence, typename Handler>
     void async_read_some(const MutableBufferSequence& buffers, Handler handler)
@@ -146,9 +158,8 @@ class short_write_socket
         boost::shared_ptr<std::vector<uint8_t> > d =
             boost::make_shared<std::vector<uint8_t> >(std::min(max_write_, boost::asio::buffer_size(buffers)));
         boost::asio::buffer_copy(boost::asio::buffer(*d), buffers);
-        boost::function<void(const boost::system::error_code&, size_t)> h = handler;
-        s_.async_write_some(boost::asio::buffer(*d),
-                            [d, h](const boost::system::error_code& ec, size_t n) { h(ec, n); });
+        write_handler h = {d, handler};
+        s_.async_write_some(boost::asio::buffer(*d), h);
     }
 
   private:
