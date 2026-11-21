@@ -1560,7 +1560,12 @@ bool TcpWSSWebSocketConnector::verify_callback(bool preverified, boost::asio::ss
 {
     if (preverified)
     {
-        return true;
+        // Chain verified by OpenSSL; the host name still must be checked
+#if BOOST_ASIO_VERSION < 101601
+        return boost::asio::ssl::rfc2818_verification(servername.to_string())(preverified, ctx);
+#else
+        return boost::asio::ssl::host_name_verification(servername.to_string())(preverified, ctx);
+#endif
     }
 
     STACK_OF(X509)* certs = X509_STORE_CTX_get1_chain(ctx.native_handle());
@@ -1599,6 +1604,8 @@ bool TcpWSSWebSocketConnector::verify_callback(bool preverified, boost::asio::ss
         CFDataRef d = CFDataCreate(NULL, (UInt8*)mem->data, mem->length);
 
         SecCertificateRef caRef = SecCertificateCreateWithData(NULL, d);
+        if (d)
+            CFRelease(d);
 
         BIO_free(bio);
         if (!caRef)
@@ -1626,7 +1633,7 @@ bool TcpWSSWebSocketConnector::verify_callback(bool preverified, boost::asio::ss
 
     SecTrustResultType result = kSecTrustResultDeny;
 
-    SecTrustRef trust;
+    SecTrustRef trust = NULL;
     int code = SecTrustCreateWithCertificates(certarray, policy, &trust);
 
     if (code == 0)
@@ -1637,7 +1644,8 @@ bool TcpWSSWebSocketConnector::verify_callback(bool preverified, boost::asio::ss
     CFRelease(certarray);
     CFRelease(host2);
     CFRelease(policy);
-    CFRelease(trust);
+    if (trust)
+        CFRelease(trust);
 
     if (result == kSecTrustResultUnspecified || result == kSecTrustResultProceed)
     {
