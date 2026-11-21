@@ -111,6 +111,46 @@ static boost::filesystem::path user_unix_run_dir(const std::string& xdg_env, con
 
     return boost::filesystem::path(run_path);
 }
+#endif
+
+void NodeDirectories_secure_tmp_user_run_dir(const boost::filesystem::path& user_run_dir)
+{
+#if !defined(ROBOTRACONTEUR_WINDOWS) && !defined(ROBOTRACONTEUR_APPLE)
+    uid_t u = getuid();
+    std::string run_path = "/tmp/robotraconteur-run-" + boost::lexical_cast<std::string>(u);
+    if (user_run_dir != boost::filesystem::path(run_path))
+    {
+        return;
+    }
+
+    if (mkdir(run_path.c_str(), S_IRWXU) < 0 && errno != EEXIST)
+    {
+        throw SystemResourceException("Could not create user run directory");
+    }
+
+    int dir_fd = open(run_path.c_str(), O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC);
+    if (dir_fd < 0)
+    {
+        throw SystemResourcePermissionDeniedException("User run directory " + run_path + " is not a directory");
+    }
+
+    struct stat st = {};
+    bool ok = fstat(dir_fd, &st) == 0 && S_ISDIR(st.st_mode) && (st.st_uid == u || st.st_uid == geteuid());
+    if (ok && (st.st_mode & (S_IRWXG | S_IRWXO)) != 0)
+    {
+        ok = fchmod(dir_fd, S_IRWXU) == 0;
+    }
+    close(dir_fd);
+    if (!ok)
+    {
+        throw SystemResourcePermissionDeniedException("User run directory " + run_path +
+                                                      " is not a private directory owned by the current user");
+    }
+#else
+    RR_UNUSED(user_run_dir);
+#endif
+}
+#ifndef ROBOTRACONTEUR_WINDOWS
 
 #ifdef ROBOTRACONTEUR_APPLE
 static boost::filesystem::path user_apple_run_dir(const std::string& rr_env_var)
@@ -692,6 +732,7 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     }
 
 #else
+    detail::NodeDirectories_secure_tmp_user_run_dir(node_dirs.user_run_dir);
     boost::filesystem::path p_lock = node_dirs.user_run_dir;
     BOOST_FOREACH (const std::string& s, scope)
     {

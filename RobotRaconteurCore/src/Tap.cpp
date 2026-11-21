@@ -273,6 +273,7 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
         {
             NodeDirectories node_dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories();
             boost::filesystem::path run_path = node_dirs.user_run_dir;
+            RobotRaconteur::detail::NodeDirectories_secure_tmp_user_run_dir(run_path);
             boost::filesystem::path tap_path = run_path / "tap";
             boost::filesystem::path all_tap_path = tap_path / "all";
             boost::filesystem::path log_tap_path = tap_path / "log";

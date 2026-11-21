@@ -4,6 +4,11 @@
 #include <boost/atomic.hpp>
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
+#include <boost/filesystem.hpp>
+#ifndef ROBOTRACONTEUR_WINDOWS
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 
 #ifndef _WIN32
 #include <pwd.h>
@@ -357,6 +362,91 @@ TEST(RobotRaconteurMisc, IsStringIdentifier)
     EXPECT_FALSE(IsStringIdentifier("identifier_1|not_a_uuid"));
     EXPECT_FALSE(IsStringIdentifier(""));
 }
+
+#if !defined(ROBOTRACONTEUR_WINDOWS) && !defined(ROBOTRACONTEUR_APPLE)
+static NodeDirectories bughunt_temp_node_dirs(const boost::filesystem::path& base,
+                                              const boost::filesystem::path& user_run_dir)
+{
+    NodeDirectories d;
+    d.system_data_dir = base / "sys_data";
+    d.system_config_dir = base / "sys_config";
+    d.system_state_dir = base / "sys_state";
+    d.system_cache_dir = base / "sys_cache";
+    d.system_run_dir = base / "sys_run";
+    d.user_data_dir = base / "user_data";
+    d.user_config_dir = base / "user_config";
+    d.user_state_dir = base / "user_state";
+    d.user_cache_dir = base / "user_cache";
+    d.user_run_dir = user_run_dir;
+    return d;
+}
+
+static bool bughunt_start_local_server(const NodeDirectories& dirs)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->SetNodeDirectories(dirs);
+    RR_SHARED_PTR<LocalTransport> t = RR_MAKE_SHARED<LocalTransport>(node);
+    node->RegisterTransport(t);
+    bool ok = true;
+    try
+    {
+        t->StartServerAsNodeName("bughunt_tmp_run_dir");
+    }
+    catch (std::exception&)
+    {
+        ok = false;
+    }
+    node->Shutdown();
+    return ok;
+}
+
+// The /tmp/robotraconteur-run-<uid> fallback user run dir must be private to the current user
+TEST(RobotRaconteurMisc, LocalTransportTmpUserRunDirSecure)
+{
+    boost::filesystem::path run_dir = "/tmp/robotraconteur-run-" + boost::lexical_cast<std::string>(getuid());
+    boost::filesystem::path base = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
+    boost::filesystem::path other = base / "other";
+    boost::filesystem::create_directories(other);
+    NodeDirectories dirs = bughunt_temp_node_dirs(base, run_dir);
+
+    // Symlink planted by another user: rejected, nothing created in the link target
+    boost::filesystem::remove_all(run_dir);
+    boost::filesystem::create_directory_symlink(other, run_dir);
+    EXPECT_FALSE(bughunt_start_local_server(dirs));
+    EXPECT_FALSE(boost::filesystem::exists(other / "transport"));
+    EXPECT_FALSE(boost::filesystem::exists(other / "nodeids"));
+    boost::filesystem::remove(run_dir);
+
+    // Directory owned by another user: rejected
+    if (geteuid() == 0)
+    {
+        boost::filesystem::create_directory(run_dir);
+        ASSERT_EQ(chown(run_dir.c_str(), 12345, 12345), 0);
+        chmod(run_dir.c_str(), 0777);
+        EXPECT_FALSE(bughunt_start_local_server(dirs));
+        boost::filesystem::remove_all(run_dir);
+    }
+
+    // Own directory with permissive mode: accepted, mode tightened to 0700
+    boost::filesystem::create_directory(run_dir);
+    chmod(run_dir.c_str(), 0777);
+    EXPECT_TRUE(bughunt_start_local_server(dirs));
+    struct stat st = {};
+    ASSERT_EQ(lstat(run_dir.c_str(), &st), 0);
+    EXPECT_EQ(st.st_mode & 0777, 0700u);
+    boost::filesystem::remove_all(run_dir);
+
+    // Missing directory: created with mode 0700
+    EXPECT_TRUE(bughunt_start_local_server(dirs));
+    ASSERT_EQ(lstat(run_dir.c_str(), &st), 0);
+    EXPECT_TRUE(S_ISDIR(st.st_mode));
+    EXPECT_EQ(st.st_mode & 0777, 0700u);
+
+    boost::filesystem::remove_all(run_dir);
+    boost::filesystem::remove_all(base);
+}
+#endif
 
 int main(int argc, char* argv[])
 {

@@ -1560,6 +1560,7 @@ std::string GetLogonUserName()
 boost::filesystem::path GetTransportPrivateSocketPath(const NodeDirectories& node_dirs)
 {
     boost::filesystem::path user_run_path = node_dirs.user_run_dir;
+    NodeDirectories_secure_tmp_user_run_dir(user_run_path);
     boost::filesystem::path path = user_run_path / "transport" / "local";
 
     boost::filesystem::path bynodeid_path = path / "by-nodeid";
