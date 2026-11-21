@@ -1001,8 +1001,8 @@ class websocket_stream : private boost::noncopyable
                 }
                 else
                 {
-                    BIO_free(b64);
-                    BIO_free(mem);
+                    BIO_free_all(b64);
+                    return "";
                 }
             }
             else
@@ -1014,7 +1014,9 @@ class websocket_stream : private boost::noncopyable
         BIO_flush(b64);
         char* output = NULL;
         int output_len = BIO_get_mem_data(mem, &output);
-        return std::string(output, output_len);
+        std::string ret(output, output_len);
+        BIO_free_all(b64);
+        return ret;
 #endif
     }
 
@@ -1069,8 +1071,8 @@ class websocket_stream : private boost::noncopyable
                 }
                 else
                 {
-                    BIO_free(b64);
-                    BIO_free(mem);
+                    BIO_free_all(b64);
+                    return "";
                 }
             }
             else
@@ -1082,7 +1084,9 @@ class websocket_stream : private boost::noncopyable
         BIO_flush(b64);
         char* output = NULL;
         int output_len = BIO_get_mem_data(mem, &output);
-        return std::string(output, output_len);
+        std::string ret(output, output_len);
+        BIO_free_all(b64);
+        return ret;
 #endif
     }
 

@@ -19,3 +19,19 @@ if(NOT BUILD_SHARED_LIBS AND (WIN32 OR ("${CMAKE_SYSTEM}" MATCHES "Linux" AND NO
         RobotRaconteurCore
         GTest::Main)
 endif()
+
+if(NOT WIN32)
+    find_package(OpenSSL REQUIRED)
+    rr_test_add_executable(
+        robotraconteur_websocket_sha1_leak_test
+        SRC
+        websocket_sha1_leak_test.cpp
+        DEPS
+        RobotRaconteurCore
+        OpenSSL::Crypto
+        GTest::Main)
+    target_include_directories(robotraconteur_websocket_sha1_leak_test
+                               PRIVATE ${CMAKE_SOURCE_DIR}/RobotRaconteurCore/src)
+    target_compile_definitions(robotraconteur_websocket_sha1_leak_test PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
+endif()
+
