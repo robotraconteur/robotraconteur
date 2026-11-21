@@ -3814,7 +3814,7 @@ void WrappedServiceInfo2Subscription::ServiceDetected1(const RR_SHARED_PTR<Servi
 {
     RR_SHARED_PTR<WrappedServiceInfo2Subscription> s = shared_from_this();
     ServiceInfo2Wrapped info2(info);
-    DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director->ServiceDetected(s, id, info2));
+    DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director2->ServiceDetected(s, id, info2));
 }
 
 void WrappedServiceInfo2Subscription::ServiceLost1(const RR_SHARED_PTR<ServiceInfo2Subscription>& subscription,
@@ -3822,7 +3822,7 @@ void WrappedServiceInfo2Subscription::ServiceLost1(const RR_SHARED_PTR<ServiceIn
 {
     RR_SHARED_PTR<WrappedServiceInfo2Subscription> s = shared_from_this();
     ServiceInfo2Wrapped info2(info);
-    DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director->ServiceLost(s, id, info2));
+    DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director2->ServiceLost(s, id, info2));
 }
 
 WrappedServiceSubscription::WrappedServiceSubscription(const RR_SHARED_PTR<ServiceSubscription>& subscription)
@@ -3989,7 +3989,7 @@ void WrappedServiceSubscription::ClientConnected1(const RR_SHARED_PTR<ServiceSub
 {
     RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
     RR_SHARED_PTR<WrappedServiceStub> client2 = RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(client);
-    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientConnected(s, id, client2));
+    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director2->ClientConnected(s, id, client2));
 }
 void WrappedServiceSubscription::ClientDisconnected1(const RR_SHARED_PTR<ServiceSubscription>& subscription,
                                                      const ServiceSubscriptionClientID& id,
@@ -3997,7 +3997,7 @@ void WrappedServiceSubscription::ClientDisconnected1(const RR_SHARED_PTR<Service
 {
     RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
     RR_SHARED_PTR<WrappedServiceStub> client2 = RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(client);
-    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientDisconnected(s, id, client2));
+    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director2->ClientDisconnected(s, id, client2));
 }
 
 void WrappedServiceSubscription::ClientConnectFailed1(const boost::shared_ptr<ServiceSubscription>& subscription,
@@ -4007,7 +4007,7 @@ void WrappedServiceSubscription::ClientConnectFailed1(const boost::shared_ptr<Se
 {
     RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
     HandlerErrorInfo err2(err);
-    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientConnectFailed(s, id, url, err2));
+    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director2->ClientConnectFailed(s, id, url, err2));
 }
 
 boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> WrappedServiceSubscription::GetNode()
@@ -4136,7 +4136,7 @@ void WrappedWireSubscription::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRVal
         return;
     }
     RR_SHARED_PTR<WrappedWireSubscription> s = RR_STATIC_POINTER_CAST<WrappedWireSubscription>(shared_from_this());
-    DIRECTOR_CALL3(WrappedWireSubscriptionDirector, RR_Director->WireValueChanged(s, val, time));
+    DIRECTOR_CALL3(WrappedWireSubscriptionDirector, RR_Director2->WireValueChanged(s, val, time));
 }
 
 WrappedWireSubscription_send_iterator::WrappedWireSubscription_send_iterator(
@@ -4231,7 +4231,7 @@ void WrappedPipeSubscription::SetRRDirector(WrappedPipeSubscriptionDirector* dir
 void WrappedPipeSubscription::fire_PipePacketReceived()
 {
     RR_SHARED_PTR<WrappedPipeSubscription> s = RR_STATIC_POINTER_CAST<WrappedPipeSubscription>(shared_from_this());
-    DIRECTOR_CALL3(WrappedPipeSubscriptionDirector, RR_Director->PipePacketReceived(s));
+    DIRECTOR_CALL3(WrappedPipeSubscriptionDirector, RR_Director2->PipePacketReceived(s));
 }
 
 WrappedPipeSubscription_send_iterator::WrappedPipeSubscription_send_iterator(
