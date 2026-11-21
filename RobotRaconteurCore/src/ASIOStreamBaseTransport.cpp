@@ -1133,7 +1133,10 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(const RR_INTRUSIVE_PTR<Message>
     catch (std::exception& exp)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(),
-                                           "Error processing received message: " << exp.what());
+                                           "Error processing received message: " << exp.what()
+                                                                                 << ", closing transport");
+        // EndReceiveMessage4() may not have run, so receive is not rearmed
+        Close();
     }
 }
 
