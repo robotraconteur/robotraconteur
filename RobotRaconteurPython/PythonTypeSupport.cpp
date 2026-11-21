@@ -125,7 +125,11 @@ PyAutoPtr<PyObject> stringToPyObject(const std::string& s)
 #else
     PyObject* r = PyUnicode_DecodeUTF8(s.c_str(), s.size(), NULL);
     if (!r)
+    {
+        // Clear the UnicodeDecodeError: the exception handler calls into Python to raise DataTypeException
+        PyErr_Clear();
         throw DataTypeException("Invalid string specified");
+    }
     return r;
 #endif
 }
@@ -140,7 +144,11 @@ PyAutoPtr<PyObject> stringToPyObject(boost::string_ref s)
 #else
     PyObject* r = PyUnicode_DecodeUTF8(s.data(), s.size(), NULL);
     if (!r)
+    {
+        // Clear the UnicodeDecodeError: the exception handler calls into Python to raise DataTypeException
+        PyErr_Clear();
         throw DataTypeException("Invalid string specified");
+    }
     return r;
 #endif
 }
