@@ -218,7 +218,7 @@ class websocket_stream : private boost::noncopyable
         n += pos;
         pos = 0;
 
-        if ((size_t)end_header_pos > n)
+        if ((size_t)end_header_pos < n)
         {
             size_t extra_len = n - end_header_pos;
             {
@@ -734,7 +734,7 @@ class websocket_stream : private boost::noncopyable
         n += pos;
         pos = 0;
 
-        if ((size_t)end_header_pos > n)
+        if ((size_t)end_header_pos < n)
         {
             size_t extra_len = n - end_header_pos;
             {
