@@ -2120,6 +2120,10 @@ void ASIOStreamBaseTransport::AsyncStreamOp(
 static std::string ASIOStreamBaseTransport_log_caps(const std::vector<uint32_t>& caps)
 {
     std::stringstream ss;
+    if (caps.empty())
+    {
+        return ss.str();
+    }
     for (size_t i = 0;;)
     {
         ss << "0x" << std::hex << caps[i];
