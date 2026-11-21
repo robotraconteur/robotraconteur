@@ -1590,8 +1590,10 @@ class websocket_stream : private boost::noncopyable
                 boost::asio::buffer(op_buf.get() + op_pos2, op_len - op_pos2),
                 boost::bind(&websocket_stream::async_read_some6, this, boost::asio::placeholders::bytes_transferred,
                             boost::asio::placeholders::error, op_buf, op_len, op_pos2, buf, boost::protect(handler)));
+            return;
         }
 
+        uint8_t opcode = recv_frame_opcode;
         recv_frame_pos = 0;
         recv_frame_length = 0;
         recv_frame_opcode = 0;
@@ -1600,7 +1602,7 @@ class websocket_stream : private boost::noncopyable
         // TODO: handle the opcode...
         try
         {
-            switch (recv_frame_opcode)
+            switch (opcode)
             {
             case WebSocketOpcode_ping: {
                 boost::mutex::scoped_lock lock(ping_lock);
