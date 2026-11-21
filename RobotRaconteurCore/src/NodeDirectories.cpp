@@ -533,7 +533,13 @@ void NodeDirectoriesFD::open_lock_write(const boost::filesystem::path& path, boo
 
     fd = h;
 #else
-    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+    int open_flags = O_CLOEXEC | O_RDWR | O_APPEND | O_CREAT;
+    if (delete_on_close)
+    {
+        // Transient pid/info files in run directories: never follow a planted symlink
+        open_flags |= O_NOFOLLOW;
+    }
+    int fd1 = open(path.c_str(), open_flags, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
     if (fd1 < 0)
     {
         err = boost::system::error_code(errno, boost::system::system_category());

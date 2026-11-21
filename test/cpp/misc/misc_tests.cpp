@@ -5,6 +5,9 @@
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
 #include <boost/filesystem.hpp>
+#include <fstream>
+#include <sstream>
+#include <boost/filesystem.hpp>
 #ifndef ROBOTRACONTEUR_WINDOWS
 #include <sys/stat.h>
 #include <unistd.h>
@@ -444,6 +447,51 @@ TEST(RobotRaconteurMisc, LocalTransportTmpUserRunDirSecure)
     EXPECT_EQ(st.st_mode & 0777, 0700u);
 
     boost::filesystem::remove_all(run_dir);
+    boost::filesystem::remove_all(base);
+}
+#endif
+
+#ifndef ROBOTRACONTEUR_WINDOWS
+static std::string bughunt_read_file(const boost::filesystem::path& p)
+{
+    std::ifstream f(p.string().c_str());
+    std::stringstream ss;
+    ss << f.rdbuf();
+    return ss.str();
+}
+
+// Pid/info files in run directories must not follow a pre-placed symlink
+TEST(RobotRaconteurMisc, NodeDirectoriesPidInfoFileNoFollow)
+{
+    boost::filesystem::path base = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
+    boost::filesystem::create_directories(base);
+    boost::filesystem::path victim = base / "victim.txt";
+    {
+        std::ofstream f(victim.string().c_str());
+        f << "original";
+    }
+
+    boost::filesystem::path pid_link = base / "node.pid";
+    boost::filesystem::path info_link = base / "node.info";
+    boost::filesystem::create_symlink(victim, pid_link);
+    boost::filesystem::create_symlink(victim, info_link);
+
+    RR_SHARED_PTR<NodeDirectoriesFD> h_pid;
+    EXPECT_ANY_THROW(h_pid = NodeDirectoriesUtil::CreatePidFile(pid_link));
+    std::map<std::string, std::string> info;
+    info.insert(std::make_pair("nodename", "bughunt"));
+    RR_SHARED_PTR<NodeDirectoriesFD> h_info;
+    EXPECT_ANY_THROW(h_info = NodeDirectoriesUtil::CreateInfoFile(info_link, info));
+    h_pid.reset();
+    h_info.reset();
+
+    EXPECT_EQ(bughunt_read_file(victim), "original");
+
+    // Regular (non-link) files still work
+    RR_SHARED_PTR<NodeDirectoriesFD> h_pid2;
+    EXPECT_NO_THROW(h_pid2 = NodeDirectoriesUtil::CreatePidFile(base / "node2.pid"));
+    h_pid2.reset();
+
     boost::filesystem::remove_all(base);
 }
 #endif
