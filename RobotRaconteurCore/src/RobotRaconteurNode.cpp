@@ -3093,6 +3093,7 @@ void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, const std::st
     r.Component = RobotRaconteur_LogComponent_Default;
     r.Endpoint = 0;
     r.Message = message;
+    r.Time = boost::posix_time::microsec_clock::local_time();
 
     LogRecord(r);
 }

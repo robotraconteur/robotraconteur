@@ -784,6 +784,28 @@ TEST(RobotRaconteurMisc, ThreadPoolPostDoesNotKeepNodeAlive)
     pool->Shutdown();
 }
 
+class CaptureLogRecordHandler : public LogRecordHandler
+{
+  public:
+    std::vector<RRLogRecord> records;
+    RR_OVIRTUAL void HandleLogRecord(const RRLogRecord& record) RR_OVERRIDE { records.push_back(record); }
+};
+
+// RobotRaconteurNode::LogMessage must set the record time like the logging macros do
+TEST(RobotRaconteurMisc, LogMessageTime)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    RR_SHARED_PTR<CaptureLogRecordHandler> handler = RR_MAKE_SHARED<CaptureLogRecordHandler>();
+    node->SetLogRecordHandler(handler);
+    node->SetLogLevel(RobotRaconteur_LogLevel_Info);
+    node->LogMessage(RobotRaconteur_LogLevel_Warning, "test LogMessage time");
+    node->SetLogRecordHandler(RR_SHARED_PTR<LogRecordHandler>());
+    ASSERT_EQ(handler->records.size(), 1u);
+    EXPECT_FALSE(handler->records[0].Time.is_special());
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
