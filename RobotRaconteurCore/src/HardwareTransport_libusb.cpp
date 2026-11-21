@@ -145,8 +145,7 @@ void intrusive_ptr_release(LibUsb_Transfer* p)
 {
     if (!p)
         return;
-    p->ref_count--;
-    if (p->ref_count == 0)
+    if (--p->ref_count == 0)
     {
         delete p; // NOLINT(cppcoreguidelines-owning-memory)
     }
