@@ -5981,6 +5981,10 @@ void IPNodeDiscovery::NodeAnnounceReceived(boost::string_ref packet, const boost
                 {
                     throw InvalidArgumentException("Invalid IP address in packet");
                 }
+                if (addr.is_loopback() && !send_ep.address().is_loopback())
+                {
+                    throw InvalidArgumentException("Loopback address in discovery packet from non-loopback sender");
+                }
                 if (!addr.is_loopback())
                 {
                     if (addr.is_v4() != send_ep.address().is_v4() || addr.is_v6() != send_ep.address().is_v6())
