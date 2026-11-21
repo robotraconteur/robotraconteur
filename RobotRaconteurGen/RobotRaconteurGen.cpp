@@ -161,7 +161,7 @@ void GenerateJavaFiles(const RR_SHARED_PTR<ServiceDefinition>& d, const std::str
     JavaServiceLangGen::GenerateFiles(d, def_str, output_dir);
 }
 
-int PullServiceDefinition(const std::string& url)
+int PullServiceDefinition(const std::string& url, const std::string& output_dir, bool overwrite)
 {
     ParseConnectionURLResult url_res;
     try
@@ -259,14 +259,45 @@ int PullServiceDefinition(const std::string& url)
         return 6008;
     }
 
+    try
+    {
+        VerifyServiceDefinitions(o2);
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "RobotRaconteurGen: fatal error: pulled service definitions are not valid: " << e.what()
+                  << std::endl;
+        return 6010;
+    }
+
+    // Check all files first so nothing is written if one of them would overwrite a different file
     for (std::vector<RR_SHARED_PTR<ServiceDefinition> >::iterator e = o2.begin(); e != o2.end(); e++)
     {
-        std::string fname = (*e)->Name + ".robdef";
+        std::string fname = (boost::filesystem::path(output_dir) / ((*e)->Name + ".robdef")).string();
+        if (overwrite || !boost::filesystem::exists(fname))
+            continue;
+        std::ifstream f(fname.c_str());
+        std::stringstream existing;
+        existing << f.rdbuf();
+        if (boost::trim_copy(existing.str()) != boost::trim_copy((*e)->ToString()))
+        {
+            std::cout << "RobotRaconteurGen: fatal error: " << fname
+                      << " exists with different contents, use --overwrite to replace it" << std::endl;
+            return 6011;
+        }
+    }
+
+    for (std::vector<RR_SHARED_PTR<ServiceDefinition> >::iterator e = o2.begin(); e != o2.end(); e++)
+    {
+        std::string fname = (boost::filesystem::path(output_dir) / ((*e)->Name + ".robdef")).string();
         try
         {
             std::ofstream f(fname.c_str());
             f << boost::trim_copy((*e)->ToString()) << std::endl;
             f.close();
+            if (!f)
+                throw std::runtime_error("write failed");
+            std::cout << "Saved " << fname << std::endl;
         }
         catch (std::exception& e)
         {
@@ -293,6 +324,7 @@ int main(int argc, char* argv[])
     bool newnodeid = false;
     bool md5passwordhash = false;
     bool pullservicedef = false;
+    bool overwrite = false;
     bool auto_import = false;
     std::vector<std::string> string_vector;
     std::vector<std::string> include_dirs;
@@ -312,6 +344,7 @@ int main(int argc, char* argv[])
             "newnodeid", po::bool_switch(&newnodeid), "generate a new NodeID")(
             "md5passwordhash", po::bool_switch(&md5passwordhash), "hash a password using MD5 algorithm")(
             "pullservicedef", po::bool_switch(&pullservicedef), "pull a service definition from a service URL")(
+            "overwrite", po::bool_switch(&overwrite), "pullservicedef: replace existing robdef files")(
             "lang", po::value(&lang), "language to generate thunk code for")(
             "include-path,I", po::value(&include_dirs)->composing(),
             "include path")("import", po::value(&import_vector)->composing(), "input file for use in imports")(
@@ -450,7 +483,7 @@ int main(int argc, char* argv[])
                 std::cout << "RobotRaconteurGen: fatal error: invalid options for pullservicedef" << std::endl;
                 return 4002;
             }
-            return PullServiceDefinition(string_vector[0]);
+            return PullServiceDefinition(string_vector[0], output_dir, overwrite);
         }
 
         if (command != "thunksource" && command != "verify-robdef" && command != "string-table")
