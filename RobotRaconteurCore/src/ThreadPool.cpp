@@ -87,7 +87,10 @@ void ThreadPool::Post(boost::function<void()> function)
     if (!keepgoing)
         throw InvalidOperationException("Thread pool shutdown");
 
-    RR_BOOST_ASIO_POST(_io_context, boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
+    // Bind a weak pointer: the node owns this pool and its io_context, so a queued op that is never run
+    // (posted around Shutdown) would otherwise keep the node alive
+    RR_BOOST_ASIO_POST(_io_context,
+                       boost::bind(&ThreadPool_post_wrapper, function, RR_WEAK_PTR<RobotRaconteurNode>(GetNode())));
 }
 
 bool ThreadPool::TryPost(boost::function<void()> function)
@@ -95,7 +98,10 @@ bool ThreadPool::TryPost(boost::function<void()> function)
     if (!keepgoing)
         return false;
 
-    RR_BOOST_ASIO_POST(_io_context, boost::bind(&ThreadPool_post_wrapper, function, GetNode()));
+    // Bind a weak pointer: the node owns this pool and its io_context, so a queued op that is never run
+    // (posted around Shutdown) would otherwise keep the node alive
+    RR_BOOST_ASIO_POST(_io_context,
+                       boost::bind(&ThreadPool_post_wrapper, function, RR_WEAK_PTR<RobotRaconteurNode>(GetNode())));
 
     return true;
 }

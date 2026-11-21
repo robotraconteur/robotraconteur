@@ -769,6 +769,21 @@ TEST(RobotRaconteurMisc, ConnectorSyncTransportFailure)
     node->Shutdown();
 }
 
+static void ThreadPoolPostTestNoop() {}
+
+TEST(RobotRaconteurMisc, ThreadPoolPostDoesNotKeepNodeAlive)
+{
+    // A pool without threads never runs posted ops, like an op posted while the pool shuts down
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node = node;
+    RR_SHARED_PTR<ThreadPool> pool = RR_MAKE_SHARED<ThreadPool>(node);
+    EXPECT_NO_THROW(pool->Post(&ThreadPoolPostTestNoop));
+    EXPECT_TRUE(pool->TryPost(&ThreadPoolPostTestNoop));
+    node.reset();
+    EXPECT_TRUE(weak_node.expired());
+    pool->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
