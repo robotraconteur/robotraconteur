@@ -3,6 +3,7 @@ from RobotRaconteur import RobotRaconteurPython as RRP
 from RobotRaconteur.RobotRaconteurPythonUtil import PackMessageElement, UnpackMessageElement
 import ctypes
 import pytest
+import sys
 
 
 def _invalidate_utf8(string_element):
@@ -12,6 +13,7 @@ def _invalidate_utf8(string_element):
     ctypes.memset(int(a.void_ptr()), 0xFF, 1)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 0), reason="Python 2 strings are byte strings, UTF-8 is not decoded")
 def test_unpack_invalid_utf8_string():
     m = PackMessageElement("abc", "string value")
     _invalidate_utf8(m)
@@ -19,6 +21,7 @@ def test_unpack_invalid_utf8_string():
         UnpackMessageElement(m, "string value")
 
 
+@pytest.mark.skipif(sys.version_info < (3, 0), reason="Python 2 strings are byte strings, UTF-8 is not decoded")
 @pytest.mark.parametrize("data,type_str", [
     ({"a": "abc", "b": "def"}, "string{string} value"),
     ({1: "abc", 2: "def"}, "string{int32} value"),
