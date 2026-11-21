@@ -4663,7 +4663,8 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
             tls_socket = RR_MAKE_SHARED<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >(
                 boost::ref(*socket), boost::ref(*(tls_context->GetServerCredentials())));
 
-            if (tls_mutual_auth)
+            // Always request an optional client certificate. The plaintext "mutualauth"
+            // STARTTLS flag can be stripped in transit, so it must not control the request.
             {
                 ::SSL_set_verify(tls_socket->native_handle(), SSL_VERIFY_PEER,
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
@@ -4681,7 +4682,8 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
                 detail::asio_ssl_stream_threadsafe<detail::websocket_stream<boost::asio::ip::tcp::socket&>&> >(
                 boost::ref(*websocket), boost::ref(*(tls_context->GetServerCredentials())));
 
-            if (tls_mutual_auth)
+            // Always request an optional client certificate. The plaintext "mutualauth"
+            // STARTTLS flag can be stripped in transit, so it must not control the request.
             {
                 ::SSL_set_verify(tls_websocket->native_handle(), SSL_VERIFY_PEER,
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
@@ -4699,7 +4701,8 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
                 detail::websocket_stream<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>&>&> >(
                 boost::ref(*wss_websocket), boost::ref(*(tls_context->GetServerCredentials())));
 
-            if (tls_mutual_auth)
+            // Always request an optional client certificate. The plaintext "mutualauth"
+            // STARTTLS flag can be stripped in transit, so it must not control the request.
             {
                 ::SSL_set_verify(tls_wss_websocket->native_handle(), SSL_VERIFY_PEER,
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
