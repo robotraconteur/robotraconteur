@@ -3041,12 +3041,17 @@ PyObject* UnpackFromRRMultiDimArray_numpy(const boost::intrusive_ptr<MessageElem
 
     DataTypes rr_type = array->GetTypeID();
     std::vector<npy_intp> npy_dims(dims->size());
+    size_t count = 1;
     for (size_t i = 0; i < dims->size(); i++)
     {
-        if ((*dims)[i] < 0)
+        uint32_t d = (*dims)[i];
+        if (d != 0 && count > std::numeric_limits<size_t>::max() / d)
             throw DataTypeException("Invalid MultiDimArray");
-        npy_dims[i] = (npy_intp)(*dims)[i];
+        count *= d;
+        npy_dims[i] = boost::numeric_cast<npy_intp>(d);
     }
+    if (count != array->size())
+        throw DataTypeException("Array dimension mismatch");
 
     switch (rr_type)
     {
