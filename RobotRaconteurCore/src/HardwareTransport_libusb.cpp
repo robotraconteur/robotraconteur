@@ -423,7 +423,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                     {
                         size_t p = 0;
 
-                        while (p < sysfs_bos_desc.size() - 3)
+                        while (p + 3 < sysfs_bos_desc.size())
                         {
                             struct libusb_bos_dev_capability_descriptor* cap =
                                 reinterpret_cast<libusb_bos_dev_capability_descriptor*>(&sysfs_bos_desc[p]);
