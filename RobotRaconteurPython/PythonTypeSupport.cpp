@@ -436,10 +436,28 @@ PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<TypeDefinition>& type,
     return GetNumPyDescrForType(rr_cast<ServiceEntryDefinition>(n), obj, node);
 }
 
+static PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
+                                      const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                                      const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
+                                      std::vector<ServiceEntryDefinition*>& parents);
+
 PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
                                const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
                                const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
 {
+    std::vector<ServiceEntryDefinition*> parents;
+    return GetNumPyDescrForType(e, obj, node, parents);
+}
+
+static PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
+                                      const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                                      const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
+                                      std::vector<ServiceEntryDefinition*>& parents)
+{
+    if (std::find(parents.begin(), parents.end(), e.get()) != parents.end())
+        throw DataTypeException("Recursive pod or namedarray detected in " + e->Name);
+    parents.push_back(e.get());
+
     PyAutoPtr<PyObject> decr_list(PyList_New(e->Members.size()));
     for (size_t i = 0; i < e->Members.size(); i++)
     {
@@ -456,7 +474,7 @@ PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
             std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs;
             RR_SHARED_PTR<ServiceEntryDefinition> f_def2 =
                 rr_cast<ServiceEntryDefinition>(f_def->ResolveNamedType(other_defs, node, obj));
-            PyAutoPtr<PyObject> f_desc(GetNumPyDescrForType(f_def2, obj, node));
+            PyAutoPtr<PyObject> f_desc(GetNumPyDescrForType(f_def2, obj, node, parents));
             PyTuple_SetItem(f.get(), 1, f_desc.detach());
         }
 
@@ -512,6 +530,7 @@ PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
         throw DataTypeException("Could not create numpy dtype for Pod");
     }
 
+    parents.pop_back();
     return (PyObject*)descr_ret;
 }
 
