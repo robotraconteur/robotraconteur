@@ -192,6 +192,18 @@ TEST(NamedArray, UnpackVoidElementsThrow)
     EXPECT_THROW(NamedArrayStub_UnpackNamedMultiDimArray<vector3>(l2), NullValueException);
 }
 
+TEST(ServiceTest3Node, CloseServiceUpdatesNonce)
+{
+    // Closing a service must change the service state nonce so discovery clients see the removal
+    TestServerNodeConfig cfg("unit_closeservice_nonce_test");
+    if (!cfg.node)
+        return;
+    std::string nonce1 = cfg.node->GetServiceStateNonce();
+    cfg.node->CloseService("RobotRaconteurTestService3");
+    EXPECT_NE(cfg.node->GetServiceStateNonce(), nonce1);
+    cfg.Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

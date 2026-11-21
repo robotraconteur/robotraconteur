@@ -984,6 +984,8 @@ void RobotRaconteurNode::CloseService(boost::string_ref sname)
         services.erase(sname.to_string());
     }
 
+    UpdateServiceStateNonce();
+
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_this, Node, -1, "Service \"" << sname << "\" closed");
 }
 
