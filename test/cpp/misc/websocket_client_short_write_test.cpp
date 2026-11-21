@@ -11,6 +11,7 @@
 
 #include "RobotRaconteur/TcpTransport.h"
 #include "websocket_stream.hpp"
+#include "websocket_test_compat.h"
 
 using boost::asio::ip::tcp;
 
@@ -21,7 +22,7 @@ typedef RobotRaconteur::detail::websocket_stream<tcp::socket&> ws_t;
 // Connected loopback socket pair: raw is the test's raw peer, ws is wrapped by websocket_stream
 struct socket_pair
 {
-    boost::asio::io_context ioc;
+    RR_BOOST_ASIO_IO_CONTEXT ioc;
     tcp::socket raw;
     tcp::socket ws;
     socket_pair() : raw(ioc), ws(ioc)
@@ -34,14 +35,7 @@ struct socket_pair
     }
 };
 
-void run_until(boost::asio::io_context& ioc, const bool& done, int timeout_ms = 2000)
-{
-    for (int i = 0; i < timeout_ms / 50 && !done; i++)
-    {
-        ioc.restart();
-        ioc.run_for(boost::asio::chrono::milliseconds(50));
-    }
-}
+using websocket_test::run_until;
 
 template <typename Stream>
 struct ws_reader
@@ -57,7 +51,7 @@ struct ws_reader
     void start()
     {
         ws.async_read_some(boost::asio::buffer(buf.get(), 1024),
-                           boost::bind(&ws_reader::handler, this, boost::placeholders::_1, boost::placeholders::_2));
+                           boost::bind(&ws_reader::handler, this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
     }
     void handler(const boost::system::error_code& e, size_t n)
     {
@@ -105,7 +99,7 @@ std::string server_response(const std::string& request)
     p1 += 19;
     std::string::size_type p2 = request.find("\r\n", p1);
     std::string key = request.substr(p1, p2 - p1);
-    boost::asio::io_context ioc;
+    RR_BOOST_ASIO_IO_CONTEXT ioc;
     tcp::socket s(ioc);
     struct hasher : public ws_t
     {
@@ -173,20 +167,13 @@ TEST(WebSocketStream, ClientHandshakeShortWrite)
 
     bool hs_done = false;
     boost::system::error_code hs_ec;
-    ws.async_client_handshake("ws://localhost:1234/", ws_protocol, [&](const boost::system::error_code& ec) {
-        hs_ec = ec;
-        hs_done = true;
-    });
+    ws.async_client_handshake("ws://localhost:1234/", ws_protocol, websocket_test::make_ec_handler(hs_done, hs_ec));
 
     boost::asio::streambuf sb(8192);
     bool req_done = false;
     boost::system::error_code req_ec;
     size_t req_n = 0;
-    boost::asio::async_read_until(p.raw, sb, "\r\n\r\n", [&](const boost::system::error_code& ec, size_t n) {
-        req_ec = ec;
-        req_n = n;
-        req_done = true;
-    });
+    boost::asio::async_read_until(p.raw, sb, "\r\n\r\n", websocket_test::make_ec_size_handler(req_done, req_ec, &req_n));
     run_until(p.ioc, req_done);
     ASSERT_TRUE(req_done);
     ASSERT_FALSE(req_ec) << "request was not received intact: " << req_ec.message();
