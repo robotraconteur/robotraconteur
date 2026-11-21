@@ -3573,7 +3573,11 @@ void JavaServiceLangGen::GenerateDocString(const std::string& docstring, const s
     w2 << prefix << "/**" << std::endl;
     BOOST_FOREACH (const std::string& s, docstring_v)
     {
-        w2 << prefix << " * " << s << std::endl;
+        // Escape "*/" so a doc line cannot end the comment, and "\u" because javac decodes
+        // unicode escapes (e.g. \u002a\u002f) before comments are recognized
+        std::string s2 = boost::replace_all_copy(s, "\\u", "&#92;u");
+        boost::replace_all(s2, "*/", "*&#47;");
+        w2 << prefix << " * " << s2 << std::endl;
     }
     w2 << prefix << " */" << std::endl;
 }

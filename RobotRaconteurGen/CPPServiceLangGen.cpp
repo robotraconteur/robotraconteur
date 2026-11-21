@@ -5018,7 +5018,8 @@ void CPPServiceLangGen::GenerateDocString(const std::string& docstring, const st
     w2 << prefix << "/*" << std::endl;
     BOOST_FOREACH (const std::string& s, docstring_v)
     {
-        w2 << prefix << " * " << s << std::endl;
+        // Break up "*/" so a doc line cannot end the comment
+        w2 << prefix << " * " << boost::replace_all_copy(s, "*/", "* /") << std::endl;
     }
     w2 << prefix << " */" << std::endl;
 }
