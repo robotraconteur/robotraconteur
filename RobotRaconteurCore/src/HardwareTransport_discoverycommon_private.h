@@ -262,6 +262,12 @@ class HardwareTransport_discovery
         RR_SHARED_PTR<RobotRaconteurNode> n = GetParent()->GetNode();
         RR_SHARED_PTR<ThreadPool> p = n->GetThreadPool();
 
+        if (!bt)
+        {
+            GetAll1(RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >(), op);
+            return;
+        }
+
         std::list<typename bluetooth_connector::btaddr_type> addr = bt->GetDeviceAddresses();
 
         if (addr.empty())
