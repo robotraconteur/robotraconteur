@@ -2775,7 +2775,7 @@ bool ConstantDefinition::VerifyTypeAndValue(TypeDefinition& t, boost::string_ref
             }
             else
             {
-                static boost::regex r_array("^[ \\t]*\\{[ \\t]*((?:(:?" RR_INT_REGEX ")|(?:" RR_HEX_REGEX
+                static boost::regex r_array("^[ \\t]*\\{[ \\t]*((?:(?:" RR_INT_REGEX ")|(?:" RR_HEX_REGEX
                                             "))(?:[ \\t]*,[ \\t]*(?:" RR_INT_REGEX "|" RR_HEX_REGEX
                                             "))*)?[ \\t]*}[ \\t]*$");
                 if (!regex_match(value.begin(), value.end(), r_array_match, r_array))

@@ -152,6 +152,16 @@ TEST(RobDef, RobDefTest)
     }
 }
 
+TEST(RobDef, IntegerArrayConstantValue)
+{
+    TypeDefinition t;
+    t.FromString("int32[]");
+    EXPECT_TRUE(ConstantDefinition::VerifyTypeAndValue(t, "{1, -2, 0x3}"));
+    EXPECT_TRUE(ConstantDefinition::VerifyTypeAndValue(t, "{}"));
+    EXPECT_FALSE(ConstantDefinition::VerifyTypeAndValue(t, "{:1, 2}"));
+    EXPECT_FALSE(ConstantDefinition::VerifyTypeAndValue(t, "{1, :2}"));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
