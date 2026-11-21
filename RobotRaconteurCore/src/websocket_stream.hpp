@@ -139,27 +139,22 @@ class websocket_stream : private boost::noncopyable
     template <typename T>
     int64_t find_http_header_end(T& str)
     {
-        int64_t pos = str.find("\r\n\r\n");
-        if (pos != -1)
+        // Use the earliest terminator, the line parser stops at the first empty line
+        const char* terminators[] = {"\r\n\r\n", "\n\n", "\r\r", "\n\r\n\r"};
+        int64_t end_pos = -1;
+        for (size_t i = 0; i < sizeof(terminators) / sizeof(terminators[0]); i++)
         {
-            return pos + 4;
+            int64_t pos = str.find(terminators[i]);
+            if (pos != -1)
+            {
+                int64_t pos_end = pos + static_cast<int64_t>(strlen(terminators[i]));
+                if (end_pos == -1 || pos_end < end_pos)
+                {
+                    end_pos = pos_end;
+                }
+            }
         }
-        pos = str.find("\n\n");
-        if (pos != -1)
-        {
-            return pos + 2;
-        }
-        pos = str.find("\r\r");
-        if (pos != -1)
-        {
-            return pos + 2;
-        }
-        pos = str.find("\n\r\n\r");
-        if (pos != -1)
-        {
-            return pos + 4;
-        }
-        return -1;
+        return end_pos;
     }
 
     void server_handshake2(
