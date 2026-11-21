@@ -533,8 +533,9 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
         if (rr_found)
         {
 
-            if (config_desc->interface[interface_].num_altsetting < 1)
+            if (interface_ >= config_desc->bNumInterfaces || config_desc->interface[interface_].num_altsetting < 1)
             {
+                f->libusb_free_config_descriptor(config_desc);
                 continue;
             }
 
