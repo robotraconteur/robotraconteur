@@ -46,12 +46,22 @@ static boost::shared_array<uint8_t> Serialize(const RR_INTRUSIVE_PTR<Message>& m
 // nested message recurse once per level; in unoptimized Windows builds (~3 KB of stack per level) that alone
 // overflows the default 1 MiB stack before 512 levels. The reads under test run on the calling thread, which has the
 // platform's default stack size.
+struct SerializeNestedTask
+{
+    size_t levels;
+    uint16_t version;
+    size_t* size;
+    boost::shared_array<uint8_t>* buf;
+    void operator()() const { *buf = Serialize(BuildNestedMessage(levels), version, *size); }
+};
+
 static boost::shared_array<uint8_t> SerializeNested(size_t levels, uint16_t version, size_t& size)
 {
     boost::shared_array<uint8_t> buf;
     boost::thread::attributes attrs;
     attrs.set_stack_size(64 * 1024 * 1024);
-    boost::thread t(attrs, [&]() { buf = Serialize(BuildNestedMessage(levels), version, size); });
+    SerializeNestedTask task = {levels, version, &size, &buf};
+    boost::thread t(attrs, task);
     t.join();
     return buf;
 }
