@@ -9396,12 +9396,12 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
         if (mxGetNumberOfElements(cell_args) == 0)
         {
             if (param_type)
-                throw "GeneratorClient Next expects a parameter";
+                throw InvalidArgumentException("GeneratorClient Next expects a parameter");
         }
         else if (mxGetNumberOfElements(cell_args) == 1)
         {
             if (!param_type)
-                throw "GeneratorClient Next does not expect a parameter";
+                throw InvalidArgumentException("GeneratorClient Next does not expect a parameter");
             param = PackMxArrayToMessageElement(mxGetCell(cell_args, 0), param_type, GetStub());
         }
         else
@@ -9434,12 +9434,12 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
         if (mxGetNumberOfElements(cell_args) == 0)
         {
             if (param_type)
-                throw "GeneratorClient TryNext expects a parameter";
+                throw InvalidArgumentException("GeneratorClient TryNext expects a parameter");
         }
         else if (mxGetNumberOfElements(cell_args) == 1)
         {
             if (!param_type)
-                throw "GeneratorClient TryNext does not expect a parameter";
+                throw InvalidArgumentException("GeneratorClient TryNext does not expect a parameter");
             param = PackMxArrayToMessageElement(mxGetCell(cell_args, 0), param_type, GetStub());
         }
         else
