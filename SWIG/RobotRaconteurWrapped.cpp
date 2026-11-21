@@ -974,6 +974,30 @@ WrappedTryReceivePacketWaitResult WrappedPipeEndpoint::TryReceivePacketWait(int3
     return res;
 }
 
+// Releases a director when it goes out of scope. Used after the closed callback, the last callback of a
+// pipe endpoint or wire connection, so the director (which usually references the wrapping object) does not
+// keep the endpoint alive when it was closed by the peer instead of by Close()
+template <typename T>
+class WrappedReleaseDirectorOnExit
+{
+  public:
+    WrappedReleaseDirectorOnExit(boost::shared_mutex& lock, boost::shared_ptr<T>& director)
+        : lock(lock), director(director)
+    {}
+    ~WrappedReleaseDirectorOnExit()
+    {
+        boost::shared_ptr<T> director1;
+        {
+            boost::unique_lock<boost::shared_mutex> lock1(lock);
+            director1.swap(director);
+        }
+    }
+
+  private:
+    boost::shared_mutex& lock;
+    boost::shared_ptr<T>& director;
+};
+
 WrappedPipeEndpoint::WrappedPipeEndpoint(const RR_SHARED_PTR<PipeBase>& parent, int32_t index, uint32_t endpoint,
                                          const RR_SHARED_PTR<TypeDefinition>& type, bool unreliable,
                                          MemberDefinition_Direction direction)
@@ -1001,6 +1025,7 @@ void WrappedPipeEndpoint::fire_PipeEndpointClosedCallback()
     catch (std::exception&)
     {}
 
+    WrappedReleaseDirectorOnExit<WrappedPipeEndpointDirector> release_director(RR_Director_lock, RR_Director);
     DIRECTOR_CALL3(WrappedPipeEndpointDirector, RR_Director2->PipeEndpointClosedCallback());
 }
 
@@ -1372,6 +1397,7 @@ void WrappedWireConnection::fire_WireClosedCallback()
     catch (std::exception&)
     {}
 
+    WrappedReleaseDirectorOnExit<WrappedWireConnectionDirector> release_director(RR_Director_lock, RR_Director);
     DIRECTOR_CALL3(WrappedWireConnectionDirector, RR_Director2->WireConnectionClosedCallback());
 }
 
