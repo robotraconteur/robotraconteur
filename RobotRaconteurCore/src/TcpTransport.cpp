@@ -4730,6 +4730,7 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
                 "Message received without TLS active when TLS is required, closing transport");
             // This may not be the nicest way to handle the situation but it is the safest
             Close();
+            return;
         }
     }
 
