@@ -62,9 +62,9 @@ def test_numpy_dtypes():
         np_node.Shutdown()
 
 
-def test_file_log_record_handler(tmp_path):
+def test_file_log_record_handler(tmpdir):
     import datetime
-    fname = str(tmp_path / "rr_log.txt")
+    fname = str(tmpdir.join("rr_log.txt"))
     node = RR.RobotRaconteurNode()
     node.Init()
     try:
