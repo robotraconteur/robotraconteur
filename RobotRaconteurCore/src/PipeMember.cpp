@@ -359,6 +359,18 @@ void PipeEndpointBase::PipePacketReceived(const RR_INTRUSIVE_PTR<RRValue>& packe
             }
             else
             {
+                // Only queue packets a bounded distance ahead of the next expected one. Old or duplicate
+                // numbers (distance 0 or wrapped) and far-future numbers would never be delivered or freed
+                uint32_t ahead = packetnum - recv_packet_number;
+                if (ahead == 0 || ahead > 1024)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
+                                                            "Dropping out of window incoming packet "
+                                                                << packetnum << " expected "
+                                                                << increment_packet_number(recv_packet_number)
+                                                                << " pipe endpoint index " << index);
+                    return;
+                }
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
                                                         "Received out of order"
                                                             << "incoming packet " << recv_packet_number
