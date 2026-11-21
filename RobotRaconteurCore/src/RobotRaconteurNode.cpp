@@ -3162,7 +3162,17 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(const std
         return log_level;
     std::string loglevel(loglevel_c);
     lock.unlock();
-    return SetLogLevelFromString(loglevel);
+    try
+    {
+        return SetLogLevelFromString(loglevel);
+    }
+    catch (InvalidArgumentException&)
+    {
+        ROBOTRACONTEUR_LOG_WARNING_COMPONENT(weak_this, Node, -1,
+                                             "Invalid log level specified in environmental variable "
+                                                 << env_variable_name << ": " << loglevel);
+        return GetLogLevel();
+    }
 }
 
 RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromString(boost::string_ref loglevel)
@@ -3212,10 +3222,7 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromString(boost::string_
 
     lock.unlock();
 
-    ROBOTRACONTEUR_LOG_WARNING_COMPONENT(
-        weak_this, Node, -1, "Invalid log level specified in environmental variable or command line: " << loglevel);
-
-    return log_level;
+    throw InvalidArgumentException("Invalid log level: " + loglevel.to_string());
 }
 
 RR_SHARED_PTR<LogRecordHandler> RobotRaconteurNode::GetLogRecordHandler()

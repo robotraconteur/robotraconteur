@@ -14,7 +14,15 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
     std::string log_level_str = config->GetOptionOrDefaultAsString("log-level");
     if (!log_level_str.empty())
     {
-        node->SetLogLevelFromString(log_level_str);
+        try
+        {
+            node->SetLogLevelFromString(log_level_str);
+        }
+        catch (InvalidArgumentException&)
+        {
+            ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, NodeSetup, -1,
+                                                 "Invalid log level specified on command line: " << log_level_str);
+        }
     }
 
     if (config->GetOptionOrDefaultAsBool("local-tap-enable"))

@@ -2518,6 +2518,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * Defaults to WARNING
      *
+     * Throws InvalidArgumentException if level is not one of these values
+     *
      * @param level The desired log level
      * @return RobotRaconteur_LogLevel The log level
      */

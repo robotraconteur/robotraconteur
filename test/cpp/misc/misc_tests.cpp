@@ -1553,6 +1553,17 @@ TEST(RobotRaconteurMisc, AutoResetEventNegativeTimeoutWaits)
     t.join();
 }
 
+// SetLogLevelFromString reports invalid input instead of silently keeping the current level
+TEST(RobotRaconteurMisc, SetLogLevelFromStringInvalid)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    EXPECT_EQ(node->SetLogLevelFromString("INFO"), RobotRaconteur_LogLevel_Info);
+    EXPECT_THROW(node->SetLogLevelFromString("NOT_A_LEVEL"), InvalidArgumentException);
+    EXPECT_EQ(node->GetLogLevel(), RobotRaconteur_LogLevel_Info);
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
