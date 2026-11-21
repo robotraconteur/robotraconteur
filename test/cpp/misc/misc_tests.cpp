@@ -4,6 +4,10 @@
 #include <boost/atomic.hpp>
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
+#include <boost/filesystem.hpp>
+#ifndef ROBOTRACONTEUR_WINDOWS
+#include <sys/stat.h>
+#endif
 #include <RobotRaconteur/Tap.h>
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
@@ -1596,6 +1600,50 @@ TEST(RobotRaconteurMisc, DiscoveryURLCap)
     EXPECT_TRUE(found);
     node->Shutdown();
 }
+
+#if !defined(ROBOTRACONTEUR_WINDOWS) && !defined(ROBOTRACONTEUR_APPLE)
+// Private (non-public) LocalTransport server sockets are owner-only
+TEST(RobotRaconteurMisc, LocalTransportPrivateSocketMode)
+{
+    boost::filesystem::path base = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
+    boost::filesystem::create_directories(base);
+
+    NodeDirectories d;
+    d.system_data_dir = base / "sys_data";
+    d.system_config_dir = base / "sys_config";
+    d.system_state_dir = base / "sys_state";
+    d.system_cache_dir = base / "sys_cache";
+    d.system_run_dir = base / "sys_run";
+    d.user_data_dir = base / "user_data";
+    d.user_config_dir = base / "user_config";
+    d.user_state_dir = base / "user_state";
+    d.user_cache_dir = base / "user_cache";
+    d.user_run_dir = base / "user_run";
+
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->SetNodeDirectories(d);
+    RR_SHARED_PTR<LocalTransport> t = RR_MAKE_SHARED<LocalTransport>(node);
+    node->RegisterTransport(t);
+    t->StartServerAsNodeName("bughunt_private_socket");
+
+    int n_sock = 0;
+    for (boost::filesystem::directory_iterator it(base / "user_run" / "socket");
+         it != boost::filesystem::directory_iterator(); ++it)
+    {
+        if (it->path().extension() != ".sock")
+            continue;
+        n_sock++;
+        struct stat st = {};
+        ASSERT_EQ(lstat(it->path().c_str(), &st), 0);
+        EXPECT_EQ(st.st_mode & 0777, 0700u) << it->path();
+    }
+    EXPECT_EQ(n_sock, 1);
+
+    node->Shutdown();
+    boost::filesystem::remove_all(base);
+}
+#endif
 
 int main(int argc, char* argv[])
 {

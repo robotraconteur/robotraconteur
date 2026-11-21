@@ -681,7 +681,7 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 #ifdef ROBOTRACONTEUR_WINDOWS
                 detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_);
 #else
-                chmod(pipename.c_str(), S_IRWXU | S_IRWXG);
+                chmod(pipename.c_str(), public_ ? (S_IRWXU | S_IRWXG) : S_IRWXU);
 #endif
 
                 break;
@@ -875,7 +875,7 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
 #ifdef ROBOTRACONTEUR_WINDOWS
                 detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_);
 #else
-                chmod(pipename.c_str(), S_IRWXU | S_IRWXG);
+                chmod(pipename.c_str(), public_ ? (S_IRWXU | S_IRWXG) : S_IRWXU);
 #endif
 
                 break;
