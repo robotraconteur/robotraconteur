@@ -1931,6 +1931,24 @@ void ServerContext::ClientLockOp(const RR_INTRUSIVE_PTR<MessageEntry>& m, const 
                 throw ObjectLockedException("User does not have object locking privileges");
             username = ServerEndpoint::GetCurrentAuthenticatedUser()->GetUsername();
         }
+        else if (m_RequireValidUser)
+        {
+            // Monitor operations must not bypass requirevaliduser (reachable after a legacy ConnectClient,
+            // which creates the endpoint before authentication)
+            RR_SHARED_PTR<AuthenticatedUser> u;
+            try
+            {
+                u = ServerEndpoint::GetCurrentAuthenticatedUser();
+            }
+            catch (std::exception&)
+            {}
+            if (!u)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, -1, m->ServicePath, m->MemberName,
+                                                        "User attempted monitor operation without authenticating");
+                throw PermissionDeniedException("User must authenticate before accessing this service");
+            }
+        }
 
         MessageStringPtr& servicepath = m->ServicePath;
 
