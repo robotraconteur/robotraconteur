@@ -313,6 +313,19 @@ TEST_F(ServiceTest, MultiDimMemoryReadReplyCountTest)
     node->DisconnectService(r);
 }
 
+// Tries the stub's client-side monitor mutex from another thread
+struct TryLockStubMutex
+{
+    RR_SHARED_PTR<ServiceStub> s;
+    bool* acquired;
+    void operator()() const
+    {
+        *acquired = s->RRMutex->try_lock();
+        if (*acquired)
+            s->RRMutex->unlock();
+    }
+};
+
 TEST_F(ServiceTest, MonitorEnterFailureReleasesStubLock)
 {
     RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
@@ -325,11 +338,8 @@ TEST_F(ServiceTest, MonitorEnterFailureReleasesStubLock)
     // A failed MonitorEnter must not leave the stub's client-side monitor mutex held by this thread.
     RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(r1);
     bool acquired = false;
-    boost::thread t([&]() {
-        acquired = s->RRMutex->try_lock();
-        if (acquired)
-            s->RRMutex->unlock();
-    });
+    TryLockStubMutex task = {s, &acquired};
+    boost::thread t(task);
     t.join();
     EXPECT_TRUE(acquired);
 
