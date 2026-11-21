@@ -72,6 +72,7 @@ print("ACCEPT_OK")
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="uses /proc and RLIMIT_NOFILE")
+@pytest.mark.skipif(sys.version_info < (3, 5), reason="needs subprocess.run (Python 3.5+)")
 def test_tcp_accept_continues_after_accept_error():
     p = subprocess.run([sys.executable, "-c", _accept_error_script], stdout=subprocess.PIPE,
                        stderr=subprocess.STDOUT, timeout=120)
