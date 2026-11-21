@@ -3018,7 +3018,7 @@ bool RobotRaconteurNode::IsEndpointLargeTransferAuthorized(uint32_t endpoint)
 
             if (s->service->RequireValidUser())
             {
-                return (bool)s->GetCurrentAuthenticatedUser();
+                return !s->GetAuthenticatedUsername().empty();
             }
             else
             {
