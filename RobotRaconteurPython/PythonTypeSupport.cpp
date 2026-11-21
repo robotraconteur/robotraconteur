@@ -1500,6 +1500,12 @@ class UnpackMessageElementImpl
                     el1 = (UnpackMessageElement(el, p1, stub, node));
                 }
 
+                if (p->Type->ArrayType != DataTypes_ArrayTypes_none && (!el1 || !PyArray_Check(el1)))
+                {
+                    Py_XDECREF(el1);
+                    throw DataTypeException("Invalid pod field " + p->Name);
+                }
+
                 if (p->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
                 {
                     std::vector<npy_intp> dims2(p->Type->ArrayLength.size());
