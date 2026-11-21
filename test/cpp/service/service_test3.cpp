@@ -1,10 +1,12 @@
 #include <boost/shared_array.hpp>
+#include <cstdlib>
 
 #include <gtest/gtest.h>
 #include <RobotRaconteur/ServiceDefinition.h>
 #include <RobotRaconteur/RobotRaconteurNode.h>
 
 #include "ServiceTestClient3.h"
+#include "ServiceTest3.h"
 #include "robotraconteur_generated.h"
 #include "service_test_utils.h"
 
@@ -93,6 +95,70 @@ TEST(ServiceTest3Pod, NamedArrayFieldArrayInvalidLength)
                                                     "com.robotraconteur.testing.TestService3.transform", RR_MOVE(a2))));
     EXPECT_NO_THROW(PodStub<field_type>::UnpackField(s.v, "t3", in2));
     EXPECT_EQ(s.v.size(), 2u);
+}
+
+struct RegisterServiceContextTask
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node;
+    RR_SHARED_PTR<ServerContext> c;
+    boost::mutex lock;
+    boost::condition_variable cv;
+    bool done;
+    bool failed;
+
+    void run()
+    {
+        bool f = false;
+        try
+        {
+            node->RegisterService(c);
+        }
+        catch (std::exception&)
+        {
+            f = true;
+        }
+        boost::mutex::scoped_lock l(lock);
+        failed = f;
+        done = true;
+        cv.notify_all();
+    }
+};
+
+TEST(ServiceTest3Node, RegisterServiceContextReplacesExisting)
+{
+    // RegisterService(ServerContext) with a name already in use closes the old service. It called
+    // CloseService() while holding services_lock, which locks it again and deadlocked.
+    TestServerNodeConfig cfg("unit_registerservice_replace_test");
+    if (!cfg.node)
+        return;
+    RR_SHARED_PTR<ServerContext> old_c = cfg.node->GetService("RobotRaconteurTestService3");
+    RR_SHARED_PTR<ServerContext> c =
+        RR_MAKE_SHARED<ServerContext>(cfg.node->GetServiceType("com.robotraconteur.testing.TestService5"), cfg.node);
+    c->SetBaseObject("RobotRaconteurTestService3", RR_MAKE_SHARED<asynctestroot_impl>());
+
+    RegisterServiceContextTask task;
+    task.node = cfg.node;
+    task.c = c;
+    task.done = false;
+    task.failed = false;
+    boost::thread t(boost::bind(&RegisterServiceContextTask::run, &task));
+    {
+        boost::mutex::scoped_lock lock(task.lock);
+        boost::system_time deadline = boost::get_system_time() + boost::posix_time::seconds(10);
+        while (!task.done && task.cv.timed_wait(lock, deadline))
+        {}
+        if (!task.done)
+        {
+            ADD_FAILURE() << "RegisterService(ServerContext) deadlocked";
+            std::cerr << "RegisterService(ServerContext) deadlocked" << std::endl;
+            std::_Exit(1);
+        }
+    }
+    t.join();
+    EXPECT_FALSE(task.failed);
+    EXPECT_EQ(cfg.node->GetService("RobotRaconteurTestService3"), c);
+    EXPECT_NE(old_c, c);
+    cfg.Shutdown();
 }
 
 int main(int argc, char* argv[])
