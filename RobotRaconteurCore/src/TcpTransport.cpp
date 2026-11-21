@@ -5471,7 +5471,7 @@ bool TcpTransportConnection::IsSecurePeerIdentityVerified()
     boost::mutex::scoped_lock lock(socket_lock);
     if (!is_tls)
         return false;
-    if (!tls_socket && !tls_websocket)
+    if (!tls_socket && !tls_websocket && !tls_wss_websocket)
         return false;
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
     if (!use_websocket && !use_wss_websocket)
