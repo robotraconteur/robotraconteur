@@ -36,6 +36,28 @@
 
 namespace RobotRaconteur
 {
+namespace detail
+{
+// Service definitions received from a remote service are only parsed. Verify them before
+// creating dynamic service factories from them, as is done for locally registered types.
+static void ClientContext_VerifyPulledServiceDefinitions(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                                                         const RR_WEAK_PTR<RobotRaconteurNode>& node, uint32_t ep)
+{
+    try
+    {
+        VerifyServiceDefinitions(defs);
+    }
+    catch (std::exception& exp)
+    {
+        RR_UNUSED(exp);
+        RR_UNUSED(ep);
+        ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Client, ep,
+                                             "Service definitions received from service failed verification: "
+                                                 << exp.what());
+        throw;
+    }
+}
+} // namespace detail
 static void rr_context_emptyhandler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
 
 static void rr_context_node_handler(const RR_SHARED_PTR<RobotRaconteurNode>& n,
@@ -470,6 +492,7 @@ void ClientContext::AsyncFindObjRef2(
                         }
                         if (!missingdefs.empty())
                         {
+                            detail::ClientContext_VerifyPulledServiceDefinitions(d, node, GetLocalEndpoint());
 
                             std::vector<std::string> missingdefs_str;
                             BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& ee, missingdefs)
@@ -1814,6 +1837,8 @@ void ClientContext::AsyncConnectService4(
                 }
                 if (!missingdefs.empty())
                 {
+                    detail::ClientContext_VerifyPulledServiceDefinitions(d->defs, node, GetLocalEndpoint());
+
                     std::vector<std::string> missingdefs_vec;
                     std::vector<std::string> missingdefs_names;
                     BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition>& e, missingdefs)
@@ -2091,11 +2116,15 @@ void ClientContext::AsyncConnectService7(
                 use_pulled_types = true;
 
                 std::vector<std::string> pulleddefs_str;
+                std::vector<RR_SHARED_PTR<ServiceDefinition> > pulleddefs;
                 BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& ee,
                                pulled_service_defs | boost::adaptors::map_values)
                 {
                     pulleddefs_str.push_back(ee->ToString());
+                    pulleddefs.push_back(ee);
                 }
+
+                detail::ClientContext_VerifyPulledServiceDefinitions(pulleddefs, node, GetLocalEndpoint());
 
                 std::vector<RR_SHARED_PTR<ServiceFactory> > di2 =
                     GetNode()->GetDynamicServiceFactory()->CreateServiceFactories(pulleddefs_str);
