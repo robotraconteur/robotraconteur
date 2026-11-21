@@ -12,6 +12,7 @@
 
 #include "RobotRaconteur/TcpTransport.h"
 #include "websocket_stream.hpp"
+#include "websocket_test_compat.h"
 
 using boost::asio::ip::tcp;
 
@@ -22,7 +23,7 @@ typedef RobotRaconteur::detail::websocket_stream<tcp::socket&> ws_t;
 // Connected loopback socket pair: raw is the test's raw peer, ws is wrapped by websocket_stream
 struct socket_pair
 {
-    boost::asio::io_context ioc;
+    RR_BOOST_ASIO_IO_CONTEXT ioc;
     tcp::socket raw;
     tcp::socket ws;
     socket_pair() : raw(ioc), ws(ioc)
@@ -35,14 +36,7 @@ struct socket_pair
     }
 };
 
-void run_until(boost::asio::io_context& ioc, const bool& done, int timeout_ms = 2000)
-{
-    for (int i = 0; i < timeout_ms / 50 && !done; i++)
-    {
-        ioc.restart();
-        ioc.run_for(boost::asio::chrono::milliseconds(50));
-    }
-}
+using websocket_test::run_until;
 
 template <typename Stream>
 struct ws_reader
@@ -58,7 +52,7 @@ struct ws_reader
     void start()
     {
         ws.async_read_some(boost::asio::buffer(buf.get(), 1024),
-                           boost::bind(&ws_reader::handler, this, boost::placeholders::_1, boost::placeholders::_2));
+                           boost::bind(&ws_reader::handler, this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
     }
     void handler(const boost::system::error_code& e, size_t n)
     {
@@ -106,10 +100,7 @@ TEST(WebSocketStream, PingFrameAnsweredWithPong)
     boost::system::error_code write_ec;
     const char out[] = "abc";
     ws.async_write_some(boost::asio::buffer(out, 3),
-                        [&](const boost::system::error_code& ec, size_t) {
-                            write_ec = ec;
-                            write_done = true;
-                        });
+                        websocket_test::make_ec_size_handler(write_done, write_ec));
     run_until(p.ioc, write_done);
     ASSERT_TRUE(write_done);
     ASSERT_FALSE(write_ec) << write_ec.message();
@@ -119,7 +110,7 @@ TEST(WebSocketStream, PingFrameAnsweredWithPong)
     // segment may not be readable yet when the write handler runs)
     for (int i = 0; i < 200 && p.raw.available() < sizeof(expected); i++)
     {
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(10));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }
     ASSERT_GE(p.raw.available(), sizeof(expected));
     uint8_t received[sizeof(expected)] = {};
