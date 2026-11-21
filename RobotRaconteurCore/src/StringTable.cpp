@@ -442,6 +442,7 @@ std::vector<uint32_t> StringTable::GetTableFlags()
 void StringTable::SetTableFlags(std::vector<uint32_t> flags_)
 {
     boost::mutex::scoped_lock lock(this_lock);
+    uint32_t old_flags = flags;
     BOOST_FOREACH (uint32_t f, flags_)
     {
         if ((f & TransportCapabilityCode_PAGE_MASK) == TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE)
@@ -450,7 +451,10 @@ void StringTable::SetTableFlags(std::vector<uint32_t> flags_)
         }
     }
 
-    if (flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE)
+    // The standard table entries are never removed, so only parse it when the flag is newly set
+    // (a peer can repeat CreateConnection on the same transport)
+    if ((flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE) &&
+        !(old_flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE))
     {
         std::vector<uint32_t> table_flags;
         table_flags.push_back(TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE);
