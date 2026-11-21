@@ -70,14 +70,21 @@ void testroot3_impl::set_peekwire(const RR_SHARED_PTR<Wire<int32_t> >& value)
 {
     testroot3_default_impl::set_peekwire(value);
 
+    // Bind a weak pointer: the timer is owned by this object, so a strong one would form a cycle
+    RR_WEAK_PTR<testroot3_impl> w = shared_from_this();
     peekwire_timer = ServerContext::GetCurrentServerContext()->GetNode()->CreateTimer(
-        boost::posix_time::milliseconds(100),
-        boost::bind(&testroot3_impl::peekwire_timer_handler, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));
+        boost::posix_time::milliseconds(100), boost::bind(&testroot3_impl::peekwire_timer_handler, w, RR_BOOST_PLACEHOLDERS(_1)));
     peekwire_timer->Start();
     rrvar_peekwire->SetOutValue(56295674);
 }
 
-void testroot3_impl::peekwire_timer_handler(const TimerEvent& e) { rrvar_peekwire->SetOutValue(56295674); }
+void testroot3_impl::peekwire_timer_handler(RR_WEAK_PTR<testroot3_impl> obj, const TimerEvent& e)
+{
+    RR_SHARED_PTR<testroot3_impl> obj1 = obj.lock();
+    if (!obj1)
+        return;
+    obj1->rrvar_peekwire->SetOutValue(56295674);
+}
 
 int32_t testroot3_impl::get_unknown_modifier() { return 0; }
 void testroot3_impl::set_unknown_modifier(int32_t value) {}

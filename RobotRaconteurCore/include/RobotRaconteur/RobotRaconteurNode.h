@@ -2273,6 +2273,12 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      *
      * Start() must be called after timer creation
      *
+     * The timer keeps the handler until the timer is destroyed or Timer::Clear() is called
+     * (a one-shot timer also releases it when it fires or is stopped). For a repeating timer,
+     * Timer::Stop(), Timer::TryStop() and node shutdown do not release it. If the handler refers
+     * to an object that owns the timer, bind a weak_ptr to the object or call Timer::Clear() when
+     * the timer is no longer needed, otherwise the object and the timer keep each other alive.
+     *
      * @param period The period of the timer
      * @param handler The handler function to call when timer times out
      * @param oneshot True if timer is a one-shot timer, false for repeated timer

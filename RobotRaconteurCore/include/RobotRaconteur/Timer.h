@@ -124,6 +124,9 @@ class ROBOTRACONTEUR_CORE_API Timer : private boost::noncopyable
     /**
      * @brief Clear the timer
      *
+     * Releases the handler function. The handler of a repeating timer is otherwise kept until
+     * the timer is destroyed; Stop(), TryStop() and node shutdown do not release it.
+     *
      */
     virtual void Clear() = 0;
 

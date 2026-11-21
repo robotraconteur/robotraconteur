@@ -226,7 +226,7 @@ class testroot3_impl : public virtual com::robotraconteur::testing::TestService3
     RR_OVIRTUAL void test_exception_params2() RR_OVERRIDE;
 
   protected:
-    void peekwire_timer_handler(const TimerEvent& e);
+    static void peekwire_timer_handler(RR_WEAK_PTR<testroot3_impl> obj, const TimerEvent& e);
 
     RR_SHARED_PTR<Timer> peekwire_timer;
 
