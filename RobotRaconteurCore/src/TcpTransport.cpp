@@ -2725,13 +2725,53 @@ void TcpTransport::GetLocalAdapterIPAddresses(std::vector<boost::asio::ip::addre
     }
 }
 
+static void TcpTransport_accept_retry_timer(const boost::system::error_code& ec,
+                                            const RR_SHARED_PTR<boost::asio::deadline_timer>& timer,
+                                            const boost::function<void(const boost::system::error_code&)>& handler)
+{
+    RR_UNUSED(timer);
+    handler(ec);
+}
+
 void TcpTransport::handle_accept(const RR_SHARED_PTR<TcpTransport>& parent,
                                  const RR_SHARED_PTR<detail::TcpSocketAcceptor>& acceptor,
                                  const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                                  const boost::system::error_code& error)
 {
-    if (error)
+    if (!socket)
+    {
+        // Retry timer after a failed accept
+        if (error)
+            return;
+        boost::mutex::scoped_lock lock(parent->acceptor_lock);
+        if (!acceptor->acceptor->is_open())
+            return;
+        RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket2(
+            new boost::asio::ip::tcp::socket(parent->GetNode()->GetThreadPool()->get_io_context()));
+        acceptor->acceptor->async_accept(*socket2, boost::bind(&TcpTransport::handle_accept, parent, acceptor, socket2,
+                                                               boost::asio::placeholders::error));
         return;
+    }
+
+    if (error)
+    {
+        if (error == boost::asio::error::operation_aborted)
+            return;
+        // Errors such as EMFILE must not stop accepting connections. Retry after a delay.
+        boost::mutex::scoped_lock lock(parent->acceptor_lock);
+        if (!acceptor->acceptor->is_open())
+            return;
+        ROBOTRACONTEUR_LOG_WARNING_COMPONENT(parent->node, Transport, -1,
+                                             "TcpTransport accept failed: " << error.message() << ", retrying");
+        RR_SHARED_PTR<boost::asio::deadline_timer> timer(new boost::asio::deadline_timer(
+            parent->GetNode()->GetThreadPool()->get_io_context(), boost::posix_time::milliseconds(100)));
+        boost::function<void(const boost::system::error_code&)> h =
+            boost::bind(&TcpTransport::handle_accept, parent, acceptor, RR_SHARED_PTR<boost::asio::ip::tcp::socket>(),
+                        RR_BOOST_PLACEHOLDERS(_1));
+        RobotRaconteurNode::asio_async_wait(
+            parent->node, timer, boost::bind(&TcpTransport_accept_retry_timer, RR_BOOST_PLACEHOLDERS(_1), timer, h));
+        return;
+    }
 
     try
     {
