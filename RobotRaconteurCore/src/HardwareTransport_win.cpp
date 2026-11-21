@@ -416,9 +416,21 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
 
     while (remaining > 0)
     {
+        if (remaining < sizeof(USB_COMMON_DESCRIPTOR))
+        {
+            return Error;
+        }
         PUSB_COMMON_DESCRIPTOR d = reinterpret_cast<PUSB_COMMON_DESCRIPTOR>(&desc_buf[pos]);
+        if (d->bLength < sizeof(USB_COMMON_DESCRIPTOR) || d->bLength > remaining)
+        {
+            return Error;
+        }
         if (d->bDescriptorType == WINUSB_USD_ENDPOINT_DESCRIPTOR_TYPE)
         {
+            if (d->bLength < sizeof(USB_ENDPOINT_DESCRIPTOR))
+            {
+                return Error;
+            }
             PUSB_ENDPOINT_DESCRIPTOR d2 = reinterpret_cast<PUSB_ENDPOINT_DESCRIPTOR>(d);
             if (((d2->bEndpointAddress & 0x80) == WINUSB_USB_ENDPOINT_DIRECTION_IN) && !in_found)
             {
