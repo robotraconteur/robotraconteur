@@ -84,8 +84,11 @@ void ThreadPool_post_wrapper(boost::function<void()> f, RR_WEAK_PTR<RobotRaconte
 
 void ThreadPool::Post(boost::function<void()> function)
 {
-    if (!keepgoing)
-        throw InvalidOperationException("Thread pool shutdown");
+    {
+        boost::mutex::scoped_lock lock(keepgoing_lock);
+        if (!keepgoing)
+            throw InvalidOperationException("Thread pool shutdown");
+    }
 
     // Bind a weak pointer: the node owns this pool and its io_context, so a queued op that is never run
     // (posted around Shutdown) would otherwise keep the node alive
@@ -95,8 +98,11 @@ void ThreadPool::Post(boost::function<void()> function)
 
 bool ThreadPool::TryPost(boost::function<void()> function)
 {
-    if (!keepgoing)
-        return false;
+    {
+        boost::mutex::scoped_lock lock(keepgoing_lock);
+        if (!keepgoing)
+            return false;
+    }
 
     // Bind a weak pointer: the node owns this pool and its io_context, so a queued op that is never run
     // (posted around Shutdown) would otherwise keep the node alive
