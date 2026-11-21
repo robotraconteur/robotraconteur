@@ -806,6 +806,24 @@ TEST(RobotRaconteurMisc, LogMessageTime)
     node->Shutdown();
 }
 
+TEST(RobotRaconteurMisc, ArrayMemoryRangeOverflow)
+{
+    // memorypos/bufferpos + count must not wrap around and pass the range check
+    RR_INTRUSIVE_PTR<RRArray<double> > data = AllocateRRArray<double>(16);
+    ArrayMemory<double> mem(data);
+    RR_INTRUSIVE_PTR<RRArray<double> > buf = AllocateRRArray<double>(4);
+    uint64_t wrap_pos = std::numeric_limits<uint64_t>::max() - 1;
+
+    EXPECT_THROW(mem.Read(wrap_pos, buf, 0, 4), OutOfRangeException);
+    EXPECT_THROW(mem.Read(0, buf, wrap_pos, 4), OutOfRangeException);
+    EXPECT_THROW(mem.Write(0, buf, wrap_pos, 4), OutOfRangeException);
+    EXPECT_THROW(mem.Read(17, buf, 0, 0), OutOfRangeException);
+
+    EXPECT_NO_THROW(mem.Read(12, buf, 0, 4));
+    EXPECT_NO_THROW(mem.Write(12, buf, 0, 4));
+    EXPECT_NO_THROW(mem.Read(16, buf, 4, 0));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

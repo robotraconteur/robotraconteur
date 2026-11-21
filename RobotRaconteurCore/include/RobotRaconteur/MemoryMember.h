@@ -170,9 +170,9 @@ class ArrayMemory : public virtual ArrayMemoryBase
     virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
 
         memcpy(buffer->data() + bufferpos, memory->data() + memorypos, boost::numeric_cast<size_t>(count * sizeof(T)));
@@ -196,9 +196,9 @@ class ArrayMemory : public virtual ArrayMemoryBase
                        uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
         memcpy(memory->data() + memorypos, buffer->data() + bufferpos, boost::numeric_cast<size_t>(count * sizeof(T)));
     }
@@ -819,9 +819,9 @@ class PodArrayMemory : public virtual ArrayMemoryBase
     virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
 
         for (size_t i = 0; i < count; i++)
@@ -836,9 +836,9 @@ class PodArrayMemory : public virtual ArrayMemoryBase
                        uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
         for (size_t i = 0; i < count; i++)
         {
@@ -1243,9 +1243,9 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
                       uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
 
         for (size_t i = 0; i < count; i++)
@@ -1260,9 +1260,9 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
                        uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
         for (size_t i = 0; i < count; i++)
         {
