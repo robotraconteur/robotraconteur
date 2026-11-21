@@ -1369,7 +1369,7 @@ class websocket_stream : private boost::noncopyable
         if (recv_en_mask1)
             header2_len += 4;
 
-        if (count1 == 0)
+        if (count1 == 0 && !recv_en_mask1)
         {
             boost::system::error_code ec1;
             handler(ec1, 0);
