@@ -1108,7 +1108,7 @@ class PackMessageElementImpl
                     std::vector<boost::intrusive_ptr<MessageElement> > map_vec;
                     if (!PyArray_Check((PyArrayObject*)data))
                     {
-                        throw new DataTypeException("Expected numpy.ndarray for pods and namedarrays");
+                        throw DataTypeException("Expected numpy.ndarray for pods and namedarrays");
                     }
 
                     int npy_dimcount = PyArray_NDIM((PyArrayObject*)data);
@@ -2542,7 +2542,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_complex(PyObject* array_,
             }
             else
             {
-                throw new InternalErrorException("");
+                throw InternalErrorException("");
             }
         }
         else
