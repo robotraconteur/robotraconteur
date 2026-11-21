@@ -5053,6 +5053,17 @@ void TcpTransportConnection::StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Mess
         {
             if (mm->EntryType == MessageEntryType_StreamOp)
             {
+                {
+                    boost::mutex::scoped_lock lock(streamop_lock);
+                    if (!server || is_tls || tls_handshaking)
+                    {
+                        lock.unlock();
+                        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint,
+                                                           "Unexpected STARTTLS request, closing connection");
+                        Close();
+                        return;
+                    }
+                }
                 if ((m->header->ReceiverNodeID == NodeID::GetAny() && m->header->ReceiverNodeName == "") ||
                     (m->header->ReceiverNodeID == GetNode()->NodeID() && m->header->ReceiverNodeName == "") ||
                     (m->header->ReceiverNodeID == NodeID::GetAny() &&
@@ -5120,7 +5131,18 @@ void TcpTransportConnection::StreamOpMessageReceived(const RR_INTRUSIVE_PTR<Mess
 
             if (mm->EntryType == MessageEntryType_StreamOpRet)
             {
-                streamop_waiting = false;
+                {
+                    boost::mutex::scoped_lock lock(streamop_lock);
+                    if (server || !tls_handshaking || tls_handshake_complete)
+                    {
+                        lock.unlock();
+                        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint,
+                                                           "Unexpected STARTTLS response, closing connection");
+                        Close();
+                        return;
+                    }
+                    streamop_waiting = false;
+                }
                 if (mm->Error != 0)
                 {
                     RR_SHARED_PTR<RobotRaconteurException> ee =
