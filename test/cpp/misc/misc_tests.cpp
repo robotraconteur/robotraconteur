@@ -660,6 +660,115 @@ TEST(RobotRaconteurMisc, LocalTransportDiscoveryInotifyFdLeak)
 }
 #endif
 
+// Client transport that fails every connection attempt by invoking the handler synchronously, like
+// LocalTransport does when attaching the stream fails
+class SyncFailClientTransport : public Transport
+{
+  public:
+    SyncFailClientTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Transport(node) {}
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE { RR_UNUSED(endpoint); }
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE { return true; }
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE { return false; }
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+syncfail"; }
+    RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE { return std::vector<std::string>(); }
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE
+    {
+        return boost::starts_with(url, "rr+syncfail://");
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
+                                                                              const RR_SHARED_PTR<Endpoint>& e)
+        RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        throw ConnectionException("Connection failed");
+    }
+    RR_OVIRTUAL void AsyncCreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        handler(RR_SHARED_PTR<ITransportConnection>(), RR_MAKE_SHARED<ConnectionException>("Connection failed"));
+    }
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE { RR_UNUSED(e); }
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE { RR_UNUSED(m); }
+};
+
+struct SyncFailConnectResult
+{
+    boost::mutex lock;
+    boost::condition_variable cv;
+    bool done;
+    RR_SHARED_PTR<RobotRaconteurException> err;
+    SyncFailConnectResult() : done(false) {}
+};
+
+static void SyncFailConnectHandler(const RR_SHARED_PTR<SyncFailConnectResult>& res, const RR_SHARED_PTR<RRObject>& obj,
+                                   const RR_SHARED_PTR<RobotRaconteurException>& err)
+{
+    RR_UNUSED(obj);
+    boost::mutex::scoped_lock lock(res->lock);
+    res->done = true;
+    res->err = err;
+    res->cv.notify_all();
+}
+
+// A transport that invokes the connect handler synchronously must not deadlock the connector
+// (RobotRaconteurNode_connector::connect2 held active_lock across AsyncCreateTransportConnection)
+TEST(RobotRaconteurMisc, ConnectorSyncTransportFailure)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->RegisterTransport(RR_MAKE_SHARED<SyncFailClientTransport>(node));
+
+    RR_SHARED_PTR<SyncFailConnectResult> res = RR_MAKE_SHARED<SyncFailConnectResult>();
+    boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                         const RR_SHARED_PTR<void>&)>
+        listener;
+    node->AsyncConnectService("rr+syncfail://localhost/?nodename=test&service=test", "",
+                              RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
+                              boost::bind(&SyncFailConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1),
+                                          RR_BOOST_PLACEHOLDERS(_2)),
+                              30000);
+
+    bool done = false;
+    {
+        boost::mutex::scoped_lock lock(res->lock);
+        boost::system_time deadline = boost::get_system_time() + boost::posix_time::seconds(10);
+        while (!res->done)
+        {
+            if (!res->cv.timed_wait(lock, deadline))
+                break;
+        }
+        done = res->done;
+    }
+
+    if (!done)
+    {
+        // A thread pool thread is deadlocked; Shutdown would hang, so leak the node
+        new RR_SHARED_PTR<RobotRaconteurNode>(node);
+        FAIL() << "Connect handler not called: connector deadlocked";
+    }
+
+    EXPECT_TRUE(res->err);
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

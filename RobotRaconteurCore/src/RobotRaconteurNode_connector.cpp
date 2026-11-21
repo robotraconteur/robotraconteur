@@ -417,23 +417,27 @@ void RobotRaconteurNode_connector::connect2(const RR_SHARED_PTR<std::vector<std:
             node->RegisterEndpoint(rr_cast<Endpoint>(c));
             RR_SHARED_PTR<endpoint_cleanup> ep = RR_MAKE_SHARED<endpoint_cleanup>(c, node);
 
-            boost::mutex::scoped_lock lock2(active_lock);
-            active_count++;
-            key2 = active_count;
+            {
+                boost::mutex::scoped_lock lock2(active_lock);
+                active_count++;
+                key2 = active_count;
+                active.push_back(key2);
+            }
 
+            // active_lock must not be held here: the transport may invoke the handler synchronously, and
+            // connected_transport / handle_error lock active_lock
             boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
                                  const RR_SHARED_PTR<RobotRaconteurException>&)>
                 h = boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_transport, shared_from_this(),
                                                t, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), url, ep, key2));
             t->AsyncCreateTransportConnection(url, c, h);
-
-            active.push_back(key2);
         }
         catch (RobotRaconteurException& err2)
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1,
                                                "Error connecting to candidate service url: " << err2.what());
             boost::mutex::scoped_lock lock2(active_lock);
+            active.remove(key2);
             if (urls->empty())
             {
                 lock2.unlock();
@@ -446,6 +450,7 @@ void RobotRaconteurNode_connector::connect2(const RR_SHARED_PTR<std::vector<std:
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1,
                                                "Error connecting to candidate service url: " << err2.what());
             boost::mutex::scoped_lock lock2(active_lock);
+            active.remove(key2);
             if (urls->empty())
             {
                 lock2.unlock();
@@ -476,9 +481,19 @@ void RobotRaconteurNode_connector::connect2(const RR_SHARED_PTR<std::vector<std:
     }
 
     start_connect_timer();
+    RR_SHARED_PTR<RobotRaconteurException> last_err;
     {
         boost::mutex::scoped_lock lock(active_lock);
         active.remove(main_key);
+        // If every candidate already failed (for example synchronously), nothing else will report the failure
+        if (active.empty() && !errors.empty())
+        {
+            last_err = errors.back();
+        }
+    }
+    if (last_err)
+    {
+        handle_error(main_key, last_err);
     }
 }
 
