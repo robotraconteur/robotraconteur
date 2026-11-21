@@ -565,6 +565,12 @@ void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec
     }
 
     UsbDeviceStatus res3 = ReadPipeSettings(dev_h, settings1);
+    if (res3 == Open && (settings1->in_pipe_buffer_size < sizeof(subpacket_header) ||
+                         settings1->out_pipe_buffer_size < sizeof(subpacket_header)))
+    {
+        // The subpacket header is written into buffers of this size
+        res3 = Error;
+    }
     if (res3 != Open)
     {
         lock.unlock();

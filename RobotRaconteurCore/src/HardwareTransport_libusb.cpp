@@ -925,7 +925,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
 
     f->libusb_free_config_descriptor(config_desc);
 
-    if (!in_found && !out_found)
+    if (!in_found || !out_found)
     {
         return Error;
     }
