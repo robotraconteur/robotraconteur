@@ -4,6 +4,7 @@
 #include <boost/atomic.hpp>
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
+#include <RobotRaconteur/RobotRaconteurServiceIndex.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem.hpp>
@@ -822,6 +823,23 @@ TEST(RobotRaconteurMisc, ArrayMemoryRangeOverflow)
     EXPECT_NO_THROW(mem.Read(12, buf, 0, 4));
     EXPECT_NO_THROW(mem.Write(12, buf, 0, 4));
     EXPECT_NO_THROW(mem.Read(16, buf, 4, 0));
+}
+
+TEST(RobotRaconteurMisc, ServiceInfo2NullMembers)
+{
+    // Fields sent as void by a remote service index unpack to null and must not be dereferenced
+    RobotRaconteurServiceIndex::ServiceInfo info;
+    info.Name = "service1";
+    info.RootObjectType = "com.example.obj";
+    RobotRaconteurServiceIndex::NodeInfo ninfo;
+    ninfo.NodeName = "node1";
+    ninfo.NodeID = ArrayToRRArray<uint8_t>(NodeID::NewUniqueID().ToByteArray());
+
+    ServiceInfo2 si(info, ninfo);
+    EXPECT_EQ(si.Name, "service1");
+    EXPECT_TRUE(si.Attributes.empty());
+    EXPECT_TRUE(si.ConnectionURL.empty());
+    EXPECT_TRUE(si.RootObjectImplements.empty());
 }
 
 int main(int argc, char* argv[])

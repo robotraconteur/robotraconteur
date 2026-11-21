@@ -51,7 +51,10 @@ ServiceInfo2::ServiceInfo2(const RobotRaconteurServiceIndex::ServiceInfo& info,
         }
     }
 
-    Attributes = info.Attributes->GetStorageContainer();
+    if (info.Attributes)
+    {
+        Attributes = info.Attributes->GetStorageContainer();
+    }
     NodeID = RobotRaconteur::NodeID(RRArrayToArray<uint8_t, 16>(ninfo.NodeID));
     NodeName = ninfo.NodeName;
 }
@@ -379,7 +382,7 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
 
                             this->ret->push_back(si);
                         }
-                        else
+                        else if (ii->RootObjectImplements)
                         {
                             BOOST_FOREACH (RR_INTRUSIVE_PTR<RRArray<char> >& impl,
                                            *ii->RootObjectImplements | boost::adaptors::map_values)
@@ -797,6 +800,8 @@ void Discovery_updateserviceinfo::serviceinfo_handler(const RR_INTRUSIVE_PTR<Mes
             BOOST_FOREACH (RR_INTRUSIVE_PTR<RobotRaconteurServiceIndex::ServiceInfo>& e,
                            *ret | boost::adaptors::map_values)
             {
+                if (!e)
+                    continue;
                 ServiceInfo2 o1;
                 o1.NodeID = remote_nodeid;
                 o1.NodeName = remote_nodename;
@@ -804,7 +809,10 @@ void Discovery_updateserviceinfo::serviceinfo_handler(const RR_INTRUSIVE_PTR<Mes
                 o1.ConnectionURL = Discovery_updateserviceinfo_convertmap(e->ConnectionURL);
                 o1.RootObjectType = e->RootObjectType;
                 o1.RootObjectImplements = Discovery_updateserviceinfo_convertmap(e->RootObjectImplements);
-                o1.Attributes = e->Attributes->GetStorageContainer();
+                if (e->Attributes)
+                {
+                    o1.Attributes = e->Attributes->GetStorageContainer();
+                }
                 o->push_back(RR_MOVE(o1));
             }
         }
