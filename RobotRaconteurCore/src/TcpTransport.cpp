@@ -4123,7 +4123,7 @@ void TcpTransportConnection::do_starttls4(const std::string& servername, const b
         starttls_handler.clear();
         starttls_timer.reset();
         lock.unlock();
-        detail::InvokeHandlerWithException(node, starttls_handler,
+        detail::InvokeHandlerWithException(node, starttls_handler1,
                                            RR_MAKE_SHARED<ConnectionException>("Could not initialize TLS connection"));
         return;
     }
