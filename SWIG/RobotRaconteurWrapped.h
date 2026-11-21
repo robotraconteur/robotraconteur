@@ -1980,6 +1980,10 @@ class WrappedServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<WrappedServ
 
   protected:
     RR_SHARED_PTR<ServiceSubscription> subscription;
+    // Wire and pipe subscriptions created by this subscription, to release their directors on Close()
+    boost::mutex member_subscriptions_lock;
+    std::vector<RR_WEAK_PTR<WrappedWireSubscription> > wire_subscriptions;
+    std::vector<RR_WEAK_PTR<WrappedPipeSubscription> > pipe_subscriptions;
     RR_SHARED_PTR<WrappedServiceSubscriptionDirector> RR_Director;
     boost::shared_mutex RR_Director_lock;
     boost::initialized<bool> events_connected;
@@ -2026,6 +2030,10 @@ class WrappedWireSubscription : public WireSubscriptionBase
     bool TryGetInValue(WrappedService_typed_packet& val, TimeSpec* time = NULL);
 
     void SetRRDirector(WrappedWireSubscriptionDirector* director, int32_t id);
+
+    // Releases the director, then closes the subscription
+    void Close();
+    void ReleaseRRDirector();
 
   protected:
     RR_OVIRTUAL void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
@@ -2074,6 +2082,10 @@ class WrappedPipeSubscription : public PipeSubscriptionBase
                               bool peek = false);
 
     void SetRRDirector(WrappedPipeSubscriptionDirector* director, int32_t id);
+
+    // Releases the director, then closes the subscription
+    void Close();
+    void ReleaseRRDirector();
 
   protected:
     RR_OVIRTUAL void fire_PipePacketReceived() RR_OVERRIDE;

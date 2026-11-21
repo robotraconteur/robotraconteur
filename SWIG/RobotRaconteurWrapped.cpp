@@ -3878,6 +3878,26 @@ void WrappedServiceSubscription::Close()
     }
 
     subscription->Close();
+
+    std::vector<RR_WEAK_PTR<WrappedWireSubscription> > wire_subscriptions1;
+    std::vector<RR_WEAK_PTR<WrappedPipeSubscription> > pipe_subscriptions1;
+    {
+        boost::mutex::scoped_lock lock(member_subscriptions_lock);
+        wire_subscriptions1.swap(wire_subscriptions);
+        pipe_subscriptions1.swap(pipe_subscriptions);
+    }
+    BOOST_FOREACH (RR_WEAK_PTR<WrappedWireSubscription>& w, wire_subscriptions1)
+    {
+        RR_SHARED_PTR<WrappedWireSubscription> w1 = w.lock();
+        if (w1)
+            w1->ReleaseRRDirector();
+    }
+    BOOST_FOREACH (RR_WEAK_PTR<WrappedPipeSubscription>& p, pipe_subscriptions1)
+    {
+        RR_SHARED_PTR<WrappedPipeSubscription> p1 = p.lock();
+        if (p1)
+            p1->ReleaseRRDirector();
+    }
 }
 
 void WrappedServiceSubscription::ClaimClient(const RR_SHARED_PTR<WrappedServiceStub>& client)
@@ -3903,6 +3923,10 @@ RR_SHARED_PTR<WrappedWireSubscription> WrappedServiceSubscription::SubscribeWire
     RR_SHARED_PTR<WrappedWireSubscription> o =
         RR_MAKE_SHARED<WrappedWireSubscription>(subscription, membername, servicepath);
     detail::ServiceSubscription_custom_member_subscribers::SubscribeWire(subscription, o);
+    {
+        boost::mutex::scoped_lock lock(member_subscriptions_lock);
+        wire_subscriptions.push_back(o);
+    }
     return o;
 }
 
@@ -3913,6 +3937,10 @@ RR_SHARED_PTR<WrappedPipeSubscription> WrappedServiceSubscription::SubscribePipe
     RR_SHARED_PTR<WrappedPipeSubscription> o =
         RR_MAKE_SHARED<WrappedPipeSubscription>(subscription, membername, servicepath, max_recv_packets);
     detail::ServiceSubscription_custom_member_subscribers::SubscribePipe(subscription, o);
+    {
+        boost::mutex::scoped_lock lock(member_subscriptions_lock);
+        pipe_subscriptions.push_back(o);
+    }
     return o;
 }
 
@@ -4138,6 +4166,21 @@ void WrappedWireSubscription::SetRRDirector(WrappedWireSubscriptionDirector* dir
                       boost::bind(&ReleaseDirector<WrappedWireSubscriptionDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 }
 
+void WrappedWireSubscription::ReleaseRRDirector()
+{
+    RR_SHARED_PTR<WrappedWireSubscriptionDirector> director1;
+    {
+        boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1.swap(RR_Director);
+    }
+}
+
+void WrappedWireSubscription::Close()
+{
+    ReleaseRRDirector();
+    WireSubscriptionBase::Close();
+}
+
 void WrappedWireSubscription::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
                                                     const RR_SHARED_PTR<WireConnectionBase>& connection)
 {
@@ -4246,6 +4289,21 @@ void WrappedPipeSubscription::SetRRDirector(WrappedPipeSubscriptionDirector* dir
     boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
     RR_Director.reset(director,
                       boost::bind(&ReleaseDirector<WrappedPipeSubscriptionDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
+}
+
+void WrappedPipeSubscription::ReleaseRRDirector()
+{
+    RR_SHARED_PTR<WrappedPipeSubscriptionDirector> director1;
+    {
+        boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1.swap(RR_Director);
+    }
+}
+
+void WrappedPipeSubscription::Close()
+{
+    ReleaseRRDirector();
+    PipeSubscriptionBase::Close();
 }
 
 void WrappedPipeSubscription::fire_PipePacketReceived()
