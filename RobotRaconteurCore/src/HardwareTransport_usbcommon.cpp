@@ -496,7 +496,7 @@ UsbDeviceStatus UsbDevice_Initialize::ParseRRDescriptors(const std::vector<uint8
 
         const robotraconteur_interface_common_descriptor* h2 =
             reinterpret_cast<const robotraconteur_interface_common_descriptor*>(&rr_descriptors[pos]);
-        if (remaining < h2->wLength)
+        if (h2->wLength < sizeof(robotraconteur_interface_common_descriptor) || remaining < h2->wLength)
         {
             return Error;
         }
@@ -508,6 +508,12 @@ UsbDeviceStatus UsbDevice_Initialize::ParseRRDescriptors(const std::vector<uint8
             {
                 const robotraconteur_interface_descriptor* h3 =
                     reinterpret_cast<const robotraconteur_interface_descriptor*>(h2);
+                const size_t protocols_offset = offsetof(robotraconteur_interface_descriptor, wProtocols);
+                if (h2->wLength < protocols_offset ||
+                    (h2->wLength - protocols_offset) / sizeof(uint16_t) < h3->wNumProtocols)
+                {
+                    return Error;
+                }
                 if (h3->wVersion != 0x0100)
                 {
                     return Invalid;

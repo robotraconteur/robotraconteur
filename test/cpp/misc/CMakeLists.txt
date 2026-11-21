@@ -7,3 +7,15 @@ rr_test_add_executable(
     RobotRaconteurCore
     robotraconteur_test_cpp_common
     GTest::Main)
+
+# Parses USB descriptors with the private USB transport parser, only compiled into the static core library on these
+# platforms
+if(NOT BUILD_SHARED_LIBS AND (WIN32 OR ("${CMAKE_SYSTEM}" MATCHES "Linux" AND NOT ANDROID)))
+    rr_test_add_executable(
+        robotraconteur_usb_descriptor_tests
+        SRC
+        usb_descriptor_tests.cpp
+        DEPS
+        RobotRaconteurCore
+        GTest::Main)
+endif()
