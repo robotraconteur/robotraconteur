@@ -272,6 +272,8 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
                 MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_namedarray_array_t);             \
             RR_INTRUSIVE_PTR<RRArray<element_type> > a1 =                                                              \
                 MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >();        \
+            if (a1->size() % RRPrimUtil<type>::GetElementArrayCount() != 0)                                            \
+                throw DataTypeException("Invalid namedarray");                                                         \
             v.resize(a1->size() / RRPrimUtil<type>::GetElementArrayCount());                                           \
             memcpy((void*)&v, (void*)a1->data(), a1->size() * sizeof(element_type));                                   \
         }                                                                                                              \

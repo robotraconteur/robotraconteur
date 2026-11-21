@@ -58,6 +58,43 @@ TEST_F(ServiceTest, Functions3Test)
     ASSERT_NO_THROW(c.Disconnect());
 }
 
+TEST(ServiceTest3Pod, NamedArrayFieldArrayInvalidLength)
+{
+    using com::robotraconteur::testing::TestService3::transform;
+    typedef pod_field_array<transform, 15, true> field_type;
+
+    struct
+    {
+        field_type v;
+        double guard[8];
+    } s = {};
+
+    // 15 * 7 + 3 doubles: not a whole number of 7-double transforms, and 3 more than the field can hold
+    RR_INTRUSIVE_PTR<RRArray<double> > bad = AllocateRRArray<double>(15 * 7 + 3);
+    std::fill(bad->begin(), bad->end(), 1.0);
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > a1;
+    a1.push_back(CreateMessageElement("array", bad));
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > in;
+    in.push_back(CreateMessageElement(
+        "t3", CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,
+                                                    "com.robotraconteur.testing.TestService3.transform", RR_MOVE(a1))));
+    EXPECT_THROW(PodStub<field_type>::UnpackField(s.v, "t3", in), DataTypeException);
+    EXPECT_EQ(s.v.size(), 0u);
+    for (size_t i = 0; i < 8; i++)
+    {
+        EXPECT_EQ(s.guard[i], 0.0);
+    }
+
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > a2;
+    a2.push_back(CreateMessageElement("array", AllocateRRArray<double>(7 * 2)));
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > in2;
+    in2.push_back(CreateMessageElement(
+        "t3", CreateMessageElementNestedElementList(DataTypes_namedarray_array_t,
+                                                    "com.robotraconteur.testing.TestService3.transform", RR_MOVE(a2))));
+    EXPECT_NO_THROW(PodStub<field_type>::UnpackField(s.v, "t3", in2));
+    EXPECT_EQ(s.v.size(), 2u);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
