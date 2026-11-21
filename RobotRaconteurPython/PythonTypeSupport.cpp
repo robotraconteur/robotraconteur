@@ -1343,12 +1343,11 @@ class UnpackMessageElementImpl
             throw DataTypeException("NamedArray must not be null");
         if (a->size() % s.get<1>() != 0)
             throw DataTypeException("Invalid length for NamedArray");
+        if (a->GetTypeID() != s.get<0>())
+            throw DataTypeException("Invalid NamedArray");
 
         if (type1)
         {
-            if (a->GetTypeID() != s.get<0>())
-                throw DataTypeException("Invalid NamedArray");
-
             uint32_t c = boost::accumulate(type1->ArrayLength, 1, std::multiplies<uint32_t>());
             if (!type1->ArrayLength.empty() && c != 0)
             {
