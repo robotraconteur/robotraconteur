@@ -581,8 +581,8 @@ class websocket_stream : private boost::noncopyable
         boost::shared_ptr<std::string> data2 = boost::make_shared<std::string>(data->substr(n));
         boost::mutex::scoped_lock lock(next_layer_lock);
         next_layer_.async_write_some(boost::asio::buffer(data2->c_str(), data2->size()),
-                                     boost::bind(&websocket_stream::end_send_server_error, this, data2,
-                                                 boost::asio::placeholders::bytes_transferred,
+                                     boost::bind(&websocket_stream::end_send_server_success_response, this, data2,
+                                                 protocol, boost::asio::placeholders::bytes_transferred,
                                                  boost::asio::placeholders::error, boost::protect(handler)));
     }
 
