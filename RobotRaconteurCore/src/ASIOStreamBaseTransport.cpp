@@ -241,6 +241,9 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(
     }
 }
 
+// Maximum number of messages waiting in send_queue
+static const size_t ASIOStreamBaseTransport_max_send_queue = 16384;
+
 void ASIOStreamBaseTransport::AsyncSendMessage(
     const RR_INTRUSIVE_PTR<Message>& m,
     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
@@ -377,6 +380,13 @@ void ASIOStreamBaseTransport::AsyncSendMessage(
 
         if (!replaced)
         {
+            // Bound the queue so a peer that does not read cannot grow it without limit
+            if (send_queue.size() >= ASIOStreamBaseTransport_max_send_queue)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(),
+                                                   "Send queue full, dropping message");
+                throw ProtocolException("Transport send queue full");
+            }
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Enqueuing message");
             send_queue.push_back(e);
         }
