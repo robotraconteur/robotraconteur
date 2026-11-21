@@ -250,6 +250,90 @@ static void DoTestW(RR_INTRUSIVE_PTR<RobotRaconteur::Message> m, uint16_t versio
     CompareMessage(m, m2);
 }
 
+// Returns true if the async reader accepts buf as a complete message
+static bool AsyncReadAccepts(const std::vector<uint8_t>& buf, uint16_t version)
+{
+    RR_SHARED_PTR<AsyncMessageReader> r = AsyncMessageReader::CreateInstance();
+    r->Reset();
+    const_buffers buf2;
+    buf2.push_back(boost::asio::buffer(&buf[0], buf.size()));
+    mutable_buffers continue_bufs;
+    size_t buf_used = 0;
+    try
+    {
+        AsyncMessageReader::return_type ret = (version == 2) ? r->Read(buf2, buf_used, 0, continue_bufs)
+                                                             : r->Read4(buf2, buf_used, 0, continue_bufs);
+        return ret == AsyncMessageReader::ReadReturn_done && r->MessageReady();
+    }
+    catch (std::exception&)
+    {
+        return false;
+    }
+}
+
+// The header size field declares more bytes than the header fields use. The sync reader rejects this
+// ("Error in message format"); the async reader must not accept it and start reading entries inside
+// the declared header
+TEST(AsyncMessageReaderTest, HeaderSizeSlackRejected)
+{
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    m->header->SenderNodeName = "sender";
+    m->header->ReceiverNodeName = "receiver";
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_FunctionCallReq, "func");
+    e->ServicePath = "svc.obj";
+    e->AddElement("d", ScalarToRRArray<double>(1.5));
+    m->entries.push_back(e);
+
+    for (uint16_t version = 2; version <= 4; version += 2)
+    {
+        std::vector<uint8_t> buf;
+        if (version == 2)
+        {
+            buf.resize(m->ComputeSize());
+            ArrayBinaryWriter w(&buf[0], 0, buf.size());
+            m->Write(w);
+        }
+        else
+        {
+            buf.resize(m->ComputeSize4());
+            ArrayBinaryWriter w(&buf[0], 0, buf.size());
+            m->Write4(w);
+        }
+
+        EXPECT_TRUE(AsyncReadAccepts(buf, version)) << "version " << version;
+
+        // Increase the declared header size by 2 bytes, leaving the message size and contents unchanged
+        if (version == 2)
+        {
+            uint16_t hs = static_cast<uint16_t>(buf[10] | (buf[11] << 8));
+            hs += 2;
+            buf[10] = static_cast<uint8_t>(hs & 0xFF);
+            buf[11] = static_cast<uint8_t>(hs >> 8);
+        }
+        else
+        {
+            ASSERT_LT(buf[10], 250);
+            buf[10] += 2;
+        }
+
+        {
+            ArrayBinaryReader sr(&buf[0], 0, buf.size());
+            RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
+            if (version == 2)
+            {
+                EXPECT_ANY_THROW(m2->Read(sr)) << "version " << version;
+            }
+            else
+            {
+                EXPECT_ANY_THROW(m2->Read4(sr)) << "version " << version;
+            }
+        }
+
+        EXPECT_FALSE(AsyncReadAccepts(buf, version)) << "version " << version;
+    }
+}
+
 TEST(AsyncMessageWriterTest, Test1)
 {
     LFSRSeqGen rng((uint32_t)std::time(0), "async_message_writer_test_test1");

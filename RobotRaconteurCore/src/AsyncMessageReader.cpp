@@ -568,6 +568,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
         }
         case MessageHeader_messageid2: {
             R(read_number(data<MessageHeader>()->MessageResID));
+            if (distance_from_limit() != 0)
+                throw ProtocolException("MessageHeader did not consume all data");
             pop_state();
             state() = Message_readentries;
         }
@@ -1058,6 +1060,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             MessageHeader* h = data<MessageHeader>();
             if (!(h->MessageFlags & MessageFlags_EXTENDED))
             {
+                if (distance_from_limit() != 0)
+                    throw ProtocolException("MessageHeader did not consume all data");
                 pop_state();
                 state() = Message_readentries;
                 continue;
@@ -1075,6 +1079,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             {
                 R(read_all_bytes(&h->Extended[0], h->Extended.size()));
             }
+            if (distance_from_limit() != 0)
+                throw ProtocolException("MessageHeader did not consume all data");
             pop_state();
             state() = Message_readentries;
         }
