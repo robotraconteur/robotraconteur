@@ -230,8 +230,15 @@ class HardwareTransport_discovery
                 continue;
 
             NodeDiscoveryInfo n;
-            n.NodeID = NodeID(*e.nodeid_str);
-            n.NodeName = *e.nodeid_str;
+            try
+            {
+                n.NodeID = NodeID(*e.nodeid_str);
+            }
+            catch (std::exception&)
+            {
+                continue;
+            }
+            n.NodeName = *e.nodename_str;
             NodeDiscoveryInfoURL n1;
             n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";
             n1.LastAnnounceTime = node->NowNodeTime();
@@ -290,7 +297,14 @@ class HardwareTransport_discovery
                 continue;
 
             NodeDiscoveryInfo n;
-            n.NodeID = NodeID(*e.nodeid_str);
+            try
+            {
+                n.NodeID = NodeID(*e.nodeid_str);
+            }
+            catch (std::exception&)
+            {
+                continue;
+            }
             n.NodeName = *e.nodename_str;
             NodeDiscoveryInfoURL n1;
             n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";
