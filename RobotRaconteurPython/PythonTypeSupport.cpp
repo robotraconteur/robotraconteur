@@ -123,7 +123,7 @@ PyAutoPtr<PyObject> stringToPyObject(const std::string& s)
         throw DataTypeException("Invalid string specified");
     return r;
 #else
-    PyObject* r = PyUnicode_DecodeUTF8(s.c_str(), s.size(), "Invalid string specified");
+    PyObject* r = PyUnicode_DecodeUTF8(s.c_str(), s.size(), NULL);
     if (!r)
         throw DataTypeException("Invalid string specified");
     return r;
@@ -138,7 +138,7 @@ PyAutoPtr<PyObject> stringToPyObject(boost::string_ref s)
         throw DataTypeException("Invalid string specified");
     return r;
 #else
-    PyObject* r = PyUnicode_DecodeUTF8(s.data(), s.size(), "Invalid string specified");
+    PyObject* r = PyUnicode_DecodeUTF8(s.data(), s.size(), NULL);
     if (!r)
         throw DataTypeException("Invalid string specified");
     return r;
@@ -1824,7 +1824,8 @@ class UnpackMessageElementImpl
 
                             push_field_level("[" + boost::lexical_cast<std::string>(i2) + "]", type2);
                             PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
-                            PyDict_SetItem(ret.get(), PyLong_FromLong(i2), el2.get());
+                            PyAutoPtr<PyObject> key(PyLong_FromLong(i2));
+                            PyDict_SetItem(ret.get(), key.get(), el2.get());
                             pop_field_level();
                         }
 
@@ -1906,7 +1907,7 @@ class UnpackMessageElementImpl
         if (element->ElementType == DataTypes_string_t)
         {
             boost::intrusive_ptr<RRArray<char> > s1 = element->CastData<RRArray<char> >();
-            return PyUnicode_DecodeUTF8(s1->data(), s1->size(), "Invalid UTF-8 String");
+            return stringToPyObject(boost::string_ref(s1->data(), s1->size())).detach();
         }
 
         if (element->ElementType == DataTypes_structure_t)
@@ -2020,10 +2021,11 @@ class UnpackMessageElementImpl
                 push_field_level("[" + boost::lexical_cast<std::string>(i2) + "]", type2);
                 PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
 #if (PY_MAJOR_VERSION == 2)
-                PyDict_SetItem(ret.get(), PyInt_FromLong(i2), el2.get());
+                PyAutoPtr<PyObject> key(PyInt_FromLong(i2));
 #else
-                PyDict_SetItem(ret.get(), PyLong_FromLong(i2), el2.get());
+                PyAutoPtr<PyObject> key(PyLong_FromLong(i2));
 #endif
+                PyDict_SetItem(ret.get(), key.get(), el2.get());
                 pop_field_level();
             }
 
