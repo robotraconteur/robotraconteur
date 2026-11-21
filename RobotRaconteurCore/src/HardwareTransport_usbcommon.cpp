@@ -1445,6 +1445,7 @@ void UsbDevice_Claim::EndRead(const boost::system::error_code& ec, size_t bytes_
 
     if (c < (read_last_complete + 1))
     {
+        lock.unlock();
         DeviceError(boost::asio::error::fault);
         return;
     }
@@ -1526,8 +1527,9 @@ void UsbDevice_Claim::EndRead2(size_t bytes_transferred, const boost::shared_arr
     }
     else if (h->flags == RR_USB_SUBPACKET_FLAG_COMMAND)
     {
+        // Called with this_lock held, Close() locks it again
         this->status = Error;
-        Close();
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&UsbDevice_Claim::Close, shared_from_this()), true);
     }
     else if (h->flags == RR_USB_SUBPACKET_FLAG_NOTIFICATION)
     {
@@ -1582,7 +1584,7 @@ void UsbDevice_Claim::EndRead2(size_t bytes_transferred, const boost::shared_arr
     else
     {
         status = Error;
-        Close();
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&UsbDevice_Claim::Close, shared_from_this()), true);
         return;
     }
 }
