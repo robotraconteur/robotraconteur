@@ -10,6 +10,7 @@
 
 #include "RobotRaconteur/TcpTransport.h"
 #include "websocket_stream.hpp"
+#include "websocket_test_compat.h"
 
 namespace
 {
@@ -56,7 +57,15 @@ void count_free(void* ptr, const char* file, int line)
 }
 
 // Must run before OpenSSL makes its first allocation
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+void count_free_nofile(void* ptr)
+{
+    count_free(ptr, NULL, 0);
+}
+const int mem_hooks_installed = CRYPTO_set_mem_ex_functions(&count_malloc, &count_realloc, &count_free_nofile);
+#else
 const int mem_hooks_installed = CRYPTO_set_mem_functions(&count_malloc, &count_realloc, &count_free);
+#endif
 
 class websocket_stream_test : public RobotRaconteur::detail::websocket_stream<boost::asio::ip::tcp::socket&>
 {
@@ -71,7 +80,7 @@ class websocket_stream_test : public RobotRaconteur::detail::websocket_stream<bo
 
 TEST(WebSocketStream, Sha1HashValue)
 {
-    boost::asio::io_context ioc;
+    RR_BOOST_ASIO_IO_CONTEXT ioc;
     boost::asio::ip::tcp::socket sock(ioc);
     websocket_stream_test ws(sock);
     // RFC 6455 section 1.3 example
@@ -87,7 +96,7 @@ TEST(WebSocketStream, Sha1HashNoLeak)
         GTEST_SKIP() << "Could not install OpenSSL memory hooks";
     }
 
-    boost::asio::io_context ioc;
+    RR_BOOST_ASIO_IO_CONTEXT ioc;
     boost::asio::ip::tcp::socket sock(ioc);
     websocket_stream_test ws(sock);
 
