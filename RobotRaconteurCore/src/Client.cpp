@@ -2585,6 +2585,15 @@ void ClientContext::AsyncPullServiceDefinitionAndImports1(
             }
             else
             {
+                // servicetype is the import that was requested
+                if (pull_ret->def->Name != servicetype)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
+                                                       "Service returned definition \"" << pull_ret->def->Name
+                                                                                         << "\" when \"" << servicetype
+                                                                                         << "\" was requested");
+                    throw ServiceDefinitionException("Service returned unexpected service definition");
+                }
                 if (!TryFindByName(current2->defs, pull_ret->def->Name))
                 {
                     current2->defs.push_back(pull_ret->def);
@@ -2612,10 +2621,11 @@ void ClientContext::AsyncPullServiceDefinitionAndImports1(
             }
             else
             {
+                std::string next_def = *needed_defs.begin();
                 AsyncPullServiceDefinition(
-                    *needed_defs.begin(),
+                    next_def,
                     boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(),
-                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), std::string(servicetype),
+                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), next_def,
                                 current2, handler, timeout_time),
                     boost::numeric_cast<int32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
                 return;
