@@ -8,6 +8,7 @@
 #include <boost/function.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_array.hpp>
+#include <boost/thread.hpp>
 
 #include "RobotRaconteur/TcpTransport.h"
 #include "websocket_stream.hpp"
@@ -114,6 +115,12 @@ TEST(WebSocketStream, PingFrameAnsweredWithPong)
     ASSERT_FALSE(write_ec) << write_ec.message();
 
     const uint8_t expected[] = {0x8A, 0x02, 'h', 'i', 0x82, 0x03, 'a', 'b', 'c'};
+    // The pong and the data frame are separate writes; wait until both have arrived (on FreeBSD the second
+    // segment may not be readable yet when the write handler runs)
+    for (int i = 0; i < 200 && p.raw.available() < sizeof(expected); i++)
+    {
+        boost::this_thread::sleep_for(boost::chrono::milliseconds(10));
+    }
     ASSERT_GE(p.raw.available(), sizeof(expected));
     uint8_t received[sizeof(expected)] = {};
     boost::asio::read(p.raw, boost::asio::buffer(received));
