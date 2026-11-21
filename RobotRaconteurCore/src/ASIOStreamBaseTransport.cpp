@@ -1440,7 +1440,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
                 {
                     RR_INTRUSIVE_PTR<Message> m = async_reader->GetNextMessage();
 
-                    if (string_table4)
+                    if (use_string_table4.load())
                     {
                         this->string_table4->MessageReplaceCodesWithStrings(m);
                     }
