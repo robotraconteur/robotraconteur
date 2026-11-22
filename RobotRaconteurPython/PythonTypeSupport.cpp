@@ -2357,7 +2357,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_int(PyObject* array_,
     if (destrrarray)
     {
         array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
-        if (!array2)
+        if (!array2 || array2->size() != seq_len)
         {
             throw DataTypeException("Invalid destination array provided for PackToRRArray");
         }
@@ -2466,7 +2466,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_float(PyObject* array_,
     if (destrrarray)
     {
         array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
-        if (!array2)
+        if (!array2 || array2->size() != seq_len)
         {
             throw DataTypeException("Invalid destination array provided for PackToRRArray");
         }
@@ -2552,7 +2552,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_complex(PyObject* array_,
     if (destrrarray)
     {
         array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
-        if (!array2)
+        if (!array2 || array2->size() != seq_len)
         {
             throw DataTypeException("Invalid destination array provided for PackToRRArray");
         }
@@ -2621,7 +2621,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_bool(PyObject* array_,
     if (destrrarray)
     {
         array2 = RR_DYNAMIC_POINTER_CAST<RRArray<rr_bool> >(destrrarray);
-        if (!array2)
+        if (!array2 || array2->size() != seq_len)
         {
             throw DataTypeException("Invalid destination array provided for PackToRRArray");
         }
@@ -2733,7 +2733,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::s
 
         if (destrrarray)
         {
-            if (destrrarray->GetTypeID() != DataTypes_uint8_t || bytearray_size == destrrarray->size())
+            if (destrrarray->GetTypeID() != DataTypes_uint8_t || bytearray_size != destrrarray->size())
             {
                 throw DataTypeException("Invalid destination array provided for PackToRRArray");
             }
