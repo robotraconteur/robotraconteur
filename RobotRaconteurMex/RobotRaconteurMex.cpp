@@ -5860,7 +5860,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
                         {
                             if (!(i == 0 && named_mem))
                             {
-                                count.push_back(((mwSize*)::mxGetDimensions(data))[0]);
+                                count.push_back(((mwSize*)::mxGetDimensions(data))[i]);
                             }
                         }
                     }

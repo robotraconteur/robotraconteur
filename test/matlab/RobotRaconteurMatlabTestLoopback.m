@@ -40,5 +40,8 @@ end
 
     RobotRaconteurMatlabTimeoutTest(url2)
 
+    RobotRaconteurMatlabMemoryWriteDimsTest(url2)
+
+
 
 
