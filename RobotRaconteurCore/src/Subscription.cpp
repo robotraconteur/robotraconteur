@@ -3650,7 +3650,9 @@ bool SubObjectSubscription::TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& cli
     if (!p)
         return false;
 
-    RR_SHARED_PTR<RRObject> client = p->GetDefaultClientBase();
+    RR_SHARED_PTR<RRObject> client;
+    if (!p->TryGetDefaultClientBase(client))
+        return false;
     RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
     if (!s)
     {
@@ -3708,7 +3710,9 @@ bool SubObjectSubscription::TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>&
     if (!p)
         return false;
 
-    RR_SHARED_PTR<RRObject> client = p->GetDefaultClientWaitBase(timeout);
+    RR_SHARED_PTR<RRObject> client;
+    if (!p->TryGetDefaultClientWaitBase(client, timeout))
+        return false;
     RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
     if (!s)
     {
