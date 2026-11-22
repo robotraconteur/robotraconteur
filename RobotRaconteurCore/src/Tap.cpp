@@ -208,6 +208,11 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
     {
         if (ec)
         {
+            // The reader is gone. Drop the queue and the sending flag, otherwise every later message is queued
+            // forever.
+            boost::mutex::scoped_lock lock(this_lock);
+            send_queue.clear();
+            sending = false;
             return;
         }
 
