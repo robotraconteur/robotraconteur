@@ -10101,6 +10101,14 @@ void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<
     RR_INTRUSIVE_PTR<RRBaseArray> rr_array =
         MessageElement::FindElement(array->Elements, "array")->CastData<RRBaseArray>();
 
+    if (!rr_array)
+        throw InvalidOperationException("Invalid memory read return");
+    if (rr_array->GetTypeID() != array_elementtype)
+        throw InvalidOperationException("Invalid memory read return");
+    uint64_t count_elems = boost::accumulate(count, static_cast<uint64_t>(1), std::multiplies<uint64_t>());
+    if (rr_array->size() != count_elems * array_elementcount)
+        throw InvalidOperationException("Invalid memory read return");
+
     MexNamedMultiDimArrayMemoryClient_buffer* buffer3 = static_cast<MexNamedMultiDimArrayMemoryClient_buffer*>(buffer);
     std::vector<uint32_t>& mema_dims = buffer3->dims;
 
@@ -10119,8 +10127,8 @@ void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<
 
     while (iter->Next(indexa, indexb, len))
     {
-        memcpy((((uint8_t*)buffer3->buffer->void_ptr()) + indexb * element_size),
-               (((uint8_t*)rr_array->void_ptr()) + indexa * element_size), len * element_size);
+        memcpy((((uint8_t*)buffer3->buffer->void_ptr()) + indexa * element_size),
+               (((uint8_t*)rr_array->void_ptr()) + indexb * element_size), len * element_size);
     }
 }
 RR_INTRUSIVE_PTR<MessageElementData> MexNamedMultiDimArrayMemoryClient::PackWriteRequest(
