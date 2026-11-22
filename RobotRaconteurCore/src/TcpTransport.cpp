@@ -74,6 +74,20 @@
 namespace RobotRaconteur
 {
 
+static void TcpTransport_set_send_timeout(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket, int32_t timeout_ms)
+{
+    // SO_SNDTIMEO takes milliseconds as a DWORD on Windows and a struct timeval elsewhere
+#ifdef ROBOTRACONTEUR_WINDOWS
+    DWORD send_timeout = static_cast<DWORD>(timeout_ms);
+#else
+    struct timeval send_timeout = {};
+    send_timeout.tv_sec = timeout_ms / 1000;
+    send_timeout.tv_usec = (timeout_ms % 1000) * 1000;
+#endif
+    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout),
+               sizeof(send_timeout));
+}
+
 static std::string TcpTransport_socket_remote_endpoint(const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket)
 {
     boost::system::error_code ec;
@@ -3669,9 +3683,7 @@ void TcpTransportConnection::AsyncAttachSocket(
     catch (std::exception&)
     {}
 
-    int send_timeout = 15000;
-    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout),
-               sizeof(send_timeout));
+    TcpTransport_set_send_timeout(socket, 15000);
     socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
     std::string noden;
@@ -3744,9 +3756,7 @@ void TcpTransportConnection::AsyncAttachWebSocket(
     catch (std::exception&)
     {}
 
-    int send_timeout = 15000;
-    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout),
-               sizeof(send_timeout));
+    TcpTransport_set_send_timeout(socket, 15000);
     socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
     std::string noden;
@@ -3824,8 +3834,7 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(
     catch (std::exception&)
     {}
 
-    int send_timeout = 15000;
-    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, (const char*)&send_timeout, sizeof(send_timeout));
+    TcpTransport_set_send_timeout(socket, 15000);
     socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
     std::string noden;
@@ -3906,9 +3915,7 @@ void TcpTransportConnection::AsyncAttachWSSWebSocket(
     catch (std::exception&)
     {}
 
-    int send_timeout = 15000;
-    setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout),
-               sizeof(send_timeout));
+    TcpTransport_set_send_timeout(socket, 15000);
     socket->set_option(boost::asio::ip::tcp::no_delay(true));
 
     std::string noden;
