@@ -31,7 +31,7 @@
 
 #include "RobotRaconteur/Timer.h"
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #endif
@@ -225,6 +225,6 @@ using ITransportConnectionPtr = RR_SHARED_PTR<ITransportConnection>;
 
 } // namespace RobotRaconteur
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif

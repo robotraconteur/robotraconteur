@@ -31,7 +31,7 @@
 #include <istream>
 #include <boost/atomic.hpp>
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #include <boost/signals2.hpp>
@@ -854,6 +854,6 @@ using ServerEndpointPtr = RR_SHARED_PTR<ServerEndpoint>;
 
 } // namespace RobotRaconteur
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif

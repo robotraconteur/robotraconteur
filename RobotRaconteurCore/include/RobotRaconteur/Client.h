@@ -31,7 +31,7 @@
 #include <boost/atomic.hpp>
 #include <set>
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #endif
@@ -548,6 +548,6 @@ using ServiceStubConstPtr = RR_SHARED_PTR<const ServiceStub>;
 
 } // namespace RobotRaconteur
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif

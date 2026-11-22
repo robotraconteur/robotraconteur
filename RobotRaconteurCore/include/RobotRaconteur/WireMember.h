@@ -29,7 +29,7 @@
 #include "RobotRaconteur/AsyncUtils.h"
 #include <boost/call_traits.hpp>
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #pragma warning(disable : 4996)
@@ -1934,6 +1934,6 @@ using WireUnicastReceiverPtr = RR_SHARED_PTR<WireUnicastReceiver<T> >;
 
 } // namespace RobotRaconteur
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif
