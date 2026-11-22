@@ -2107,15 +2107,24 @@ template <typename T>
 static int32_t TypeDefinition_ParseArrayLength(const T& v, boost::string_ref s,
                                                const ServiceDefinitionParseInfo& parse_info)
 {
+    uint32_t n = 0;
     try
     {
-        return boost::lexical_cast<int32_t>(boost::lexical_cast<uint32_t>(v));
+        n = boost::lexical_cast<uint32_t>(v);
     }
     catch (boost::bad_lexical_cast&)
     {
         throw ServiceDefinitionParseException(
             "Could not parse type \"" + boost::trim_copy(s.to_string()) + "\": invalid array length", parse_info);
     }
+    // Check the range explicitly: lexical_cast<int32_t>(uint32_t) does not reject values above INT32_MAX with
+    // every Boost version (it wraps with newer Boost)
+    if (n > static_cast<uint32_t>(std::numeric_limits<int32_t>::max()))
+    {
+        throw ServiceDefinitionParseException(
+            "Could not parse type \"" + boost::trim_copy(s.to_string()) + "\": invalid array length", parse_info);
+    }
+    return static_cast<int32_t>(n);
 }
 
 void TypeDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
