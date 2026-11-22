@@ -2721,6 +2721,8 @@ class UnpackMessageElementToMxArrayImpl
             throw DataTypeException("Invalid pod type");
 
         RR_INTRUSIVE_PTR<MessageElementNestedElementList> l = element->CastDataToNestedList(DataTypes_pod_array_t);
+        if (!l)
+            throw DataTypeException("Invalid pod array");
 
         RR_SHARED_PTR<TypeDefinition> type2;
 
@@ -2788,6 +2790,8 @@ class UnpackMessageElementToMxArrayImpl
             }
 
             RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = el1->CastDataToNestedList(DataTypes_pod_t);
+            if (!s)
+                throw DataTypeException("Invalid pod array");
 
             std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
 
@@ -3425,6 +3429,8 @@ class UnpackMessageElementToMxArrayImpl
                     MessageElement::FindElement(a->Elements, "dims")->CastData<RRArray<uint32_t> >());
                 RR_INTRUSIVE_PTR<RRBaseArray> array =
                     MessageElement::FindElement(a->Elements, "array")->CastData<RRBaseArray>();
+                if (!array)
+                    throw DataTypeException("Invalid MultiDimArray");
 
                 if (!tdef->ArrayVarLength)
                 {
