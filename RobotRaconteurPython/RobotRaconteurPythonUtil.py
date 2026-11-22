@@ -2375,6 +2375,14 @@ class NodeInfo2(object):
         """
 
 
+def _getattr_or_none(obj, name):
+    # The attribute may be a user property whose getter fails before the setter was called
+    try:
+        return getattr(obj, name)
+    except Exception:
+        return None
+
+
 class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDirector):
     def __init__(self, obj):
         self.obj = obj
@@ -2421,6 +2429,10 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         setattr(self.obj, m.Name, PipeBroadcaster(outerp))
                     else:
                         setattr(self.obj, m.Name, outerp)
+                elif isinstance(_getattr_or_none(self.obj, m.Name), PipeBroadcaster):
+                    # Object initialized again (released and requested again, or reachable by
+                    # more than one service path): keep the broadcaster API for the new pipe
+                    setattr(self.obj, m.Name, PipeBroadcaster(outerp))
                 else:
                     setattr(self.obj, m.Name, outerp)
             if (isinstance(m, RobotRaconteurPython.WireDefinition)):
@@ -2433,6 +2445,10 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         setattr(self.obj, m.Name, WireUnicastReceiver(outerw))
                     else:
                         setattr(self.obj, m.Name, outerw)
+                elif isinstance(_getattr_or_none(self.obj, m.Name), WireBroadcaster):
+                    setattr(self.obj, m.Name, WireBroadcaster(outerw))
+                elif isinstance(_getattr_or_none(self.obj, m.Name), WireUnicastReceiver):
+                    setattr(self.obj, m.Name, WireUnicastReceiver(outerw))
                 else:
                     setattr(self.obj, m.Name, outerw)
         if hasattr(self.obj, "RRServiceObjectInit"):
