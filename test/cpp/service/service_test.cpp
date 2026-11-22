@@ -463,6 +463,102 @@ TEST_F(ServiceTest, ConnectClientCombinedInvalidClientVersion)
     EXPECT_NE(ret->entries[0]->Error, MessageErrorType_None);
 }
 
+// Transport connection stand-in for calling RobotRaconteurNode::SpecialRequest directly
+class ServiceTest_DummyTransportConnection : public ITransportConnection
+{
+  public:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+    ServiceTest_DummyTransportConnection(const RR_SHARED_PTR<RobotRaconteurNode>& node) : node(node) {}
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void Close() RR_OVERRIDE {}
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE { RR_UNUSED(endpoint); }
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE { return 0; }
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE { return 0; }
+    RR_OVIRTUAL NodeID GetRemoteNodeID() RR_OVERRIDE { return NodeID::GetAny(); }
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurNode> GetNode() RR_OVERRIDE { return node.lock(); }
+    RR_OVIRTUAL bool CheckCapabilityActive(uint32_t flag) RR_OVERRIDE
+    {
+        RR_UNUSED(flag);
+        return false;
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE { return RR_SHARED_PTR<Transport>(); }
+};
+
+static RR_INTRUSIVE_PTR<Message> ServiceTest_CreateSpecialRequest(const RR_INTRUSIVE_PTR<MessageEntry>& e,
+                                                                  uint32_t receiver_endpoint, const NodeID& sender)
+{
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    m->header->ReceiverNodeID = NodeID::GetAny();
+    m->header->SenderNodeID = sender;
+    m->header->SenderEndpoint = 1234;
+    m->header->ReceiverEndpoint = receiver_endpoint;
+    m->entries.push_back(e);
+    return m;
+}
+
+struct ServiceTest_ClientDisconnectedCounter
+{
+    RR_SHARED_PTR<int> count;
+    ServiceTest_ClientDisconnectedCounter() : count(RR_MAKE_SHARED<int>(0)) {}
+    void operator()(const RR_SHARED_PTR<ServerContext>& ctx, ServerServiceListenerEventType evt,
+                    const RR_SHARED_PTR<void>& p)
+    {
+        RR_UNUSED(ctx);
+        RR_UNUSED(p);
+        if (evt == ServerServiceListenerEventType_ClientDisconnected)
+            (*count)++;
+    }
+};
+
+// DisconnectClient naming another service must remove the endpoint from the service it is connected to
+TEST_F(ServiceTest, DisconnectClientOtherServiceName)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = test_server_node_config->node;
+    if (!node)
+        return; // external test server (ROBOTRACONTEUR_TEST_SERVER_URL), SpecialRequest not reachable
+    RR_SHARED_PTR<ServerContext> service1 = node->GetService("RobotRaconteurTestService");
+    RR_SHARED_PTR<ServerContext> service2 = node->GetService("RobotRaconteurTestService2");
+    ServiceTest_ClientDisconnectedCounter counter1;
+    ServiceTest_ClientDisconnectedCounter counter2;
+    boost::signals2::scoped_connection c1 = service1->ServerServiceListener.connect(counter1);
+    boost::signals2::scoped_connection c2 = service2->ServerServiceListener.connect(counter2);
+
+    NodeID client_id = NodeID::NewUniqueID();
+    RR_SHARED_PTR<ITransportConnection> tc = RR_MAKE_SHARED<ServiceTest_DummyTransportConnection>(node);
+
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ConnectClient, "");
+    e->ServicePath = "RobotRaconteurTestService";
+    RR_INTRUSIVE_PTR<Message> ret =
+        node->SpecialRequest(ServiceTest_CreateSpecialRequest(e, 0, client_id), std::numeric_limits<uint32_t>::max(), tc);
+    ASSERT_TRUE(ret);
+    ASSERT_EQ(ret->entries.size(), 1u);
+    ASSERT_EQ(ret->entries[0]->Error, MessageErrorType_None);
+    uint32_t ep = ret->header->SenderEndpoint;
+    ASSERT_NE(ep, 0u);
+
+    RR_INTRUSIVE_PTR<MessageEntry> e2 = CreateMessageEntry(MessageEntryType_DisconnectClient, "");
+    e2->AddElement("servicename", stringToRRArray("RobotRaconteurTestService2"));
+    RR_INTRUSIVE_PTR<Message> ret2 = node->SpecialRequest(ServiceTest_CreateSpecialRequest(e2, ep, client_id),
+                                                          std::numeric_limits<uint32_t>::max(), tc);
+    ASSERT_TRUE(ret2);
+
+    EXPECT_EQ(*counter1.count, 1);
+    EXPECT_EQ(*counter2.count, 0);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

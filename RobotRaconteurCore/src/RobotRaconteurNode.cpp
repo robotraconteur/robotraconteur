@@ -1223,15 +1223,20 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 }
 
                 {
-
-                    try
+                    // Remove the endpoint from its own service, not from the one named in the request
+                    RR_SHARED_PTR<ServerContext> sc = se->service;
+                    if (!sc)
                     {
-                        GetService(name)->RemoveClient(se);
+                        try
+                        {
+                            sc = GetService(name);
+                        }
+                        catch (std::out_of_range&)
+                        {
+                            throw ServiceNotFoundException("Service " + name + " not found");
+                        }
                     }
-                    catch (std::out_of_range&)
-                    {
-                        throw ServiceNotFoundException("Service " + name + " not found");
-                    }
+                    sc->RemoveClient(se);
                 }
 
                 try
