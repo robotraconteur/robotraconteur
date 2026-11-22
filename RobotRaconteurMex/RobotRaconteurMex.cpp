@@ -5180,7 +5180,7 @@ void MexServiceStub::MexProcessRequests()
                             mxArray* ret = NULL;
                             if ((ret = ::mexCallMATLABWithTrap(0, NULL, (int)args2.size(), &args2[0], "feval")))
                             {
-                                ::mexWarnMsgIdAndTxt(mxToString(mxGetProperty(ret, 0, "identifier")).c_str(),
+                                ::mexWarnMsgIdAndTxt(mxToString(mxGetProperty(ret, 0, "identifier")).c_str(), "%s",
                                                      mxToString(mxGetProperty(ret, 0, "message")).c_str());
                             }
                         }
@@ -5360,7 +5360,7 @@ void MexServiceStub::MexProcessRequests()
                 mxArray* ret = NULL;
                 if ((ret = ::mexCallMATLABWithTrap(0, NULL, (int)plhs.size(), &plhs[0], "feval")))
                 {
-                    ::mexWarnMsgIdAndTxt(mxToString(mxGetProperty(ret, 0, "identifier")).c_str(),
+                    ::mexWarnMsgIdAndTxt(mxToString(mxGetProperty(ret, 0, "identifier")).c_str(), "%s",
                                          mxToString(mxGetProperty(ret, 0, "message")).c_str());
                 }
             }

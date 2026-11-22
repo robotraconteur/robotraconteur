@@ -33,3 +33,6 @@ catch e
     clear lib
     quit(1)
 end
+
+    RobotRaconteurMatlabWarnFormatTest(url2)
+
