@@ -1027,8 +1027,9 @@ void UsbDevice_Claim::AsyncCreateTransportConnection2(
         {
             boost::mutex::scoped_lock lock(this_lock);
             stream_connection_in_progress--;
+            // Also fails the queued requests and releases the claim, so the status does not stay Claiming
+            AsyncCreateTransportConnection_err(handler);
         }
-        handler(RR_SHARED_PTR<ITransportConnection>(), RR_MAKE_SHARED<ConnectionException>("USB Device Error"));
         return;
     }
 
