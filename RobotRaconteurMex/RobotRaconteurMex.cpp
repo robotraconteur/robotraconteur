@@ -93,6 +93,8 @@ std::string mxToString(const mxArray* str)
             return "";
 
         char* str1 = mxArrayToString(str);
+        if (!str1)
+            throw DataTypeException("Failed to convert MATLAB string");
         std::string str2(str1);
         mxFree(str1);
         return str2;
@@ -123,10 +125,15 @@ RR_INTRUSIVE_PTR<RRArray<char> > mxToStringRRArray(const mxArray* str)
                 throw DataTypeException("1xN string expected");
         }
 
-        char* str1 = mxArrayToString(str);
-        RR_INTRUSIVE_PTR<RRArray<char> > str2 = AttachRRArrayCopy<char>(str1, mxGetNumberOfElements(str));
-        mxFree(str1);
-        return str2;
+        // mxChar is UTF-16. Convert to UTF-8 for the wire; mxArrayToString uses the platform's
+        // default encoding and its result is not mxGetNumberOfElements bytes long
+        const mxChar* str1 = mxGetChars(str);
+        if (!str1)
+            throw DataTypeException("Failed to convert MATLAB string");
+        const char16_t* str1_begin = reinterpret_cast<const char16_t*>(str1);
+        std::string str_utf8 =
+            boost::locale::conv::utf_to_utf<char>(str1_begin, str1_begin + mxGetNumberOfElements(str));
+        return stringToRRArray(str_utf8);
     }
 
     if (mxIsClass(str, "string"))
