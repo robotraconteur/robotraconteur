@@ -406,6 +406,77 @@ TEST(AsyncMessageWriterTest, RandomTest4)
     }
 }
 
+// Serialize m in format 2 or 4
+static std::vector<uint8_t> WriteMessageElementTypeTest(const RR_INTRUSIVE_PTR<Message>& m, uint16_t version)
+{
+    std::vector<uint8_t> buf(version == 2 ? m->ComputeSize() : m->ComputeSize4());
+    ArrayBinaryWriter w(&buf[0], 0, buf.size());
+    if (version == 2)
+        m->Write(w);
+    else
+        m->Write4(w);
+    return buf;
+}
+
+// Element types from the wire above 127 are outside the range of the DataTypes enum. They must be rejected
+// before they are stored in the enum (undefined behavior, reported by UBSan -fsanitize=enum)
+TEST(AsyncMessageReaderTest, ElementTypeOutOfRangeRejected)
+{
+    const std::string name = "zz_element_type_test";
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_FunctionCallReq, "func");
+    e->ServicePath = "svc";
+    e->AddElement(name, ScalarToRRArray<double>(1.5));
+    m->entries.push_back(e);
+
+    const uint16_t bad_types[] = {128, 200, 0xFFFF};
+    for (uint16_t version = 2; version <= 4; version += 2)
+    {
+        std::vector<uint8_t> buf = WriteMessageElementTypeTest(m, version);
+        // The element type follows the element name in both formats
+        std::vector<uint8_t>::iterator it = std::search(buf.begin(), buf.end(), name.begin(), name.end());
+        ASSERT_TRUE(it != buf.end());
+        size_t type_pos = (it - buf.begin()) + name.size();
+        ASSERT_EQ(buf[type_pos] | (buf[type_pos + 1] << 8), DataTypes_double_t);
+
+        for (size_t i = 0; i < sizeof(bad_types) / sizeof(bad_types[0]); i++)
+        {
+            std::vector<uint8_t> buf2 = buf;
+            buf2[type_pos] = static_cast<uint8_t>(bad_types[i] & 0xFF);
+            buf2[type_pos + 1] = static_cast<uint8_t>(bad_types[i] >> 8);
+
+            ArrayBinaryReader sr(&buf2[0], 0, buf2.size());
+            RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
+            if (version == 2)
+            {
+                EXPECT_ANY_THROW(m2->Read(sr)) << "version " << version << " type " << bad_types[i];
+            }
+            else
+            {
+                EXPECT_ANY_THROW(m2->Read4(sr)) << "version " << version << " type " << bad_types[i];
+            }
+
+            RR_SHARED_PTR<AsyncMessageReader> r = AsyncMessageReader::CreateInstance();
+            r->Reset();
+            const_buffers bufs;
+            bufs.push_back(boost::asio::buffer(&buf2[0], buf2.size()));
+            mutable_buffers continue_bufs;
+            size_t buf_used = 0;
+            if (version == 2)
+            {
+                EXPECT_ANY_THROW(r->Read(bufs, buf_used, 0, continue_bufs))
+                    << "version " << version << " type " << bad_types[i];
+            }
+            else
+            {
+                EXPECT_ANY_THROW(r->Read4(bufs, buf_used, 0, continue_bufs))
+                    << "version " << version << " type " << bad_types[i];
+            }
+        }
+    }
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

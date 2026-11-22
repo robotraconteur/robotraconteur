@@ -681,6 +681,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
         case MessageElement_elementtype: {
             uint16_t t = 0;
             R(read_number(t));
+            if (t > 127)
+                throw ProtocolException("Invalid message element type");
             data<MessageElement>()->ElementType = static_cast<DataTypes>(t);
             state() = MessageElement_elementtypestr;
         }
@@ -1277,6 +1279,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
         case MessageElement_elementtype: {
             uint16_t t = 0;
             R(read_number(t));
+            if (t > 127)
+                throw ProtocolException("Invalid message element type");
             data<MessageElement>()->ElementType = static_cast<DataTypes>(t);
             state() = MessageElement_elementtypestr;
         }

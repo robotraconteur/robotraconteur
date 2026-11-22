@@ -1272,7 +1272,10 @@ void MessageElement::Read(ArrayBinaryReader& r)
 
     uint16_t name_s = r.ReadNumber<uint16_t>();
     ElementName = r.ReadString8(name_s);
-    ElementType = static_cast<DataTypes>(r.ReadNumber<uint16_t>());
+    uint16_t element_type = r.ReadNumber<uint16_t>();
+    if (element_type > 127)
+        throw ProtocolException("Invalid message element type");
+    ElementType = static_cast<DataTypes>(element_type);
     uint16_t nametype_s = r.ReadNumber<uint16_t>();
     ElementTypeName = r.ReadString8(nametype_s);
     uint16_t metadata_s = r.ReadNumber<uint16_t>();
@@ -1635,7 +1638,10 @@ void MessageElement::Read4(ArrayBinaryReader& r)
         ElementNumber = r.ReadIntX();
     }
 
-    ElementType = static_cast<DataTypes>(r.ReadNumber<uint16_t>());
+    uint16_t element_type = r.ReadNumber<uint16_t>();
+    if (element_type > 127)
+        throw ProtocolException("Invalid message element type");
+    ElementType = static_cast<DataTypes>(element_type);
 
     if (ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_STR)
     {
