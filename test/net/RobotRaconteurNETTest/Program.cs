@@ -225,6 +225,20 @@ class Program
             return;
         }
 
+        if (command == "nodesetup_preregistered")
+        {
+            // A service type registered before the node setup must not make the setup fail
+            RobotRaconteurNode.s.RegisterServiceType(
+                new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+            using (var setup = new ClientNodeSetup())
+            {
+                RRAssert.IsTrue(RobotRaconteurNode.s.IsServiceTypeRegistered("com.robotraconteur.testing.TestService1"));
+                RRAssert.IsTrue(RobotRaconteurNode.s.IsServiceTypeRegistered("com.robotraconteur.testing.TestService3"));
+            }
+            Console.WriteLine("Test completed");
+            return;
+        }
+
         if (command == "loopback")
         {
 

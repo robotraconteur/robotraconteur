@@ -102,6 +102,9 @@ endif()
 
     rrconfiguretest(test_net_custom_authenticator "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} custom_authenticator")
 
+    rrconfiguretest(test_net_nodesetup_preregistered "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} nodesetup_preregistered")
+
+
 
 
 

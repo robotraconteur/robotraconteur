@@ -142,8 +142,9 @@ public partial class RobotRaconteurNode
     {
         lock (servicetypes)
         {
-            servicetypes.Add(servicetype.GetServiceName(), servicetype);
+            // Register with the native node first, so a failed registration leaves no entry behind
             _RegisterServiceType(servicetype.ServiceDef());
+            servicetypes.Add(servicetype.GetServiceName(), servicetype);
         }
     }
 
