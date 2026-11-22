@@ -4096,7 +4096,8 @@ struct rrimplements
 rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj,
                             const RR_SHARED_PTR<ServiceDefinition>& def,
                             const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
-                            ServiceDefinitionParseInfo& parse_info, std::string rootobj = "")
+                            ServiceDefinitionParseInfo& parse_info, std::string rootobj = "",
+                            std::set<std::string> parent_objs = std::set<std::string>())
 {
     rrimplements out;
     out.obj = obj;
@@ -4104,6 +4105,8 @@ rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj,
 
     if (rootobj.empty())
         rootobj = out.name;
+
+    parent_objs.insert(out.name);
 
     BOOST_FOREACH (std::string& e, obj->Implements)
     {
@@ -4128,7 +4131,12 @@ rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj,
                                                            def->Name + "." + obj2->Name + "\"",
                                                        parse_info);
 
-            rrimplements imp2 = get_implements(obj2, def, defs, parse_info, rootobj);
+            if (parent_objs.count(def->Name + "." + obj2->Name) != 0)
+                throw ServiceDefinitionVerifyException("Recursive implements between \"" + out.name + "\" and \"" +
+                                                           def->Name + "." + obj2->Name + "\"",
+                                                       parse_info);
+
+            rrimplements imp2 = get_implements(obj2, def, defs, parse_info, rootobj, parent_objs);
             out.implements.push_back(imp2);
         }
         else
@@ -4168,7 +4176,12 @@ rrimplements get_implements(const RR_SHARED_PTR<ServiceEntryDefinition>& obj,
                                                            def2->Name + "." + obj2->Name + "\"",
                                                        parse_info);
 
-            rrimplements imp2 = get_implements(obj2, def2, defs, parse_info, rootobj);
+            if (parent_objs.count(def2->Name + "." + obj2->Name) != 0)
+                throw ServiceDefinitionVerifyException("Recursive implements between \"" + out.name + "\" and \"" +
+                                                           def2->Name + "." + obj2->Name + "\"",
+                                                       parse_info);
+
+            rrimplements imp2 = get_implements(obj2, def2, defs, parse_info, rootobj, parent_objs);
             out.implements.push_back(RR_MOVE(imp2));
         }
     }

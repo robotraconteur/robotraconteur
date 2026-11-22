@@ -341,6 +341,25 @@ TEST(RobDef, UsingAsMultipleBlanks)
     EXPECT_EQ(u3->UnqualifiedName, "e");
 }
 
+TEST(RobDef, RecursiveImplementsNotThroughRoot)
+{
+    std::string def_text = "service example.implementscycle\n\nstdver 0.10\n\n"
+                           "object A\n"
+                           "implements B\n"
+                           "end\n\n"
+                           "object B\n"
+                           "implements C\n"
+                           "end\n\n"
+                           "object C\n"
+                           "implements B\n"
+                           "end\n";
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(def->FromString(def_text));
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > defs;
+    defs.push_back(def);
+    EXPECT_THROW(VerifyServiceDefinitions(defs), ServiceDefinitionVerifyException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
