@@ -638,6 +638,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
                              const RR_SHARED_PTR<RobotRaconteurException>& error)>
             handler;
         RR_SHARED_PTR<Timer> timer;
+        uint32_t endpoint;
     };
 
     boost::mutex outstanding_requests_lock;

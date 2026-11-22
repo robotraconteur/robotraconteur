@@ -1257,6 +1257,15 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
                     noreturn = true;
                     return ret;
                 }
+                if (e1->second->endpoint != c->GetLocalEndpoint())
+                {
+                    // Only the client the callback request was sent to may answer it
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
+                        node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName,
+                        "Ignoring CallbackCallRet with requestid " << requestid << " from wrong endpoint");
+                    noreturn = true;
+                    return ret;
+                }
                 t = e1->second;
                 t->ret = m;
 
@@ -1406,6 +1415,7 @@ void ServerContext::AsyncProcessCallbackRequest(
         RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
         t->handler = handler;
         t->evt = GetNode()->CreateAutoResetEvent();
+        t->endpoint = endpoint;
 
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
@@ -2333,6 +2343,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(const RR_IN
 
         RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
         t->evt = GetNode()->CreateAutoResetEvent();
+        t->endpoint = endpointid;
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
 
