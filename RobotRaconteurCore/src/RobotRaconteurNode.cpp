@@ -1224,6 +1224,15 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                         throw InternalErrorException("");
                 }
 
+                // Only the connection that owns the client endpoint may disconnect it
+                if (tc && se->GetTransportConnection() != tc)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
+                        weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath, e->MemberName,
+                        "DisconnectClient received from a transport connection that does not own the endpoint");
+                    throw InvalidOperationException("Endpoint does not belong to this connection");
+                }
+
                 {
                     // Remove the endpoint from its own service, not from the one named in the request
                     RR_SHARED_PTR<ServerContext> sc = se->service;
