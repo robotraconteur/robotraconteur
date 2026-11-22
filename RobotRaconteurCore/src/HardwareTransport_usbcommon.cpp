@@ -1862,7 +1862,10 @@ void UsbDevice::Close()
         RR_SHARED_PTR<UsbDevice_Claim> c = claim.lock();
         if (c)
         {
+            // UsbDevice_Claim::Close calls DeviceClaimReleased, which locks this_lock
+            lock.unlock();
             c->Close();
+            lock.lock();
             claim.reset();
         }
     }
