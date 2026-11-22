@@ -424,7 +424,7 @@ static std::string JavaServiceLangGen_VerifyArrayLength(TypeDefinition& t, const
             }
             else
             {
-                if (t.Type == DataTypes_pod_t)
+                if (t.Type == DataTypes_namedtype_t && t.ResolveNamedType()->RRDataType() == DataTypes_pod_t)
                 {
                     s = "3";
                 }

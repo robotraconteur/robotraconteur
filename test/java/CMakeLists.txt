@@ -32,7 +32,18 @@ if(NOT ANDROID)
         OUTDIR
         "${CMAKE_CURRENT_BINARY_DIR}/test_src")
 
-    add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS} ${RR_NAMES_THUNK_SRCS})
+    # Containers of fixed size pod multidimensional arrays; compiled with the test to check the generated code
+    robotraconteur_generate_thunk(
+        RR_POD_CONTAINERS_THUNK_SRCS
+        experimental.gen_test_java_pod_containers.robdef
+        LANG
+        java
+        INCLUDE_DIRS
+        "${CMAKE_CURRENT_SOURCE_DIR}/robdef"
+        OUTDIR
+        "${CMAKE_CURRENT_BINARY_DIR}/test_src")
+
+    add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS} ${RR_NAMES_THUNK_SRCS} ${RR_POD_CONTAINERS_THUNK_SRCS})
 
     # cSpell: disable
     add_custom_target(
@@ -50,6 +61,7 @@ if(NOT ANDROID)
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService2/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService3/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/experimental/gen_test_java_names/*.java
+        ${CMAKE_CURRENT_BINARY_DIR}/test_src/experimental/gen_test_java_pod_containers/*.java
         -d
         "${CMAKE_CURRENT_BINARY_DIR}/test"
         -classpath
