@@ -2265,7 +2265,7 @@ void WireSubscription_connection::ClientConnected2(const RR_SHARED_PTR<WireConne
     {
         boost::mutex::scoped_lock lock(p->this_lock);
 
-        if (p->closed.data())
+        if (p->closed.data() || closed)
         {
             try
             {
@@ -2327,6 +2327,8 @@ void WireSubscription_connection::SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& v
 
 void WireSubscription_connection::RetryConnect()
 {
+    if (closed)
+        return;
     RR_SHARED_PTR<WireSubscriptionBase> p = parent.lock();
     if (!p)
         return;
@@ -2366,6 +2368,8 @@ void WireSubscription_connection::RetryConnect1(const TimerEvent& ev)
 
     boost::mutex::scoped_lock lock(p->this_lock);
     retry_timer.reset();
+    if (closed)
+        return;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                             "ServiceSubscription begin retry connect wire");
@@ -2737,7 +2741,7 @@ bool PipeSubscriptionBase::isempty_PipePacketReceived() { return false; }
 
 namespace detail
 {
-PipeSubscription_connection::PipeSubscription_connection() {}
+PipeSubscription_connection::PipeSubscription_connection() : closed(false) {}
 
 void PipeSubscription_connection::Init(const RR_SHARED_PTR<PipeSubscriptionBase>& parent,
                                        const RR_SHARED_PTR<RRObject>& client)
@@ -2780,6 +2784,7 @@ void PipeSubscription_connection::ClientConnected1(const RR_SHARED_PTR<ServiceSt
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                                 "ServiceSubscription client connect pipe failed: Invalid service path");
+        boost::mutex::scoped_lock lock(p->this_lock);
         RetryConnect();
         return;
     }
@@ -2798,6 +2803,7 @@ void PipeSubscription_connection::ClientConnected1(const RR_SHARED_PTR<ServiceSt
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                                 "ServiceSubscription client connect pipe failed: " << exp.what());
 
+        boost::mutex::scoped_lock lock(p->this_lock);
         RetryConnect();
     }
 }
@@ -2817,6 +2823,7 @@ void PipeSubscription_connection::ClientConnected2(const RR_SHARED_PTR<PipeEndpo
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                                 "ServiceSubscription client connect pipe failed: " << err->what());
+        boost::mutex::scoped_lock lock(p->this_lock);
         RetryConnect();
         return;
     }
@@ -2825,7 +2832,7 @@ void PipeSubscription_connection::ClientConnected2(const RR_SHARED_PTR<PipeEndpo
     {
         boost::mutex::scoped_lock lock(p->this_lock);
 
-        if (p->closed.data())
+        if (p->closed.data() || closed)
         {
             try
             {
@@ -2962,6 +2969,8 @@ void PipeSubscription_connection::pipe_packet_send_handler(RR_WEAK_PTR<PipeSubsc
 
 void PipeSubscription_connection::RetryConnect()
 {
+    if (closed)
+        return;
     RR_SHARED_PTR<PipeSubscriptionBase> p = parent.lock();
     if (!p)
         return;
@@ -3001,6 +3010,8 @@ void PipeSubscription_connection::RetryConnect1(const TimerEvent& ev)
 
     boost::mutex::scoped_lock lock(p->this_lock);
     retry_timer.reset();
+    if (closed)
+        return;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                             "ServiceSubscription begin retry connect pipe");
@@ -3023,9 +3034,9 @@ void PipeSubscription_connection::RetryConnect1(const TimerEvent& ev)
 
 void PipeSubscription_connection::Close()
 {
+    closed = true;
     RR_SHARED_PTR<PipeEndpointBase> c = connection.lock();
-    if (!c)
-        return;
+    if (c)
     {
         connection.reset();
         try
