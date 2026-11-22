@@ -7119,7 +7119,7 @@ mxArray* ServiceInfo2ToMxArray(const ServiceInfo2& info)
     mxArray* RootObjectImplements = mxCreateCellMatrix(info.RootObjectImplements.size(), 1);
     for (size_t j = 0; j < info.RootObjectImplements.size(); j++)
     {
-        mxSetCell(RootObjectImplements, 0, mxCreateString(info.RootObjectImplements[j].c_str()));
+        mxSetCell(RootObjectImplements, j, mxCreateString(info.RootObjectImplements[j].c_str()));
     }
     mxSetField(serviceinfo, 0, "RootObjectImplements", RootObjectImplements);
 
