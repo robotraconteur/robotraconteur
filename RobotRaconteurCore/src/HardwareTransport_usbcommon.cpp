@@ -38,10 +38,9 @@ UsbDeviceClaim_create_request::UsbDeviceClaim_create_request(
     boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
         handler)
 {
-    RR_UNUSED(noden);
     this->url_res = url_res;
     this->endpoint = endpoint;
-    this->endpoint = endpoint;
+    this->noden = noden.to_string();
     this->handler = handler;
 }
 // End UsbDeviceClaim_create_request
