@@ -300,7 +300,7 @@ is typically used:
 .. code-block:: python
 
    import RobotRaconteur as RR
-   RRN = RobotRaconteur.s
+   RRN = RR.RobotRaconteurNode.s
 
 """
 
