@@ -1150,7 +1150,7 @@ void TlsSchannelAsyncStreamAdapter::do_handshake4(const boost::system::error_cod
         const_buffers send_b;
         send_b.push_back(boost::asio::const_buffer(send_buffer.get() + send_buffer_transfer_pos,
                                                    send_buffer_end_pos - send_buffer_transfer_pos));
-        _async_write_some(send_b, boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake1, shared_from_this(),
+        _async_write_some(send_b, boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake4, shared_from_this(),
                                               boost::asio::placeholders::error,
                                               boost::asio::placeholders::bytes_transferred, boost::protect(handler)));
         return;
