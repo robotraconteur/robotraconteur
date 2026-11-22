@@ -4819,7 +4819,11 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
                 return;
             }
         }
+    }
 
+    // A connection carries one client/service endpoint pair. Check the header against it on every connection, not
+    // only with TLS, so a peer cannot address another client's server endpoint (session) over its own connection.
+    {
         if (local_ep != 0 && remote_ep != 0)
         {
             if (local_ep != m->header->ReceiverEndpoint || remote_ep != m->header->SenderEndpoint)

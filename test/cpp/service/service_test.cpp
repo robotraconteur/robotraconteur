@@ -4,6 +4,8 @@
 #include <boost/assign/list_of.hpp>
 #include <RobotRaconteur/ServiceDefinition.h>
 #include <RobotRaconteur/RobotRaconteurNode.h>
+#include <RobotRaconteur/Tap.h>
+#include <boost/foreach.hpp>
 
 #include "com__robotraconteur__testing__TestService1.h"
 #include "com__robotraconteur__testing__TestService1_stubskel.h"
@@ -982,6 +984,88 @@ TEST_F(ServiceTest, ClientIgnoresLateConnectClientRet)
     EXPECT_EQ(ctx->GetRemoteNodeName(), remote_nodename);
 
     RobotRaconteurNode::s()->DisconnectService(obj);
+}
+
+// Records replies (PropertyGetRes) with a given request id that arrive at the client node
+class EndpointCheckReplyTap : public MessageTap
+{
+  public:
+    boost::mutex lock;
+    uint32_t request_id;
+    std::vector<RR_INTRUSIVE_PTR<Message> > replies;
+    EndpointCheckReplyTap(uint32_t request_id) : request_id(request_id) {}
+    RR_OVIRTUAL void Open() RR_OVERRIDE {}
+    RR_OVIRTUAL void Close() RR_OVERRIDE {}
+    RR_OVIRTUAL void RecordLogRecord(const RRLogRecord& log_record) RR_OVERRIDE { RR_UNUSED(log_record); }
+    RR_OVIRTUAL void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message) RR_OVERRIDE
+    {
+        BOOST_FOREACH (const RR_INTRUSIVE_PTR<MessageEntry>& e, message->entries)
+        {
+            if (e->EntryType == MessageEntryType_PropertyGetRes && e->RequestID == request_id)
+            {
+                boost::mutex::scoped_lock l(lock);
+                replies.push_back(message);
+            }
+        }
+    }
+};
+
+static void EndpointCheckSendHandler(const RR_SHARED_PTR<RobotRaconteurException>& err) { RR_UNUSED(err); }
+
+TEST_F(ServiceTest, ConnectionEndpointCheckTest)
+{
+    // A connection carries one client / service endpoint pair. A request on client B's connection that names client
+    // A's service endpoint must be rejected, not run in A's session (with A's user, locks and member state)
+    RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
+    RR_SHARED_PTR<RRObject> ra = node->ConnectService(service_url);
+    RR_SHARED_PTR<RRObject> rb = node->ConnectService(service_url);
+    RR_SHARED_PTR<ServiceStub> stub_a = rr_cast<ServiceStub>(ra);
+    RR_SHARED_PTR<ClientContext> ctx_a = stub_a->GetContext();
+    RR_SHARED_PTR<ClientContext> ctx_b = rr_cast<ServiceStub>(rb)->GetContext();
+    ASSERT_NE(ctx_a->GetLocalEndpoint(), ctx_b->GetLocalEndpoint());
+
+    const uint32_t request_id = 0x7f3a5c21;
+    RR_SHARED_PTR<EndpointCheckReplyTap> tap = RR_MAKE_SHARED<EndpointCheckReplyTap>(request_id);
+    RR_SHARED_PTR<MessageTap> old_tap = node->GetMessageTap();
+    node->SetMessageTap(tap);
+
+    // Sent on B's connection (routed by SenderEndpoint), addressed to A's service endpoint
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    m->header->SenderNodeID = node->NodeID();
+    m->header->ReceiverNodeID = ctx_b->GetRemoteNodeID();
+    m->header->SenderEndpoint = ctx_b->GetLocalEndpoint();
+    m->header->ReceiverEndpoint = ctx_a->GetRemoteEndpoint();
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_PropertyGetReq, "d1");
+    e->ServicePath = stub_a->ServicePath;
+    e->RequestID = request_id;
+    m->entries.push_back(e);
+    node->AsyncSendMessage(m, &EndpointCheckSendHandler);
+
+    RR_INTRUSIVE_PTR<Message> reply;
+    for (int i = 0; i < 100 && !reply; i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+        boost::mutex::scoped_lock l(tap->lock);
+        if (!tap->replies.empty())
+            reply = tap->replies.front();
+    }
+    node->SetMessageTap(old_tap);
+
+    ASSERT_TRUE(reply) << "no reply to the request";
+    // Not run as A: the reply did not go to A's client endpoint
+    EXPECT_NE(reply->header->ReceiverEndpoint, ctx_a->GetLocalEndpoint());
+    EXPECT_EQ(reply->header->ReceiverEndpoint, ctx_b->GetLocalEndpoint());
+    ASSERT_EQ(reply->entries.size(), 1u);
+    EXPECT_EQ(reply->entries.at(0)->Error, MessageErrorType_InvalidEndpoint);
+
+    // A's session is unaffected. B gets the InvalidEndpoint error, and a client treats that as a lost session and
+    // closes (Client.cpp, ClientContext::MessageReceived)
+    EXPECT_NO_THROW(rr_cast<com::robotraconteur::testing::TestService1::testroot>(ra)->get_d1());
+
+    node->DisconnectService(ra);
+    // B has already closed itself; not disconnected again here (DisconnectService on a closed client waits for a
+    // handler AsyncClose never calls, CORE-T6-D8)
 }
 
 int main(int argc, char* argv[])
