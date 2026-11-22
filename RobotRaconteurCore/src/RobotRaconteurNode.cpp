@@ -3153,7 +3153,7 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(const std
     boost::unique_lock<boost::shared_mutex> lock(log_level_mutex);
     char* loglevel_c = std::getenv(env_variable_name.c_str());
     if (!loglevel_c)
-        return RobotRaconteur_LogLevel_Warning;
+        return log_level;
     std::string loglevel(loglevel_c);
     lock.unlock();
     return SetLogLevelFromString(loglevel);

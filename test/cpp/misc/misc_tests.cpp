@@ -842,6 +842,16 @@ TEST(RobotRaconteurMisc, ServiceInfo2NullMembers)
     EXPECT_TRUE(si.RootObjectImplements.empty());
 }
 
+// SetLogLevelFromEnvVariable leaves the level unchanged when the variable is not set and returns the current level
+TEST(RobotRaconteurMisc, SetLogLevelFromEnvVariableUnset)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->SetLogLevel(RobotRaconteur_LogLevel_Error);
+    RobotRaconteur_LogLevel ret = node->SetLogLevelFromEnvVariable("ROBOTRACONTEUR_TEST_LOG_LEVEL_NOT_SET_8d1f6a");
+    EXPECT_EQ(node->GetLogLevel(), RobotRaconteur_LogLevel_Error);
+    EXPECT_EQ(ret, RobotRaconteur_LogLevel_Error);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
