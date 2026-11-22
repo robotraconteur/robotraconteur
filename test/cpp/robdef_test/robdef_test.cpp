@@ -178,6 +178,18 @@ TEST(RobDef, StdVerOnlyOnce)
                  ServiceDefinitionParseException);
 }
 
+TEST(RobDef, NumberOverflowThrowsParseException)
+{
+    RobotRaconteurVersion v;
+    EXPECT_THROW(v.FromString("99999999999.0"), ServiceDefinitionParseException);
+    RR_SHARED_PTR<TypeDefinition> t = RR_MAKE_SHARED<TypeDefinition>();
+    EXPECT_THROW(t->FromString("double[99999999999] a"), ServiceDefinitionParseException);
+    EXPECT_THROW(t->FromString("double[3000000000] a"), ServiceDefinitionParseException);
+    EXPECT_THROW(t->FromString("double[99999999999-] a"), ServiceDefinitionParseException);
+    EXPECT_THROW(t->FromString("double[2,99999999999] a"), ServiceDefinitionParseException);
+    EXPECT_NO_THROW(t->FromString("double[2,3] a"));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

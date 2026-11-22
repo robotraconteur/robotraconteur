@@ -104,10 +104,18 @@ void RobotRaconteurVersion::FromString(boost::string_ref v, const ServiceDefinit
             "Format error for version definition \"" + boost::trim_copy(v.to_string()) + "\"", ParseInfo);
     }
 
-    major = boost::lexical_cast<uint32_t>(r_match[1].str());
-    minor = boost::lexical_cast<uint32_t>(r_match[2].str());
-    patch = r_match[3].matched ? boost::lexical_cast<uint32_t>(r_match[3].str()) : 0;
-    tweak = r_match[4].matched ? boost::lexical_cast<uint32_t>(r_match[4].str()) : 0;
+    try
+    {
+        major = boost::lexical_cast<uint32_t>(r_match[1].str());
+        minor = boost::lexical_cast<uint32_t>(r_match[2].str());
+        patch = r_match[3].matched ? boost::lexical_cast<uint32_t>(r_match[3].str()) : 0;
+        tweak = r_match[4].matched ? boost::lexical_cast<uint32_t>(r_match[4].str()) : 0;
+    }
+    catch (boost::bad_lexical_cast&)
+    {
+        throw ServiceDefinitionParseException(
+            "Format error for version definition \"" + boost::trim_copy(v.to_string()) + "\"", ParseInfo);
+    }
 }
 
 bool operator==(const RobotRaconteurVersion& v1, const RobotRaconteurVersion& v2)
@@ -2095,6 +2103,21 @@ std::string TypeDefinition::ToString()
     return o2;
 }
 
+template <typename T>
+static int32_t TypeDefinition_ParseArrayLength(const T& v, boost::string_ref s,
+                                               const ServiceDefinitionParseInfo& parse_info)
+{
+    try
+    {
+        return boost::lexical_cast<int32_t>(boost::lexical_cast<uint32_t>(v));
+    }
+    catch (boost::bad_lexical_cast&)
+    {
+        throw ServiceDefinitionParseException(
+            "Could not parse type \"" + boost::trim_copy(s.to_string()) + "\": invalid array length", parse_info);
+    }
+}
+
 void TypeDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
     Reset();
@@ -2169,7 +2192,7 @@ void TypeDefinition::FromString(boost::string_ref s, const ServiceDefinitionPars
             // Fixed array
             ArrayType = DataTypes_ArrayTypes_array;
             ArrayLength.resize(1);
-            ArrayLength.at(0) = boost::lexical_cast<int32_t>(boost::lexical_cast<uint32_t>(array_var_result));
+            ArrayLength.at(0) = TypeDefinition_ParseArrayLength(array_var_result, s, ParseInfo);
             ArrayVarLength = false;
         }
         else if (array_max_var_result.matched)
@@ -2177,7 +2200,7 @@ void TypeDefinition::FromString(boost::string_ref s, const ServiceDefinitionPars
             // variable array max sized
             ArrayType = DataTypes_ArrayTypes_array;
             ArrayLength.resize(1);
-            ArrayLength.at(0) = boost::lexical_cast<int32_t>(boost::lexical_cast<uint32_t>(array_max_var_result));
+            ArrayLength.at(0) = TypeDefinition_ParseArrayLength(array_max_var_result, s, ParseInfo);
             ArrayVarLength = true;
         }
         else if (array_multi_result.matched)
@@ -2192,8 +2215,7 @@ void TypeDefinition::FromString(boost::string_ref s, const ServiceDefinitionPars
             ArrayType = DataTypes_ArrayTypes_multidimarray;
             ArrayVarLength = false;
             ArrayLength.resize(1);
-            ArrayLength.at(0) =
-                boost::lexical_cast<int32_t>(boost::lexical_cast<uint32_t>(array_multi_single_fixed_result));
+            ArrayLength.at(0) = TypeDefinition_ParseArrayLength(array_multi_single_fixed_result, s, ParseInfo);
         }
         else if (array_multi_fixed_result.matched)
         {
@@ -2207,7 +2229,7 @@ void TypeDefinition::FromString(boost::string_ref s, const ServiceDefinitionPars
             ArrayLength.clear();
             BOOST_FOREACH (boost::iterator_range<boost::string_ref::const_iterator>& d, dims)
             {
-                ArrayLength.push_back(boost::lexical_cast<int32_t>(boost::lexical_cast<uint32_t>(d)));
+                ArrayLength.push_back(TypeDefinition_ParseArrayLength(d, s, ParseInfo));
             }
         }
         else
