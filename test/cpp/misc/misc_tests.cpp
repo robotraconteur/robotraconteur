@@ -1238,6 +1238,32 @@ TEST(RobotRaconteurMisc, PasswordVerifiedClientWithoutTransport)
                  AuthenticationException);
 }
 
+namespace
+{
+class WireUnicastReceiverPeekTest : public WireUnicastReceiver<int32_t>
+{
+  public:
+    WireUnicastReceiverPeekTest() { node = RobotRaconteurNode::sp(); }
+    int32_t Peek() { return ClientPeekOutValue(); }
+    void Poke(int32_t v) { ClientPokeOutValue(v, TimeSpec(), 1); }
+};
+} // namespace
+
+TEST(RobotRaconteurMisc, WireUnicastReceiverPeekLifespan)
+{
+    RR_SHARED_PTR<WireUnicastReceiverPeekTest> r = RR_MAKE_SHARED<WireUnicastReceiverPeekTest>();
+    EXPECT_THROW(r->Peek(), ValueNotSetException);
+    r->Poke(5);
+    EXPECT_EQ(r->Peek(), 5);
+    r->SetInValueLifespan(1);
+    boost::this_thread::sleep(boost::posix_time::milliseconds(20));
+    TimeSpec ts;
+    uint32_t ep = 0;
+    EXPECT_THROW(r->GetInValue(ts, ep), ValueNotSetException);
+    // A client peek must apply the same lifespan as GetInValue
+    EXPECT_THROW(r->Peek(), ValueNotSetException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

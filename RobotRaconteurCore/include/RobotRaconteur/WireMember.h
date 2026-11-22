@@ -1832,6 +1832,10 @@ class WireUnicastReceiverBase : public RR_ENABLE_SHARED_FROM_THIS<WireUnicastRec
         boost::mutex::scoped_lock lock(this_lock);
         if (!in_value_valid)
             throw ValueNotSetException("Value not set");
+        if (detail::WireConnectionBase_IsValueExpired(node, in_value_lasttime_local, in_value_lifespan))
+        {
+            throw ValueNotSetException("Value expired");
+        }
         return in_value;
     }
 
