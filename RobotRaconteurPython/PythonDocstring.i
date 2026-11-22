@@ -304,7 +304,7 @@ is typically used:
 
 """
 
-%feature("docstring") RobotRaconteur::RobotRaconteurNode::__init__() """
+%feature("docstring") RobotRaconteur::RobotRaconteurNode::RobotRaconteurNode() """
 Construct a new Robot Raconteur node.
 """
 
@@ -1218,13 +1218,25 @@ It will be loaded when a node is started with the same NodeName.
 NodeID with all zeros is considered \"any\" node.
 """
 
-%feature("docstring") RobotRaconteur::NodeID::ToString() """
-Convert the NodeID UUID to string with \"B\" format
+%feature("docstring") RobotRaconteur::NodeID::ToString(const std::string& format) const """
+ToString(format=\"B\")
 
-Convert the UUID string to 8-4-4-4-12 \"B\" format (with brackets)
+Convert the NodeID UUID to string
+
+\"B\" format (default), 8-4-4-4-12 with brackets:
 
 {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
 
+\"D\" format, 8-4-4-4-12 without brackets:
+
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+\"N\" format, digits only:
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+:param format: (optional) \"B\", \"D\", or \"N\" for the format
+:type format: str
 :return: The string
 :rtype: str
 """
@@ -1724,10 +1736,13 @@ Subscription filter attribute for use with ServiceSubscriptionFilter
 %feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttribute::Name """(str) The attribute name. Empty for no name"""
 %feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttribute::Value """(str) The string value for the attribute"""
 
-%feature("docstring") RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex(const std::string& regex_value) """
+%feature("docstring") RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex(const std::string& name, const std::string& regex_value) """
+CreateServiceSubscriptionFilterAttributeRegex([name,] regex_value)
 
 Create a ServiceSubscriptionFilterAttribute from a regex string
 
+:param name: (optional) The attribute name
+:type name: str
 :param regex_value: The regex string
 :type regex_value: str
 :return: The ServiceSubscriptionFilterAttribute
