@@ -668,7 +668,7 @@ ThreadPoolCount = property(lambda self: self._GetThreadPoolCount(), lambda self,
     (int) The size of the native thread pool. May be configured dynamically.
     """)
 
-RequestTimeout = property(lambda self : self._GetRequestTimeout()/1000.0, lambda self,t : self._SetRequestTimeout(t*1000),
+RequestTimeout = property(lambda self : self._GetRequestTimeout()/1000.0, lambda self,t : self._SetRequestTimeout(int(t*1000)),
     doc = """
     (float) The timeout for requests in seconds
 
@@ -677,7 +677,7 @@ RequestTimeout = property(lambda self : self._GetRequestTimeout()/1000.0, lambda
     are all requests. All other Robot Raconteur functions that call the remote
     node and expect a response are requests. Default timeout is 15 seconds.
     """)
-TransportInactivityTimeout = property(lambda self : self._GetTransportInactivityTimeout()/1000.0, lambda self,t : self._SetTransportInactivityTimeout(t*1000),
+TransportInactivityTimeout = property(lambda self : self._GetTransportInactivityTimeout()/1000.0, lambda self,t : self._SetTransportInactivityTimeout(int(t*1000)),
     doc = """
     (float) The timeout for transport activity in seconds
 
@@ -685,7 +685,7 @@ TransportInactivityTimeout = property(lambda self : self._GetTransportInactivity
     is sent or received on the transport for the specified time,
     the transport is closed. Default timeout is 10 minutes.
     """)
-EndpointInactivityTimeout = property(lambda self : self._GetEndpointInactivityTimeout()/1000.0, lambda self,t : self._SetEndpointInactivityTimeout(t*1000),
+EndpointInactivityTimeout = property(lambda self : self._GetEndpointInactivityTimeout()/1000.0, lambda self,t : self._SetEndpointInactivityTimeout(int(t*1000)),
     doc = """
     (float) The timeout for endpoint activity in seconds
 
