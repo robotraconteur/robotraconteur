@@ -230,16 +230,16 @@
 // TransportCapabilityCode flags
 %feature("docstring") TransportCapabilityCode_PAGE_MASK "Page mask for transport capability code";
 %feature("docstring") TranspartCapabilityCode_PAGE_MASK "Page mask for transport capability code (deprecated misspelled name, use TransportCapabilityCode_PAGE_MASK)";
-%feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_PAGE2000000 "Message Version 2 transport capability page code";
+%feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_PAGE "Message Version 2 transport capability page code";
 %feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_ENABLE "Enable Message Version 2 transport capability flag";
-%feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED2 "Enable Message Version 2 connect combined transport capability flag";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_PAGE4000000 "Message Version 4 transport capability page code";
+%feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED "Enable Message Version 2 connect combined transport capability flag";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_PAGE "Message Version 4 transport capability page code";
 %feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_ENABLE "Enable Message Version 4 transport capability flag";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_CONNECTCOMBINED2 "Enable Message Version 4 connect combine transport capability flag";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE4100000 "Message Version 4 String Table capability page code";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_CONNECTCOMBINED "Enable Message Version 4 connect combine transport capability flag";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE "Message Version 4 String Table capability page code";
 %feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_ENABLE "Enable Message Version 4 String Table transport capability code";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_MESSAGE_LOCAL2 "Enable Message Version 4 local String Table capability code";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE4 "Enable Message Version 4 standard String Table capability code";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_MESSAGE_LOCAL "Enable Message Version 4 local String Table capability code";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE "Enable Message Version 4 standard String Table capability code";
 
 // RobotRaconteur_LogLevel Enum
 %feature("docstring") RobotRaconteur_LogLevel_Trace "`trace` log level";
@@ -476,7 +476,7 @@ Default level is \"info\"
 
 Set the log level for the node
 
-Set RobotRaconteur.RobotRaconteur_LogLevel_Disable to disable logging
+Set RobotRaconteur.LogLevel_Disable to disable logging
 
 :param level: The desired log level
 :type level: int
