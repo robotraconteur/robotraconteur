@@ -216,10 +216,10 @@ std::string GetUserNameForProcessId(DWORD processid)
     }
 
     wchar_t username1[512];
-    DWORD cchName = sizeof(username1);
+    DWORD cchName = sizeof(username1) / sizeof(username1[0]);
     SID_NAME_USE peUse;
     wchar_t lpReferencedDomainName[512];
-    DWORD cchReferencedDomainName = sizeof(lpReferencedDomainName);
+    DWORD cchReferencedDomainName = sizeof(lpReferencedDomainName) / sizeof(lpReferencedDomainName[0]);
     if (!::LookupAccountSidW(NULL, ((PTOKEN_USER)pTokenUser.get())->User.Sid, username1, &cchName,
                              lpReferencedDomainName, &cchReferencedDomainName, &peUse))
     {
