@@ -250,3 +250,45 @@ def test_sub_manager_enable_disabled_by_type():
 
         sub_manager.Close()
 
+def test_sub_manager_disable_twice_stays_disabled():
+
+    client_node = RR.RobotRaconteurNode()
+    client_node.Init()
+
+    client_node_setup = RR.RobotRaconteurNodeSetup(
+        "", 0, flags=intra_client_flags, node=client_node)
+
+    server1 = _testservice_impl(
+        "server1", RR.NodeID("0d694574-1ad8-4b9e-9aea-e881524fb451"))
+
+    with client_node_setup, server1:
+
+        sub_manager = RR.ServiceSubscriptionManager(node=client_node)
+
+        sub1_details = RR.ServiceSubscriptionManagerDetails(
+            Name="sub1",
+            Urls=["rr+intra:///?nodename=server1&service=test_service"]
+        )
+        sub_manager.AddSubscription(sub1_details)
+
+        sub = sub_manager.GetSubscription("sub1")
+        c = sub.GetDefaultClientWait(5)
+        assert c.add_two_numbers(1, 2) == 3
+
+        sub_manager.DisableSubscription("sub1", True)
+        time.sleep(0.1)
+        res, _ = sub.TryGetDefaultClient()
+        assert not res
+
+        # A second disable must not re-initialize the subscription
+        sub_manager.DisableSubscription("sub1", True)
+        res, _ = sub.TryGetDefaultClientWait(1)
+        assert not res
+
+        sub_manager.EnableSubscription("sub1")
+        res, _ = sub.TryGetDefaultClientWait(5)
+        assert res
+
+        sub_manager.Close()
+
+

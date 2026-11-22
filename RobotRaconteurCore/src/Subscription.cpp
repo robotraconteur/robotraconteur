@@ -3960,9 +3960,9 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
                       (sub.subscription->use_service_url && !sub.subscription->service_url.empty());
     }
 
-    if (sub_running && !sub.details.Enabled)
+    if (!sub.details.Enabled)
     {
-        if (close)
+        if (sub_running && close)
         {
             sub.subscription->SoftClose();
         }
