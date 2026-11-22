@@ -82,6 +82,45 @@ class Program
             return;
         }
 
+        if (command == "subscription_release_client")
+        {
+            using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2", 0,
+                                                   RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT |
+                                                       RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
+            {
+                var port = setup.TcpTransport.GetListenPort();
+                RobotRaconteurTestServiceSupport2 sup = new RobotRaconteurTestServiceSupport2();
+                sup.RegisterServices(setup.TcpTransport);
+                string url = "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService2";
+
+                var subscription = RobotRaconteurNode.s.SubscribeService(url);
+                var c = (com.robotraconteur.testing.TestService3.testroot3)subscription.GetDefaultClientWait(10000);
+                subscription.ClaimClient(c);
+                subscription.ReleaseClient(c);
+                // A released client is managed by the subscription again, so updating the URL with
+                // close_connected disconnects it (claimed clients are left connected)
+                subscription.UpdateServiceURL(url, null, null, null, true);
+                bool disconnected = false;
+                for (int i = 0; i < 100; i++)
+                {
+                    try
+                    {
+                        var v = c.testenum1_prop;
+                    }
+                    catch (Exception)
+                    {
+                        disconnected = true;
+                        break;
+                    }
+                    System.Threading.Thread.Sleep(100);
+                }
+                RRAssert.IsTrue(disconnected);
+                subscription.Close();
+            }
+            Console.WriteLine("Test completed");
+            return;
+        }
+
         if (command == "loopback")
         {
 

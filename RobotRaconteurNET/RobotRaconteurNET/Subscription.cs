@@ -532,7 +532,7 @@ public class ServiceSubscription
         if (s == null)
             throw new ArgumentException("Invalid object for ReleaseClient");
 
-        _subscription.ClaimClient(s.rr_innerstub);
+        _subscription.ReleaseClient(s.rr_innerstub);
     }
 
     /// <summary>

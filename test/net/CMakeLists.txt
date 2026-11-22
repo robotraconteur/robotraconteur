@@ -94,3 +94,6 @@ endif()
 
     rrconfiguretest(test_net_monitor_lock "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} monitor_lock")
 
+    rrconfiguretest(test_net_subscription_release_client "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} subscription_release_client")
+
+
