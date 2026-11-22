@@ -9111,19 +9111,19 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
             boost::to_lower(attributes_op);
             if (attributes_op == "and")
             {
-                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_OR;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_AND;
             }
             else if (attributes_op == "or")
             {
-                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_AND;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_OR;
             }
             else if (attributes_op == "nand")
             {
-                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NOR;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NAND;
             }
             else if (attributes_op == "nor")
             {
-                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NAND;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NOR;
             }
             else
             {
