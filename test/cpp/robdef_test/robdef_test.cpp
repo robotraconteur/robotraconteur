@@ -325,6 +325,22 @@ TEST(RobDef, ExceptionDefinitionKeepsService)
     EXPECT_EQ(def->Exceptions[0]->service.lock(), def);
 }
 
+TEST(RobDef, UsingAsMultipleBlanks)
+{
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    RR_SHARED_PTR<UsingDefinition> u1 = RR_MAKE_SHARED<UsingDefinition>(def);
+    ASSERT_NO_THROW(u1->FromString("using c.d  as e"));
+    EXPECT_EQ(u1->QualifiedName, "c.d");
+    EXPECT_EQ(u1->UnqualifiedName, "e");
+    RR_SHARED_PTR<UsingDefinition> u2 = RR_MAKE_SHARED<UsingDefinition>(def);
+    ASSERT_NO_THROW(u2->FromString("using c.d as  e"));
+    EXPECT_EQ(u2->QualifiedName, "c.d");
+    EXPECT_EQ(u2->UnqualifiedName, "e");
+    RR_SHARED_PTR<UsingDefinition> u3 = RR_MAKE_SHARED<UsingDefinition>(def);
+    ASSERT_NO_THROW(u3->FromString("using c.d as\te"));
+    EXPECT_EQ(u3->UnqualifiedName, "e");
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

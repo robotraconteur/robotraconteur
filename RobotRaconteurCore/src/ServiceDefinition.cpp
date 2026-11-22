@@ -2646,7 +2646,7 @@ void UsingDefinition::FromString(boost::string_ref s, const ServiceDefinitionPar
     if (ParseInfo.Line.empty())
         ParseInfo.Line = s.to_string();
 
-    static boost::regex r("^[ \\t]*using[ \\t]+(" RR_QUALIFIED_TYPE_REGEX ")(?:[ \\t]+as[ \\t](" RR_NAME_REGEX
+    static boost::regex r("^[ \\t]*using[ \\t]+(" RR_QUALIFIED_TYPE_REGEX ")(?:[ \\t]+as[ \\t]+(" RR_NAME_REGEX
                           "))?[ \\t]*$");
 
     ref_match r_match;
