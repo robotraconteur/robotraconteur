@@ -43,13 +43,13 @@ function RobotRaconteurMatlabTest2(url)
         g3.Next(5);
         error('RobotRaconteurMatlabTest2:noerror', 'Next with parameter did not fail');
     catch e
-        assert(~isempty(strfind(e.message, 'GeneratorClient Next does not expect a parameter')), e.message)
+        assert(~isempty(strfind(e.message, 'RobotRaconteur.InvalidArgument GeneratorClient Next does not expect a parameter')), e.message)
     end
     try
         g3.TryNext(5);
         error('RobotRaconteurMatlabTest2:noerror', 'TryNext with parameter did not fail');
     catch e
-        assert(~isempty(strfind(e.message, 'GeneratorClient TryNext does not expect a parameter')), e.message)
+        assert(~isempty(strfind(e.message, 'RobotRaconteur.InvalidArgument GeneratorClient TryNext does not expect a parameter')), e.message)
     end
     g3.Close()
 
