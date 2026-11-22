@@ -4445,11 +4445,26 @@ void MexServiceStub::EndAsyncFunctionCall(const RR_INTRUSIVE_PTR<MessageEntry>& 
     async_results.push(ares);
 }
 
+// Requests, events and callback calls are queued until the MATLAB script calls ProcessRequests. Bound the
+// queues so a remote peer cannot grow them without limit while MATLAB is busy.
+static const size_t MEX_MAX_QUEUED_REQUESTS = 1024;
+
+static void MexServiceSkel_CheckRequestQueue(size_t queued)
+{
+    if (queued >= MEX_MAX_QUEUED_REQUESTS)
+        throw OperationFailedException("MATLAB service request queue full");
+}
+
 void MexServiceStub::DispatchEvent(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
     if (!EnableEvents)
         return;
     boost::recursive_mutex::scoped_lock lock2(events_lock);
+    if (events.size() >= MEX_MAX_QUEUED_REQUESTS)
+    {
+        // Drop the oldest event rather than growing the queue without bound
+        events.pop_front();
+    }
     events.push_back(m);
 
     // throw MemberNotFoundException("Event member not found");
@@ -5135,12 +5150,22 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceStub::CallbackCall(const RR_INTRUSIVE_P
             throw InvalidOperationException("MATLAB callback function not set");
         }
 
+        if (callback_requests.size() >= MEX_MAX_QUEUED_REQUESTS)
+            throw OperationFailedException("MATLAB callback request queue full");
         callback_requests.push_back(req);
     }
     req->ev.WaitOne(10000);
 
     if (!req->response)
+    {
+        // Do not run a callback call that already timed out later
+        boost::recursive_mutex::scoped_lock lock(callback_lock);
+        std::deque<boost::shared_ptr<MexCallbackCall> >::iterator e2 =
+            std::find(callback_requests.begin(), callback_requests.end(), req);
+        if (e2 != callback_requests.end())
+            callback_requests.erase(e2);
         throw OperationFailedException("Callback was not called");
+    }
 
     return req->response;
 }
@@ -7577,6 +7602,8 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallGetProperty(const RR_INTRUSIV
     if (!found)
         throw MemberNotFoundException("Property " + m->MemberName.str() + " not found");
 
+    MexServiceSkel_CheckRequestQueue(property_get_requests.size() + property_set_requests.size() +
+                                     function_requests.size());
     property_get_requests.push_back(boost::make_tuple(m, ServerEndpoint::GetCurrentEndpoint()));
     skels_waiting.Set();
     return RR_INTRUSIVE_PTR<MessageEntry>();
@@ -7599,6 +7626,8 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallSetProperty(const RR_INTRUSIV
     if (!found)
         throw MemberNotFoundException("Property " + m->MemberName.str() + " not found");
 
+    MexServiceSkel_CheckRequestQueue(property_get_requests.size() + property_set_requests.size() +
+                                     function_requests.size());
     property_set_requests.push_back(boost::make_tuple(m, ServerEndpoint::GetCurrentEndpoint()));
     skels_waiting.Set();
     return RR_INTRUSIVE_PTR<MessageEntry>();
@@ -7621,6 +7650,8 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallFunction(const RR_INTRUSIVE_P
     if (!found)
         throw MemberNotFoundException("Function " + m->MemberName.str() + " not found");
 
+    MexServiceSkel_CheckRequestQueue(property_get_requests.size() + property_set_requests.size() +
+                                     function_requests.size());
     function_requests.push_back(boost::make_tuple(m, ServerEndpoint::GetCurrentEndpoint()));
     skels_waiting.Set();
     return RR_INTRUSIVE_PTR<MessageEntry>();
