@@ -385,8 +385,9 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadConfigurationDescriptorRaw(const RR
     std::vector<uint8_t> buf1(8192);
 
     ULONG len = 0;
-    if (!f->WinUsb_GetDescriptor(h->hInterface.get(), USB_CONFIGURATION_DESCRIPTOR_TYPE,
-                                 settings->interface_alt_setting, 0, &buf1[0], buf1.size(), &len))
+    // Index is the configuration descriptor index, not the interface alternate setting
+    if (!f->WinUsb_GetDescriptor(h->hInterface.get(), USB_CONFIGURATION_DESCRIPTOR_TYPE, 0, 0, &buf1[0], buf1.size(),
+                                 &len))
     {
         return Error;
     }
@@ -414,6 +415,9 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
     size_t pos = 0;
     size_t remaining = desc_buf.size();
 
+    // Only use the bulk endpoints of the Robot Raconteur interface (composite devices have more interfaces)
+    bool in_rr_interface = false;
+
     while (remaining > 0)
     {
         if (remaining < sizeof(USB_COMMON_DESCRIPTOR))
@@ -425,7 +429,15 @@ UsbDeviceStatus WinUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
         {
             return Error;
         }
-        if (d->bDescriptorType == WINUSB_USD_ENDPOINT_DESCRIPTOR_TYPE)
+        if (d->bDescriptorType == USB_INTERFACE_DESCRIPTOR_TYPE && d->bLength >= sizeof(USB_INTERFACE_DESCRIPTOR))
+        {
+            PUSB_INTERFACE_DESCRIPTOR d1 = reinterpret_cast<PUSB_INTERFACE_DESCRIPTOR>(d);
+            in_rr_interface = d1->bInterfaceNumber == settings->interface_number &&
+                              d1->bAlternateSetting == settings->interface_alt_setting;
+        }
+        if (in_rr_interface && d->bDescriptorType == WINUSB_USD_ENDPOINT_DESCRIPTOR_TYPE &&
+            (d->bLength < sizeof(USB_ENDPOINT_DESCRIPTOR) ||
+             (reinterpret_cast<PUSB_ENDPOINT_DESCRIPTOR>(d)->bmAttributes & 0x03) == 0x02 /* bulk */))
         {
             if (d->bLength < sizeof(USB_ENDPOINT_DESCRIPTOR))
             {
