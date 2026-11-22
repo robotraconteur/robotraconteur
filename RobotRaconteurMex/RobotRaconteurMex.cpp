@@ -7293,6 +7293,9 @@ constant_type convert_constant(const RR_SHARED_PTR<ConstantDefinition>& c1,
     {
         if (def->ArrayType != DataTypes_ArrayTypes_multidimarray)
         {
+            // The value is evaluated as MATLAB code below. Only allow numeric literals.
+            if (!c1->VerifyValue())
+                throw InvalidArgumentException("Invalid constant value");
             boost::shared_ptr<TypeDefinition> def2 = def->Clone();
             def2->Name = "";
             def2->RemoveContainers();
