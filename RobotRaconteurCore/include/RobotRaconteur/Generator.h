@@ -418,7 +418,7 @@ class GeneratorClient : public Generator<Return, Param>, public GeneratorClientB
     RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                 int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
-        GeneratorClientBase::AsyncAbort(handler, timeout);
+        GeneratorClientBase::AsyncClose(handler, timeout);
     }
 };
 
@@ -455,7 +455,7 @@ class GeneratorClient<Return, void> : public Generator<Return, void>, public Gen
     RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                 int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
-        GeneratorClientBase::AsyncAbort(handler, timeout);
+        GeneratorClientBase::AsyncClose(handler, timeout);
     }
 };
 
@@ -496,7 +496,7 @@ class GeneratorClient<void, Param> : public Generator<void, Param>, public Gener
     RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                 int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
-        GeneratorClientBase::AsyncAbort(handler, timeout);
+        GeneratorClientBase::AsyncClose(handler, timeout);
     }
 };
 
