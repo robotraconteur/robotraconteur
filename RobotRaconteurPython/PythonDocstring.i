@@ -539,8 +539,8 @@ is connected
 
 Raises `RobotRaconteur.ConnectionException` or other exception if connection is invalid.
 
-:param endpoint: The LocalEndpoint identifier to check
-:type endpoint: int
+:param client: The LocalEndpoint identifier to check
+:type client: int
 """
 
 %feature("docstring") RobotRaconteurNodeSetupFlags_NONE "No options enabled";
@@ -606,7 +606,7 @@ The command line options will be allowed to override the options
 specified in allowed_overrides passed to CommandLineConfigParser().
 
 :param node_name: The default NodeName
-:type node_name str
+:type node_name: str
 :param tcp_port: The default TCP port
 :type tcp_port: int
 :param default_flags: The default flags
@@ -690,7 +690,7 @@ Get the option value as a bool
 Returns default_value if option not specified on command line
 
 :param option: The name of the option
-:type option: bool
+:type option: str
 :param default_value: The default option value
 :type default_value: bool
 :return: The option value, or default_value if not specified on command line
@@ -1379,7 +1379,7 @@ specified using endpoint.
 :param username: The name of the user owning the lock
 :type username: str
 :param endpoint: The client endpoint ID of the client owning the lock
-:type int:
+:type endpoint: int
 """
 
 %feature("docstring") RobotRaconteur::ServerContext::ReleaseObjectLock(const std::string& servicepath, const std::string& username, bool override_) """
@@ -1393,9 +1393,9 @@ The override_ parameter is set to true for client requests if the client has
 the \"objectlockoverride\" permission.
 
 :param servicepath: The service path to release lock
-:type str:
+:type servicepath: str
 :param username: The username requesting the lock release
-:type username:
+:type username: str
 :param override_: If False, only the creating username can release the lock. If True,
  any username can release the lock
 :type override_: bool
