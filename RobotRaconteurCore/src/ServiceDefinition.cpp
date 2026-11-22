@@ -4701,11 +4701,16 @@ struct rrimports
 
 rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def,
                       const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
-                      std::set<std::string> parent_defs = std::set<std::string>())
+                      std::set<std::string> parent_defs = std::set<std::string>(),
+                      std::set<std::string>* checked_defs = NULL)
 {
     rrimports out;
     out.def = def;
     if (def->Imports.empty())
+        return out;
+
+    // The imports of this definition were already checked for cycles, do not walk them again
+    if (checked_defs && checked_defs->count(def->Name) != 0)
         return out;
 
     parent_defs.insert(def->Name);
@@ -4733,9 +4738,12 @@ rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def,
                 "Recursive imports between \"" + def->Name + "\" and \"" + *e_parent_defs + "\"", def->ParseInfo);
         }
 
-        rrimports imp2 = get_imports(def2, defs, parent_defs);
+        rrimports imp2 = get_imports(def2, defs, parent_defs, checked_defs);
         out.imported.push_back(RR_MOVE(imp2));
     }
+
+    if (checked_defs)
+        checked_defs->insert(def->Name);
 
     return out;
 }
@@ -4743,7 +4751,8 @@ rrimports get_imports(const RR_SHARED_PTR<ServiceDefinition>& def,
 void VerifyImports(const RR_SHARED_PTR<ServiceDefinition>& def,
                    const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs)
 {
-    rrimports c = get_imports(def, defs);
+    std::set<std::string> checked_defs;
+    rrimports c = get_imports(def, defs, std::set<std::string>(), &checked_defs);
 }
 
 ROBOTRACONTEUR_CORE_API void VerifyServiceDefinitions(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& def,

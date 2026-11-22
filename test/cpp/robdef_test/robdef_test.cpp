@@ -360,6 +360,40 @@ TEST(RobDef, RecursiveImplementsNotThroughRoot)
     EXPECT_THROW(VerifyServiceDefinitions(defs), ServiceDefinitionVerifyException);
 }
 
+TEST(RobDef, VerifyImportsChainNotExponential)
+{
+    // Each definition imports all earlier definitions. Without memoization the import tree has 2^N nodes.
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > defs;
+    for (int i = 0; i < 40; i++)
+    {
+        std::stringstream ss;
+        ss << "service example.importchain" << i << "\n\nstdver 0.10\n\n";
+        for (int j = 0; j < i; j++)
+        {
+            ss << "import example.importchain" << j << "\n";
+        }
+        RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+        ASSERT_NO_THROW(def->FromString(ss.str()));
+        defs.push_back(def);
+    }
+    EXPECT_NO_THROW(VerifyServiceDefinitions(defs));
+}
+
+TEST(RobDef, VerifyImportsCycleStillDetected)
+{
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > defs;
+    RR_SHARED_PTR<ServiceDefinition> d1 = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(d1->FromString("service example.importcycle1\n\nstdver 0.10\nimport example.importcycle2\n"));
+    RR_SHARED_PTR<ServiceDefinition> d2 = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(d2->FromString("service example.importcycle2\n\nstdver 0.10\nimport example.importcycle3\n"));
+    RR_SHARED_PTR<ServiceDefinition> d3 = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(d3->FromString("service example.importcycle3\n\nstdver 0.10\nimport example.importcycle2\n"));
+    defs.push_back(d1);
+    defs.push_back(d2);
+    defs.push_back(d3);
+    EXPECT_THROW(VerifyServiceDefinitions(defs), ServiceDefinitionVerifyException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
