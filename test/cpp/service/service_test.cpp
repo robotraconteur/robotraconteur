@@ -398,6 +398,71 @@ TEST_F(ServiceTest, DisconnectServiceAlreadyClosed)
     EXPECT_TRUE(h.ev->WaitOne(5000));
 }
 
+// Transport connection stand-in for calling RobotRaconteurNode::SpecialRequest directly
+class ServiceTest_DummyTransportConnection : public ITransportConnection
+{
+  public:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+    ServiceTest_DummyTransportConnection(const RR_SHARED_PTR<RobotRaconteurNode>& node) : node(node) {}
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void Close() RR_OVERRIDE {}
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE { RR_UNUSED(endpoint); }
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE { return 0; }
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE { return 0; }
+    RR_OVIRTUAL NodeID GetRemoteNodeID() RR_OVERRIDE { return NodeID::GetAny(); }
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurNode> GetNode() RR_OVERRIDE { return node.lock(); }
+    RR_OVIRTUAL bool CheckCapabilityActive(uint32_t flag) RR_OVERRIDE
+    {
+        RR_UNUSED(flag);
+        return false;
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE { return RR_SHARED_PTR<Transport>(); }
+};
+
+static RR_INTRUSIVE_PTR<Message> ServiceTest_CreateSpecialRequest(const RR_INTRUSIVE_PTR<MessageEntry>& e,
+                                                                  uint32_t receiver_endpoint, const NodeID& sender)
+{
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    m->header->ReceiverNodeID = NodeID::GetAny();
+    m->header->SenderNodeID = sender;
+    m->header->SenderEndpoint = 1234;
+    m->header->ReceiverEndpoint = receiver_endpoint;
+    m->entries.push_back(e);
+    return m;
+}
+
+// An invalid clientversion element in ConnectClientCombined must produce an error reply, not an exception
+TEST_F(ServiceTest, ConnectClientCombinedInvalidClientVersion)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = test_server_node_config->node;
+    if (!node)
+        return; // external test server (ROBOTRACONTEUR_TEST_SERVER_URL), SpecialRequest not reachable
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ConnectClientCombined, "");
+    e->ServicePath = "RobotRaconteurTestService";
+    e->AddElement("clientversion", ScalarToRRArray<int32_t>(5));
+    RR_INTRUSIVE_PTR<Message> m = ServiceTest_CreateSpecialRequest(e, 0, NodeID::NewUniqueID());
+
+    RR_SHARED_PTR<ITransportConnection> tc = RR_MAKE_SHARED<ServiceTest_DummyTransportConnection>(node);
+    RR_INTRUSIVE_PTR<Message> ret;
+    ASSERT_NO_THROW(ret = node->SpecialRequest(m, std::numeric_limits<uint32_t>::max(), tc));
+    ASSERT_TRUE(ret);
+    ASSERT_EQ(ret->entries.size(), 1u);
+    EXPECT_NE(ret->entries[0]->Error, MessageErrorType_None);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

@@ -1292,13 +1292,14 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
 
             RobotRaconteurVersion v;
             RR_INTRUSIVE_PTR<MessageElement> m_ver;
-            if (e->TryFindElement("clientversion", m_ver))
-            {
-                v.FromString(m_ver->CastDataToString());
-            }
 
             try
             {
+                if (e->TryFindElement("clientversion", m_ver))
+                {
+                    v.FromString(m_ver->CastDataToString());
+                }
+
                 c = GetService(name);
                 std::string objtype = c->GetRootObjectType(v);
                 eret->AddElement("objecttype", stringToRRArray(objtype));
