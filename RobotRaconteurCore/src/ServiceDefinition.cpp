@@ -2594,7 +2594,10 @@ std::string ExceptionDefinition::ToString() { return "exception " + Name; }
 
 void ExceptionDefinition::FromString(boost::string_ref s, const ServiceDefinitionParseInfo* parse_info)
 {
+    // Reset() clears all fields, keep the parent service definition
+    RR_WEAK_PTR<ServiceDefinition> service1 = service;
     Reset();
+    service = service1;
 
     if (parse_info)
     {

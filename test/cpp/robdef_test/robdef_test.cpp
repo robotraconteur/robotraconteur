@@ -316,6 +316,15 @@ TEST(RobDef, ExceptionMessagesIncludeLocation)
     EXPECT_EQ(e2.ToString(), "Verify error on line 12 in example.messages: verify problem");
 }
 
+TEST(RobDef, ExceptionDefinitionKeepsService)
+{
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(def->FromString("service example.exceptionservice\n\nstdver 0.10\n\nexception MyError\n"));
+    ASSERT_EQ(def->Exceptions.size(), 1u);
+    EXPECT_EQ(def->Exceptions[0]->Name, "MyError");
+    EXPECT_EQ(def->Exceptions[0]->service.lock(), def);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
