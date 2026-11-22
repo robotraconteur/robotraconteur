@@ -796,6 +796,57 @@ TEST_F(ServiceTest, ClientObjectLockReleaseOtherSession)
     EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r2));
 }
 
+TEST_F(ServiceTest, ClientObjectLockReleasedOnDisconnectAfterReauthentication)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+    using com::robotraconteur::testing::TestService1::sub1;
+    using com::robotraconteur::testing::TestService1::testroot;
+
+    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > cred1 = AllocateEmptyRRMap<std::string, RRValue>();
+    cred1->insert(std::make_pair("password", stringToRRArray("testpass1")));
+    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > cred2 = AllocateEmptyRRMap<std::string, RRValue>();
+    cred2->insert(std::make_pair("password", stringToRRArray("testpass2")));
+
+    RR_SHARED_PTR<testroot> r1;
+    RR_SHARED_PTR<testroot> r2;
+    ASSERT_NO_THROW(
+        r1 = rr_cast<testroot>(RobotRaconteurNode::s()->ConnectService(service_auth_url, "testuser1", cred1)));
+    ASSERT_NO_THROW(
+        r2 = rr_cast<testroot>(RobotRaconteurNode::s()->ConnectService(service_auth_url, "testuser2", cred2)));
+
+    RR_SHARED_PTR<sub1> r1_o;
+    RR_SHARED_PTR<sub1> r2_o;
+    ASSERT_NO_THROW(r1_o = r1->get_o3(3));
+    ASSERT_NO_THROW(r2_o = r2->get_o3(3));
+
+    double d1[] = {1.0};
+    RR_INTRUSIVE_PTR<RRArray<double> > d = AttachRRArrayCopy(d1, 1);
+
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->RequestObjectLock(r1_o, RobotRaconteurObjectLockFlags_CLIENT_LOCK));
+    EXPECT_THROW(r2_o->set_d1(d), ObjectLockedException);
+
+    // Authenticate the locking session as another user, then disconnect it. The session lock must be released.
+    EXPECT_NO_THROW(rr_cast<ServiceStub>(r1)->GetContext()->AuthenticateUser("testuser2", cred2));
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r1));
+
+    bool released = false;
+    for (int i = 0; i < 100 && !released; i++)
+    {
+        try
+        {
+            r2_o->set_d1(d);
+            released = true;
+        }
+        catch (ObjectLockedException&)
+        {
+            boost::this_thread::sleep(boost::posix_time::milliseconds(20));
+        }
+    }
+    EXPECT_TRUE(released);
+
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r2));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

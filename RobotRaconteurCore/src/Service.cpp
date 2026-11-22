@@ -1698,14 +1698,14 @@ void ServerContext::RemoveClient(const RR_SHARED_PTR<ServerEndpoint>& cendpoint)
         {
             try
             {
-                if (o.second->GetUsername() == cusername)
+                if (o.second->GetEndpoint() == ce)
                 {
-                    if (o.second->GetEndpoint() == ce)
-                    {
-                        o.second->ReleaseLock();
-                        active_object_locks.erase(o.first);
-                    }
-                    else
+                    // Session lock of this endpoint, whatever user the endpoint is now authenticated as
+                    o.second->ReleaseLock();
+                    active_object_locks.erase(o.first);
+                }
+                else if (o.second->GetUsername() == cusername)
+                {
                     {
 
                         {
