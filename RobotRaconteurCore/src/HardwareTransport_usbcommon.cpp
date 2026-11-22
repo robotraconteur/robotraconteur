@@ -554,7 +554,13 @@ void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec
     boost::mutex::scoped_lock lock(this_lock);
 
     RR_SHARED_PTR<UsbDevice_Settings> settings1 = settings;
-    ParseRRDescriptors(rr_descriptors, settings1);
+    UsbDeviceStatus res2 = ParseRRDescriptors(rr_descriptors, settings1);
+    if (res2 != Open)
+    {
+        lock.unlock();
+        InitializeDevice_err(handler, res2);
+        return;
+    }
 
     if (boost::range::count(settings->supported_protocols, 0x0101) == 0)
     {
