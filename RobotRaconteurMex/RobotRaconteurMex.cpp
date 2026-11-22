@@ -1074,7 +1074,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
             RR_SHARED_PTR<RobotRaconteur::Rate> r = RobotRaconteur::RobotRaconteurNode::s()->CreateRate(rate);
             rates.insert(std::make_pair(rate_count, r));
             mxArray* ret = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
-            ((int32_t*)(mxGetData(prhs[1])))[0] = rate_count;
+            ((int32_t*)(mxGetData(ret)))[0] = rate_count;
             plhs[0] = ret;
             return;
         }
@@ -1091,7 +1091,9 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
             RR_SHARED_PTR<RobotRaconteur::Rate> r;
             {
                 boost::recursive_mutex::scoped_lock lock(rate_lock);
-                r = rates.at(id);
+                std::map<int32_t, RR_SHARED_PTR<RobotRaconteur::Rate> >::iterator e = rates.find(id);
+                if (e != rates.end())
+                    r = e->second;
             }
 
             if (!r)

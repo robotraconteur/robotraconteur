@@ -13,6 +13,7 @@ try
 
     RobotRaconteurMatlabTest(url1)
     RobotRaconteurMatlabTest2(url2)
+    RobotRaconteurMatlabRateTest()
     try
     lib.Shutdown()
     catch
