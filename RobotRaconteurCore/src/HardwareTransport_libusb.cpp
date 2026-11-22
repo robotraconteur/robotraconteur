@@ -1068,7 +1068,21 @@ UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
 
     if (current_config != settings->device_desired_config)
     {
-        f->libusb_set_configuration(dev_h1.get(), 0);
+        int res0 = f->libusb_set_configuration(dev_h1.get(), settings->device_desired_config);
+        if (res0 != 0)
+        {
+            if (res0 == LIBUSB_ERROR_BUSY)
+            {
+                return Busy;
+            }
+
+            if (res0 == LIBUSB_ERROR_ACCESS)
+            {
+                return Unauthorized;
+            }
+
+            return Error;
+        }
     }
 
     int res1 = f->libusb_claim_interface(dev_h1.get(), settings->interface_number);
