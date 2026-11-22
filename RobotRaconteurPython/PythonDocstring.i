@@ -466,7 +466,7 @@ for the node, it will be ignored
 
 Get the current log level for the node
 
-Default level is \"info\"
+Default level is \"warning\"
 
 :return: The current log level
 :rtype: int
@@ -488,7 +488,7 @@ Set the log level for the node from a string
 
 Must be one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
 
-Defaults to WARNING
+If the value is invalid, the log level is left unchanged
 
 :param level: The desired log level
 :type level: str
@@ -516,7 +516,7 @@ If an invalid value or the variable does not exist, the log level is left unchan
 
 Get the currently configured log record handler
 
-If None, records are sent to ``stdout``
+If None, records are sent to ``stderr``
 
 :return: The log record handler
 :rtype: LogRecordHandler
