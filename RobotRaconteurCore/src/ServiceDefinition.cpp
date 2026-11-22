@@ -5098,10 +5098,46 @@ ROBOTRACONTEUR_CORE_API boost::tuple<boost::string_ref, boost::string_ref> Split
     return boost::make_tuple(name.substr(0, pos), name.substr(pos + 1, name.size() - pos - 1));
 }
 
-ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(
-    const RR_SHARED_PTR<ServiceEntryDefinition>& def, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
-    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<RRObject>& client)
+static size_t EstimatePodPackedElementSize_ArrayCount(const RR_SHARED_PTR<TypeDefinition>& t)
 {
+    if (t->ArrayType == DataTypes_ArrayTypes_none)
+    {
+        return 1;
+    }
+    size_t array_count = 1;
+    BOOST_FOREACH (int32_t l, t->ArrayLength)
+    {
+        size_t l1 = boost::numeric_cast<size_t>(l);
+        if (l1 != 0 && array_count > std::numeric_limits<size_t>::max() / l1)
+        {
+            throw DataTypeException("Pod field array too large");
+        }
+        array_count *= l1;
+    }
+    return array_count;
+}
+
+static size_t EstimatePodPackedElementSize_Add(size_t s, size_t element_size, size_t array_count)
+{
+    if (array_count != 0 && element_size > (std::numeric_limits<size_t>::max() - s) / array_count)
+    {
+        throw DataTypeException("Pod too large");
+    }
+    return s + element_size * array_count;
+}
+
+static size_t EstimatePodPackedElementSize1(const RR_SHARED_PTR<ServiceEntryDefinition>& def,
+                                            const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+                                            const RR_SHARED_PTR<RobotRaconteurNode>& node,
+                                            const RR_SHARED_PTR<RRObject>& client, std::set<std::string>& parent_pods)
+{
+    // Service definitions pulled from a service are not verified, so guard against recursive pods
+    std::string def_name = def->ResolveQualifiedName();
+    if (!parent_pods.insert(def_name).second)
+    {
+        throw ServiceDefinitionVerifyException("Recursive pod \"" + def_name + "\"");
+    }
+
     size_t s = 16;
     s += ArrayBinaryWriter::GetStringByteCount8(def->Name);
     BOOST_FOREACH (const RR_SHARED_PTR<MemberDefinition>& m, def->Members)
@@ -5111,17 +5147,8 @@ ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(
         {
             s += 16;
             s += ArrayBinaryWriter::GetStringByteCount8(p->Name);
-            size_t array_count = 0;
-            if (p->Type->ArrayType == DataTypes_ArrayTypes_none)
-            {
-                array_count = 1;
-            }
-            else
-            {
-                array_count =
-                    boost::numeric_cast<size_t>(boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>()));
-            }
-            s += RRArrayElementSize(p->Type->Type) * array_count;
+            size_t array_count = EstimatePodPackedElementSize_ArrayCount(p->Type);
+            s = EstimatePodPackedElementSize_Add(s, RRArrayElementSize(p->Type->Type), array_count);
         }
         else
         {
@@ -5130,20 +5157,21 @@ ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(
             s += 16;
             s += ArrayBinaryWriter::GetStringByteCount8(p->Name);
             s += ArrayBinaryWriter::GetStringByteCount8(nt->ResolveQualifiedName());
-            size_t array_count = 0;
-            if (p->Type->ArrayType == DataTypes_ArrayTypes_none)
-            {
-                array_count = 1;
-            }
-            else
-            {
-                array_count =
-                    boost::numeric_cast<size_t>(boost::accumulate(p->Type->ArrayLength, 1, std::multiplies<int32_t>()));
-            }
-            s += EstimatePodPackedElementSize(nt, other_defs, node, client) * array_count;
+            size_t array_count = EstimatePodPackedElementSize_ArrayCount(p->Type);
+            s = EstimatePodPackedElementSize_Add(
+                s, EstimatePodPackedElementSize1(nt, other_defs, node, client, parent_pods), array_count);
         }
     }
+    parent_pods.erase(def_name);
     return s;
+}
+
+ROBOTRACONTEUR_CORE_API size_t EstimatePodPackedElementSize(
+    const RR_SHARED_PTR<ServiceEntryDefinition>& def, const std::vector<RR_SHARED_PTR<ServiceDefinition> >& other_defs,
+    const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<RRObject>& client)
+{
+    std::set<std::string> parent_pods;
+    return EstimatePodPackedElementSize1(def, other_defs, node, client, parent_pods);
 }
 
 boost::tuple<DataTypes, size_t> GetNamedArrayElementTypeAndCount(

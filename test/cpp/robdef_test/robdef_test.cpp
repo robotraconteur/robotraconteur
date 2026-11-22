@@ -394,6 +394,39 @@ TEST(RobDef, VerifyImportsCycleStillDetected)
     EXPECT_THROW(VerifyServiceDefinitions(defs), ServiceDefinitionVerifyException);
 }
 
+TEST(RobDef, EstimatePodPackedElementSizeRecursivePod)
+{
+    // Definitions pulled from a service are not verified, so EstimatePodPackedElementSize must not
+    // recurse forever on a recursive pod
+    std::string def_text = "service example.recursivepod\n\nstdver 0.10\n\n"
+                           "pod A\nfield A a\nend\n\n"
+                           "pod B\nfield C c\nend\n\n"
+                           "pod C\nfield B[2] b\nend\n\n"
+                           "pod D\nfield double[2,3] x\nfield int32 y\nend\n\n"
+                           "pod E\nfield D d1\nfield D[3] d2\nend\n";
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(def->FromString(def_text));
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > defs;
+    defs.push_back(def);
+
+    RR_SHARED_PTR<ServiceEntryDefinition> a = TryFindByName(def->Pods, "A");
+    RR_SHARED_PTR<ServiceEntryDefinition> b = TryFindByName(def->Pods, "B");
+    RR_SHARED_PTR<ServiceEntryDefinition> d = TryFindByName(def->Pods, "D");
+    RR_SHARED_PTR<ServiceEntryDefinition> e = TryFindByName(def->Pods, "E");
+    ASSERT_TRUE(a);
+    ASSERT_TRUE(b);
+    ASSERT_TRUE(d);
+    ASSERT_TRUE(e);
+    EXPECT_ANY_THROW(EstimatePodPackedElementSize(a, defs));
+    EXPECT_ANY_THROW(EstimatePodPackedElementSize(b, defs));
+    size_t d_size = 0;
+    EXPECT_NO_THROW(d_size = EstimatePodPackedElementSize(d, defs));
+    EXPECT_GT(d_size, 6 * sizeof(double) + sizeof(int32_t));
+    size_t e_size = 0;
+    EXPECT_NO_THROW(e_size = EstimatePodPackedElementSize(e, defs));
+    EXPECT_GT(e_size, 4 * d_size);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
