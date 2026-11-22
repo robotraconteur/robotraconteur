@@ -1546,6 +1546,12 @@ class UnpackMessageElementImpl
                     dims3.len = (int)dims2.size();
 
                     PyAutoPtr<PyObject> el3(PyArray_Newshape((PyArrayObject*)el1, &dims3, NPY_FORTRANORDER));
+                    if (!el3.get())
+                    {
+                        PyErr_Clear();
+                        Py_XDECREF(el1);
+                        throw DataTypeException("Invalid pod field array dimensions");
+                    }
 
                     if (PyObject_SetItem(el2.get(), py_name.get(), el3.get()) != 0)
                     {
@@ -1813,6 +1819,11 @@ class UnpackMessageElementImpl
 
                             push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", type2);
                             PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                            if (!el2.get())
+                            {
+                                PyErr_Clear();
+                                throw DataTypeException("Could not unpack container element");
+                            }
                             PyList_SetItem(ret.get(), i, el2.get());
                             Py_XINCREF(el2.get());
                             pop_field_level();
@@ -1851,6 +1862,11 @@ class UnpackMessageElementImpl
 
                             push_field_level("[" + boost::lexical_cast<std::string>(i2) + "]", type2);
                             PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                            if (!el2.get())
+                            {
+                                PyErr_Clear();
+                                throw DataTypeException("Could not unpack container element");
+                            }
                             PyAutoPtr<PyObject> key(PyLong_FromLong(i2));
                             PyDict_SetItem(ret.get(), key.get(), el2.get());
                             pop_field_level();
@@ -1875,6 +1891,11 @@ class UnpackMessageElementImpl
 
                             push_field_level("[\"" + el1->ElementName.str() + "\"]", type2);
                             PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                            if (!el2.get())
+                            {
+                                PyErr_Clear();
+                                throw DataTypeException("Could not unpack container element");
+                            }
                             PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName.str()).get(), el2.get());
                             pop_field_level();
                         }
@@ -2007,6 +2028,11 @@ class UnpackMessageElementImpl
                 }
 
                 PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                if (!el2.get())
+                {
+                    PyErr_Clear();
+                    throw DataTypeException("Could not unpack container element");
+                }
                 PyList_SetItem(ret.get(), i, el2.get());
                 Py_XINCREF(el2.get());
                 pop_field_level();
@@ -2047,6 +2073,11 @@ class UnpackMessageElementImpl
 
                 push_field_level("[" + boost::lexical_cast<std::string>(i2) + "]", type2);
                 PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                if (!el2.get())
+                {
+                    PyErr_Clear();
+                    throw DataTypeException("Could not unpack container element");
+                }
 #if (PY_MAJOR_VERSION == 2)
                 PyAutoPtr<PyObject> key(PyInt_FromLong(i2));
 #else
@@ -2079,6 +2110,11 @@ class UnpackMessageElementImpl
 
                 push_field_level("[" + el1->ElementName.str() + "]", type2);
                 PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                if (!el2.get())
+                {
+                    PyErr_Clear();
+                    throw DataTypeException("Could not unpack container element");
+                }
                 PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName.str()).get(), el2.get());
                 pop_field_level();
             }
@@ -2140,6 +2176,11 @@ class UnpackMessageElementImpl
             dims3.len = (int)dims2.size();
 
             PyAutoPtr<PyObject> ret2(PyArray_Newshape((PyArrayObject*)ret.get(), &dims3, NPY_FORTRANORDER));
+            if (!ret2.get())
+            {
+                PyErr_Clear();
+                throw DataTypeException("Invalid MultiDimArray dimensions");
+            }
 
             return ret2.detach();
         }
@@ -2185,6 +2226,11 @@ class UnpackMessageElementImpl
             dims3.len = (int)dims2.size();
 
             PyAutoPtr<PyObject> ret2(PyArray_Newshape((PyArrayObject*)ret.get(), &dims3, NPY_FORTRANORDER));
+            if (!ret2.get())
+            {
+                PyErr_Clear();
+                throw DataTypeException("Invalid MultiDimArray dimensions");
+            }
 
             return ret2.detach();
         }
