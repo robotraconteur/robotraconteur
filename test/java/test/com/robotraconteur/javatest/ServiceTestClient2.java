@@ -26,6 +26,7 @@ public class ServiceTestClient2
         r.get_o4();
         testWirePeekPoke();
         asyncTestWirePeekPoke();
+        testWireLastValueSentTime();
 
         testEnums();
         testPods();
@@ -113,6 +114,22 @@ public class ServiceTestClient2
     public final void disconnectService()
     {
         RobotRaconteurNode.s().disconnectService(r);
+    }
+
+    public void testWireLastValueSentTime()
+    {
+        // The test service does not send values on w1, so the connection sends values but does not receive one
+        Wire<int[]>.WireConnection c = r.get_w1().connect();
+        try
+        {
+            c.setOutValue(new int[6]);
+            TimeSpec t = c.getLastValueSentTime();
+            RRAssert.isTrue(t != null);
+        }
+        finally
+        {
+            c.close();
+        }
     }
 
     public void testWirePeekPoke()

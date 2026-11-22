@@ -405,7 +405,7 @@ public class Wire<T>
 
         public final TimeSpec getLastValueSentTime()
         {
-            return innerwire.getLastValueReceivedTime();
+            return innerwire.getLastValueSentTime();
         }
 
         public final boolean getInValueValid()
