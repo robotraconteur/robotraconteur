@@ -346,6 +346,35 @@ TEST_F(ServiceTest, MonitorEnterFailureReleasesStubLock)
     node->DisconnectService(r1);
 }
 
+// PipeSubscription<T>::TryReceivePacketWait with the default ep = NULL must not write through the null pointer
+TEST_F(ServiceTest, PipeSubscriptionTryReceivePacketWaitNoEndpoint)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    RR_SHARED_PTR<ServiceSubscription> sub = RobotRaconteurNode::s()->SubscribeService(service_url);
+    RR_SHARED_PTR<PipeSubscription<double> > pipe_sub = sub->SubscribePipe<double>("broadcastpipe");
+
+    bool received = false;
+    for (size_t i = 0; i < 100 && !received; i++)
+    {
+        double packet = 0;
+        received = pipe_sub->TryReceivePacketWait(packet, 100);
+    }
+    EXPECT_TRUE(received);
+
+    double packet2 = 0;
+    RR_SHARED_PTR<PipeEndpoint<double> > ep;
+    bool received2 = false;
+    for (size_t i = 0; i < 100 && !received2; i++)
+    {
+        received2 = pipe_sub->TryReceivePacketWait(packet2, 100, false, &ep);
+    }
+    EXPECT_TRUE(received2);
+    EXPECT_TRUE(ep);
+
+    sub->Close();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

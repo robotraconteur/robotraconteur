@@ -1514,7 +1514,7 @@ class PipeSubscription : public PipeSubscriptionBase
         if (!TryReceivePacketBaseWait(o, timeout, peek, &ep1))
             return false;
         packet = RRPrimUtil<T>::PreUnpack(o);
-        if (ep1)
+        if (ep && ep1)
         {
             *ep = RR_DYNAMIC_POINTER_CAST<PipeEndpoint<T> >(ep1);
         }
