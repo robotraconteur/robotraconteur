@@ -902,7 +902,7 @@ void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, bo
 
     for (size_t i = 1; i < url.size(); i++)
     {
-        ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(0));
+        ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(i));
         if (url_res1.nodeid != url_res.nodeid || url_res1.nodename != url_res.nodename ||
             url_res1.service != url_res.service)
         {
@@ -1675,7 +1675,7 @@ void ServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, 
 
     for (size_t i = 1; i < url.size(); i++)
     {
-        ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(0));
+        ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(i));
         if (url_res1.nodeid != url_res.nodeid || url_res1.nodename != url_res.nodename ||
             url_res1.service != url_res.service)
         {

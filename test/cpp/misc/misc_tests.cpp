@@ -1137,6 +1137,29 @@ TEST(RobotRaconteurMisc, UpdateDetectedNodesTransportThrows)
     node->Shutdown();
 }
 
+// SubscribeService / UpdateServiceURL must reject URLs that point to different services
+TEST(RobotRaconteurMisc, SubscribeServiceUrlsDifferentServices)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+
+    std::vector<std::string> urls;
+    urls.push_back("rr+tcp://localhost:1/?nodename=test_node&service=service1");
+    urls.push_back("rr+tcp://localhost:1/?nodename=test_node&service=service2");
+    RR_SHARED_PTR<ServiceSubscription> sub1;
+    EXPECT_THROW(sub1 = node->SubscribeService(urls), InvalidArgumentException);
+    if (sub1)
+        sub1->Close();
+
+    std::vector<std::string> urls2;
+    urls2.push_back("rr+tcp://localhost:1/?nodename=test_node&service=service1");
+    RR_SHARED_PTR<ServiceSubscription> sub2 = node->SubscribeService(urls2);
+    EXPECT_THROW(sub2->UpdateServiceURL(urls), InvalidArgumentException);
+    sub2->Close();
+
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
