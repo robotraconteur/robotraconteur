@@ -1189,11 +1189,12 @@ class PackMessageElementImpl
                 PyAutoPtr<PyObject> str1(PyUnicode_AsUTF8String(data));
                 if (!str1.get())
                 {
+                    PyErr_Clear();
                     throw DataTypeException("Invalid string");
                 }
                 char* str_dat;
                 Py_ssize_t str_len;
-                if (PyString_AsStringAndSize(data, &str_dat, &str_len) < 0)
+                if (PyString_AsStringAndSize(str1.get(), &str_dat, &str_len) < 0)
                 {
                     throw DataTypeException("Invalid string");
                 }
