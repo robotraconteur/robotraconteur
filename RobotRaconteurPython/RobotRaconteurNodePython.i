@@ -105,7 +105,7 @@ def AsyncConnectService(self, url, username, credentials, listener, handler, tim
         listener2=WrappedClientServiceListenerDirector(listener)
         listener2.__disown__()
 
-    return async_call(self._AsyncConnectService,(url, username, credentials, listener2, "", adjust_timeout(timeout)), AsyncStubReturnDirectorImpl, handler)
+    return async_call(self._AsyncConnectService,(url, username, credentials, listener2, "", adjust_timeout(timeout)), AsyncStubReturnDirectorImpl, handler, directorargs=(listener2,))
 
 def DisconnectService(self, stub):
     """

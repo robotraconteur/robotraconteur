@@ -2931,6 +2931,7 @@ class WrappedNamedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.Wrapped
 class WrappedClientServiceListenerDirector(RobotRaconteurPython.ClientServiceListenerDirector):
     def __init__(self, callback):
         self.callback = callback
+        self.stub = None
 
         super(WrappedClientServiceListenerDirector, self).__init__()
 
@@ -3054,9 +3055,10 @@ def adjust_timeout(t):
 
 
 class AsyncStubReturnDirectorImpl(RobotRaconteurPython.AsyncStubReturnDirector):
-    def __init__(self, handler):
+    def __init__(self, handler, listener=None):
         super(AsyncStubReturnDirectorImpl, self).__init__()
         self._handler = handler
+        self._listener = listener
 
     def handler(self, innerstub2, error_info):
         if (error_info.error_code != 0):
@@ -3072,6 +3074,8 @@ class AsyncStubReturnDirectorImpl(RobotRaconteurPython.AsyncStubReturnDirector):
         except Exception as err2:
             self._handler(None, err2)
             return
+        if self._listener is not None:
+            self._listener.stub = stub
         self._handler(stub, None)
 
 
