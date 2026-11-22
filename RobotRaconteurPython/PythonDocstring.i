@@ -935,7 +935,7 @@ NodeID
 :type public_: bool
 """
 %feature("docstring") RobotRaconteur::LocalTransport::StartServerAsNodeID(const NodeID& nodeid) """
-StartServerAsNodeId(name, public_ = False)
+StartServerAsNodeID(nodeid, public_ = False)
 
 The LocalTransport will listen on a UNIX domain socket for incoming clients,
 using information files and inodes on the local filesystem. This function
