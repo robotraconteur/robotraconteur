@@ -2892,14 +2892,9 @@ void PipeSubscription_connection::PipePacketAckReceived(const RR_SHARED_PTR<Pipe
 
     try
     {
-        if (std::count(backlog.begin(), backlog.end(), pnum) == 0)
-        {
-            forward_backlog.push_back(pnum);
-        }
-        else
-        {
-            backlog.remove(pnum);
-        }
+        // backlog is never filled (pipe_packet_send_handler does not record packet numbers and the subscription
+        // does not request acks), so do not queue unmatched acks in forward_backlog: nothing would drain it
+        backlog.remove(pnum);
     }
     catch (std::exception&)
     {}
