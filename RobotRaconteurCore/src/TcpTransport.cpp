@@ -5710,8 +5710,25 @@ void IPNodeDiscovery::start_listen_sockets2(int32_t key, const boost::system::er
         if (flags == listen_socket_flags)
             return;
 
+        // Close the sockets of a previous pass. Otherwise they stay alive in their pending receive
+        // handlers and every announce packet is processed once per socket.
+        if (ip4_listen)
+        {
+            boost::system::error_code ec1;
+            ip4_listen->close(ec1);
+        }
+        BOOST_FOREACH (RR_SHARED_PTR<boost::asio::ip::udp::socket>& ip6_listen1, ip6_listen)
+        {
+            if (ip6_listen1)
+            {
+                boost::system::error_code ec1;
+                ip6_listen1->close(ec1);
+            }
+        }
+
         ip4_listen.reset();
         ip6_listen.clear();
+        ip6_listen_scope_ids.clear();
 
         std::vector<boost::asio::ip::address> local_addresses;
 
@@ -5877,6 +5894,12 @@ void IPNodeDiscovery::handle_receive(const boost::system::error_code& error, std
         boost::mutex::scoped_lock lock(change_lock);
         if (!listening)
             return;
+    }
+
+    if (error == boost::asio::error::operation_aborted || !socket->is_open())
+    {
+        // Socket was closed
+        return;
     }
 
     if (!error)
