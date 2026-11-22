@@ -375,6 +375,29 @@ TEST_F(ServiceTest, PipeSubscriptionTryReceivePacketWaitNoEndpoint)
     sub->Close();
 }
 
+struct ServiceTest_DisconnectHandler
+{
+    RR_SHARED_PTR<AutoResetEvent> ev;
+    ServiceTest_DisconnectHandler() : ev(RR_MAKE_SHARED<AutoResetEvent>()) {}
+    void operator()() { ev->Set(); }
+};
+
+// Disconnecting a client that is already closed must still call the handler (DisconnectService waits for it)
+TEST_F(ServiceTest, DisconnectServiceAlreadyClosed)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    RR_SHARED_PTR<RRObject> obj;
+    ASSERT_NO_THROW(obj = RobotRaconteurNode::s()->ConnectService(service_url));
+    RR_SHARED_PTR<ClientContext> ctx;
+    ASSERT_NO_THROW(ctx = rr_cast<ServiceStub>(obj)->GetContext());
+    ASSERT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(obj));
+
+    ServiceTest_DisconnectHandler h;
+    ASSERT_NO_THROW(ctx->AsyncClose(h));
+    EXPECT_TRUE(h.ev->WaitOne(5000));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

@@ -2236,7 +2236,14 @@ void ClientContext::AsyncClose(RR_MOVE_ARG(boost::function<void()>) handler)
     {
         boost::mutex::scoped_lock lock(m_Connected_lock);
         if (!m_Connected)
+        {
+            // Already closed: still complete the request, Close() waits for this handler
+            if (handler)
+            {
+                RobotRaconteurNode::TryPostToThreadPool(node, handler, true);
+            }
             return;
+        }
     }
     try
     {
