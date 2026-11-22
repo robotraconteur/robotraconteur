@@ -1806,8 +1806,20 @@ public partial class RobotRaconteurNode
 
         public override bool Predicate(ServiceInfo2Wrapped info)
         {
-            var info2 = new ServiceInfo2(info);
-            return _f(info2);
+            try
+            {
+                var info2 = new ServiceInfo2(info);
+                return _f(info2);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return false;
+                }
+            }
         }
     }
 

@@ -989,7 +989,19 @@ public class PipeBroadcaster<T>
 
         public override bool Predicate(uint client_endpoint, int index)
         {
-            return f(client_endpoint, index);
+            try
+            {
+                return f(client_endpoint, index);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return false;
+                }
+            }
         }
     }
 
@@ -1638,10 +1650,22 @@ public class Wire<T>
 
         public override MessageElement PeekValue(uint ep)
         {
-            var value = cb(ep);
+            try
+            {
+                var value = cb(ep);
 
-            MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
-            return m;
+                MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
+                return m;
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return null;
+                }
+            }
         }
     }
 
@@ -1656,8 +1680,20 @@ public class Wire<T>
 
         public override void PokeValue(MessageElement el, TimeSpec ts, uint ep)
         {
-            T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
-            cb(value, ts, ep);
+            try
+            {
+                T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
+                cb(value, ts, ep);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return;
+                }
+            }
         }
     }
 
@@ -2306,7 +2342,19 @@ public class WireBroadcaster<T>
 
         public override bool Predicate(uint client_endpoint)
         {
-            return f(client_endpoint);
+            try
+            {
+                return f(client_endpoint);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return false;
+                }
+            }
         }
     }
 
@@ -2321,10 +2369,22 @@ public class WireBroadcaster<T>
 
         public override MessageElement PeekValue(uint ep)
         {
-            var value = cb(ep);
+            try
+            {
+                var value = cb(ep);
 
-            MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
-            return m;
+                MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
+                return m;
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return null;
+                }
+            }
         }
     }
 
@@ -2610,8 +2670,20 @@ public class WireUnicastReceiver<T>
             if (cb1 == null)
                 return;
 
-            T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
-            cb1.ValueChanged(value, ts, ep);
+            try
+            {
+                T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
+                cb1.ValueChanged(value, ts, ep);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return;
+                }
+            }
         }
     }
 
@@ -2709,12 +2781,22 @@ public class ClientServiceListenerDirectorNET : ClientServiceListenerDirector
 
     public override void Callback(int code)
     {
-        listener(stub, (ClientServiceListenerEventType)code, null);
+        try
+        {
+            listener(stub, (ClientServiceListenerEventType)code, null);
+        }
+        catch
+        {}
     }
 
     public override void Callback2(int code, string p)
     {
-        listener(stub, (ClientServiceListenerEventType)code, p);
+        try
+        {
+            listener(stub, (ClientServiceListenerEventType)code, p);
+        }
+        catch
+        {}
     }
 }
 
