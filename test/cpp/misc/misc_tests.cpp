@@ -1225,6 +1225,19 @@ TEST(RobotRaconteurMisc, LocalMessageTapRecordAfterClose)
 }
 #endif
 
+TEST(RobotRaconteurMisc, PasswordVerifiedClientWithoutTransport)
+{
+    // testpass1
+    std::string authdata = "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\n";
+    RR_SHARED_PTR<PasswordFileUserAuthenticator> p = RR_MAKE_SHARED<PasswordFileUserAuthenticator>(authdata, true);
+    std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > credentials;
+    credentials.insert(std::make_pair("password", stringToRRArray("testpass1")));
+    // With require_verified_client, a missing transport connection must not skip the verification
+    EXPECT_THROW(p->AuthenticateUser("testuser1", credentials, RR_SHARED_PTR<ServerContext>(),
+                                     RR_SHARED_PTR<ITransportConnection>()),
+                 AuthenticationException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
