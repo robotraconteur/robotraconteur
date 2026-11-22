@@ -389,7 +389,9 @@ void IntraTransport::PeriodicCleanupTask()
             }
         }
         catch (std::exception&)
-        {}
+        {
+            e++;
+        }
     }
 }
 
