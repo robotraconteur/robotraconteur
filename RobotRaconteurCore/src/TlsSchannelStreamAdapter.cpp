@@ -758,6 +758,12 @@ void TlsSchannelAsyncStreamAdapter::async_handshake(boost::function<void(const b
 
         if (OutBuffers[0].cbBuffer != 0 && OutBuffers[0].pvBuffer != NULL)
         {
+            if (OutBuffers[0].cbBuffer > static_cast<unsigned long>(max_tls_record_size))
+            {
+                FreeContextBuffer(OutBuffers[0].pvBuffer);
+                OutBuffers[0].pvBuffer = NULL;
+                throw SystemResourceException("TLS handshake token too large");
+            }
             memcpy(send_buffer.get(), OutBuffers[0].pvBuffer, OutBuffers[0].cbBuffer);
             send_buffer_end_pos = OutBuffers[0].cbBuffer;
 
@@ -1009,6 +1015,16 @@ void TlsSchannelAsyncStreamAdapter::do_handshake3(const boost::system::error_cod
     {
         if (OutBuffers[0].cbBuffer != 0 && OutBuffers[0].pvBuffer != NULL)
         {
+            if (OutBuffers[0].cbBuffer > static_cast<unsigned long>(max_tls_record_size))
+            {
+                // The token does not fit in send_buffer (for example a very long local certificate chain)
+                FreeContextBuffer(OutBuffers[0].pvBuffer);
+                OutBuffers[0].pvBuffer = NULL;
+                handshaking = false;
+                boost::system::error_code ec(boost::system::errc::message_size, boost::system::generic_category());
+                do_handshake6(ec, handler);
+                return;
+            }
             memcpy(send_buffer.get(), OutBuffers[0].pvBuffer, OutBuffers[0].cbBuffer);
             send_buffer_end_pos = OutBuffers[0].cbBuffer;
             FreeContextBuffer(OutBuffers[0].pvBuffer);
@@ -1833,6 +1849,14 @@ void TlsSchannelAsyncStreamAdapter::do_shutdown1()
 
     pbMessage = OutBuffers[0].pvBuffer;
     cbMessage = OutBuffers[0].cbBuffer;
+
+    if (cbMessage > static_cast<unsigned long>(max_tls_record_size))
+    {
+        FreeContextBuffer(pbMessage);
+        boost::system::error_code ec1(boost::system::errc::message_size, boost::system::generic_category());
+        do_shutdown3(ec1);
+        return;
+    }
 
     // Send the close notify message to the server.
     memcpy(send_buffer.get(), pbMessage, cbMessage);
