@@ -4,6 +4,8 @@
 #include <boost/atomic.hpp>
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
+#include <RobotRaconteur/Tap.h>
+#include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 #include <RobotRaconteur/RobotRaconteurServiceIndex.h>
 #include <boost/filesystem.hpp>
@@ -1181,6 +1183,47 @@ TEST(RobotRaconteurMisc, SubscriptionClaimClientNotAStub)
 
     node->Shutdown();
 }
+
+#ifdef BOOST_ASIO_HAS_LOCAL_SOCKETS
+// Recording to a LocalMessageTap after Close() must not crash
+TEST(RobotRaconteurMisc, LocalMessageTapRecordAfterClose)
+{
+    std::string tap_name = "rrtest" + NodeID::NewUniqueID().ToString("N").substr(0, 12);
+    RR_SHARED_PTR<LocalMessageTap> tap = RR_MAKE_SHARED<LocalMessageTap>(tap_name);
+    ASSERT_NO_THROW(tap->Open());
+
+    NodeDirectories dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories();
+    boost::filesystem::path sock_path = dirs.user_run_dir / "tap" / "all" / (tap_name + ".sock");
+
+    RR_BOOST_ASIO_IO_CONTEXT io;
+    boost::asio::local::stream_protocol::socket reader(io);
+    ASSERT_NO_THROW(reader.connect(boost::asio::local::stream_protocol::endpoint(sock_path.string())));
+
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    m->entries.push_back(CreateMessageEntry(MessageEntryType_ConnectionTest, ""));
+
+    // Record until the tap has accepted the reader and data arrives
+    size_t available = 0;
+    for (size_t i = 0; i < 100 && available == 0; i++)
+    {
+        tap->RecordMessage(m);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+        available = reader.available();
+    }
+    ASSERT_GT(available, 0u);
+    // Let the pending write complete
+    boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+
+    tap->Close();
+
+    tap->RecordMessage(m);
+    tap->RecordMessage(m);
+
+    boost::system::error_code ec;
+    reader.close(ec);
+}
+#endif
 
 int main(int argc, char* argv[])
 {
