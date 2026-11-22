@@ -1265,6 +1265,8 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
     if (!this1)
         return;
     RR_SHARED_PTR<detail::ServiceSubscription_client> c2_1 = c2.lock();
+    if (!c2_1)
+        return;
     RR_SHARED_PTR<RobotRaconteurNode> n = this1->node.lock();
 
     if (c2_1->erase)
