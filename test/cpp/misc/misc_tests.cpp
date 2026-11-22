@@ -1264,6 +1264,129 @@ TEST(RobotRaconteurMisc, WireUnicastReceiverPeekLifespan)
     EXPECT_THROW(r->Peek(), ValueNotSetException);
 }
 
+// Client transport whose connection attempts fail right away (handler posted with an error)
+class NcFastFailClientTransport : public Transport
+{
+  public:
+    NcFastFailClientTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Transport(node) {}
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE { RR_UNUSED(endpoint); }
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE { return true; }
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE { return false; }
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncfastfail"; }
+    RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE { return std::vector<std::string>(); }
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE
+    {
+        return boost::starts_with(url, "rr+ncfastfail://");
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
+                                                                              const RR_SHARED_PTR<Endpoint>& e)
+        RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        throw ConnectionException("Connection refused");
+    }
+    RR_OVIRTUAL void AsyncCreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        RR_SHARED_PTR<RobotRaconteurException> err = RR_MAKE_SHARED<ConnectionException>("Connection refused");
+        RobotRaconteurNode::TryPostToThreadPool(
+            node, boost::bind(handler, RR_SHARED_PTR<ITransportConnection>(), err), true);
+    }
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE { RR_UNUSED(e); }
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE { RR_UNUSED(m); }
+    RR_OVIRTUAL void Close() RR_OVERRIDE {}
+};
+
+struct NcFastFailResult
+{
+    boost::mutex lock;
+    boost::condition_variable cv;
+    bool done;
+    RR_SHARED_PTR<RobotRaconteurException> err;
+    NcFastFailResult() : done(false) {}
+};
+
+static void NcFastFailHandler(const RR_SHARED_PTR<NcFastFailResult>& res, const RR_SHARED_PTR<RRObject>& obj,
+                              const RR_SHARED_PTR<RobotRaconteurException>& err)
+{
+    RR_UNUSED(obj);
+    boost::mutex::scoped_lock lock(res->lock);
+    res->done = true;
+    res->err = err;
+    res->cv.notify_all();
+}
+
+// When every candidate URL fails before the connector finishes starting them, the connect must still complete
+// with the candidate's error, not wait for the connect timeout (or forever with RR_TIMEOUT_INFINITE).
+// The failure is a race, so repeat the connect many times; each must complete well before the 5 s timeout.
+TEST(RobotRaconteurMisc, ConnectorFastCandidateFailureCompletes)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    RR_SHARED_PTR<NcFastFailClientTransport> t = RR_MAKE_SHARED<NcFastFailClientTransport>(node);
+    node->RegisterTransport(t);
+
+    boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                         const RR_SHARED_PTR<void>&)>
+        listener;
+    int late = 0;
+    for (int i = 0; i < 200; i++)
+    {
+        RR_SHARED_PTR<NcFastFailResult> res = RR_MAKE_SHARED<NcFastFailResult>();
+        node->AsyncConnectService("rr+ncfastfail://localhost/?nodename=test&service=test", "",
+                                  RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
+                                  boost::bind(&NcFastFailHandler, res, RR_BOOST_PLACEHOLDERS(_1),
+                                              RR_BOOST_PLACEHOLDERS(_2)),
+                                  5000);
+        boost::mutex::scoped_lock lock(res->lock);
+        boost::system_time deadline = boost::get_system_time() + boost::posix_time::seconds(2);
+        while (!res->done)
+        {
+            if (!res->cv.timed_wait(lock, deadline))
+                break;
+        }
+        if (!res->done)
+        {
+            late++;
+            // let the connect timer finish this attempt before the next one
+            deadline = boost::get_system_time() + boost::posix_time::seconds(10);
+            while (!res->done)
+            {
+                if (!res->cv.timed_wait(lock, deadline))
+                    break;
+            }
+        }
+        else
+        {
+            // The message may be "Connection timed out": handle_error resets the connect timer, and the cancelled
+            // timer's callback can complete the connect first (it ignores the cancellation by design)
+            ASSERT_TRUE(res->err);
+        }
+        if (late > 0)
+            break;
+    }
+    EXPECT_EQ(late, 0);
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
