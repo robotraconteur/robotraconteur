@@ -640,6 +640,41 @@ TEST_F(ServiceTest, WireBroadcasterDuplicateConnect)
     EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
 }
 
+namespace
+{
+class ArrayMemoryClientUnpackTest : public ArrayMemoryClient<double>
+{
+  public:
+    ArrayMemoryClientUnpackTest(const RR_SHARED_PTR<ServiceStub>& stub)
+        : ArrayMemoryClientBase("m1", stub, DataTypes_double_t, sizeof(double), MemberDefinition_Direction_both),
+          ArrayMemoryClient<double>("m1", stub, MemberDefinition_Direction_both)
+    {}
+    void Unpack(const RR_INTRUSIVE_PTR<MessageElementData>& res, RR_INTRUSIVE_PTR<RRArray<double> >& buffer,
+                uint64_t bufferpos, uint64_t count)
+    {
+        UnpackReadResult(res, &buffer, bufferpos, count);
+    }
+};
+} // namespace
+
+TEST_F(ServiceTest, ArrayMemoryClientReadResultLength)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    RR_SHARED_PTR<RRObject> r;
+    ASSERT_NO_THROW(r = RobotRaconteurNode::s()->ConnectService(service_url));
+    RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(r);
+
+    RR_SHARED_PTR<ArrayMemoryClientUnpackTest> c = RR_MAKE_SHARED<ArrayMemoryClientUnpackTest>(stub);
+    RR_INTRUSIVE_PTR<RRArray<double> > buffer = AllocateRRArray<double>(100);
+    // Reply shorter than the requested count, or a void reply
+    EXPECT_THROW(c->Unpack(AllocateRRArray<double>(2), buffer, 0, 100), DataTypeException);
+    EXPECT_THROW(c->Unpack(RR_INTRUSIVE_PTR<MessageElementData>(), buffer, 0, 10), DataTypeException);
+    EXPECT_NO_THROW(c->Unpack(AllocateRRArray<double>(10), buffer, 5, 10));
+
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

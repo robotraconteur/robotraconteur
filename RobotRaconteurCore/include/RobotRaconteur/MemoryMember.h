@@ -581,6 +581,8 @@ class ArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual A
                                       uint64_t count) RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<RRArray<T> > data = rr_cast<RRArray<T> >(res);
+        if (!data || data->size() != count)
+            throw DataTypeException("Invalid memory read result length");
         RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
         memcpy(buffer1->data() + bufferpos, data->data(), boost::numeric_cast<size_t>(count * sizeof(T)));
     }
@@ -1344,6 +1346,8 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
         RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
         RR_INTRUSIVE_PTR<RRNamedArray<T> > res1 =
             NamedArrayStub_UnpackNamedArray<T>(rr_cast<RobotRaconteur::MessageElementNestedElementList>(res));
+        if (!res1 || res1->size() != count)
+            throw DataTypeException("Invalid memory read result length");
 
         for (size_t i = 0; i < count; i++)
         {
