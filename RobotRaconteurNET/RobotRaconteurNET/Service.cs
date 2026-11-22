@@ -2757,17 +2757,32 @@ public partial class ServiceSecurityPolicy
         protected override AuthenticatedUser AuthenticateUser(string username, MessageElement credentials,
                                                               ServerContext context)
         {
-            using (credentials)
+            try
             {
-                IUserAuthenticator t = target;
-                if (t == null)
-                    throw new AuthenticationException("Authenticator internal error");
+                using (credentials)
+                {
+                    IUserAuthenticator t = target;
+                    if (t == null)
+                        throw new AuthenticationException("Authenticator internal error");
 
-                Dictionary<string, object> c2 =
-                    (Dictionary<string, object>)RobotRaconteurNode.s.UnpackMapType<string, object>(credentials);
+                    Dictionary<string, object> c2 =
+                        (Dictionary<string, object>)RobotRaconteurNode.s.UnpackMapType<string, object>(
+                            credentials.Data);
 
-                AuthenticatedUser ret = t.AuthenticateUser(username, c2, context);
-                return ret;
+                    AuthenticatedUser ret = t.AuthenticateUser(username, c2, context);
+                    return ret;
+                }
+            }
+            catch (Exception e)
+            {
+                // The authenticator rejects a login by throwing. Report it to the native caller
+                // instead of letting the exception leave the director callback
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return null;
+                }
             }
         }
     }
@@ -2834,8 +2849,12 @@ public partial class NativeUserAuthenticator
     public virtual AuthenticatedUser AuthenticateUser(string username, Dictionary<string, object> credentials,
                                                       ServerContext context)
     {
-        MessageElement c = (MessageElement)RobotRaconteurNode.s.PackMapType<string, object>(credentials);
-        return _AuthenticateUser(username, c, context);
+        using (MessageElement c =
+                   MessageElementUtil.NewMessageElement("credentials",
+                                                        RobotRaconteurNode.s.PackMapType<string, object>(credentials)))
+        {
+            return _AuthenticateUser(username, c, context);
+        }
     }
 }
 

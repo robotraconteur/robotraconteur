@@ -14,6 +14,20 @@ using System.Threading.Tasks;
 
 namespace RobotRaconteurNETTest
 {
+class TestCustomAuthenticator : IUserAuthenticator
+{
+    PasswordFileUserAuthenticator native_authenticator = new PasswordFileUserAuthenticator(
+        "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\n");
+
+    public AuthenticatedUser AuthenticateUser(string username, Dictionary<string, object> credentials,
+                                              ServerContext context)
+    {
+        if (!credentials.ContainsKey("password"))
+            throw new AuthenticationException("Password required");
+        return native_authenticator.AuthenticateUser(username, credentials, context);
+    }
+}
+
 class Program
 {
     static void Main(string[] args)
@@ -168,6 +182,45 @@ class Program
             RRAssert.IsFalse(v1.Equals(null));
             RRAssert.IsFalse(v1.Equals("1.2.3.4"));
             RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
+        if (command == "custom_authenticator")
+        {
+            using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2", 0,
+                                                   RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT |
+                                                       RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
+            {
+                var port = setup.TcpTransport.GetListenPort();
+                var testservice = new testroot3_impl();
+                Dictionary<string, string> policies = new Dictionary<string, string>();
+                policies.Add("requirevaliduser", "true");
+                var security = new ServiceSecurityPolicy(new TestCustomAuthenticator(), policies);
+                RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2_auth",
+                                                     "com.robotraconteur.testing.TestService3", testservice, security);
+                string url =
+                    "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService2_auth";
+
+                // Valid login: the C# authenticator receives the credentials and calls the native
+                // PasswordFileUserAuthenticator
+                var cred1 = new Dictionary<string, object>();
+                cred1.Add("password", "testpass1");
+                var c1 = (com.robotraconteur.testing.TestService3.testroot3)RobotRaconteurNode.s.ConnectService(
+                    url, "testuser1", cred1);
+                var v1 = c1.testenum1_prop;
+                RobotRaconteurNode.s.DisconnectService(c1);
+
+                // Invalid login: the authenticator throws, the client gets an error
+                var cred2 = new Dictionary<string, object>();
+                cred2.Add("password", "wrongpassword");
+                RRAssert.ThrowsException<Exception>(delegate() {
+                    var c2 = (com.robotraconteur.testing.TestService3.testroot3)RobotRaconteurNode.s.ConnectService(
+                        url, "testuser1", cred2);
+                    var v2 = c2.testenum1_prop;
+                });
+                RobotRaconteurNode.s.CloseService("RobotRaconteurTestService2_auth");
+            }
             Console.WriteLine("Test completed");
             return;
         }

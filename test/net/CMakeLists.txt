@@ -100,6 +100,9 @@ endif()
 
     rrconfiguretest(test_net_version_equals "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} version_equals")
 
+    rrconfiguretest(test_net_custom_authenticator "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} custom_authenticator")
+
+
 
 
 
