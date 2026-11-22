@@ -6407,9 +6407,9 @@ void IPNodeDiscovery::SendDiscoveryRequestNow()
             new boost::asio::deadline_timer(p1->GetNode()->GetThreadPool()->get_io_context()));
         uint32_t delay = p1->GetNode()->GetRandomInt<uint32_t>(250, 1000);
         discovery_request_timer->expires_from_now(boost::posix_time::milliseconds(delay));
-        RobotRaconteurNode::asio_async_wait(
-            node, discovery_request_timer,
-            boost::bind(&IPNodeDiscovery::handle_request_timer, this, boost::asio::placeholders::error, 3));
+        RobotRaconteurNode::asio_async_wait(node, discovery_request_timer,
+                                            boost::bind(&IPNodeDiscovery::handle_request_timer, shared_from_this(),
+                                                        boost::asio::placeholders::error, 3));
     }
 }
 
