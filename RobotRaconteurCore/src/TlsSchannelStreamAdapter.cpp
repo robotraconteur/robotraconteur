@@ -482,7 +482,15 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteNodeCertificate(PCCERT_CO
 
     bool valid = true;
 
-    if ((status.dwError & (~(CRYPT_E_NO_REVOCATION_CHECK | CRYPT_E_REVOCATION_OFFLINE | CERT_E_UNTRUSTEDROOT))) != 0)
+    // dwError is a single HRESULT, not a set of flags
+    if (!cv_res)
+    {
+        valid = false;
+    }
+
+    if (status.dwError != 0 && status.dwError != static_cast<DWORD>(CRYPT_E_NO_REVOCATION_CHECK) &&
+        status.dwError != static_cast<DWORD>(CRYPT_E_REVOCATION_OFFLINE) &&
+        status.dwError != static_cast<DWORD>(CERT_E_UNTRUSTEDROOT))
     {
         valid = false;
     }
@@ -629,7 +637,7 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCER
 
     bool valid = true;
 
-    if (status.dwError != 0)
+    if (!cv_res || status.dwError != 0)
     {
         valid = false;
     }
