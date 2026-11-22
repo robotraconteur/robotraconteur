@@ -296,33 +296,35 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1,
                                                "Error connecting to candidate service url: " << err2.what());
-            if (transport)
+            if (connection)
             {
                 try
                 {
-                    transport->Close();
+                    connection->Close();
                 }
                 catch (std::exception&)
                 {}
             }
 
-            connecting_lock.unlock();
+            if (lock.owns_lock())
+                lock.unlock();
             handle_error(key, RobotRaconteurExceptionUtil::DownCastException(err2));
         }
         catch (std::exception& err2)
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Node, -1,
                                                "Error connecting to candidate service url: " << err2.what());
-            if (transport)
+            if (connection)
             {
                 try
                 {
-                    transport->Close();
+                    connection->Close();
                 }
                 catch (std::exception&)
                 {}
             }
-            connecting_lock.unlock();
+            if (lock.owns_lock())
+                lock.unlock();
             handle_error(key, RR_MAKE_SHARED<ConnectionException>(err2.what()));
         }
     }

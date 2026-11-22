@@ -906,6 +906,155 @@ TEST(RobotRaconteurMisc, LocalTransportStartServerAsNodeID)
     boost::filesystem::remove_all(base, ec);
 }
 
+// Connection stand-in that counts Close() calls
+class NcCountingTransportConnection : public ITransportConnection
+{
+  public:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+    RR_SHARED_PTR<boost::atomic<int> > close_count;
+    NcCountingTransportConnection(const RR_SHARED_PTR<RobotRaconteurNode>& node)
+        : node(node), close_count(RR_MAKE_SHARED<boost::atomic<int> >(0))
+    {}
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void Close() RR_OVERRIDE { (*close_count)++; }
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE { RR_UNUSED(endpoint); }
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE { return 0; }
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE { return 0; }
+    RR_OVIRTUAL NodeID GetRemoteNodeID() RR_OVERRIDE { return NodeID::GetAny(); }
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurNode> GetNode() RR_OVERRIDE { return node.lock(); }
+    RR_OVIRTUAL bool CheckCapabilityActive(uint32_t flag) RR_OVERRIDE
+    {
+        RR_UNUSED(flag);
+        return true;
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE { return RR_SHARED_PTR<Transport>(); }
+};
+
+// Client transport whose connections are created, but sending the first request throws synchronously
+// (like a peer that closed right after the transport handshake)
+class NcSendFailClientTransport : public Transport
+{
+  public:
+    RR_SHARED_PTR<NcCountingTransportConnection> connection;
+    boost::atomic<int> close_count;
+    NcSendFailClientTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Transport(node), close_count(0)
+    {
+        connection = RR_MAKE_SHARED<NcCountingTransportConnection>(node);
+    }
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE { RR_UNUSED(endpoint); }
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE { return true; }
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE { return false; }
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncsendfail"; }
+    RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE { return std::vector<std::string>(); }
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE
+    {
+        return boost::starts_with(url, "rr+ncsendfail://");
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
+                                                                              const RR_SHARED_PTR<Endpoint>& e)
+        RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        return connection;
+    }
+    RR_OVIRTUAL void AsyncCreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        RR_SHARED_PTR<ITransportConnection> c = connection;
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, c, RR_SHARED_PTR<RobotRaconteurException>()),
+                                                true);
+    }
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE { RR_UNUSED(e); }
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE { RR_UNUSED(m); }
+    RR_OVIRTUAL void Close() RR_OVERRIDE { close_count++; }
+};
+
+struct NcConnectResult
+{
+    boost::mutex lock;
+    boost::condition_variable cv;
+    bool done;
+    RR_SHARED_PTR<RobotRaconteurException> err;
+    NcConnectResult() : done(false) {}
+};
+
+static void NcConnectHandler(const RR_SHARED_PTR<NcConnectResult>& res, const RR_SHARED_PTR<RRObject>& obj,
+                             const RR_SHARED_PTR<RobotRaconteurException>& err)
+{
+    RR_UNUSED(obj);
+    boost::mutex::scoped_lock lock(res->lock);
+    res->done = true;
+    res->err = err;
+    res->cv.notify_all();
+}
+
+// When connecting a service on a candidate connection fails synchronously, the connector must close that
+// connection, not the whole transport (which would drop every connection and listener of the node)
+TEST(RobotRaconteurMisc, ConnectorFailureClosesConnectionNotTransport)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    RR_SHARED_PTR<NcSendFailClientTransport> t = RR_MAKE_SHARED<NcSendFailClientTransport>(node);
+    node->RegisterTransport(t);
+
+    RR_SHARED_PTR<NcConnectResult> res = RR_MAKE_SHARED<NcConnectResult>();
+    boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                         const RR_SHARED_PTR<void>&)>
+        listener;
+    node->AsyncConnectService("rr+ncsendfail://localhost/?nodename=test&service=test", "",
+                              RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
+                              boost::bind(&NcConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+                              30000);
+
+    bool done = false;
+    {
+        boost::mutex::scoped_lock lock(res->lock);
+        boost::system_time deadline = boost::get_system_time() + boost::posix_time::seconds(10);
+        while (!res->done)
+        {
+            if (!res->cv.timed_wait(lock, deadline))
+                break;
+        }
+        done = res->done;
+    }
+
+    EXPECT_TRUE(done);
+    EXPECT_TRUE(res->err);
+    EXPECT_EQ(t->close_count.load(), 0);
+    EXPECT_GE(t->connection->close_count->load(), 1);
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
