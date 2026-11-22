@@ -390,8 +390,10 @@ class ScopedMonitorLock(object):
     def __enter__(self):
         self.node.MonitorEnter(self.obj,self.timeout)
         self.locked=True
+        return self
     def __exit__(self,type, value, traceback):
-        self.node.MonitorExit(self.obj)
+        if self.obj is not None and self.locked:
+            self.node.MonitorExit(self.obj)
         self.locked=False
     def lock(self,timeout):
         """
@@ -407,8 +409,8 @@ class ScopedMonitorLock(object):
         """
         Releases the monitor lock
 
-        The ScopedMonitorLock destructor will release
-        the lock automatically, so in most cases it is
+        The lock is released automatically when the
+        ``with`` block exits, so in most cases it is
         not necessary to call this function
         """
         self.node.MonitorExit(self.obj,)
