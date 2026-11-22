@@ -128,13 +128,16 @@ public class RRObjectHeap
 
     public static object GetObject(int id)
     {
-        try
+        lock (objects)
         {
-            return objects[id];
-        }
-        catch (KeyNotFoundException)
-        {
-            throw new ApplicationException("Internal stub error");
+            try
+            {
+                return objects[id];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ApplicationException("Internal stub error");
+            }
         }
     }
 }
