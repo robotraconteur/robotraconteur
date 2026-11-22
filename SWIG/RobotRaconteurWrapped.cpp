@@ -3560,7 +3560,7 @@ uint64_t WrappedNamedMultiDimArrayMemory::DimCount()
     return l;
 }
 
-DataTypes WrappedNamedMultiDimArrayMemory::ElementTypeID() { return DataTypes_pod_t; }
+DataTypes WrappedNamedMultiDimArrayMemory::ElementTypeID() { return DataTypes_namedarray_t; }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> WrappedNamedMultiDimArrayMemory::Read(
     const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 {

@@ -227,6 +227,18 @@ TEST(ServiceTest3Node, SpecialRequestErrorName)
     cfg.Shutdown();
 }
 
+TEST(NamedArray, MemoryElementTypeID)
+{
+    typedef com::robotraconteur::testing::TestService3::vector3 vector3;
+    RR_SHARED_PTR<NamedArrayMemory<vector3> > m1 =
+        RR_MAKE_SHARED<NamedArrayMemory<vector3> >(AllocateEmptyRRNamedArray<vector3>(2));
+    EXPECT_EQ(m1->ElementTypeID(), DataTypes_namedarray_t);
+    std::vector<uint32_t> dims(2, 2);
+    RR_SHARED_PTR<NamedMultiDimArrayMemory<vector3> > m2 =
+        RR_MAKE_SHARED<NamedMultiDimArrayMemory<vector3> >(AllocateEmptyRRNamedMultiDimArray<vector3>(dims));
+    EXPECT_EQ(m2->ElementTypeID(), DataTypes_namedarray_t);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

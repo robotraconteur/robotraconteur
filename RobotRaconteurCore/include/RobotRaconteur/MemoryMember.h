@@ -1137,7 +1137,7 @@ class PodMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelB
   public:
     PodMultiDimArrayMemoryServiceSkel(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
                                       size_t element_size, MemberDefinition_Direction direction)
-        : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_structure_t, element_size, direction)
+        : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
     {}
 
     RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> DoRead(
@@ -1273,7 +1273,7 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
         }
     }
 
-    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE { return DataTypes_pod_t; }
+    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE { return DataTypes_namedarray_t; }
 };
 
 template <typename T>
@@ -1282,7 +1282,7 @@ class NamedArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
   public:
     NamedArrayMemoryServiceSkel(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
                                 size_t element_size, MemberDefinition_Direction direction)
-        : ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
+        : ArrayMemoryServiceSkelBase(membername, skel, DataTypes_namedarray_t, element_size, direction)
     {}
 
     RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count,
@@ -1485,7 +1485,7 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
                                     detail::ConvertVectorType<uint32_t>(count));
     }
 
-    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE { return DataTypes_pod_t; }
+    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE { return DataTypes_namedarray_t; }
 };
 
 template <typename T>
@@ -1495,7 +1495,7 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
   public:
     NamedMultiDimArrayMemoryClient(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub,
                                    size_t element_size, MemberDefinition_Direction direction)
-        : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
+        : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_namedarray_t, element_size, direction)
     {}
 
     RR_OVIRTUAL void Attach(const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& memory) RR_OVERRIDE
@@ -1563,7 +1563,7 @@ class NamedMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSke
   public:
     NamedMultiDimArrayMemoryServiceSkel(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
                                         size_t element_size, MemberDefinition_Direction direction)
-        : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_structure_t, element_size, direction)
+        : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_namedarray_t, element_size, direction)
     {}
 
     RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> DoRead(
