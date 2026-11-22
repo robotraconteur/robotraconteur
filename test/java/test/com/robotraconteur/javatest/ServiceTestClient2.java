@@ -16,6 +16,8 @@ public class ServiceTestClient2
 
     public final void RunFullTest(String url)
     {
+        testVerifyUnsignedArrayLength();
+
         connectService(url);
 
         RRAssert.areEqual(r.get_testenum1_prop(), testenum1.anothervalue);
@@ -69,6 +71,36 @@ public class ServiceTestClient2
         {
             sub.close();
         }
+    }
+
+    public static void testVerifyUnsignedArrayLength()
+    {
+        // Fixed and maximum length checks used by the generated code for uint8[N], uint16[N], ... members
+        DataTypeUtil.verifyArrayLength(new UnsignedBytes(4), 4, false);
+        DataTypeUtil.verifyArrayLength(new UnsignedShorts(3), 4, true);
+        DataTypeUtil.verifyArrayLength(new UnsignedInts(2), 2, false);
+        DataTypeUtil.verifyArrayLength(new UnsignedLongs(1), 1, false);
+        DataTypeUtil.verifyArrayLength(new double[4], 4, false);
+        boolean err = false;
+        try
+        {
+            DataTypeUtil.verifyArrayLength(new UnsignedBytes(5), 4, false);
+        }
+        catch (DataTypeException e)
+        {
+            err = true;
+        }
+        RRAssert.isTrue(err);
+        err = false;
+        try
+        {
+            DataTypeUtil.verifyArrayLength(new UnsignedInts(5), 4, true);
+        }
+        catch (DataTypeException e)
+        {
+            err = true;
+        }
+        RRAssert.isTrue(err);
     }
 
     private testroot3 r;
