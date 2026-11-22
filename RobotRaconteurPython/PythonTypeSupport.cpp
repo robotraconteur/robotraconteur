@@ -2512,7 +2512,8 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_float(PyObject* array_,
             PyErr_Print();
             throw DataTypeException("Invalid value in list provided to PackRRArray");
         }
-        if (v2 < -std::numeric_limits<type2>::max() || v2 > std::numeric_limits<type2>::max())
+        if ((v2 < -std::numeric_limits<type2>::max() || v2 > std::numeric_limits<type2>::max()) &&
+            v2 != std::numeric_limits<double>::infinity() && v2 != -std::numeric_limits<double>::infinity())
             throw DataTypeException("Number outside of range limit for specified type");
         buf[i] = (type2)v2;
     }
