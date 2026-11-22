@@ -76,7 +76,7 @@ class RobotRaconteurExceptionUtil:
         if errorparam is not None:
             from .RobotRaconteurPythonUtil import PackMessageElement
             param2 = PackMessageElement(errorparam,"varvalue")
-            error_info.errorparam = param2
+            error_info.param_ = param2
 
         return error_info
 
