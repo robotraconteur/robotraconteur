@@ -1610,6 +1610,7 @@ public partial class RobotRaconteurNode
         public ScopedMonitorLock(object obj, int timeout = -1)
         {
             RobotRaconteurNode.s.MonitorEnter(obj, timeout);
+            this.obj = obj;
             locked = true;
         }
 
@@ -1645,7 +1646,7 @@ public partial class RobotRaconteurNode
                 return;
             if (!locked)
                 throw new Exception("Not locked");
-            RobotRaconteurNode.s.MonitorExit(timeout);
+            RobotRaconteurNode.s.MonitorExit(obj);
             locked = false;
         }
 

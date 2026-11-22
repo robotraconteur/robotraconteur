@@ -91,3 +91,6 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
     endif()
 
 endif()
+
+    rrconfiguretest(test_net_monitor_lock "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} monitor_lock")
+

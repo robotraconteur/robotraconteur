@@ -48,6 +48,40 @@ class Program
             return;
         }
 
+        if (command == "monitor_lock")
+        {
+            TcpTransport t = new TcpTransport();
+            t.StartServer(0);
+            var port = t.GetListenPort();
+            RobotRaconteurNode.s.RegisterTransport(t);
+            RobotRaconteurNode.s.RegisterServiceType(
+                new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+            RobotRaconteurNode.s.RegisterServiceType(
+                new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
+            RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
+            sup.RegisterServices(t);
+            string url = "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService";
+
+            testroot r1 = (testroot)RobotRaconteurNode.s.ConnectService(url);
+            testroot r2 = (testroot)RobotRaconteurNode.s.ConnectService(url);
+            sub1 o1_1 = r1.get_o1();
+            sub1 o1_2 = r2.get_o1();
+            using (var l1 = new RobotRaconteurNode.ScopedMonitorLock(o1_1, 5000))
+            {
+                // A second client cannot take the monitor lock while the first holds it
+                RRAssert.ThrowsException<Exception>(
+                    delegate() { using (var l2 = new RobotRaconteurNode.ScopedMonitorLock(o1_2, 500)) {} });
+            }
+            // Dispose released the first lock, so the second client can lock now
+            using (var l3 = new RobotRaconteurNode.ScopedMonitorLock(o1_2, 5000))
+            {}
+            RobotRaconteurNode.s.DisconnectService(r1);
+            RobotRaconteurNode.s.DisconnectService(r2);
+            RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
         if (command == "loopback")
         {
 
