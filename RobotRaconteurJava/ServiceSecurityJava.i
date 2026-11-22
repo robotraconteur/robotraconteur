@@ -5,7 +5,7 @@
 	@Override
 	public  AuthenticatedUser authenticateUser(String username, java.util.Map<String,Object> credentials, ServerContext context)
 	{
-		MessageElement c =(MessageElement) RobotRaconteurNode.s().<String,Object>packMapType(credentials,String.class, Object.class);
+		MessageElement c = MessageElementUtil.<String,Object>packMapType("credentials", credentials, String.class, Object.class);
 		return _AuthenticateUser(username, c, context);
 	}
 
@@ -33,7 +33,7 @@
 			IUserAuthenticator t = target;
 			if (t == null) throw new AuthenticationException("Authenticator internal error");
 
-			java.util.Map<String, Object> c2 = (java.util.Map<String, Object>)RobotRaconteurNode.s().<String, Object>unpackMapType(credentials);
+			java.util.Map<String, Object> c2 = MessageElementUtil.<String, Object>unpackMapType(credentials);
 
 			AuthenticatedUser ret = t.authenticateUser(username, c2, context);
 			return ret;
