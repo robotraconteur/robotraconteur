@@ -19,6 +19,8 @@
 #include <boost/bind/protect.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/random.hpp>
+#include <boost/random/random_device.hpp>
+#include <boost/array.hpp>
 #include <boost/date_time.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/regex.hpp>
@@ -105,9 +107,24 @@ class websocket_stream : private boost::noncopyable
         ping_data_len = 0;
 
         boost::mutex::scoped_lock lock(random_lock);
-        std::string str = boost::posix_time::to_iso_string(boost::posix_time::microsec_clock::universal_time());
-        boost::random::seed_seq seed1(str.begin(), str.end());
-        random.seed(seed1);
+        // RFC 6455 section 5.3: masking keys must come from an unpredictable source
+        try
+        {
+            boost::random::random_device rd;
+            boost::array<uint32_t, 8> seed_data = {};
+            for (size_t i = 0; i < seed_data.size(); i++)
+            {
+                seed_data[i] = rd();
+            }
+            boost::random::seed_seq seed1(seed_data.begin(), seed_data.end());
+            random.seed(seed1);
+        }
+        catch (std::exception&)
+        {
+            std::string str = boost::posix_time::to_iso_string(boost::posix_time::microsec_clock::universal_time());
+            boost::random::seed_seq seed1(str.begin(), str.end());
+            random.seed(seed1);
+        }
     }
 
     void async_server_handshake(
@@ -1020,10 +1037,13 @@ class websocket_stream : private boost::noncopyable
 
         boost::array<uint8_t, 16> random_data = {};
 
-        boost::random::uniform_int_distribution<uint8_t> distribution(0, std::numeric_limits<uint8_t>::max());
-        for (size_t i = 0; i < 16; i++)
         {
-            random_data[i] = distribution(random);
+            boost::mutex::scoped_lock lock(random_lock);
+            boost::random::uniform_int_distribution<uint8_t> distribution(0, std::numeric_limits<uint8_t>::max());
+            for (size_t i = 0; i < 16; i++)
+            {
+                random_data[i] = distribution(random);
+            }
         }
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
         DWORD hashlen = 0;
