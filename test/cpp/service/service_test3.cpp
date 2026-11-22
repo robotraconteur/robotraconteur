@@ -171,6 +171,27 @@ TEST(NamedArray, ConstAt)
     EXPECT_THROW(ca.at(2), std::out_of_range);
 }
 
+TEST(NamedArray, UnpackVoidElementsThrow)
+{
+    typedef com::robotraconteur::testing::TestService3::vector3 vector3;
+
+    // "array" element of type void (null data)
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > v;
+    v.push_back(CreateMessageElement("array", RR_INTRUSIVE_PTR<MessageElementData>()));
+    RR_INTRUSIVE_PTR<MessageElementNestedElementList> l = CreateMessageElementNestedElementList(
+        DataTypes_namedarray_array_t, RRPrimUtil<vector3>::GetElementTypeString(), v);
+    EXPECT_THROW(NamedArrayStub_UnpackNamedArrayFromArray<vector3>(l), NullValueException);
+    EXPECT_THROW(NamedArrayStub_UnpackNamedArray<vector3>(l), NullValueException);
+
+    // "dims" element of type void (null data)
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > v2;
+    v2.push_back(CreateMessageElement("dims", RR_INTRUSIVE_PTR<MessageElementData>()));
+    v2.push_back(CreateMessageElement("array", NamedArrayStub_PackNamedArray(AllocateEmptyRRNamedArray<vector3>(1))));
+    RR_INTRUSIVE_PTR<MessageElementNestedElementList> l2 = CreateMessageElementNestedElementList(
+        DataTypes_namedarray_multidimarray_t, RRPrimUtil<vector3>::GetElementTypeString(), v2);
+    EXPECT_THROW(NamedArrayStub_UnpackNamedMultiDimArray<vector3>(l2), NullValueException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

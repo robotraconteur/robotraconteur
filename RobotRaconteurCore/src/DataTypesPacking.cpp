@@ -299,6 +299,8 @@ RR_INTRUSIVE_PTR<RRValue> UnpackVarType(const RR_INTRUSIVE_PTR<MessageElement>& 
         return RR_INTRUSIVE_PTR<RRValue>();
 
     RR_INTRUSIVE_PTR<MessageElementData> mvardata = mvardata1->GetData();
+    if (!mvardata)
+        throw NullValueException("Unexpected null varvalue data");
 
     DataTypes type = mvardata->GetTypeID();
 
