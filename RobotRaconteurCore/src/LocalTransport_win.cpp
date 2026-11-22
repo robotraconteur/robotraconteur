@@ -358,11 +358,11 @@ bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_)
         boost::optional<std::wstring> rr_group1_sid =
             RobotRaconteur::detail::LocalTransportUtil::GetSIDStringForName(L"robotraconteur");
         if (rr_group1_sid)
-            dacl_str += L"(A; OICI; FRFWFX;;; " + *rr_group1_sid + L")";
+            dacl_str += L"(A;OICI;FRFWFX;;;" + *rr_group1_sid + L")";
         boost::optional<std::wstring> rr_group2_sid =
             RobotRaconteur::detail::LocalTransportUtil::GetSIDStringForName(L"Robot Raconteur");
         if (rr_group2_sid)
-            dacl_str += L"(A; OICI; FRFWFX;;; " + *rr_group2_sid + L")";
+            dacl_str += L"(A;OICI;FRFWFX;;;" + *rr_group2_sid + L")";
     }
 
     if (!ConvertStringSecurityDescriptorToSecurityDescriptorW(dacl_str.c_str(), SDDL_REVISION_1,
@@ -374,10 +374,20 @@ bool SetWindowsSocketPermissions(const std::string& socket_fname, bool public_)
 
     RR_SHARED_PTR<void> sd_sp(sa.lpSecurityDescriptor, &LocalFree);
 
-    std::string socket_fname_c = socket_fname + "\0";
+    // SetNamedSecurityInfo takes the DACL, not the security descriptor that contains it
+    BOOL dacl_present = FALSE;
+    BOOL dacl_defaulted = FALSE;
+    PACL dacl = NULL;
+    if (!GetSecurityDescriptorDacl(sa.lpSecurityDescriptor, &dacl_present, &dacl, &dacl_defaulted) || !dacl_present ||
+        !dacl)
+    {
+        return false;
+    }
 
-    DWORD ret = ::SetNamedSecurityInfoA(&socket_fname_c[0], SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL,
-                                        (PACL)sa.lpSecurityDescriptor, NULL);
+    std::string socket_fname_c = socket_fname;
+
+    DWORD ret =
+        ::SetNamedSecurityInfoA(&socket_fname_c[0], SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, dacl, NULL);
     if (ret != ERROR_SUCCESS)
     {
         return false;

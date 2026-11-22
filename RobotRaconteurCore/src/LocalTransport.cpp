@@ -679,7 +679,11 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 
                 acceptor->acceptor.listen();
 #ifdef ROBOTRACONTEUR_WINDOWS
-                detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_);
+                if (!detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_))
+                {
+                    ROBOTRACONTEUR_LOG_WARNING_COMPONENT(
+                        node, Transport, -1, "LocalTransport could not set permissions on socket file " << pipename);
+                }
 #else
                 chmod(pipename.c_str(), public_ ? (S_IRWXU | S_IRWXG) : S_IRWXU);
 #endif
@@ -873,7 +877,11 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
                 acceptor->acceptor.bind(ep);
                 acceptor->acceptor.listen();
 #ifdef ROBOTRACONTEUR_WINDOWS
-                detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_);
+                if (!detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_))
+                {
+                    ROBOTRACONTEUR_LOG_WARNING_COMPONENT(
+                        node, Transport, -1, "LocalTransport could not set permissions on socket file " << pipename);
+                }
 #else
                 chmod(pipename.c_str(), public_ ? (S_IRWXU | S_IRWXG) : S_IRWXU);
 #endif
