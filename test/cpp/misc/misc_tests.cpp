@@ -1160,6 +1160,28 @@ TEST(RobotRaconteurMisc, SubscribeServiceUrlsDifferentServices)
     node->Shutdown();
 }
 
+class NcNotAStubObject : public RRObject
+{
+  public:
+    RR_OVIRTUAL std::string RRType() RR_OVERRIDE { return "test::NcNotAStubObject"; }
+};
+
+// ClaimClient / ReleaseClient with an object that is not a service stub must throw, not dereference null
+TEST(RobotRaconteurMisc, SubscriptionClaimClientNotAStub)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+
+    RR_SHARED_PTR<ServiceSubscription> sub =
+        node->SubscribeService("rr+tcp://localhost:1/?nodename=test_node&service=service1");
+    RR_SHARED_PTR<RRObject> obj = RR_MAKE_SHARED<NcNotAStubObject>();
+    EXPECT_THROW(sub->ClaimClient(obj), InvalidArgumentException);
+    EXPECT_THROW(sub->ReleaseClient(obj), InvalidArgumentException);
+    sub->Close();
+
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

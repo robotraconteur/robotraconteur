@@ -744,7 +744,7 @@ static RR_SHARED_PTR<detail::ServiceSubscription_client> ServiceSubscription_Fin
     const RR_SHARED_PTR<RRObject>& client)
 {
     RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
-    if (!client)
+    if (!s)
         throw InvalidArgumentException("Can only lock object opened through Robot Raconteur");
 
     RR_SHARED_PTR<ClientContext> c = s->GetContext();
@@ -3751,7 +3751,7 @@ static void SubObjectSubscription_AsyncGetDefaultClientBase2(
     try
     {
         RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
-        if (!client)
+        if (!s)
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
             detail::InvokeHandlerWithException(
