@@ -524,6 +524,125 @@ TEST(AsyncMessageReaderTest, HeaderSize4OutOfRangeRejected)
     }
 }
 
+// Feed buf to the async reader as the stream transports do, offering the rest of the data after each call.
+// Once all of buf has been offered, keep calling with no new data so the reader processes the bytes it has
+// buffered. Returns true if the reader accepted the complete message. Exceptions propagate
+static bool AsyncReadSectionLimitTest(const std::vector<uint8_t>& buf, uint16_t version)
+{
+    RR_SHARED_PTR<AsyncMessageReader> r = AsyncMessageReader::CreateInstance();
+    r->Reset();
+    size_t pos = 0;
+    size_t idle_calls = 0;
+    mutable_buffers continue_bufs;
+    for (size_t iter = 0; iter < 1000; iter++)
+    {
+        AsyncMessageReader::return_type ret;
+        mutable_buffers next;
+        size_t used = 0;
+        if (continue_bufs.empty())
+        {
+            const_buffers bufs;
+            if (pos < buf.size())
+                bufs.push_back(boost::asio::buffer(&buf[pos], buf.size() - pos));
+            else if (++idle_calls > 100)
+                return false;
+            ret = (version == 2) ? r->Read(bufs, used, 0, next) : r->Read4(bufs, used, 0, next);
+            pos += used;
+        }
+        else
+        {
+            size_t n = 0;
+            for (mutable_buffers::iterator b = continue_bufs.begin(); b != continue_bufs.end(); ++b)
+            {
+                size_t c = std::min(boost::asio::buffer_size(*b), buf.size() - pos);
+                if (c == 0)
+                    break;
+                memcpy(RR_BOOST_ASIO_BUFFER_CAST(uint8_t*, *b), &buf[pos], c);
+                pos += c;
+                n += c;
+            }
+            if (n == 0)
+                return false;
+            const_buffers empty;
+            ret = (version == 2) ? r->Read(empty, used, n, next) : r->Read4(empty, used, n, next);
+        }
+        if (ret == AsyncMessageReader::ReadReturn_done)
+            return r->MessageReady();
+        continue_bufs.clear();
+        if (ret == AsyncMessageReader::ReadReturn_continue_buffers)
+            continue_bufs = next;
+    }
+    return false;
+}
+
+// A read that runs past the end of its section (here a string that continues past the end of its element)
+// must be rejected. distance_from_limit() wrapped to a huge value instead, so the following reads, and the
+// length and allocation checks that use it, were no longer limited
+TEST(AsyncMessageReaderTest, ReadPastSectionLimitRejected)
+{
+    const std::string name = "zz_section_limit_test";
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_FunctionCallReq, "func");
+    e->ServicePath = "svc";
+    e->AddElement(name, RR_INTRUSIVE_PTR<MessageElementData>());
+    e->AddElement("d", ScalarToRRArray<double>(1.5));
+    m->entries.push_back(e);
+    ASSERT_EQ(e->elements.at(0)->ElementType, DataTypes_void_t);
+
+    for (uint16_t version = 2; version <= 4; version += 2)
+    {
+        std::vector<uint8_t> buf(version == 2 ? m->ComputeSize() : m->ComputeSize4());
+        ArrayBinaryWriter w(&buf[0], 0, buf.size());
+        if (version == 2)
+            m->Write(w);
+        else
+            m->Write4(w);
+
+        EXPECT_TRUE(AsyncReadSectionLimitTest(buf, version)) << "version " << version;
+
+        std::vector<uint8_t>::iterator it = std::search(buf.begin(), buf.end(), name.begin(), name.end());
+        ASSERT_TRUE(it != buf.end());
+        size_t name_pos = it - buf.begin();
+
+        // Shrink the element size of the void element so the element ends 4 bytes into its name.
+        // Format 2: uint32 element size, uint16 name length, name. Format 4: uint_x element size, uint8 flags,
+        // uint_x name length, name
+        if (version == 2)
+        {
+            size_t el_pos = name_pos - 6;
+            ASSERT_EQ(buf[name_pos - 2], name.size());
+            uint32_t el_size = static_cast<uint32_t>(name_pos + 4 - el_pos);
+            buf[el_pos] = static_cast<uint8_t>(el_size);
+            buf[el_pos + 1] = 0;
+            buf[el_pos + 2] = 0;
+            buf[el_pos + 3] = 0;
+        }
+        else
+        {
+            size_t el_pos = name_pos - 3;
+            ASSERT_EQ(buf[name_pos - 1], name.size());
+            ASSERT_LT(buf[el_pos], 253);
+            buf[el_pos] = static_cast<uint8_t>(name_pos + 4 - el_pos);
+        }
+
+        {
+            ArrayBinaryReader sr(&buf[0], 0, buf.size());
+            RR_INTRUSIVE_PTR<Message> m2 = CreateMessage();
+            if (version == 2)
+            {
+                EXPECT_ANY_THROW(m2->Read(sr)) << "version " << version;
+            }
+            else
+            {
+                EXPECT_ANY_THROW(m2->Read4(sr)) << "version " << version;
+            }
+        }
+
+        EXPECT_THROW(AsyncReadSectionLimitTest(buf, version), ProtocolException) << "version " << version;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

@@ -55,7 +55,16 @@ std::string& AsyncMessageReaderImpl::param3() { return state_stack.back().param3
 
 size_t& AsyncMessageReaderImpl::limit() { return state_stack.back().limit; }
 
-size_t AsyncMessageReaderImpl::distance_from_limit() { return limit() - message_pos; }
+size_t AsyncMessageReaderImpl::distance_from_limit()
+{
+    size_t lim = limit();
+    // message_pos must never pass the current section limit. If it has, a read over-ran the section
+    // (malformed message); returning the unsigned difference would underflow to a huge value and defeat
+    // every bounds and allocation check that uses this result.
+    if (message_pos > lim)
+        throw ProtocolException("Message read past section limit");
+    return lim - message_pos;
+}
 
 void AsyncMessageReaderImpl::pop_state()
 {
