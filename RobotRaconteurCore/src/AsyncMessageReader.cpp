@@ -932,6 +932,10 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
         case MessageHeader_headersize: {
             uint32_t l = 0;
             R(read_uint_x(l));
+            // The header size is an absolute position from the wire: it must not move the limit past the
+            // end of the message or before data that has already been read
+            if (l > message_len() || l < message_pos)
+                throw ProtocolException("Invalid message header size");
             limit() = l;
             data<MessageHeader>()->HeaderSize = l;
             state() = MessageHeader_flags;

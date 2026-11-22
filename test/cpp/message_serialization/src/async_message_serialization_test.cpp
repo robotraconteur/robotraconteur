@@ -477,6 +477,53 @@ TEST(AsyncMessageReaderTest, ElementTypeOutOfRangeRejected)
     }
 }
 
+// Feed buf to the async reader in one call. Returns true if it accepted the complete message, false if it
+// is waiting for more data. Exceptions propagate
+static bool AsyncRead4HeaderSizeTest(std::vector<uint8_t>& buf)
+{
+    RR_SHARED_PTR<AsyncMessageReader> r = AsyncMessageReader::CreateInstance();
+    r->Reset();
+    const_buffers bufs;
+    bufs.push_back(boost::asio::buffer(&buf[0], buf.size()));
+    mutable_buffers continue_bufs;
+    size_t buf_used = 0;
+    AsyncMessageReader::return_type ret = r->Read4(bufs, buf_used, 0, continue_bufs);
+    return ret == AsyncMessageReader::ReadReturn_done && r->MessageReady();
+}
+
+// The v4 header size is an absolute position from the wire. A value past the end of the message, or before
+// the data already read, must be rejected instead of becoming the reader's limit
+TEST(AsyncMessageReaderTest, HeaderSize4OutOfRangeRejected)
+{
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_FunctionCallReq, "func");
+    e->ServicePath = "svc";
+    e->AddElement("d", ScalarToRRArray<double>(1.5));
+    m->entries.push_back(e);
+
+    std::vector<uint8_t> buf(m->ComputeSize4());
+    ArrayBinaryWriter w(&buf[0], 0, buf.size());
+    m->Write4(w);
+    // The header size at offset 10 must fit in one byte, and the message must be shorter than 252 bytes
+    ASSERT_LT(buf[10], 252);
+    ASSERT_LT(buf.size(), 252u);
+
+    {
+        std::vector<uint8_t> buf2 = buf;
+        EXPECT_TRUE(AsyncRead4HeaderSizeTest(buf2));
+    }
+
+    // Past the end of the message, and before the current position (just after the header size field)
+    const uint8_t bad_sizes[] = {251, 5};
+    for (size_t i = 0; i < sizeof(bad_sizes) / sizeof(bad_sizes[0]); i++)
+    {
+        std::vector<uint8_t> buf2 = buf;
+        buf2[10] = bad_sizes[i];
+        EXPECT_THROW(AsyncRead4HeaderSizeTest(buf2), ProtocolException) << "header size " << (int)bad_sizes[i];
+    }
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
