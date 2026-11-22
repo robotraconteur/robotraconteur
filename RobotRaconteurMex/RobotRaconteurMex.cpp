@@ -4839,6 +4839,14 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 throw InvalidArgumentException("Could not get objref");
 
             boost::recursive_mutex::scoped_lock lock(stubs_lock);
+            // FindObjRef returns the same stub for the same path. Reuse its id and MATLAB object
+            // instead of inserting the stub into stubs again under a new id
+            if (ostub->stubptr && ostub->stubid != 0)
+            {
+                std::map<int32_t, boost::shared_ptr<MexServiceStub> >::iterator e_stub = stubs.find(ostub->stubid);
+                if (e_stub != stubs.end() && e_stub->second == ostub)
+                    return mxDuplicateArray(ostub->stubptr.get());
+            }
             do
             {
                 stubcount++;
