@@ -1822,7 +1822,7 @@ void ObjRefDefinition::FromString(boost::string_ref s, const ServiceDefinitionPa
         break;
     }
     case DataTypes_ArrayTypes_array: {
-        if (ContainerType != DataTypes_ContainerTypes_none)
+        if (t->ContainerType != DataTypes_ContainerTypes_none)
         {
             throw ServiceDefinitionParseException(
                 "Invalid objref definition \"" + boost::trim_copy(s.to_string()) + "\"", ParseInfo);

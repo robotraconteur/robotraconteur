@@ -244,6 +244,16 @@ TEST(RobDef, Int8Constants)
                  ServiceDefinitionParseException);
 }
 
+TEST(RobDef, ObjRefArrayWithContainerRejected)
+{
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    RR_SHARED_PTR<ServiceEntryDefinition> entry = RR_MAKE_SHARED<ServiceEntryDefinition>(def);
+    RR_SHARED_PTR<ObjRefDefinition> o = RR_MAKE_SHARED<ObjRefDefinition>(entry);
+    EXPECT_NO_THROW(o->FromString("objref varobject[] x"));
+    RR_SHARED_PTR<ObjRefDefinition> o2 = RR_MAKE_SHARED<ObjRefDefinition>(entry);
+    EXPECT_THROW(o2->FromString("objref varobject[]{string} x"), ServiceDefinitionParseException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
