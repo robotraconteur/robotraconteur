@@ -481,6 +481,7 @@ void BrowserWebSocketTransportConnection::AsyncConnect1()
     boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> active_connect_handler1 = active_connect_handler;
     active_connect_handler.clear();
 
+    bool attach_started = false;
     try
     {
         std::string noden;
@@ -501,10 +502,20 @@ void BrowserWebSocketTransportConnection::AsyncConnect1()
 
         parent1->register_transport(shared_from_this());
 
+        // AsyncAttachStream reports its own errors to the handler
+        attach_started = true;
         ASIOStreamBaseTransport::AsyncAttachStream(server, target_nodeid, target_nodename, active_connect_handler1);
     }
     catch (std::exception& exp)
     {
+        if (!attach_started && active_connect_handler1)
+        {
+            // Complete the connect attempt instead of leaving it pending forever
+            RobotRaconteurNode::TryPostToThreadPool(
+                node, boost::bind(active_connect_handler1, RR_MAKE_SHARED<ConnectionException>(exp.what())));
+            Close();
+            return;
+        }
         RobotRaconteurNode::TryHandleException(node, &exp);
     }
 }
