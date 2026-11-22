@@ -9818,20 +9818,65 @@ MexPodMultiDimArrayMemoryClient::MexPodMultiDimArrayMemoryClient(const std::stri
 {
     this->type = type;
 }
+struct MexPodMultiDimArrayMemoryClient_buffer
+{
+    std::vector<uint32_t> dims;
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer;
+};
+
+// Copy pod elements between the full buffer (a) and a transfer block (b), renumbering the
+// elements when they move to a different index (pod arrays require element number == index)
+static void MexPodMultiDimArrayMemoryClient_CopyElements(
+    const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& src, std::vector<RR_INTRUSIVE_PTR<MessageElement> >& dest,
+    const std::vector<uint32_t>& buffer_dims, const std::vector<uint64_t>& bufferpos,
+    const std::vector<uint64_t>& count, bool buffer_to_block)
+{
+    std::vector<uint32_t> zero_dims(count.size());
+    std::vector<uint32_t> bufferpos1 = detail::ConvertVectorType<uint32_t>(bufferpos);
+    std::vector<uint32_t> count1 = detail::ConvertVectorType<uint32_t>(count);
+
+    // NOLINTNEXTLINE(readability-suspicious-call-argument)
+    RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
+        // NOLINTNEXTLINE(readability-suspicious-call-argument)
+        detail::MultiDimArray_CalculateCopyIndicesBeginIter(buffer_dims, bufferpos1, count1, zero_dims, count1);
+
+    uint32_t len = 0;
+    uint32_t indexa = 0;
+    uint32_t indexb = 0;
+
+    while (iter->Next(indexa, indexb, len))
+    {
+        for (uint32_t j = 0; j < len; j++)
+        {
+            uint32_t src_i = buffer_to_block ? (indexa + j) : (indexb + j);
+            uint32_t dest_i = buffer_to_block ? (indexb + j) : (indexa + j);
+            RR_INTRUSIVE_PTR<MessageElement> el = src.at(src_i);
+            if (src_i != dest_i)
+            {
+                el = ShallowCopyMessageElement(el);
+                MessageElement_SetElementNumber(el, boost::numeric_cast<int32_t>(dest_i));
+            }
+            dest.at(dest_i) = el;
+        }
+    }
+}
+
 mxArray* MexPodMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memorypos,
                                                const std::vector<uint64_t>& bufferpos,
                                                const std::vector<uint64_t>& count)
 {
     uint64_t elemcount = boost::accumulate(count, 1, std::multiplies<uint64_t>());
 
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer(elemcount);
+    MexPodMultiDimArrayMemoryClient_buffer buffer;
+    buffer.dims = detail::ConvertVectorType<uint32_t>(count);
+    buffer.buffer.resize(elemcount);
 
     ReadBase(memorypos, &buffer, bufferpos, count);
 
     std::vector<mwSize> mx_dims = detail::ConvertVectorType<mwSize>(count);
 
     RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement(
-        "array", CreateMessageElementNestedElementList(DataTypes_pod_array_t, type->TypeString, buffer));
+        "array", CreateMessageElementNestedElementList(DataTypes_pod_array_t, type->TypeString, buffer.buffer));
 
     mxArray* mx_buffer = UnpackMessageElementToMxArray_pod(m, type, GetStub());
 
@@ -9847,7 +9892,10 @@ void MexPodMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& memoryp
 {
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer2 =
         PackMxArrayToMessageElement_pod(buffer, type, GetStub());
-    WriteBase(memorypos, &buffer2->Elements, bufferpos, count);
+    MexPodMultiDimArrayMemoryClient_buffer buffer3;
+    buffer3.dims = detail::ConvertVectorType<uint32_t>(count);
+    buffer3.buffer = buffer2->Elements;
+    WriteBase(memorypos, &buffer3, bufferpos, count);
 }
 std::vector<uint64_t> MexPodMultiDimArrayMemoryClient::Dimensions()
 {
@@ -9866,7 +9914,7 @@ void MexPodMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Me
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> array =
         MessageElement::FindElement(res2->Elements, "array")->CastDataToNestedList(DataTypes_pod_array_t);
 
-    if (array->Elements.empty())
+    if (!array || array->Elements.size() != elemcount)
     {
         throw InvalidOperationException("Invalid memory read return");
     }
@@ -9879,43 +9927,19 @@ void MexPodMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Me
     if (count.empty())
         throw InvalidOperationException("Invalid read operation");
 
-    std::vector<uint64_t> stride(count.size());
-    stride[0] = 1;
-    size_t start_ind = bufferpos.at(0);
-    for (size_t i = 1; i < stride.size(); i++)
-    {
-        stride[i] = count[i - 1] * stride[i - 1];
-        start_ind += stride[i] * bufferpos.at(i);
-    }
+    MexPodMultiDimArrayMemoryClient_buffer* buffer2 = static_cast<MexPodMultiDimArrayMemoryClient_buffer*>(buffer);
 
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> >* buffer2 =
-        static_cast<std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
-
-    for (size_t i = 0; i < elemcount; i++)
-    {
-        buffer2->at(i + start_ind) = array->Elements.at(i);
-    }
+    MexPodMultiDimArrayMemoryClient_CopyElements(array->Elements, buffer2->buffer, buffer2->dims, bufferpos, count,
+                                                 false);
 }
 RR_INTRUSIVE_PTR<MessageElementData> MexPodMultiDimArrayMemoryClient::PackWriteRequest(
     const void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer2 =
-        *static_cast<const std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
-
-    std::vector<uint64_t> stride(count.size());
-    stride[0] = 1;
-    size_t start_ind = bufferpos.at(0);
-    for (size_t i = 1; i < stride.size(); i++)
-    {
-        stride[i] = count[i - 1] * stride[i - 1];
-        start_ind += stride[i] * bufferpos.at(i);
-    }
+    const MexPodMultiDimArrayMemoryClient_buffer* buffer2 =
+        static_cast<const MexPodMultiDimArrayMemoryClient_buffer*>(buffer);
 
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer3(elemcount);
-    for (size_t i = 0; i < elemcount; i++)
-    {
-        buffer3.at(i + start_ind) = buffer2.at(i);
-    }
+    MexPodMultiDimArrayMemoryClient_CopyElements(buffer2->buffer, buffer3, buffer2->dims, bufferpos, count, true);
 
     std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
     std::string qualified_name =
