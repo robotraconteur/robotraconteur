@@ -214,7 +214,9 @@ int32_t mxToTimeout(const mxArray* val)
         if (::mxGetNumberOfElements(val) != 1)
             throw InvalidArgumentException("Timeout must be a scalar");
         double p1 = ((double*)mxGetData(val))[0] * 1000;
-        return boost::lexical_cast<int32_t>(p1);
+        if (!(p1 == p1))
+            throw InvalidArgumentException("Timeout must not be NaN");
+        return boost::numeric_cast<int32_t>(p1);
     }
     else if (mxIsInt32(val))
     {
@@ -238,7 +240,9 @@ int32_t mxToTimeoutAdjusted(const mxArray* val)
         double p1 = ((double*)mxGetData(val))[0];
         if (p1 < 0)
             return -1;
-        return boost::lexical_cast<int32_t>(p1) * 1000;
+        if (!(p1 == p1))
+            throw InvalidArgumentException("Timeout must not be NaN");
+        return boost::numeric_cast<int32_t>(p1 * 1000);
     }
     else if (mxIsInt32(val))
     {

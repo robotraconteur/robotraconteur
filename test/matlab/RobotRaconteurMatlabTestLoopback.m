@@ -38,4 +38,7 @@ end
 
     RobotRaconteurMatlabSubscriptionClientTest(url2)
 
+    RobotRaconteurMatlabTimeoutTest(url2)
+
+
 
