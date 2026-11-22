@@ -25,6 +25,7 @@
 #include <vector>
 
 #include <stdint.h>
+#include <limits>
 #include <map>
 #include <deque>
 #include <list>
@@ -3029,6 +3030,40 @@ bool try_convert_string_to_number(const U& arg, T& result)
 
     result = v;
 
+    return true;
+}
+
+// boost::lexical_cast and operator>> treat 8-bit integers as characters, so convert
+// through int32_t and check the range
+template <typename U>
+bool try_convert_string_to_number(const U& arg, int8_t& result)
+{
+    int32_t v = 0;
+    if (!try_convert_string_to_number(arg, v))
+    {
+        return false;
+    }
+    if (v < std::numeric_limits<int8_t>::min() || v > std::numeric_limits<int8_t>::max())
+    {
+        return false;
+    }
+    result = static_cast<int8_t>(v);
+    return true;
+}
+
+template <typename U>
+bool try_convert_string_to_number(const U& arg, uint8_t& result)
+{
+    int32_t v = 0;
+    if (!try_convert_string_to_number(arg, v))
+    {
+        return false;
+    }
+    if (v < 0 || v > std::numeric_limits<uint8_t>::max())
+    {
+        return false;
+    }
+    result = static_cast<uint8_t>(v);
     return true;
 }
 

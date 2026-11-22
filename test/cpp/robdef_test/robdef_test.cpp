@@ -190,6 +190,60 @@ TEST(RobDef, NumberOverflowThrowsParseException)
     EXPECT_NO_THROW(t->FromString("double[2,3] a"));
 }
 
+TEST(RobDef, Int8Constants)
+{
+    std::string def_text = "service example.int8const\n\nstdver 0.10\n\n"
+                           "constant uint8 u1 200\n"
+                           "constant uint8 u2 0xC8\n"
+                           "constant uint8 u3 5\n"
+                           "constant int8 i1 -1\n"
+                           "constant int8 i2 -128\n"
+                           "constant uint8[] ua {10, 20, 255}\n"
+                           "constant int8[] ia {-10, 127}\n";
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(def->FromString(def_text));
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > defs;
+    defs.push_back(def);
+    EXPECT_NO_THROW(VerifyServiceDefinitions(defs));
+
+    RR_SHARED_PTR<ConstantDefinition> c;
+    c = TryFindByName(def->Constants, "u1");
+    ASSERT_TRUE(c);
+    EXPECT_EQ(c->ValueToScalar<uint8_t>(), 200);
+    c = TryFindByName(def->Constants, "u2");
+    ASSERT_TRUE(c);
+    EXPECT_EQ(c->ValueToScalar<uint8_t>(), 200);
+    c = TryFindByName(def->Constants, "u3");
+    ASSERT_TRUE(c);
+    EXPECT_EQ(c->ValueToScalar<uint8_t>(), 5);
+    c = TryFindByName(def->Constants, "i1");
+    ASSERT_TRUE(c);
+    EXPECT_EQ(c->ValueToScalar<int8_t>(), -1);
+    c = TryFindByName(def->Constants, "i2");
+    ASSERT_TRUE(c);
+    EXPECT_EQ(c->ValueToScalar<int8_t>(), -128);
+    c = TryFindByName(def->Constants, "ua");
+    ASSERT_TRUE(c);
+    RR_INTRUSIVE_PTR<RRArray<uint8_t> > ua = c->ValueToArray<uint8_t>();
+    ASSERT_EQ(ua->size(), 3u);
+    EXPECT_EQ((*ua)[0], 10);
+    EXPECT_EQ((*ua)[1], 20);
+    EXPECT_EQ((*ua)[2], 255);
+    c = TryFindByName(def->Constants, "ia");
+    ASSERT_TRUE(c);
+    RR_INTRUSIVE_PTR<RRArray<int8_t> > ia = c->ValueToArray<int8_t>();
+    ASSERT_EQ(ia->size(), 2u);
+    EXPECT_EQ((*ia)[0], -10);
+    EXPECT_EQ((*ia)[1], 127);
+
+    RR_SHARED_PTR<ServiceDefinition> def2 = RR_MAKE_SHARED<ServiceDefinition>();
+    EXPECT_THROW(def2->FromString("service example.int8const2\n\nstdver 0.10\n\nconstant uint8 u1 256\n"),
+                 ServiceDefinitionParseException);
+    RR_SHARED_PTR<ServiceDefinition> def3 = RR_MAKE_SHARED<ServiceDefinition>();
+    EXPECT_THROW(def3->FromString("service example.int8const3\n\nstdver 0.10\n\nconstant int8 i1 128\n"),
+                 ServiceDefinitionParseException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
