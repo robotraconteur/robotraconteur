@@ -1741,6 +1741,7 @@ void ClientContext::AsyncConnectService3(
                         type = objecttype;
                         AsyncConnectService4(d, RR_SHARED_PTR<RobotRaconteurException>(), username, credentials,
                                              objecttype, type, (handler));
+                        return;
                     }
                 }
 
