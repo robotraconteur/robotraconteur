@@ -6770,6 +6770,7 @@ void TcpTransportPortSharerClient::client_thread()
                     ::WSASocketW(prot->iAddressFamily, SOCK_STREAM, IPPROTO_TCP, prot, 0, WSA_FLAG_OVERLAPPED);
                 if (sock == INVALID_SOCKET)
                     continue;
+                bool sock_owned = false;
                 try
                 {
                     boost::mutex::scoped_lock lock(this_lock);
@@ -6787,19 +6788,23 @@ void TcpTransportPortSharerClient::client_thread()
                     }
                     else
                     {
+                        ::closesocket(sock);
                         continue;
                     }
+                    sock_owned = true;
                     IncomingSocket(ssocket);
                 }
                 catch (std::exception& exp2)
                 {
+                    if (!sock_owned)
+                        ::closesocket(sock);
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(
                         node, Transport, -1, "TcpTransport port sharer socket handoff failed: " << exp2.what());
                 }
                 // cSpell: enable
 #else
 
-                int sock = 0;
+                int sock = -1;
 
                 boost::array<uint8_t, 1024> buf = {};
 
@@ -6808,11 +6813,11 @@ void TcpTransportPortSharerClient::client_thread()
                     break;
                 }
 
-                if (sock == 0)
-                    break;
+                // Descriptor 0 is a valid descriptor (process started with stdin closed)
                 if (sock < 0)
                     continue;
 
+                bool sock_owned = false;
                 try
                 {
                     boost::mutex::scoped_lock lock(this_lock);
@@ -6823,7 +6828,10 @@ void TcpTransportPortSharerClient::client_thread()
                     socklen_t address_len = sizeof(struct sockaddr);
 
                     if (getsockname(sock, &sock_addr, &address_len) < 0)
+                    {
+                        ::close(sock);
                         continue;
+                    }
 
                     if (sock_addr.sa_family == AF_INET)
                     {
@@ -6837,13 +6845,17 @@ void TcpTransportPortSharerClient::client_thread()
                     }
                     else
                     {
+                        ::close(sock);
                         continue;
                     }
 
+                    sock_owned = true;
                     IncomingSocket(ssocket);
                 }
                 catch (std::exception& exp2)
                 {
+                    if (!sock_owned)
+                        ::close(sock);
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(
                         node, Transport, -1, "TcpTransport port sharer socket handoff failed: " << exp2.what());
                 }
