@@ -498,7 +498,17 @@ void WrappedServiceStub::async_PropertyGet_handler(const RR_INTRUSIVE_PTR<RobotR
         DIRECTOR_CALL2(handler->handler(RR_INTRUSIVE_PTR<MessageElement>(), err2));
         return;
     }
-    RR_INTRUSIVE_PTR<MessageElement> ret = m->FindElement("value");
+    RR_INTRUSIVE_PTR<MessageElement> ret;
+    try
+    {
+        ret = m->FindElement("value");
+    }
+    catch (RobotRaconteurException& exp)
+    {
+        HandlerErrorInfo err2(exp);
+        DIRECTOR_CALL2(handler->handler(RR_INTRUSIVE_PTR<MessageElement>(), err2));
+        return;
+    }
     HandlerErrorInfo err3;
     DIRECTOR_CALL2(handler->handler(ret, err3));
 }
@@ -583,8 +593,18 @@ void WrappedServiceStub::async_GeneratorFunctionCall_handler(
     catch (std::exception&)
     {}
 
-    RR_SHARED_PTR<WrappedGeneratorClient> gen_ret = RR_MAKE_SHARED<WrappedGeneratorClient>(
-        FunctionName, RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >()), shared_from_this());
+    RR_SHARED_PTR<WrappedGeneratorClient> gen_ret;
+    try
+    {
+        gen_ret = RR_MAKE_SHARED<WrappedGeneratorClient>(
+            FunctionName, RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >()), shared_from_this());
+    }
+    catch (RobotRaconteurException& exp)
+    {
+        HandlerErrorInfo err2(exp);
+        DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<WrappedGeneratorClient>(), err2));
+        return;
+    }
 
     HandlerErrorInfo err3;
     DIRECTOR_CALL2(handler->handler(gen_ret, err3));
