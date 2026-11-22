@@ -1196,8 +1196,11 @@ void TlsSchannelAsyncStreamAdapter::do_handshake5(boost::function<void(const boo
     {
         if (recv_buffer_end_pos != 0)
         {
+            // do_handshake3 adds bytes_transferred to recv_buffer_end_pos
+            uint32_t r = recv_buffer_end_pos;
+            recv_buffer_end_pos = 0;
             boost::system::error_code ec2;
-            do_handshake3(ec2, recv_buffer_end_pos, boost::protect(handler), true);
+            do_handshake3(ec2, r, boost::protect(handler), true);
         }
         else
         {
