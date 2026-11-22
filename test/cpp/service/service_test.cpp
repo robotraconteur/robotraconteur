@@ -707,6 +707,57 @@ TEST_F(ServiceTest, MemoryMaxTransferSizeSmallerThanElement)
     EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
 }
 
+TEST_F(ServiceTest, MultiDimMemorySplitAboveTwoDims)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r;
+    ASSERT_NO_THROW(r = rr_cast<com::robotraconteur::testing::TestService1::testroot>(
+                        RobotRaconteurNode::s()->ConnectService(service_url)));
+    RR_SHARED_PTR<MultiDimArrayMemory<double> > m2 = r->get_m2();
+
+    std::vector<uint64_t> pos(5, 0);
+    pos[0] = 1;
+    pos[1] = 2;
+    pos[2] = 3;
+    std::vector<uint64_t> bufpos(5, 0);
+    std::vector<uint64_t> count(5, 1);
+    count[0] = 2;
+    count[1] = 2;
+    count[2] = 2;
+    RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>(5);
+    for (size_t i = 0; i < 5; i++)
+        (*dims)[i] = boost::numeric_cast<uint32_t>(count[i]);
+
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > expected =
+        AllocateRRMultiDimArray<double>(dims, AllocateRRArray<double>(8));
+    ASSERT_NO_THROW(m2->Read(pos, expected, bufpos, count));
+
+    // One element per block: the split dimension is 0 and dimensions 1 and 2 must be iterated
+    uint32_t old_max_transfer_size = RobotRaconteurNode::s()->GetMemoryMaxTransferSize();
+    RobotRaconteurNode::s()->SetMemoryMaxTransferSize(sizeof(double));
+
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > split =
+        AllocateRRMultiDimArray<double>(dims, AllocateRRArray<double>(8));
+    for (size_t i = 0; i < 8; i++)
+        (*split->Array)[i] = -1.0;
+    EXPECT_NO_THROW(m2->Read(pos, split, bufpos, count));
+    EXPECT_NO_THROW(m2->Write(pos, split, bufpos, count));
+
+    RobotRaconteurNode::s()->SetMemoryMaxTransferSize(old_max_transfer_size);
+
+    for (size_t i = 0; i < 8; i++)
+        EXPECT_EQ((*split->Array)[i], (*expected->Array)[i]) << "element " << i;
+
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > after =
+        AllocateRRMultiDimArray<double>(dims, AllocateRRArray<double>(8));
+    ASSERT_NO_THROW(m2->Read(pos, after, bufpos, count));
+    for (size_t i = 0; i < 8; i++)
+        EXPECT_EQ((*after->Array)[i], (*expected->Array)[i]) << "element " << i;
+
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

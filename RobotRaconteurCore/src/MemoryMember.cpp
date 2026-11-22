@@ -777,26 +777,19 @@ void MultiDimArrayMemoryClientBase::ReadBase(const std::vector<uint64_t>& memory
             }
             else
             {
-                current_pos[split_dim + 1]++;
-                if (current_pos[split_dim + 1] >= count[split_dim + 1])
+                // Advance the dimensions above the split dimension, carrying into the next dimension
+                size_t j = split_dim + 1;
+                current_pos[j]++;
+                while (current_pos[j] >= count[j])
                 {
-                    if (split_dim + 1 == boost::numeric_cast<uint32_t>(count.size() - 1))
+                    if (j == count.size() - 1)
                     {
                         done = true;
+                        break;
                     }
-                    else
-                    {
-                        current_pos[split_dim + 1] = 0;
-                        for (size_t j = split_dim + 2; j < count.size(); j++)
-                        {
-                            if (current_pos[j - 1] >= count[j - 1])
-                            {
-                                current_pos[j]++;
-                            }
-                        }
-                        if (current_pos[count.size() - 1] >= count[count.size() - 1])
-                            done = true;
-                    }
+                    current_pos[j] = 0;
+                    j++;
+                    current_pos[j]++;
                 }
             }
         }
@@ -905,26 +898,19 @@ void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memor
             }
             else
             {
-                current_pos[split_dim + 1]++;
-                if (current_pos[split_dim + 1] >= count[split_dim + 1])
+                // Advance the dimensions above the split dimension, carrying into the next dimension
+                size_t j = split_dim + 1;
+                current_pos[j]++;
+                while (current_pos[j] >= count[j])
                 {
-                    if (split_dim + 1 == boost::numeric_cast<uint32_t>(count.size() - 1))
+                    if (j == count.size() - 1)
                     {
                         done = true;
+                        break;
                     }
-                    else
-                    {
-                        current_pos[split_dim + 1] = 0;
-                        for (size_t j = split_dim + 2; j < count.size(); j++)
-                        {
-                            if (current_pos[j - 1] >= count[j - 1])
-                            {
-                                current_pos[j]++;
-                            }
-                        }
-                        if (current_pos[count.size() - 1] >= count[count.size() - 1])
-                            done = true;
-                    }
+                    current_pos[j] = 0;
+                    j++;
+                    current_pos[j]++;
                 }
             }
         }
