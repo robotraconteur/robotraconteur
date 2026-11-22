@@ -121,6 +121,11 @@ RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(co
 
             uint64_t memorypos = RRArrayToScalar(m->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
             uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
+            // Enforce MaxTransferSize on the server before allocating: a client could otherwise request an
+            // arbitrary count and make DoRead allocate count*element_size before the memory object is consulted
+            uint32_t max_transfer_size = GetNode()->GetMemoryMaxTransferSize();
+            if (element_size == 0 || count > static_cast<uint64_t>(max_transfer_size) / element_size)
+                throw InvalidArgumentException("Memory read count exceeds maximum transfer size");
             RR_INTRUSIVE_PTR<MessageElementData> data = DoRead(memorypos, 0, boost::numeric_cast<size_t>(count), mem);
             RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
             ret->AddElement("memorypos", ScalarToRRArray(memorypos));
@@ -145,6 +150,9 @@ RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(co
 
             uint64_t memorypos = RRArrayToScalar(m->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
             uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
+            uint32_t max_transfer_size = GetNode()->GetMemoryMaxTransferSize();
+            if (element_size == 0 || count > static_cast<uint64_t>(max_transfer_size) / element_size)
+                throw InvalidArgumentException("Memory write count exceeds maximum transfer size");
             RR_INTRUSIVE_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
             DoWrite(memorypos, data, 0, boost::numeric_cast<size_t>(count), mem);
             RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryWriteRet, GetMemberName());
@@ -249,6 +257,11 @@ RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFun
                     throw InvalidArgumentException("Memory request count too large");
             }
             uint32_t elemcount = static_cast<uint32_t>(elemcount64);
+
+            // Enforce MaxTransferSize on the server before allocating elemcount elements in DoRead
+            uint32_t max_transfer_size = GetNode()->GetMemoryMaxTransferSize();
+            if (element_size == 0 || elemcount > max_transfer_size / element_size)
+                throw InvalidArgumentException("Memory read count exceeds maximum transfer size");
 
             RR_INTRUSIVE_PTR<MessageElementData> data =
                 DoRead(RRArrayToVector<uint64_t>(memorypos), std::vector<uint64_t>(count->size()),

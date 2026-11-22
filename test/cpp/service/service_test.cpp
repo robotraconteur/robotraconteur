@@ -847,6 +847,47 @@ TEST_F(ServiceTest, ClientObjectLockReleasedOnDisconnectAfterReauthentication)
     EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r2));
 }
 
+TEST_F(ServiceTest, MemoryRequestMaxTransferSizeTest)
+{
+    // The service must enforce MaxTransferSize on memory requests itself. Clients split larger transfers, but a
+    // crafted request could otherwise make the service allocate count elements before the memory is consulted
+    RR_SHARED_PTR<RobotRaconteurNode> node = RobotRaconteurNode::sp();
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r =
+        rr_cast<com::robotraconteur::testing::TestService1::testroot>(node->ConnectService(service_url));
+    RR_SHARED_PTR<ServiceStub> stub = rr_cast<ServiceStub>(r);
+
+    // m3 is a 1024 x 1024 uint8 multidimensional memory, 1 MB, larger than the default 100 KB MaxTransferSize
+    {
+        std::vector<uint64_t> memorypos(2, 0);
+        std::vector<uint64_t> count(2, 1024);
+        RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryRead, "m3");
+        m->AddElement("memorypos", VectorToRRArray<uint64_t>(memorypos));
+        m->AddElement("count", VectorToRRArray<uint64_t>(count));
+        EXPECT_THROW(stub->ProcessRequest(m), InvalidArgumentException);
+    }
+
+    // m1 is a double array memory: one element more than MaxTransferSize allows
+    {
+        uint64_t count = node->GetMemoryMaxTransferSize() / sizeof(double) + 1;
+        RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryRead, "m1");
+        m->AddElement("memorypos", ScalarToRRArray<uint64_t>(0));
+        m->AddElement("count", ScalarToRRArray<uint64_t>(count));
+        EXPECT_THROW(stub->ProcessRequest(m), InvalidArgumentException);
+    }
+
+    // Requests within MaxTransferSize still work
+    {
+        std::vector<uint64_t> memorypos(2, 0);
+        std::vector<uint64_t> count(2, 16);
+        RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_MemoryRead, "m3");
+        m->AddElement("memorypos", VectorToRRArray<uint64_t>(memorypos));
+        m->AddElement("count", VectorToRRArray<uint64_t>(count));
+        EXPECT_NO_THROW(stub->ProcessRequest(m));
+    }
+
+    node->DisconnectService(r);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
