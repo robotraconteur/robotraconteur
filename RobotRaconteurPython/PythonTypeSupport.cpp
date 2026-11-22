@@ -2672,6 +2672,23 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::s
 
     if (PyArray_Check(array_))
     {
+        // Apply the same declared-length checks as for sequences below
+        size_t np_size = (size_t)PyArray_SIZE((PyArrayObject*)array_);
+        if (type1->ArrayType == DataTypes_ArrayTypes_none && (np_size != 1))
+            throw DataTypeException("Invalid array length for PackToRRArray");
+        if (type1->ArrayType == DataTypes_ArrayTypes_array)
+        {
+            if (!type1->ArrayVarLength)
+            {
+                if (type1->ArrayLength.at(0) != boost::numeric_cast<int32_t>(np_size))
+                    throw DataTypeException("Invalid array length for PackToRRArray");
+            }
+            else if (type1->ArrayLength.at(0) != 0)
+            {
+                if (type1->ArrayLength.at(0) < boost::numeric_cast<int32_t>(np_size))
+                    throw DataTypeException("Array too long for PackToRRArray");
+            }
+        }
         return PackToRRArray_numpy(array_, type1, destrrarray);
     }
 
