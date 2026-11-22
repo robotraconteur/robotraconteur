@@ -533,8 +533,8 @@ TEST_F(ServiceTest, DisconnectClientOtherServiceName)
     RR_SHARED_PTR<ServerContext> service2 = node->GetService("RobotRaconteurTestService2");
     ServiceTest_ClientDisconnectedCounter counter1;
     ServiceTest_ClientDisconnectedCounter counter2;
-    boost::signals2::scoped_connection c1 = service1->ServerServiceListener.connect(counter1);
-    boost::signals2::scoped_connection c2 = service2->ServerServiceListener.connect(counter2);
+    boost::signals2::scoped_connection c1(service1->ServerServiceListener.connect(counter1));
+    boost::signals2::scoped_connection c2(service2->ServerServiceListener.connect(counter2));
 
     NodeID client_id = NodeID::NewUniqueID();
     RR_SHARED_PTR<ITransportConnection> tc = RR_MAKE_SHARED<ServiceTest_DummyTransportConnection>(node);
