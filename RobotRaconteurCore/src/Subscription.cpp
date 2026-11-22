@@ -3061,6 +3061,7 @@ RR_SHARED_PTR<PipeEndpointBase> PipeSubscription_send_iterator::Next()
 {
     if (connections_iterator == subscription->connections.end())
     {
+        current_connection = connections_iterator;
         return RR_SHARED_PTR<PipeEndpointBase>();
     }
     boost::unordered_map<ServiceSubscriptionClientID, RR_SHARED_PTR<PipeSubscription_connection> >::iterator c;
@@ -3068,7 +3069,8 @@ RR_SHARED_PTR<PipeEndpointBase> PipeSubscription_send_iterator::Next()
     {
         c = connections_iterator++;
         RR_SHARED_PTR<PipeEndpointBase> c2 = c->second->connection.lock();
-        if (c->second->DoSendPacket())
+        // Skip entries whose pipe is not connected (a null return means the end to callers)
+        if (c2 && c->second->DoSendPacket())
         {
             current_connection = c;
             return c2;
@@ -3076,6 +3078,7 @@ RR_SHARED_PTR<PipeEndpointBase> PipeSubscription_send_iterator::Next()
 
         if (connections_iterator == subscription->connections.end())
         {
+            current_connection = connections_iterator;
             return RR_SHARED_PTR<PipeEndpointBase>();
         }
     }
