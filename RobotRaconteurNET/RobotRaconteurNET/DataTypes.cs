@@ -545,7 +545,7 @@ public partial class RobotRaconteurVersion
     {
         RobotRaconteurVersion v2_1 = v2 as RobotRaconteurVersion;
 
-        if (v2_1 == null)
+        if (Object.ReferenceEquals(v2_1, null))
             return false;
 
         return RobotRaconteurNET.RobotRaconteurVersion_eq(this, v2_1);
@@ -559,11 +559,15 @@ public partial class RobotRaconteurVersion
 
     public static bool operator ==(RobotRaconteurVersion v1, RobotRaconteurVersion v2)
     {
+        if (Object.ReferenceEquals(v1, null) || Object.ReferenceEquals(v2, null))
+            return Object.ReferenceEquals(v1, null) && Object.ReferenceEquals(v2, null);
         return RobotRaconteurNET.RobotRaconteurVersion_eq(v1, v2);
     }
 
     public static bool operator !=(RobotRaconteurVersion v1, RobotRaconteurVersion v2)
     {
+        if (Object.ReferenceEquals(v1, null) || Object.ReferenceEquals(v2, null))
+            return !(Object.ReferenceEquals(v1, null) && Object.ReferenceEquals(v2, null));
         return RobotRaconteurNET.RobotRaconteurVersion_ne(v1, v2);
     }
 }

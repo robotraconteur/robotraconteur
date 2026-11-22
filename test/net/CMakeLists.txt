@@ -98,5 +98,8 @@ endif()
 
     rrconfiguretest(test_net_varvalue_bool_complex "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} varvalue_bool_complex")
 
+    rrconfiguretest(test_net_version_equals "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} version_equals")
+
+
 
 

@@ -149,6 +149,29 @@ class Program
             return;
         }
 
+        if (command == "version_equals")
+        {
+            var v1 = new RobotRaconteurVersion(1, 2, 3, 4);
+            var v2 = new RobotRaconteurVersion(1, 2, 3, 4);
+            var v3 = new RobotRaconteurVersion(1, 2, 3, 5);
+            RobotRaconteurVersion vnull = null;
+            RRAssert.IsTrue(v1 == v2);
+            RRAssert.IsFalse(v1 == v3);
+            RRAssert.IsTrue(v1 != v3);
+            RRAssert.IsFalse(v1 == null);
+            RRAssert.IsTrue(v1 != null);
+            RRAssert.IsFalse(null == v1);
+            RRAssert.IsTrue(vnull == null);
+            RRAssert.IsFalse(vnull != null);
+            RRAssert.IsTrue(v1.Equals(v2));
+            RRAssert.IsFalse(v1.Equals(v3));
+            RRAssert.IsFalse(v1.Equals(null));
+            RRAssert.IsFalse(v1.Equals("1.2.3.4"));
+            RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
         if (command == "loopback")
         {
 
