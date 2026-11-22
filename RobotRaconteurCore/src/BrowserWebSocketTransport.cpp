@@ -547,11 +547,18 @@ void BrowserWebSocketTransportConnection::Close()
         return;
     closing = true;
 
+    // Keep this connection alive until Close returns; the map entry may hold the last reference
+    RR_SHARED_PTR<BrowserWebSocketTransportConnection> this_ =
+        RR_STATIC_POINTER_CAST<BrowserWebSocketTransportConnection>(shared_from_this());
+
     if (socket >= 0)
     {
         emscripten_websocket_close(socket, 1000, "transport closed");
         invalidate_websocket();
     }
+
+    // No more WebSocket callbacks are delivered after the socket is deleted, so they cannot erase the entry
+    active_transports.erase(static_cast<void*>(this));
 
     try
     {
