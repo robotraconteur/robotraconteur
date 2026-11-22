@@ -2765,9 +2765,21 @@ void ClientContext::AsyncAuthenticateUser2(
         return;
     }
 
+    std::string res;
+    try
+    {
+        res = ret->FindElement("return")->CastDataToString();
+    }
+    catch (std::exception& exp)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
+                                           "AuthenticateUser failed, invalid reply: " << exp.what());
+        detail::InvokeHandlerWithException(node, handler, exp, MessageErrorType_ProtocolError);
+        return;
+    }
+
     m_AuthenticatedUsername = username;
     m_UserAuthenticated = true;
-    std::string res = ret->FindElement("return")->CastDataToString();
     RR_SHARED_PTR<std::string> res2 = RR_MAKE_SHARED<std::string>(res);
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
