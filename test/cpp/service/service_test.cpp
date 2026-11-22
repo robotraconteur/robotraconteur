@@ -9,6 +9,7 @@
 #include "com__robotraconteur__testing__TestService1_stubskel.h"
 
 #include "ServiceTestClient.h"
+#include "ServiceTest.h"
 #include "robotraconteur_generated.h"
 #include "service_test_utils.h"
 
@@ -557,6 +558,86 @@ TEST_F(ServiceTest, DisconnectClientOtherServiceName)
 
     EXPECT_EQ(*counter1.count, 1);
     EXPECT_EQ(*counter2.count, 0);
+}
+
+namespace
+{
+struct WireDuplicateConnectHandler
+{
+    boost::mutex* lock;
+    int* count;
+    std::vector<RR_SHARED_PTR<WireConnection<double> > >* connections;
+    void operator()(const RR_SHARED_PTR<WireConnection<double> >& c, const RR_SHARED_PTR<RobotRaconteurException>& err)
+    {
+        RR_UNUSED(err);
+        boost::mutex::scoped_lock l(*lock);
+        (*count)++;
+        if (c)
+            connections->push_back(c);
+    }
+};
+} // namespace
+
+TEST_F(ServiceTest, WireBroadcasterDuplicateConnect)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+    if (!test_server_node_config->node)
+    {
+        // Test server in another process
+        return;
+    }
+
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r;
+    ASSERT_NO_THROW(r = rr_cast<com::robotraconteur::testing::TestService1::testroot>(
+                        RobotRaconteurNode::s()->ConnectService(service_url)));
+    RR_SHARED_PTR<Wire<double> > w = r->get_broadcastwire();
+
+    RR_SHARED_PTR<ServerContext> ctx = test_server_node_config->node->GetService("RobotRaconteurTestService");
+    ASSERT_TRUE(ctx);
+    RR_SHARED_PTR<RobotRaconteurTest_testroot> obj = RR_DYNAMIC_POINTER_CAST<RobotRaconteurTest_testroot>(
+        ctx->GetObjectSkel("RobotRaconteurTestService")->GetUncastObject());
+    ASSERT_TRUE(obj);
+    ASSERT_TRUE(obj->broadcastwire);
+    size_t count_before = obj->broadcastwire->GetActiveWireConnectionCount();
+
+    // Two connect requests sent before the first reply arrives reach the service with the same endpoint
+    boost::mutex lock;
+    int handler_count = 0;
+    std::vector<RR_SHARED_PTR<WireConnection<double> > > connections;
+    WireDuplicateConnectHandler h;
+    h.lock = &lock;
+    h.count = &handler_count;
+    h.connections = &connections;
+    int started = 0;
+    for (int i = 0; i < 2; i++)
+    {
+        try
+        {
+            w->AsyncConnect(h);
+            started++;
+        }
+        catch (std::exception&)
+        {}
+    }
+
+    for (int i = 0; i < 1000; i++)
+    {
+        {
+            boost::mutex::scoped_lock l(lock);
+            if (handler_count >= started)
+                break;
+        }
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+
+    {
+        boost::mutex::scoped_lock l(lock);
+        EXPECT_EQ(handler_count, started);
+        EXPECT_EQ(connections.size(), 1u);
+    }
+    EXPECT_EQ(obj->broadcastwire->GetActiveWireConnectionCount(), count_before + 1);
+
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
 }
 
 int main(int argc, char* argv[])
