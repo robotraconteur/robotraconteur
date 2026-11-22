@@ -21,7 +21,18 @@ if(NOT ANDROID)
         OUTDIR
         "${CMAKE_CURRENT_BINARY_DIR}/test_src")
 
-    add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS})
+    # Member and type names that are Java or C# keywords; compiled with the test to check the generated code
+    robotraconteur_generate_thunk(
+        RR_NAMES_THUNK_SRCS
+        experimental.gen_test_java_names.robdef
+        LANG
+        java
+        INCLUDE_DIRS
+        "${CMAKE_CURRENT_SOURCE_DIR}/robdef"
+        OUTDIR
+        "${CMAKE_CURRENT_BINARY_DIR}/test_src")
+
+    add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS} ${RR_NAMES_THUNK_SRCS})
 
     # cSpell: disable
     add_custom_target(
@@ -38,6 +49,7 @@ if(NOT ANDROID)
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService1/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService2/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService3/*.java
+        ${CMAKE_CURRENT_BINARY_DIR}/test_src/experimental/gen_test_java_names/*.java
         -d
         "${CMAKE_CURRENT_BINARY_DIR}/test"
         -classpath
@@ -82,5 +94,12 @@ if(NOT ANDROID)
         "${RR_JAVA_TEST_CMD_ARG}")
     rrconfiguretest(test_java_loopback "${RR_JAVA_TEST_CMD}" "test_prog" ARGS "${RR_JAVA_TEST_CMD_ARG} loopback")
     rrconfiguretest(test_java_loopback2 "${RR_JAVA_TEST_CMD}" "test_prog" ARGS "${RR_JAVA_TEST_CMD_ARG} loopback2")
+
+    add_test(
+        NAME RobotRaconteurGen.JavaCSharpKeywordNames
+        COMMAND
+            ${CMAKE_COMMAND} -DROBOTRACONTEURGEN=$<TARGET_FILE:RobotRaconteurGen>
+            -DROBDEF=${CMAKE_CURRENT_SOURCE_DIR}/robdef/experimental.gen_test_java_names.robdef
+            -DOUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/gen_names_check -P ${CMAKE_CURRENT_SOURCE_DIR}/check_gen_names.cmake)
 
 endif()

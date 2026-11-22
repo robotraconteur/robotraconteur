@@ -1731,11 +1731,11 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
 
         std::string objecttype2;
 
-        std::string s2 = fix_qualified_name(m->ObjectType);
+        std::string s2 = m->ObjectType;
 
         if (s2.find('.') == std::string::npos)
         {
-            objecttype2 = fix_name(d->Name) + "." + s2;
+            objecttype2 = d->Name + "." + s2;
         }
         else
         {
@@ -1746,7 +1746,7 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         if (GetObjRefIndType(m, indtype))
         {
             w2 << "    public " << objtype << " get_" << fix_name(m->Name) << "(" << indtype << " ind) {" << std::endl;
-            w2 << "    return (" << objtype << ")FindObjRefTyped(\"" << fix_name(m->Name) << "\",ind.ToString(),\""
+            w2 << "    return (" << objtype << ")FindObjRefTyped(\"" << m->Name << "\",ind.ToString(),\""
                << objecttype2 << "\");" << std::endl;
             w2 << "    }" << std::endl;
         }
@@ -1996,11 +1996,11 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
 
         std::string objecttype2;
 
-        std::string s2 = fix_qualified_name(m->ObjectType);
+        std::string s2 = m->ObjectType;
 
         if (s2.find('.') == std::string::npos)
         {
-            objecttype2 = fix_name(d->Name) + "." + s2;
+            objecttype2 = d->Name + "." + s2;
         }
         else
         {
@@ -2013,7 +2013,7 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
             w2 << "    public Task<" << objtype << ">  async_get_" << fix_name(m->Name) << "(" << indtype
                << " ind, int timeout=RobotRaconteurNode.RR_TIMEOUT_INFINITE)" << std::endl
                << "    {" << std::endl;
-            w2 << "    return AsyncFindObjRefTyped<" << objtype << ">(\"" << fix_name(m->Name) << "\",ind.ToString(),\""
+            w2 << "    return AsyncFindObjRefTyped<" << objtype << ">(\"" << m->Name << "\",ind.ToString(),\""
                << objecttype2 << "\",timeout);" << std::endl;
             w2 << "    }" << std::endl;
         }

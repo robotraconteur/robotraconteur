@@ -956,8 +956,8 @@ void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefi
             }
             else
             {
-                w2 << "    " << m->Type->TypeString << ".getNumericArray(" << t8.name << ", buffer, offset + " << i
-                   << ");" << std::endl;
+                w2 << "    " << fix_qualified_name(m->Type->TypeString) << ".getNumericArray(" << t8.name
+                   << ", buffer, offset + " << i << ");" << std::endl;
             }
             i += boost::numeric_cast<int32_t>(t9.get<1>() * e2_count);
         }
@@ -1015,8 +1015,8 @@ void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefi
             }
             else
             {
-                w2 << "    " << m->Type->TypeString << ".assignFromNumericArray(" << t8.name << ", buffer, offset + "
-                   << i << ");" << std::endl;
+                w2 << "    " << fix_qualified_name(m->Type->TypeString) << ".assignFromNumericArray(" << t8.name
+                   << ", buffer, offset + " << i << ");" << std::endl;
             }
             i += boost::numeric_cast<int32_t>(t9.get<1>() * e2_count);
         }
@@ -1565,8 +1565,8 @@ void JavaServiceLangGen::GeneratePodStub(ServiceEntryDefinition* e, std::ostream
     w2 << "    }" << std::endl;
     w2 << "    }" << std::endl;
 
-    w2 << "    public String getTypeName() {return \"" << fix_qualified_name(e->ServiceDefinition_.lock()->Name) << "."
-       << fix_name(e->Name) << "\";}" << std::endl;
+    w2 << "    public String getTypeName() {return \"" << e->ServiceDefinition_.lock()->Name << "." << e->Name << "\";}"
+       << std::endl;
     ;
     w2 << "    protected " << fix_name(e->Name) << "[] createArray(int count) { return new " << fix_name(e->Name)
        << "[count]; }" << std::endl;
@@ -1885,11 +1885,11 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
 
         if (m->ObjectType.find('.') == std::string::npos)
         {
-            objecttype2 = fix_name(d->Name) + "." + fix_name(m->ObjectType);
+            objecttype2 = d->Name + "." + m->ObjectType;
         }
         else
         {
-            objecttype2 = fix_name(m->ObjectType);
+            objecttype2 = m->ObjectType;
         }
 
         std::string indtype;
@@ -1913,7 +1913,7 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
     MEMBER_ITER2(PipeDefinition)
     convert_type_result t = convert_type_array(*m->Type);
     w2 << "    public Pipe<" << t.java_type << t.java_arr_type << "> get_" << fix_name(m->Name) << "()" << std::endl;
-    w2 << "    { return rr_" << m->Name << ";  }" << std::endl;
+    w2 << "    { return rr_" << fix_name(m->Name) << ";  }" << std::endl;
     w2 << "    public void set_" << fix_name(m->Name) << "(Pipe<" << t.java_type << t.java_arr_type << "> value)"
        << std::endl;
     w2 << "    { throw new RuntimeException();}" << std::endl;
@@ -2229,11 +2229,11 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
 
         std::string objecttype2;
 
-        std::string s2 = fix_qualified_name(m->ObjectType);
+        std::string s2 = m->ObjectType;
 
         if (s2.find('.') == std::string::npos)
         {
-            objecttype2 = fix_name(d->Name) + "." + s2;
+            objecttype2 = d->Name + "." + s2;
         }
         else
         {
@@ -2245,7 +2245,7 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
         {
             w2 << "    public void async_get_" << fix_name(m->Name) << "(" << indtype << " ind, Action2<" << objtype
                << ",RuntimeException> handler, int timeout) {" << std::endl;
-            w2 << "    asyncFindObjRefTyped(\"" << fix_name(m->Name) << "\",String.valueOf(ind),\"" << objecttype2
+            w2 << "    asyncFindObjRefTyped(\"" << m->Name << "\",String.valueOf(ind),\"" << objecttype2
                << "\",handler,timeout);" << std::endl;
             w2 << "    }" << std::endl;
         }
