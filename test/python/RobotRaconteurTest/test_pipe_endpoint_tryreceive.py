@@ -52,6 +52,11 @@ def test_pipe_endpoint_tryreceivepacketwait():
 
         obj.server_eps[0].SendPacket(2.5)
         obj.server_eps[0].SendPacket(3.5)
+        # Wait until both packets have arrived before checking Available
+        for _ in range(500):
+            if ep.Available >= 2:
+                break
+            time.sleep(0.01)
         res, packet = ep.TryReceivePacketWait(5, True)
         assert res and packet == 2.5
         assert ep.Available == 2
