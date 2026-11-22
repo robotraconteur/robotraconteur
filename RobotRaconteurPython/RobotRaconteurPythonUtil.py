@@ -2982,7 +2982,7 @@ def convert_constant(const):
                 s3 = const.Value.strip().lstrip('{').rstrip('}')
                 return const.Name, [int(i, 0) for i in s3.split(',')]
             else:
-                return const.Name, const.Value
+                return const.Name, int(const.Value.strip(), 0)
 
     if t.Type == RobotRaconteurPython.DataTypes_namedtype_t:
         struct_fields = const.ValueToStructFields()
