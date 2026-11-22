@@ -921,6 +921,38 @@ TEST_F(ServiceTest, MemoryRequestMaxTransferSizeTest)
     node->DisconnectService(r);
 }
 
+TEST_F(ServiceTest, ServicePathIndexAliases)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+    if (!test_server_node_config->node)
+    {
+        // Test server in another process
+        return;
+    }
+
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r;
+    ASSERT_NO_THROW(r = rr_cast<com::robotraconteur::testing::TestService1::testroot>(
+                        RobotRaconteurNode::s()->ConnectService(service_url)));
+    RR_SHARED_PTR<ServerContext> ctx = test_server_node_config->node->GetService("RobotRaconteurTestService");
+    ASSERT_TRUE(ctx);
+
+    RR_SHARED_PTR<ServiceSkel> s1;
+    RR_SHARED_PTR<ServiceSkel> s2;
+    ASSERT_NO_THROW(s1 = ctx->GetObjectSkel("RobotRaconteurTestService.o2[1]"));
+    ASSERT_NO_THROW(s2 = ctx->GetObjectSkel("RobotRaconteurTestService.o2[%31]"));
+    EXPECT_EQ(s1, s2);
+    EXPECT_EQ(s2->GetServicePath(), "RobotRaconteurTestService.o2[1]");
+
+    RR_SHARED_PTR<ServiceSkel> s3;
+    RR_SHARED_PTR<ServiceSkel> s4;
+    ASSERT_NO_THROW(s3 = ctx->GetObjectSkel("RobotRaconteurTestService.o4[alias%2etest]"));
+    ASSERT_NO_THROW(s4 = ctx->GetObjectSkel("RobotRaconteurTestService.o4[alias%2Etest]"));
+    EXPECT_EQ(s3, s4);
+    EXPECT_EQ(s4->GetServicePath(), "RobotRaconteurTestService.o4[alias%2etest]");
+
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

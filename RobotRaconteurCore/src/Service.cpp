@@ -952,6 +952,19 @@ void ServerContext::SetBaseObject(boost::string_ref name, const RR_SHARED_PTR<RR
     }
 }
 
+// Re-encode the index of a service path segment with encode_index so that every spelling of the
+// same index ("o[1]", "o[%31]", "o[a%2eb]", "o[a%2Eb]") maps to one skel
+static std::string ServerContext_CanonicalServicePathSegment(const std::string& segment)
+{
+    size_t pos = segment.find('[');
+    if (pos == std::string::npos || segment.size() < pos + 2 || segment[segment.size() - 1] != ']')
+    {
+        return segment;
+    }
+    std::string ind = segment.substr(pos + 1, segment.size() - pos - 2);
+    return segment.substr(0, pos + 1) + detail::encode_index(detail::decode_index(ind)) + "]";
+}
+
 RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef servicepath)
 {
 
@@ -991,7 +1004,7 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
                 boost::mutex::scoped_lock lock(skels_lock);
                 std::string ppath1 = ppath;
 
-                ppath = ppath.append(".").append(p.at(i));
+                ppath = ppath.append(".").append(ServerContext_CanonicalServicePathSegment(p.at(i)));
 
                 skel1.reset();
                 RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(ppath);
