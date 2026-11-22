@@ -21,6 +21,7 @@
 #include "RobotRaconteur/Message.h"
 #include "RobotRaconteur/Error.h"
 #include <boost/algorithm/string.hpp>
+#include <set>
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include "RobotRaconteur/AutoResetEvent.h"
 #include "RobotRaconteur/DataTypes.h"
@@ -2150,55 +2151,73 @@ bool ClientContext::VerifyObjectImplements2(boost::string_ref objecttype, boost:
     if (objecttype == implementstype)
         return true;
 
-    boost::tuple<boost::string_ref, boost::string_ref> s1 = SplitQualifiedName(objecttype);
+    // The pulled service definitions are not verified, so Implements may contain cycles (an object that implements
+    // itself, or a loop across definitions). Walk the graph iteratively with a visited set instead of recursing, and
+    // bound the number of object types examined.
+    std::set<std::string> visited;
+    std::list<std::string> pending;
+    pending.push_back(objecttype.to_string());
 
-    if (pulled_service_defs.find(s1.get<0>().to_string()) == pulled_service_defs.end())
+    while (!pending.empty())
     {
-        RR_SHARED_PTR<ServiceDefinition> d1 = PullServiceDefinition(s1.get<0>()).def;
-        pulled_service_defs.insert(std::make_pair(d1->Name, d1));
-    }
+        std::string objecttype1 = pending.front();
+        pending.pop_front();
 
-    std::map<std::string, RR_SHARED_PTR<ServiceDefinition> >::iterator e1 =
-        pulled_service_defs.find(s1.get<0>().to_string());
-    if (e1 == pulled_service_defs.end())
-        return false;
+        if (!visited.insert(objecttype1).second)
+            continue;
 
-    RR_SHARED_PTR<ServiceDefinition> d = e1->second;
+        if (visited.size() > 1024)
+            return false;
 
-    RR_SHARED_PTR<ServiceEntryDefinition> o;
+        boost::tuple<boost::string_ref, boost::string_ref> s1 = SplitQualifiedName(objecttype1);
 
-    BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& e, d->Objects)
-    {
-        if (e->Name == s1.get<1>())
-            o = e;
-    }
-
-    if (!o)
-        return false;
-
-    BOOST_FOREACH (std::string& e, o->Implements)
-    {
-        std::string deftype = d->Name;
-        std::string objtype;
-
-        if (!boost::contains(e, "."))
+        if (pulled_service_defs.find(s1.get<0>().to_string()) == pulled_service_defs.end())
         {
-            objtype = e;
-        }
-        else
-        {
-            boost::tuple<boost::string_ref, boost::string_ref> s2 = SplitQualifiedName(e);
-            deftype = s2.get<0>().to_string();
-            objtype = s2.get<1>().to_string();
+            RR_SHARED_PTR<ServiceDefinition> d1 = PullServiceDefinition(s1.get<0>()).def;
+            pulled_service_defs.insert(std::make_pair(d1->Name, d1));
         }
 
-        // NOLINTBEGIN(performance-inefficient-string-concatenation)
-        if ((deftype + "." + objtype) == implementstype)
-            return true;
+        std::map<std::string, RR_SHARED_PTR<ServiceDefinition> >::iterator e1 =
+            pulled_service_defs.find(s1.get<0>().to_string());
+        if (e1 == pulled_service_defs.end())
+            continue;
 
-        if (VerifyObjectImplements2(deftype + "." + objtype, implementstype))
-            return true;
-        // NOLINTEND(performance-inefficient-string-concatenation)
+        RR_SHARED_PTR<ServiceDefinition> d = e1->second;
+
+        RR_SHARED_PTR<ServiceEntryDefinition> o;
+
+        BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& e, d->Objects)
+        {
+            if (e->Name == s1.get<1>())
+                o = e;
+        }
+
+        if (!o)
+            continue;
+
+        BOOST_FOREACH (std::string& e, o->Implements)
+        {
+            std::string deftype = d->Name;
+            std::string objtype;
+
+            if (!boost::contains(e, "."))
+            {
+                objtype = e;
+            }
+            else
+            {
+                boost::tuple<boost::string_ref, boost::string_ref> s2 = SplitQualifiedName(e);
+                deftype = s2.get<0>().to_string();
+                objtype = s2.get<1>().to_string();
+            }
+
+            // NOLINTBEGIN(performance-inefficient-string-concatenation)
+            if ((deftype + "." + objtype) == implementstype)
+                return true;
+
+            pending.push_back(deftype + "." + objtype);
+            // NOLINTEND(performance-inefficient-string-concatenation)
+        }
     }
 
     return false;
