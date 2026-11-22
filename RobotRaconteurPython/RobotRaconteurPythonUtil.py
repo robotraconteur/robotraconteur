@@ -5485,8 +5485,10 @@ class RobotRaconteurNodeSetup(object):
     def __init__(self, node_name=None, tcp_port=None, flags=None, allowed_overrides=None, node=None, argv=None, config=None):
         if (config is not None):
             assert node_name is None and tcp_port is None and flags is None and allowed_overrides is None and argv is None
+            if node is None:
+                node = RobotRaconteurPython.RobotRaconteurNode.s
             self.__setup = RobotRaconteurPython.WrappedRobotRaconteurNodeSetup(
-                config)
+                node, config)
         else:
             if node_name is None:
                 node_name = ""
