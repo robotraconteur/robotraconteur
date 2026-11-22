@@ -54,8 +54,6 @@ mxArray* UnpackMessageElementToMxArray(const RR_INTRUSIVE_PTR<MessageElement>& m
                                        const boost::shared_ptr<TypeDefinition>& tdef,
                                        const RR_SHARED_PTR<ServiceStub>& stub);
 
-mxArray* ConnectClient(mxArray* url, mxArray* username, mxArray* credentials);
-
 class MexServiceFactory : public virtual RobotRaconteur::ServiceFactory
 {
   public:
