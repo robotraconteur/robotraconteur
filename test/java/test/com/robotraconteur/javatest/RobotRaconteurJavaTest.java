@@ -104,6 +104,8 @@ public class RobotRaconteurJavaTest
                     ServiceTestClient2 stest = new ServiceTestClient2();
                     stest.RunFullTest("rr+tcp://localhost:" + String.valueOf(port) +
                                       "/?service=RobotRaconteurTestService2");
+                    stest.testGenerator3AsyncNextLoopback("rr+tcp://localhost:" + String.valueOf(port) +
+                                                          "/?service=RobotRaconteurTestService2");
 
                     RobotRaconteurNode.s().shutdown();
                     System.out.println("Finished shutdown");

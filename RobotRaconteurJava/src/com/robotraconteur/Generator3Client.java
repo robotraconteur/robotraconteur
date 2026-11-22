@@ -42,10 +42,8 @@ public class Generator3Client<ParamType> implements Generator3<ParamType>
         {
 
             MessageElement m = new MessageElement("parameter", param1);
-            MessageElement m2 = null;
             try
             {
-                m2 = inner_gen.next(m);
                 AsyncRequestDirectorImpl d = new AsyncRequestDirectorImpl(new endAsyncNext(), handler);
                 int id = RRObjectHeap.addObject(d);
                 inner_gen.asyncNext(m, timeout, d, id);
@@ -53,8 +51,6 @@ public class Generator3Client<ParamType> implements Generator3<ParamType>
             finally
             {
                 m.finalize();
-                if (m2 != null)
-                    m2.finalize();
             }
         }
         finally

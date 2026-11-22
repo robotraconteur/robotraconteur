@@ -238,6 +238,47 @@ public class ServiceTestClient2
         r.set_teststruct3_prop(ServiceTest2_pod.fill_teststruct3(858362));
     }
 
+    // Needs the service from testroot3_impl in this process
+    public void testGenerator3AsyncNextLoopback(String url)
+    {
+        connectService(url);
+        try
+        {
+            synchronized (testroot3_impl.class)
+            {
+                testroot3_impl.gen_func3_next_count = 0;
+            }
+            Generator3<UnsignedBytes> g = r.gen_func3("test");
+            final CountDownLatch done = new CountDownLatch(1);
+            final RuntimeException[] err = new RuntimeException[1];
+            g.asyncNext(new UnsignedBytes(new byte[] {1, 2}), new Action1<RuntimeException>() {
+                public void action(RuntimeException e)
+                {
+                    err[0] = e;
+                    done.countDown();
+                }
+            }, 10000);
+            try
+            {
+                RRAssert.isTrue(done.await(20, TimeUnit.SECONDS));
+            }
+            catch (InterruptedException e)
+            {
+                throw new RuntimeException(e);
+            }
+            RRAssert.isTrue(err[0] == null);
+            g.close();
+            synchronized (testroot3_impl.class)
+            {
+                RRAssert.areEqual(testroot3_impl.gen_func3_next_count, 1);
+            }
+        }
+        finally
+        {
+            disconnectService();
+        }
+    }
+
     public void testGenerators()
     {
         Generator1<UnsignedBytes, UnsignedBytes> g = r.gen_func4();
