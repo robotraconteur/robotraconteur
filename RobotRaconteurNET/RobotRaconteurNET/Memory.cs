@@ -696,8 +696,21 @@ public class PodArrayMemoryClient<T> : PodArrayMemory<T>
 
         public override void UnpackReadResult(MessageElementNestedElementList res, ulong bufferpos, ulong count)
         {
-            T[] res1 = RobotRaconteurNode.s.UnpackPodArrayDispose<T>(res);
-            Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
+            try
+            {
+                T[] res1 = RobotRaconteurNode.s.UnpackPodArrayDispose<T>(res);
+                if (res1 == null || res1.LongLength != (long)count)
+                    throw new DataTypeException("Invalid memory read return");
+                Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                }
+            }
         }
 
         public override MessageElementNestedElementList PackWriteRequest(ulong bufferpos, ulong count)
@@ -774,11 +787,22 @@ public class PodMultiDimArrayMemoryClient<T> : PodMultiDimArrayMemory<T>
         public override void UnpackReadResult(MessageElementNestedElementList res, vector_uint64_t bufferpos,
                                               vector_uint64_t count)
         {
-            using (res) using (bufferpos) using (count)
+            try
             {
-                PodMultiDimArray res1 = RobotRaconteurNode.s.UnpackPodMultiDimArrayDispose<T>(res);
-                buffer.AssignSubArray(bufferpos.Select(x => (uint)x).ToArray(), res1, new uint[buffer.Dims.Length],
-                                      count.Select(x => (uint)x).ToArray());
+                using (res) using (bufferpos) using (count)
+                {
+                    PodMultiDimArray res1 = RobotRaconteurNode.s.UnpackPodMultiDimArrayDispose<T>(res);
+                    buffer.AssignSubArray(bufferpos.Select(x => (uint)x).ToArray(), res1, new uint[buffer.Dims.Length],
+                                          count.Select(x => (uint)x).ToArray());
+                }
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                }
             }
         }
 
@@ -1459,8 +1483,21 @@ public class NamedArrayMemoryClient<T> : NamedArrayMemory<T>
 
         public override void UnpackReadResult(MessageElementNestedElementList res, ulong bufferpos, ulong count)
         {
-            T[] res1 = RobotRaconteurNode.s.UnpackNamedArrayDispose<T>(res);
-            Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
+            try
+            {
+                T[] res1 = RobotRaconteurNode.s.UnpackNamedArrayDispose<T>(res);
+                if (res1 == null || res1.LongLength != (long)count)
+                    throw new DataTypeException("Invalid memory read return");
+                Array.Copy(res1, 0, buffer, (long)bufferpos, (long)count);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                }
+            }
         }
 
         public override MessageElementNestedElementList PackWriteRequest(ulong bufferpos, ulong count)
@@ -1537,11 +1574,22 @@ public class NamedMultiDimArrayMemoryClient<T> : NamedMultiDimArrayMemory<T>
         public override void UnpackReadResult(MessageElementNestedElementList res, vector_uint64_t bufferpos,
                                               vector_uint64_t count)
         {
-            using (res) using (bufferpos) using (count)
+            try
             {
-                NamedMultiDimArray res1 = RobotRaconteurNode.s.UnpackNamedMultiDimArrayDispose<T>(res);
-                buffer.AssignSubArray(bufferpos.Select(x => (uint)x).ToArray(), res1, new uint[buffer.Dims.Length],
-                                      count.Select(x => (uint)x).ToArray());
+                using (res) using (bufferpos) using (count)
+                {
+                    NamedMultiDimArray res1 = RobotRaconteurNode.s.UnpackNamedMultiDimArrayDispose<T>(res);
+                    buffer.AssignSubArray(bufferpos.Select(x => (uint)x).ToArray(), res1, new uint[buffer.Dims.Length],
+                                          count.Select(x => (uint)x).ToArray());
+                }
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                }
             }
         }
 
