@@ -300,6 +300,22 @@ TEST(RobDef, PipeUnreliableModifierAndOptionWarning)
     EXPECT_EQ(combination_warnings, 1u);
 }
 
+TEST(RobDef, ExceptionMessagesIncludeLocation)
+{
+    ServiceDefinitionParseInfo info;
+    info.ServiceName = "example.messages";
+    info.LineNumber = 12;
+    info.Line = "object foo";
+
+    ServiceDefinitionParseException e1("parse problem", info);
+    EXPECT_EQ(std::string(e1.what()), "Parse error on line 12 in example.messages: parse problem");
+    EXPECT_EQ(e1.ToString(), "Parse error on line 12 in example.messages: parse problem");
+
+    ServiceDefinitionVerifyException e2("verify problem", info);
+    EXPECT_EQ(std::string(e2.what()), "Verify error on line 12 in example.messages: verify problem");
+    EXPECT_EQ(e2.ToString(), "Verify error on line 12 in example.messages: verify problem");
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

@@ -3314,7 +3314,7 @@ std::string ServiceDefinitionParseException::ToString() const
     if (!ParseInfo.ServiceName.empty())
     {
         return "Parse error on line " + boost::lexical_cast<std::string>(ParseInfo.LineNumber) + " in " +
-               ParseInfo.ServiceName + ": " + Message;
+               ParseInfo.ServiceName + ": " + ShortMessage;
     }
     else if (!ParseInfo.Line.empty())
     {
@@ -3331,8 +3331,8 @@ const char* ServiceDefinitionParseException::what() const throw() { return what_
 ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::string& e) : ServiceDefinitionException(e)
 {
     ShortMessage = e;
-    Message = ServiceDefinitionVerifyException::ToString();
     ParseInfo.LineNumber = -1;
+    Message = ServiceDefinitionVerifyException::ToString();
     what_store = Message;
 }
 
@@ -3341,8 +3341,8 @@ ServiceDefinitionVerifyException::ServiceDefinitionVerifyException(const std::st
     : ServiceDefinitionException(e)
 {
     ShortMessage = e;
-    Message = ServiceDefinitionVerifyException::ToString();
     ParseInfo = info;
+    Message = ServiceDefinitionVerifyException::ToString();
     what_store = Message;
 }
 
