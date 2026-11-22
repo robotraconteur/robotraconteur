@@ -3240,13 +3240,13 @@ void EnumDefinition::FromString(boost::string_ref s, const ServiceDefinitionPars
 }
 bool EnumDefinition::VerifyValues() const
 {
-    if (Values.size() == 1)
+    if (Values.size() <= 1)
     {
         return true;
     }
 
     std::vector<EnumDefinitionValue>::const_iterator e = Values.begin();
-    std::vector<EnumDefinitionValue>::const_iterator e_end = Values.end()--;
+    std::vector<EnumDefinitionValue>::const_iterator e_end = Values.end() - 1;
 
     std::vector<EnumDefinitionValue>::const_iterator e2_end = Values.end();
     for (; e != e_end; e++)

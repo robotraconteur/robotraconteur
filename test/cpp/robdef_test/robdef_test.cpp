@@ -427,6 +427,36 @@ TEST(RobDef, EstimatePodPackedElementSizeRecursivePod)
     EXPECT_GT(e_size, 4 * d_size);
 }
 
+static EnumDefinitionValue MakeEnumDefinitionValue(const std::string& name, int32_t value)
+{
+    EnumDefinitionValue v;
+    v.Name = name;
+    v.Value = value;
+    return v;
+}
+
+// VerifyValues must handle empty and single-value enums, and still find duplicate names and values. It used
+// Values.end()-- (a no-op on a temporary that decremented the end iterator of an empty vector)
+TEST(RobDef, EnumVerifyValues)
+{
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    EnumDefinition e(def);
+    EXPECT_TRUE(e.VerifyValues());
+
+    e.Values.push_back(MakeEnumDefinitionValue("a", 1));
+    EXPECT_TRUE(e.VerifyValues());
+
+    e.Values.push_back(MakeEnumDefinitionValue("b", 2));
+    e.Values.push_back(MakeEnumDefinitionValue("c", 3));
+    EXPECT_TRUE(e.VerifyValues());
+
+    e.Values.push_back(MakeEnumDefinitionValue("d", 3));
+    EXPECT_FALSE(e.VerifyValues());
+
+    e.Values.back() = MakeEnumDefinitionValue("a", 4);
+    EXPECT_FALSE(e.VerifyValues());
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
