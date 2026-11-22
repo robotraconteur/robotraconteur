@@ -5267,9 +5267,8 @@ class ServiceSubscriptionManager(object):
         :type close: bool
         """
         with self._lock:
-            self._subscription_manager.RemoveSubscription(name)
-            if close:
-                del self._subscriptions[name]
+            self._subscription_manager.RemoveSubscription(name, close)
+            self._subscriptions.pop(name, None)
 
     def EnableSubscription(self, name):
         """

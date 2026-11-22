@@ -171,3 +171,45 @@ def test_sub_manager_subscribe_by_url():
         assert c.add_two_numbers(1, 2) == 3
 
         sub_manager.Close()
+
+
+def test_sub_manager_remove_subscription():
+
+    client_node = RR.RobotRaconteurNode()
+    client_node.Init()
+
+    client_node_setup = RR.RobotRaconteurNodeSetup(
+        "", 0, flags=intra_client_flags, node=client_node)
+
+    server1 = _testservice_impl("server1", RR.NodeID("0d694574-1ad8-4b9e-9aea-e881524fb451"))
+
+    with client_node_setup, server1:
+
+        sub_manager = RR.ServiceSubscriptionManager(node=client_node)
+
+        sub1_details = RR.ServiceSubscriptionManagerDetails(
+            Name="sub1",
+            ServiceTypes=["experimental.sub_test.testobj"]
+        )
+
+        # Removing a subscription that was never fetched with GetSubscription must not raise KeyError
+        sub_manager.AddSubscription(sub1_details)
+        sub_manager.RemoveSubscription("sub1")
+        with pytest.raises(RR.InvalidArgumentException):
+            sub_manager.GetSubscription("sub1")
+
+        # close=False must leave the removed subscription open
+        sub_manager.AddSubscription(sub1_details)
+        sub = sub_manager.GetSubscription("sub1")
+        c = sub.GetDefaultClientWait(5)
+        assert c.add_two_numbers(1, 2) == 3
+        sub_manager.RemoveSubscription("sub1", False)
+        time.sleep(0.1)
+        res, c2 = sub.TryGetDefaultClient()
+        assert res
+        assert c2.add_two_numbers(2, 3) == 5
+        with pytest.raises(RR.InvalidArgumentException):
+            sub_manager.GetSubscription("sub1")
+        sub.Close()
+
+        sub_manager.Close()
