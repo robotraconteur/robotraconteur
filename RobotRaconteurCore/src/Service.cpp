@@ -2089,8 +2089,7 @@ void ServerContext::ReleaseObjectLock(boost::string_ref servicepath, boost::stri
     if (lock->GetEndpoint() != 0)
     {
         if (ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint() != lock->GetEndpoint() && !override_)
-            if (username != lock->GetUsername() && !override_)
-                throw ObjectLockedException("Service locked by other session");
+            throw ObjectLockedException("Service locked by other session");
     }
 
     lock2.unlock();
