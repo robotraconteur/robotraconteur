@@ -643,6 +643,12 @@ void PipeClientBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                             continue;
                         }
 
+                        // Each pending connect can create at most one endpoint before its reply arrives
+                        if (early_endpoints.size() >= connecting_endpoints.size())
+                        {
+                            continue;
+                        }
+
                         RR_SHARED_PTR<PipeEndpointBase> new_ep = CreateNewPipeEndpoint(index, false, direction);
                         early_endpoints.insert(std::make_pair(index, new_ep));
                         e = new_ep;
