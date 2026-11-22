@@ -169,6 +169,15 @@ TEST(RobDef, FromStringRecordsFirstLine)
     EXPECT_EQ(def->ParseInfo.Line, "service example.firstline");
 }
 
+TEST(RobDef, StdVerOnlyOnce)
+{
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    EXPECT_NO_THROW(def->FromString("service example.stdver\n\nstdver 0.10\n"));
+    RR_SHARED_PTR<ServiceDefinition> def2 = RR_MAKE_SHARED<ServiceDefinition>();
+    EXPECT_THROW(def2->FromString("service example.stdver\n\nstdver 0.10\nstdver 0.9\n"),
+                 ServiceDefinitionParseException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

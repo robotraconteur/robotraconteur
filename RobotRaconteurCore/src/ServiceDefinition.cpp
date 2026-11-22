@@ -631,6 +631,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
                     throw ServiceDefinitionParseException("stdver must be first after service name", working_info);
                 stdver_version.FromString(to_ref(r_entry_match_remaining), &working_info);
                 stdver_found = true;
+                entry_key_max = 2;
                 if (stdver_version < RobotRaconteurVersion(0, 9))
                 {
                     throw ServiceDefinitionParseException(
