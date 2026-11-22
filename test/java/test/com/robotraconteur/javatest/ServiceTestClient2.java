@@ -47,6 +47,28 @@ public class ServiceTestClient2
         testExceptionParams();
 
         disconnectService();
+
+        testSubscriptionConnectedClients(url);
+    }
+
+    public void testSubscriptionConnectedClients(String url)
+    {
+        ServiceSubscription sub = RobotRaconteurNode.s().subscribeService(url);
+        try
+        {
+            testroot3 c = sub.<testroot3>getDefaultClientWait(10000);
+            Map<ServiceSubscriptionClientID, Object> clients = sub.getConnectedClients();
+            RRAssert.areEqual(clients.size(), 1);
+            for (Object o : clients.values())
+            {
+                RRAssert.isTrue(o instanceof testroot3);
+                RRAssert.isTrue(o == c);
+            }
+        }
+        finally
+        {
+            sub.close();
+        }
     }
 
     private testroot3 r;
