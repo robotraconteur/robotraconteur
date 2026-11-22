@@ -928,10 +928,11 @@ class PipeEndpoint(object):
         :return: Tuple of success and received packet
         :rtype: Tuple[bool,T]
         """
-        m = RobotRaconteurPython.MessageElement()
         r = self.__innerpipe.TryReceivePacketWait(
-            m, adjust_timeout(timeout), peek)
-        return (r, UnpackMessageElement(m, self.__type, self.__obj, self.__innerpipe.GetNode()))
+            adjust_timeout(timeout), peek)
+        if not r.res:
+            return (False, None)
+        return (True, UnpackMessageElement(r.packet, self.__type, self.__obj, self.__innerpipe.GetNode()))
 
     @property
     def PacketReceivedEvent(self):
