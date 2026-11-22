@@ -73,6 +73,7 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
     rrconfiguretest(test_net_loopback "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback")
     rrconfiguretest(test_net_loopback2 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback2")
     rrconfiguretest(test_net_loopback3 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback3")
+    rrconfiguretest(test_net_messageelement_scalar "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} messageelement_scalar")
 
     if(WIN32 AND (MSVC_VERSION GREATER 1900))
         add_custom_target(

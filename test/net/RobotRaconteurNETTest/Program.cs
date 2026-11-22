@@ -31,6 +31,23 @@ class Program
             command = args[0];
         }
 
+        if (command == "messageelement_scalar")
+        {
+            using (var m = new MessageElement("v", (ulong)18446744073709551615UL))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.uint64_t);
+                RRAssert.AreEqual(((ulong[])m.Data)[0], 18446744073709551615UL);
+            }
+            using (var m = new MessageElement("v", (long)-5))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.int64_t);
+                RRAssert.AreEqual(((long[])m.Data)[0], -5L);
+            }
+            RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
         if (command == "loopback")
         {
 
