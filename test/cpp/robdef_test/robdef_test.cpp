@@ -254,6 +254,52 @@ TEST(RobDef, ObjRefArrayWithContainerRejected)
     EXPECT_THROW(o2->FromString("objref varobject[]{string} x"), ServiceDefinitionParseException);
 }
 
+TEST(RobDef, PipeUnreliableOptionPerPipe)
+{
+    std::string def_text = "service example.unreliableoption\n\n"
+                           "object obj\n"
+                           "option pipe p1 unreliable\n"
+                           "option pipe p2 unreliable\n"
+                           "pipe double p1\n"
+                           "pipe double p2\n"
+                           "pipe double p3\n"
+                           "end\n";
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(def->FromString(def_text));
+    RR_SHARED_PTR<ServiceEntryDefinition> obj = TryFindByName(def->Objects, "obj");
+    ASSERT_TRUE(obj);
+    RR_SHARED_PTR<PipeDefinition> p1 = rr_cast<PipeDefinition>(TryFindByName(obj->Members, "p1"));
+    RR_SHARED_PTR<PipeDefinition> p2 = rr_cast<PipeDefinition>(TryFindByName(obj->Members, "p2"));
+    RR_SHARED_PTR<PipeDefinition> p3 = rr_cast<PipeDefinition>(TryFindByName(obj->Members, "p3"));
+    EXPECT_TRUE(p1->IsUnreliable());
+    EXPECT_TRUE(p2->IsUnreliable());
+    EXPECT_FALSE(p3->IsUnreliable());
+}
+
+TEST(RobDef, PipeUnreliableModifierAndOptionWarning)
+{
+    std::string def_text = "service example.unreliablemodifier\n\n"
+                           "object obj\n"
+                           "option pipe q2 unreliable\n"
+                           "pipe double q1 [unreliable]\n"
+                           "pipe double q2 [unreliable]\n"
+                           "end\n";
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    ASSERT_NO_THROW(def->FromString(def_text));
+    std::vector<RR_SHARED_PTR<ServiceDefinition> > defs;
+    defs.push_back(def);
+    std::vector<ServiceDefinitionParseException> warnings;
+    ASSERT_NO_THROW(VerifyServiceDefinitions(defs, warnings));
+    size_t combination_warnings = 0;
+    for (size_t i = 0; i < warnings.size(); i++)
+    {
+        if (warnings[i].ShortMessage == "Invalid member modifier combination: [unreliable]")
+            combination_warnings++;
+    }
+    // Only q2 has both the modifier and the legacy option
+    EXPECT_EQ(combination_warnings, 1u);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

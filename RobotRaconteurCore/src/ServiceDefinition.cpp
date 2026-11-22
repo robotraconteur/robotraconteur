@@ -1912,7 +1912,7 @@ bool PipeDefinition::IsUnreliable() const
     {
         BOOST_FOREACH (const std::string& o, obj->Options)
         {
-            static boost::regex r("^[ \\t]*pipe[ \\t]+" + Name + "[ \\t]+unreliable[ \\t]*$");
+            boost::regex r("^[ \\t]*pipe[ \\t]+" + Name + "[ \\t]+unreliable[ \\t]*$");
             if (boost::regex_match(o, r))
             {
                 return true;
@@ -3782,7 +3782,7 @@ void VerifyModifiers(const RR_SHARED_PTR<MemberDefinition>& m, bool readwrite, b
                 {
                     BOOST_FOREACH (const std::string& o, obj->Options)
                     {
-                        static boost::regex r("^[ \\t]*pipe[ \\t]+" + m->Name + "[ \\t]+unreliable[ \\t]*$");
+                        boost::regex r("^[ \\t]*pipe[ \\t]+" + m->Name + "[ \\t]+unreliable[ \\t]*$");
                         if (boost::regex_match(o, r))
                         {
                             warnings.push_back(ServiceDefinitionParseException(
