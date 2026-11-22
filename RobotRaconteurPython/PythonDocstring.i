@@ -1547,9 +1547,8 @@ an example of an authenticator. The valid options for Policies are as follows:
 |                  |                 |                 | users to        |
 |                  |                 |                 | request object  |
 |                  |                 |                 | locks.          |
-|                  |                 |                 | r               |
-|                  |                 |                 | requirevaliduser |
-|                  |                 |                 | most also be    |
+|                  |                 |                 | requirevaliduser|
+|                  |                 |                 | must also be    |
 |                  |                 |                 | \"true\"          |
 +------------------+-----------------+-----------------+-----------------+
 
