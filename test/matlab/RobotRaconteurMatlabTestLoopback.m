@@ -36,3 +36,6 @@ end
 
     RobotRaconteurMatlabWarnFormatTest(url2)
 
+    RobotRaconteurMatlabSubscriptionClientTest(url2)
+
+

@@ -5999,7 +5999,7 @@ mxArray* ConnectClient(const mxArray* url, const mxArray* username, const mxArra
 
     if (s->stubptr != NULL)
     {
-        return s->stubptr.get();
+        return mxDuplicateArray(s->stubptr.get());
     }
     else
     {
@@ -8283,7 +8283,7 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -8321,7 +8321,7 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -8397,7 +8397,7 @@ mxArray* MexServiceSubscription::GetConnectedClients()
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -8900,7 +8900,7 @@ mxArray* MexSubObjectSubscription::subsref(const mxArray* S)
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -8938,7 +8938,7 @@ mxArray* MexSubObjectSubscription::subsref(const mxArray* S)
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
