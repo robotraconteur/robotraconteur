@@ -564,7 +564,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
 
     int32_t entry_key_max = 0;
 
-    bool first_line = false;
+    bool first_line = true;
 
     try
     {
@@ -578,7 +578,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
 
             if (first_line)
             {
-                first_line = true;
+                first_line = false;
                 ParseInfo.Line = l;
             }
 

@@ -162,6 +162,13 @@ TEST(RobDef, IntegerArrayConstantValue)
     EXPECT_FALSE(ConstantDefinition::VerifyTypeAndValue(t, "{1, :2}"));
 }
 
+TEST(RobDef, FromStringRecordsFirstLine)
+{
+    RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+    def->FromString("# comment\nservice example.firstline\n\nstdver 0.10\n");
+    EXPECT_EQ(def->ParseInfo.Line, "service example.firstline");
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
