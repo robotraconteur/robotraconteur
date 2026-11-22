@@ -12,6 +12,7 @@
 
 #include "ServiceTestClient.h"
 #include "ServiceTest.h"
+#include "ServiceTest.h"
 #include "robotraconteur_generated.h"
 #include "service_test_utils.h"
 
@@ -1066,6 +1067,39 @@ TEST_F(ServiceTest, ConnectionEndpointCheckTest)
     node->DisconnectService(ra);
     // B has already closed itself; not disconnected again here (DisconnectService on a closed client waits for a
     // handler AsyncClose never calls, CORE-T6-D8)
+}
+
+TEST_F(ServiceTest, ObjectLockRequiresAllowObjectLockPolicy)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+    if (!test_server_node_config->node)
+    {
+        // Test server in another process
+        return;
+    }
+
+    std::string authdata = "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\n";
+    RR_SHARED_PTR<PasswordFileUserAuthenticator> p = RR_MAKE_SHARED<PasswordFileUserAuthenticator>(authdata);
+    std::map<std::string, std::string> policies;
+    policies.insert(std::make_pair("requirevaliduser", "true"));
+    RR_SHARED_PTR<ServiceSecurityPolicy> s = RR_MAKE_SHARED<ServiceSecurityPolicy>(p, policies);
+    ASSERT_NO_THROW(test_server_node_config->node->RegisterService("RobotRaconteurTestService_nolockpolicy",
+                                                                   "com.robotraconteur.testing.TestService2",
+                                                                   RR_MAKE_SHARED<TestService2SubObj>(), s));
+    std::string url = test_server_node_config->GetServiceURL("RobotRaconteurTestService_nolockpolicy");
+
+    RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> > cred1 = AllocateEmptyRRMap<std::string, RRValue>();
+    cred1->insert(std::make_pair("password", stringToRRArray("testpass1")));
+    RR_SHARED_PTR<RRObject> r;
+    ASSERT_NO_THROW(r = RobotRaconteurNode::s()->ConnectService(url, "testuser1", cred1));
+
+    EXPECT_THROW(RobotRaconteurNode::s()->RequestObjectLock(r, RobotRaconteurObjectLockFlags_USER_LOCK),
+                 PermissionDeniedException);
+    EXPECT_THROW(RobotRaconteurNode::s()->RequestObjectLock(r, RobotRaconteurObjectLockFlags_CLIENT_LOCK),
+                 PermissionDeniedException);
+
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
+    EXPECT_NO_THROW(test_server_node_config->node->CloseService("RobotRaconteurTestService_nolockpolicy"));
 }
 
 int main(int argc, char* argv[])

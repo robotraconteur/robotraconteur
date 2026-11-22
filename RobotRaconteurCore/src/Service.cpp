@@ -1936,6 +1936,9 @@ void ServerContext::ClientLockOp(const RR_INTRUSIVE_PTR<MessageEntry>& m, const 
         std::string username;
         if (!boost::starts_with(m->MemberName.str(), "Monitor"))
         {
+            if ((m->MemberName == "RequestObjectLock" || m->MemberName == "RequestClientObjectLock") &&
+                !AllowObjectLock)
+                throw PermissionDeniedException("Object locking is not enabled for this service");
             if (ServerEndpoint::GetCurrentAuthenticatedUser() == 0)
                 throw PermissionDeniedException("User must be authenticated to lock object");
             priv = ServerEndpoint::GetCurrentAuthenticatedUser()->GetPrivileges();
