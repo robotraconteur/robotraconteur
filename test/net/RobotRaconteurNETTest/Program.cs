@@ -121,6 +121,34 @@ class Program
             return;
         }
 
+        if (command == "varvalue_bool_complex")
+        {
+            var b = new bool[] { true, false, true };
+            using (var m = MessageElementUtil.PackVarType("b", b))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.bool_t);
+                var b2 = (bool[])RobotRaconteurNode.s.UnpackVarType(m);
+                RRAssert.IsTrue(b.SequenceEqual(b2));
+            }
+            var cd = new CDouble[] { new CDouble(1.5, -2.5), new CDouble(3, 4) };
+            using (var m = MessageElementUtil.PackVarType("cd", cd))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.cdouble_t);
+                var cd2 = (CDouble[])RobotRaconteurNode.s.UnpackVarType(m);
+                RRAssert.IsTrue(cd.SequenceEqual(cd2));
+            }
+            var cs = new CSingle[] { new CSingle(1.5f, -2.5f) };
+            using (var m = MessageElementUtil.PackVarType("cs", cs))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.csingle_t);
+                var cs2 = (CSingle[])RobotRaconteurNode.s.UnpackVarType(m);
+                RRAssert.IsTrue(cs.SequenceEqual(cs2));
+            }
+            RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
         if (command == "loopback")
         {
 

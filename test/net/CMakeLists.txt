@@ -96,4 +96,7 @@ endif()
 
     rrconfiguretest(test_net_subscription_release_client "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} subscription_release_client")
 
+    rrconfiguretest(test_net_varvalue_bool_complex "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} varvalue_bool_complex")
+
+
 
