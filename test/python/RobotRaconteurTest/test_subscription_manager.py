@@ -213,3 +213,40 @@ def test_sub_manager_remove_subscription():
         sub.Close()
 
         sub_manager.Close()
+
+def test_sub_manager_enable_disabled_by_type():
+
+    test_servers = {
+        "server1": RR.NodeID("0d694574-1ad8-4b9e-9aea-e881524fb451")
+    }
+
+    client_node = RR.RobotRaconteurNode()
+    client_node.Init()
+
+    client_node_setup = RR.RobotRaconteurNodeSetup(
+        "", 0, flags=intra_client_flags, node=client_node)
+
+    with client_node_setup:
+
+        sub_manager = RR.ServiceSubscriptionManager(node=client_node)
+
+        # Created disabled, enabled later: must still see services that appear after it was enabled
+        sub1_details = RR.ServiceSubscriptionManagerDetails(
+            Name="sub1",
+            ServiceTypes=["experimental.sub_test.testobj"],
+            Enabled=False
+        )
+        sub_manager.AddSubscription(sub1_details)
+        sub_manager.EnableSubscription("sub1")
+        time.sleep(0.5)
+
+        sub = sub_manager.GetSubscription("sub1")
+
+        server1 = _testservice_impl("server1", test_servers["server1"])
+        with server1:
+            res, c = sub.TryGetDefaultClientWait(10)
+            assert res
+            assert c.add_two_numbers(1, 2) == 3
+
+        sub_manager.Close()
+

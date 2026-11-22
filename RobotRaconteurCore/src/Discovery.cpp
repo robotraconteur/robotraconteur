@@ -2010,6 +2010,17 @@ void Discovery::DoUpdateAllDetectedServices(const RR_SHARED_PTR<IServiceSubscrip
     }
 }
 
+void Discovery::AddSubscription(const RR_SHARED_PTR<IServiceSubscription>& s)
+{
+    boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
+    BOOST_FOREACH (RR_WEAK_PTR<IServiceSubscription>& e, subscriptions)
+    {
+        if (e.lock() == s)
+            return;
+    }
+    subscriptions.push_back(s);
+}
+
 void Discovery::SubscriptionClosed(const RR_SHARED_PTR<IServiceSubscription>& subscription)
 {
     boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
