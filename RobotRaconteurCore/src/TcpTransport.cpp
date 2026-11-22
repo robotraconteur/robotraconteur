@@ -4802,8 +4802,9 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
                         &TcpTransportConnection::SimpleAsyncEndSendMessage,
                         RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
                     AsyncSendMessage(ret1, h);
-                    return;
                 }
+                // Never process a message with the wrong sender, even if no error reply could be built
+                return;
             }
         }
 
@@ -4830,14 +4831,15 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
                                                        "Message received with invalid ReceiverEndpoint received: "
                                                            << m->header->ReceiverEndpoint << " expected: " << local_ep);
                 }
-                if (!ret1->entries.empty())
+                if (ret1 && !ret1->entries.empty())
                 {
                     boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h = boost::bind(
                         &TcpTransportConnection::SimpleAsyncEndSendMessage,
                         RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
                     AsyncSendMessage(ret1, h);
-                    return;
                 }
+                // Never process a message with the wrong endpoints, even if no error reply could be built
+                return;
             }
         }
     }
