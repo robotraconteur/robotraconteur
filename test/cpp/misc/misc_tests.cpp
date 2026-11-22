@@ -1055,6 +1055,88 @@ TEST(RobotRaconteurMisc, ConnectorFailureClosesConnectionNotTransport)
     node->Shutdown();
 }
 
+// Transport whose node discovery query throws synchronously
+class NcDiscoveryThrowTransport : public Transport
+{
+  public:
+    NcDiscoveryThrowTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Transport(node) {}
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE { RR_UNUSED(endpoint); }
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE { return true; }
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE { return false; }
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncdiscthrow"; }
+    RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE { return std::vector<std::string>(); }
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        return false;
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
+                                                                              const RR_SHARED_PTR<Endpoint>& e)
+        RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        throw ConnectionException("Connection failed");
+    }
+    RR_OVIRTUAL void AsyncCreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        RR_UNUSED(handler);
+        throw ConnectionException("Connection failed");
+    }
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE { RR_UNUSED(e); }
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE { RR_UNUSED(m); }
+    RR_OVIRTUAL void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout) RR_OVERRIDE
+    {
+        RR_UNUSED(schemes);
+        RR_UNUSED(handler);
+        RR_UNUSED(timeout);
+        throw InvalidOperationException("Discovery not available");
+    }
+};
+
+struct NcUpdateDetectedNodesHandler
+{
+    RR_SHARED_PTR<AutoResetEvent> ev;
+    NcUpdateDetectedNodesHandler() : ev(RR_MAKE_SHARED<AutoResetEvent>()) {}
+    void operator()() { ev->Set(); }
+};
+
+// UpdateDetectedNodes must complete when a transport's AsyncGetDetectedNodes throws (no timeout given)
+TEST(RobotRaconteurMisc, UpdateDetectedNodesTransportThrows)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->RegisterTransport(RR_MAKE_SHARED<NcDiscoveryThrowTransport>(node));
+
+    NcUpdateDetectedNodesHandler h;
+    std::vector<std::string> schemes;
+    schemes.push_back("rr+ncdiscthrow");
+    node->AsyncUpdateDetectedNodes(schemes, h, RR_TIMEOUT_INFINITE);
+    EXPECT_TRUE(h.ev->WaitOne(5000));
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

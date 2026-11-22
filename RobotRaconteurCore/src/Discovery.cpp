@@ -191,6 +191,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
                     boost::bind(&Discovery_updatediscoverednodes::getdetectednodes_callback, shared_from_this(),
                                 RR_BOOST_PLACEHOLDERS(_1), key);
                 e->AsyncGetDetectedNodes(schemes, h, timeout1);
+                active.push_back(key);
             }
             catch (std::exception& exp)
             {
@@ -198,8 +199,6 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
                                                    "Begin GetDetectedNodes failed for transport "
                                                        << e->GetUrlSchemeString() << ": " << exp.what());
             }
-
-            active.push_back(key);
         }
     }
 
@@ -609,6 +608,30 @@ void Discovery_findservicebytype::find2()
                                                    << boost::join(e, ", ") << " failed: " << exp2.what());
         }
     }
+
+    // If every candidate failed synchronously nothing else completes the search
+    {
+        boost::mutex::scoped_lock lock(active_lock);
+        if (!active.empty())
+            return;
+    }
+
+    if (!searching)
+        return;
+    searching = false;
+
+    {
+        boost::mutex::scoped_lock lock(timeout_timer_lock);
+
+        if (timeout_timer)
+            timeout_timer->TryStop();
+
+        timeout_timer.reset();
+    }
+
+    boost::mutex::scoped_lock lock(ret_lock);
+    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Discovery, -1, "FindServiceByType all candidate connections failed");
+    detail::PostHandler(node, handler, ret, true);
 }
 
 void Discovery_findservicebytype::AsyncFindServiceByType(
