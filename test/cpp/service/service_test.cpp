@@ -953,6 +953,37 @@ TEST_F(ServiceTest, ServicePathIndexAliases)
     EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
 }
 
+// A connect reply received after the client is connected must not change the service's identity
+TEST_F(ServiceTest, ClientIgnoresLateConnectClientRet)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    RR_SHARED_PTR<RRObject> obj;
+    ASSERT_NO_THROW(obj = RobotRaconteurNode::s()->ConnectService(service_url));
+    RR_SHARED_PTR<ClientContext> ctx = rr_cast<ServiceStub>(obj)->GetContext();
+    NodeID remote_nodeid = ctx->GetRemoteNodeID();
+    uint32_t remote_ep = ctx->GetRemoteEndpoint();
+    std::string remote_nodename = ctx->GetRemoteNodeName();
+
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    m->header->SenderNodeID = NodeID::NewUniqueID();
+    m->header->SenderNodeName = "other_node";
+    m->header->SenderEndpoint = remote_ep + 1;
+    m->header->ReceiverNodeID = RobotRaconteurNode::s()->NodeID();
+    m->header->ReceiverEndpoint = ctx->GetLocalEndpoint();
+    RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ConnectClientCombinedRet, "");
+    e->RequestID = 0xFFFFFFF0;
+    m->entries.push_back(e);
+    ctx->MessageReceived(m);
+
+    EXPECT_EQ(ctx->GetRemoteNodeID(), remote_nodeid);
+    EXPECT_EQ(ctx->GetRemoteEndpoint(), remote_ep);
+    EXPECT_EQ(ctx->GetRemoteNodeName(), remote_nodename);
+
+    RobotRaconteurNode::s()->DisconnectService(obj);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

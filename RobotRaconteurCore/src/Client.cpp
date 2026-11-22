@@ -1075,9 +1075,27 @@ void ClientContext::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
                                                    << " RemoteNodeName: " << m->header->SenderNodeName
                                                    << " RemoteEndpoint: " << m->header->SenderEndpoint);
 
-            SetRemoteEndpoint(m->header->SenderEndpoint);
-            SetRemoteNodeID(m->header->SenderNodeID);
-            SetRemoteNodeName(m->header->SenderNodeName.str());
+            // Accept the service's identity only from the first connect reply, and only if it matches the
+            // NodeID the connection URL asked for (when it asked for one)
+            NodeID expected_nodeid = GetRemoteNodeID();
+            if (GetRemoteEndpoint() != 0)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
+                                                   "Ignoring connect client response, client already connected");
+            }
+            else if (!expected_nodeid.IsAnyNode() && expected_nodeid != m->header->SenderNodeID)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
+                                                   "Ignoring connect client response from unexpected NodeID "
+                                                       << m->header->SenderNodeID.ToString()
+                                                       << " expected: " << expected_nodeid.ToString());
+            }
+            else
+            {
+                SetRemoteEndpoint(m->header->SenderEndpoint);
+                SetRemoteNodeID(m->header->SenderNodeID);
+                SetRemoteNodeName(m->header->SenderNodeName.str());
+            }
         }
 
         if (m->entries[0]->EntryType == MessageEntryType_EndpointCheckCapability)
