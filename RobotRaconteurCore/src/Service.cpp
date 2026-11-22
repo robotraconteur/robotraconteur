@@ -884,7 +884,7 @@ void ServerContext::SetSecurityPolicy(const RR_SHARED_PTR<ServiceSecurityPolicy>
         {
             AllowObjectLock = true;
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "",
-                                                    "\"requirevaliduser\" policy enabled");
+                                                    "\"allowobjectlock\" policy enabled");
         }
     }
 }
