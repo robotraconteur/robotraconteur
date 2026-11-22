@@ -79,6 +79,8 @@ public class RobotRaconteurJavaTest
 
                 RobotRaconteurNode.s().setLogLevelFromEnvVariable();
 
+                experimental.gen_test_java_constants.GenConstantsTest.run();
+
                 ServerNodeSetup node_setup = new ServerNodeSetup(
                     "com.robotraconteur.testing.TestService2", 0,
                     RobotRaconteurNodeSetupFlags.RobotRaconteurNodeSetupFlags_ENABLE_TCP_TRANSPORT.swigValue() |

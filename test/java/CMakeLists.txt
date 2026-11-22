@@ -43,7 +43,18 @@ if(NOT ANDROID)
         OUTDIR
         "${CMAKE_CURRENT_BINARY_DIR}/test_src")
 
-    add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS} ${RR_NAMES_THUNK_SRCS} ${RR_POD_CONTAINERS_THUNK_SRCS})
+    # Numeric constants of all types; compiled and checked by the test
+    robotraconteur_generate_thunk(
+        RR_CONSTANTS_THUNK_SRCS
+        experimental.gen_test_java_constants.robdef
+        LANG
+        java
+        INCLUDE_DIRS
+        "${CMAKE_CURRENT_SOURCE_DIR}/robdef"
+        OUTDIR
+        "${CMAKE_CURRENT_BINARY_DIR}/test_src")
+
+    add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS} ${RR_NAMES_THUNK_SRCS} ${RR_POD_CONTAINERS_THUNK_SRCS} ${RR_CONSTANTS_THUNK_SRCS})
 
     # cSpell: disable
     add_custom_target(
@@ -57,11 +68,13 @@ if(NOT ANDROID)
         8
         -Xlint:none
         com/robotraconteur/javatest/*.java
+        experimental/gen_test_java_constants/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService1/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService2/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/com/robotraconteur/testing/TestService3/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/experimental/gen_test_java_names/*.java
         ${CMAKE_CURRENT_BINARY_DIR}/test_src/experimental/gen_test_java_pod_containers/*.java
+        ${CMAKE_CURRENT_BINARY_DIR}/test_src/experimental/gen_test_java_constants/*.java
         -d
         "${CMAKE_CURRENT_BINARY_DIR}/test"
         -classpath
@@ -113,5 +126,13 @@ if(NOT ANDROID)
             ${CMAKE_COMMAND} -DROBOTRACONTEURGEN=$<TARGET_FILE:RobotRaconteurGen>
             -DROBDEF=${CMAKE_CURRENT_SOURCE_DIR}/robdef/experimental.gen_test_java_names.robdef
             -DOUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/gen_names_check -P ${CMAKE_CURRENT_SOURCE_DIR}/check_gen_names.cmake)
+
+    add_test(
+        NAME RobotRaconteurGen.CSharpNumericConstants
+        COMMAND
+            ${CMAKE_COMMAND} -DROBOTRACONTEURGEN=$<TARGET_FILE:RobotRaconteurGen>
+            -DROBDEF=${CMAKE_CURRENT_SOURCE_DIR}/robdef/experimental.gen_test_java_constants.robdef
+            -DOUT_DIR=${CMAKE_CURRENT_BINARY_DIR}/gen_constants_check -P
+            ${CMAKE_CURRENT_SOURCE_DIR}/check_gen_csharp_constants.cmake)
 
 endif()

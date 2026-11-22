@@ -3066,6 +3066,54 @@ static std::string JavaServiceLangGen_EscapeString_Formatter(const boost::smatch
     return v2.str();
 }
 
+// Splits the value of an array constant ("{1, 2, 3}") into its elements
+static std::vector<std::string> JavaServiceLangGen_SplitArrayConstant(const std::string& value)
+{
+    std::vector<std::string> o;
+    std::string value1 = boost::trim_copy_if(value, boost::is_any_of(" \t{}"));
+    if (value1.empty())
+        return o;
+    boost::split(o, value1, boost::is_any_of(","));
+    for (std::vector<std::string>::iterator e = o.begin(); e != o.end(); ++e)
+    {
+        boost::trim(*e);
+    }
+    return o;
+}
+
+// Numeric constant literal for a Java static final field of the converted type. float and long values need a
+// suffix, and the unsigned types are wrapper classes initialized with the same bits as a signed value.
+static std::string JavaServiceLangGen_ConvertNumberConstant(DataTypes type, const std::string& value)
+{
+    switch (type)
+    {
+    case DataTypes_single_t:
+        return value + "f";
+    case DataTypes_int64_t:
+        return value + "L";
+    case DataTypes_uint8_t:
+        return "new UnsignedByte((byte)" + value + ")";
+    case DataTypes_uint16_t:
+        return "new UnsignedShort((short)" + value + ")";
+    case DataTypes_uint32_t:
+        return "new UnsignedInt((int)" + value + "L)";
+    case DataTypes_uint64_t: {
+        uint64_t v = 0;
+        if (!RobotRaconteur::detail::try_convert_string_to_number(value, v))
+            throw DataTypeException("Invalid uint64 constant value " + value);
+        return "new UnsignedLong(" + boost::lexical_cast<std::string>(static_cast<int64_t>(v)) + "L)";
+    }
+    default:
+        return value;
+    }
+}
+
+static bool JavaServiceLangGen_NumberConstantNeedsConversion(DataTypes type)
+{
+    return type == DataTypes_single_t || type == DataTypes_int64_t || type == DataTypes_uint8_t ||
+           type == DataTypes_uint16_t || type == DataTypes_uint32_t || type == DataTypes_uint64_t;
+}
+
 std::string JavaServiceLangGen::convert_constant(ConstantDefinition* c,
                                                  std::vector<RR_SHARED_PTR<ConstantDefinition> >& c2,
                                                  ServiceDefinition* def)
@@ -3121,13 +3169,32 @@ std::string JavaServiceLangGen::convert_constant(ConstantDefinition* c,
         return "public static final String " + fix_name(c->Name) + "=\"" + t.str() + "\";";
     }
 
+    if (!JavaServiceLangGen_NumberConstantNeedsConversion(t->Type))
+    {
+        if (t->ArrayType == DataTypes_ArrayTypes_none)
+        {
+            return "public static final " + c1.java_type + " " + fix_name(c->Name) + "=" + c->Value + ";";
+        }
+        else
+        {
+            return "public static final " + c1.java_type + "[] " + fix_name(c->Name) + "=" + c->Value + ";";
+        }
+    }
+
     if (t->ArrayType == DataTypes_ArrayTypes_none)
     {
-        return "public static final " + c1.java_type + " " + fix_name(c->Name) + "=" + c->Value + ";";
+        return "public static final " + c1.java_type + " " + fix_name(c->Name) + "=" +
+               JavaServiceLangGen_ConvertNumberConstant(t->Type, boost::trim_copy(c->Value)) + ";";
     }
     else
     {
-        return "public static final " + c1.java_type + "[] " + fix_name(c->Name) + "=" + c->Value + ";";
+        std::vector<std::string> v = JavaServiceLangGen_SplitArrayConstant(c->Value);
+        for (std::vector<std::string>::iterator e = v.begin(); e != v.end(); ++e)
+        {
+            *e = JavaServiceLangGen_ConvertNumberConstant(t->Type, *e);
+        }
+        return "public static final " + c1.java_type + "[] " + fix_name(c->Name) + "={" + boost::join(v, ", ") +
+               "};";
     }
 }
 

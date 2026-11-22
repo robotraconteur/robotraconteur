@@ -2735,6 +2735,21 @@ static std::string CSharpServiceLangGen_EscapeString_Formatter(const boost::smat
     return v2.str();
 }
 
+// Splits the value of an array constant ("{1, 2, 3}") into its elements
+static std::vector<std::string> CSharpServiceLangGen_SplitArrayConstant(const std::string& value)
+{
+    std::vector<std::string> o;
+    std::string value1 = boost::trim_copy_if(value, boost::is_any_of(" \t{}"));
+    if (value1.empty())
+        return o;
+    boost::split(o, value1, boost::is_any_of(","));
+    for (std::vector<std::string>::iterator e = o.begin(); e != o.end(); ++e)
+    {
+        boost::trim(*e);
+    }
+    return o;
+}
+
 std::string CSharpServiceLangGen::convert_constant(ConstantDefinition* c,
                                                    std::vector<RR_SHARED_PTR<ConstantDefinition> >& c2,
                                                    ServiceDefinition* def)
@@ -2786,6 +2801,22 @@ std::string CSharpServiceLangGen::convert_constant(ConstantDefinition* c,
                              CSharpServiceLangGen_EscapeString_Formatter, boost::match_default | boost::format_all);
 
         return "public const string " + fix_name(c->Name) + "=\"" + t.str() + "\";";
+    }
+
+    if (t->Type == DataTypes_single_t)
+    {
+        // A literal without suffix is a double, which does not convert implicitly to float
+        if (t->ArrayType == DataTypes_ArrayTypes_none)
+        {
+            return "public const " + c1.cs_type + " " + fix_name(c->Name) + "=" + boost::trim_copy(c->Value) + "F;";
+        }
+        std::vector<std::string> v = CSharpServiceLangGen_SplitArrayConstant(c->Value);
+        for (std::vector<std::string>::iterator e = v.begin(); e != v.end(); ++e)
+        {
+            *e += "F";
+        }
+        return "public static readonly " + c1.cs_type + "[] " + fix_name(c->Name) + "={" + boost::join(v, ", ") +
+               "};";
     }
 
     if (t->ArrayType == DataTypes_ArrayTypes_none)
