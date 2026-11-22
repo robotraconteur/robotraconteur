@@ -2613,7 +2613,17 @@ void ServerEndpoint::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
     m_CurrentAuthenticatedUser.reset(new RR_SHARED_PTR<AuthenticatedUser>(endpoint_authenticated_user));
     if (endpoint_authenticated_user != 0)
         endpoint_authenticated_user->UpdateLastAccess();
-    service->MessageReceived(m, shared_from_this());
+    try
+    {
+        service->MessageReceived(m, shared_from_this());
+    }
+    catch (...)
+    {
+        // Do not leave this client's endpoint and user on the thread
+        m_CurrentEndpoint.reset(0);
+        m_CurrentAuthenticatedUser.reset(0);
+        throw;
+    }
     m_CurrentEndpoint.reset(0);
     m_CurrentAuthenticatedUser.reset(0);
     // NOLINTEND(cppcoreguidelines-owning-memory)
