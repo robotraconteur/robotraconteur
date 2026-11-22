@@ -2007,6 +2007,15 @@ void ServerContext::ClientLockOp(const RR_INTRUSIVE_PTR<MessageEntry>& m, const 
     }
 }
 
+// True if path is servicepath or the path of an object below it ("svc.obj1" covers "svc.obj1.sub",
+// not "svc.obj10")
+static bool ServerContext_IsSameOrSubPath(boost::string_ref path, boost::string_ref servicepath)
+{
+    if (!boost::starts_with(path, servicepath))
+        return false;
+    return path.size() == servicepath.size() || path[servicepath.size()] == '.';
+}
+
 void ServerContext::RequestObjectLock(boost::string_ref servicepath, boost::string_ref username)
 {
     RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(servicepath);
@@ -2016,7 +2025,7 @@ void ServerContext::RequestObjectLock(boost::string_ref servicepath, boost::stri
     for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end();
          ++s)
     {
-        if (boost::starts_with(s->first.str(), servicepath))
+        if (ServerContext_IsSameOrSubPath(s->first.str(), servicepath))
             if (s->second->IsLocked())
                 throw ObjectLockedException("Object already locked");
     }
@@ -2026,7 +2035,7 @@ void ServerContext::RequestObjectLock(boost::string_ref servicepath, boost::stri
     for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end();
          ++s)
     {
-        if (boost::starts_with(s->first.str(), servicepath))
+        if (ServerContext_IsSameOrSubPath(s->first.str(), servicepath))
             o->AddSkel(s->second);
     }
 
@@ -2046,7 +2055,7 @@ void ServerContext::RequestClientObjectLock(boost::string_ref servicepath, boost
     for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end();
          ++s)
     {
-        if (boost::starts_with(s->first.str(), servicepath))
+        if (ServerContext_IsSameOrSubPath(s->first.str(), servicepath))
             if (s->second->IsLocked())
                 throw ObjectLockedException("Object already locked");
     }
@@ -2055,7 +2064,7 @@ void ServerContext::RequestClientObjectLock(boost::string_ref servicepath, boost
     for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end();
          ++s)
     {
-        if (boost::starts_with(s->first.str(), servicepath))
+        if (ServerContext_IsSameOrSubPath(s->first.str(), servicepath))
             o->AddSkel(s->second);
     }
     active_object_locks.insert(make_pair(o->GetRootServicePath(), o));
