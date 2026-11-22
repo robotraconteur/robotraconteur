@@ -388,7 +388,8 @@ void LocalTransport::AsyncCreateTransportConnection2(
     RR_UNUSED(noden);
     if (err)
     {
-        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(),
+        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport,
+                                          (transport ? static_cast<int64_t>(transport->GetLocalEndpoint()) : -1),
                                           "LocalTransport failed to connect: " << err->what());
         try
         {
