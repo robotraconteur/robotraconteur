@@ -51,6 +51,42 @@ public class ServiceTestClient2
 
         disconnectService();
 
+        testWireSubscriptionWaitTimeout();
+    }
+
+    public void testWireSubscriptionWaitTimeout()
+    {
+        // No service at this URL, so the wait must return false once the timeout expires
+        ServiceSubscription sub =
+            RobotRaconteurNode.s().subscribeService("rr+tcp://localhost:1/?service=RobotRaconteurTestService2");
+        try
+        {
+            final WireSubscription<int[]> w = sub.<int[]>subscribeWire("peekwire");
+            final boolean[] res = new boolean[] {true, false};
+            Thread t = new Thread(new Runnable() {
+                public void run()
+                {
+                    res[0] = w.waitInValueValid(100);
+                    res[1] = true;
+                }
+            });
+            t.setDaemon(true);
+            t.start();
+            try
+            {
+                t.join(10000);
+            }
+            catch (InterruptedException e)
+            {}
+            RRAssert.isTrue(res[1]);
+            RRAssert.isFalse(res[0]);
+            w.close();
+        }
+        finally
+        {
+            sub.close();
+        }
+
         testSubscriptionConnectedClients(url);
     }
 
