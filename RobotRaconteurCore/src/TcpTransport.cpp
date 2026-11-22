@@ -4710,6 +4710,8 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, m_LocalEndpoint,
                                            "Server failed starting TLS handshake: " << exp.what());
+        // Receive and send are paused, so the connection cannot recover. Close it.
+        Close();
     }
 }
 
