@@ -675,6 +675,38 @@ TEST_F(ServiceTest, ArrayMemoryClientReadResultLength)
     EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
 }
 
+TEST_F(ServiceTest, MemoryMaxTransferSizeSmallerThanElement)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r;
+    ASSERT_NO_THROW(r = rr_cast<com::robotraconteur::testing::TestService1::testroot>(
+                        RobotRaconteurNode::s()->ConnectService(service_url)));
+
+    // The negotiated MaxTransferSize is the smaller of the service's and the client node's value.
+    // A value smaller than the element size (here 4 bytes for double) gives zero elements per block.
+    uint32_t old_max_transfer_size = RobotRaconteurNode::s()->GetMemoryMaxTransferSize();
+    RobotRaconteurNode::s()->SetMemoryMaxTransferSize(4);
+
+    RR_INTRUSIVE_PTR<RRArray<double> > buf = AllocateRRArray<double>(2);
+    EXPECT_THROW(r->get_m1()->Read(0, buf, 0, 2), InvalidOperationException);
+    EXPECT_THROW(r->get_m1()->Write(0, buf, 0, 2), InvalidOperationException);
+
+    std::vector<uint64_t> pos(5, 0);
+    std::vector<uint64_t> count(5, 1);
+    count[0] = 2;
+    RR_INTRUSIVE_PTR<RRArray<uint32_t> > dims = AllocateRRArray<uint32_t>(5);
+    for (size_t i = 0; i < 5; i++)
+        (*dims)[i] = boost::numeric_cast<uint32_t>(count[i]);
+    RR_INTRUSIVE_PTR<RRMultiDimArray<double> > mbuf = AllocateRRMultiDimArray<double>(dims, AllocateRRArray<double>(2));
+    EXPECT_THROW(r->get_m2()->Read(pos, mbuf, pos, count), InvalidArgumentException);
+    EXPECT_THROW(r->get_m2()->Write(pos, mbuf, pos, count), InvalidArgumentException);
+
+    RobotRaconteurNode::s()->SetMemoryMaxTransferSize(old_max_transfer_size);
+
+    EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

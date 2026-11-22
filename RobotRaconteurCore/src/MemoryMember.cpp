@@ -48,6 +48,10 @@ ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::v
             {
                 split_dim = boost::numeric_cast<uint32_t>(i);
                 split_dim_block = max_elems / split_elem_count;
+                if (split_dim_block == 0)
+                {
+                    throw InvalidArgumentException("Could not split array into blocks");
+                }
                 split_dim_found = true;
                 block_count[i] = split_dim_block;
                 splits_count = boost::numeric_cast<uint32_t>(count[i] / split_dim_block);
@@ -467,6 +471,9 @@ void ArrayMemoryClientBase::ReadBase(uint64_t memorypos, void* buffer, uint64_t 
     }
     else
     {
+        if (max_elems == 0)
+            throw InvalidOperationException("Memory MaxTransferSize is smaller than the element size");
+
         uint64_t blocks = count / boost::numeric_cast<uint64_t>(max_elems);
         uint64_t blockrem = count % boost::numeric_cast<uint64_t>(max_elems);
 
@@ -534,6 +541,9 @@ void ArrayMemoryClientBase::WriteBase(uint64_t memorypos, const void* buffer, ui
     }
     else
     {
+        if (max_elems == 0)
+            throw InvalidOperationException("Memory MaxTransferSize is smaller than the element size");
+
         if ((boost::numeric_cast<int64_t>(GetBufferLength(buffer)) - boost::numeric_cast<int64_t>(bufferpos)) <
             boost::numeric_cast<int64_t>(count))
             throw OutOfRangeException("Invalid buffer length");
