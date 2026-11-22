@@ -161,6 +161,16 @@ TEST(ServiceTest3Node, RegisterServiceContextReplacesExisting)
     cfg.Shutdown();
 }
 
+TEST(NamedArray, ConstAt)
+{
+    typedef com::robotraconteur::testing::TestService3::vector3 vector3;
+    RR_INTRUSIVE_PTR<RRNamedArray<vector3> > a = AllocateEmptyRRNamedArray<vector3>(2);
+    (*a)[1].s.x = 5.0;
+    const RRNamedArray<vector3>& ca = *a;
+    EXPECT_EQ(ca.at(1).s.x, 5.0);
+    EXPECT_THROW(ca.at(2), std::out_of_range);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

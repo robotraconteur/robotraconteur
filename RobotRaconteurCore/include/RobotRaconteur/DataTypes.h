@@ -2432,7 +2432,7 @@ class RRNamedArray : public RRNamedBaseArray
     const_reference at(size_type i) const
     {
         rangecheck(i);
-        (static_cast<T*>(rr_array->void_ptr())[i]);
+        return (static_cast<T*>(rr_array->void_ptr())[i]);
     }
 
     /** @brief access the first element */
@@ -2450,7 +2450,7 @@ class RRNamedArray : public RRNamedBaseArray
     /** @brief returns the maximum possible number of elements */
     size_type max_size() { return size(); }
 
-    void rangecheck(size_type i)
+    void rangecheck(size_type i) const
     {
         if (i >= size())
         {
