@@ -1784,8 +1784,6 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
             info.Attributes = n->GetServiceAttributes(c2);
             info.ConnectionURL = c->urls;
 
-            c->erase.data() = true;
-
             std::vector<std::string> filter_res_urls;
             std::string filter_res;
             RR_SHARED_PTR<ServiceSubscriptionFilterNode> filter_node;
@@ -1799,6 +1797,8 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1,
                                                    "Service filtered by UpdateServiceByType: " << c->nodeid.ToString()
                                                                                                << "," << c->nodename);
+                // Only clients that no longer match the filter are dropped
+                c->erase.data() = true;
                 try
                 {
                     n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
