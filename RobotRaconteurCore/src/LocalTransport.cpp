@@ -868,8 +868,9 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
                     new detail::LocalTransport_socket(GetNode()->GetThreadPool()->get_io_context()));
                 boost::asio::local::stream_protocol::endpoint ep(pipename);
                 acceptor = RR_SHARED_PTR<detail::LocalTransport_acceptor>(
-                    new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context(), ep));
+                    new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context()));
                 acceptor->acceptor.open();
+                acceptor->acceptor.bind(ep);
                 acceptor->acceptor.listen();
 #ifdef ROBOTRACONTEUR_WINDOWS
                 detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_);

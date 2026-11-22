@@ -4,6 +4,7 @@
 #include <boost/atomic.hpp>
 #include <RobotRaconteur.h>
 #include <RobotRaconteur/NodeDirectories.h>
+#include <boost/filesystem.hpp>
 #include <RobotRaconteur/RobotRaconteurServiceIndex.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem.hpp>
@@ -850,6 +851,59 @@ TEST(RobotRaconteurMisc, SetLogLevelFromEnvVariableUnset)
     RobotRaconteur_LogLevel ret = node->SetLogLevelFromEnvVariable("ROBOTRACONTEUR_TEST_LOG_LEVEL_NOT_SET_8d1f6a");
     EXPECT_EQ(node->GetLogLevel(), RobotRaconteur_LogLevel_Error);
     EXPECT_EQ(ret, RobotRaconteur_LogLevel_Error);
+}
+
+static size_t CountLocalSocketFiles(const boost::filesystem::path& dir)
+{
+    size_t n = 0;
+    if (!boost::filesystem::is_directory(dir))
+        return 0;
+    for (boost::filesystem::directory_iterator e(dir); e != boost::filesystem::directory_iterator(); ++e)
+    {
+        if (e->path().extension() == ".sock")
+            n++;
+    }
+    return n;
+}
+
+// StartServerAsNodeID must start a working server and leave one socket file
+TEST(RobotRaconteurMisc, LocalTransportStartServerAsNodeID)
+{
+    boost::filesystem::path base =
+        boost::filesystem::temp_directory_path() / boost::filesystem::unique_path("rr-test-%%%%-%%%%");
+    boost::filesystem::create_directories(base);
+
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    NodeDirectories dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories(node);
+    dirs.user_run_dir = base / "run";
+    node->SetNodeDirectories(dirs);
+    RR_SHARED_PTR<LocalTransport> t = RR_MAKE_SHARED<LocalTransport>(node);
+    node->RegisterTransport(t);
+
+    RR_SHARED_PTR<RobotRaconteurNode> client_node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    client_node->Init();
+    client_node->SetNodeDirectories(dirs);
+    RR_SHARED_PTR<LocalTransport> client_t = RR_MAKE_SHARED<LocalTransport>(client_node);
+    client_node->RegisterTransport(client_t);
+
+    NodeID id = NodeID::NewUniqueID();
+    EXPECT_NO_THROW(t->StartServerAsNodeID(id));
+    EXPECT_EQ(node->NodeID(), id);
+    EXPECT_EQ(CountLocalSocketFiles(base / "run" / "socket"), 1u);
+
+    RR_SHARED_PTR<RRObject> c;
+    EXPECT_NO_THROW(c = client_node->ConnectService("rr+local:///?nodeid=" + id.ToString("D") +
+                                                    "&service=RobotRaconteurServiceIndex"));
+    if (c)
+    {
+        EXPECT_NO_THROW(client_node->DisconnectService(c));
+    }
+
+    client_node->Shutdown();
+    node->Shutdown();
+    boost::system::error_code ec;
+    boost::filesystem::remove_all(base, ec);
 }
 
 int main(int argc, char* argv[])
