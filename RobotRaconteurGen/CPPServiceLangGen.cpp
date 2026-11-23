@@ -30,7 +30,7 @@
 
 using namespace RobotRaconteur;
 
-// cSpell: ignore noteq, dforc
+// cSpell: ignore dforc
 
 // NOLINTBEGIN(bugprone-macro-parentheses)
 #define MEMBER_ITER(TYPE)                                                                                              \
@@ -126,11 +126,11 @@ std::string CPPServiceLangGen::fix_name(const std::string& name)
     const char* res_str[] = {
         "alignas",   "alignof",  "and",      "and_eq",    "asm",        "auto",          "bitand",
         "bitor",     "bool",     "break",    "case",      "catch",      "char",          "char16_t",
-        "char32_t",  "class",    "compl",    "const",     "constnexpr", "const_cast",    "continue",
+        "char32_t",  "class",    "compl",    "const",     "constexpr",  "const_cast",    "continue",
         "decltype",  "default",  "delete",   "do",        "double",     "dynamic_cast",  "else",
         "enum",      "explicit", "export",   "extern",    "false",      "float",         "for",
         "friend",    "goto",     "if",       "inline",    "int",        "long",          "mutable",
-        "namespace", "new",      "noexcept", "not",       "noteq",      "nullptr",       "operator",
+        "namespace", "new",      "noexcept", "not",       "not_eq",     "nullptr",       "operator",
         "or",        "or_eq",    "private",  "protected", "public",     "register",      "reinterpret_cast",
         "return",    "short",    "signed",   "sizeof",    "static",     "static_assert", "static_cast",
         "struct",    "switch",   "switch",   "template",  "this",       "thread_local",  "throw",
