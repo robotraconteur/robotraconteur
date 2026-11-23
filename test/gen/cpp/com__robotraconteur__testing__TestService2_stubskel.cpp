@@ -619,11 +619,13 @@ ServiceSkel::Init(path,object,context);
 }
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::baseobj > baseobj_skel::get_obj()
 {
-return RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService2::baseobj >(uncastobj);
+RR_SHARED_PTR<RobotRaconteur::RRObject> o=GetUncastObject();
+if (!o) throw RobotRaconteur::InvalidOperationException("Object has been released");
+return RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService2::baseobj >(o);
 }
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::async_baseobj > baseobj_skel::get_asyncobj()
 {
-return RR_DYNAMIC_POINTER_CAST<com::robotraconteur::testing::TestService2::async_baseobj >(uncastobj);
+return RR_DYNAMIC_POINTER_CAST<com::robotraconteur::testing::TestService2::async_baseobj >(GetUncastObject());
 }
 void baseobj_skel::ReleaseCastObject() 
 {
@@ -925,11 +927,13 @@ ServiceSkel::Init(path,object,context);
 }
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::subobj > subobj_skel::get_obj()
 {
-return RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService2::subobj >(uncastobj);
+RR_SHARED_PTR<RobotRaconteur::RRObject> o=GetUncastObject();
+if (!o) throw RobotRaconteur::InvalidOperationException("Object has been released");
+return RobotRaconteur::rr_cast<com::robotraconteur::testing::TestService2::subobj >(o);
 }
 RR_SHARED_PTR<com::robotraconteur::testing::TestService2::async_subobj > subobj_skel::get_asyncobj()
 {
-return RR_DYNAMIC_POINTER_CAST<com::robotraconteur::testing::TestService2::async_subobj >(uncastobj);
+return RR_DYNAMIC_POINTER_CAST<com::robotraconteur::testing::TestService2::async_subobj >(GetUncastObject());
 }
 void subobj_skel::ReleaseCastObject() 
 {

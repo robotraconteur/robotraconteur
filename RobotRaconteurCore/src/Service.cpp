@@ -153,7 +153,14 @@ RR_SHARED_PTR<ServerContext> ServiceSkel::GetContext()
     return out;
 }
 
-RR_SHARED_PTR<RRObject> ServiceSkel::GetUncastObject() const { return uncastobj; }
+RR_SHARED_PTR<RRObject> ServiceSkel::GetUncastObject() const
+{
+    // uncastobj is reset by ReleaseObject() while request threads read it. objectlock_lock (otherwise used for the
+    // object lock state) also guards it: it is never held while calling into the object or GetUncastObject().
+    // The initial set in Init() happens before the skel is reachable and is not guarded.
+    boost::mutex::scoped_lock lock(const_cast<boost::mutex&>(objectlock_lock));
+    return uncastobj;
+}
 
 RR_SHARED_PTR<RRObject> ServiceSkel::GetSubObj(boost::string_ref name)
 {
@@ -345,7 +352,13 @@ void ServiceSkel::ReleaseObject()
 
     UnregisterEvents(uncastobj);
     ReleaseCastObject();
-    uncastobj.reset();
+    RR_SHARED_PTR<RRObject> o;
+    {
+        boost::mutex::scoped_lock lock(objectlock_lock);
+        o.swap(uncastobj);
+    }
+    // The object is destroyed (if this was the last reference) outside the lock
+    o.reset();
 }
 
 void ServiceSkel::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,

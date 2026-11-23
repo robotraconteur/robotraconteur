@@ -3484,8 +3484,10 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
            << " > " << fix_name((*e)->Name) << "_skel::"
            << "get_obj()" << std::endl
            << "{" << std::endl;
+        w2 << "RR_SHARED_PTR<RobotRaconteur::RRObject> o=GetUncastObject();" << std::endl;
+        w2 << "if (!o) throw RobotRaconteur::InvalidOperationException(\"Object has been released\");" << std::endl;
         w2 << "return RobotRaconteur::rr_cast<" << boost::replace_all_copy(fix_name(d->Name), ".", "::")
-           << "::" << fix_name((*e)->Name) << " >(uncastobj);" << std::endl;
+           << "::" << fix_name((*e)->Name) << " >(o);" << std::endl;
         w2 << "}" << std::endl;
 
         w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::async_"
@@ -3493,7 +3495,7 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
            << "get_asyncobj()" << std::endl
            << "{" << std::endl;
         w2 << "return RR_DYNAMIC_POINTER_CAST<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::async_"
-           << fix_name((*e)->Name) << " >(uncastobj);" << std::endl;
+           << fix_name((*e)->Name) << " >(GetUncastObject());" << std::endl;
         w2 << "}" << std::endl;
 
         w2 << "void " << fix_name((*e)->Name) << "_skel::"

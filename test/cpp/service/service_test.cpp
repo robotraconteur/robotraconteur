@@ -53,6 +53,39 @@ TEST_F(ServiceTest, MinimalTest)
     ASSERT_NO_THROW(c.RunMinimalTest(service_url));
 }
 
+TEST_F(ServiceTest, ReleasedObjectRequestTest)
+{
+    // A request thread can still hold the skel of an object the service has just released (ReleaseServicePath,
+    // a changed objref). The request must fail with an error, not call through the released (null) object
+    RR_SHARED_PTR<ServerContext> ctx = test_server_node_config->node->GetService("RobotRaconteurTestService");
+    std::string path = "RobotRaconteurTestService.o1";
+    RR_SHARED_PTR<ServiceSkel> skel = ctx->GetObjectSkel(path);
+    ASSERT_TRUE(skel);
+    ctx->ReleaseServicePath(path);
+    EXPECT_FALSE(skel->GetUncastObject());
+
+    RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_PropertyGetReq, "d1");
+    m->ServicePath = path;
+    EXPECT_THROW(skel->CallGetProperty(m), InvalidOperationException);
+
+    // The object path works again for new requests
+    RR_SHARED_PTR<ServiceSkel> skel2 = ctx->GetObjectSkel(path);
+    ASSERT_TRUE(skel2);
+    EXPECT_TRUE(skel2->GetUncastObject());
+    try
+    {
+        skel2->CallGetProperty(m);
+    }
+    catch (InvalidOperationException& e)
+    {
+        ADD_FAILURE() << "object reported as released: " << e.what();
+    }
+    catch (std::exception&)
+    {
+        // The test service's o1.d1 is a null array; any other result is fine
+    }
+}
+
 TEST_F(ServiceTest, PropertyTest)
 {
     RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
