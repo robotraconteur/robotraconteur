@@ -3,13 +3,16 @@ import time
 
 import RobotRaconteur as RR
 
+# Python 2 has no time.monotonic
+_now = getattr(time, "monotonic", time.time)
+
 
 def test_auto_reset_event_wait_one_seconds():
     # WaitOne takes the timeout in seconds, like the other timeouts of the Python API
     e = RR.AutoResetEvent()
-    t0 = time.monotonic()
+    t0 = _now()
     assert not e.WaitOne(0.2)
-    dt = time.monotonic() - t0
+    dt = _now() - t0
     assert 0.15 <= dt < 5
 
     e.Set()

@@ -1956,7 +1956,14 @@ class UnpackMessageElementImpl
         if (element->ElementType == DataTypes_string_t)
         {
             boost::intrusive_ptr<RRArray<char> > s1 = element->CastData<RRArray<char> >();
-            return stringToPyObject(boost::string_ref(s1->data(), s1->size())).detach();
+            // Strings unpack to unicode on Python 2 and 3 (stringToPyObject gives a byte string on Python 2)
+            PyObject* r = PyUnicode_DecodeUTF8(s1->data(), s1->size(), NULL);
+            if (!r)
+            {
+                PyErr_Clear();
+                throw DataTypeException("Invalid UTF-8 string");
+            }
+            return r;
         }
 
         if (element->ElementType == DataTypes_structure_t)
