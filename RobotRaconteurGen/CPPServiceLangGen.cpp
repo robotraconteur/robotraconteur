@@ -2582,7 +2582,9 @@ void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition* d,
 
 std::string dforc(const std::string& definition, const std::string& class_)
 {
-    std::string res1_1 = boost::replace_first_copy(definition, "virtual", "");
+    std::string res1_1 = boost::trim_copy(definition);
+    if (boost::starts_with(res1_1, "virtual "))
+        res1_1.erase(0, 7);
     std::string res1_2 = boost::replace_last_copy(res1_1, "RR_OVERRIDE", "");
     std::string res1 = boost::trim_copy(boost::replace_first_copy(res1_2, "RR_OVIRTUAL", ""));
 
