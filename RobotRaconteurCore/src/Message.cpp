@@ -25,7 +25,10 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range.hpp>
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+// (the single-threaded emscripten build gets thread_specific_ptr from RobotRaconteurEmscripten.h)
 #include <boost/thread/tss.hpp>
+#endif
 #include "AsyncMessageReader.h"
 #include <boost/range/algorithm.hpp>
 #include <boost/bind/bind.hpp>

@@ -16,16 +16,25 @@ template <typename T>
 class null_lock
 {
   public:
-    null_lock() {}
+    null_lock() : locked_(false) {}
     template <typename U>
-    null_lock(U& u)
+    null_lock(U& u) : locked_(true)
     {}
-    void lock() {}
-    void unlock() {}
+    void lock() { locked_ = true; }
+    void unlock() { locked_ = false; }
+    bool owns_lock() const { return locked_; }
+    T* release()
+    {
+        locked_ = false;
+        return 0;
+    }
 
     template <typename U>
     void swap(U& l)
     {}
+
+  private:
+    bool locked_;
 };
 
 template <typename T>
