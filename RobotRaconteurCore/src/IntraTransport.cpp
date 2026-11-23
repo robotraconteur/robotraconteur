@@ -777,7 +777,10 @@ void IntraTransportConnection::AsyncSendMessage(
 
     peer1->AcceptMessage(m);
 
-    detail::PostHandler(node, handler);
+    // The message has been delivered: the request can already be answered and the node shut down by the time the
+    // send completion is posted. Do not throw "Node has been released" to the caller in that case; nobody is left to
+    // receive the completion.
+    detail::PostHandler(node, handler, false, false);
 }
 
 void IntraTransportConnection::SimpleAsyncEndSendMessage(const RR_SHARED_PTR<RobotRaconteurException>& err)
