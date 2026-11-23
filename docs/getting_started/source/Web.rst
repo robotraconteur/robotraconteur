@@ -31,17 +31,14 @@ By default, the following origins are allowed:
 
 * ``null``
 * ``file://``
-* ``chrome-extension://``
-* ``http://robotraconteur.com``
-* ``http://robotraconteur.com:80``
-* ``http://*.robotraconteur.com``
-* ``http://*.robotraconteur.com:80``
 * ``https://robotraconteur.com``
 * ``https://robotraconteur.com:443``
 * ``https://*.robotraconteur.com``
 * ``https://*.robotraconteur.com:443``
 
-For pages loaded off the filesystem, the origin is either ``null`` or ``file://``. For pages loaded from a web server,
+For pages loaded off the filesystem, the origin is either ``null`` or ``file://``. Browsers also send ``null`` for
+sandboxed iframes and ``data:`` pages, so any web page can produce it; if pages loaded off the filesystem are not
+needed, remove it with ``--robotraconteur-tcp-ws-remove-origins=null``. For pages loaded from a web server,
 the origin is the domain name of the server. The port number is also sometimes included in the origin.
 
 Any other origin, including ``localhost``, will be denied by default. To allow additional origins, the command

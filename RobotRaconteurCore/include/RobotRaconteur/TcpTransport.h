@@ -560,10 +560,6 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * * (empty string)
      * * "null"
      * * "file://"
-     * * "http://robotraconteur.com"
-     * * "http://robotraconteur.com:80"
-     * * "http://(*).robotraconteur.com"
-     * * "http://(*).robotraconteur.com:80"
      * * "https://robotraconteur.com"
      * * "https://robotraconteur.com:443"
      * * "https://(*).robotraconteur.com"

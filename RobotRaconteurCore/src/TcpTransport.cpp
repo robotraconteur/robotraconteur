@@ -1861,13 +1861,10 @@ TcpTransport::TcpTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Tran
     this->require_tls = false;
     accept_websockets = true;
 
+    // "null" is the origin browsers send for pages loaded from local files; sandboxed iframes and data: pages
+    // send it too. Deployments that do not need local files can remove it (tcp-ws-remove-origins=null).
     allowed_websocket_origins.push_back("null");
     allowed_websocket_origins.push_back("file://");
-    allowed_websocket_origins.push_back("chrome-extension://");
-    allowed_websocket_origins.push_back("http://robotraconteur.com");
-    allowed_websocket_origins.push_back("http://robotraconteur.com:80");
-    allowed_websocket_origins.push_back("http://*.robotraconteur.com");
-    allowed_websocket_origins.push_back("http://*.robotraconteur.com:80");
     allowed_websocket_origins.push_back("https://robotraconteur.com");
     allowed_websocket_origins.push_back("https://robotraconteur.com:443");
     allowed_websocket_origins.push_back("https://*.robotraconteur.com");
@@ -3010,6 +3007,13 @@ std::vector<std::string> TcpTransport::GetWebSocketAllowedOrigins()
 void TcpTransport::AddWebSocketAllowedOrigin(boost::string_ref origin)
 {
     boost::mutex::scoped_lock lock(parameter_lock);
+
+    if (origin == "null")
+    {
+        // Opaque origin (local files, sandboxed iframes, data: URLs); not a URL, so not matched by the regex below
+        allowed_websocket_origins.push_back("null");
+        return;
+    }
 
     boost::smatch origin_result;
     std::string origin1 = origin.to_string();
