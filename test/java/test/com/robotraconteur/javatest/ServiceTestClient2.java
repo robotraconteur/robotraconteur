@@ -52,6 +52,8 @@ public class ServiceTestClient2
         disconnectService();
 
         testWireSubscriptionWaitTimeout();
+
+        testSubscriptionConnectedClients(url);
     }
 
     public void testWireSubscriptionWaitTimeout()
@@ -86,8 +88,6 @@ public class ServiceTestClient2
         {
             sub.close();
         }
-
-        testSubscriptionConnectedClients(url);
     }
 
     public void testSubscriptionConnectedClients(String url)
