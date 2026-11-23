@@ -4772,14 +4772,14 @@ void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d,
         if (m->Direction() == MemberDefinition_Direction_readonly)
         {
             get_variable_type_result t = get_variable_type(*m->Type);
-            w2 << "RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<" << t.cpp_type << " > > rrvar_" << m->Name << ";"
-               << std::endl;
+            w2 << "RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<" << t.cpp_type << " > > rrvar_" << fix_name(m->Name)
+               << ";" << std::endl;
         }
         if (m->Direction() == MemberDefinition_Direction_writeonly)
         {
             get_variable_type_result t = get_variable_type(*m->Type);
-            w2 << "RR_SHARED_PTR<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << " > > rrvar_" << m->Name << ";"
-               << std::endl;
+            w2 << "RR_SHARED_PTR<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << " > > rrvar_"
+               << fix_name(m->Name) << ";" << std::endl;
         }
         MEMBER_ITER3_END()
 
