@@ -119,6 +119,10 @@ if(NOT WIN32)
     target_compile_definitions(robotraconteur_websocket_header_end_test PRIVATE ROBOTRACONTEUR_USE_OPENSSL)
 endif()
 
+rr_test_add_executable(robotraconteur_tcp_accept_timeout_test SRC tcp_accept_timeout_test.cpp DEPS RobotRaconteurCore
+                       GTest::Main)
+
+
 
 
 

@@ -294,7 +294,16 @@ class TcpAcceptor : public RR_ENABLE_SHARED_FROM_THIS<TcpAcceptor>
 
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
+    RR_SHARED_PTR<boost::asio::deadline_timer> accept_timer;
+    boost::mutex accept_timer_lock;
+    bool accept_done;
+
   protected:
+    void AcceptSocketTimeout(const boost::system::error_code& ec,
+                             const RR_WEAK_PTR<boost::asio::ip::tcp::socket>& socket);
+
+    void AcceptSocketDone();
+
     void AcceptSocket6(const RR_SHARED_PTR<RobotRaconteurException>& err,
                        const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                        const RR_SHARED_PTR<TcpTransportConnection>& t,

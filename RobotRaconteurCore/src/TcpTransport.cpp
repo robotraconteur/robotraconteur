@@ -793,6 +793,7 @@ void TcpAcceptor::AcceptSocket5(const boost::system::error_code& ec,
                                                            const RR_SHARED_PTR<RobotRaconteurException>&)>& handler)
 {
     RR_UNUSED(socket_closer);
+    AcceptSocketDone();
     if (ec)
     {
         ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, 0,
@@ -896,6 +897,7 @@ void TcpAcceptor::AcceptSocket2(const boost::system::error_code& ec, size_t n,
 
     if (magic == "RRAC")
     {
+        AcceptSocketDone();
         try
         {
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, 0,
@@ -976,6 +978,39 @@ TcpAcceptor::TcpAcceptor(const RR_SHARED_PTR<TcpTransport>& parent, boost::strin
     this->url = RR_MOVE(url.to_string());
     this->local_endpoint = local_endpoint;
     this->node = parent->GetNode();
+    this->accept_done = false;
+}
+
+void TcpAcceptor::AcceptSocketTimeout(const boost::system::error_code& ec,
+                                      const RR_WEAK_PTR<boost::asio::ip::tcp::socket>& socket)
+{
+    if (ec)
+        return;
+    boost::mutex::scoped_lock lock(accept_timer_lock);
+    if (accept_done)
+        return;
+    RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket1 = socket.lock();
+    if (!socket1)
+        return;
+    ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, 0,
+                                      "TcpTransport accepted socket timed out waiting for protocol header "
+                                          << TcpTransport_socket_remote_endpoint(socket1) << " to "
+                                          << TcpTransport_socket_local_endpoint(socket1));
+    // Shutdown instead of close so the pending peek or websocket handshake read completes with an error and
+    // its handler releases the socket; close here could race with an operation starting on another thread
+    boost::system::error_code ec1;
+    socket1->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec1);
+}
+
+void TcpAcceptor::AcceptSocketDone()
+{
+    boost::mutex::scoped_lock lock(accept_timer_lock);
+    accept_done = true;
+    if (accept_timer)
+    {
+        boost::system::error_code ec1;
+        accept_timer->cancel(ec1);
+    }
 }
 
 void TcpAcceptor::AcceptSocket(
@@ -993,6 +1028,18 @@ void TcpAcceptor::AcceptSocket(
     RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer =
         RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
             socket, boost::bind(&boost::asio::ip::tcp::socket::close, RR_BOOST_PLACEHOLDERS(_1))));
+
+    {
+        // Limit the time until the "RRAC" magic or a complete websocket handshake request has been received to
+        // the receive timeout; the connection's own receive timeout only starts once it is attached
+        boost::mutex::scoped_lock lock(accept_timer_lock);
+        accept_timer.reset(new boost::asio::deadline_timer(parent->GetNode()->GetThreadPool()->get_io_context()));
+        accept_timer->expires_from_now(boost::posix_time::milliseconds(parent->GetDefaultReceiveTimeout()));
+        RobotRaconteurNode::asio_async_wait(node, accept_timer,
+                                            boost::bind(&TcpAcceptor::AcceptSocketTimeout, shared_from_this(),
+                                                        boost::asio::placeholders::error,
+                                                        RR_WEAK_PTR<boost::asio::ip::tcp::socket>(socket)));
+    }
 
     socket->async_receive(boost::asio::buffer(buf, 4), boost::asio::ip::tcp::socket::message_peek,
                           boost::bind(&TcpAcceptor::AcceptSocket2, shared_from_this(), boost::asio::placeholders::error,
