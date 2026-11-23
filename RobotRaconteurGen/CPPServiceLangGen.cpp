@@ -3163,7 +3163,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
                << "{" << std::endl;
             w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
                   "m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,\""
-               << fix_name(m->Name) << "\");" << std::endl;
+               << m->Name << "\");" << std::endl;
             w2 << "AsyncProcessRequest(m,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_get_"
                << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name)
                << "_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler "
@@ -3213,7 +3213,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
                << "{" << std::endl;
             w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
                   "req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,\""
-               << fix_name(m->Name) << "\");" << std::endl;
+               << m->Name << "\");" << std::endl;
             w2 << "req->AddElement(" << str_pack_message_element("value", "value", m->Type) << ");" << std::endl;
             w2 << "AsyncProcessRequest(req,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_set_"
                << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name)
