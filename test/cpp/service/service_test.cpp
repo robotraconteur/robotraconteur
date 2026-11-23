@@ -60,6 +60,8 @@ TEST_F(ServiceTest, ReleasedObjectRequestTest)
 {
     // A request thread can still hold the skel of an object the service has just released (ReleaseServicePath,
     // a changed objref). The request must fail with an error, not call through the released (null) object
+    if (!test_server_node_config->node)
+        return; // external test server (ROBOTRACONTEUR_TEST_SERVER_URL), its skels are not reachable
     RR_SHARED_PTR<ServerContext> ctx = test_server_node_config->node->GetService("RobotRaconteurTestService");
     std::string path = "RobotRaconteurTestService.o1";
     RR_SHARED_PTR<ServiceSkel> skel = ctx->GetObjectSkel(path);
