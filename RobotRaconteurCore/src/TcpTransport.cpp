@@ -4719,6 +4719,10 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
             {
                 ::SSL_set_verify(tls_socket->native_handle(), SSL_VERIFY_PEER,
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
+                // With peer verification on, OpenSSL refuses to resume a session (as .NET clients do) unless a
+                // session id context is set
+                static const unsigned char rr_tls_sid_ctx[] = "RobotRaconteurTcpTransport";
+                ::SSL_set_session_id_context(tls_socket->native_handle(), rr_tls_sid_ctx, sizeof(rr_tls_sid_ctx) - 1);
             }
             RobotRaconteurNode::asio_async_handshake(
                 node, tls_socket, boost::asio::ssl::stream_base::server,
@@ -4738,6 +4742,10 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
             {
                 ::SSL_set_verify(tls_websocket->native_handle(), SSL_VERIFY_PEER,
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
+                // With peer verification on, OpenSSL refuses to resume a session (as .NET clients do) unless a
+                // session id context is set
+                static const unsigned char rr_tls_sid_ctx[] = "RobotRaconteurTcpTransport";
+                ::SSL_set_session_id_context(tls_websocket->native_handle(), rr_tls_sid_ctx, sizeof(rr_tls_sid_ctx) - 1);
             }
             RobotRaconteurNode::asio_async_handshake(
                 node, tls_websocket, boost::asio::ssl::stream_base::server,
@@ -4757,6 +4765,10 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
             {
                 ::SSL_set_verify(tls_wss_websocket->native_handle(), SSL_VERIFY_PEER,
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
+                // With peer verification on, OpenSSL refuses to resume a session (as .NET clients do) unless a
+                // session id context is set
+                static const unsigned char rr_tls_sid_ctx[] = "RobotRaconteurTcpTransport";
+                ::SSL_set_session_id_context(tls_wss_websocket->native_handle(), rr_tls_sid_ctx, sizeof(rr_tls_sid_ctx) - 1);
             }
             RobotRaconteurNode::asio_async_handshake(
                 node, tls_wss_websocket, boost::asio::ssl::stream_base::server,
