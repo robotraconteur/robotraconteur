@@ -4900,6 +4900,10 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
                 }
                 if (ret1 && !ret1->entries.empty())
                 {
+                    // Address the error with this connection's own endpoint pair: the peer checks replies against
+                    // it too, and would drop one sent from the endpoint the request named
+                    ret1->header->SenderEndpoint = local_ep;
+                    ret1->header->ReceiverEndpoint = remote_ep;
                     boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h = boost::bind(
                         &TcpTransportConnection::SimpleAsyncEndSendMessage,
                         RR_STATIC_POINTER_CAST<TcpTransportConnection>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
