@@ -69,13 +69,16 @@ On the server side, the server should use ``SecureServerNodeSetup`` to set up th
 configuration. There must be a certificate and private key file available that matches the NodeID uuid
 of the service node. See the framework documentation for more information.
 
-On the client side, simply replace the ``rr+tcp://`` or ``rr+ws://`` URL scheme with ``rr+tcps://`` or ``rrs+ws://``.
+On the client side, simply replace the ``rr+tcp://`` or ``rr+ws://`` URL scheme with ``rrs+tcp://`` or ``rrs+ws://``.
 For instance, to connect to a service using TLS, use the URL ``rrs+tcp://192.168.1.10:1234?service=my_service`` instead of
 ``rr+tcp://192.168.1.10:1234?service=my_service``. Otherwise no other changes are necessary for the client, although it is highly
 recommended to include the `?nodeid=xxx` parameter in the URL to prevent sending credentials to the wrong device.
 For example, ``rrs+tcp://192.168.1.10:1234?nodeid=7932d2a6-b7e1-4068-82d9-16f93e868ed9&service=my_service``.
+Without ``nodeid``, TLS encrypts the connection and verifies that the peer holds a valid Robot Raconteur certificate,
+but not which node it is: any node with a certificate can answer. Include ``nodeid`` if the client must verify which
+node it connects to.
 
-When connecting to web servers, the URL scheme should be ``rr+wss://`` should be used. The ``rr+wss://`` scheme
+When connecting to web servers, the ``rr+wss://`` URL scheme should be used. The ``rr+wss://`` scheme
 uses standard DNS based certificate validation, and the certificate must be signed by a standard certificate authority.
 This is in contrast to the ``rrs+tcp://`` scheme, which uses the Robot Raconteur certificate authority. For example,
 the URL used in the web server example ``rr+wss://wstest2.wasontech.com/robotraconteur?service=testobj`` will
