@@ -3872,14 +3872,14 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
            << "::" << fix_name((*e)->Name) << " >(rrobj1);" << std::endl;
         MEMBER_ITER(EventDefinition)
         std::vector<std::string> p;
-        p.push_back("&" + fix_name((*e)->Name) + "_skel::rr_" + m->Name + "_Handler");
+        p.push_back("&" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + "_Handler");
         p.push_back("RobotRaconteur::rr_cast<" + fix_name((*e)->Name) + "_skel>(shared_from_this())");
         for (size_t i = 0; i < m->Parameters.size(); i++)
         {
             p.push_back("RR_BOOST_PLACEHOLDERS(_" + boost::lexical_cast<std::string>(i + 1) + ")");
         }
 
-        w2 << m->Name << "_rrconnection=obj->get_" << fix_name(m->Name) << "().connect(boost::bind("
+        w2 << fix_name(m->Name) << "_rrconnection=obj->get_" << fix_name(m->Name) << "().connect(boost::bind("
            << boost::join(p, ", ") << "));" << std::endl;
         MEMBER_ITER_END()
         w2 << "RobotRaconteur::ServiceSkel::RegisterEvents(rrobj1);" << std::endl;
@@ -3889,7 +3889,7 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
            << "_skel::UnregisterEvents(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1)" << std::endl
            << "{" << std::endl;
         MEMBER_ITER(EventDefinition)
-        w2 << m->Name << "_rrconnection.disconnect();" << std::endl;
+        w2 << fix_name(m->Name) << "_rrconnection.disconnect();" << std::endl;
         MEMBER_ITER_END()
         w2 << "RobotRaconteur::ServiceSkel::UnregisterEvents(rrobj1);" << std::endl;
         w2 << "}" << std::endl << std::endl;
@@ -4901,7 +4901,7 @@ void CPPServiceLangGen::GenerateDefaultImplDefinition(ServiceDefinition* d,
         MEMBER_ITER3(EventDefinition)
         w2 << dforc(EventDeclaration(m.get(), true), default_impl_name) << std::endl;
         w2 << "{" << std::endl;
-        w2 << "return rrvar_" << fix_name(m->Name) << ";" << std::endl;
+        w2 << "return rrvar_" << m->Name << ";" << std::endl;
         w2 << "}" << std::endl;
         MEMBER_ITER3_END()
 
