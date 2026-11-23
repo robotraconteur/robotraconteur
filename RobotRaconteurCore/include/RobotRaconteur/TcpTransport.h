@@ -574,7 +574,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * The star symbol can be used for a subdomain wildcard when matching origins.
      *
      * Additional allowed origins can be added using this function, or the
-     * `--robotraconteur-tcp-ws-add-origin=` command line option if
+     * `--robotraconteur-tcp-ws-add-origins=` command line option if
      * the RobotRaconteurNodeSetup classes are being used.
      *
      *

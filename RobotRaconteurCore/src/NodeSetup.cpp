@@ -238,7 +238,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
             catch (std::exception&)
             {
                 ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1,
-                                                   "Invalid tcp-ws-add-origin specified: " << ws_add_origin);
+                                                   "Invalid tcp-ws-add-origins specified: " << ws_add_origin);
             }
 
             BOOST_FOREACH (const std::string& ws_origin, ws_add_origin_split)
@@ -250,7 +250,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
                 catch (std::exception& exp)
                 {
                     ROBOTRACONTEUR_LOG_ERROR_COMPONENT(
-                        node, NodeSetup, -1, "Adding tcp-ws-add-origin failed " << ws_origin << ": " << exp.what());
+                        node, NodeSetup, -1, "Adding tcp-ws-add-origins failed " << ws_origin << ": " << exp.what());
                 }
             }
         }
@@ -266,7 +266,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
             catch (std::exception&)
             {
                 ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1,
-                                                   "Invalid tcp-ws-remove-origin specified: " << ws_remove_origin);
+                                                   "Invalid tcp-ws-remove-origins specified: " << ws_remove_origin);
             }
 
             BOOST_FOREACH (const std::string& ws_origin, ws_remove_origin_split)
@@ -278,7 +278,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
                 catch (std::exception& exp)
                 {
                     ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1,
-                                                       "Removing tcp-ws-remove-origin failed " << ws_origin << ": "
+                                                       "Removing tcp-ws-remove-origins failed " << ws_origin << ": "
                                                                                                << exp.what());
                 }
             }
