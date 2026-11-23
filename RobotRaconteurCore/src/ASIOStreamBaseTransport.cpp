@@ -1766,7 +1766,7 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 
             boost::posix_time::ptime tr = tlastrecv.load();
 
-            if ((t - tr).total_milliseconds() > ReceiveTimeout)
+            if ((GetNode()->NowNodeTime() - tr).total_milliseconds() > ReceiveTimeout)
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(),
                                                    "Transport close requested due to heartbeat timeout");
@@ -1780,6 +1780,12 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 
                 boost::posix_time::time_duration t =
                     boost::posix_time::milliseconds(heartbeat_period2 + 10) - (GetNode()->NowNodeTime() - tlastsend);
+                // tlastsend is only updated when a send completes; if it is older than the heartbeat period (a
+                // heartbeat was just queued, or sends are stalled) the delay is negative and the timer would spin
+                if (t < boost::posix_time::milliseconds(10))
+                {
+                    t = boost::posix_time::milliseconds(heartbeat_period2);
+                }
 
                 heartbeat_timer->expires_from_now(t);
                 heartbeat_timer->async_wait(
