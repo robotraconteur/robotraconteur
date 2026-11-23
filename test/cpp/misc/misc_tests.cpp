@@ -1536,6 +1536,23 @@ TEST(RobotRaconteurMisc, ConnectorServiceConnectThrows)
     node->Shutdown();
 }
 
+static void AutoResetEventNegativeTimeout_set_after(AutoResetEvent* ev, int ms)
+{
+    boost::this_thread::sleep(boost::posix_time::milliseconds(ms));
+    ev->Set();
+}
+
+TEST(RobotRaconteurMisc, AutoResetEventNegativeTimeoutWaits)
+{
+    // WaitOne(-1) waits until Set(), like WaitOne() (on POSIX it returned false at once)
+    AutoResetEvent ev;
+    boost::thread t(boost::bind(&AutoResetEventNegativeTimeout_set_after, &ev, 200));
+    boost::posix_time::ptime t1 = boost::posix_time::microsec_clock::universal_time();
+    EXPECT_TRUE(ev.WaitOne(-1));
+    EXPECT_GE((boost::posix_time::microsec_clock::universal_time() - t1).total_milliseconds(), 150);
+    t.join();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
