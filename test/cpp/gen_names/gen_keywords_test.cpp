@@ -22,7 +22,7 @@ TEST(RobotRaconteurGen, CppKeywordNamesConstexprNotEq)
 {
     keyword_enum::keyword_enum e = keyword_enum::not_eq_;
     EXPECT_EQ(static_cast<int>(e), 1);
-    keyword_structPtr s(new keyword_struct());
+    RR_SHARED_PTR<keyword_struct> s(new keyword_struct());
     s->constexpr_ = 1.5;
     s->not_eq_ = 2;
 
