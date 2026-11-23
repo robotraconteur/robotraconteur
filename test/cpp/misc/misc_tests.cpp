@@ -1387,6 +1387,155 @@ TEST(RobotRaconteurMisc, ConnectorFastCandidateFailureCompletes)
     node->Shutdown();
 }
 
+// Transport connection that fails as soon as a client tries to use it, so ClientContext::AsyncConnectService
+// throws after the transport reported the connection as made
+class CapabilityThrowConnection : public ITransportConnection
+{
+  public:
+    RR_WEAK_PTR<RobotRaconteurNode> node;
+    RR_WEAK_PTR<Transport> transport;
+    CapabilityThrowConnection(const RR_SHARED_PTR<RobotRaconteurNode>& node, const RR_SHARED_PTR<Transport>& t)
+        : node(node), transport(t)
+    {}
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Connection lost");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Connection lost");
+    }
+    RR_OVIRTUAL void Close() RR_OVERRIDE {}
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE
+    {
+        RR_UNUSED(endpoint);
+        throw ConnectionException("Connection lost");
+    }
+    RR_OVIRTUAL uint32_t GetLocalEndpoint() RR_OVERRIDE { return 0; }
+    RR_OVIRTUAL uint32_t GetRemoteEndpoint() RR_OVERRIDE { return 0; }
+    RR_OVIRTUAL NodeID GetRemoteNodeID() RR_OVERRIDE { return NodeID(); }
+    RR_OVIRTUAL RR_SHARED_PTR<RobotRaconteurNode> GetNode() RR_OVERRIDE { return node.lock(); }
+    RR_OVIRTUAL bool CheckCapabilityActive(uint32_t flag) RR_OVERRIDE
+    {
+        RR_UNUSED(flag);
+        throw ConnectionException("Connection lost");
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<Transport> GetTransport() RR_OVERRIDE { return transport.lock(); }
+};
+
+// Client transport that reports a connection (from the thread pool) that fails on first use
+class CapabilityThrowClientTransport : public Transport,
+                                       public RR_ENABLE_SHARED_FROM_THIS<CapabilityThrowClientTransport>
+{
+  public:
+    CapabilityThrowClientTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : Transport(node) {}
+    RR_OVIRTUAL void CheckConnection(uint32_t endpoint) RR_OVERRIDE { RR_UNUSED(endpoint); }
+    RR_OVIRTUAL bool IsClient() const RR_OVERRIDE { return true; }
+    RR_OVIRTUAL bool IsServer() const RR_OVERRIDE { return false; }
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+capthrow"; }
+    RR_OVIRTUAL std::vector<std::string> GetServerListenUrls() RR_OVERRIDE { return std::vector<std::string>(); }
+    RR_OVIRTUAL bool CanConnectService(boost::string_ref url) RR_OVERRIDE
+    {
+        return boost::starts_with(url, "rr+capthrow://");
+    }
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
+                                                                              const RR_SHARED_PTR<Endpoint>& e)
+        RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        throw ConnectionException("Not supported");
+    }
+    RR_OVIRTUAL void AsyncCreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e,
+        boost::function<void(const RR_SHARED_PTR<ITransportConnection>&,
+                             const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(url);
+        RR_UNUSED(e);
+        RR_SHARED_PTR<RobotRaconteurNode> n = GetNode();
+        RR_SHARED_PTR<ITransportConnection> c = RR_MAKE_SHARED<CapabilityThrowConnection>(n, shared_from_this());
+        RobotRaconteurNode::TryPostToThreadPool(n, boost::bind(handler, c, RR_SHARED_PTR<RobotRaconteurException>()));
+    }
+    RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE { RR_UNUSED(e); }
+    RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<Message>& m,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& handler) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(handler);
+        throw ConnectionException("Not connected");
+    }
+    RR_OVIRTUAL void MessageReceived(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE { RR_UNUSED(m); }
+};
+
+struct CapabilityThrowConnectResult
+{
+    boost::mutex lock;
+    boost::condition_variable cv;
+    bool done;
+    RR_SHARED_PTR<RobotRaconteurException> err;
+    CapabilityThrowConnectResult() : done(false) {}
+};
+
+static void CapabilityThrowConnectHandler(const RR_SHARED_PTR<CapabilityThrowConnectResult>& res,
+                                          const RR_SHARED_PTR<RRObject>& obj,
+                                          const RR_SHARED_PTR<RobotRaconteurException>& err)
+{
+    RR_UNUSED(obj);
+    boost::mutex::scoped_lock lock(res->lock);
+    res->done = true;
+    res->err = err;
+    res->cv.notify_all();
+}
+
+// AsyncConnectService throwing after the transport connected must report the error and leave the connector's
+// connecting_lock consistent (connected_transport's catch blocks unlocked the mutex behind its scoped_lock, so it
+// was unlocked twice; ThreadSanitizer reports "unlock of an unlocked mutex")
+TEST(RobotRaconteurMisc, ConnectorServiceConnectThrows)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->RegisterTransport(RR_MAKE_SHARED<CapabilityThrowClientTransport>(node));
+
+    // Short connect timeout: without the CORE-GO-G1 connector fix, an error that arrives while connect2 still
+    // holds its own key is only reported when the connect timer fires
+    for (int i = 0; i < 3; i++)
+    {
+        RR_SHARED_PTR<CapabilityThrowConnectResult> res = RR_MAKE_SHARED<CapabilityThrowConnectResult>();
+        boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
+                             const RR_SHARED_PTR<void>&)>
+            listener;
+        node->AsyncConnectService("rr+capthrow://localhost/?nodename=test&service=test", "",
+                                  RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
+                                  boost::bind(&CapabilityThrowConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1),
+                                              RR_BOOST_PLACEHOLDERS(_2)),
+                                  2000);
+
+        boost::mutex::scoped_lock lock(res->lock);
+        boost::system_time deadline = boost::get_system_time() + boost::posix_time::seconds(10);
+        while (!res->done)
+        {
+            if (!res->cv.timed_wait(lock, deadline))
+                break;
+        }
+        ASSERT_TRUE(res->done) << "Connect handler not called";
+        EXPECT_TRUE(res->err);
+    }
+
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

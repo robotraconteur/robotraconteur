@@ -76,6 +76,8 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
                              const RR_SHARED_PTR<RobotRaconteurException>& err, const std::string& url,
                              const RR_SHARED_PTR<endpoint_cleanup>& ep, int32_t key);
 
+    void connected_transport_failed(boost::mutex::scoped_lock& lock, bool connect_started);
+
     void connect_timer_callback(const boost::system::error_code& ec);
 
     void connect2(const RR_SHARED_PTR<std::vector<std::string> >& urls, int32_t main_key,

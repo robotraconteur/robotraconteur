@@ -270,27 +270,36 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
     }
     else
     {
+        int32_t key2 = 0;
+        bool connect_started = false;
         try
         {
-            int32_t key2 = 0;
             {
-                boost::mutex::scoped_lock lock(active_lock);
+                boost::mutex::scoped_lock lock2(active_lock);
                 active_count++;
                 key2 = active_count;
 
-                ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Transport connected, connect service: " << url);
-
-                ep->ep->AsyncConnectService(
-                    transport, connection, url, username, credentials, objecttype,
-                    boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_client, shared_from_this(),
-                                               RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), url, ep, key2)),
-                    timeout);
-
+                // Mark connected and update the active bookkeeping atomically (under connecting_lock), so no
+                // other candidate transport can also proceed, before releasing connecting_lock below.
                 transport_connected = true;
 
                 active.push_back(key2);
                 active.remove(key);
             }
+            connect_started = true;
+
+            // Release connecting_lock before calling into the client context: AsyncConnectService acquires
+            // ClientContext::connect_lock, and connected_client (invoked from under connect_lock) acquires
+            // connecting_lock -- holding connecting_lock across this call is an AB-BA lock-order inversion.
+            lock.unlock();
+
+            ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "Transport connected, connect service: " << url);
+
+            ep->ep->AsyncConnectService(
+                transport, connection, url, username, credentials, objecttype,
+                boost::protect(boost::bind(&RobotRaconteurNode_connector::connected_client, shared_from_this(),
+                                           RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), url, ep, key2)),
+                timeout);
         }
         catch (RobotRaconteurException& err2)
         {
@@ -306,9 +315,8 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
                 {}
             }
 
-            if (lock.owns_lock())
-                lock.unlock();
-            handle_error(key, RobotRaconteurExceptionUtil::DownCastException(err2));
+            connected_transport_failed(lock, connect_started);
+            handle_error(connect_started ? key2 : key, RobotRaconteurExceptionUtil::DownCastException(err2));
         }
         catch (std::exception& err2)
         {
@@ -323,11 +331,25 @@ void RobotRaconteurNode_connector::connected_transport(const RR_SHARED_PTR<Trans
                 catch (std::exception&)
                 {}
             }
-            if (lock.owns_lock())
-                lock.unlock();
-            handle_error(key, RR_MAKE_SHARED<ConnectionException>(err2.what()));
+            connected_transport_failed(lock, connect_started);
+            handle_error(connect_started ? key2 : key, RR_MAKE_SHARED<ConnectionException>(err2.what()));
         }
     }
+}
+
+void RobotRaconteurNode_connector::connected_transport_failed(boost::mutex::scoped_lock& lock, bool connect_started)
+{
+    // Leaves connecting_lock released (handle_error locks it). If this candidate had already been marked as the
+    // connected transport (AsyncConnectService threw after connecting_lock was released), clear the mark so other
+    // candidates can still proceed; the active entry to remove is then key2, which handle_error is called with.
+    if (connect_started)
+    {
+        if (!lock.owns_lock())
+            lock.lock();
+        transport_connected = false;
+    }
+    if (lock.owns_lock())
+        lock.unlock();
 }
 
 void RobotRaconteurNode_connector::connect_timer_callback(const boost::system::error_code& e)
