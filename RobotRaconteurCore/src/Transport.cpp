@@ -169,6 +169,8 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
         {
             throw ConnectionException("Invalid Connection URL");
         }
+        if (o.port < 1 || o.port > 65535)
+            throw ConnectionException("Invalid Connection URL");
         o.service = s.at(1);
 
         return o;
@@ -211,6 +213,8 @@ ROBOTRACONTEUR_CORE_API ParseConnectionURLResult ParseConnectionURL(boost::strin
         {
             throw ConnectionException("Invalid Connection URL");
         }
+        if (o.port < 1 || o.port > 65535)
+            throw ConnectionException("Invalid Connection URL");
     }
 
     o.path = url_result[4];

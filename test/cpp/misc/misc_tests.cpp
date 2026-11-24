@@ -168,6 +168,28 @@ TEST(RobotRaconteurMisc, BuildServicePathTest)
     // cSpell: enable
 }
 
+TEST(RobotRaconteurMisc, ParseConnectionURLPortRange)
+{
+    const char* bad_urls[] = {"rr+tcp://localhost:0/?service=s",
+                              "rr+tcp://localhost:65536/?service=s",
+                              "rr+tcp://localhost:70000/?service=s",
+                              "rr+tcp://localhost:-1/?service=s",
+                              "rr+wss://localhost:0/?service=s",
+                              "tcp://localhost:0/MyNode/MyService",
+                              "tcp://localhost:65536/MyNode/MyService",
+                              "tcp://localhost:-1/MyNode/MyService"};
+    for (size_t i = 0; i < sizeof(bad_urls) / sizeof(bad_urls[0]); i++)
+    {
+        EXPECT_THROW(ParseConnectionURL(bad_urls[i]), ConnectionException) << bad_urls[i];
+    }
+
+    EXPECT_EQ(ParseConnectionURL("rr+tcp://localhost:1/?service=s").port, 1);
+    EXPECT_EQ(ParseConnectionURL("rr+tcp://localhost:65535/?service=s").port, 65535);
+    EXPECT_EQ(ParseConnectionURL("tcp://localhost:65535/MyNode/MyService").port, 65535);
+    EXPECT_EQ(ParseConnectionURL("rr+tcp://localhost/?service=s").port, 48653);
+    EXPECT_EQ(ParseConnectionURL("rr+wss://localhost/?service=s").port, 443);
+}
+
 TEST(RobotRaconteurMisc, CreateIdentifierAttributeFilterTest)
 {
     ServiceSubscriptionFilterAttribute attr1 = CreateServiceSubscriptionFilterAttributeIdentifier("identifier_1", "");
