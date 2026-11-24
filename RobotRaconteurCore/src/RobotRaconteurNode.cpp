@@ -1018,6 +1018,19 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::GetService(boost::string_ref na
 RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m, uint32_t transportid,
                                                              const RR_SHARED_PTR<ITransportConnection>& tc)
 {
+    // A special request must be the only entry in its message (object protocol, "Special Requests"). Anything
+    // else is a protocol violation: close the connection instead of answering it
+    if (m->entries.size() != 1)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1,
+                                           "Received SpecialRequest with " << m->entries.size()
+                                                                           << " entries, closing connection");
+        if (tc)
+        {
+            tc->Close();
+        }
+        throw ProtocolException("Special request must be the only entry in a message");
+    }
 
     if (!(m->header->ReceiverNodeID == NodeID::GetAny() &&
           (m->header->ReceiverNodeName == "" || m->header->ReceiverNodeName == NodeName())) &&

@@ -50,6 +50,8 @@ rr_service_test_add_test(service2 SRC service_test2.cpp ${RR_THUNK_SRCS})
 
 rr_service_test_add_test(service3 SRC service_test3.cpp ${RR_THUNK_SRCS})
 
+rr_service_test_add_test(special_request_single_entry SRC special_request_single_entry_test.cpp)
+
 rr_service_test_add_exe(server SRC test_server.cpp service_test_utils.cpp)
 
 rr_service_test_add_exe(findservicebytype SRC findservicebytype.cpp)
