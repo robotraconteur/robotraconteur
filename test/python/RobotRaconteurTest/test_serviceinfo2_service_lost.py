@@ -57,16 +57,15 @@ def test_serviceinfo2_service_lost_event():
         id2 = RR.ServiceSubscriptionClientID(server_id, "service2")
         assert _wait(lambda: len(sub.GetDetectedServiceInfo2()) == 2, 15), "both services not detected"
 
-        lost = []
-        detected = []
+        events = []
         lost_evt = threading.Event()
 
         def lost_handler(s, client_id, info):
-            lost.append(client_id.ServiceName)
+            events.append(("lost", client_id.ServiceName))
             lost_evt.set()
 
         def detected_handler(s, client_id, info):
-            detected.append(client_id.ServiceName)
+            events.append(("detected", client_id.ServiceName))
 
         sub.ServiceLost += lost_handler
         sub.ServiceDetected += detected_handler
@@ -83,5 +82,10 @@ def test_serviceinfo2_service_lost_event():
     server.Shutdown()
     client.Shutdown()
 
-    assert lost == ["service2"], "ServiceLost not fired for service2 (lost={0}, detected={1})".format(lost, detected)
-    assert "service2" not in detected, "ServiceDetected fired for the removed service2"
+    # ServiceDetected is also fired again when a detected service's info changes, so a late update can report
+    # service2 as detected before it is removed. It must not be reported detected after it was lost
+    lost = [n for (k, n) in events if k == "lost"]
+    assert lost == ["service2"], "ServiceLost not fired for service2 (events={0})".format(events)
+    after_lost = events[events.index(("lost", "service2")) + 1:]
+    assert ("detected", "service2") not in after_lost, \
+        "ServiceDetected fired for service2 after ServiceLost (events={0})".format(events)
