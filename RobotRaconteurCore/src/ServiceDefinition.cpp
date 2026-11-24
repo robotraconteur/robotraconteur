@@ -635,7 +635,7 @@ void ServiceDefinition::FromStream(std::istream& s, std::vector<ServiceDefinitio
             }
             // stdver
             case 2: {
-                if (entry_key_max >= 2)
+                if (entry_key_max >= 2 || !Options.empty())
                     throw ServiceDefinitionParseException("stdver must be first after service name", working_info);
                 stdver_version.FromString(to_ref(r_entry_match_remaining), &working_info);
                 stdver_found = true;

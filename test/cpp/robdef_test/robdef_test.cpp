@@ -457,6 +457,34 @@ TEST(RobDef, EnumVerifyValues)
     EXPECT_FALSE(e.VerifyValues());
 }
 
+TEST(RobDef, OptionBeforeStdver)
+{
+    // stdver must come right after the service line, also when an option precedes it
+    {
+        RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+        EXPECT_THROW(def->FromString("service a.b\noption foo\nstdver 0.9.2\n"), ServiceDefinitionParseException);
+    }
+    {
+        RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+        EXPECT_THROW(def->FromString("service a.b\noption foo\nstdver 0.9\n"), ServiceDefinitionParseException);
+    }
+
+    // Options without stdver, or after a stdver < 0.9.2, are still accepted (deprecated)
+    {
+        RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+        EXPECT_NO_THROW(def->FromString("service a.b\noption foo\n"));
+        EXPECT_EQ(def->Options.size(), 1u);
+    }
+    {
+        RR_SHARED_PTR<ServiceDefinition> def = RR_MAKE_SHARED<ServiceDefinition>();
+        EXPECT_NO_THROW(def->FromString("service a.b\nstdver 0.9\noption foo\n"));
+        EXPECT_EQ(def->Options.size(), 1u);
+        RR_SHARED_PTR<ServiceDefinition> def2 = RR_MAKE_SHARED<ServiceDefinition>();
+        EXPECT_NO_THROW(def2->FromString(def->ToString()));
+        EXPECT_EQ(def2->Options.size(), 1u);
+    }
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
