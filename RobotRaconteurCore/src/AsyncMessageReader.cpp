@@ -713,7 +713,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read(const const_buf
             switch (el->ElementType)
             {
             case DataTypes_void_t: {
-                DO_POP_STATE();
+                state() = MessageElement_finishreaddata;
+                continue;
             }
             case DataTypes_double_t:
             case DataTypes_single_t:
@@ -1353,7 +1354,8 @@ AsyncMessageReaderImpl::return_type AsyncMessageReaderImpl::Read4(const const_bu
             switch (el->ElementType)
             {
             case DataTypes_void_t: {
-                DO_POP_STATE();
+                state() = MessageElement_finishreaddata;
+                continue;
             }
             case DataTypes_double_t:
             case DataTypes_single_t:
