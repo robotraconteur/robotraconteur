@@ -366,6 +366,8 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-${{ matrix.config.arch }}-build-main
         token: ${{ github.token }}
+        # vcpkg master with boost-locale CMake 4.5 fix (microsoft/vcpkg#55069); remove after next vcpkg release
+        revision: 5ad42ec00d7723dde08c0df0910d9044e54ef032
     - uses: actions/setup-java@v5
       with:
         java-version: 8
@@ -561,6 +563,8 @@ jobs:
         extra-args: --clean-after-build
         cache-key: win-shared-build-main
         token: ${{ github.token }}
+        # vcpkg master with boost-locale CMake 4.5 fix (microsoft/vcpkg#55069); remove after next vcpkg release
+        revision: 5ad42ec00d7723dde08c0df0910d9044e54ef032
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
       id: cache-build
@@ -776,6 +780,8 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ubuntu-build-matlab-gcc9
         token: ${{ github.token }}
+        # vcpkg master with boost-locale CMake 4.5 fix (microsoft/vcpkg#55069); remove after next vcpkg release
+        revision: 5ad42ec00d7723dde08c0df0910d9044e54ef032
 
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -878,6 +884,8 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: osx-build-matlab-${{ matrix.config.arch }}
         token: ${{ github.token }}
+        # vcpkg master with boost-locale CMake 4.5 fix (microsoft/vcpkg#55069); remove after next vcpkg release
+        revision: 5ad42ec00d7723dde08c0df0910d9044e54ef032
 
     - name: cache-build
       if: startsWith(github.ref, 'refs/tags/v') != true
@@ -1188,6 +1196,11 @@ jobs:
     - uses: actions/checkout@v7
       with:
         path: robotraconteur
+    # vcpkg 2026.06.01 boost-locale fails to configure with CMake >= 4.5
+    - name: setup cmake
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: '4.4.x'
     - name: vcpkg build
       uses: johnwason/vcpkg-action@v8
       id: vcpkg
@@ -1533,6 +1546,8 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-win
         token: ${{ github.token }}
+        # vcpkg master with boost-locale CMake 4.5 fix (microsoft/vcpkg#55069); remove after next vcpkg release
+        revision: 5ad42ec00d7723dde08c0df0910d9044e54ef032
     - uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
@@ -1568,6 +1583,8 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-linux
         token: ${{ github.token }}
+        # vcpkg master with boost-locale CMake 4.5 fix (microsoft/vcpkg#55069); remove after next vcpkg release
+        revision: 5ad42ec00d7723dde08c0df0910d9044e54ef032
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
@@ -1599,6 +1616,8 @@ jobs:
         extra-args: --clean-after-build --overlay-ports=${{ github.workspace }}/tools/build_files/ports --no-binarycaching
         cache-key: vcpkg-test-osx
         token: ${{ github.token }}
+        # vcpkg master with boost-locale CMake 4.5 fix (microsoft/vcpkg#55069); remove after next vcpkg release
+        revision: 5ad42ec00d7723dde08c0df0910d9044e54ef032
     - name: build-disttest-cpp
       working-directory: test/dist/cpp
       run: |
@@ -1926,6 +1945,8 @@ jobs:
         extra-args: --clean-after-build --overlay-triplets=${{ github.workspace }}/robotraconteur/tools/build_files/triplets
         cache-key: ${{ runner.os }}-x64-build-companion
         token: ${{ github.token }}
+        # vcpkg master with boost-locale CMake 4.5 fix (microsoft/vcpkg#55069); remove after next vcpkg release
+        revision: 5ad42ec00d7723dde08c0df0910d9044e54ef032
     - name: choco
       run: |
         choco install swig -r
@@ -2367,7 +2388,6 @@ jobs:
     - name: update brew
       run: |
         brew update
-        brew upgrade
         brew install swig
     - name: pip install dependencies
       run: |
