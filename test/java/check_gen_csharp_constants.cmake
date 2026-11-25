@@ -1,7 +1,7 @@
-# Runs RobotRaconteurGen --lang=csharp on a robdef with numeric constants and checks that single constants get
-# the F suffix (a literal without suffix is a double, which C# does not convert implicitly to float).
-# The Java output of the same robdef is compiled and checked by the Java test.
-# Usage: cmake -DROBOTRACONTEURGEN=<exe> -DROBDEF=<file> -DOUT_DIR=<dir> -P check_gen_csharp_constants.cmake
+# Runs RobotRaconteurGen --lang=csharp on a robdef with numeric constants and checks that single constants get the F
+# suffix (a literal without suffix is a double, which C# does not convert implicitly to float). The Java output of the
+# same robdef is compiled and checked by the Java test. Usage: cmake -DROBOTRACONTEURGEN=<exe> -DROBDEF=<file>
+# -DOUT_DIR=<dir> -P check_gen_csharp_constants.cmake
 
 file(REMOVE_RECURSE "${OUT_DIR}")
 file(MAKE_DIRECTORY "${OUT_DIR}")

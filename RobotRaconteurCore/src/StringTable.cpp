@@ -428,9 +428,7 @@ void StringTable::AddCodesCSV_p(const std::string& csv, const std::vector<uint32
     }
 }
 
-StringTable::~StringTable()
-{
-}
+StringTable::~StringTable() {}
 
 std::vector<uint32_t> StringTable::GetTableFlags()
 {

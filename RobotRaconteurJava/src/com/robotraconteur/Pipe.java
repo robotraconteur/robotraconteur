@@ -37,8 +37,7 @@ public class Pipe<T>
     protected void finalize() throws Throwable
     {
         if (innerpipe instanceof WrappedPipeServer)
-        {
-        }
+        {}
     }
 
     public final Action1<Pipe<T>.PipeEndpoint> getPipeConnectCallback()
@@ -185,8 +184,7 @@ public class Pipe<T>
         }
 
         protected void finalize() throws Throwable
-        {
-        }
+        {}
 
         public final int getIndex()
         {

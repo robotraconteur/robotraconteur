@@ -24,8 +24,9 @@ struct closed_watch
     closed_watch(tcp::socket& s) : s(s), b(0), done(false) {}
     void start()
     {
-        s.async_read_some(boost::asio::buffer(&b, 1), boost::bind(&closed_watch::handler, this, RR_BOOST_PLACEHOLDERS(_1),
-                                                                  RR_BOOST_PLACEHOLDERS(_2)));
+        s.async_read_some(
+            boost::asio::buffer(&b, 1),
+            boost::bind(&closed_watch::handler, this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
     }
     void handler(const boost::system::error_code& e, size_t n)
     {
@@ -84,8 +85,7 @@ TEST(TcpTransport, IdleAcceptedSocketTimesOut)
     w2.start();
 
     boost::posix_time::ptime start = boost::posix_time::microsec_clock::universal_time();
-    while ((!w1.done || !w2.done) &&
-           (boost::posix_time::microsec_clock::universal_time() - start).total_seconds() < 20)
+    while ((!w1.done || !w2.done) && (boost::posix_time::microsec_clock::universal_time() - start).total_seconds() < 20)
     {
         run_for_100ms(ioc);
     }

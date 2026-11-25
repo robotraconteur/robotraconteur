@@ -9865,10 +9865,11 @@ struct MexPodMultiDimArrayMemoryClient_buffer
 
 // Copy pod elements between the full buffer (a) and a transfer block (b), renumbering the
 // elements when they move to a different index (pod arrays require element number == index)
-static void MexPodMultiDimArrayMemoryClient_CopyElements(
-    const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& src, std::vector<RR_INTRUSIVE_PTR<MessageElement> >& dest,
-    const std::vector<uint32_t>& buffer_dims, const std::vector<uint64_t>& bufferpos,
-    const std::vector<uint64_t>& count, bool buffer_to_block)
+static void MexPodMultiDimArrayMemoryClient_CopyElements(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& src,
+                                                         std::vector<RR_INTRUSIVE_PTR<MessageElement> >& dest,
+                                                         const std::vector<uint32_t>& buffer_dims,
+                                                         const std::vector<uint64_t>& bufferpos,
+                                                         const std::vector<uint64_t>& count, bool buffer_to_block)
 {
     std::vector<uint32_t> zero_dims(count.size());
     std::vector<uint32_t> bufferpos1 = detail::ConvertVectorType<uint32_t>(bufferpos);

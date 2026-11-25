@@ -344,8 +344,10 @@ TEST_F(ServiceTest, MultiDimMemoryReadReplyCountTest)
     rd->AddElement("memorypos", VectorToRRArray<uint64_t>(pos));
     rd->AddElement("count", VectorToRRArray<uint64_t>(count));
     RR_INTRUSIVE_PTR<MessageEntry> ret = stub->ProcessRequest(rd);
-    std::vector<uint64_t> ret_pos = RRArrayToVector<uint64_t>(ret->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
-    std::vector<uint64_t> ret_count = RRArrayToVector<uint64_t>(ret->FindElement("count")->CastData<RRArray<uint64_t> >());
+    std::vector<uint64_t> ret_pos =
+        RRArrayToVector<uint64_t>(ret->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
+    std::vector<uint64_t> ret_count =
+        RRArrayToVector<uint64_t>(ret->FindElement("count")->CastData<RRArray<uint64_t> >());
     EXPECT_EQ(ret_pos, pos);
     EXPECT_EQ(ret_count, count);
 
@@ -534,8 +536,8 @@ TEST_F(ServiceTest, DisconnectClientOtherServiceName)
 
     RR_INTRUSIVE_PTR<MessageEntry> e = CreateMessageEntry(MessageEntryType_ConnectClient, "");
     e->ServicePath = "RobotRaconteurTestService";
-    RR_INTRUSIVE_PTR<Message> ret =
-        node->SpecialRequest(ServiceTest_CreateSpecialRequest(e, 0, client_id), std::numeric_limits<uint32_t>::max(), tc);
+    RR_INTRUSIVE_PTR<Message> ret = node->SpecialRequest(ServiceTest_CreateSpecialRequest(e, 0, client_id),
+                                                         std::numeric_limits<uint32_t>::max(), tc);
     ASSERT_TRUE(ret);
     ASSERT_EQ(ret->entries.size(), 1u);
     ASSERT_EQ(ret->entries[0]->Error, MessageErrorType_None);

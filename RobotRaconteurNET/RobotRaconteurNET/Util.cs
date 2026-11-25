@@ -120,9 +120,7 @@ public class RRObjectHeap
                 objects.Remove(id);
             }
             catch
-            {
-
-            }
+            {}
         }
     }
 

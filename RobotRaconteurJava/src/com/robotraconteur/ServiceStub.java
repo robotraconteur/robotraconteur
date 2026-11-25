@@ -16,8 +16,7 @@ public abstract class ServiceStub
     }
 
     protected void finalize() throws Throwable
-    {
-    }
+    {}
 
     public abstract void dispatchEvent(String membername, vectorptr_messageelement m);
 

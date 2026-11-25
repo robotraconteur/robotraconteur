@@ -781,8 +781,7 @@ public abstract class ServiceStub
     }
 
     ~ServiceStub()
-    {
-    }
+    {}
 
     public abstract void DispatchEvent(string membername, vectorptr_messageelement m);
 

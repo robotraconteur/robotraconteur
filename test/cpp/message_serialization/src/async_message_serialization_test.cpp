@@ -376,8 +376,8 @@ static bool AsyncReadAccepts(const std::vector<uint8_t>& buf, uint16_t version)
     size_t buf_used = 0;
     try
     {
-        AsyncMessageReader::return_type ret = (version == 2) ? r->Read(buf2, buf_used, 0, continue_bufs)
-                                                             : r->Read4(buf2, buf_used, 0, continue_bufs);
+        AsyncMessageReader::return_type ret =
+            (version == 2) ? r->Read(buf2, buf_used, 0, continue_bufs) : r->Read4(buf2, buf_used, 0, continue_bufs);
         return ret == AsyncMessageReader::ReadReturn_done && r->MessageReady();
     }
     catch (std::exception&)

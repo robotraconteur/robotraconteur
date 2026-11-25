@@ -170,14 +170,10 @@ TEST(RobotRaconteurMisc, BuildServicePathTest)
 
 TEST(RobotRaconteurMisc, ParseConnectionURLPortRange)
 {
-    const char* bad_urls[] = {"rr+tcp://localhost:0/?service=s",
-                              "rr+tcp://localhost:65536/?service=s",
-                              "rr+tcp://localhost:70000/?service=s",
-                              "rr+tcp://localhost:-1/?service=s",
-                              "rr+wss://localhost:0/?service=s",
-                              "tcp://localhost:0/MyNode/MyService",
-                              "tcp://localhost:65536/MyNode/MyService",
-                              "tcp://localhost:-1/MyNode/MyService"};
+    const char* bad_urls[] = {"rr+tcp://localhost:0/?service=s",        "rr+tcp://localhost:65536/?service=s",
+                              "rr+tcp://localhost:70000/?service=s",    "rr+tcp://localhost:-1/?service=s",
+                              "rr+wss://localhost:0/?service=s",        "tcp://localhost:0/MyNode/MyService",
+                              "tcp://localhost:65536/MyNode/MyService", "tcp://localhost:-1/MyNode/MyService"};
     for (size_t i = 0; i < sizeof(bad_urls) / sizeof(bad_urls[0]); i++)
     {
         EXPECT_THROW(ParseConnectionURL(bad_urls[i]), ConnectionException) << bad_urls[i];
@@ -640,8 +636,7 @@ TEST(RobotRaconteurMisc, LocalTransportDiscoveryPrivateDirRemoved)
 static size_t bughunt_count_open_fds()
 {
     size_t n = 0;
-    for (boost::filesystem::directory_iterator it("/proc/self/fd"); it != boost::filesystem::directory_iterator();
-         ++it)
+    for (boost::filesystem::directory_iterator it("/proc/self/fd"); it != boost::filesystem::directory_iterator(); ++it)
     {
         n++;
     }
@@ -709,9 +704,8 @@ class SyncFailClientTransport : public Transport
     {
         return boost::starts_with(url, "rr+syncfail://");
     }
-    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                              const RR_SHARED_PTR<Endpoint>& e)
-        RR_OVERRIDE
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
     {
         RR_UNUSED(url);
         RR_UNUSED(e);
@@ -774,11 +768,10 @@ TEST(RobotRaconteurMisc, ConnectorSyncTransportFailure)
     boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
                          const RR_SHARED_PTR<void>&)>
         listener;
-    node->AsyncConnectService("rr+syncfail://localhost/?nodename=test&service=test", "",
-                              RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
-                              boost::bind(&SyncFailConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1),
-                                          RR_BOOST_PLACEHOLDERS(_2)),
-                              30000);
+    node->AsyncConnectService(
+        "rr+syncfail://localhost/?nodename=test&service=test", "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(),
+        listener, "", boost::bind(&SyncFailConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+        30000);
 
     bool done = false;
     {
@@ -994,9 +987,8 @@ class NcSendFailClientTransport : public Transport
     {
         return boost::starts_with(url, "rr+ncsendfail://");
     }
-    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                              const RR_SHARED_PTR<Endpoint>& e)
-        RR_OVERRIDE
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
     {
         RR_UNUSED(url);
         RR_UNUSED(e);
@@ -1063,10 +1055,9 @@ TEST(RobotRaconteurMisc, ConnectorFailureClosesConnectionNotTransport)
     boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
                          const RR_SHARED_PTR<void>&)>
         listener;
-    node->AsyncConnectService("rr+ncsendfail://localhost/?nodename=test&service=test", "",
-                              RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
-                              boost::bind(&NcConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
-                              30000);
+    node->AsyncConnectService(
+        "rr+ncsendfail://localhost/?nodename=test&service=test", "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(),
+        listener, "", boost::bind(&NcConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), 30000);
 
     bool done = false;
     {
@@ -1102,9 +1093,8 @@ class NcDiscoveryThrowTransport : public Transport
         RR_UNUSED(url);
         return false;
     }
-    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                              const RR_SHARED_PTR<Endpoint>& e)
-        RR_OVERRIDE
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
     {
         RR_UNUSED(url);
         RR_UNUSED(e);
@@ -1308,9 +1298,8 @@ class NcFastFailClientTransport : public Transport
     {
         return boost::starts_with(url, "rr+ncfastfail://");
     }
-    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                              const RR_SHARED_PTR<Endpoint>& e)
-        RR_OVERRIDE
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
     {
         RR_UNUSED(url);
         RR_UNUSED(e);
@@ -1324,8 +1313,8 @@ class NcFastFailClientTransport : public Transport
         RR_UNUSED(url);
         RR_UNUSED(e);
         RR_SHARED_PTR<RobotRaconteurException> err = RR_MAKE_SHARED<ConnectionException>("Connection refused");
-        RobotRaconteurNode::TryPostToThreadPool(
-            node, boost::bind(handler, RR_SHARED_PTR<ITransportConnection>(), err), true);
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, RR_SHARED_PTR<ITransportConnection>(), err),
+                                                true);
     }
     RR_OVIRTUAL void CloseTransportConnection(const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE { RR_UNUSED(e); }
     RR_OVIRTUAL void SendMessage(const RR_INTRUSIVE_PTR<Message>& m) RR_OVERRIDE
@@ -1381,11 +1370,10 @@ TEST(RobotRaconteurMisc, ConnectorFastCandidateFailureCompletes)
     for (int i = 0; i < 200; i++)
     {
         RR_SHARED_PTR<NcFastFailResult> res = RR_MAKE_SHARED<NcFastFailResult>();
-        node->AsyncConnectService("rr+ncfastfail://localhost/?nodename=test&service=test", "",
-                                  RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
-                                  boost::bind(&NcFastFailHandler, res, RR_BOOST_PLACEHOLDERS(_1),
-                                              RR_BOOST_PLACEHOLDERS(_2)),
-                                  5000);
+        node->AsyncConnectService(
+            "rr+ncfastfail://localhost/?nodename=test&service=test", "",
+            RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
+            boost::bind(&NcFastFailHandler, res, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)), 5000);
         boost::mutex::scoped_lock lock(res->lock);
         boost::system_time deadline = boost::get_system_time() + boost::posix_time::seconds(2);
         while (!res->done)
@@ -1473,9 +1461,8 @@ class CapabilityThrowClientTransport : public Transport,
     {
         return boost::starts_with(url, "rr+capthrow://");
     }
-    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(boost::string_ref url,
-                                                                              const RR_SHARED_PTR<Endpoint>& e)
-        RR_OVERRIDE
+    RR_OVIRTUAL RR_SHARED_PTR<ITransportConnection> CreateTransportConnection(
+        boost::string_ref url, const RR_SHARED_PTR<Endpoint>& e) RR_OVERRIDE
     {
         RR_UNUSED(url);
         RR_UNUSED(e);
@@ -1546,11 +1533,11 @@ TEST(RobotRaconteurMisc, ConnectorServiceConnectThrows)
         boost::function<void(const RR_SHARED_PTR<ClientContext>&, ClientServiceListenerEventType,
                              const RR_SHARED_PTR<void>&)>
             listener;
-        node->AsyncConnectService("rr+capthrow://localhost/?nodename=test&service=test", "",
-                                  RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), listener, "",
-                                  boost::bind(&CapabilityThrowConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1),
-                                              RR_BOOST_PLACEHOLDERS(_2)),
-                                  2000);
+        node->AsyncConnectService(
+            "rr+capthrow://localhost/?nodename=test&service=test", "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(),
+            listener, "",
+            boost::bind(&CapabilityThrowConnectHandler, res, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+            2000);
 
         boost::mutex::scoped_lock lock(res->lock);
         boost::system_time deadline = boost::get_system_time() + boost::posix_time::seconds(10);
@@ -1606,8 +1593,8 @@ TEST(RobotRaconteurMisc, DiscoveryURLCap)
         info.NodeID = id;
         info.NodeName = "discovery_url_cap";
         NodeDiscoveryInfoURL u;
-        u.URL = "rr+tcp://127.0.0.1:" + boost::lexical_cast<std::string>(10000 + i) +
-                "/?nodeid=" + id.ToString("D") + "&service=RobotRaconteurServiceIndex";
+        u.URL = "rr+tcp://127.0.0.1:" + boost::lexical_cast<std::string>(10000 + i) + "/?nodeid=" + id.ToString("D") +
+                "&service=RobotRaconteurServiceIndex";
         u.LastAnnounceTime = node->NowNodeTime();
         info.URLs.push_back(u);
         node->NodeDetected(info);

@@ -149,9 +149,9 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPythonError.py
             $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME}>/)
 
-# Copy the Python sources in a target that runs on every build (copy_if_different), not in a POST_BUILD step
-# of the module: POST_BUILD only runs when the module is relinked, so a change to a .py file alone left a
-# stale copy in the output directory
+# Copy the Python sources in a target that runs on every build (copy_if_different), not in a POST_BUILD step of the
+# module: POST_BUILD only runs when the module is relinked, so a change to a .py file alone left a stale copy in the
+# output directory
 add_custom_target(
     RobotRaconteurPython3_py_sources ALL
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RR_PY_SOURCES}

@@ -37,8 +37,8 @@ TEST(RobotRaconteurGen, CppKeywordNamesConstexprNotEq)
     RR_SHARED_PTR<testobj_impl> obj = RR_MAKE_SHARED<testobj_impl>();
     node->RegisterService("test_service", "experimental.gen_test_cpp_keywords", obj);
 
-    RR_SHARED_PTR<testobj> c = rr_cast<testobj>(
-        node->ConnectService("rr+intra:///?nodename=gen_test_cpp_keywords&service=test_service"));
+    RR_SHARED_PTR<testobj> c =
+        rr_cast<testobj>(node->ConnectService("rr+intra:///?nodename=gen_test_cpp_keywords&service=test_service"));
 
     EXPECT_EQ(c->f(1.5), 3.0);
 

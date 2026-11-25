@@ -50,8 +50,9 @@ struct ws_reader
     ws_reader(Stream& ws, size_t want) : ws(ws), want(want), buf(new uint8_t[1024]), done(false), zero_reads(0) {}
     void start()
     {
-        ws.async_read_some(boost::asio::buffer(buf.get(), 1024),
-                           boost::bind(&ws_reader::handler, this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
+        ws.async_read_some(
+            boost::asio::buffer(buf.get(), 1024),
+            boost::bind(&ws_reader::handler, this, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
     }
     void handler(const boost::system::error_code& e, size_t n)
     {

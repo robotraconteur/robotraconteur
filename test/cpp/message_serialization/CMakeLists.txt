@@ -37,18 +37,8 @@ rr_test_add_executable(
     robotraconteur_test_cpp_common
     GTest::Main)
 
-rr_test_add_executable(
-    robotraconteur_nesting_depth_test
-    SRC
-    src/nesting_depth_test.cpp
-    DEPS
-    RobotRaconteurCore
-    GTest::Main)
+rr_test_add_executable(robotraconteur_nesting_depth_test SRC src/nesting_depth_test.cpp DEPS RobotRaconteurCore
+                       GTest::Main)
 
-rr_test_add_executable(
-    robotraconteur_element_count_test
-    SRC
-    src/element_count_test.cpp
-    DEPS
-    RobotRaconteurCore
-    GTest::Main)
+rr_test_add_executable(robotraconteur_element_count_test SRC src/element_count_test.cpp DEPS RobotRaconteurCore
+                       GTest::Main)

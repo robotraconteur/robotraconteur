@@ -51,9 +51,8 @@ static void ClientContext_VerifyPulledServiceDefinitions(const std::vector<RR_SH
     {
         RR_UNUSED(exp);
         RR_UNUSED(ep);
-        ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, Client, ep,
-                                             "Service definitions received from service failed verification: "
-                                                 << exp.what());
+        ROBOTRACONTEUR_LOG_WARNING_COMPONENT(
+            node, Client, ep, "Service definitions received from service failed verification: " << exp.what());
         throw;
     }
 }
@@ -2664,8 +2663,8 @@ void ClientContext::AsyncPullServiceDefinitionAndImports1(
                 {
                     ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
                                                        "Service returned definition \"" << pull_ret->def->Name
-                                                                                         << "\" when \"" << servicetype
-                                                                                         << "\" was requested");
+                                                                                        << "\" when \"" << servicetype
+                                                                                        << "\" was requested");
                     throw ServiceDefinitionException("Service returned unexpected service definition");
                 }
                 if (!TryFindByName(current2->defs, pull_ret->def->Name))
@@ -2699,8 +2698,8 @@ void ClientContext::AsyncPullServiceDefinitionAndImports1(
                 AsyncPullServiceDefinition(
                     next_def,
                     boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(),
-                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), next_def,
-                                current2, handler, timeout_time),
+                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), next_def, current2, handler,
+                                timeout_time),
                     boost::numeric_cast<int32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
                 return;
             }

@@ -58,10 +58,7 @@ void count_free(void* ptr, const char* file, int line)
 
 // Must run before OpenSSL makes its first allocation
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
-void count_free_nofile(void* ptr)
-{
-    count_free(ptr, NULL, 0);
-}
+void count_free_nofile(void* ptr) { count_free(ptr, NULL, 0); }
 const int mem_hooks_installed = CRYPTO_set_mem_ex_functions(&count_malloc, &count_realloc, &count_free_nofile);
 #else
 const int mem_hooks_installed = CRYPTO_set_mem_functions(&count_malloc, &count_realloc, &count_free);

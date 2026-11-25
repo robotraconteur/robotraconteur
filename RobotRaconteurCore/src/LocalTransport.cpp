@@ -2049,9 +2049,8 @@ void LocalTransportDiscovery::Refresh()
 
     if (public_path1)
     {
-        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
-                                           "LocalTransport discovery searching public path \"" << *public_path1
-                                                                                               << "\"");
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
+            node, Transport, -1, "LocalTransport discovery searching public path \"" << *public_path1 << "\"");
         try
         {
             boost::filesystem::directory_iterator end_iter;

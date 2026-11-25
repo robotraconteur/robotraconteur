@@ -12,7 +12,8 @@ using namespace experimental::gen_test_cpp_events;
 namespace
 {
 class testobj_impl : public testobj_default_impl
-{};
+{
+};
 
 struct event_result
 {
@@ -44,8 +45,8 @@ TEST(RobotRaconteurGen, CppEventKeywordName)
     RR_SHARED_PTR<testobj_impl> obj = RR_MAKE_SHARED<testobj_impl>();
     node->RegisterService("test_service", "experimental.gen_test_cpp_events", obj);
 
-    RR_SHARED_PTR<testobj> c = rr_cast<testobj>(
-        node->ConnectService("rr+intra:///?nodename=gen_test_cpp_events&service=test_service"));
+    RR_SHARED_PTR<testobj> c =
+        rr_cast<testobj>(node->ConnectService("rr+intra:///?nodename=gen_test_cpp_events&service=test_service"));
 
     event_result r;
     boost::signals2::connection ec =

@@ -63,7 +63,6 @@ RobotRaconteurNode::RobotRaconteurNode()
     instance_is_init = false;
 
     log_level = RobotRaconteur_LogLevel_Warning;
-
 }
 
 void RobotRaconteurNode::Init()
@@ -551,9 +550,7 @@ void RobotRaconteurNode::ReleaseThreadPool()
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_this, Node, -1, "Thread pool released");
 }
 
-RobotRaconteurNode::~RobotRaconteurNode()
-{
-}
+RobotRaconteurNode::~RobotRaconteurNode() {}
 
 static std::string RobotRaconteurNode_log_msg_servicepath(const RR_INTRUSIVE_PTR<Message>& m)
 {
@@ -944,16 +941,14 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(const RR_SHARED
 
     {
         boost::unique_lock<boost::shared_mutex> lock(services_lock);
-        RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServerContext> >::iterator e1 =
-            services.find(c->GetServiceName());
+        RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServerContext> >::iterator e1 = services.find(c->GetServiceName());
         if (e1 != services.end())
         {
             // Close the old service here: CloseService() would lock services_lock again
             RR_SHARED_PTR<ServerContext> old_service = e1->second;
             old_service->Close();
             services.erase(e1);
-            ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_this, Node, -1,
-                                              "Service \"" << c->GetServiceName() << "\" closed");
+            ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_this, Node, -1, "Service \"" << c->GetServiceName() << "\" closed");
         }
 
         services.insert(std::make_pair(c->GetServiceName(), c));

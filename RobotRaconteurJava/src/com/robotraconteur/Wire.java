@@ -38,8 +38,7 @@ public class Wire<T>
     protected void finalize() throws Throwable
     {
         if (innerwire instanceof WrappedWireServer)
-        {
-        }
+        {}
     }
 
     public final WireConnection connect()
@@ -355,8 +354,7 @@ public class Wire<T>
         }
 
         protected void finalize() throws Throwable
-        {
-        }
+        {}
 
         public final long getEndpoint()
         {

@@ -13,7 +13,8 @@ using namespace experimental::gen_test_cpp_async_names;
 namespace
 {
 class testobj_impl : public testobj_default_impl
-{};
+{
+};
 
 struct async_result
 {
@@ -70,8 +71,8 @@ TEST(RobotRaconteurGen, CppAsyncPropertyKeywordName)
     RR_SHARED_PTR<testobj_impl> obj = RR_MAKE_SHARED<testobj_impl>();
     node->RegisterService("test_service", "experimental.gen_test_cpp_async_names", obj);
 
-    RR_SHARED_PTR<testobj> c = rr_cast<testobj>(
-        node->ConnectService("rr+intra:///?nodename=gen_test_cpp_async_names&service=test_service"));
+    RR_SHARED_PTR<testobj> c =
+        rr_cast<testobj>(node->ConnectService("rr+intra:///?nodename=gen_test_cpp_async_names&service=test_service"));
 
     c->set_delete_(1.5);
     EXPECT_EQ(c->get_delete_(), 1.5);

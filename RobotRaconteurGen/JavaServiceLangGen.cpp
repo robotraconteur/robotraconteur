@@ -3193,8 +3193,7 @@ std::string JavaServiceLangGen::convert_constant(ConstantDefinition* c,
         {
             *e = JavaServiceLangGen_ConvertNumberConstant(t->Type, *e);
         }
-        return "public static final " + c1.java_type + "[] " + fix_name(c->Name) + "={" + boost::join(v, ", ") +
-               "};";
+        return "public static final " + c1.java_type + "[] " + fix_name(c->Name) + "={" + boost::join(v, ", ") + "};";
     }
 }
 

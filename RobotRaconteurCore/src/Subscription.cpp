@@ -522,9 +522,9 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
                                                        << info1.Name << "\" on node " << info1.NodeID.ToString()
                                                        << " due to service no longer advertising");
 
-                RobotRaconteurNode::TryPostToThreadPool(
-                    node, boost::bind(&ServiceInfo2Subscription::fire_ServiceLostListener, shared_from_this(),
-                                      RR_MOVE(id1), RR_MOVE(info1)));
+                RobotRaconteurNode::TryPostToThreadPool(node,
+                                                        boost::bind(&ServiceInfo2Subscription::fire_ServiceLostListener,
+                                                                    shared_from_this(), RR_MOVE(id1), RR_MOVE(info1)));
             }
             else
             {

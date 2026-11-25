@@ -214,6 +214,7 @@ def test_sub_manager_remove_subscription():
 
         sub_manager.Close()
 
+
 def test_sub_manager_enable_disabled_by_type():
 
     test_servers = {
@@ -249,6 +250,7 @@ def test_sub_manager_enable_disabled_by_type():
             assert c.add_two_numbers(1, 2) == 3
 
         sub_manager.Close()
+
 
 def test_sub_manager_disable_twice_stays_disabled():
 
@@ -290,5 +292,3 @@ def test_sub_manager_disable_twice_stays_disabled():
         assert res
 
         sub_manager.Close()
-
-

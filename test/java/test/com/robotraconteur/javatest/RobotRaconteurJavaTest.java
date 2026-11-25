@@ -71,8 +71,8 @@ public class RobotRaconteurJavaTest
                 }
 
                 // Authentication through a Java IUserAuthenticator
-                new ServiceTestClient().TestAuthentication(
-                    "rr+tcp://localhost:" + String.valueOf(port) + "/?service=RobotRaconteurTestService_auth_java");
+                new ServiceTestClient().TestAuthentication("rr+tcp://localhost:" + String.valueOf(port) +
+                                                           "/?service=RobotRaconteurTestService_auth_java");
                 RobotRaconteurNode.s().shutdown();
                 System.out.println("Finished shutdown");
                 return;

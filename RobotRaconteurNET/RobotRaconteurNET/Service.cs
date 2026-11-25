@@ -240,8 +240,7 @@ public class Pipe<T>
     ~Pipe()
     {
         if (innerpipe is WrappedPipeServer)
-        {
-        }
+        {}
     }
 
     /// <summary>
@@ -505,8 +504,7 @@ public class Pipe<T>
         }
 
         ~PipeEndpoint()
-        {
-        }
+        {}
 
         /// <summary>
         /// Get the pipe endpoint index used when endpoint connected
@@ -1246,8 +1244,7 @@ public class Wire<T>
     ~Wire()
     {
         if (innerwire is WrappedWireServer)
-        {
-        }
+        {}
     }
 
     /// <summary>
@@ -1873,8 +1870,7 @@ public class Wire<T>
         ~WireConnection()
         {
             try
-            {
-            }
+            {}
             catch
             {}
         }
@@ -2931,9 +2927,8 @@ public partial class NativeUserAuthenticator
     public virtual AuthenticatedUser AuthenticateUser(string username, Dictionary<string, object> credentials,
                                                       ServerContext context)
     {
-        using (MessageElement c =
-                   MessageElementUtil.NewMessageElement("credentials",
-                                                        RobotRaconteurNode.s.PackMapType<string, object>(credentials)))
+        using (MessageElement c = MessageElementUtil.NewMessageElement(
+                   "credentials", RobotRaconteurNode.s.PackMapType<string, object>(credentials)))
         {
             return _AuthenticateUser(username, c, context);
         }

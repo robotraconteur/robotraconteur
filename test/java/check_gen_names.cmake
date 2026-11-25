@@ -1,7 +1,7 @@
-# Runs RobotRaconteurGen --lang=java and --lang=csharp on a robdef whose type and member names are Java / C#
-# keywords, and checks that the generated code uses the names from the service definition (not the escaped
-# identifiers) where a Robot Raconteur member or type name is expected.
-# Usage: cmake -DROBOTRACONTEURGEN=<exe> -DROBDEF=<file> -DOUT_DIR=<dir> -P check_gen_names.cmake
+# Runs RobotRaconteurGen --lang=java and --lang=csharp on a robdef whose type and member names are Java / C# keywords,
+# and checks that the generated code uses the names from the service definition (not the escaped identifiers) where a
+# Robot Raconteur member or type name is expected. Usage: cmake -DROBOTRACONTEURGEN=<exe> -DROBDEF=<file>
+# -DOUT_DIR=<dir> -P check_gen_names.cmake
 
 file(REMOVE_RECURSE "${OUT_DIR}")
 foreach(lang java csharp)
@@ -16,10 +16,11 @@ endforeach()
 set(svc "experimental.gen_test_java_names")
 
 file(READ "${OUT_DIR}/java/experimental/gen_test_java_names/o1_stub.java" java_stub)
-foreach(expected "findObjRefTyped(\"goto\",String.valueOf(ind),\"${svc}.try\")"
-                 "findObjRefTyped(\"default\",\"${svc}.try\")"
-                 "asyncFindObjRefTyped(\"goto\",String.valueOf(ind),\"${svc}.try\",handler,timeout)"
-                 "asyncFindObjRefTyped(\"default\",\"${svc}.try\",handler,timeout)")
+foreach(
+    expected
+    "findObjRefTyped(\"goto\",String.valueOf(ind),\"${svc}.try\")" "findObjRefTyped(\"default\",\"${svc}.try\")"
+    "asyncFindObjRefTyped(\"goto\",String.valueOf(ind),\"${svc}.try\",handler,timeout)"
+    "asyncFindObjRefTyped(\"default\",\"${svc}.try\",handler,timeout)")
     string(FIND "${java_stub}" "${expected}" pos)
     if(pos EQUAL -1)
         message(FATAL_ERROR "Java stub does not contain ${expected}")
@@ -38,9 +39,11 @@ foreach(f ${cs_files})
     file(READ "${f}" c)
     string(APPEND cs_src "${c}")
 endforeach()
-foreach(expected "FindObjRefTyped(\"goto\",ind.ToString(),\"${svc}.try\")" "FindObjRefTyped(\"default\",\"${svc}.try\")"
-                 "AsyncFindObjRefTyped<try_>(\"goto\",ind.ToString(),\"${svc}.try\",timeout)"
-                 "AsyncFindObjRefTyped<try_>(\"default\",\"${svc}.try\",timeout)")
+foreach(
+    expected
+    "FindObjRefTyped(\"goto\",ind.ToString(),\"${svc}.try\")" "FindObjRefTyped(\"default\",\"${svc}.try\")"
+    "AsyncFindObjRefTyped<try_>(\"goto\",ind.ToString(),\"${svc}.try\",timeout)"
+    "AsyncFindObjRefTyped<try_>(\"default\",\"${svc}.try\",timeout)")
     string(FIND "${cs_src}" "${expected}" pos)
     if(pos EQUAL -1)
         message(FATAL_ERROR "C# stub does not contain ${expected}")

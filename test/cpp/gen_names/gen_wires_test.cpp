@@ -13,7 +13,8 @@ using namespace experimental::gen_test_cpp_wires;
 namespace
 {
 class testobj_impl : public testobj_default_impl
-{};
+{
+};
 } // namespace
 
 TEST(RobotRaconteurGen, CppDefaultImplWireKeywordNames)
@@ -29,8 +30,8 @@ TEST(RobotRaconteurGen, CppDefaultImplWireKeywordNames)
     RR_SHARED_PTR<testobj_impl> obj = RR_MAKE_SHARED<testobj_impl>();
     node->RegisterService("test_service", "experimental.gen_test_cpp_wires", obj);
 
-    RR_SHARED_PTR<testobj> c = rr_cast<testobj>(
-        node->ConnectService("rr+intra:///?nodename=gen_test_cpp_wires&service=test_service"));
+    RR_SHARED_PTR<testobj> c =
+        rr_cast<testobj>(node->ConnectService("rr+intra:///?nodename=gen_test_cpp_wires&service=test_service"));
 
     EXPECT_TRUE(c->get_operator_());
     EXPECT_TRUE(c->get_register_());

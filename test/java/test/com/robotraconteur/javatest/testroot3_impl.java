@@ -171,9 +171,11 @@ public class testroot3_impl implements testroot3
 
     class func3_gen extends SyncGenerator3<UnsignedBytes>
     {
-        @Override public void close() {}
+        @Override public void close()
+        {}
 
-        @Override public void abort() {}
+        @Override public void abort()
+        {}
 
         @Override public void next(UnsignedBytes param)
         {

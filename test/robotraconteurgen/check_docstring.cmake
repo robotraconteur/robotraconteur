@@ -1,6 +1,6 @@
-# Runs RobotRaconteurGen on a robdef whose doc lines contain comment terminators and checks
-# that no generated comment line is ended early by the doc text.
-# Usage: cmake -DROBOTRACONTEURGEN=<exe> -DROBDEF=<file> -DOUT_DIR=<dir> -P check_docstring.cmake
+# Runs RobotRaconteurGen on a robdef whose doc lines contain comment terminators and checks that no generated comment
+# line is ended early by the doc text. Usage: cmake -DROBOTRACONTEURGEN=<exe> -DROBDEF=<file> -DOUT_DIR=<dir> -P
+# check_docstring.cmake
 
 file(REMOVE_RECURSE "${OUT_DIR}")
 foreach(lang cpp java)

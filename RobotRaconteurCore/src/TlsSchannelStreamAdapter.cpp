@@ -314,8 +314,7 @@ CredHandle TlsSchannelAsyncStreamAdapterContext::GetClientCredentials()
             //
         }
         else
-        {
-        }
+        {}
         CredHandle phCreds;
         ZeroMemory(&phCreds, sizeof(CredHandle));
         TimeStamp tsExpiry_cred;

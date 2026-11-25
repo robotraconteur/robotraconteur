@@ -287,7 +287,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
                 {
                     ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1,
                                                        "Removing tcp-ws-remove-origins failed " << ws_origin << ": "
-                                                                                               << exp.what());
+                                                                                                << exp.what());
                 }
             }
         }

@@ -1746,8 +1746,8 @@ void CSharpServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream*
         if (GetObjRefIndType(m, indtype))
         {
             w2 << "    public " << objtype << " get_" << fix_name(m->Name) << "(" << indtype << " ind) {" << std::endl;
-            w2 << "    return (" << objtype << ")FindObjRefTyped(\"" << m->Name << "\",ind.ToString(),\""
-               << objecttype2 << "\");" << std::endl;
+            w2 << "    return (" << objtype << ")FindObjRefTyped(\"" << m->Name << "\",ind.ToString(),\"" << objecttype2
+               << "\");" << std::endl;
             w2 << "    }" << std::endl;
         }
         else
@@ -2815,8 +2815,7 @@ std::string CSharpServiceLangGen::convert_constant(ConstantDefinition* c,
         {
             *e += "F";
         }
-        return "public static readonly " + c1.cs_type + "[] " + fix_name(c->Name) + "={" + boost::join(v, ", ") +
-               "};";
+        return "public static readonly " + c1.cs_type + "[] " + fix_name(c->Name) + "={" + boost::join(v, ", ") + "};";
     }
 
     if (t->ArrayType == DataTypes_ArrayTypes_none)

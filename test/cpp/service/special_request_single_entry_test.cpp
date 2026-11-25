@@ -68,8 +68,7 @@ TEST(RobotRaconteurService, SpecialRequestSingleEntry)
     ASSERT_TRUE(node);
 
     {
-        RR_SHARED_PTR<SingleEntryTestTransportConnection> tc =
-            RR_MAKE_SHARED<SingleEntryTestTransportConnection>(node);
+        RR_SHARED_PTR<SingleEntryTestTransportConnection> tc = RR_MAKE_SHARED<SingleEntryTestTransportConnection>(node);
         RR_INTRUSIVE_PTR<Message> ret =
             node->SpecialRequest(NewSpecialRequestMessage(1), std::numeric_limits<uint32_t>::max(), tc);
         ASSERT_TRUE(ret);
@@ -80,16 +79,14 @@ TEST(RobotRaconteurService, SpecialRequestSingleEntry)
     }
 
     {
-        RR_SHARED_PTR<SingleEntryTestTransportConnection> tc =
-            RR_MAKE_SHARED<SingleEntryTestTransportConnection>(node);
+        RR_SHARED_PTR<SingleEntryTestTransportConnection> tc = RR_MAKE_SHARED<SingleEntryTestTransportConnection>(node);
         EXPECT_THROW(node->SpecialRequest(NewSpecialRequestMessage(2), std::numeric_limits<uint32_t>::max(), tc),
                      ProtocolException);
         EXPECT_EQ(tc->close_count, 1);
     }
 
     {
-        RR_SHARED_PTR<SingleEntryTestTransportConnection> tc =
-            RR_MAKE_SHARED<SingleEntryTestTransportConnection>(node);
+        RR_SHARED_PTR<SingleEntryTestTransportConnection> tc = RR_MAKE_SHARED<SingleEntryTestTransportConnection>(node);
         EXPECT_THROW(node->SpecialRequest(NewSpecialRequestMessage(0), std::numeric_limits<uint32_t>::max(), tc),
                      ProtocolException);
         EXPECT_EQ(tc->close_count, 1);

@@ -300,9 +300,10 @@ void ServiceTestClient2::TestGenerators()
     RR_SHARED_PTR<Generator<RR_INTRUSIVE_PTR<RRArray<uint8_t> >, RR_INTRUSIVE_PTR<RRArray<uint8_t> > > > gen5;
     ASSERT_NO_THROW(gen5 = r->gen_func4());
     ASSERT_NO_THROW(gen5->Next(AttachRRArrayCopy(a, 3)));
-    RR_SHARED_PTR<RobotRaconteur::detail::sync_async_handler<void> > gen5_close = RR_MAKE_SHARED<RobotRaconteur::detail::sync_async_handler<void> >();
-    ASSERT_NO_THROW(gen5->AsyncClose(boost::bind(&RobotRaconteur::detail::sync_async_handler<void>::operator(), gen5_close,
-                                                 RR_BOOST_PLACEHOLDERS(_1)),
+    RR_SHARED_PTR<RobotRaconteur::detail::sync_async_handler<void> > gen5_close =
+        RR_MAKE_SHARED<RobotRaconteur::detail::sync_async_handler<void> >();
+    ASSERT_NO_THROW(gen5->AsyncClose(boost::bind(&RobotRaconteur::detail::sync_async_handler<void>::operator(),
+                                                 gen5_close, RR_BOOST_PLACEHOLDERS(_1)),
                                      5000));
     EXPECT_NO_THROW(gen5_close->end_void());
     EXPECT_THROW(gen5->Next(AttachRRArrayCopy(a, 3)), StopIterationException);

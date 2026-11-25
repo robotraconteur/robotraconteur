@@ -16,8 +16,8 @@ namespace RobotRaconteurNETTest
 {
 class TestCustomAuthenticator : IUserAuthenticator
 {
-    PasswordFileUserAuthenticator native_authenticator = new PasswordFileUserAuthenticator(
-        "testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\n");
+    PasswordFileUserAuthenticator native_authenticator =
+        new PasswordFileUserAuthenticator("testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\n");
 
     public AuthenticatedUser AuthenticateUser(string username, Dictionary<string, object> credentials,
                                               ServerContext context)
@@ -199,8 +199,7 @@ class Program
                 var security = new ServiceSecurityPolicy(new TestCustomAuthenticator(), policies);
                 RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2_auth",
                                                      "com.robotraconteur.testing.TestService3", testservice, security);
-                string url =
-                    "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService2_auth";
+                string url = "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService2_auth";
 
                 // Valid login: the C# authenticator receives the credentials and calls the native
                 // PasswordFileUserAuthenticator
@@ -232,8 +231,10 @@ class Program
                 new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
             using (var setup = new ClientNodeSetup())
             {
-                RRAssert.IsTrue(RobotRaconteurNode.s.IsServiceTypeRegistered("com.robotraconteur.testing.TestService1"));
-                RRAssert.IsTrue(RobotRaconteurNode.s.IsServiceTypeRegistered("com.robotraconteur.testing.TestService3"));
+                RRAssert.IsTrue(
+                    RobotRaconteurNode.s.IsServiceTypeRegistered("com.robotraconteur.testing.TestService1"));
+                RRAssert.IsTrue(
+                    RobotRaconteurNode.s.IsServiceTypeRegistered("com.robotraconteur.testing.TestService3"));
             }
             Console.WriteLine("Test completed");
             return;

@@ -1,6 +1,5 @@
-# Runs RobotRaconteurGen --lang=cpp on a robdef with string constants that need escaping and checks
-# the generated C++ string literals.
-# Usage: cmake -DROBOTRACONTEURGEN=<exe> -DROBDEF=<file> -DOUT_DIR=<dir> -P check_string_escape.cmake
+# Runs RobotRaconteurGen --lang=cpp on a robdef with string constants that need escaping and checks the generated C++
+# string literals. Usage: cmake -DROBOTRACONTEURGEN=<exe> -DROBDEF=<file> -DOUT_DIR=<dir> -P check_string_escape.cmake
 
 file(REMOVE_RECURSE "${OUT_DIR}")
 file(MAKE_DIRECTORY "${OUT_DIR}")

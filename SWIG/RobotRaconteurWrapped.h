@@ -1340,7 +1340,6 @@ class WrappedServiceSkel : public virtual ServiceSkel
     boost::shared_mutex RR_Director_lock;
 
   public:
-
     RR_SHARED_PTR<RobotRaconteur::WrappedPipeServer> GetPipe(const std::string& membername);
     RR_SHARED_PTR<RobotRaconteur::WrappedWireServer> GetWire(const std::string& membername);
 

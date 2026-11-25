@@ -54,7 +54,8 @@ if(NOT ANDROID)
         OUTDIR
         "${CMAKE_CURRENT_BINARY_DIR}/test_src")
 
-    add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS} ${RR_NAMES_THUNK_SRCS} ${RR_POD_CONTAINERS_THUNK_SRCS} ${RR_CONSTANTS_THUNK_SRCS})
+    add_custom_target(RobotRaconteurJavaTest_gen DEPENDS ${RR_THUNK_SRCS} ${RR_NAMES_THUNK_SRCS}
+                                                         ${RR_POD_CONTAINERS_THUNK_SRCS} ${RR_CONSTANTS_THUNK_SRCS})
 
     # cSpell: disable
     add_custom_target(

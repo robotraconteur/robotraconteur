@@ -43,8 +43,3 @@ end
     RobotRaconteurMatlabMemoryWriteDimsTest(url2)
 
     RobotRaconteurMatlabObjRefTest(url2)
-
-
-
-
-

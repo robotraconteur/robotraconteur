@@ -892,9 +892,7 @@ std::string WrappedServiceStub::RRType()
     }
 }
 
-WrappedServiceStub::~WrappedServiceStub()
-{
-}
+WrappedServiceStub::~WrappedServiceStub() {}
 
 bool WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int32_t id)
 {
@@ -1141,9 +1139,7 @@ void WrappedPipeEndpoint::AsyncClose_handler(const RR_SHARED_PTR<RobotRaconteurE
     DIRECTOR_CALL2(handler->handler(err3));
 }
 
-WrappedPipeEndpoint::~WrappedPipeEndpoint()
-{
-}
+WrappedPipeEndpoint::~WrappedPipeEndpoint() {}
 
 void WrappedPipeEndpoint::SetPipeBroadcaster(const RR_SHARED_PTR<WrappedPipeBroadcaster>& broadcaster,
                                              const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
@@ -1230,9 +1226,7 @@ WrappedPipeServer::WrappedPipeServer(const std::string& name, const RR_SHARED_PT
     this->rawelements = true;
 }
 
-WrappedPipeServer::~WrappedPipeServer()
-{
-}
+WrappedPipeServer::~WrappedPipeServer() {}
 
 void WrappedPipeServer::Shutdown()
 {
@@ -1439,9 +1433,7 @@ RR_SHARED_PTR<WrappedServiceStub> WrappedWireConnection::GetStub()
     return RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(w2->GetStub());
 }
 
-WrappedWireConnection::~WrappedWireConnection()
-{
-}
+WrappedWireConnection::~WrappedWireConnection() {}
 
 void WrappedWireConnection::Close()
 {
@@ -1688,9 +1680,7 @@ WrappedWireServer::WrappedWireServer(const std::string& name, const RR_SHARED_PT
     this->rawelements = true;
 }
 
-WrappedWireServer::~WrappedWireServer()
-{
-}
+WrappedWireServer::~WrappedWireServer() {}
 
 RR_SHARED_PTR<WireConnectionBase> WrappedWireServer::CreateNewWireConnection(uint32_t endpoint,
                                                                              MemberDefinition_Direction direction)

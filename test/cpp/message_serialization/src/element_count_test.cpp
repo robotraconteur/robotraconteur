@@ -204,11 +204,20 @@ static void CheckV4LengthNoLargeAllocation(const RR_INTRUSIVE_PTR<Message>& m, R
 
 TEST(MessageElementCount, SyncRead4StringLength) { CheckV4LengthNoLargeAllocation(BuildLongNameMessage(), &SyncRead); }
 
-TEST(MessageElementCount, AsyncRead4StringLength) { CheckV4LengthNoLargeAllocation(BuildLongNameMessage(), &AsyncRead); }
+TEST(MessageElementCount, AsyncRead4StringLength)
+{
+    CheckV4LengthNoLargeAllocation(BuildLongNameMessage(), &AsyncRead);
+}
 
-TEST(MessageElementCount, SyncRead4ExtendedLength) { CheckV4LengthNoLargeAllocation(BuildExtendedMessage(), &SyncRead); }
+TEST(MessageElementCount, SyncRead4ExtendedLength)
+{
+    CheckV4LengthNoLargeAllocation(BuildExtendedMessage(), &SyncRead);
+}
 
-TEST(MessageElementCount, AsyncRead4ExtendedLength) { CheckV4LengthNoLargeAllocation(BuildExtendedMessage(), &AsyncRead); }
+TEST(MessageElementCount, AsyncRead4ExtendedLength)
+{
+    CheckV4LengthNoLargeAllocation(BuildExtendedMessage(), &AsyncRead);
+}
 
 TEST(MessageElementCount, EntryElementCount)
 {
