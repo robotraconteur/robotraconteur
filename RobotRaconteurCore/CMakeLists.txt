@@ -280,9 +280,9 @@ endif()
 if(WIN32)
     target_compile_definitions(RobotRaconteurCore PUBLIC _WIN32_WINNT=0x0600 NOMINMAX=1)
     if(MINGW)
-        # MinGW-w64 import libraries: lowercase names without .lib; libraries MSVC pulls
-        # in through #pragma comment(lib) or by default are listed explicitly (uuid: the
-        # Bluetooth GUIDs used by HardwareTransport_win.cpp).
+        # MinGW-w64 import libraries: lowercase names without .lib; libraries MSVC pulls in through #pragma comment(lib)
+        # or by default are listed explicitly (uuid: the Bluetooth GUIDs used by HardwareTransport_win.cpp).
+
         # cSpell: disable
         set(RobotRaconteurCore_win_libs
             mswsock

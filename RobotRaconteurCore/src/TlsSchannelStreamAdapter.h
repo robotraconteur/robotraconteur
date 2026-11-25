@@ -303,9 +303,8 @@ inline void TlsSchannelAsyncStreamAdapter_ASIO_adapter::async_read_some(const Mu
 
     // TODO: use more than just first buffer
     mutable_buffers b;
-    b.push_back(
-        boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence>::first(
-            buffers));
+    b.push_back(boost::asio::detail::buffer_sequence_adapter<boost::asio::mutable_buffer, MutableBufferSequence>::first(
+        buffers));
     next_layer_.async_read_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2,
                                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
     return;
@@ -319,8 +318,8 @@ inline void TlsSchannelAsyncStreamAdapter_ASIO_adapter::async_write_some(const C
     boost::shared_ptr<handler_wrapper<Handler> > handler2 = boost::make_shared<handler_wrapper<Handler> >(handler);
     // TODO: use more than just first buffer
     const_buffers b;
-    b.push_back(boost::asio::detail::buffer_sequence_adapter<boost::asio::const_buffer, ConstBufferSequence>::first(
-        buffers));
+    b.push_back(
+        boost::asio::detail::buffer_sequence_adapter<boost::asio::const_buffer, ConstBufferSequence>::first(buffers));
     next_layer_.async_write_some(b, boost::bind(&handler_wrapper<Handler>::do_complete, handler2,
                                                 RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)));
     return;
