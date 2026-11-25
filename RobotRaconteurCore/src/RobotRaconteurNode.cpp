@@ -1260,6 +1260,10 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                             throw ServiceNotFoundException("Service " + name + " not found");
                         }
                     }
+                    if (!sc)
+                    {
+                        throw ServiceNotFoundException("Service " + name + " not found");
+                    }
                     sc->RemoveClient(se);
                 }
 

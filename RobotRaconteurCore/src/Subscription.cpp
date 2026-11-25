@@ -1277,9 +1277,6 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
 
     try
     {
-        if (!this1 || !c2_1)
-            return;
-
         boost::mutex::scoped_lock lock(this1->this_lock);
 
         if (evt == ClientServiceListenerEventType_ClientClosed ||
