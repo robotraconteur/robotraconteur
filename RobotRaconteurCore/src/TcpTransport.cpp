@@ -125,12 +125,37 @@ TcpConnector::TcpConnector(const RR_SHARED_PTR<TcpTransport>& parent)
     connecting = false;
     active_count = 0;
     socket_connected = false;
+    transport_closed = false;
 
     connect_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(
         new boost::asio::deadline_timer(parent->GetNode()->GetThreadPool()->get_io_context()));
     backoff_timer = RR_SHARED_PTR<boost::asio::deadline_timer>(
         new boost::asio::deadline_timer(parent->GetNode()->GetThreadPool()->get_io_context()));
     node = parent->GetNode();
+}
+
+void TcpConnector::TransportClosed()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    transport_closed = true;
+    boost::system::error_code ec;
+    try
+    {
+        if (_resolver)
+            _resolver->cancel();
+    }
+    catch (std::exception&)
+    {}
+    // connect_timer is reset once the connect has finished
+    if (connect_timer)
+        connect_timer->cancel(ec);
+    BOOST_FOREACH (RR_WEAK_PTR<boost::asio::ip::tcp::socket>& e, pending_sockets)
+    {
+        RR_SHARED_PTR<boost::asio::ip::tcp::socket> s = e.lock();
+        if (s)
+            s->close(ec);
+    }
+    pending_sockets.clear();
 }
 
 void TcpConnector::Connect(
@@ -151,8 +176,10 @@ void TcpConnector::Connect(
         connecting = true;
         _resolver = RR_SHARED_PTR<boost::asio::ip::tcp::resolver>(
             new boost::asio::ip::tcp::resolver(parent->GetNode()->GetThreadPool()->get_io_context()));
-        parent->AddCloseListener(_resolver, &boost::asio::ip::tcp::resolver::cancel);
     }
+
+    // Registered outside this_lock: if the transport is already closed, AddCloseListener calls it immediately
+    parent->AddCloseListener(shared_from_this(), &TcpConnector::TransportClosed);
 
     std::vector<boost::tuple<std::string, std::string> > queries;
 
@@ -202,9 +229,6 @@ void TcpConnector::Connect(
                 RobotRaconteurNode::asio_async_wait(node, connect_timer,
                                                     boost::bind(&TcpConnector::connect_timer_callback,
                                                                 shared_from_this(), boost::asio::placeholders::error));
-
-                parent->AddCloseListener(connect_timer,
-                                         boost::bind(&boost::asio::deadline_timer::cancel, RR_BOOST_PLACEHOLDERS(_1)));
             }
 
             typedef boost::tuple<std::string, std::string> e_type;
@@ -410,9 +434,15 @@ void TcpConnector::connect3(const RR_SHARED_PTR<std::list<boost::asio::ip::tcp::
             if (!connecting)
                 return;
 
-            RR_SHARED_PTR<boost::signals2::scoped_connection> sock_closer =
-                RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
-                    sock, boost::bind(&boost::asio::ip::tcp::socket::close, RR_BOOST_PLACEHOLDERS(_1))));
+            // Closed by TransportClosed() under this_lock until it is handed to a connection
+            RR_SHARED_PTR<boost::signals2::scoped_connection> sock_closer;
+            pending_sockets.push_back(sock);
+            if (transport_closed)
+            {
+                // The connect below then fails, as it did when the close listener closed the socket
+                boost::system::error_code ec1;
+                sock->close(ec1);
+            }
 
             RobotRaconteurNode::asio_async_connect(node, sock, ep,
                                                    boost::bind(&TcpConnector::connected_callback, shared_from_this(),
@@ -521,6 +551,25 @@ void TcpConnector::connected_callback(const RR_SHARED_PTR<boost::asio::ip::tcp::
 
         if (!c)
         {
+            return;
+        }
+
+        // Hand the socket to the connection: from here on the connection's Close() closes it
+        for (std::list<RR_WEAK_PTR<boost::asio::ip::tcp::socket> >::iterator e = pending_sockets.begin();
+             e != pending_sockets.end();)
+        {
+            RR_SHARED_PTR<boost::asio::ip::tcp::socket> s = e->lock();
+            if (!s || s == socket)
+                e = pending_sockets.erase(e);
+            else
+                ++e;
+        }
+
+        if (transport_closed)
+        {
+            lock.unlock();
+            handle_error(key, boost::system::error_code(boost::system::errc::operation_canceled,
+                                                        boost::system::generic_category()));
             return;
         }
 
@@ -806,6 +855,13 @@ void TcpAcceptor::AcceptSocket5(const boost::system::error_code& ec,
         return;
     }
 
+    if (!HandOffSocket())
+    {
+        RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection closed");
+        handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
+        return;
+    }
+
     try
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, 0,
@@ -844,6 +900,14 @@ void TcpAcceptor::AcceptSocket3(const boost::system::error_code& ec,
 {
     RR_UNUSED(ec);
     RR_UNUSED(timer);
+    boost::mutex::scoped_lock lock(socket_close_lock);
+    if (socket_handed_off)
+    {
+        lock.unlock();
+        RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection closed");
+        handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
+        return;
+    }
     socket->async_receive(boost::asio::buffer(buf, 4), boost::asio::ip::tcp::socket::message_peek,
                           boost::bind(&TcpAcceptor::AcceptSocket2, shared_from_this(), boost::asio::placeholders::error,
                                       boost::asio::placeholders::bytes_transferred, socket, socket_closer, handler));
@@ -898,6 +962,12 @@ void TcpAcceptor::AcceptSocket2(const boost::system::error_code& ec, size_t n,
     if (magic == "RRAC")
     {
         AcceptSocketDone();
+        if (!HandOffSocket())
+        {
+            RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection closed");
+            handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
+            return;
+        }
         try
         {
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, 0,
@@ -938,6 +1008,17 @@ void TcpAcceptor::AcceptSocket2(const boost::system::error_code& ec, size_t n,
             boost::function<void(boost::string_ref protocol, const boost::system::error_code& ec)> h =
                 boost::bind(&TcpAcceptor::AcceptSocket5, shared_from_this(), RR_BOOST_PLACEHOLDERS(_2), socket,
                             websocket, socket_closer, handler);
+            {
+                boost::mutex::scoped_lock lock(socket_close_lock);
+                if (socket_handed_off)
+                {
+                    lock.unlock();
+                    RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection closed");
+                    handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
+                    return;
+                }
+                accept_websocket = websocket;
+            }
             websocket->async_server_handshake("robotraconteur.robotraconteur.com", parent->GetWebSocketAllowedOrigins(),
                                               h);
             return;
@@ -951,9 +1032,15 @@ void TcpAcceptor::AcceptSocket2(const boost::system::error_code& ec, size_t n,
             std::string response2_1 = "HTTP/1.1 404 File Not Found\r\n";
             RR_SHARED_PTR<std::string> response2 = RR_MAKE_SHARED<std::string>(response2_1);
             BOOST_AUTO(response2_buf, boost::asio::buffer(response2->c_str(), response2->size()));
-            RobotRaconteurNode::asio_async_write_some(
-                node, socket, response2_buf,
-                boost::bind(&TcpAcceptor::AcceptSocket4, response2, socket, socket_closer));
+            {
+                boost::mutex::scoped_lock lock(socket_close_lock);
+                if (!socket_handed_off)
+                {
+                    RobotRaconteurNode::asio_async_write_some(
+                        node, socket, response2_buf,
+                        boost::bind(&TcpAcceptor::AcceptSocket4, response2, socket, socket_closer));
+                }
+            }
 
             RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Invalid protocol");
             handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
@@ -979,6 +1066,41 @@ TcpAcceptor::TcpAcceptor(const RR_SHARED_PTR<TcpTransport>& parent, boost::strin
     this->local_endpoint = local_endpoint;
     this->node = parent->GetNode();
     this->accept_done = false;
+    this->socket_handed_off = false;
+}
+
+void TcpAcceptor::CloseSocket()
+{
+    boost::mutex::scoped_lock lock(socket_close_lock);
+    if (socket_handed_off)
+        return;
+    socket_handed_off = true;
+    try
+    {
+        if (accept_websocket)
+        {
+            // Takes the websocket's next layer lock, so the close is serialized with the handshake operations
+            accept_websocket->close();
+            return;
+        }
+        RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket1 = accept_socket.lock();
+        if (socket1)
+        {
+            boost::system::error_code ec;
+            socket1->close(ec);
+        }
+    }
+    catch (std::exception&)
+    {}
+}
+
+bool TcpAcceptor::HandOffSocket()
+{
+    boost::mutex::scoped_lock lock(socket_close_lock);
+    if (socket_handed_off)
+        return false;
+    socket_handed_off = true;
+    return true;
 }
 
 void TcpAcceptor::AcceptSocketTimeout(const boost::system::error_code& ec,
@@ -988,6 +1110,9 @@ void TcpAcceptor::AcceptSocketTimeout(const boost::system::error_code& ec,
         return;
     boost::mutex::scoped_lock lock(accept_timer_lock);
     if (accept_done)
+        return;
+    boost::mutex::scoped_lock lock2(socket_close_lock);
+    if (socket_handed_off)
         return;
     RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket1 = socket.lock();
     if (!socket1)
@@ -1025,9 +1150,16 @@ void TcpAcceptor::AcceptSocket(
                                           << TcpTransport_socket_local_endpoint(socket));
     start_time = parent->GetNode()->NowNodeTime();
 
+    {
+        boost::mutex::scoped_lock lock(socket_close_lock);
+        accept_socket = socket;
+    }
+
+    // Close the socket through the acceptor so the close is serialized with the acceptor's operations on it.
+    // AddCloseListener tracks the acceptor weakly.
     RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer =
-        RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
-            socket, boost::bind(&boost::asio::ip::tcp::socket::close, RR_BOOST_PLACEHOLDERS(_1))));
+        RR_MAKE_SHARED<boost::signals2::scoped_connection>(
+            parent->AddCloseListener(shared_from_this(), &TcpAcceptor::CloseSocket));
 
     {
         // Limit the time until the "RRAC" magic or a complete websocket handshake request has been received to
@@ -1043,6 +1175,15 @@ void TcpAcceptor::AcceptSocket(
                                                         RR_WEAK_PTR<boost::asio::ip::tcp::socket>(socket)));
     }
 
+    boost::mutex::scoped_lock lock(socket_close_lock);
+    if (socket_handed_off)
+    {
+        // The transport closed before the first read started
+        lock.unlock();
+        RR_SHARED_PTR<ConnectionException> err = RR_MAKE_SHARED<ConnectionException>("Connection closed");
+        handler(RR_SHARED_PTR<boost::asio::ip::tcp::socket>(), RR_SHARED_PTR<ITransportConnection>(), err);
+        return;
+    }
     socket->async_receive(boost::asio::buffer(buf, 4), boost::asio::ip::tcp::socket::message_peek,
                           boost::bind(&TcpAcceptor::AcceptSocket2, shared_from_this(), boost::asio::placeholders::error,
                                       boost::asio::placeholders::bytes_transferred, socket, socket_closer,
@@ -1405,10 +1546,6 @@ void TcpWSSWebSocketConnector::Connect2(
     try
     {
 
-        RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer =
-            RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
-                socket, boost::bind(&boost::asio::ip::tcp::socket::close, RR_BOOST_PLACEHOLDERS(_1))));
-
         RR_WEAK_PTR<boost::asio::ip::tcp::socket> socket1 = socket;
         RR_SHARED_PTR<TlsSchannelAsyncStreamAdapterContext> context =
             RR_MAKE_SHARED<TlsSchannelAsyncStreamAdapterContext>(parent->GetNode()->NodeID());
@@ -1421,6 +1558,12 @@ void TcpWSSWebSocketConnector::Connect2(
                 boost::bind(TcpTransportConnection_socket_write_adapter, node, socket1, RR_BOOST_PLACEHOLDERS(_1),
                             RR_BOOST_PLACEHOLDERS(_2)),
                 boost::bind(TcpTransportConnection_socket_close_adapter, socket1));
+
+        // Close through the TLS adapter, which closes the socket under its stream lock, serialized with the
+        // handshake's operations on the socket
+        RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer =
+            RR_MAKE_SHARED<boost::signals2::scoped_connection>(
+                parent->AddCloseListener(tls_stream, &RobotRaconteur::detail::TlsSchannelAsyncStreamAdapter::close));
 
         RobotRaconteurNode::asio_async_handshake(node, tls_stream,
                                                  boost::bind(&TcpWSSWebSocketConnector::Connect2_1, shared_from_this(),
@@ -1718,6 +1861,15 @@ bool TcpWSSWebSocketConnector::verify_callback(bool preverified, boost::asio::ss
     return false;
 }
 #endif
+static void TcpWSSWebSocketConnector_close_tls_stream(
+    const RR_WEAK_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >& tls_stream)
+{
+    RR_SHARED_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> > tls_stream1 = tls_stream.lock();
+    if (!tls_stream1)
+        return;
+    detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&>::close_on_strand(tls_stream1);
+}
+
 void TcpWSSWebSocketConnector::Connect2(
     const boost::system::error_code& ec, const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
     const RR_SHARED_PTR<websocket_tcp_connector>& socket_connector,
@@ -1738,10 +1890,6 @@ void TcpWSSWebSocketConnector::Connect2(
                                        "wss tcp socket connected, begin wss HTTP TLS handshake");
     try
     {
-        RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer =
-            RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
-                socket, boost::bind(&boost::asio::ip::tcp::socket::close, RR_BOOST_PLACEHOLDERS(_1))));
-
         context = RR_MAKE_SHARED<boost::asio::ssl::context>(ROBOTRACONTEUR_BOOST_ASIO_TLS_METHOD_HTTPS);
 
         context->set_default_verify_paths();
@@ -1766,6 +1914,14 @@ void TcpWSSWebSocketConnector::Connect2(
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, endpoint, "Could not set TLS SNI hostname");
         }
+
+        // Close on the TLS stream's strand, serialized with the handshake's operations on the socket. The
+        // listener holds the stream weakly.
+        RR_SHARED_PTR<boost::signals2::scoped_connection> socket_closer =
+            RR_MAKE_SHARED<boost::signals2::scoped_connection>(parent->AddCloseListener(
+                tls_stream, boost::bind(&TcpWSSWebSocketConnector_close_tls_stream,
+                                        RR_WEAK_PTR<detail::asio_ssl_stream_threadsafe<boost::asio::ip::tcp::socket&> >(
+                                            tls_stream))));
 
         RobotRaconteurNode::asio_async_handshake(node, tls_stream, boost::asio::ssl::stream_base::client,
                                                  boost::bind(&TcpWSSWebSocketConnector::Connect2_1, shared_from_this(),
