@@ -606,6 +606,47 @@ jobs:
         path: build2/*
         retention-days: 2
 
+  build-mingw:
+    # MSYS2 MINGW64 toolchain (GCC, MinGW-w64), static core
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        path: robotraconteur
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-ninja
+          mingw-w64-x86_64-boost
+          mingw-w64-x86_64-gtest
+    - name: configure
+      run: >
+        cmake -G Ninja -DBUILD_GEN=ON -DBUILD_TESTING=ON -DBUILD_DOCUMENTATION=OFF
+        -DCMAKE_BUILD_TYPE=Release
+        -S robotraconteur -B build2
+    - name: build
+      working-directory: build2
+      run: |
+        cmake --build . -j 4
+    - name: test
+      working-directory: build2
+      run: |
+        ctest . --output-on-failure
+    - name: build artifacts
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: 'build-artifacts-mingw'
+        path: build2/*
+        retention-days: 2
+
   build-osx:
 
     strategy:
