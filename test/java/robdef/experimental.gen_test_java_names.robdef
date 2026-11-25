@@ -1,0 +1,30 @@
+service experimental.gen_test_java_names
+
+stdver 0.10
+
+pod native
+    field double a
+end
+
+namedarray transient
+    field double x
+    field double y
+end
+
+namedarray holder
+    field transient[2] t
+end
+
+object try
+    property double p1
+end
+
+object o1
+    property native p1
+    property holder h1
+    pipe double synchronized
+    wire double strictfp
+    objref try default
+    objref try[] goto
+    objref try{string} extern
+end

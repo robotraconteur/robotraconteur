@@ -9,7 +9,6 @@ public class WrappedPodArrayMemoryDirectorJava<T> extends WrappedPodArrayMemoryD
     PodArrayMemory<T> mem;
 
     Class<?> mem_type;
-    // public int memoryid = 0;
 
     public WrappedPodArrayMemoryDirectorJava(PodArrayMemory<T> mem, Class<?> mem_type)
     {

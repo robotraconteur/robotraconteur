@@ -311,9 +311,9 @@ enum MessageEntryType
     MessageEntryType_FunctionCallReq = 1121,
     /** @brief Function member call response */
     MessageEntryType_FunctionCallRes,
-    /** @brief Generater next call request */
+    /** @brief Generator next call request */
     MessageEntryType_GeneratorNextReq,
-    /** @brief Generater next call response */
+    /** @brief Generator next call response */
     MessageEntryType_GeneratorNextRes,
     /** @brief Event member notification */
     MessageEntryType_EventReq = 1131,
@@ -574,7 +574,12 @@ enum MemberDefinition_NoLock
 #define RR_VALUE_LIFESPAN_INFINITE (-1)
 
 /** @brief Page mask for transport capability code */
-const uint32_t TranspartCapabilityCode_PAGE_MASK = 0xFFF00000;
+const uint32_t TransportCapabilityCode_PAGE_MASK = 0xFFF00000;
+/** @brief Page mask for transport capability code
+ *
+ * @deprecated Misspelled name kept for compatibility. Use TransportCapabilityCode_PAGE_MASK.
+ */
+const uint32_t TranspartCapabilityCode_PAGE_MASK = TransportCapabilityCode_PAGE_MASK;
 /** @brief Message Version 2 transport capability page code */
 const uint32_t TransportCapabilityCode_MESSAGE2_BASIC_PAGE = 0x02000000;
 /** @brief Enable Message Version 2 transport capability flag */
@@ -635,7 +640,7 @@ enum RobotRaconteur_LogComponent
     RobotRaconteur_LogComponent_Default,
     /** @brief Robot Raconteur Node component */
     RobotRaconteur_LogComponent_Node,
-    /** @brief tranport component */
+    /** @brief transport component */
     RobotRaconteur_LogComponent_Transport,
     /** @brief message or message serialization component */
     RobotRaconteur_LogComponent_Message,

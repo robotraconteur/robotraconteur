@@ -167,10 +167,28 @@ public class testroot3_impl implements testroot3
 
         return new IteratorGenerator<UnsignedBytes>(v.iterator());
     }
+    public static int gen_func3_next_count = 0;
+
+    class func3_gen extends SyncGenerator3<UnsignedBytes>
+    {
+        @Override public void close()
+        {}
+
+        @Override public void abort()
+        {}
+
+        @Override public void next(UnsignedBytes param)
+        {
+            synchronized (testroot3_impl.class)
+            {
+                gen_func3_next_count++;
+            }
+        }
+    }
+
     @Override public Generator3<UnsignedBytes> gen_func3(String name)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new func3_gen();
     }
 
     class func4_gen extends SyncGenerator1<UnsignedBytes, UnsignedBytes>

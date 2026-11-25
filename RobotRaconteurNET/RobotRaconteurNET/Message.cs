@@ -142,7 +142,7 @@ public partial class MessageElement
 
         string datatype = datatype = RobotRaconteurNode.GetTypeString(dat.GetType());
         DataTypes elementtype = DataTypeUtil.TypeIDFromString(datatype);
-        if (elementtype != DataTypes.void_t && (elementtype < DataTypes.uint64_t || elementtype == DataTypes.bool_t) &&
+        if (elementtype != DataTypes.void_t && (elementtype <= DataTypes.uint64_t || elementtype == DataTypes.bool_t) &&
             !(dat is Array))
         {
             object dat2 = DataTypeUtil.ArrayFromScalar(dat);

@@ -19,6 +19,8 @@
 #include <boost/bind/protect.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/random.hpp>
+#include <boost/random/random_device.hpp>
+#include <boost/array.hpp>
 #include <boost/date_time.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/regex.hpp>
@@ -105,9 +107,24 @@ class websocket_stream : private boost::noncopyable
         ping_data_len = 0;
 
         boost::mutex::scoped_lock lock(random_lock);
-        std::string str = boost::posix_time::to_iso_string(boost::posix_time::microsec_clock::universal_time());
-        boost::random::seed_seq seed1(str.begin(), str.end());
-        random.seed(seed1);
+        // RFC 6455 section 5.3: masking keys must come from an unpredictable source
+        try
+        {
+            boost::random::random_device rd;
+            boost::array<uint32_t, 8> seed_data = {};
+            for (size_t i = 0; i < boost::array<uint32_t, 8>::static_size; i++)
+            {
+                seed_data[i] = rd();
+            }
+            boost::random::seed_seq seed1(seed_data.begin(), seed_data.end());
+            random.seed(seed1);
+        }
+        catch (std::exception&)
+        {
+            std::string str = boost::posix_time::to_iso_string(boost::posix_time::microsec_clock::universal_time());
+            boost::random::seed_seq seed1(str.begin(), str.end());
+            random.seed(seed1);
+        }
     }
 
     void async_server_handshake(
@@ -139,27 +156,24 @@ class websocket_stream : private boost::noncopyable
     template <typename T>
     int64_t find_http_header_end(T& str)
     {
-        int64_t pos = str.find("\r\n\r\n");
-        if (pos != -1)
+        // Use the earliest terminator, the line parser stops at the first empty line
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
+        const char* terminators[] = {"\r\n\r\n", "\n\n", "\r\r", "\n\r\n\r"};
+        int64_t end_pos = -1;
+        for (size_t i = 0; i < sizeof(terminators) / sizeof(terminators[0]); i++)
         {
-            return pos + 4;
+            // Compare with npos, not -1: on 32-bit targets npos converted to int64_t is 4294967295
+            size_t pos = str.find(terminators[i]);
+            if (pos != T::npos)
+            {
+                int64_t pos_end = static_cast<int64_t>(pos) + static_cast<int64_t>(strlen(terminators[i]));
+                if (end_pos == -1 || pos_end < end_pos)
+                {
+                    end_pos = pos_end;
+                }
+            }
         }
-        pos = str.find("\n\n");
-        if (pos != -1)
-        {
-            return pos + 2;
-        }
-        pos = str.find("\r\r");
-        if (pos != -1)
-        {
-            return pos + 2;
-        }
-        pos = str.find("\n\r\n\r");
-        if (pos != -1)
-        {
-            return pos + 4;
-        }
-        return -1;
+        return end_pos;
     }
 
     void server_handshake2(
@@ -218,7 +232,7 @@ class websocket_stream : private boost::noncopyable
         n += pos;
         pos = 0;
 
-        if ((size_t)end_header_pos > n)
+        if ((size_t)end_header_pos < n)
         {
             size_t extra_len = n - end_header_pos;
             {
@@ -581,8 +595,8 @@ class websocket_stream : private boost::noncopyable
         boost::shared_ptr<std::string> data2 = boost::make_shared<std::string>(data->substr(n));
         boost::mutex::scoped_lock lock(next_layer_lock);
         next_layer_.async_write_some(boost::asio::buffer(data2->c_str(), data2->size()),
-                                     boost::bind(&websocket_stream::end_send_server_error, this, data2,
-                                                 boost::asio::placeholders::bytes_transferred,
+                                     boost::bind(&websocket_stream::end_send_server_success_response, this, data2,
+                                                 protocol, boost::asio::placeholders::bytes_transferred,
                                                  boost::asio::placeholders::error, boost::protect(handler)));
     }
 
@@ -642,8 +656,9 @@ class websocket_stream : private boost::noncopyable
     }
 
   protected:
-    void async_client_handshake2(const boost::system::error_code& ec, size_t n, boost::shared_ptr<std::string>(data),
-                                 const std::string& url, const std::string& protocol, const std::string& key,
+    void async_client_handshake2(const boost::system::error_code& ec, size_t n,
+                                 const boost::shared_ptr<std::string>& data, const std::string& url,
+                                 const std::string& protocol, const std::string& key,
                                  boost::function<void(const boost::system::error_code& ec)> handler)
     {
         if (ec || n == 0)
@@ -664,7 +679,7 @@ class websocket_stream : private boost::noncopyable
             next_layer_.async_write_some(boost::asio::buffer(data2->c_str(), data2->size()),
                                          boost::bind(&websocket_stream::async_client_handshake2, this,
                                                      boost::asio::placeholders::error,
-                                                     boost::asio::placeholders::bytes_transferred, data, url, protocol,
+                                                     boost::asio::placeholders::bytes_transferred, data2, url, protocol,
                                                      key, boost::protect(handler)));
             return;
         }
@@ -734,7 +749,7 @@ class websocket_stream : private boost::noncopyable
         n += pos;
         pos = 0;
 
-        if ((size_t)end_header_pos > n)
+        if ((size_t)end_header_pos < n)
         {
             size_t extra_len = n - end_header_pos;
             {
@@ -1001,8 +1016,8 @@ class websocket_stream : private boost::noncopyable
                 }
                 else
                 {
-                    BIO_free(b64);
-                    BIO_free(mem);
+                    BIO_free_all(b64);
+                    return "";
                 }
             }
             else
@@ -1014,7 +1029,9 @@ class websocket_stream : private boost::noncopyable
         BIO_flush(b64);
         char* output = NULL;
         int output_len = BIO_get_mem_data(mem, &output);
-        return std::string(output, output_len);
+        std::string ret(output, output_len);
+        BIO_free_all(b64);
+        return ret;
 #endif
     }
 
@@ -1023,10 +1040,13 @@ class websocket_stream : private boost::noncopyable
 
         boost::array<uint8_t, 16> random_data = {};
 
-        boost::random::uniform_int_distribution<uint8_t> distribution(0, std::numeric_limits<uint8_t>::max());
-        for (size_t i = 0; i < 16; i++)
         {
-            random_data[i] = distribution(random);
+            boost::mutex::scoped_lock lock(random_lock);
+            boost::random::uniform_int_distribution<uint8_t> distribution(0, std::numeric_limits<uint8_t>::max());
+            for (size_t i = 0; i < 16; i++)
+            {
+                random_data[i] = distribution(random);
+            }
         }
 #ifdef ROBOTRACONTEUR_USE_SCHANNEL
         DWORD hashlen = 0;
@@ -1069,8 +1089,8 @@ class websocket_stream : private boost::noncopyable
                 }
                 else
                 {
-                    BIO_free(b64);
-                    BIO_free(mem);
+                    BIO_free_all(b64);
+                    return "";
                 }
             }
             else
@@ -1082,7 +1102,9 @@ class websocket_stream : private boost::noncopyable
         BIO_flush(b64);
         char* output = NULL;
         int output_len = BIO_get_mem_data(mem, &output);
-        return std::string(output, output_len);
+        std::string ret(output, output_len);
+        BIO_free_all(b64);
+        return ret;
 #endif
     }
 
@@ -1365,7 +1387,7 @@ class websocket_stream : private boost::noncopyable
         if (recv_en_mask1)
             header2_len += 4;
 
-        if (count1 == 0)
+        if (count1 == 0 && !recv_en_mask1)
         {
             boost::system::error_code ec1;
             handler(ec1, 0);
@@ -1586,8 +1608,10 @@ class websocket_stream : private boost::noncopyable
                 boost::asio::buffer(op_buf.get() + op_pos2, op_len - op_pos2),
                 boost::bind(&websocket_stream::async_read_some6, this, boost::asio::placeholders::bytes_transferred,
                             boost::asio::placeholders::error, op_buf, op_len, op_pos2, buf, boost::protect(handler)));
+            return;
         }
 
+        uint8_t opcode = recv_frame_opcode;
         recv_frame_pos = 0;
         recv_frame_length = 0;
         recv_frame_opcode = 0;
@@ -1596,7 +1620,7 @@ class websocket_stream : private boost::noncopyable
         // TODO: handle the opcode...
         try
         {
-            switch (recv_frame_opcode)
+            switch (opcode)
             {
             case WebSocketOpcode_ping: {
                 boost::mutex::scoped_lock lock(ping_lock);

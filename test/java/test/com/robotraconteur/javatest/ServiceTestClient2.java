@@ -16,6 +16,8 @@ public class ServiceTestClient2
 
     public final void RunFullTest(String url)
     {
+        testVerifyUnsignedArrayLength();
+
         connectService(url);
 
         RRAssert.areEqual(r.get_testenum1_prop(), testenum1.anothervalue);
@@ -24,6 +26,7 @@ public class ServiceTestClient2
         r.get_o4();
         testWirePeekPoke();
         asyncTestWirePeekPoke();
+        testWireLastValueSentTime();
 
         testEnums();
         testPods();
@@ -47,6 +50,94 @@ public class ServiceTestClient2
         testExceptionParams();
 
         disconnectService();
+
+        testWireSubscriptionWaitTimeout();
+
+        testSubscriptionConnectedClients(url);
+    }
+
+    public void testWireSubscriptionWaitTimeout()
+    {
+        // No service at this URL, so the wait must return false once the timeout expires
+        ServiceSubscription sub =
+            RobotRaconteurNode.s().subscribeService("rr+tcp://localhost:1/?service=RobotRaconteurTestService2");
+        try
+        {
+            final WireSubscription<int[]> w = sub.<int[]>subscribeWire("peekwire");
+            final boolean[] res = new boolean[] {true, false};
+            Thread t = new Thread(new Runnable() {
+                public void run()
+                {
+                    res[0] = w.waitInValueValid(100);
+                    res[1] = true;
+                }
+            });
+            t.setDaemon(true);
+            t.start();
+            try
+            {
+                t.join(10000);
+            }
+            catch (InterruptedException e)
+            {}
+            RRAssert.isTrue(res[1]);
+            RRAssert.isFalse(res[0]);
+            w.close();
+        }
+        finally
+        {
+            sub.close();
+        }
+    }
+
+    public void testSubscriptionConnectedClients(String url)
+    {
+        ServiceSubscription sub = RobotRaconteurNode.s().subscribeService(url);
+        try
+        {
+            testroot3 c = sub.<testroot3>getDefaultClientWait(10000);
+            Map<ServiceSubscriptionClientID, Object> clients = sub.getConnectedClients();
+            RRAssert.areEqual(clients.size(), 1);
+            for (Object o : clients.values())
+            {
+                RRAssert.isTrue(o instanceof testroot3);
+                RRAssert.isTrue(o == c);
+            }
+        }
+        finally
+        {
+            sub.close();
+        }
+    }
+
+    public static void testVerifyUnsignedArrayLength()
+    {
+        // Fixed and maximum length checks used by the generated code for uint8[N], uint16[N], ... members
+        DataTypeUtil.verifyArrayLength(new UnsignedBytes(4), 4, false);
+        DataTypeUtil.verifyArrayLength(new UnsignedShorts(3), 4, true);
+        DataTypeUtil.verifyArrayLength(new UnsignedInts(2), 2, false);
+        DataTypeUtil.verifyArrayLength(new UnsignedLongs(1), 1, false);
+        DataTypeUtil.verifyArrayLength(new double[4], 4, false);
+        boolean err = false;
+        try
+        {
+            DataTypeUtil.verifyArrayLength(new UnsignedBytes(5), 4, false);
+        }
+        catch (DataTypeException e)
+        {
+            err = true;
+        }
+        RRAssert.isTrue(err);
+        err = false;
+        try
+        {
+            DataTypeUtil.verifyArrayLength(new UnsignedInts(5), 4, true);
+        }
+        catch (DataTypeException e)
+        {
+            err = true;
+        }
+        RRAssert.isTrue(err);
     }
 
     private testroot3 r;
@@ -59,6 +150,22 @@ public class ServiceTestClient2
     public final void disconnectService()
     {
         RobotRaconteurNode.s().disconnectService(r);
+    }
+
+    public void testWireLastValueSentTime()
+    {
+        // The test service does not send values on w1, so the connection sends values but does not receive one
+        Wire<int[]>.WireConnection c = r.get_w1().connect();
+        try
+        {
+            c.setOutValue(new int[6]);
+            TimeSpec t = c.getLastValueSentTime();
+            RRAssert.isTrue(t != null);
+        }
+        finally
+        {
+            c.close();
+        }
     }
 
     public void testWirePeekPoke()
@@ -236,6 +343,47 @@ public class ServiceTestClient2
 
         ServiceTest2_pod.verify_teststruct3(r.get_teststruct3_prop(), 16483675);
         r.set_teststruct3_prop(ServiceTest2_pod.fill_teststruct3(858362));
+    }
+
+    // Needs the service from testroot3_impl in this process
+    public void testGenerator3AsyncNextLoopback(String url)
+    {
+        connectService(url);
+        try
+        {
+            synchronized (testroot3_impl.class)
+            {
+                testroot3_impl.gen_func3_next_count = 0;
+            }
+            Generator3<UnsignedBytes> g = r.gen_func3("test");
+            final CountDownLatch done = new CountDownLatch(1);
+            final RuntimeException[] err = new RuntimeException[1];
+            g.asyncNext(new UnsignedBytes(new byte[] {1, 2}), new Action1<RuntimeException>() {
+                public void action(RuntimeException e)
+                {
+                    err[0] = e;
+                    done.countDown();
+                }
+            }, 10000);
+            try
+            {
+                RRAssert.isTrue(done.await(20, TimeUnit.SECONDS));
+            }
+            catch (InterruptedException e)
+            {
+                throw new RuntimeException(e);
+            }
+            RRAssert.isTrue(err[0] == null);
+            g.close();
+            synchronized (testroot3_impl.class)
+            {
+                RRAssert.areEqual(testroot3_impl.gen_func3_next_count, 1);
+            }
+        }
+        finally
+        {
+            disconnectService();
+        }
     }
 
     public void testGenerators()

@@ -469,7 +469,10 @@ void ServiceIndex_skel::Init(boost::string_ref path, const RR_SHARED_PTR<RobotRa
 }
 RR_SHARED_PTR<RobotRaconteurServiceIndex::ServiceIndex> ServiceIndex_skel::get_obj()
 {
-    return RobotRaconteur::rr_cast<RobotRaconteurServiceIndex::ServiceIndex>(uncastobj);
+    RR_SHARED_PTR<RobotRaconteur::RRObject> o = GetUncastObject();
+    if (!o)
+        throw RobotRaconteur::InvalidOperationException("Object has been released");
+    return RobotRaconteur::rr_cast<RobotRaconteurServiceIndex::ServiceIndex>(o);
 }
 void ServiceIndex_skel::ReleaseCastObject() {}
 std::string ServiceIndex_skel::GetObjectType() { return "RobotRaconteurServiceIndex.ServiceIndex"; }

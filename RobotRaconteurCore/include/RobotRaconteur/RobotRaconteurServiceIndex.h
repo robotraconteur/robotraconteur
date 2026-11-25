@@ -4,7 +4,7 @@
 
 #pragma once
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #endif
@@ -56,6 +56,6 @@ class ServiceIndex : public virtual RobotRaconteur::RRObject
 
 } // namespace RobotRaconteurServiceIndex
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif

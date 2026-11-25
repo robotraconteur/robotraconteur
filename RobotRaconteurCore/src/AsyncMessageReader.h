@@ -23,6 +23,13 @@
 
 namespace RobotRaconteur
 {
+namespace detail
+{
+// Maximum nesting depth of message element lists accepted from the network. Readers recurse (or keep
+// state) per nesting level, so unbounded nesting allows stack exhaustion with small messages.
+static const size_t MessageMaxNestingDepth = 512;
+} // namespace detail
+
 class ROBOTRACONTEUR_CORE_API AsyncMessageReaderImpl : public AsyncMessageReader
 {
   public:
@@ -131,6 +138,8 @@ class ROBOTRACONTEUR_CORE_API AsyncMessageReaderImpl : public AsyncMessageReader
     std::queue<RR_INTRUSIVE_PTR<Message> > read_messages;
 
     size_t message_pos;
+
+    size_t nested_depth;
 
   public:
     AsyncMessageReaderImpl();

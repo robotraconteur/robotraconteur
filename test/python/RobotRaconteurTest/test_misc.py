@@ -60,3 +60,26 @@ def test_numpy_dtypes():
         np_node.GetPodDType('com.robotraconteur.testing.TestService3.testpod2')
     finally:
         np_node.Shutdown()
+
+
+def test_file_log_record_handler(tmpdir):
+    import datetime
+    fname = str(tmpdir.join("rr_log.txt"))
+    node = RR.RobotRaconteurNode()
+    node.Init()
+    try:
+        h = RR.FileLogRecordHandler()
+        h.OpenFile(fname, False)
+        node.SetLogRecordHandler(h)
+        r = RR.RRLogRecord()
+        r.Node = node
+        r.Time = datetime.datetime.now()
+        r.Level = RR.LogLevel_Warning
+        r.Message = "file log record handler test"
+        node.LogRecord(r)
+        node.SetLogRecordHandler(None)
+        del h
+    finally:
+        node.Shutdown()
+    with open(fname) as f:
+        assert "file log record handler test" in f.read()

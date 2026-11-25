@@ -76,7 +76,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscriptionFilterNode
   public:
     /** The NodeID to match. All zero NodeID will match any NodeID. **/
     ::RobotRaconteur::NodeID NodeID;
-    /** The NodeName to match. Emtpy NodeName will match any NodeName. **/
+    /** The NodeName to match. Empty NodeName will match any NodeName. **/
     std::string NodeName;
     /** The username to use for authentication. Should only be used with secure transports and verified NodeID **/
     std::string Username;
@@ -845,7 +845,7 @@ class ROBOTRACONTEUR_CORE_API ServiceSubscription : public IServiceSubscription,
      * for RobotRaconteurNode::SubscribeService()
      *
      * Clients using GetDefaultClient() should not store a reference to the client. It should instead
-     * call GetDefaultClient() right before using the client to make sure the most recenty connection
+     * call GetDefaultClient() right before using the client to make sure the most recent connection
      * is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
      * of pipes and wires can be managed automatically.
      *
@@ -1514,7 +1514,7 @@ class PipeSubscription : public PipeSubscriptionBase
         if (!TryReceivePacketBaseWait(o, timeout, peek, &ep1))
             return false;
         packet = RRPrimUtil<T>::PreUnpack(o);
-        if (ep1)
+        if (ep && ep1)
         {
             *ep = RR_DYNAMIC_POINTER_CAST<PipeEndpoint<T> >(ep1);
         }

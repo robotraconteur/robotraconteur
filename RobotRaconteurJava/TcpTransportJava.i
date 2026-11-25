@@ -3,12 +3,12 @@
 %{
 public final void enableNodeDiscoveryListening(IPNodeDiscoveryFlags flags)
 {
-	enableNodeDiscoveryListening(flags.ordinal());
+	enableNodeDiscoveryListening(flags.swigValue());
 }
 
 public final void enableNodeAnnounce(IPNodeDiscoveryFlags flags)
 {
-	enableNodeAnnounce(flags.ordinal());
+	enableNodeAnnounce(flags.swigValue());
 }
 
 public final boolean isTransportConnectionSecure(Object obj)

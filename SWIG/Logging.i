@@ -69,7 +69,7 @@ namespace RobotRaconteur
         //virtual ~LogRecordHandler() {}
     };
 
-    class FileLogRecordHandler
+    class FileLogRecordHandler : public LogRecordHandler
     {
     public:
         void OpenFile(const std::string& filename, bool append = true);

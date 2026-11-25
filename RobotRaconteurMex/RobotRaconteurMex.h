@@ -54,8 +54,6 @@ mxArray* UnpackMessageElementToMxArray(const RR_INTRUSIVE_PTR<MessageElement>& m
                                        const boost::shared_ptr<TypeDefinition>& tdef,
                                        const RR_SHARED_PTR<ServiceStub>& stub);
 
-mxArray* ConnectClient(mxArray* url, mxArray* username, mxArray* credentials);
-
 class MexServiceFactory : public virtual RobotRaconteur::ServiceFactory
 {
   public:
@@ -289,8 +287,6 @@ class MexPipeEndpoint : public PipeEndpointBase
 class MexPipeClient : public virtual PipeClientBase
 {
   public:
-    // virtual boost::function<void(const RR_SHARED_PTR<MexPipeEndpoint>&)> GetPipeConnectCallback();
-    // virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<MexPipeEndpoint>&)> function);
     RR_SHARED_PTR<MexPipeEndpoint> Connect(int32_t index);
     MexPipeClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub,
                   const RR_SHARED_PTR<TypeDefinition>& Type, bool unreliable, MemberDefinition_Direction direction);

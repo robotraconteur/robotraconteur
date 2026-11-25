@@ -25,6 +25,7 @@
 #include <vector>
 
 #include <stdint.h>
+#include <limits>
 #include <map>
 #include <deque>
 #include <list>
@@ -924,7 +925,7 @@ class RRMap : public RRValue
     iterator find(const key_type& x) { return map.find(x); }
     /** @brief finds element with the specified key */
     const_iterator find(const key_type& x) const { return map.find(x); }
-    /** @brief returns the number of elemnts matching the specified key */
+    /** @brief returns the number of elements matching the specified key */
     size_type count(const key_type& x) const { return map.count(x); }
 
     /**
@@ -1604,6 +1605,9 @@ MultiDimArray_CalculateCopyIndicesBeginIter(const std::vector<uint32_t>& mema_di
                                             const std::vector<uint32_t>& mema_pos,
                                             const std::vector<uint32_t>& memb_dims,
                                             const std::vector<uint32_t>& memb_pos, const std::vector<uint32_t>& count);
+
+// Throws InvalidArgumentException if the element count of dims is larger than array_size
+ROBOTRACONTEUR_CORE_API void MultiDimArray_CheckArraySize(const std::vector<uint32_t>& dims, size_t array_size);
 } // namespace detail
 
 /**
@@ -1663,6 +1667,8 @@ class RRMultiDimArray : public RRMultiDimBaseArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, Array->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->Array->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -1691,6 +1697,8 @@ class RRMultiDimArray : public RRMultiDimBaseArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, Array->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->Array->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -1957,7 +1965,7 @@ class RRPodArray : public RRPodBaseArray
 
     /** @brief returns an iterator to the beginning */
     iterator begin() { return pod_array.begin(); }
-    /** @brief retuns an iterator to the beginning */
+    /** @brief returns an iterator to the beginning */
     const_iterator begin() const { return pod_array.begin(); }
     /** @brief returns an iterator to the end */
     iterator end() { return pod_array.end(); }
@@ -2101,6 +2109,8 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, PodArray->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->PodArray->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -2132,6 +2142,8 @@ class RRPodMultiDimArray : public RRPodBaseMultiDimArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, PodArray->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->PodArray->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -2420,7 +2432,7 @@ class RRNamedArray : public RRNamedBaseArray
     const_reference at(size_type i) const
     {
         rangecheck(i);
-        (static_cast<T*>(rr_array->void_ptr())[i]);
+        return (static_cast<T*>(rr_array->void_ptr())[i]);
     }
 
     /** @brief access the first element */
@@ -2438,7 +2450,7 @@ class RRNamedArray : public RRNamedBaseArray
     /** @brief returns the maximum possible number of elements */
     size_type max_size() { return size(); }
 
-    void rangecheck(size_type i)
+    void rangecheck(size_type i) const
     {
         if (i >= size())
         {
@@ -2516,6 +2528,8 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, NamedArray->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->NamedArray->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -2547,6 +2561,8 @@ class RRNamedMultiDimArray : public RRNamedBaseMultiDimArray
 
         std::vector<uint32_t> mema_dims = RRArrayToVector<uint32_t>(Dims);
         std::vector<uint32_t> memb_dims = RRArrayToVector<uint32_t>(buffer->Dims);
+        detail::MultiDimArray_CheckArraySize(mema_dims, NamedArray->size());
+        detail::MultiDimArray_CheckArraySize(memb_dims, buffer->NamedArray->size());
         RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
             detail::MultiDimArray_CalculateCopyIndicesBeginIter(mema_dims, memorypos, memb_dims, bufferpos, count);
 
@@ -3014,6 +3030,40 @@ bool try_convert_string_to_number(const U& arg, T& result)
 
     result = v;
 
+    return true;
+}
+
+// boost::lexical_cast and operator>> treat 8-bit integers as characters, so convert
+// through int32_t and check the range
+template <typename U>
+bool try_convert_string_to_number(const U& arg, int8_t& result)
+{
+    int32_t v = 0;
+    if (!try_convert_string_to_number(arg, v))
+    {
+        return false;
+    }
+    if (v < std::numeric_limits<int8_t>::min() || v > std::numeric_limits<int8_t>::max())
+    {
+        return false;
+    }
+    result = static_cast<int8_t>(v);
+    return true;
+}
+
+template <typename U>
+bool try_convert_string_to_number(const U& arg, uint8_t& result)
+{
+    int32_t v = 0;
+    if (!try_convert_string_to_number(arg, v))
+    {
+        return false;
+    }
+    if (v < 0 || v > std::numeric_limits<uint8_t>::max())
+    {
+        return false;
+    }
+    result = static_cast<uint8_t>(v);
     return true;
 }
 

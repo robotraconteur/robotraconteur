@@ -37,7 +37,7 @@ namespace RobotRaconteur
  * returned by function members with a parameter and/or return marked with the
  * generator container type. Robot Raconteur generators are modeled on Python generators,
  * and are intended to be used in two scenarios:
- * 1. Transfering large parameter values or return values that would be over the message
+ * 1. Transferring large parameter values or return values that would be over the message
  * transfer limit (typically around 10 MB).
  * 2. Long running operations that return updates or require periodic input. Generators
  * are used to implement functionality similar to "actions" in ROS.
@@ -418,7 +418,7 @@ class GeneratorClient : public Generator<Return, Param>, public GeneratorClientB
     RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                 int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
-        GeneratorClientBase::AsyncAbort(handler, timeout);
+        GeneratorClientBase::AsyncClose(handler, timeout);
     }
 };
 
@@ -455,7 +455,7 @@ class GeneratorClient<Return, void> : public Generator<Return, void>, public Gen
     RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                 int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
-        GeneratorClientBase::AsyncAbort(handler, timeout);
+        GeneratorClientBase::AsyncClose(handler, timeout);
     }
 };
 
@@ -496,7 +496,7 @@ class GeneratorClient<void, Param> : public Generator<void, Param>, public Gener
     RR_OVIRTUAL void AsyncClose(boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> handler,
                                 int32_t timeout = RR_TIMEOUT_INFINITE) RR_OVERRIDE
     {
-        GeneratorClientBase::AsyncAbort(handler, timeout);
+        GeneratorClientBase::AsyncClose(handler, timeout);
     }
 };
 

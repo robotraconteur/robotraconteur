@@ -34,15 +34,15 @@ class ROBOTRACONTEUR_ROBDEF_THUNK____com__robotraconteur__testing__TestService3_
 namespace com__robotraconteur__testing__TestService3Constants 
 {
 RR_GCC_DISABLE_WARNING("-Wunused-variable")
-    static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81";
+    static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\303\277 tabme\ttabme\n smile! \360\237\230\201";
     static const int32_t int32const=3856384;
     static const int32_t int32const_array[]={182476, 56483, -2947};
     static const int32_t int32hexconst=0x082bc7;
     static const int32_t int32hexconst2=-0x7264c17;
     static const int32_t int32hexconst_array[]={ 0x8274ec, -0x0001, +0xABCDEF, 0xabcdef, 0x012345, 0x6789 };
     static const double doubleconst_array[]={1.5847, 3.14, -548e3, 3452.67e2, 485e-21};
-    namespace structconst { static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81"; static const int32_t int32const_array[]={182476, 56483, -2947}; }
-    namespace structconst2 { namespace structconst { static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\xc3\xbf tabme\ttabme\n smile! \xf0\x9f\x98\x81"; static const int32_t int32const_array[]={182476, 56483, -2947}; } static const int32_t int32const=3856384; }
+    namespace structconst { static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\303\277 tabme\ttabme\n smile! \360\237\230\201"; static const int32_t int32const_array[]={182476, 56483, -2947}; }
+    namespace structconst2 { namespace structconst { static const char* strconst="This is a\n \"string constant\" \\/\b\f \r\303\277 tabme\ttabme\n smile! \360\237\230\201"; static const int32_t int32const_array[]={182476, 56483, -2947}; } static const int32_t int32const=3856384; }
     namespace testroot3
     {
     static const char* unknown_modifier_hello="hello world!";

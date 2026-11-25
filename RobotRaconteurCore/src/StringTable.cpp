@@ -264,8 +264,8 @@ void StringTable::MessageElementReplaceCodesWithStrings(const RR_INTRUSIVE_PTR<M
         {
             BOOST_FOREACH (RR_INTRUSIVE_PTR<MessageElement>& ee, sdat->Elements)
                 MessageElementReplaceCodesWithStrings(ee, local_table);
+            sdat->TypeName = e->ElementTypeName;
         }
-        sdat->TypeName = e->ElementTypeName;
         break;
     }
 
@@ -428,25 +428,7 @@ void StringTable::AddCodesCSV_p(const std::string& csv, const std::vector<uint32
     }
 }
 
-StringTable::~StringTable()
-{
-    // Diagnostic table dump
-
-    /*boost::posix_time::ptime n = boost::posix_time::microsec_clock::local_time();
-    std::string n1 = boost::posix_time::to_iso_string(n) + ".txt";
-
-    std::ofstream f(n1, std::ofstream::out);
-
-
-    typedef RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<StringTableEntry> >::value_type e_type;
-
-    BOOST_FOREACH(const e_type& e, code_table)
-    {
-        f << e.first << " " << e.second->value << std::endl;
-    }
-
-    f.close();*/
-}
+StringTable::~StringTable() {}
 
 std::vector<uint32_t> StringTable::GetTableFlags()
 {
@@ -458,15 +440,19 @@ std::vector<uint32_t> StringTable::GetTableFlags()
 void StringTable::SetTableFlags(std::vector<uint32_t> flags_)
 {
     boost::mutex::scoped_lock lock(this_lock);
+    uint32_t old_flags = flags;
     BOOST_FOREACH (uint32_t f, flags_)
     {
-        if ((f & TranspartCapabilityCode_PAGE_MASK) == TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE)
+        if ((f & TransportCapabilityCode_PAGE_MASK) == TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE)
         {
-            flags = (f & (~TranspartCapabilityCode_PAGE_MASK));
+            flags = (f & (~TransportCapabilityCode_PAGE_MASK));
         }
     }
 
-    if (flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE)
+    // The standard table entries are never removed, so only parse it when the flag is newly set
+    // (a peer can repeat CreateConnection on the same transport)
+    if ((flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE) &&
+        !(old_flags & TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE))
     {
         std::vector<uint32_t> table_flags;
         table_flags.push_back(TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE);

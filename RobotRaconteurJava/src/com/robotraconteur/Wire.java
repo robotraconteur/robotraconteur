@@ -38,9 +38,7 @@ public class Wire<T>
     protected void finalize() throws Throwable
     {
         if (innerwire instanceof WrappedWireServer)
-        {
-            //((WrappedWireServer)innerwire).setRR_Director(null);
-        }
+        {}
     }
 
     public final WireConnection connect()
@@ -356,9 +354,7 @@ public class Wire<T>
         }
 
         protected void finalize() throws Throwable
-        {
-            // innerwire.setRR_Director(null);
-        }
+        {}
 
         public final long getEndpoint()
         {
@@ -407,7 +403,7 @@ public class Wire<T>
 
         public final TimeSpec getLastValueSentTime()
         {
-            return innerwire.getLastValueReceivedTime();
+            return innerwire.getLastValueSentTime();
         }
 
         public final boolean getInValueValid()

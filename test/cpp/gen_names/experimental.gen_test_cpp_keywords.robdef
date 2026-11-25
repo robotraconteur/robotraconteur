@@ -1,0 +1,18 @@
+service experimental.gen_test_cpp_keywords
+
+stdver 0.10
+
+enum keyword_enum
+    constexpr = 0,
+    not_eq,
+    other
+end
+
+struct keyword_struct
+    field double constexpr
+    field int32 not_eq
+end
+
+object testobj
+    function double f(double not_eq)
+end

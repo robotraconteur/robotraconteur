@@ -4,6 +4,10 @@ classdef RobotRaconteurRate < handle
 	%    RobotRaconteur.CreateRate() to create rates.
 	%
 	%    See also RobotRaconteur.CreateRate
+	properties (Access = private)
+		id
+	end
+
 	methods
 		function obj=RobotRaconteurRate(frequency)
 			obj.id=RobotRaconteurMex('CreateRate',frequency);

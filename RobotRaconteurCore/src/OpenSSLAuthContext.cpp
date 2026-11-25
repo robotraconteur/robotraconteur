@@ -470,6 +470,7 @@ bool OpenSSLAuthContext::VerifyRemoteNodeCertificate(SSL* connection, const Node
     X509* cert = SSL_get_peer_certificate(connection);
     if (!cert)
         return false;
+    OpenSSLSupport::x509_cleanup cert_cleanup = {cert};
 
     boost::array<char, 256> buf = {};
     memset(buf.data(), 0, 256);

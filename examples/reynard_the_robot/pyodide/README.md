@@ -18,10 +18,10 @@ The Python pyodide service must be installed and running normally. Because Pyodi
 the "origin" must be added to allow for access. The "origin" for web sockets is the host URL that initiated
 the connection, excluding any file path or query. For this example, the origin is `http://localhost:8000`,
 since the page is served by `http`, the hostname is `localhost`, and the port is `8000`. Use the
-`--robotraconteur-tcp-ws-add-origin=` command line argument when starting the service:
+`--robotraconteur-tcp-ws-add-origins=` command line argument when starting the service:
 
 ```
-python -m reynard_the_robot --robotraconteur-tcp-ws-add-origin=http://localhost:8000
+python -m reynard_the_robot --robotraconteur-tcp-ws-add-origins=http://localhost:8000
 ```
 
 Now open another terminal, and navigate to the `examples/reynard_the_robot/pyodide` directory. Run:

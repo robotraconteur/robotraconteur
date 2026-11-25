@@ -30,7 +30,7 @@ namespace RobotRaconteur
 /// returned by function members with a parameter and/or return marked with the
 /// generator container type. Robot Raconteur generators are modeled on Python generators,
 /// and are intended to be used in two scenarios:
-/// 1. Transfering large parameter values or return values that would be over the message
+/// 1. Transferring large parameter values or return values that would be over the message
 /// transfer limit (typically around 10 MB).
 /// 2. Long running operations that return updates or require periodic input. Generators
 /// are used to implement functionality similar to "actions" in ROS.
@@ -136,7 +136,7 @@ public interface Generator1<ReturnType, ParamType>
 /// returned by function members with a parameter and/or return marked with the
 /// generator container type. Robot Raconteur generators are modeled on Python generators,
 /// and are intended to be used in two scenarios:
-/// 1. Transfering large parameter values or return values that would be over the message
+/// 1. Transferring large parameter values or return values that would be over the message
 /// transfer limit (typically around 10 MB).
 /// 2. Long running operations that return updates or require periodic input. Generators
 /// are used to implement functionality similar to "actions" in ROS.
@@ -241,7 +241,7 @@ public interface Generator2<ReturnType>
 /// returned by function members with a parameter and/or return marked with the
 /// generator container type. Robot Raconteur generators are modeled on Python generators,
 /// and are intended to be used in two scenarios:
-/// 1. Transfering large parameter values or return values that would be over the message
+/// 1. Transferring large parameter values or return values that would be over the message
 /// transfer limit (typically around 10 MB).
 /// 2. Long running operations that return updates or require periodic input. Generators
 /// are used to implement functionality similar to "actions" in ROS.
@@ -357,7 +357,7 @@ public abstract class SyncGenerator1<ReturnType, ParamType> : Generator1<ReturnT
     /// <remarks>None</remarks>
     public abstract void Close();
     /// <summary>
-    /// Abstract function te receive next requests
+    /// Abstract function to receive next requests
     /// </summary>
     /// <remarks>None</remarks>
     /// <param name="param">Next param</param>
@@ -418,7 +418,7 @@ public abstract class SyncGenerator2<ReturnType> : Generator2<ReturnType>
     /// <remarks>None</remarks>
     public abstract void Close();
     /// <summary>
-    /// Abstract function te receive next requests
+    /// Abstract function to receive next requests
     /// </summary>
     /// <remarks>None</remarks>
     /// <returns>Next return</returns>
@@ -493,7 +493,7 @@ public abstract class SyncGenerator3<ParamType> : Generator3<ParamType>
     /// <remarks>None</remarks>
     public abstract void Close();
     /// <summary>
-    /// Abstract function te receive next requests
+    /// Abstract function to receive next requests
     /// </summary>
     /// <remarks>None</remarks>
     /// <param name="param">Next param</param>
@@ -1057,7 +1057,6 @@ internal class AsyncGeneratorClientReturnDirectorImpl : AsyncGeneratorClientRetu
 
     public override void handler(WrappedGeneratorClient m, HandlerErrorInfo error)
     {
-        // using (m)
         {
             try
             {

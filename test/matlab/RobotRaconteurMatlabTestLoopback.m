@@ -13,6 +13,7 @@ try
 
     RobotRaconteurMatlabTest(url1)
     RobotRaconteurMatlabTest2(url2)
+    RobotRaconteurMatlabRateTest()
     try
     lib.Shutdown()
     catch
@@ -32,3 +33,13 @@ catch e
     clear lib
     quit(1)
 end
+
+    RobotRaconteurMatlabWarnFormatTest(url2)
+
+    RobotRaconteurMatlabSubscriptionClientTest(url2)
+
+    RobotRaconteurMatlabTimeoutTest(url2)
+
+    RobotRaconteurMatlabMemoryWriteDimsTest(url2)
+
+    RobotRaconteurMatlabObjRefTest(url2)

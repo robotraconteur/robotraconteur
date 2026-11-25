@@ -299,3 +299,49 @@ def test_subscribe_by_url_bad_url():
 
         sub.ClientConnectFailed -= connect_err_handler
         time.sleep(0.1)
+
+
+def test_subscribe_by_type_update_keeps_matching_client():
+
+    test_servers = {
+        "server1": RR.NodeID("0d694574-1ad8-4b9e-9aea-e881524fb451")
+    }
+
+    client_node = RR.RobotRaconteurNode()
+    client_node.Init()
+
+    client_node_setup = RR.RobotRaconteurNodeSetup(
+        "", 0, flags=intra_client_flags, node=client_node)
+
+    server1 = _testservice_impl("server1", test_servers["server1"])
+
+    with client_node_setup, server1:
+        sub = client_node.SubscribeServiceByType(
+            "experimental.sub_test.testobj")
+        sub.ConnectRetryDelay = 1
+        c = sub.GetDefaultClientWait(5)
+        assert c.add_two_numbers(1, 2) == 3
+
+        # Same type: the connected client still matches and must stay tracked by the subscription
+        sub.UpdateServiceByType("experimental.sub_test.testobj")
+        time.sleep(0.5)
+
+        # A tracked client is reconnected after its connection is lost
+        client_node.DisconnectService(c)
+
+        reconnected = False
+        t_end = time.time() + 10
+        while time.time() < t_end:
+            res, c2 = sub.TryGetDefaultClientWait(0.5)
+            if res:
+                try:
+                    if c2.add_two_numbers(3, 4) == 7:
+                        reconnected = True
+                        break
+                except Exception:
+                    # Still the closed client
+                    pass
+            time.sleep(0.1)
+        assert reconnected
+
+        sub.Close()

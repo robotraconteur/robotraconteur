@@ -1,0 +1,7 @@
+service experimental.gen_test_cpp_async_names
+
+stdver 0.10
+
+object testobj
+    property double delete
+end

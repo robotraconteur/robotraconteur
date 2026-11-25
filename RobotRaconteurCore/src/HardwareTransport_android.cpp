@@ -95,7 +95,6 @@ int32_t AndroidHardwareHelper::ConnectBluetooth_success(const RR_SHARED_PTR<Andr
         RR_MAKE_SHARED<HardwareTransportConnection_bluetooth>(p->parent, false, p->endpoint);
     c->AsyncAttachSocket(sock, p->noden, boost::bind(p->handler, c, RR_BOOST_PLACEHOLDERS(_1)));
 
-    std::cout << "Got a connection success" << std::endl;
     return fds[1];
 }
 

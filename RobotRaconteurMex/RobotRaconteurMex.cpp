@@ -50,8 +50,6 @@ void rrAtExit()
         {}
         catch (...)
         {}
-        // mexPrintf("Unload!\n");
-        // boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
     }
 }
 
@@ -95,6 +93,8 @@ std::string mxToString(const mxArray* str)
             return "";
 
         char* str1 = mxArrayToString(str);
+        if (!str1)
+            throw DataTypeException("Failed to convert MATLAB string");
         std::string str2(str1);
         mxFree(str1);
         return str2;
@@ -125,10 +125,15 @@ RR_INTRUSIVE_PTR<RRArray<char> > mxToStringRRArray(const mxArray* str)
                 throw DataTypeException("1xN string expected");
         }
 
-        char* str1 = mxArrayToString(str);
-        RR_INTRUSIVE_PTR<RRArray<char> > str2 = AttachRRArrayCopy<char>(str1, mxGetNumberOfElements(str));
-        mxFree(str1);
-        return str2;
+        // mxChar is UTF-16. Convert to UTF-8 for the wire; mxArrayToString uses the platform's
+        // default encoding and its result is not mxGetNumberOfElements bytes long
+        const mxChar* str1 = mxGetChars(str);
+        if (!str1)
+            throw DataTypeException("Failed to convert MATLAB string");
+        const char16_t* str1_begin = reinterpret_cast<const char16_t*>(str1);
+        std::string str_utf8 =
+            boost::locale::conv::utf_to_utf<char>(str1_begin, str1_begin + mxGetNumberOfElements(str));
+        return stringToRRArray(str_utf8);
     }
 
     if (mxIsClass(str, "string"))
@@ -216,7 +221,9 @@ int32_t mxToTimeout(const mxArray* val)
         if (::mxGetNumberOfElements(val) != 1)
             throw InvalidArgumentException("Timeout must be a scalar");
         double p1 = ((double*)mxGetData(val))[0] * 1000;
-        return boost::lexical_cast<int32_t>(p1);
+        if (!(p1 == p1))
+            throw InvalidArgumentException("Timeout must not be NaN");
+        return boost::numeric_cast<int32_t>(p1);
     }
     else if (mxIsInt32(val))
     {
@@ -240,7 +247,9 @@ int32_t mxToTimeoutAdjusted(const mxArray* val)
         double p1 = ((double*)mxGetData(val))[0];
         if (p1 < 0)
             return -1;
-        return boost::lexical_cast<int32_t>(p1) * 1000;
+        if (!(p1 == p1))
+            throw InvalidArgumentException("Timeout must not be NaN");
+        return boost::numeric_cast<int32_t>(p1 * 1000);
     }
     else if (mxIsInt32(val))
     {
@@ -832,8 +841,6 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                     mxSetCell(o2, i, mxCreateString(types.at(i).c_str()));
                 }
                 plhs[0] = o2;
-                // std::string type=o->RR_objecttype->ServiceDefinition_.lock()->Name + "." + o->RR_objecttype->Name;
-                // plhs[0]= mxCreateString(type.c_str());
             }
             else
                 throw InvalidArgumentException("Unknown RobotRaconteur object type");
@@ -862,8 +869,6 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
                 std::string def = RobotRaconteurNode::s()->GetPulledServiceType(o, type)->DefString();
                 mxArray* o2 = mxCreateString(def.c_str());
                 plhs[0] = o2;
-                // std::string type=o->RR_objecttype->ServiceDefinition_.lock()->Name + "." + o->RR_objecttype->Name;
-                // plhs[0]= mxCreateString(type.c_str());
             }
             else
                 throw InvalidArgumentException("Unknown RobotRaconteur object type");
@@ -1080,7 +1085,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
             RR_SHARED_PTR<RobotRaconteur::Rate> r = RobotRaconteur::RobotRaconteurNode::s()->CreateRate(rate);
             rates.insert(std::make_pair(rate_count, r));
             mxArray* ret = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
-            ((int32_t*)(mxGetData(prhs[1])))[0] = rate_count;
+            ((int32_t*)(mxGetData(ret)))[0] = rate_count;
             plhs[0] = ret;
             return;
         }
@@ -1097,7 +1102,9 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[])
             RR_SHARED_PTR<RobotRaconteur::Rate> r;
             {
                 boost::recursive_mutex::scoped_lock lock(rate_lock);
-                r = rates.at(id);
+                std::map<int32_t, RR_SHARED_PTR<RobotRaconteur::Rate> >::iterator e = rates.find(id);
+                if (e != rates.end())
+                    r = e->second;
             }
 
             if (!r)
@@ -2481,7 +2488,6 @@ class PackMxArrayToMessageElementImpl
                     array_type->ArrayLength.clear();
                     array_type->ArrayVarLength = true;
                     array_type->Name = "array";
-                    // type1->Name = "real";
 
                     map_vec.push_back(
                         CreateMessageElement("array", PackMxArrayToMessageElement_pod(pm, array_type, stub)));
@@ -2726,6 +2732,8 @@ class UnpackMessageElementToMxArrayImpl
             throw DataTypeException("Invalid pod type");
 
         RR_INTRUSIVE_PTR<MessageElementNestedElementList> l = element->CastDataToNestedList(DataTypes_pod_array_t);
+        if (!l)
+            throw DataTypeException("Invalid pod array");
 
         RR_SHARED_PTR<TypeDefinition> type2;
 
@@ -2793,6 +2801,8 @@ class UnpackMessageElementToMxArrayImpl
             }
 
             RR_INTRUSIVE_PTR<MessageElementNestedElementList> s = el1->CastDataToNestedList(DataTypes_pod_t);
+            if (!s)
+                throw DataTypeException("Invalid pod array");
 
             std::vector<RR_SHARED_PTR<ServiceDefinition> > empty_defs;
 
@@ -3215,10 +3225,7 @@ class UnpackMessageElementToMxArrayImpl
                         mxArray* mxkey = mxCreateString(key1.c_str());
                         mxSetFieldByNumber(subs, 0, 1, mxkey);
 
-                        // mxSetCell(k,count,mxkey);
-
                         mxArray* mxdata = UnpackMessageElementToMxArray(el1, type2, stub);
-                        // mxSetCell(v,count,mxdata);
 
                         mxArray* prhs2[3];
                         prhs2[0] = o;
@@ -3335,10 +3342,7 @@ class UnpackMessageElementToMxArrayImpl
                     mxArray* mxkey = mxCreateString(key1.c_str());
                     mxSetFieldByNumber(subs, 0, 1, mxkey);
 
-                    // mxSetCell(k,count,mxkey);
-
                     mxArray* mxdata = UnpackMessageElementToMxArray(e, tdef2, stub);
-                    // mxSetCell(v,count,mxdata);
 
                     mxArray* prhs2[3];
                     prhs2[0] = o;
@@ -3412,13 +3416,11 @@ class UnpackMessageElementToMxArrayImpl
                 {
                     if (tdef->ArrayVarLength)
                     {
-                        // if (data)
                         if (data->size() > tdef->ArrayLength.at(0))
                             throw DataTypeException("Array exceeds maximum length");
                     }
                     else
                     {
-                        // if (!data) throw DataTypeException("Array " + tdef->Name + " must not be null");
                         if (data->size() != tdef->ArrayLength.at(0))
                             throw DataTypeException("Array length mismatch");
                     }
@@ -3438,6 +3440,8 @@ class UnpackMessageElementToMxArrayImpl
                     MessageElement::FindElement(a->Elements, "dims")->CastData<RRArray<uint32_t> >());
                 RR_INTRUSIVE_PTR<RRBaseArray> array =
                     MessageElement::FindElement(a->Elements, "array")->CastData<RRBaseArray>();
+                if (!array)
+                    throw DataTypeException("Invalid MultiDimArray");
 
                 if (!tdef->ArrayVarLength)
                 {
@@ -3924,7 +3928,6 @@ MexServiceStub::MexServiceStub(boost::string_ref path, const RR_SHARED_PTR<Servi
 {
     RR_objecttype = type;
     stubid = 0;
-    // stubptr=NULL;
     EnableEvents = false;
     eventconnections_count = 10;
 }
@@ -4173,8 +4176,6 @@ void MexServiceStub::PropertySet(const std::string& PropertyName, const mxArray*
 
 mxArray* CreateGeneratorClientMxArray(int32_t id)
 {
-    // boost::recursive_mutex::scoped_lock lock(pipeendpoints_lock);
-    // pipeendpoints_count++;
     mxArray* lhs[1];
     mxArray* rhs[2];
     rhs[0] = CreateInt32Scalar(RR_MEX_GENERATOR_CLIENT);
@@ -4444,11 +4445,26 @@ void MexServiceStub::EndAsyncFunctionCall(const RR_INTRUSIVE_PTR<MessageEntry>& 
     async_results.push(ares);
 }
 
+// Requests, events and callback calls are queued until the MATLAB script calls ProcessRequests. Bound the
+// queues so a remote peer cannot grow them without limit while MATLAB is busy.
+static const size_t MEX_MAX_QUEUED_REQUESTS = 1024;
+
+static void MexServiceSkel_CheckRequestQueue(size_t queued)
+{
+    if (queued >= MEX_MAX_QUEUED_REQUESTS)
+        throw OperationFailedException("MATLAB service request queue full");
+}
+
 void MexServiceStub::DispatchEvent(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
     if (!EnableEvents)
         return;
     boost::recursive_mutex::scoped_lock lock2(events_lock);
+    if (events.size() >= MEX_MAX_QUEUED_REQUESTS)
+    {
+        // Drop the oldest event rather than growing the queue without bound
+        events.pop_front();
+    }
     events.push_back(m);
 
     // throw MemberNotFoundException("Event member not found");
@@ -4526,8 +4542,6 @@ RR_SHARED_PTR<WireClientBase> MexServiceStub::RRGetWireClient(boost::string_ref 
 
 mxArray* CreatePipeEndpointMxArray(int32_t id)
 {
-    // boost::recursive_mutex::scoped_lock lock(pipeendpoints_lock);
-    // pipeendpoints_count++;
     mxArray* lhs[1];
     mxArray* rhs[2];
     rhs[0] = CreateInt32Scalar(RR_MEX_PIPE_ENDPOINT);
@@ -4542,8 +4556,6 @@ mxArray* CreatePipeEndpointMxArray(int32_t id)
 
 mxArray* CreateWireConnectionMxArray(int32_t id)
 {
-    // boost::recursive_mutex::scoped_lock lock(pipeendpoints_lock);
-    // pipeendpoints_count++;
     mxArray* lhs[1];
     mxArray* rhs[2];
     rhs[0] = CreateInt32Scalar(RR_MEX_WIRE_CONNECTION);
@@ -4611,7 +4623,6 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, 2));
             }
 
-            // mexPrintf("async_get: %s\n",membername.c_str());
             RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args, 0)), rr_mxDestroyArray);
             RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args, 1)), rr_mxDestroyArray);
 
@@ -4647,7 +4658,6 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, 3));
             }
 
-            // mexPrintf("async_get: %s\n",membername.c_str());
             RR_SHARED_PTR<mxArray> handler(mxDuplicateArray(mxGetCell(cell_args, 1)), rr_mxDestroyArray);
             RR_SHARED_PTR<mxArray> param(mxDuplicateArray(mxGetCell(cell_args, 2)), rr_mxDestroyArray);
 
@@ -4687,7 +4697,6 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 timeout = mxToTimeoutAdjusted(mxGetCell(cell_args, pcount + 2));
             }
 
-            // mexPrintf("async_get: %s\n",membername.c_str());
             std::vector<const mxArray*> params;
             for (size_t i = 0; i < pcount; i++)
             {
@@ -4845,6 +4854,14 @@ mxArray* MexServiceStub::subsref(const mxArray* S)
                 throw InvalidArgumentException("Could not get objref");
 
             boost::recursive_mutex::scoped_lock lock(stubs_lock);
+            // FindObjRef returns the same stub for the same path. Reuse its id and MATLAB object
+            // instead of inserting the stub into stubs again under a new id
+            if (ostub->stubptr && ostub->stubid != 0)
+            {
+                std::map<int32_t, boost::shared_ptr<MexServiceStub> >::iterator e_stub = stubs.find(ostub->stubid);
+                if (e_stub != stubs.end() && e_stub->second == ostub)
+                    return mxDuplicateArray(ostub->stubptr.get());
+            }
             do
             {
                 stubcount++;
@@ -5133,12 +5150,22 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceStub::CallbackCall(const RR_INTRUSIVE_P
             throw InvalidOperationException("MATLAB callback function not set");
         }
 
+        if (callback_requests.size() >= MEX_MAX_QUEUED_REQUESTS)
+            throw OperationFailedException("MATLAB callback request queue full");
         callback_requests.push_back(req);
     }
     req->ev.WaitOne(10000);
 
     if (!req->response)
+    {
+        // Do not run a callback call that already timed out later
+        boost::recursive_mutex::scoped_lock lock(callback_lock);
+        std::deque<boost::shared_ptr<MexCallbackCall> >::iterator e2 =
+            std::find(callback_requests.begin(), callback_requests.end(), req);
+        if (e2 != callback_requests.end())
+            callback_requests.erase(e2);
         throw OperationFailedException("Callback was not called");
+    }
 
     return req->response;
 }
@@ -5203,7 +5230,7 @@ void MexServiceStub::MexProcessRequests()
                             mxArray* ret = NULL;
                             if ((ret = ::mexCallMATLABWithTrap(0, NULL, (int)args2.size(), &args2[0], "feval")))
                             {
-                                ::mexWarnMsgIdAndTxt(mxToString(mxGetProperty(ret, 0, "identifier")).c_str(),
+                                ::mexWarnMsgIdAndTxt(mxToString(mxGetProperty(ret, 0, "identifier")).c_str(), "%s",
                                                      mxToString(mxGetProperty(ret, 0, "message")).c_str());
                             }
                         }
@@ -5383,7 +5410,7 @@ void MexServiceStub::MexProcessRequests()
                 mxArray* ret = NULL;
                 if ((ret = ::mexCallMATLABWithTrap(0, NULL, (int)plhs.size(), &plhs[0], "feval")))
                 {
-                    ::mexWarnMsgIdAndTxt(mxToString(mxGetProperty(ret, 0, "identifier")).c_str(),
+                    ::mexWarnMsgIdAndTxt(mxToString(mxGetProperty(ret, 0, "identifier")).c_str(), "%s",
                                          mxToString(mxGetProperty(ret, 0, "message")).c_str());
                 }
             }
@@ -5448,7 +5475,6 @@ void MexServiceStub::deletelistener(const mxArray* eventid)
     boost::recursive_mutex::scoped_lock lock(eventconnections_lock);
     if (eventconnections.find(ieventid) != eventconnections.end())
     {
-        // mxDestroyArray(eventconnections.at(ieventid)->functionhandle);
         eventconnections.erase(ieventid);
     }
     else
@@ -5867,7 +5893,7 @@ mxArray* MexServiceStub::MemoryOp(const mxArray* member, const mxArray* command,
                         {
                             if (!(i == 0 && named_mem))
                             {
-                                count.push_back(((mwSize*)::mxGetDimensions(data))[0]);
+                                count.push_back(((mwSize*)::mxGetDimensions(data))[i]);
                             }
                         }
                     }
@@ -6017,7 +6043,7 @@ mxArray* ConnectClient(const mxArray* url, const mxArray* username, const mxArra
 
     if (s->stubptr != NULL)
     {
-        return s->stubptr.get();
+        return mxDuplicateArray(s->stubptr.get());
     }
     else
     {
@@ -7126,7 +7152,7 @@ mxArray* ServiceInfo2ToMxArray(const ServiceInfo2& info)
     mxArray* RootObjectImplements = mxCreateCellMatrix(info.RootObjectImplements.size(), 1);
     for (size_t j = 0; j < info.RootObjectImplements.size(); j++)
     {
-        mxSetCell(RootObjectImplements, 0, mxCreateString(info.RootObjectImplements[j].c_str()));
+        mxSetCell(RootObjectImplements, j, mxCreateString(info.RootObjectImplements[j].c_str()));
     }
     mxSetField(serviceinfo, 0, "RootObjectImplements", RootObjectImplements);
 
@@ -7311,6 +7337,9 @@ constant_type convert_constant(const RR_SHARED_PTR<ConstantDefinition>& c1,
     {
         if (def->ArrayType != DataTypes_ArrayTypes_multidimarray)
         {
+            // The value is evaluated as MATLAB code below. Only allow numeric literals.
+            if (!c1->VerifyValue())
+                throw InvalidArgumentException("Invalid constant value");
             boost::shared_ptr<TypeDefinition> def2 = def->Clone();
             def2->Name = "";
             def2->RemoveContainers();
@@ -7573,6 +7602,8 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallGetProperty(const RR_INTRUSIV
     if (!found)
         throw MemberNotFoundException("Property " + m->MemberName.str() + " not found");
 
+    MexServiceSkel_CheckRequestQueue(property_get_requests.size() + property_set_requests.size() +
+                                     function_requests.size());
     property_get_requests.push_back(boost::make_tuple(m, ServerEndpoint::GetCurrentEndpoint()));
     skels_waiting.Set();
     return RR_INTRUSIVE_PTR<MessageEntry>();
@@ -7595,6 +7626,8 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallSetProperty(const RR_INTRUSIV
     if (!found)
         throw MemberNotFoundException("Property " + m->MemberName.str() + " not found");
 
+    MexServiceSkel_CheckRequestQueue(property_get_requests.size() + property_set_requests.size() +
+                                     function_requests.size());
     property_set_requests.push_back(boost::make_tuple(m, ServerEndpoint::GetCurrentEndpoint()));
     skels_waiting.Set();
     return RR_INTRUSIVE_PTR<MessageEntry>();
@@ -7617,6 +7650,8 @@ RR_INTRUSIVE_PTR<MessageEntry> MexServiceSkel::CallFunction(const RR_INTRUSIVE_P
     if (!found)
         throw MemberNotFoundException("Function " + m->MemberName.str() + " not found");
 
+    MexServiceSkel_CheckRequestQueue(property_get_requests.size() + property_set_requests.size() +
+                                     function_requests.size());
     function_requests.push_back(boost::make_tuple(m, ServerEndpoint::GetCurrentEndpoint()));
     skels_waiting.Set();
     return RR_INTRUSIVE_PTR<MessageEntry>();
@@ -7755,7 +7790,6 @@ void MexServiceSkel::ProcessRequests()
                 std::vector<mxArray*> args2;
                 args2.push_back(obj->mxobj.get());
                 args2.push_back(S);
-                // args2.push_back(val);
 
                 mxArray* ret2 = NULL;
                 mxArray* mxret = NULL;
@@ -7768,7 +7802,6 @@ void MexServiceSkel::ProcessRequests()
                     throw OperationFailedException(errmsg);
                 }
 
-                // mxArray* mxret=mxGetProperty(obj->mxobj.get(),0,pg.get<0>()->MemberName.c_str());
                 ret = PackMxArrayToMessageElement(mxret, def->Type, RR_SHARED_PTR<ServiceStub>());
 
                 EndAsyncCallGetProperty(shared_from_this(), ret, boost::shared_ptr<RobotRaconteurException>(),
@@ -7833,8 +7866,6 @@ void MexServiceSkel::ProcessRequests()
                     ::mexWarnMsgTxt(errmsg.c_str());
                     throw OperationFailedException(errmsg);
                 }
-
-                // mxSetProperty(obj->mxobj.get(),0,ps.get<0>()->MemberName.c_str(),val);
 
                 EndAsyncCallSetProperty(shared_from_this(), boost::shared_ptr<RobotRaconteurException>(), ps.get<0>(),
                                         ps.get<1>());
@@ -8305,7 +8336,7 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -8343,7 +8374,7 @@ mxArray* MexServiceSubscription::subsref(const mxArray* S)
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -8419,7 +8450,7 @@ mxArray* MexServiceSubscription::GetConnectedClients()
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -8922,7 +8953,7 @@ mxArray* MexSubObjectSubscription::subsref(const mxArray* S)
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -8960,7 +8991,7 @@ mxArray* MexSubObjectSubscription::subsref(const mxArray* S)
 
         if (stub->stubptr != NULL)
         {
-            mxStub = stub->stubptr.get();
+            mxStub = mxDuplicateArray(stub->stubptr.get());
         }
         else
         {
@@ -9133,19 +9164,19 @@ static boost::shared_ptr<ServiceSubscriptionFilter> SubscribeService_LoadFilter(
             boost::to_lower(attributes_op);
             if (attributes_op == "and")
             {
-                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_OR;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_AND;
             }
             else if (attributes_op == "or")
             {
-                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_AND;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_OR;
             }
             else if (attributes_op == "nand")
             {
-                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NOR;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NAND;
             }
             else if (attributes_op == "nor")
             {
-                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NAND;
+                filter2->AttributesMatchOperation = ServiceSubscriptionFilterAttributeGroupOperation_NOR;
             }
             else
             {
@@ -9426,12 +9457,12 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
         if (mxGetNumberOfElements(cell_args) == 0)
         {
             if (param_type)
-                throw "GeneratorClient Next expects a parameter";
+                throw InvalidArgumentException("GeneratorClient Next expects a parameter");
         }
         else if (mxGetNumberOfElements(cell_args) == 1)
         {
             if (!param_type)
-                throw "GeneratorClient Next does not expect a parameter";
+                throw InvalidArgumentException("GeneratorClient Next does not expect a parameter");
             param = PackMxArrayToMessageElement(mxGetCell(cell_args, 0), param_type, GetStub());
         }
         else
@@ -9464,12 +9495,12 @@ mxArray* MexGeneratorClient::subsref(const mxArray* S)
         if (mxGetNumberOfElements(cell_args) == 0)
         {
             if (param_type)
-                throw "GeneratorClient TryNext expects a parameter";
+                throw InvalidArgumentException("GeneratorClient TryNext expects a parameter");
         }
         else if (mxGetNumberOfElements(cell_args) == 1)
         {
             if (!param_type)
-                throw "GeneratorClient TryNext does not expect a parameter";
+                throw InvalidArgumentException("GeneratorClient TryNext does not expect a parameter");
             param = PackMxArrayToMessageElement(mxGetCell(cell_args, 0), param_type, GetStub());
         }
         else
@@ -9826,20 +9857,66 @@ MexPodMultiDimArrayMemoryClient::MexPodMultiDimArrayMemoryClient(const std::stri
 {
     this->type = type;
 }
+struct MexPodMultiDimArrayMemoryClient_buffer
+{
+    std::vector<uint32_t> dims;
+    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer;
+};
+
+// Copy pod elements between the full buffer (a) and a transfer block (b), renumbering the
+// elements when they move to a different index (pod arrays require element number == index)
+static void MexPodMultiDimArrayMemoryClient_CopyElements(const std::vector<RR_INTRUSIVE_PTR<MessageElement> >& src,
+                                                         std::vector<RR_INTRUSIVE_PTR<MessageElement> >& dest,
+                                                         const std::vector<uint32_t>& buffer_dims,
+                                                         const std::vector<uint64_t>& bufferpos,
+                                                         const std::vector<uint64_t>& count, bool buffer_to_block)
+{
+    std::vector<uint32_t> zero_dims(count.size());
+    std::vector<uint32_t> bufferpos1 = detail::ConvertVectorType<uint32_t>(bufferpos);
+    std::vector<uint32_t> count1 = detail::ConvertVectorType<uint32_t>(count);
+
+    // NOLINTNEXTLINE(readability-suspicious-call-argument)
+    RR_SHARED_PTR<detail::MultiDimArray_CalculateCopyIndicesIter> iter =
+        // NOLINTNEXTLINE(readability-suspicious-call-argument)
+        detail::MultiDimArray_CalculateCopyIndicesBeginIter(buffer_dims, bufferpos1, count1, zero_dims, count1);
+
+    uint32_t len = 0;
+    uint32_t indexa = 0;
+    uint32_t indexb = 0;
+
+    while (iter->Next(indexa, indexb, len))
+    {
+        for (uint32_t j = 0; j < len; j++)
+        {
+            uint32_t src_i = buffer_to_block ? (indexa + j) : (indexb + j);
+            uint32_t dest_i = buffer_to_block ? (indexb + j) : (indexa + j);
+            RR_INTRUSIVE_PTR<MessageElement> el = src.at(src_i);
+            if (src_i != dest_i)
+            {
+                el = ShallowCopyMessageElement(el);
+                MessageElement_SetElementNumber(el, boost::numeric_cast<int32_t>(dest_i));
+            }
+            dest.at(dest_i) = el;
+        }
+    }
+}
+
 mxArray* MexPodMultiDimArrayMemoryClient::Read(const std::vector<uint64_t>& memorypos,
                                                const std::vector<uint64_t>& bufferpos,
                                                const std::vector<uint64_t>& count)
 {
     uint64_t elemcount = boost::accumulate(count, 1, std::multiplies<uint64_t>());
 
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer(elemcount);
+    MexPodMultiDimArrayMemoryClient_buffer buffer;
+    buffer.dims = detail::ConvertVectorType<uint32_t>(count);
+    buffer.buffer.resize(elemcount);
 
     ReadBase(memorypos, &buffer, bufferpos, count);
 
     std::vector<mwSize> mx_dims = detail::ConvertVectorType<mwSize>(count);
 
     RR_INTRUSIVE_PTR<MessageElement> m = CreateMessageElement(
-        "array", CreateMessageElementNestedElementList(DataTypes_pod_array_t, type->TypeString, buffer));
+        "array", CreateMessageElementNestedElementList(DataTypes_pod_array_t, type->TypeString, buffer.buffer));
 
     mxArray* mx_buffer = UnpackMessageElementToMxArray_pod(m, type, GetStub());
 
@@ -9855,7 +9932,10 @@ void MexPodMultiDimArrayMemoryClient::Write(const std::vector<uint64_t>& memoryp
 {
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> buffer2 =
         PackMxArrayToMessageElement_pod(buffer, type, GetStub());
-    WriteBase(memorypos, &buffer2->Elements, bufferpos, count);
+    MexPodMultiDimArrayMemoryClient_buffer buffer3;
+    buffer3.dims = detail::ConvertVectorType<uint32_t>(count);
+    buffer3.buffer = buffer2->Elements;
+    WriteBase(memorypos, &buffer3, bufferpos, count);
 }
 std::vector<uint64_t> MexPodMultiDimArrayMemoryClient::Dimensions()
 {
@@ -9874,7 +9954,7 @@ void MexPodMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Me
     RR_INTRUSIVE_PTR<MessageElementNestedElementList> array =
         MessageElement::FindElement(res2->Elements, "array")->CastDataToNestedList(DataTypes_pod_array_t);
 
-    if (array->Elements.empty())
+    if (!array || array->Elements.size() != elemcount)
     {
         throw InvalidOperationException("Invalid memory read return");
     }
@@ -9887,43 +9967,19 @@ void MexPodMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<Me
     if (count.empty())
         throw InvalidOperationException("Invalid read operation");
 
-    std::vector<uint64_t> stride(count.size());
-    stride[0] = 1;
-    size_t start_ind = bufferpos.at(0);
-    for (size_t i = 1; i < stride.size(); i++)
-    {
-        stride[i] = count[i - 1] * stride[i - 1];
-        start_ind += stride[i] * bufferpos.at(i);
-    }
+    MexPodMultiDimArrayMemoryClient_buffer* buffer2 = static_cast<MexPodMultiDimArrayMemoryClient_buffer*>(buffer);
 
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> >* buffer2 =
-        static_cast<std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
-
-    for (size_t i = 0; i < elemcount; i++)
-    {
-        buffer2->at(i + start_ind) = array->Elements.at(i);
-    }
+    MexPodMultiDimArrayMemoryClient_CopyElements(array->Elements, buffer2->buffer, buffer2->dims, bufferpos, count,
+                                                 false);
 }
 RR_INTRUSIVE_PTR<MessageElementData> MexPodMultiDimArrayMemoryClient::PackWriteRequest(
     const void* buffer, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count, uint64_t elemcount)
 {
-    std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer2 =
-        *static_cast<const std::vector<RR_INTRUSIVE_PTR<MessageElement> >*>(buffer);
-
-    std::vector<uint64_t> stride(count.size());
-    stride[0] = 1;
-    size_t start_ind = bufferpos.at(0);
-    for (size_t i = 1; i < stride.size(); i++)
-    {
-        stride[i] = count[i - 1] * stride[i - 1];
-        start_ind += stride[i] * bufferpos.at(i);
-    }
+    const MexPodMultiDimArrayMemoryClient_buffer* buffer2 =
+        static_cast<const MexPodMultiDimArrayMemoryClient_buffer*>(buffer);
 
     std::vector<RR_INTRUSIVE_PTR<MessageElement> > buffer3(elemcount);
-    for (size_t i = 0; i < elemcount; i++)
-    {
-        buffer3.at(i + start_ind) = buffer2.at(i);
-    }
+    MexPodMultiDimArrayMemoryClient_CopyElements(buffer2->buffer, buffer3, buffer2->dims, bufferpos, count, true);
 
     std::vector<boost::shared_ptr<ServiceDefinition> > other_defs;
     std::string qualified_name =
@@ -10123,6 +10179,14 @@ void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<
     RR_INTRUSIVE_PTR<RRBaseArray> rr_array =
         MessageElement::FindElement(array->Elements, "array")->CastData<RRBaseArray>();
 
+    if (!rr_array)
+        throw InvalidOperationException("Invalid memory read return");
+    if (rr_array->GetTypeID() != array_elementtype)
+        throw InvalidOperationException("Invalid memory read return");
+    uint64_t count_elems = boost::accumulate(count, static_cast<uint64_t>(1), std::multiplies<uint64_t>());
+    if (rr_array->size() != count_elems * array_elementcount)
+        throw InvalidOperationException("Invalid memory read return");
+
     MexNamedMultiDimArrayMemoryClient_buffer* buffer3 = static_cast<MexNamedMultiDimArrayMemoryClient_buffer*>(buffer);
     std::vector<uint32_t>& mema_dims = buffer3->dims;
 
@@ -10141,8 +10205,8 @@ void MexNamedMultiDimArrayMemoryClient::UnpackReadResult(const RR_INTRUSIVE_PTR<
 
     while (iter->Next(indexa, indexb, len))
     {
-        memcpy((((uint8_t*)buffer3->buffer->void_ptr()) + indexb * element_size),
-               (((uint8_t*)rr_array->void_ptr()) + indexa * element_size), len * element_size);
+        memcpy((((uint8_t*)buffer3->buffer->void_ptr()) + indexa * element_size),
+               (((uint8_t*)rr_array->void_ptr()) + indexb * element_size), len * element_size);
     }
 }
 RR_INTRUSIVE_PTR<MessageElementData> MexNamedMultiDimArrayMemoryClient::PackWriteRequest(

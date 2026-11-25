@@ -94,7 +94,7 @@ public class WireSubscription<T>
 
     public boolean waitInValueValid(int timeout)
     {
-        return _subscription.waitInValueValid();
+        return _subscription.waitInValueValid(timeout);
     }
 
     public boolean getIgnoreInValue()

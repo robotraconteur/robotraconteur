@@ -481,6 +481,7 @@ void BrowserWebSocketTransportConnection::AsyncConnect1()
     boost::function<void(RR_SHARED_PTR<RobotRaconteurException>)> active_connect_handler1 = active_connect_handler;
     active_connect_handler.clear();
 
+    bool attach_started = false;
     try
     {
         std::string noden;
@@ -501,10 +502,20 @@ void BrowserWebSocketTransportConnection::AsyncConnect1()
 
         parent1->register_transport(shared_from_this());
 
+        // AsyncAttachStream reports its own errors to the handler
+        attach_started = true;
         ASIOStreamBaseTransport::AsyncAttachStream(server, target_nodeid, target_nodename, active_connect_handler1);
     }
     catch (std::exception& exp)
     {
+        if (!attach_started && active_connect_handler1)
+        {
+            // Complete the connect attempt instead of leaving it pending forever
+            RobotRaconteurNode::TryPostToThreadPool(
+                node, boost::bind(active_connect_handler1, RR_MAKE_SHARED<ConnectionException>(exp.what())));
+            Close();
+            return;
+        }
         RobotRaconteurNode::TryHandleException(node, &exp);
     }
 }
@@ -547,11 +558,18 @@ void BrowserWebSocketTransportConnection::Close()
         return;
     closing = true;
 
+    // Keep this connection alive until Close returns; the map entry may hold the last reference
+    RR_SHARED_PTR<BrowserWebSocketTransportConnection> this_ =
+        RR_STATIC_POINTER_CAST<BrowserWebSocketTransportConnection>(shared_from_this());
+
     if (socket >= 0)
     {
         emscripten_websocket_close(socket, 1000, "transport closed");
         invalidate_websocket();
     }
+
+    // No more WebSocket callbacks are delivered after the socket is deleted, so they cannot erase the entry
+    active_transports.erase(static_cast<void*>(this));
 
     try
     {

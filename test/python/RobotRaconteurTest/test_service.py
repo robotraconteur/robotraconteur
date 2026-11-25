@@ -76,3 +76,30 @@ def test_async(test_server_node_config):
         "RobotRaconteurTestService_auth")
     c = ServiceTestClient()
     c.TestAsync(service_auth_url)
+
+
+def test_authenticated_large_transfer(test_server_node_config):
+    # Messages > 512 KiB must be allowed once the client has authenticated on a requirevaliduser service
+    import numpy as np
+    import RobotRaconteur as RR
+    RRN = RR.RobotRaconteurNode.s
+    service_auth_url = test_server_node_config.get_service_url(
+        "RobotRaconteurTestService_auth")
+    cred1 = {"password": RR.VarValue("testpass1", "string")}
+    r1 = RRN.ConnectService(service_auth_url, "testuser1", cred1)
+    try:
+        r1.func3(2.2, 3.3)
+        # ~800 KB argument; the server setter rejects the value, which is fine as long as the
+        # connection is not dropped for an unauthorized large transfer
+        try:
+            r1.d2 = np.zeros((100000,), dtype=np.float64)
+        except RR.ConnectionException:
+            raise
+        except Exception:
+            pass
+        r1.func3(2.2, 3.3)
+    finally:
+        try:
+            RRN.DisconnectService(r1)
+        except Exception:
+            pass

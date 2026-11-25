@@ -532,7 +532,7 @@ public class ServiceSubscription
         if (s == null)
             throw new ArgumentException("Invalid object for ReleaseClient");
 
-        _subscription.ClaimClient(s.rr_innerstub);
+        _subscription.ReleaseClient(s.rr_innerstub);
     }
 
     /// <summary>
@@ -658,7 +658,7 @@ public class ServiceSubscription
     /// </para>
     /// <para>
     /// Clients using GetDefaultClient() should not store a reference to the client. It should instead
-    /// call GetDefaultClient() right before using the client to make sure the most recenty connection
+    /// call GetDefaultClient() right before using the client to make sure the most recent connection
     /// is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
     /// of pipes and wires can be managed automatically.
     /// </para>
@@ -1721,7 +1721,7 @@ public class ServiceSubscriptionManager
     /// Get if a subscription is connected
     /// </summary>
     /// <remarks>None</remarks>
-    /// <param name="name">Teh local name of the subscription</param>
+    /// <param name="name">The local name of the subscription</param>
     /// <returns>True if the subscription is connected</returns>
     public bool IsConnected(string name)
     {
@@ -1806,8 +1806,20 @@ public partial class RobotRaconteurNode
 
         public override bool Predicate(ServiceInfo2Wrapped info)
         {
-            var info2 = new ServiceInfo2(info);
-            return _f(info2);
+            try
+            {
+                var info2 = new ServiceInfo2(info);
+                return _f(info2);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return false;
+                }
+            }
         }
     }
 

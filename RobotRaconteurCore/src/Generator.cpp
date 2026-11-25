@@ -35,6 +35,7 @@ GeneratorClientBase::GeneratorClientBase(boost::string_ref name, int32_t id, con
     this->name = RR_MOVE(name.to_string());
     this->id = id;
     this->stub = stub;
+    this->service_path = stub->ServicePath;
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, name,
                                             "Created generator with id " << id);
 }
@@ -119,7 +120,6 @@ void GeneratorClientBase::AsyncNextBase(
         handler,
     int32_t timeout)
 {
-    RR_UNUSED(timeout);
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Client, endpoint, service_path, name,
                                             "Calling async generator next with id " << id);
     RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_GeneratorNextReq, GetMemberName());
@@ -130,8 +130,10 @@ void GeneratorClientBase::AsyncNextBase(
         m->elements.push_back(v);
     }
     RR_WEAK_PTR<RobotRaconteurNode> node = GetStub()->RRGetNode();
-    GetStub()->AsyncProcessRequest(m, boost::bind(&GeneratorClientBase::AsyncNextBase1, RR_BOOST_PLACEHOLDERS(_1),
-                                                  RR_BOOST_PLACEHOLDERS(_2), RR_MOVE(handler), node));
+    GetStub()->AsyncProcessRequest(m,
+                                   boost::bind(&GeneratorClientBase::AsyncNextBase1, RR_BOOST_PLACEHOLDERS(_1),
+                                               RR_BOOST_PLACEHOLDERS(_2), RR_MOVE(handler), node),
+                                   timeout);
 }
 
 void GeneratorClientBase::AsyncNextBase1(

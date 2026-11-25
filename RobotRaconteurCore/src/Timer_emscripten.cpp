@@ -138,7 +138,8 @@ WallTimer::WallTimer(const boost::posix_time::time_duration& period, boost::func
     running = false;
     if (!node)
         this->node = RobotRaconteurNode::weak_sp();
-    this->node = node;
+    else
+        this->node = node;
 }
 
 void WallTimer::Start()
@@ -213,10 +214,9 @@ void WallTimer::Stop()
     TimerEvent ev;
     ev.stopped = true;
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
-    if (n)
+    if (n && handler)
     {
-        RR_BOOST_ASIO_IO_CONTEXT ctx;
-        ctx.post(boost::bind(handler, ev));
+        RobotRaconteurNode::TryPostToThreadPool(n, boost::bind(handler, ev), true);
     }
     handler.clear();
 }
