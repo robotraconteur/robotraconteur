@@ -424,7 +424,7 @@ static std::string JavaServiceLangGen_VerifyArrayLength(TypeDefinition& t, const
             }
             else
             {
-                if (t.Type == DataTypes_pod_t)
+                if (t.Type == DataTypes_namedtype_t && t.ResolveNamedType()->RRDataType() == DataTypes_pod_t)
                 {
                     s = "3";
                 }
@@ -956,8 +956,8 @@ void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefi
             }
             else
             {
-                w2 << "    " << m->Type->TypeString << ".getNumericArray(" << t8.name << ", buffer, offset + " << i
-                   << ");" << std::endl;
+                w2 << "    " << fix_qualified_name(m->Type->TypeString) << ".getNumericArray(" << t8.name
+                   << ", buffer, offset + " << i << ");" << std::endl;
             }
             i += boost::numeric_cast<int32_t>(t9.get<1>() * e2_count);
         }
@@ -1015,8 +1015,8 @@ void JavaServiceLangGen::GenerateNamedArray(const RR_SHARED_PTR<ServiceEntryDefi
             }
             else
             {
-                w2 << "    " << m->Type->TypeString << ".assignFromNumericArray(" << t8.name << ", buffer, offset + "
-                   << i << ");" << std::endl;
+                w2 << "    " << fix_qualified_name(m->Type->TypeString) << ".assignFromNumericArray(" << t8.name
+                   << ", buffer, offset + " << i << ");" << std::endl;
             }
             i += boost::numeric_cast<int32_t>(t9.get<1>() * e2_count);
         }
@@ -1565,8 +1565,8 @@ void JavaServiceLangGen::GeneratePodStub(ServiceEntryDefinition* e, std::ostream
     w2 << "    }" << std::endl;
     w2 << "    }" << std::endl;
 
-    w2 << "    public String getTypeName() {return \"" << fix_qualified_name(e->ServiceDefinition_.lock()->Name) << "."
-       << fix_name(e->Name) << "\";}" << std::endl;
+    w2 << "    public String getTypeName() {return \"" << e->ServiceDefinition_.lock()->Name << "." << e->Name << "\";}"
+       << std::endl;
     ;
     w2 << "    protected " << fix_name(e->Name) << "[] createArray(int count) { return new " << fix_name(e->Name)
        << "[count]; }" << std::endl;
@@ -1885,11 +1885,11 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
 
         if (m->ObjectType.find('.') == std::string::npos)
         {
-            objecttype2 = fix_name(d->Name) + "." + fix_name(m->ObjectType);
+            objecttype2 = d->Name + "." + m->ObjectType;
         }
         else
         {
-            objecttype2 = fix_name(m->ObjectType);
+            objecttype2 = m->ObjectType;
         }
 
         std::string indtype;
@@ -1913,7 +1913,7 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
     MEMBER_ITER2(PipeDefinition)
     convert_type_result t = convert_type_array(*m->Type);
     w2 << "    public Pipe<" << t.java_type << t.java_arr_type << "> get_" << fix_name(m->Name) << "()" << std::endl;
-    w2 << "    { return rr_" << m->Name << ";  }" << std::endl;
+    w2 << "    { return rr_" << fix_name(m->Name) << ";  }" << std::endl;
     w2 << "    public void set_" << fix_name(m->Name) << "(Pipe<" << t.java_type << t.java_arr_type << "> value)"
        << std::endl;
     w2 << "    { throw new RuntimeException();}" << std::endl;
@@ -2229,11 +2229,11 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
 
         std::string objecttype2;
 
-        std::string s2 = fix_qualified_name(m->ObjectType);
+        std::string s2 = m->ObjectType;
 
         if (s2.find('.') == std::string::npos)
         {
-            objecttype2 = fix_name(d->Name) + "." + s2;
+            objecttype2 = d->Name + "." + s2;
         }
         else
         {
@@ -2245,7 +2245,7 @@ void JavaServiceLangGen::GenerateStub(ServiceEntryDefinition* e, std::ostream* w
         {
             w2 << "    public void async_get_" << fix_name(m->Name) << "(" << indtype << " ind, Action2<" << objtype
                << ",RuntimeException> handler, int timeout) {" << std::endl;
-            w2 << "    asyncFindObjRefTyped(\"" << fix_name(m->Name) << "\",String.valueOf(ind),\"" << objecttype2
+            w2 << "    asyncFindObjRefTyped(\"" << m->Name << "\",String.valueOf(ind),\"" << objecttype2
                << "\",handler,timeout);" << std::endl;
             w2 << "    }" << std::endl;
         }
@@ -3066,6 +3066,54 @@ static std::string JavaServiceLangGen_EscapeString_Formatter(const boost::smatch
     return v2.str();
 }
 
+// Splits the value of an array constant ("{1, 2, 3}") into its elements
+static std::vector<std::string> JavaServiceLangGen_SplitArrayConstant(const std::string& value)
+{
+    std::vector<std::string> o;
+    std::string value1 = boost::trim_copy_if(value, boost::is_any_of(" \t{}"));
+    if (value1.empty())
+        return o;
+    boost::split(o, value1, boost::is_any_of(","));
+    for (std::vector<std::string>::iterator e = o.begin(); e != o.end(); ++e)
+    {
+        boost::trim(*e);
+    }
+    return o;
+}
+
+// Numeric constant literal for a Java static final field of the converted type. float and long values need a
+// suffix, and the unsigned types are wrapper classes initialized with the same bits as a signed value.
+static std::string JavaServiceLangGen_ConvertNumberConstant(DataTypes type, const std::string& value)
+{
+    switch (type)
+    {
+    case DataTypes_single_t:
+        return value + "f";
+    case DataTypes_int64_t:
+        return value + "L";
+    case DataTypes_uint8_t:
+        return "new UnsignedByte((byte)" + value + ")";
+    case DataTypes_uint16_t:
+        return "new UnsignedShort((short)" + value + ")";
+    case DataTypes_uint32_t:
+        return "new UnsignedInt((int)" + value + "L)";
+    case DataTypes_uint64_t: {
+        uint64_t v = 0;
+        if (!RobotRaconteur::detail::try_convert_string_to_number(value, v))
+            throw DataTypeException("Invalid uint64 constant value " + value);
+        return "new UnsignedLong(" + boost::lexical_cast<std::string>(static_cast<int64_t>(v)) + "L)";
+    }
+    default:
+        return value;
+    }
+}
+
+static bool JavaServiceLangGen_NumberConstantNeedsConversion(DataTypes type)
+{
+    return type == DataTypes_single_t || type == DataTypes_int64_t || type == DataTypes_uint8_t ||
+           type == DataTypes_uint16_t || type == DataTypes_uint32_t || type == DataTypes_uint64_t;
+}
+
 std::string JavaServiceLangGen::convert_constant(ConstantDefinition* c,
                                                  std::vector<RR_SHARED_PTR<ConstantDefinition> >& c2,
                                                  ServiceDefinition* def)
@@ -3121,13 +3169,31 @@ std::string JavaServiceLangGen::convert_constant(ConstantDefinition* c,
         return "public static final String " + fix_name(c->Name) + "=\"" + t.str() + "\";";
     }
 
+    if (!JavaServiceLangGen_NumberConstantNeedsConversion(t->Type))
+    {
+        if (t->ArrayType == DataTypes_ArrayTypes_none)
+        {
+            return "public static final " + c1.java_type + " " + fix_name(c->Name) + "=" + c->Value + ";";
+        }
+        else
+        {
+            return "public static final " + c1.java_type + "[] " + fix_name(c->Name) + "=" + c->Value + ";";
+        }
+    }
+
     if (t->ArrayType == DataTypes_ArrayTypes_none)
     {
-        return "public static final " + c1.java_type + " " + fix_name(c->Name) + "=" + c->Value + ";";
+        return "public static final " + c1.java_type + " " + fix_name(c->Name) + "=" +
+               JavaServiceLangGen_ConvertNumberConstant(t->Type, boost::trim_copy(c->Value)) + ";";
     }
     else
     {
-        return "public static final " + c1.java_type + "[] " + fix_name(c->Name) + "=" + c->Value + ";";
+        std::vector<std::string> v = JavaServiceLangGen_SplitArrayConstant(c->Value);
+        for (std::vector<std::string>::iterator e = v.begin(); e != v.end(); ++e)
+        {
+            *e = JavaServiceLangGen_ConvertNumberConstant(t->Type, *e);
+        }
+        return "public static final " + c1.java_type + "[] " + fix_name(c->Name) + "={" + boost::join(v, ", ") + "};";
     }
 }
 
@@ -3573,7 +3639,11 @@ void JavaServiceLangGen::GenerateDocString(const std::string& docstring, const s
     w2 << prefix << "/**" << std::endl;
     BOOST_FOREACH (const std::string& s, docstring_v)
     {
-        w2 << prefix << " * " << s << std::endl;
+        // Escape "*/" so a doc line cannot end the comment, and "\u" because javac decodes
+        // unicode escapes (e.g. \u002a\u002f) before comments are recognized
+        std::string s2 = boost::replace_all_copy(s, "\\u", "&#92;u");
+        boost::replace_all(s2, "*/", "*&#47;");
+        w2 << prefix << " * " << s2 << std::endl;
     }
     w2 << prefix << " */" << std::endl;
 }

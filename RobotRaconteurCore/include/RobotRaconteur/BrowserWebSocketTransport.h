@@ -54,7 +54,7 @@ class BrowserWebSocketTransportConnection;
  * the origin would be `https://example.com`. For localhost, the origin is `http://localhost:8080`,
  * where 8080 is the port the web page is hosted on. The origin can be configured
  * using the function `TcpTransport::AddWebSocketAllowedOrigin()`, or using
- * the `--robotraconteur-tcp-ws-add-origin` command line option if a node setup class is used.
+ * the `--robotraconteur-tcp-ws-add-origins` command line option if a node setup class is used.
  * If a local file is used to host the web page, the origin is `null` and no origin
  * checking is performed.
  *
@@ -125,7 +125,7 @@ class BrowserWebSocketTransport : public Transport, public RR_ENABLE_SHARED_FROM
      * @brief Get the default heartbeat period
      *
      * The heartbeat is used to keep the connection alive
-     * if no communication is occuring between nodes.
+     * if no communication is occurring between nodes.
      *
      * Default: 5 seconds
      *
@@ -136,7 +136,7 @@ class BrowserWebSocketTransport : public Transport, public RR_ENABLE_SHARED_FROM
      * @brief Set the default heartbeat period
      *
      * The heartbeat is used to keep the connection alive
-     * if no communication is occuring between nodes.
+     * if no communication is occurring between nodes.
      *
      * Default: 5 seconds
      *

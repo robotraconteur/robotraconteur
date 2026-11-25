@@ -25,6 +25,11 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range.hpp>
+#ifndef ROBOTRACONTEUR_EMSCRIPTEN
+// (the single-threaded emscripten build gets thread_specific_ptr from RobotRaconteurEmscripten.h)
+#include <boost/thread/tss.hpp>
+#endif
+#include "AsyncMessageReader.h"
 #include <boost/range/algorithm.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/bind/placeholders.hpp>
@@ -34,6 +39,30 @@
 namespace RobotRaconteur
 {
 
+namespace
+{
+// Nesting depth of the message element lists currently being read by MessageElement::Read/Read4 on this thread
+boost::thread_specific_ptr<size_t> message_read_nested_depth;
+
+class MessageReadNestedDepthGuard
+{
+  public:
+    MessageReadNestedDepthGuard()
+    {
+        if (!message_read_nested_depth.get())
+        {
+            // NOLINTBEGIN(cppcoreguidelines-owning-memory)
+            message_read_nested_depth.reset(new size_t(0));
+            // NOLINTEND(cppcoreguidelines-owning-memory)
+        }
+        if (*message_read_nested_depth >= detail::MessageMaxNestingDepth)
+            throw ProtocolException("Message element nesting depth exceeds maximum");
+        (*message_read_nested_depth)++;
+    }
+    ~MessageReadNestedDepthGuard() { (*message_read_nested_depth)--; }
+};
+} // namespace
+
 Message::Message() { entries.clear(); }
 
 RR_INTRUSIVE_PTR<MessageEntry> Message::FindEntry(MessageStringRef name)
@@ -42,7 +71,7 @@ RR_INTRUSIVE_PTR<MessageEntry> Message::FindEntry(MessageStringRef name)
         boost::find_if(entries, boost::bind(&MessageEntry::MemberName, RR_BOOST_PLACEHOLDERS(_1)) == name);
 
     if (m == entries.end())
-        throw MessageEntryNotFoundException("Element " + name.str() + " not found.");
+        throw MessageEntryNotFoundException("Entry " + name.str() + " not found.");
 
     return *m;
 }
@@ -536,6 +565,8 @@ void MessageHeader::Read4(ArrayBinaryReader& r)
     if (MessageFlags & MessageFlags_EXTENDED)
     {
         size_t l = r.ReadUintX();
+        if (l > static_cast<size_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message extended data exceeds message limit");
         Extended.resize(l);
         if (l != 0)
         {
@@ -959,6 +990,8 @@ void MessageEntry::Read4(ArrayBinaryReader& r)
     if (EntryFlags & MessageFlags_EXTENDED)
     {
         size_t l = r.ReadUintX();
+        if (l > static_cast<size_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message extended data exceeds message limit");
         Extended.resize(l);
         if (l != 0)
         {
@@ -967,6 +1000,9 @@ void MessageEntry::Read4(ArrayBinaryReader& r)
     }
 
     uint32_t ecount = r.ReadUintX();
+    // Every element takes at least one byte, so a larger count is malformed
+    if (ecount > static_cast<uint32_t>(r.DistanceFromLimit()))
+        throw ProtocolException("Message entry element count exceeds message limit");
 
     elements = std::vector<RR_INTRUSIVE_PTR<MessageElement> >();
     elements.reserve(ecount);
@@ -1243,7 +1279,10 @@ void MessageElement::Read(ArrayBinaryReader& r)
 
     uint16_t name_s = r.ReadNumber<uint16_t>();
     ElementName = r.ReadString8(name_s);
-    ElementType = static_cast<DataTypes>(r.ReadNumber<uint16_t>());
+    uint16_t element_type = r.ReadNumber<uint16_t>();
+    if (element_type > 127)
+        throw ProtocolException("Invalid message element type");
+    ElementType = static_cast<DataTypes>(element_type);
     uint16_t nametype_s = r.ReadNumber<uint16_t>();
     ElementTypeName = r.ReadString8(nametype_s);
     uint16_t metadata_s = r.ReadNumber<uint16_t>();
@@ -1288,7 +1327,11 @@ void MessageElement::Read(ArrayBinaryReader& r)
     case DataTypes_pod_multidimarray_t:
     case DataTypes_namedarray_array_t:
     case DataTypes_namedarray_multidimarray_t: {
+        MessageReadNestedDepthGuard depth_guard;
         std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
+        // Every child element takes at least one byte, so a larger count is malformed
+        if (DataCount > static_cast<uint32_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message element count exceeds element size");
         l.reserve(DataCount);
         for (size_t i = 0; i < DataCount; i++)
         {
@@ -1602,7 +1645,10 @@ void MessageElement::Read4(ArrayBinaryReader& r)
         ElementNumber = r.ReadIntX();
     }
 
-    ElementType = static_cast<DataTypes>(r.ReadNumber<uint16_t>());
+    uint16_t element_type = r.ReadNumber<uint16_t>();
+    if (element_type > 127)
+        throw ProtocolException("Invalid message element type");
+    ElementType = static_cast<DataTypes>(element_type);
 
     if (ElementFlags & MessageElementFlags_ELEMENT_TYPE_NAME_STR)
     {
@@ -1624,6 +1670,8 @@ void MessageElement::Read4(ArrayBinaryReader& r)
     if (ElementFlags & MessageElementFlags_EXTENDED)
     {
         size_t l = r.ReadUintX();
+        if (l > static_cast<size_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message extended data exceeds message limit");
         Extended.resize(l);
         if (l != 0)
         {
@@ -1671,7 +1719,11 @@ void MessageElement::Read4(ArrayBinaryReader& r)
     case DataTypes_pod_multidimarray_t:
     case DataTypes_namedarray_array_t:
     case DataTypes_namedarray_multidimarray_t: {
+        MessageReadNestedDepthGuard depth_guard;
         std::vector<RR_INTRUSIVE_PTR<MessageElement> > l;
+        // Every child element takes at least one byte, so a larger count is malformed
+        if (DataCount > static_cast<uint32_t>(r.DistanceFromLimit()))
+            throw ProtocolException("Message element count exceeds element size");
         l.reserve(DataCount);
         for (size_t i = 0; i < DataCount; i++)
         {

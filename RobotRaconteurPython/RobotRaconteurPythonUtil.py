@@ -621,7 +621,6 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
         try:
             type1 = FindMemberByName(
                 self.innerstub.RR_objecttype.Members, name)
-            # type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
             args = []
             type2 = RobotRaconteurPython.MemberDefinitionUtil.ToEvent(type1)
             for p in type2.Parameters:
@@ -637,7 +636,6 @@ class WrappedServiceStubDirectorPython(RobotRaconteurPython.WrappedServiceStubDi
         try:
             type1 = FindMemberByName(
                 self.innerstub.RR_objecttype.Members, name)
-            # type1=[e for e in self.innerstub.RR_objecttype.Members if e.Name == name][0]
             args = []
 
             type2 = RobotRaconteurPython.MemberDefinitionUtil.ToCallback(type1)
@@ -930,10 +928,11 @@ class PipeEndpoint(object):
         :return: Tuple of success and received packet
         :rtype: Tuple[bool,T]
         """
-        m = RobotRaconteurPython.MessageElement()
         r = self.__innerpipe.TryReceivePacketWait(
-            m, adjust_timeout(timeout), peek)
-        return (r, UnpackMessageElement(m, self.__type, self.__obj, self.__innerpipe.GetNode()))
+            adjust_timeout(timeout), peek)
+        if not r.res:
+            return (False, None)
+        return (True, UnpackMessageElement(r.packet, self.__type, self.__obj, self.__innerpipe.GetNode()))
 
     @property
     def PacketReceivedEvent(self):
@@ -1078,7 +1077,7 @@ class Pipe(object):
 
         Creates a connected pipe endpoint pair, and returns the local endpoint. Use to create the streaming data
         connection to the service. Pipe endpoints are indexed, meaning that Connect() may be called multiple
-        times for the same client connection to create multple pipe endpoint pairs. For most cases Pipe.ANY_INDEX
+        times for the same client connection to create multiple pipe endpoint pairs. For most cases Pipe.ANY_INDEX
         (-1) can be used to automatically select an available index.
 
         Only valid on clients. Will throw InvalidOperationException on the service side.
@@ -2376,6 +2375,14 @@ class NodeInfo2(object):
         """
 
 
+def _getattr_or_none(obj, name):
+    # The attribute may be a user property whose getter fails before the setter was called
+    try:
+        return getattr(obj, name)
+    except Exception:
+        return None
+
+
 class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDirector):
     def __init__(self, obj):
         self.obj = obj
@@ -2422,6 +2429,10 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         setattr(self.obj, m.Name, PipeBroadcaster(outerp))
                     else:
                         setattr(self.obj, m.Name, outerp)
+                elif isinstance(_getattr_or_none(self.obj, m.Name), PipeBroadcaster):
+                    # Object initialized again (released and requested again, or reachable by
+                    # more than one service path): keep the broadcaster API for the new pipe
+                    setattr(self.obj, m.Name, PipeBroadcaster(outerp))
                 else:
                     setattr(self.obj, m.Name, outerp)
             if (isinstance(m, RobotRaconteurPython.WireDefinition)):
@@ -2434,6 +2445,10 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
                         setattr(self.obj, m.Name, WireUnicastReceiver(outerw))
                     else:
                         setattr(self.obj, m.Name, outerw)
+                elif isinstance(_getattr_or_none(self.obj, m.Name), WireBroadcaster):
+                    setattr(self.obj, m.Name, WireBroadcaster(outerw))
+                elif isinstance(_getattr_or_none(self.obj, m.Name), WireUnicastReceiver):
+                    setattr(self.obj, m.Name, WireUnicastReceiver(outerw))
                 else:
                     setattr(self.obj, m.Name, outerw)
         if hasattr(self.obj, "RRServiceObjectInit"):
@@ -2443,7 +2458,6 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _CallGetProperty(self, name, async_adapter):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToProperty(type1)
         try:
             async_getter = getattr(self.obj, "async_get_" + name)
@@ -2481,7 +2495,6 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _CallSetProperty(self, name, value, async_adapter):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToProperty(type1)
         a = UnpackMessageElement(value, type2.Type, node=self.skel.RRGetNode())
 
@@ -2579,7 +2592,6 @@ class WrappedServiceSkelDirectorPython(RobotRaconteurPython.WrappedServiceSkelDi
     def _GetSubObj(self, name, index):
 
         type1 = FindMemberByName(self.skel.Type.Members, name)
-        # type1=[e for e in self.skel.Type.Members if e.Name == name][0]
         type2 = RobotRaconteurPython.MemberDefinitionUtil.ToObjRef(type1)
         if (type2.ArrayType == RobotRaconteurPython.DataTypes_ArrayTypes_array or (type2.ContainerType == RobotRaconteurPython.DataTypes_ContainerTypes_map_int32)):
             obj, objecttype = getattr(self.obj, 'get_' + name)(str(index))
@@ -2935,6 +2947,7 @@ class WrappedNamedMultiDimArrayMemoryDirectorPython(RobotRaconteurPython.Wrapped
 class WrappedClientServiceListenerDirector(RobotRaconteurPython.ClientServiceListenerDirector):
     def __init__(self, callback):
         self.callback = callback
+        self.stub = None
 
         super(WrappedClientServiceListenerDirector, self).__init__()
 
@@ -2985,7 +2998,7 @@ def convert_constant(const):
                 s3 = const.Value.strip().lstrip('{').rstrip('}')
                 return const.Name, [int(i, 0) for i in s3.split(',')]
             else:
-                return const.Name, const.Value
+                return const.Name, int(const.Value.strip(), 0)
 
     if t.Type == RobotRaconteurPython.DataTypes_namedtype_t:
         struct_fields = const.ValueToStructFields()
@@ -3058,9 +3071,10 @@ def adjust_timeout(t):
 
 
 class AsyncStubReturnDirectorImpl(RobotRaconteurPython.AsyncStubReturnDirector):
-    def __init__(self, handler):
+    def __init__(self, handler, listener=None):
         super(AsyncStubReturnDirectorImpl, self).__init__()
         self._handler = handler
+        self._listener = listener
 
     def handler(self, innerstub2, error_info):
         if (error_info.error_code != 0):
@@ -3076,6 +3090,8 @@ class AsyncStubReturnDirectorImpl(RobotRaconteurPython.AsyncStubReturnDirector):
         except Exception as err2:
             self._handler(None, err2)
             return
+        if self._listener is not None:
+            self._listener.stub = stub
         self._handler(stub, None)
 
 
@@ -3958,7 +3974,7 @@ class ServiceSubscriptionFilterNode(object):
         self.NodeID = None
         """(RobotRaconteur.NodeID) The NodeID to match. All zero NodeID will match any NodeID."""
         self.NodeName = None
-        """(str) The NodeName to match. Emtpy NodeName will match any NodeName."""
+        """(str) The NodeName to match. Empty NodeName will match any NodeName."""
         self.Username = None
         """(str) The username to use for authentication. Should only be used with secure transports and verified NodeID"""
         self.Credentials = None
@@ -4415,7 +4431,7 @@ class ServiceSubscription(object):
         for RobotRaconteurNode.SubscribeService()
 
         Clients using GetDefaultClient() should not store a reference to the client. It should instead
-        call GetDefaultClient() right before using the client to make sure the most recenty connection
+        call GetDefaultClient() right before using the client to make sure the most recent connection
         is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
         of pipes and wires can be managed automatically.
 
@@ -4447,7 +4463,7 @@ class ServiceSubscription(object):
         for RobotRaconteurNode.SubscribeService()
 
         Clients using GetDefaultClient() should not store a reference to the client. It should instead
-        call GetDefaultClient() right before using the client to make sure the most recenty connection
+        call GetDefaultClient() right before using the client to make sure the most recent connection
         is being used. If possible, SubscribePipe() or SubscribeWire() should be used so the lifecycle
         of pipes and wires can be managed automatically.
 
@@ -5267,9 +5283,8 @@ class ServiceSubscriptionManager(object):
         :type close: bool
         """
         with self._lock:
-            self._subscription_manager.RemoveSubscription(name)
-            if close:
-                del self._subscriptions[name]
+            self._subscription_manager.RemoveSubscription(name, close)
+            self._subscriptions.pop(name, None)
 
     def EnableSubscription(self, name):
         """
@@ -5489,8 +5504,10 @@ class RobotRaconteurNodeSetup(object):
     def __init__(self, node_name=None, tcp_port=None, flags=None, allowed_overrides=None, node=None, argv=None, config=None):
         if (config is not None):
             assert node_name is None and tcp_port is None and flags is None and allowed_overrides is None and argv is None
+            if node is None:
+                node = RobotRaconteurPython.RobotRaconteurNode.s
             self.__setup = RobotRaconteurPython.WrappedRobotRaconteurNodeSetup(
-                config)
+                node, config)
         else:
             if node_name is None:
                 node_name = ""

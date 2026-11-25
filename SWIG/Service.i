@@ -199,6 +199,10 @@ class AuthenticatedUser
 {
 public:
 
+    AuthenticatedUser(const std::string& username, const std::vector<std::string>& privileges,
+                      const std::vector<std::string>& properties,
+                      const boost::shared_ptr<RobotRaconteur::ServerContext>& context);
+
     RR_MAKE_METHOD_PRIVATE(GetUsername)
     const std::string GetUsername();
 

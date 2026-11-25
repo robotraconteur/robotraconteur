@@ -31,7 +31,7 @@
 #include <istream>
 #include <boost/atomic.hpp>
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #include <boost/signals2.hpp>
@@ -638,6 +638,8 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
                              const RR_SHARED_PTR<RobotRaconteurException>& error)>
             handler;
         RR_SHARED_PTR<Timer> timer;
+        uint32_t endpoint;
+        outstanding_request() : endpoint(0) {}
     };
 
     boost::mutex outstanding_requests_lock;
@@ -658,7 +660,7 @@ class ROBOTRACONTEUR_CORE_API ServerContext : public RR_ENABLE_SHARED_FROM_THIS<
     /**
      * @brief Set the monitor lock thread pool count
      *
-     * Monitor looks use a thread pool to manage tho lock. Each lock takes ownership of a thread,
+     * Monitor locks use a thread pool to manage the lock. Each lock takes ownership of a thread,
      * and this thread is used to enforce single thread at a time access. By default 3 threads are
      * activated, allowing for 3 concurrent monitor locks. Use SetMonitorThreadPoolCount() to enable
      * more monitor locks if necessary.
@@ -854,6 +856,6 @@ using ServerEndpointPtr = RR_SHARED_PTR<ServerEndpoint>;
 
 } // namespace RobotRaconteur
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif

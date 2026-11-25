@@ -111,6 +111,46 @@ static boost::filesystem::path user_unix_run_dir(const std::string& xdg_env, con
 
     return boost::filesystem::path(run_path);
 }
+#endif
+
+void NodeDirectories_secure_tmp_user_run_dir(const boost::filesystem::path& user_run_dir)
+{
+#if !defined(ROBOTRACONTEUR_WINDOWS) && !defined(ROBOTRACONTEUR_APPLE)
+    uid_t u = getuid();
+    std::string run_path = "/tmp/robotraconteur-run-" + boost::lexical_cast<std::string>(u);
+    if (user_run_dir != boost::filesystem::path(run_path))
+    {
+        return;
+    }
+
+    if (mkdir(run_path.c_str(), S_IRWXU) < 0 && errno != EEXIST)
+    {
+        throw SystemResourceException("Could not create user run directory");
+    }
+
+    int dir_fd = open(run_path.c_str(), O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC);
+    if (dir_fd < 0)
+    {
+        throw SystemResourcePermissionDeniedException("User run directory " + run_path + " is not a directory");
+    }
+
+    struct stat st = {};
+    bool ok = fstat(dir_fd, &st) == 0 && S_ISDIR(st.st_mode) && (st.st_uid == u || st.st_uid == geteuid());
+    if (ok && (st.st_mode & (S_IRWXG | S_IRWXO)) != 0)
+    {
+        ok = fchmod(dir_fd, S_IRWXU) == 0;
+    }
+    close(dir_fd);
+    if (!ok)
+    {
+        throw SystemResourcePermissionDeniedException("User run directory " + run_path +
+                                                      " is not a private directory owned by the current user");
+    }
+#else
+    RR_UNUSED(user_run_dir);
+#endif
+}
+#ifndef ROBOTRACONTEUR_WINDOWS
 
 #ifdef ROBOTRACONTEUR_APPLE
 static boost::filesystem::path user_apple_run_dir(const std::string& rr_env_var)
@@ -285,7 +325,7 @@ NodeDirectories NodeDirectoriesUtil::GetDefaultNodeDirectories(const RR_SHARED_P
                                                                            "ROBOTRACONTEUR_USER_CONFIG_DIR"),
                           "user_config_dir");
         CATCH_DIR_RESOLVE(ret.user_state_dir = detail::user_unix_home_dir(
-                              ".local/state/RobotRaconteur", "XDG_STATE_HOME", "ROBOTRACONTEUR_USER_CONFIG_DIR"),
+                              ".local/state/RobotRaconteur", "XDG_STATE_HOME", "ROBOTRACONTEUR_USER_STATE_DIR"),
                           "user_state_dir");
         CATCH_DIR_RESOLVE(ret.user_cache_dir = detail::user_unix_home_dir(".cache/RobotRaconteur", "XDG_CACHE_HOME",
                                                                           "ROBOTRACONTEUR_USER_CACHE_DIR"),
@@ -322,11 +362,11 @@ std::string NodeDirectoriesUtil::GetLogonUserName()
     struct passwd* passwd = NULL;
     passwd = getpwuid(getuid());
     if (passwd == NULL)
-        throw ConnectionException("Could not determine current user");
+        throw SystemResourceException("Could not determine current user");
 
     std::string o(passwd->pw_name);
     if (o.empty())
-        throw ConnectionException("Could not determine current user");
+        throw SystemResourceException("Could not determine current user");
 
     return o;
 
@@ -465,10 +505,18 @@ void NodeDirectoriesFD::open_read(const boost::filesystem::path& path, boost::sy
 
     fd = h;
 #else
-    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDONLY);
+    // O_NONBLOCK: do not block on a FIFO swapped in after the caller's is_regular_file() check
+    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDONLY | O_NONBLOCK);
     if (fd1 < 0)
     {
         err = boost::system::error_code(errno, boost::system::system_category());
+        return;
+    }
+    struct stat st = {};
+    if (fstat(fd1, &st) < 0 || !S_ISREG(st.st_mode))
+    {
+        close(fd1);
+        err = boost::system::error_code(boost::system::errc::invalid_argument, boost::system::generic_category());
         return;
     }
     fd = fd1;
@@ -493,7 +541,13 @@ void NodeDirectoriesFD::open_lock_write(const boost::filesystem::path& path, boo
 
     fd = h;
 #else
-    int fd1 = open(path.c_str(), O_CLOEXEC | O_RDWR | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+    int open_flags = O_CLOEXEC | O_RDWR | O_APPEND | O_CREAT;
+    if (delete_on_close)
+    {
+        // Transient pid/info files in run directories: never follow a planted symlink
+        open_flags |= O_NOFOLLOW;
+    }
+    int fd1 = open(path.c_str(), open_flags, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
     if (fd1 < 0)
     {
         err = boost::system::error_code(errno, boost::system::system_category());
@@ -545,6 +599,8 @@ bool NodeDirectoriesFD::read(std::string& data) // NOLINT(readability-make-membe
     if (len < 0)
         return false;
     if (lseek(fd, 0, SEEK_SET) < 0)
+        return false;
+    if (len > 16384)
         return false;
 
     std::string ret;
@@ -692,6 +748,7 @@ GetUuidForNameAndLockResult GetUuidForNameAndLock(const NodeDirectories& node_di
     }
 
 #else
+    detail::NodeDirectories_secure_tmp_user_run_dir(node_dirs.user_run_dir);
     boost::filesystem::path p_lock = node_dirs.user_run_dir;
     BOOST_FOREACH (const std::string& s, scope)
     {

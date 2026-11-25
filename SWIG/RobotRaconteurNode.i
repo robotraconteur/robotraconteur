@@ -170,7 +170,7 @@ RR_KEEP_GIL()
 		}
 		else
 		{
-			boost::shared_ptr<ClientServiceListenerDirector> listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener);
+			boost::shared_ptr<ClientServiceListenerDirector> listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ClientServiceListenerDirector>,RR_BOOST_PLACEHOLDERS(_1),listener->objectheapid));
 			$self->AsyncConnectService(url,username,credentials2,boost::bind(&ClientServiceListenerDirector::OuterCallback,listenerptr,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)),objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 		}
 	}
@@ -189,7 +189,7 @@ RR_KEEP_GIL()
 		}
 		else
 		{
-			boost::shared_ptr<ClientServiceListenerDirector> listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener);
+			boost::shared_ptr<ClientServiceListenerDirector> listenerptr=boost::shared_ptr<ClientServiceListenerDirector>(listener,boost::bind(&ReleaseDirector<ClientServiceListenerDirector>,RR_BOOST_PLACEHOLDERS(_1),listener->objectheapid));
 			$self->AsyncConnectService(url,username,credentials2,boost::bind(&ClientServiceListenerDirector::OuterCallback,listenerptr,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),RR_BOOST_PLACEHOLDERS(_3)),objecttype,boost::bind(&AsyncStubReturn_handler,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),sphandler),timeout);
 		}
 	}
@@ -244,7 +244,7 @@ RR_KEEP_GIL()
 
 		VerifyServiceDefinitions(defs);
 
-		$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def2));
+		$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def2, def));
 	}
 
 	void RegisterServiceTypes(const std::vector<std::string>& defs_str)
@@ -268,9 +268,9 @@ RR_KEEP_GIL()
 
 		VerifyServiceDefinitions(defs2);
 
-		BOOST_FOREACH(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def, defs)
+		for (size_t i = 0; i < defs.size(); i++)
 		{
-			$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(def));
+			$self->RegisterServiceType(boost::make_shared<WrappedServiceFactory>(defs[i], defs_str[i]));
 		}
 	}
 

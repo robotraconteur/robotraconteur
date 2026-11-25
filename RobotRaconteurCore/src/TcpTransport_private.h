@@ -257,6 +257,15 @@ class TcpConnector : public RR_ENABLE_SHARED_FROM_THIS<TcpConnector>
 
     RR_SHARED_PTR<boost::asio::ip::tcp::resolver> _resolver;
 
+    // Candidate sockets with a connect in progress. TransportClosed() closes them under this_lock; a socket is
+    // removed when it is handed to a TcpTransportConnection, which then closes it.
+    std::list<RR_WEAK_PTR<boost::asio::ip::tcp::socket> > pending_sockets;
+    bool transport_closed;
+
+    // Close listener: cancels the resolver and connect timer and closes the pending candidate sockets under
+    // this_lock, so it is serialized with the connector's own operations on them
+    void TransportClosed();
+
     uint32_t endpoint;
 
     int32_t resolve_count;
@@ -294,7 +303,28 @@ class TcpAcceptor : public RR_ENABLE_SHARED_FROM_THIS<TcpAcceptor>
 
     RR_WEAK_PTR<RobotRaconteurNode> node;
 
+    RR_SHARED_PTR<boost::asio::deadline_timer> accept_timer;
+    boost::mutex accept_timer_lock;
+    bool accept_done;
+
+    // Serializes the acceptor's own operations on the accepted socket with CloseSocket(), which the transport
+    // calls when it closes. Once the socket is handed to a TcpTransportConnection, that connection closes it.
+    boost::mutex socket_close_lock;
+    RR_WEAK_PTR<boost::asio::ip::tcp::socket> accept_socket;
+    RR_SHARED_PTR<websocket_stream<boost::asio::ip::tcp::socket&> > accept_websocket;
+    bool socket_handed_off;
+
+    void CloseSocket();
+
+    // Returns false if the socket was already closed by CloseSocket()
+    bool HandOffSocket();
+
   protected:
+    void AcceptSocketTimeout(const boost::system::error_code& ec,
+                             const RR_WEAK_PTR<boost::asio::ip::tcp::socket>& socket);
+
+    void AcceptSocketDone();
+
     void AcceptSocket6(const RR_SHARED_PTR<RobotRaconteurException>& err,
                        const RR_SHARED_PTR<boost::asio::ip::tcp::socket>& socket,
                        const RR_SHARED_PTR<TcpTransportConnection>& t,

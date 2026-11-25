@@ -1,0 +1,8 @@
+service experimental.gen_test_cpp_wires
+
+stdver 0.10
+
+object testobj
+    wire double operator [readonly]
+    wire double register [writeonly]
+end

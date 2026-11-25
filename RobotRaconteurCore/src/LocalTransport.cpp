@@ -388,7 +388,8 @@ void LocalTransport::AsyncCreateTransportConnection2(
     RR_UNUSED(noden);
     if (err)
     {
-        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport, transport->GetLocalEndpoint(),
+        ROBOTRACONTEUR_LOG_INFO_COMPONENT(node, Transport,
+                                          (transport ? static_cast<int64_t>(transport->GetLocalEndpoint()) : -1),
                                           "LocalTransport failed to connect: " << err->what());
         try
         {
@@ -565,7 +566,7 @@ bool LocalTransport::IsLocalTransportSupported()
             sockaddr_un tmpaddr;
             tmpaddr.sun_family = AF_UNIX;
             std::string tmpfile_str = tmpfile.string();
-            if (tmpfile_str.size() - 1 < UNIX_PATH_MAX)
+            if (tmpfile_str.size() < UNIX_PATH_MAX)
             {
                 strcpy(tmpaddr.sun_path, tmpfile_str.c_str());
                 if (::bind(sock, (SOCKADDR*)&tmpaddr, sizeof(tmpaddr)) == SOCKET_ERROR)
@@ -678,9 +679,13 @@ void LocalTransport::StartServerAsNodeName(boost::string_ref name, bool public_)
 
                 acceptor->acceptor.listen();
 #ifdef ROBOTRACONTEUR_WINDOWS
-                detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_);
+                if (!detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_))
+                {
+                    ROBOTRACONTEUR_LOG_WARNING_COMPONENT(
+                        node, Transport, -1, "LocalTransport could not set permissions on socket file " << pipename);
+                }
 #else
-                chmod(pipename.c_str(), S_IRWXU | S_IRWXG);
+                chmod(pipename.c_str(), public_ ? (S_IRWXU | S_IRWXG) : S_IRWXU);
 #endif
 
                 break;
@@ -867,13 +872,18 @@ void LocalTransport::StartServerAsNodeID(const NodeID& nodeid1, bool public_)
                     new detail::LocalTransport_socket(GetNode()->GetThreadPool()->get_io_context()));
                 boost::asio::local::stream_protocol::endpoint ep(pipename);
                 acceptor = RR_SHARED_PTR<detail::LocalTransport_acceptor>(
-                    new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context(), ep));
+                    new detail::LocalTransport_acceptor(GetNode()->GetThreadPool()->get_io_context()));
                 acceptor->acceptor.open();
+                acceptor->acceptor.bind(ep);
                 acceptor->acceptor.listen();
 #ifdef ROBOTRACONTEUR_WINDOWS
-                detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_);
+                if (!detail::LocalTransportUtil::SetWindowsSocketPermissions(pipename, public_))
+                {
+                    ROBOTRACONTEUR_LOG_WARNING_COMPONENT(
+                        node, Transport, -1, "LocalTransport could not set permissions on socket file " << pipename);
+                }
 #else
-                chmod(pipename.c_str(), S_IRWXU | S_IRWXG);
+                chmod(pipename.c_str(), public_ ? (S_IRWXU | S_IRWXG) : S_IRWXU);
 #endif
 
                 break;
@@ -1013,13 +1023,53 @@ void LocalTransport::AsyncSendMessage(
     t->AsyncSendMessage(m, handler);
 }
 
+static void LocalTransport_accept_retry_timer(const boost::system::error_code& ec,
+                                              const RR_SHARED_PTR<boost::asio::deadline_timer>& timer,
+                                              const boost::function<void(const boost::system::error_code&)>& handler)
+{
+    RR_UNUSED(timer);
+    handler(ec);
+}
+
 void LocalTransport::handle_accept(const RR_SHARED_PTR<LocalTransport>& parent,
                                    const RR_SHARED_PTR<detail::LocalTransport_acceptor>& acceptor,
                                    const RR_SHARED_PTR<detail::LocalTransport_socket>& socket,
                                    const boost::system::error_code& error)
 {
-    if (error)
+    if (!socket)
+    {
+        // Retry timer after a failed accept
+        if (error)
+            return;
+        boost::mutex::scoped_lock lock(parent->acceptor_lock);
+        if (!acceptor->acceptor.is_open())
+            return;
+        RR_SHARED_PTR<detail::LocalTransport_socket> socket2(
+            new detail::LocalTransport_socket(parent->GetNode()->GetThreadPool()->get_io_context()));
+        acceptor->acceptor.async_accept(*socket2->socket, boost::bind(&LocalTransport::handle_accept, parent, acceptor,
+                                                                      socket2, boost::asio::placeholders::error));
         return;
+    }
+
+    if (error)
+    {
+        if (error == boost::asio::error::operation_aborted)
+            return;
+        // Errors such as EMFILE must not stop accepting connections. Retry after a delay.
+        boost::mutex::scoped_lock lock(parent->acceptor_lock);
+        if (!acceptor->acceptor.is_open())
+            return;
+        ROBOTRACONTEUR_LOG_WARNING_COMPONENT(parent->node, Transport, -1,
+                                             "LocalTransport accept failed: " << error.message() << ", retrying");
+        RR_SHARED_PTR<boost::asio::deadline_timer> timer(new boost::asio::deadline_timer(
+            parent->GetNode()->GetThreadPool()->get_io_context(), boost::posix_time::milliseconds(100)));
+        boost::function<void(const boost::system::error_code&)> h =
+            boost::bind(&LocalTransport::handle_accept, parent, acceptor,
+                        RR_SHARED_PTR<detail::LocalTransport_socket>(), RR_BOOST_PLACEHOLDERS(_1));
+        RobotRaconteurNode::asio_async_wait(
+            parent->node, timer, boost::bind(&LocalTransport_accept_retry_timer, RR_BOOST_PLACEHOLDERS(_1), timer, h));
+        return;
+    }
 
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(parent->node, Transport, 0, "LocalTransport accepted socket");
     try
@@ -1560,6 +1610,7 @@ std::string GetLogonUserName()
 boost::filesystem::path GetTransportPrivateSocketPath(const NodeDirectories& node_dirs)
 {
     boost::filesystem::path user_run_path = node_dirs.user_run_dir;
+    NodeDirectories_secure_tmp_user_run_dir(user_run_path);
     boost::filesystem::path path = user_run_path / "transport" / "local";
 
     boost::filesystem::path bynodeid_path = path / "by-nodeid";
@@ -1967,28 +2018,43 @@ void LocalTransportDiscovery::Refresh()
 
     boost::posix_time::ptime now = node1->NowNodeTime();
 
-    if (private_path)
+    // Take a stable snapshot of the paths under the lock; the discovery poll thread may rewrite them. The
+    // directory scans below run on the copies so the lock is not held during filesystem I/O.
+    boost::optional<boost::filesystem::path> private_path1;
+    boost::optional<boost::filesystem::path> public_path1;
     {
-        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
-            node, Transport, -1, "LocalTransport discovery searching private path \"" << *private_path << "\"");
-
-        std::vector<NodeDiscoveryInfo> nodeinfo;
-        LocalTransportUtil::FindNodesInDirectory(nodeinfo, *private_path, "rr+local", now,
-                                                 boost::optional<std::string>());
-        BOOST_FOREACH (NodeDiscoveryInfo& n, nodeinfo)
-        {
-            node1->NodeDetected(n);
-        }
+        boost::mutex::scoped_lock lock(path_lock);
+        private_path1 = private_path;
+        public_path1 = public_path;
     }
 
-    if (public_path)
+    if (private_path1)
     {
-        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, -1,
-                                           "LocalTransport discovery searching public path \"" << *public_path << "\"");
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
+            node, Transport, -1, "LocalTransport discovery searching private path \"" << *private_path1 << "\"");
+
+        try
+        {
+            std::vector<NodeDiscoveryInfo> nodeinfo;
+            LocalTransportUtil::FindNodesInDirectory(nodeinfo, *private_path1, "rr+local", now,
+                                                     boost::optional<std::string>());
+            BOOST_FOREACH (NodeDiscoveryInfo& n, nodeinfo)
+            {
+                node1->NodeDetected(n);
+            }
+        }
+        catch (std::exception&)
+        {}
+    }
+
+    if (public_path1)
+    {
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
+            node, Transport, -1, "LocalTransport discovery searching public path \"" << *public_path1 << "\"");
         try
         {
             boost::filesystem::directory_iterator end_iter;
-            for (boost::filesystem::directory_iterator dir_itr(*public_path); dir_itr != end_iter; dir_itr++)
+            for (boost::filesystem::directory_iterator dir_itr(*public_path1); dir_itr != end_iter; dir_itr++)
             {
                 try
                 {

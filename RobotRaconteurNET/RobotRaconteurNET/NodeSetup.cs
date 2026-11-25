@@ -266,7 +266,7 @@ public class RobotRaconteurNodeSetup : IDisposable
 
         var scanners = AppDomain.CurrentDomain.GetAssemblies()
                            .ToList()
-                           .SelectMany(x => x.GetTypes())
+                           .SelectMany(x => GetLoadableTypes(x))
                            .Where(t => assignableType.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
                            .ToList();
 
@@ -275,8 +275,25 @@ public class RobotRaconteurNodeSetup : IDisposable
             var service_factory = Activator.CreateInstance(type) as ServiceFactory;
             if (service_factory != null)
             {
+                // Skip service types that are already registered (for example registered by hand
+                // before the node setup was created)
+                if (node.IsServiceTypeRegistered(service_factory.GetServiceName()))
+                    continue;
                 node.RegisterServiceType(service_factory);
             }
+        }
+    }
+
+    private static IEnumerable<Type> GetLoadableTypes(System.Reflection.Assembly assembly)
+    {
+        // An assembly whose types cannot all be loaded must not abort node setup
+        try
+        {
+            return assembly.GetTypes();
+        }
+        catch (System.Reflection.ReflectionTypeLoadException e)
+        {
+            return e.Types.Where(t => t != null);
         }
     }
 }

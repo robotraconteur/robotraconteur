@@ -50,7 +50,6 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
 
     @Override public void releaseCastObject()
     {
-        // RRObjectHeap.DeleteObject(innerskelid);
         innerskel = null;
     }
 
@@ -60,9 +59,6 @@ public abstract class ServiceSkel extends WrappedServiceSkelDirector
     {
         throw new MemberNotFoundException("Callback " + membername + " not found");
     }
-
-    // public virtual MessageEntry CallMemoryFunction(MessageEntry m, Endpoint e) { throw new
-    // MemberNotFoundException("Memory " + m.MemberName + " not found"); }
 
     public int innerskelid;
 

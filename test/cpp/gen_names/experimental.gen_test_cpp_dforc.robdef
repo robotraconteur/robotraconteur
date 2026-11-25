@@ -1,0 +1,8 @@
+service experimental.gen_test_cpp_dforc
+
+stdver 0.10
+
+object testobj
+    property double is_virtual
+    wire double virtual
+end

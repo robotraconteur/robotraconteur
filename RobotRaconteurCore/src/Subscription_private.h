@@ -169,6 +169,7 @@ class PipeSubscription_connection : public RR_ENABLE_SHARED_FROM_THIS<PipeSubscr
                                          const RR_SHARED_PTR<RobotRaconteurException>& err, int32_t send_key);
 
     RR_SHARED_PTR<Timer> retry_timer;
+    bool closed;
 };
 
 class ServiceSubscriptionManager_subscription

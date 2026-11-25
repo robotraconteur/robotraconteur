@@ -39,7 +39,13 @@ LinuxLocalTransportDiscovery_dir::LinuxLocalTransportDiscovery_dir()
     bynodename_wd = -1;
 }
 
-LinuxLocalTransportDiscovery_dir::~LinuxLocalTransportDiscovery_dir() {}
+LinuxLocalTransportDiscovery_dir::~LinuxLocalTransportDiscovery_dir()
+{
+    if (notify_fd >= 0)
+    {
+        close(notify_fd);
+    }
+}
 
 bool LinuxLocalTransportDiscovery_dir::Init(const boost::filesystem::path& path)
 {
@@ -52,7 +58,7 @@ bool LinuxLocalTransportDiscovery_dir::Init(const boost::filesystem::path& path)
 
     int dir_wd1 = LinuxLocalTransportDiscovery_add_watch(notify_fd1, (path).c_str());
 
-    if (!dir_wd1)
+    if (dir_wd1 < 0)
     {
         close(notify_fd1);
         return false;
@@ -189,7 +195,12 @@ void LinuxLocalTransportDiscovery::run()
         {
             try
             {
-                private_path = LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
+                {
+                    boost::optional<boost::filesystem::path> private_path2 =
+                        LocalTransportUtil::GetTransportPrivateSocketPath(node_dirs);
+                    boost::mutex::scoped_lock lock(path_lock);
+                    private_path = private_path2;
+                }
                 if (private_path)
                 {
                     RR_SHARED_PTR<LinuxLocalTransportDiscovery_dir> private_dir1 =
@@ -294,13 +305,19 @@ void LinuxLocalTransportDiscovery::run()
             if (!private_dir->Refresh())
             {
                 private_dir.reset();
+                boost::mutex::scoped_lock lock(path_lock);
                 private_path.reset();
             }
         }
 
-        refresh_public();
+        try
+        {
+            refresh_public();
 
-        Refresh();
+            Refresh();
+        }
+        catch (std::exception&)
+        {}
     }
 }
 
@@ -312,12 +329,18 @@ bool LinuxLocalTransportDiscovery::update_public()
     {
         try
         {
-            public_path = LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
+            boost::optional<boost::filesystem::path> public_path2 =
+                LocalTransportUtil::GetTransportPublicSearchPath(node_dirs);
+            {
+                boost::mutex::scoped_lock lock(path_lock);
+                public_path = public_path2;
+            }
             if (public_path)
             {
                 public_wd = LinuxLocalTransportDiscovery_add_watch(public_evt->fd(), *public_path);
                 if (public_wd < 0)
                 {
+                    boost::mutex::scoped_lock lock(path_lock);
                     public_path.reset();
                 }
                 else

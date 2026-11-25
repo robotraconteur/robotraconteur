@@ -449,11 +449,16 @@ public class DataTypeUtil
             throw new NullPointerException();
         if (len != 0)
         {
-            if (varlength && Array.getLength(a) > len)
+            // Unsigned arrays are wrapper objects, not Java arrays
+            int a_len = (a instanceof UnsignedBytes || a instanceof UnsignedShorts || a instanceof UnsignedInts ||
+                         a instanceof UnsignedLongs)
+                            ? getArrayLength(a)
+                            : Array.getLength(a);
+            if (varlength && a_len > len)
             {
                 throw new DataTypeException("Array dimension mismatch");
             }
-            if (!varlength && Array.getLength(a) != len)
+            if (!varlength && a_len != len)
             {
                 throw new DataTypeException("Array dimension mismatch");
             }

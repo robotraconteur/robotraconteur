@@ -4,7 +4,7 @@ function c=RobotRaconteurGenerator(objecttype,stubid)
 %    returned by function members with a parameter and/or return marked with the
 %    generator container type. Robot Raconteur generators are modeled on Python generators,
 %    and are intended to be used in two scenarios:
-%    1. Transfering large parameter values or return values that would be over the message
+%    1. Transferring large parameter values or return values that would be over the message
 %    transfer limit (typically around 10 MB, unless jumbo messages are enabled).
 %    2. Long running operations that return updates or require periodic input. Generators
 %    are used to implement functionality similar to "actions" in ROS.

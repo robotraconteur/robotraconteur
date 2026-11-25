@@ -93,6 +93,21 @@ class asio_ssl_stream_threadsafe
 
     native_handle_type native_handle() { return ssl_stream_.native_handle(); }
 
+    // Close the lowest layer on the strand, so the close is serialized with the TLS stream's handlers, which
+    // continue the TLS operations on the socket. self keeps the stream alive until the close has run.
+    static void close_on_strand(const boost::shared_ptr<asio_ssl_stream_threadsafe>& self)
+    {
+        RR_BOOST_ASIO_POST(self->strand_, boost::bind(&asio_ssl_stream_threadsafe::close_now, self));
+    }
+
+  protected:
+    static void close_now(const boost::shared_ptr<asio_ssl_stream_threadsafe>& self)
+    {
+        boost::system::error_code ec;
+        self->ssl_stream_.lowest_layer().close(ec);
+    }
+
+  public:
     lowest_layer_type& lowest_layer() { return ssl_stream_.lowest_layer(); }
 
     next_layer_type& next_layer() { return ssl_stream_; }

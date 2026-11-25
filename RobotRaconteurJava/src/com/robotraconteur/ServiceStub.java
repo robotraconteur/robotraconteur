@@ -12,14 +12,11 @@ public abstract class ServiceStub
         director = new WrappedServiceStubDirectorJava(this);
 
         rr_innerstub = innerstub;
-        // director.swigReleaseOwnership();
         innerstub.setRRDirector(director, RRObjectHeap.addObject(this));
     }
 
     protected void finalize() throws Throwable
-    {
-        // rr_innerstub.setRR_Director(null);
-    }
+    {}
 
     public abstract void dispatchEvent(String membername, vectorptr_messageelement m);
 

@@ -134,12 +134,12 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
         return o;
     }
 
-    dbus_f->dbus_connection_set_exit_on_disconnect(conn, FALSE);
-
     if (conn == NULL)
     {
         return o;
     }
+
+    dbus_f->dbus_connection_set_exit_on_disconnect(conn, FALSE);
 
     dbus_bool_t hcid_exists = 0;
     dbus_f->dbus_error_init(&err);
@@ -238,19 +238,24 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
 
         message1 = dbus_f->dbus_message_new_method_call("org.bluez", object_path, "org.bluez.Device", "GetProperties");
         reply1 = dbus_f->dbus_connection_send_with_reply_and_block(conn, message1, -1, &err);
+        dbus_f->dbus_message_unref(message1);
         if (dbus_f->dbus_error_is_set(&err))
         {
             dbus_f->dbus_error_free(&err);
             dbus_f->dbus_error_init(&err);
+            dbus_f->dbus_message_iter_next(&iter_array);
             continue;
         }
-        dbus_f->dbus_message_unref(message1);
 
         DBusMessageIter reply_iter1;
         dbus_f->dbus_message_iter_init(reply1, &reply_iter1);
 
         if (dbus_f->dbus_message_iter_get_arg_type(&reply_iter1) != DBUS_TYPE_ARRAY)
+        {
+            dbus_f->dbus_message_unref(reply1);
+            dbus_f->dbus_message_iter_next(&iter_array);
             continue;
+        }
 
         DBusMessageIter reply_iter_entry1;
         dbus_f->dbus_message_iter_recurse(&reply_iter1, &reply_iter_entry1);
@@ -278,6 +283,7 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
 
             if (!dbus_f->dbus_message_iter_next(&dict_entry))
             {
+                dbus_f->dbus_message_iter_next(&reply_iter_entry1);
                 continue;
             }
 
@@ -327,7 +333,7 @@ std::list<sockaddr_rc> BluezBluetoothConnector::GetDeviceAddresses()
                                     }
                                 }
                             }
-                            catch (boost::bad_lexical_cast&)
+                            catch (std::exception&)
                             {}
 
                             dbus_f->dbus_message_iter_next(&iter_uuid_val);

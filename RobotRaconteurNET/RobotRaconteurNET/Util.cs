@@ -107,7 +107,6 @@ public class RRObjectHeap
 
             int i = objectcount;
             objects.Add(i, o);
-            // Console.WriteLine(objects.Count);
             return i;
         }
     }
@@ -119,25 +118,24 @@ public class RRObjectHeap
             try
             {
                 objects.Remove(id);
-                // Console.WriteLine(objects.Count);
             }
             catch
-            {
-
-                // Console.WriteLine(e.ToString());
-            }
+            {}
         }
     }
 
     public static object GetObject(int id)
     {
-        try
+        lock (objects)
         {
-            return objects[id];
-        }
-        catch (KeyNotFoundException)
-        {
-            throw new ApplicationException("Internal stub error");
+            try
+            {
+                return objects[id];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ApplicationException("Internal stub error");
+            }
         }
     }
 }

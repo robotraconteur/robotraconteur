@@ -153,7 +153,15 @@ RR_SHARED_PTR<ServerContext> ServiceSkel::GetContext()
     return out;
 }
 
-RR_SHARED_PTR<RRObject> ServiceSkel::GetUncastObject() const { return uncastobj; }
+RR_SHARED_PTR<RRObject> ServiceSkel::GetUncastObject() const
+{
+    // uncastobj is reset by ReleaseObject() while request threads read it. objectlock_lock (otherwise used for the
+    // object lock state) also guards it: it is never held while calling into the object or GetUncastObject().
+    // The initial set in Init() happens before the skel is reachable and is not guarded.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+    boost::mutex::scoped_lock lock(const_cast<boost::mutex&>(objectlock_lock));
+    return uncastobj;
+}
 
 RR_SHARED_PTR<RRObject> ServiceSkel::GetSubObj(boost::string_ref name)
 {
@@ -345,7 +353,13 @@ void ServiceSkel::ReleaseObject()
 
     UnregisterEvents(uncastobj);
     ReleaseCastObject();
-    uncastobj.reset();
+    RR_SHARED_PTR<RRObject> o;
+    {
+        boost::mutex::scoped_lock lock(objectlock_lock);
+        o.swap(uncastobj);
+    }
+    // The object is destroyed (if this was the last reference) outside the lock
+    o.reset();
 }
 
 void ServiceSkel::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
@@ -884,7 +898,7 @@ void ServerContext::SetSecurityPolicy(const RR_SHARED_PTR<ServiceSecurityPolicy>
         {
             AllowObjectLock = true;
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, GetServiceName(), "",
-                                                    "\"requirevaliduser\" policy enabled");
+                                                    "\"allowobjectlock\" policy enabled");
         }
     }
 }
@@ -939,6 +953,19 @@ void ServerContext::SetBaseObject(boost::string_ref name, const RR_SHARED_PTR<RR
     }
 }
 
+// Re-encode the index of a service path segment with encode_index so that every spelling of the
+// same index ("o[1]", "o[%31]", "o[a%2eb]", "o[a%2Eb]") maps to one skel
+static std::string ServerContext_CanonicalServicePathSegment(const std::string& segment)
+{
+    size_t pos = segment.find('[');
+    if (pos == std::string::npos || segment.size() < pos + 2 || segment[segment.size() - 1] != ']')
+    {
+        return segment;
+    }
+    std::string ind = segment.substr(pos + 1, segment.size() - pos - 2);
+    return segment.substr(0, pos + 1) + detail::encode_index(detail::decode_index(ind)) + "]";
+}
+
 RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef servicepath)
 {
 
@@ -978,7 +1005,7 @@ RR_SHARED_PTR<ServiceSkel> ServerContext::GetObjectSkel(MessageStringRef service
                 boost::mutex::scoped_lock lock(skels_lock);
                 std::string ppath1 = ppath;
 
-                ppath = ppath.append(".").append(p.at(i));
+                ppath = ppath.append(".").append(ServerContext_CanonicalServicePathSegment(p.at(i)));
 
                 skel1.reset();
                 RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator e1 = skels.find(ppath);
@@ -1257,6 +1284,15 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
                     noreturn = true;
                     return ret;
                 }
+                if (e1->second->endpoint != c->GetLocalEndpoint())
+                {
+                    // Only the client the callback request was sent to may answer it
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
+                        node, Service, c->GetLocalEndpoint(), m->ServicePath, m->MemberName,
+                        "Ignoring CallbackCallRet with requestid " << requestid << " from wrong endpoint");
+                    noreturn = true;
+                    return ret;
+                }
                 t = e1->second;
                 t->ret = m;
 
@@ -1406,6 +1442,7 @@ void ServerContext::AsyncProcessCallbackRequest(
         RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
         t->handler = handler;
         t->evt = GetNode()->CreateAutoResetEvent();
+        t->endpoint = endpoint;
 
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
@@ -1688,14 +1725,14 @@ void ServerContext::RemoveClient(const RR_SHARED_PTR<ServerEndpoint>& cendpoint)
         {
             try
             {
-                if (o.second->GetUsername() == cusername)
+                if (o.second->GetEndpoint() == ce)
                 {
-                    if (o.second->GetEndpoint() == ce)
-                    {
-                        o.second->ReleaseLock();
-                        active_object_locks.erase(o.first);
-                    }
-                    else
+                    // Session lock of this endpoint, whatever user the endpoint is now authenticated as
+                    o.second->ReleaseLock();
+                    active_object_locks.erase(o.first);
+                }
+                else if (o.second->GetUsername() == cusername)
+                {
                     {
 
                         {
@@ -1900,6 +1937,9 @@ void ServerContext::ClientLockOp(const RR_INTRUSIVE_PTR<MessageEntry>& m, const 
         std::string username;
         if (!boost::starts_with(m->MemberName.str(), "Monitor"))
         {
+            if ((m->MemberName == "RequestObjectLock" || m->MemberName == "RequestClientObjectLock") &&
+                !AllowObjectLock)
+                throw PermissionDeniedException("Object locking is not enabled for this service");
             if (ServerEndpoint::GetCurrentAuthenticatedUser() == 0)
                 throw PermissionDeniedException("User must be authenticated to lock object");
             priv = ServerEndpoint::GetCurrentAuthenticatedUser()->GetPrivileges();
@@ -1907,6 +1947,24 @@ void ServerContext::ClientLockOp(const RR_INTRUSIVE_PTR<MessageEntry>& m, const 
                   std::find(priv.begin(), priv.end(), "objectlockoverride") != priv.end()))
                 throw ObjectLockedException("User does not have object locking privileges");
             username = ServerEndpoint::GetCurrentAuthenticatedUser()->GetUsername();
+        }
+        else if (m_RequireValidUser)
+        {
+            // Monitor operations must not bypass requirevaliduser (reachable after a legacy ConnectClient,
+            // which creates the endpoint before authentication)
+            RR_SHARED_PTR<AuthenticatedUser> u;
+            try
+            {
+                u = ServerEndpoint::GetCurrentAuthenticatedUser();
+            }
+            catch (std::exception&)
+            {}
+            if (!u)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, -1, m->ServicePath, m->MemberName,
+                                                        "User attempted monitor operation without authenticating");
+                throw PermissionDeniedException("User must authenticate before accessing this service");
+            }
         }
 
         MessageStringPtr& servicepath = m->ServicePath;
@@ -1997,6 +2055,15 @@ void ServerContext::ClientLockOp(const RR_INTRUSIVE_PTR<MessageEntry>& m, const 
     }
 }
 
+// True if path is servicepath or the path of an object below it ("svc.obj1" covers "svc.obj1.sub",
+// not "svc.obj10")
+static bool ServerContext_IsSameOrSubPath(boost::string_ref path, boost::string_ref servicepath)
+{
+    if (!boost::starts_with(path, servicepath))
+        return false;
+    return path.size() == servicepath.size() || path[servicepath.size()] == '.';
+}
+
 void ServerContext::RequestObjectLock(boost::string_ref servicepath, boost::string_ref username)
 {
     RR_SHARED_PTR<ServiceSkel> skel = GetObjectSkel(servicepath);
@@ -2006,7 +2073,7 @@ void ServerContext::RequestObjectLock(boost::string_ref servicepath, boost::stri
     for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end();
          ++s)
     {
-        if (boost::starts_with(s->first.str(), servicepath))
+        if (ServerContext_IsSameOrSubPath(s->first.str(), servicepath))
             if (s->second->IsLocked())
                 throw ObjectLockedException("Object already locked");
     }
@@ -2016,7 +2083,7 @@ void ServerContext::RequestObjectLock(boost::string_ref servicepath, boost::stri
     for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end();
          ++s)
     {
-        if (boost::starts_with(s->first.str(), servicepath))
+        if (ServerContext_IsSameOrSubPath(s->first.str(), servicepath))
             o->AddSkel(s->second);
     }
 
@@ -2036,7 +2103,7 @@ void ServerContext::RequestClientObjectLock(boost::string_ref servicepath, boost
     for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end();
          ++s)
     {
-        if (boost::starts_with(s->first.str(), servicepath))
+        if (ServerContext_IsSameOrSubPath(s->first.str(), servicepath))
             if (s->second->IsLocked())
                 throw ObjectLockedException("Object already locked");
     }
@@ -2045,7 +2112,7 @@ void ServerContext::RequestClientObjectLock(boost::string_ref servicepath, boost
     for (RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> >::iterator s = skels.begin(); s != skels.end();
          ++s)
     {
-        if (boost::starts_with(s->first.str(), servicepath))
+        if (ServerContext_IsSameOrSubPath(s->first.str(), servicepath))
             o->AddSkel(s->second);
     }
     active_object_locks.insert(make_pair(o->GetRootServicePath(), o));
@@ -2070,8 +2137,7 @@ void ServerContext::ReleaseObjectLock(boost::string_ref servicepath, boost::stri
     if (lock->GetEndpoint() != 0)
     {
         if (ServerEndpoint::GetCurrentEndpoint()->GetLocalEndpoint() != lock->GetEndpoint() && !override_)
-            if (username != lock->GetUsername() && !override_)
-                throw ObjectLockedException("Service locked by other session");
+            throw ObjectLockedException("Service locked by other session");
     }
 
     lock2.unlock();
@@ -2216,7 +2282,7 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
                         return;
                     if (lock->GetRootServicePath() == path1)
                     {
-                        active_object_locks.erase(lock->GetUsername());
+                        active_object_locks.erase(path1);
                         lock2.unlock();
                         lock->ReleaseLock();
                     }
@@ -2333,6 +2399,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(const RR_IN
 
         RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
         t->evt = GetNode()->CreateAutoResetEvent();
+        t->endpoint = endpointid;
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
 
@@ -2594,7 +2661,17 @@ void ServerEndpoint::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
     m_CurrentAuthenticatedUser.reset(new RR_SHARED_PTR<AuthenticatedUser>(endpoint_authenticated_user));
     if (endpoint_authenticated_user != 0)
         endpoint_authenticated_user->UpdateLastAccess();
-    service->MessageReceived(m, shared_from_this());
+    try
+    {
+        service->MessageReceived(m, shared_from_this());
+    }
+    catch (...)
+    {
+        // Do not leave this client's endpoint and user on the thread
+        m_CurrentEndpoint.reset(0);
+        m_CurrentAuthenticatedUser.reset(0);
+        throw;
+    }
     m_CurrentEndpoint.reset(0);
     m_CurrentAuthenticatedUser.reset(0);
     // NOLINTEND(cppcoreguidelines-owning-memory)

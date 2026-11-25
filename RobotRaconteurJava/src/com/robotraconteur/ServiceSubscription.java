@@ -171,7 +171,7 @@ public class ServiceSubscription
         for (int i = 0; i < c2.size(); i++)
         {
             WrappedServiceSubscriptionClientID id2 = c2.get(i);
-            Object client = c1.get(id2);
+            Object client = getClientStub(c1.get(id2));
             o.put(new ServiceSubscriptionClientID(id2), client);
         }
 

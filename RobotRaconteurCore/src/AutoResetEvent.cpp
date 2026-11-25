@@ -57,7 +57,7 @@ void AutoResetEvent::Reset()
 {
     if (!::ResetEvent(*((HANDLE*)ev)))
     {
-        throw InternalErrorException("Internal error setting event");
+        throw InternalErrorException("Internal error resetting event");
     }
 }
 
@@ -73,6 +73,12 @@ void AutoResetEvent::WaitOne()
 
 bool AutoResetEvent::WaitOne(int32_t timeout)
 {
+    // A negative timeout waits without timeout
+    if (timeout < 0)
+    {
+        WaitOne();
+        return true;
+    }
     DWORD waitres = ::WaitForSingleObject(*((HANDLE*)ev), timeout);
 
     if (waitres == WAIT_OBJECT_0)
@@ -119,12 +125,18 @@ void AutoResetEvent::WaitOne()
 
 bool AutoResetEvent::WaitOne(int32_t timeout)
 {
+    // A negative timeout waits without timeout (as INFINITE does on Windows) instead of returning at once
+    if (timeout < 0)
+    {
+        WaitOne();
+        return true;
+    }
 
     boost::system_time const timeout1 =
         boost::posix_time::microsec_clock::universal_time() + boost::posix_time::milliseconds(timeout);
+    boost::unique_lock<boost::mutex> lock(m_mutex);
     while (!m_bSet)
     {
-        boost::unique_lock<boost::mutex> lock(m_mutex);
         m_setCondition.timed_wait(lock, timeout1);
         if (!m_bSet && boost::posix_time::microsec_clock::universal_time() > timeout1)
             return false;

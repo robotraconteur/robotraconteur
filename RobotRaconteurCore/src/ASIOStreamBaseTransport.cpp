@@ -241,6 +241,9 @@ void ASIOStreamBaseTransport::AsyncAttachStream1(
     }
 }
 
+// Maximum number of messages waiting in send_queue
+static const size_t ASIOStreamBaseTransport_max_send_queue = 16384;
+
 void ASIOStreamBaseTransport::AsyncSendMessage(
     const RR_INTRUSIVE_PTR<Message>& m,
     const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback)
@@ -254,11 +257,6 @@ void ASIOStreamBaseTransport::AsyncSendMessage(
     }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Begin sending message");
-
-    // Clear flags that should not be sent from the node layer
-    // if (m->header->MessageFlags & MessageFlags_TRANSPORT_SPECIFIC) m->header->TransportSpecific.clear();
-    // m->header->MessageFlags &= ~(MessageFlags_SUBSTREAM_SEQUENCE_NUMBER | MessageFlags_TRANSPORT_SPECIFIC);
-    // End clear flags
 
     bool send_4 = send_version4.load();
 
@@ -339,7 +337,10 @@ void ASIOStreamBaseTransport::AsyncSendMessage(
                 {
                     if (ee->message->entries.at(0)->EntryType == MessageEntryType_ConnectionTest &&
                         m->entries.at(0)->EntryType == MessageEntryType_ConnectionTest)
+                    {
+                        detail::PostHandler(node, callback, true, false);
                         return;
+                    }
 
                     if (ee->message->entries.at(0)->EntryType == MessageEntryType_WirePacket &&
                         m->entries.at(0)->EntryType == MessageEntryType_WirePacket)
@@ -379,6 +380,13 @@ void ASIOStreamBaseTransport::AsyncSendMessage(
 
         if (!replaced)
         {
+            // Bound the queue so a peer that does not read cannot grow it without limit
+            if (send_queue.size() >= ASIOStreamBaseTransport_max_send_queue)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(),
+                                                   "Send queue full, dropping message");
+                throw ProtocolException("Transport send queue full");
+            }
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Enqueuing message");
             send_queue.push_back(e);
         }
@@ -717,7 +725,7 @@ void ASIOStreamBaseTransport::EndSendMessage1()
 
     if (!send_queue.empty() && c && !send_pause_request)
     {
-        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Dequeing next message");
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Dequeuing next message");
         message_queue_entry m = send_queue.front();
         send_queue.pop_front();
         try
@@ -921,24 +929,6 @@ void ASIOStreamBaseTransport::EndReceiveMessage1(size_t startpos, const boost::s
                     }
                 }
             }
-
-            /*
-            if (size > recvbuf_len)
-            {
-                delete recvbuf;
-                recvbuf=new uint8_t[size];
-                recvbuf_len=size;
-            }
-
-            memcpy(recvbuf,streammagic,8);
-
-            recv_message_size=size;
-
-            async_read(*stream,buffer(recvbuf+8, recv_message_size-8),
-                boost::bind(&ASIOStreamBaseTransport::EndReceiveMessage3,
-                RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
-                boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred));*/
 
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(),
                                                "Receiving message size " << size << " bytes");
@@ -1153,7 +1143,10 @@ void ASIOStreamBaseTransport::EndReceiveMessage3(const RR_INTRUSIVE_PTR<Message>
     catch (std::exception& exp)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Transport, GetLocalEndpoint(),
-                                           "Error processing received message: " << exp.what());
+                                           "Error processing received message: " << exp.what()
+                                                                                 << ", closing transport");
+        // EndReceiveMessage4() may not have run, so receive is not rearmed
+        Close();
     }
 }
 
@@ -1457,7 +1450,7 @@ void ASIOStreamBaseTransport::EndReceiveMessage5(const boost::system::error_code
                 {
                     RR_INTRUSIVE_PTR<Message> m = async_reader->GetNextMessage();
 
-                    if (string_table4)
+                    if (use_string_table4.load())
                     {
                         this->string_table4->MessageReplaceCodesWithStrings(m);
                     }
@@ -1783,7 +1776,7 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 
             boost::posix_time::ptime tr = tlastrecv.load();
 
-            if ((t - tr).total_milliseconds() > ReceiveTimeout)
+            if ((GetNode()->NowNodeTime() - tr).total_milliseconds() > ReceiveTimeout)
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(),
                                                    "Transport close requested due to heartbeat timeout");
@@ -1797,6 +1790,12 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 
                 boost::posix_time::time_duration t =
                     boost::posix_time::milliseconds(heartbeat_period2 + 10) - (GetNode()->NowNodeTime() - tlastsend);
+                // tlastsend is only updated when a send completes; if it is older than the heartbeat period (a
+                // heartbeat was just queued, or sends are stalled) the delay is negative and the timer would spin
+                if (t < boost::posix_time::milliseconds(10))
+                {
+                    t = boost::posix_time::milliseconds(heartbeat_period2);
+                }
 
                 heartbeat_timer->expires_from_now(t);
                 heartbeat_timer->async_wait(
@@ -2140,6 +2139,10 @@ void ASIOStreamBaseTransport::AsyncStreamOp(
 static std::string ASIOStreamBaseTransport_log_caps(const std::vector<uint32_t>& caps)
 {
     std::stringstream ss;
+    if (caps.empty())
+    {
+        return ss.str();
+    }
     for (size_t i = 0;;)
     {
         ss << "0x" << std::hex << caps[i];
@@ -2362,8 +2365,8 @@ RR_INTRUSIVE_PTR<MessageEntry> ASIOStreamBaseTransport::ProcessStreamOpRequest(
                 for (size_t i = 0; i < caps_array->size(); i++)
                 {
                     uint32_t cap = (*caps_array)[i];
-                    uint32_t cap_page = cap & TranspartCapabilityCode_PAGE_MASK;
-                    uint32_t cap_value = cap & ~TranspartCapabilityCode_PAGE_MASK;
+                    uint32_t cap_page = cap & TransportCapabilityCode_PAGE_MASK;
+                    uint32_t cap_value = cap & ~TransportCapabilityCode_PAGE_MASK;
                     if (cap_page == TransportCapabilityCode_MESSAGE2_BASIC_PAGE)
                     {
                         message2_basic_caps = (cap_value & (TransportCapabilityCode_MESSAGE2_BASIC_ENABLE |
@@ -2644,8 +2647,8 @@ RR_SHARED_PTR<RRObject> ASIOStreamBaseTransport::UnpackStreamOpResponse(const RR
             for (size_t i = 0; i < caps_array->size(); i++)
             {
                 uint32_t cap = (*caps_array)[i];
-                uint32_t cap_page = cap & TranspartCapabilityCode_PAGE_MASK;
-                uint32_t cap_value = cap & ~TranspartCapabilityCode_PAGE_MASK;
+                uint32_t cap_page = cap & TransportCapabilityCode_PAGE_MASK;
+                uint32_t cap_value = cap & ~TransportCapabilityCode_PAGE_MASK;
                 if (cap_page == TransportCapabilityCode_MESSAGE2_BASIC_PAGE)
                 {
                     if (!(cap_value & TransportCapabilityCode_MESSAGE2_BASIC_ENABLE))
@@ -2822,22 +2825,22 @@ void ASIOStreamBaseTransport::SetDisableStringTable(bool d) { disable_string_tab
 
 bool ASIOStreamBaseTransport::CheckCapabilityActive(uint32_t cap)
 {
-    uint32_t cap_page = cap & TranspartCapabilityCode_PAGE_MASK;
-    uint32_t cap_value = cap & (~TranspartCapabilityCode_PAGE_MASK);
+    uint32_t cap_page = cap & TransportCapabilityCode_PAGE_MASK;
+    uint32_t cap_value = cap & (~TransportCapabilityCode_PAGE_MASK);
 
     if (cap_page == TransportCapabilityCode_MESSAGE2_BASIC_PAGE)
     {
-        return (cap_value & (active_capabilities_message2_basic & (~TranspartCapabilityCode_PAGE_MASK))) != 0;
+        return (cap_value & (active_capabilities_message2_basic & (~TransportCapabilityCode_PAGE_MASK))) != 0;
     }
 
     if (cap_page == TransportCapabilityCode_MESSAGE4_BASIC_PAGE)
     {
-        return (cap_value & (active_capabilities_message4_basic & (~TranspartCapabilityCode_PAGE_MASK))) != 0;
+        return (cap_value & (active_capabilities_message4_basic & (~TransportCapabilityCode_PAGE_MASK))) != 0;
     }
 
     if (cap_page == TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE)
     {
-        return (cap_value & (active_capabilities_message4_stringtable & (~TranspartCapabilityCode_PAGE_MASK))) != 0;
+        return (cap_value & (active_capabilities_message4_stringtable & (~TransportCapabilityCode_PAGE_MASK))) != 0;
     }
 
     return false;

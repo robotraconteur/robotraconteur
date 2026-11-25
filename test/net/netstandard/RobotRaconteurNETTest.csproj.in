@@ -33,6 +33,8 @@
     <Compile Include="$(RRSourceDir)\ServiceTestClient3.cs" Link="ServiceTestClient3.cs" />
     <Compile Include="$(RRSourceDir)\RRAssert.cs" Link="RRAssert.cs" />
     <Compile Include="$(RRSourceDir)\LFSRSeqGen.cs" Link="LFSRSeqGen.cs" />
+    <Compile Include="$(RRSourceDir)\TestVectors.cs" Link="TestVectors.cs" />
+    <EmbeddedResource Include="@ROBOTRACONTEUR_TEST_VECTORS_BIN@" LogicalName="test_vectors.bin" />
   </ItemGroup>
 
   <ItemGroup>

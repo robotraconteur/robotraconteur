@@ -14,6 +14,20 @@ using System.Threading.Tasks;
 
 namespace RobotRaconteurNETTest
 {
+class TestCustomAuthenticator : IUserAuthenticator
+{
+    PasswordFileUserAuthenticator native_authenticator =
+        new PasswordFileUserAuthenticator("testuser1 0b91dec4fe98266a03b136b59219d0d6 objectlock\n");
+
+    public AuthenticatedUser AuthenticateUser(string username, Dictionary<string, object> credentials,
+                                              ServerContext context)
+    {
+        if (!credentials.ContainsKey("password"))
+            throw new AuthenticationException("Password required");
+        return native_authenticator.AuthenticateUser(username, credentials, context);
+    }
+}
+
 class Program
 {
     static void Main(string[] args)
@@ -29,6 +43,201 @@ class Program
         if (args.Length >= 1)
         {
             command = args[0];
+        }
+
+        if (command == "messageelement_scalar")
+        {
+            using (var m = new MessageElement("v", (ulong)18446744073709551615UL))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.uint64_t);
+                RRAssert.AreEqual(((ulong[])m.Data)[0], 18446744073709551615UL);
+            }
+            using (var m = new MessageElement("v", (long)-5))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.int64_t);
+                RRAssert.AreEqual(((long[])m.Data)[0], -5L);
+            }
+            RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
+        if (command == "monitor_lock")
+        {
+            TcpTransport t = new TcpTransport();
+            t.StartServer(0);
+            var port = t.GetListenPort();
+            RobotRaconteurNode.s.RegisterTransport(t);
+            RobotRaconteurNode.s.RegisterServiceType(
+                new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+            RobotRaconteurNode.s.RegisterServiceType(
+                new com.robotraconteur.testing.TestService2.com__robotraconteur__testing__TestService2Factory());
+            RobotRaconteurTestServiceSupport sup = new RobotRaconteurTestServiceSupport();
+            sup.RegisterServices(t);
+            string url = "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService";
+
+            testroot r1 = (testroot)RobotRaconteurNode.s.ConnectService(url);
+            testroot r2 = (testroot)RobotRaconteurNode.s.ConnectService(url);
+            sub1 o1_1 = r1.get_o1();
+            sub1 o1_2 = r2.get_o1();
+            using (var l1 = new RobotRaconteurNode.ScopedMonitorLock(o1_1, 5000))
+            {
+                // A second client cannot take the monitor lock while the first holds it
+                RRAssert.ThrowsException<Exception>(
+                    delegate() { using (var l2 = new RobotRaconteurNode.ScopedMonitorLock(o1_2, 500)) {} });
+            }
+            // Dispose released the first lock, so the second client can lock now
+            using (var l3 = new RobotRaconteurNode.ScopedMonitorLock(o1_2, 5000))
+            {}
+            RobotRaconteurNode.s.DisconnectService(r1);
+            RobotRaconteurNode.s.DisconnectService(r2);
+            RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
+        if (command == "subscription_release_client")
+        {
+            using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2", 0,
+                                                   RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT |
+                                                       RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
+            {
+                var port = setup.TcpTransport.GetListenPort();
+                RobotRaconteurTestServiceSupport2 sup = new RobotRaconteurTestServiceSupport2();
+                sup.RegisterServices(setup.TcpTransport);
+                string url = "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService2";
+
+                var subscription = RobotRaconteurNode.s.SubscribeService(url);
+                var c = (com.robotraconteur.testing.TestService3.testroot3)subscription.GetDefaultClientWait(10000);
+                subscription.ClaimClient(c);
+                subscription.ReleaseClient(c);
+                // A released client is managed by the subscription again, so updating the URL with
+                // close_connected disconnects it (claimed clients are left connected)
+                subscription.UpdateServiceURL(url, null, null, null, true);
+                bool disconnected = false;
+                for (int i = 0; i < 100; i++)
+                {
+                    try
+                    {
+                        var v = c.testenum1_prop;
+                    }
+                    catch (Exception)
+                    {
+                        disconnected = true;
+                        break;
+                    }
+                    System.Threading.Thread.Sleep(100);
+                }
+                RRAssert.IsTrue(disconnected);
+                subscription.Close();
+            }
+            Console.WriteLine("Test completed");
+            return;
+        }
+
+        if (command == "varvalue_bool_complex")
+        {
+            var b = new bool[] { true, false, true };
+            using (var m = MessageElementUtil.PackVarType("b", b))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.bool_t);
+                var b2 = (bool[])RobotRaconteurNode.s.UnpackVarType(m);
+                RRAssert.IsTrue(b.SequenceEqual(b2));
+            }
+            var cd = new CDouble[] { new CDouble(1.5, -2.5), new CDouble(3, 4) };
+            using (var m = MessageElementUtil.PackVarType("cd", cd))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.cdouble_t);
+                var cd2 = (CDouble[])RobotRaconteurNode.s.UnpackVarType(m);
+                RRAssert.IsTrue(cd.SequenceEqual(cd2));
+            }
+            var cs = new CSingle[] { new CSingle(1.5f, -2.5f) };
+            using (var m = MessageElementUtil.PackVarType("cs", cs))
+            {
+                RRAssert.IsTrue(m.ElementType == DataTypes.csingle_t);
+                var cs2 = (CSingle[])RobotRaconteurNode.s.UnpackVarType(m);
+                RRAssert.IsTrue(cs.SequenceEqual(cs2));
+            }
+            RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
+        if (command == "version_equals")
+        {
+            var v1 = new RobotRaconteurVersion(1, 2, 3, 4);
+            var v2 = new RobotRaconteurVersion(1, 2, 3, 4);
+            var v3 = new RobotRaconteurVersion(1, 2, 3, 5);
+            RobotRaconteurVersion vnull = null;
+            RRAssert.IsTrue(v1 == v2);
+            RRAssert.IsFalse(v1 == v3);
+            RRAssert.IsTrue(v1 != v3);
+            RRAssert.IsFalse(v1 == null);
+            RRAssert.IsTrue(v1 != null);
+            RRAssert.IsFalse(null == v1);
+            RRAssert.IsTrue(vnull == null);
+            RRAssert.IsFalse(vnull != null);
+            RRAssert.IsTrue(v1.Equals(v2));
+            RRAssert.IsFalse(v1.Equals(v3));
+            RRAssert.IsFalse(v1.Equals(null));
+            RRAssert.IsFalse(v1.Equals("1.2.3.4"));
+            RobotRaconteurNode.s.Shutdown();
+            Console.WriteLine("Test completed");
+            return;
+        }
+
+        if (command == "custom_authenticator")
+        {
+            using (var setup = new ServerNodeSetup("com.robotraconteur.testing.TestService2", 0,
+                                                   RobotRaconteurNodeSetupFlags.ENABLE_TCP_TRANSPORT |
+                                                       RobotRaconteurNodeSetupFlags.TCP_TRANSPORT_START_SERVER))
+            {
+                var port = setup.TcpTransport.GetListenPort();
+                var testservice = new testroot3_impl();
+                Dictionary<string, string> policies = new Dictionary<string, string>();
+                policies.Add("requirevaliduser", "true");
+                var security = new ServiceSecurityPolicy(new TestCustomAuthenticator(), policies);
+                RobotRaconteurNode.s.RegisterService("RobotRaconteurTestService2_auth",
+                                                     "com.robotraconteur.testing.TestService3", testservice, security);
+                string url = "rr+tcp://localhost:" + port.ToString() + "/?service=RobotRaconteurTestService2_auth";
+
+                // Valid login: the C# authenticator receives the credentials and calls the native
+                // PasswordFileUserAuthenticator
+                var cred1 = new Dictionary<string, object>();
+                cred1.Add("password", "testpass1");
+                var c1 = (com.robotraconteur.testing.TestService3.testroot3)RobotRaconteurNode.s.ConnectService(
+                    url, "testuser1", cred1);
+                var v1 = c1.testenum1_prop;
+                RobotRaconteurNode.s.DisconnectService(c1);
+
+                // Invalid login: the authenticator throws, the client gets an error
+                var cred2 = new Dictionary<string, object>();
+                cred2.Add("password", "wrongpassword");
+                RRAssert.ThrowsException<Exception>(delegate() {
+                    var c2 = (com.robotraconteur.testing.TestService3.testroot3)RobotRaconteurNode.s.ConnectService(
+                        url, "testuser1", cred2);
+                    var v2 = c2.testenum1_prop;
+                });
+                RobotRaconteurNode.s.CloseService("RobotRaconteurTestService2_auth");
+            }
+            Console.WriteLine("Test completed");
+            return;
+        }
+
+        if (command == "nodesetup_preregistered")
+        {
+            // A service type registered before the node setup must not make the setup fail
+            RobotRaconteurNode.s.RegisterServiceType(
+                new com.robotraconteur.testing.TestService1.com__robotraconteur__testing__TestService1Factory());
+            using (var setup = new ClientNodeSetup())
+            {
+                RRAssert.IsTrue(
+                    RobotRaconteurNode.s.IsServiceTypeRegistered("com.robotraconteur.testing.TestService1"));
+                RRAssert.IsTrue(
+                    RobotRaconteurNode.s.IsServiceTypeRegistered("com.robotraconteur.testing.TestService3"));
+            }
+            Console.WriteLine("Test completed");
+            return;
         }
 
         if (command == "loopback")

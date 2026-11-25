@@ -355,6 +355,24 @@ bool TimeSpec::operator<=(const TimeSpec& t2) const
 
 namespace detail
 {
+static uint64_t MultiDimArray_CheckDimsElementCount(const std::vector<uint32_t>& dims)
+{
+    uint64_t n = 1;
+    for (size_t i = 0; i < dims.size(); i++)
+    {
+        n *= dims[i];
+        if (n > std::numeric_limits<uint32_t>::max())
+            throw InvalidArgumentException("MultiDimArray dims too large");
+    }
+    return n;
+}
+
+void MultiDimArray_CheckArraySize(const std::vector<uint32_t>& dims, size_t array_size)
+{
+    if (MultiDimArray_CheckDimsElementCount(dims) > array_size)
+        throw InvalidArgumentException("MultiDimArray array is smaller than dims");
+}
+
 MultiDimArray_CalculateCopyIndicesIter::~MultiDimArray_CalculateCopyIndicesIter() {}
 
 class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_CalculateCopyIndicesIter
@@ -386,9 +404,9 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
         if (count.empty())
             throw InvalidArgumentException("MultiDimArray count invalid");
 
-        if (count.size() > mema_dims.size() || count.size() > mema_dims.size())
+        if (count.size() > mema_dims.size() || count.size() > mema_pos.size())
             throw InvalidArgumentException("MultiDimArray copy count invalid");
-        if (count.size() > memb_dims.size() || count.size() > memb_dims.size())
+        if (count.size() > memb_dims.size() || count.size() > memb_pos.size())
             throw InvalidArgumentException("MultiDimArray copy count invalid");
 
         for (size_t i = 0; i < mema_dims.size(); i++)
@@ -411,15 +429,18 @@ class MultiDimArray_CalculateCopyIndicesIterImpl : public MultiDimArray_Calculat
 
         for (size_t i = 0; i < mema_dims.size() && i < count.size(); i++)
         {
-            if (mema_pos[i] > mema_dims[i] || (mema_pos[i] + count[i]) > mema_dims[i])
+            if (mema_pos[i] > mema_dims[i] || (static_cast<uint64_t>(mema_pos[i]) + count[i]) > mema_dims[i])
                 throw InvalidArgumentException("MultiDimArray A count invalid");
         }
 
         for (size_t i = 0; i < memb_dims.size() && i < count.size(); i++)
         {
-            if (memb_pos[i] > memb_dims[i] || (memb_pos[i] + count[i]) > memb_dims[i])
+            if (memb_pos[i] > memb_dims[i] || (static_cast<uint64_t>(memb_pos[i]) + count[i]) > memb_dims[i])
                 throw InvalidArgumentException("MultiDimArray B count invalid");
         }
+
+        MultiDimArray_CheckDimsElementCount(mema_dims);
+        MultiDimArray_CheckDimsElementCount(memb_dims);
 
         stridea.resize(count.size());
         stridea[0] = 1;
@@ -511,7 +532,7 @@ ROBOTRACONTEUR_CORE_API std::string encode_index(boost::string_ref index)
 
     for (size_t i = 0; i < index.length(); i++)
     {
-        char c = index[i];
+        unsigned char c = static_cast<unsigned char>(index[i]);
         if (std::isalnum(c))
         {
             out << std::dec << c;
@@ -709,7 +730,7 @@ void MessageStringPtr::reset() { _str_ptr = detail::MessageStringData_static_str
 
 bool MessageStringPtr::operator==(MessageStringRef b) const { return this->str() == b.str(); }
 bool MessageStringPtr::operator!=(MessageStringRef b) const { return this->str() != b.str(); }
-bool MessageStringPtr::operator<(MessageStringRef b) const { return this->str() <= b.str(); }
+bool MessageStringPtr::operator<(MessageStringRef b) const { return this->str() < b.str(); }
 
 MessageStringRef::MessageStringRef(const std::string& str)
 {
@@ -876,7 +897,7 @@ bool IsStringIdentifier(boost::string_ref str)
     const std::string uuid_regex_str =
         "\\{?([a-fA-F0-9]{8})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{4})-?([a-fA-F0-9]{12})\\}?";
 
-    const std::string combined_regex_str = "(" + name_regex_str + ")\\|(" + uuid_regex_str + ")?";
+    const std::string combined_regex_str = "(" + name_regex_str + ")\\|(" + uuid_regex_str + ")";
 
     static boost::regex combined_regex(combined_regex_str);
     if (boost::regex_match(str.begin(), str.end(), combined_regex))
@@ -884,7 +905,7 @@ bool IsStringIdentifier(boost::string_ref str)
         return true;
     }
 
-    return (IsStringName(str) || IsStringUUID(str));
+    return (IsStringScopedName(str) || IsStringUUID(str));
 }
 
 } // namespace RobotRaconteur

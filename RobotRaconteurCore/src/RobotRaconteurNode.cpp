@@ -63,8 +63,6 @@ RobotRaconteurNode::RobotRaconteurNode()
     instance_is_init = false;
 
     log_level = RobotRaconteur_LogLevel_Warning;
-
-    // ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Node, -1, "RobotRaconteurNode created");
 }
 
 void RobotRaconteurNode::Init()
@@ -552,10 +550,7 @@ void RobotRaconteurNode::ReleaseThreadPool()
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_this, Node, -1, "Thread pool released");
 }
 
-RobotRaconteurNode::~RobotRaconteurNode()
-{
-    // Shutdown();
-}
+RobotRaconteurNode::~RobotRaconteurNode() {}
 
 static std::string RobotRaconteurNode_log_msg_servicepath(const RR_INTRUSIVE_PTR<Message>& m)
 {
@@ -946,9 +941,14 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::RegisterService(const RR_SHARED
 
     {
         boost::unique_lock<boost::shared_mutex> lock(services_lock);
-        if (services.count(c->GetServiceName()) != 0)
+        RR_UNORDERED_MAP<std::string, RR_SHARED_PTR<ServerContext> >::iterator e1 = services.find(c->GetServiceName());
+        if (e1 != services.end())
         {
-            CloseService(c->GetServiceName());
+            // Close the old service here: CloseService() would lock services_lock again
+            RR_SHARED_PTR<ServerContext> old_service = e1->second;
+            old_service->Close();
+            services.erase(e1);
+            ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_this, Node, -1, "Service \"" << c->GetServiceName() << "\" closed");
         }
 
         services.insert(std::make_pair(c->GetServiceName(), c));
@@ -978,6 +978,8 @@ void RobotRaconteurNode::CloseService(boost::string_ref sname)
         s->Close();
         services.erase(sname.to_string());
     }
+
+    UpdateServiceStateNonce();
 
     ROBOTRACONTEUR_LOG_INFO_COMPONENT(weak_this, Node, -1, "Service \"" << sname << "\" closed");
 }
@@ -1011,6 +1013,19 @@ RR_SHARED_PTR<ServerContext> RobotRaconteurNode::GetService(boost::string_ref na
 RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_PTR<Message>& m, uint32_t transportid,
                                                              const RR_SHARED_PTR<ITransportConnection>& tc)
 {
+    // A special request must be the only entry in its message (object protocol, "Special Requests"). Anything
+    // else is a protocol violation: close the connection instead of answering it
+    if (m->entries.size() != 1)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1,
+                                           "Received SpecialRequest with " << m->entries.size()
+                                                                           << " entries, closing connection");
+        if (tc)
+        {
+            tc->Close();
+        }
+        throw ProtocolException("Special request must be the only entry in a message");
+    }
 
     if (!(m->header->ReceiverNodeID == NodeID::GetAny() &&
           (m->header->ReceiverNodeName == "" || m->header->ReceiverNodeName == NodeName())) &&
@@ -1105,7 +1120,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName,
                                                         "Client requested type of an invalid service path")
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ObjectNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ObjectNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Object not found"));
                 eret->Error = MessageErrorType_ObjectNotFound;
             }
@@ -1166,7 +1181,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
                     weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath, e->MemberName,
                     "Client requested type of an invalid service type: \"" << name << "\"")
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
             }
@@ -1197,7 +1212,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
             {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error connecting client: " << exp.what())
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
             }
@@ -1217,16 +1232,34 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                         throw InternalErrorException("");
                 }
 
+                // Only the connection that owns the client endpoint may disconnect it
+                if (tc && se->GetTransportConnection() != tc)
                 {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(
+                        weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath, e->MemberName,
+                        "DisconnectClient received from a transport connection that does not own the endpoint");
+                    throw InvalidOperationException("Endpoint does not belong to this connection");
+                }
 
-                    try
+                {
+                    // Remove the endpoint from its own service, not from the one named in the request
+                    RR_SHARED_PTR<ServerContext> sc = se->service;
+                    if (!sc)
                     {
-                        GetService(name)->RemoveClient(se);
+                        try
+                        {
+                            sc = GetService(name);
+                        }
+                        catch (std::out_of_range&)
+                        {
+                            throw ServiceNotFoundException("Service " + name + " not found");
+                        }
                     }
-                    catch (std::out_of_range&)
+                    if (!sc)
                     {
                         throw ServiceNotFoundException("Service " + name + " not found");
                     }
+                    sc->RemoveClient(se);
                 }
 
                 try
@@ -1240,7 +1273,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
             {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error disconnecting client: " << exp.what())
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
             }
@@ -1287,13 +1320,14 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
 
             RobotRaconteurVersion v;
             RR_INTRUSIVE_PTR<MessageElement> m_ver;
-            if (e->TryFindElement("clientversion", m_ver))
-            {
-                v.FromString(m_ver->CastDataToString());
-            }
 
             try
             {
+                if (e->TryFindElement("clientversion", m_ver))
+                {
+                    v.FromString(m_ver->CastDataToString());
+                }
+
                 c = GetService(name);
                 std::string objtype = c->GetRootObjectType(v);
                 eret->AddElement("objecttype", stringToRRArray(objtype));
@@ -1315,7 +1349,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error connecting client: " << exp.what())
                 eret->elements.clear();
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
                 break;
@@ -1403,7 +1437,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error connecting client: " << exp.what())
                 eret->elements.clear();
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service factory configuration error"));
                 eret->Error = MessageErrorType_ServiceNotFound;
                 break;
@@ -1451,7 +1485,7 @@ RR_INTRUSIVE_PTR<Message> RobotRaconteurNode::SpecialRequest(const RR_INTRUSIVE_
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(weak_this, Node, m->header->ReceiverEndpoint, e->ServicePath,
                                                         e->MemberName, "Error connecting client: " << exp.what())
                 eret->elements.clear();
-                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFoundException"));
+                eret->AddElement("errorname", stringToRRArray("RobotRaconteur.ServiceNotFound"));
                 eret->AddElement("errorstring", stringToRRArray("Service not found"));
                 eret->Error = MessageErrorType_ServiceNotFound;
                 break;
@@ -3020,7 +3054,7 @@ bool RobotRaconteurNode::IsEndpointLargeTransferAuthorized(uint32_t endpoint)
 
             if (s->service->RequireValidUser())
             {
-                return (bool)s->GetCurrentAuthenticatedUser();
+                return !s->GetAuthenticatedUsername().empty();
             }
             else
             {
@@ -3095,6 +3129,7 @@ void RobotRaconteurNode::LogMessage(RobotRaconteur_LogLevel level, const std::st
     r.Component = RobotRaconteur_LogComponent_Default;
     r.Endpoint = 0;
     r.Message = message;
+    r.Time = boost::posix_time::microsec_clock::local_time();
 
     LogRecord(r);
 }
@@ -3147,10 +3182,20 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromEnvVariable(const std
     boost::unique_lock<boost::shared_mutex> lock(log_level_mutex);
     char* loglevel_c = std::getenv(env_variable_name.c_str());
     if (!loglevel_c)
-        return RobotRaconteur_LogLevel_Warning;
+        return log_level;
     std::string loglevel(loglevel_c);
     lock.unlock();
-    return SetLogLevelFromString(loglevel);
+    try
+    {
+        return SetLogLevelFromString(loglevel);
+    }
+    catch (InvalidArgumentException&)
+    {
+        ROBOTRACONTEUR_LOG_WARNING_COMPONENT(weak_this, Node, -1,
+                                             "Invalid log level specified in environmental variable "
+                                                 << env_variable_name << ": " << loglevel);
+        return GetLogLevel();
+    }
 }
 
 RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromString(boost::string_ref loglevel)
@@ -3200,10 +3245,7 @@ RobotRaconteur_LogLevel RobotRaconteurNode::SetLogLevelFromString(boost::string_
 
     lock.unlock();
 
-    ROBOTRACONTEUR_LOG_WARNING_COMPONENT(
-        weak_this, Node, -1, "Invalid log level specified in environmental variable or command line: " << loglevel);
-
-    return log_level;
+    throw InvalidArgumentException("Invalid log level: " + loglevel.to_string());
 }
 
 RR_SHARED_PTR<LogRecordHandler> RobotRaconteurNode::GetLogRecordHandler()

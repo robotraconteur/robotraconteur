@@ -116,8 +116,8 @@
 %feature("docstring") MessageEntryType_PropertySetRes "Property member set response";
 %feature("docstring") MessageEntryType_FunctionCallReq "Function member call request";
 %feature("docstring") MessageEntryType_FunctionCallRes "Function member call response";
-%feature("docstring") MessageEntryType_GeneratorNextReq "Generater next call request";
-%feature("docstring") MessageEntryType_GeneratorNextRes "Generater next call response";
+%feature("docstring") MessageEntryType_GeneratorNextReq "Generator next call request";
+%feature("docstring") MessageEntryType_GeneratorNextRes "Generator next call response";
 %feature("docstring") MessageEntryType_EventReq "Event member notification";
 %feature("docstring") MessageEntryType_EventRes "(reserved)";
 %feature("docstring") MessageEntryType_PipePacket "Pipe member packet";
@@ -228,17 +228,18 @@
 %feature("docstring") RR_VALUE_LIFESPAN_INFINITE "Set wire values to have infinite lifespan and will not expire";
 
 // TransportCapabilityCode flags
-%feature("docstring") TranspartCapabilityCode_PAGE_MASK "Page mask for transport capability code";
-%feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_PAGE2000000 "Message Version 2 transport capability page code";
+%feature("docstring") TransportCapabilityCode_PAGE_MASK "Page mask for transport capability code";
+%feature("docstring") TranspartCapabilityCode_PAGE_MASK "Page mask for transport capability code (deprecated misspelled name, use TransportCapabilityCode_PAGE_MASK)";
+%feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_PAGE "Message Version 2 transport capability page code";
 %feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_ENABLE "Enable Message Version 2 transport capability flag";
-%feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED2 "Enable Message Version 2 connect combined transport capability flag";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_PAGE4000000 "Message Version 4 transport capability page code";
+%feature("docstring") TransportCapabilityCode_MESSAGE2_BASIC_CONNECTCOMBINED "Enable Message Version 2 connect combined transport capability flag";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_PAGE "Message Version 4 transport capability page code";
 %feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_ENABLE "Enable Message Version 4 transport capability flag";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_CONNECTCOMBINED2 "Enable Message Version 4 connect combine transport capability flag";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE4100000 "Message Version 4 String Table capability page code";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_BASIC_CONNECTCOMBINED "Enable Message Version 4 connect combine transport capability flag";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_PAGE "Message Version 4 String Table capability page code";
 %feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_ENABLE "Enable Message Version 4 String Table transport capability code";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_MESSAGE_LOCAL2 "Enable Message Version 4 local String Table capability code";
-%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE4 "Enable Message Version 4 standard String Table capability code";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_MESSAGE_LOCAL "Enable Message Version 4 local String Table capability code";
+%feature("docstring") TransportCapabilityCode_MESSAGE4_STRINGTABLE_STANDARD_TABLE "Enable Message Version 4 standard String Table capability code";
 
 // RobotRaconteur_LogLevel Enum
 %feature("docstring") RobotRaconteur_LogLevel_Trace "`trace` log level";
@@ -252,7 +253,7 @@
 // RobotRaconteur_LogComponent Enum
 %feature("docstring") RobotRaconteur_LogComponent_Default "default component";
 %feature("docstring") RobotRaconteur_LogComponent_Node "Robot Raconteur Node component";
-%feature("docstring") RobotRaconteur_LogComponent_Transport "tranport component";
+%feature("docstring") RobotRaconteur_LogComponent_Transport "transport component";
 %feature("docstring") RobotRaconteur_LogComponent_Message "message or message serialization component";
 %feature("docstring") RobotRaconteur_LogComponent_Client "client component";
 %feature("docstring") RobotRaconteur_LogComponent_Service "service component";
@@ -299,11 +300,11 @@ is typically used:
 .. code-block:: python
 
    import RobotRaconteur as RR
-   RRN = RobotRaconteur.s
+   RRN = RR.RobotRaconteurNode.s
 
 """
 
-%feature("docstring") RobotRaconteur::RobotRaconteurNode::__init__() """
+%feature("docstring") RobotRaconteur::RobotRaconteurNode::RobotRaconteurNode() """
 Construct a new Robot Raconteur node.
 """
 
@@ -465,7 +466,7 @@ for the node, it will be ignored
 
 Get the current log level for the node
 
-Default level is \"info\"
+Default level is \"warning\"
 
 :return: The current log level
 :rtype: int
@@ -475,7 +476,7 @@ Default level is \"info\"
 
 Set the log level for the node
 
-Set RobotRaconteur.RobotRaconteur_LogLevel_Disable to disable logging
+Set RobotRaconteur.LogLevel_Disable to disable logging
 
 :param level: The desired log level
 :type level: int
@@ -487,7 +488,7 @@ Set the log level for the node from a string
 
 Must be one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
 
-Defaults to WARNING
+If the value is invalid, the log level is left unchanged
 
 :param level: The desired log level
 :type level: str
@@ -515,7 +516,7 @@ If an invalid value or the variable does not exist, the log level is left unchan
 
 Get the currently configured log record handler
 
-If None, records are sent to ``stdout``
+If None, records are sent to ``stderr``
 
 :return: The log record handler
 :rtype: LogRecordHandler
@@ -538,8 +539,8 @@ is connected
 
 Raises `RobotRaconteur.ConnectionException` or other exception if connection is invalid.
 
-:param endpoint: The LocalEndpoint identifier to check
-:type endpoint: int
+:param client: The LocalEndpoint identifier to check
+:type client: int
 """
 
 %feature("docstring") RobotRaconteurNodeSetupFlags_NONE "No options enabled";
@@ -605,7 +606,7 @@ The command line options will be allowed to override the options
 specified in allowed_overrides passed to CommandLineConfigParser().
 
 :param node_name: The default NodeName
-:type node_name str
+:type node_name: str
 :param tcp_port: The default TCP port
 :type tcp_port: int
 :param default_flags: The default flags
@@ -689,7 +690,7 @@ Get the option value as a bool
 Returns default_value if option not specified on command line
 
 :param option: The name of the option
-:type option: bool
+:type option: str
 :param default_value: The default option value
 :type default_value: bool
 :return: The option value, or default_value if not specified on command line
@@ -934,7 +935,7 @@ NodeID
 :type public_: bool
 """
 %feature("docstring") RobotRaconteur::LocalTransport::StartServerAsNodeID(const NodeID& nodeid) """
-StartServerAsNodeId(name, public_ = False)
+StartServerAsNodeID(nodeid, public_ = False)
 
 The LocalTransport will listen on a UNIX domain socket for incoming clients,
 using information files and inodes on the local filesystem. This function
@@ -1217,13 +1218,25 @@ It will be loaded when a node is started with the same NodeName.
 NodeID with all zeros is considered \"any\" node.
 """
 
-%feature("docstring") RobotRaconteur::NodeID::ToString() """
-Convert the NodeID UUID to string with \"B\" format
+%feature("docstring") RobotRaconteur::NodeID::ToString(const std::string& format) const """
+ToString(format=\"B\")
 
-Convert the UUID string to 8-4-4-4-12 \"B\" format (with brackets)
+Convert the NodeID UUID to string
+
+\"B\" format (default), 8-4-4-4-12 with brackets:
 
 {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
 
+\"D\" format, 8-4-4-4-12 without brackets:
+
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+\"N\" format, digits only:
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+:param format: (optional) \"B\", \"D\", or \"N\" for the format
+:type format: str
 :return: The string
 :rtype: str
 """
@@ -1248,7 +1261,7 @@ Test if NodeID is not equal
 %feature("docstring") RobotRaconteur::NodeID::IsAnyNode() """
 Is the NodeID UUID all zeros
 
-The all zero UUID respresents \"any\" node, or an unset NodeID
+The all zero UUID represents \"any\" node, or an unset NodeID
 
 :return: True The NodeID UUID is all zeros, representing any node, False The NodeID UUID is not all zeros
 :rtype: bool
@@ -1378,7 +1391,7 @@ specified using endpoint.
 :param username: The name of the user owning the lock
 :type username: str
 :param endpoint: The client endpoint ID of the client owning the lock
-:type int:
+:type endpoint: int
 """
 
 %feature("docstring") RobotRaconteur::ServerContext::ReleaseObjectLock(const std::string& servicepath, const std::string& username, bool override_) """
@@ -1392,9 +1405,9 @@ The override_ parameter is set to true for client requests if the client has
 the \"objectlockoverride\" permission.
 
 :param servicepath: The service path to release lock
-:type str:
+:type servicepath: str
 :param username: The username requesting the lock release
-:type username:
+:type username: str
 :param override_: If False, only the creating username can release the lock. If True,
  any username can release the lock
 :type override_: bool
@@ -1546,9 +1559,8 @@ an example of an authenticator. The valid options for Policies are as follows:
 |                  |                 |                 | users to        |
 |                  |                 |                 | request object  |
 |                  |                 |                 | locks.          |
-|                  |                 |                 | r               |
-|                  |                 |                 | requirevaliduser |
-|                  |                 |                 | most also be    |
+|                  |                 |                 | requirevaliduser|
+|                  |                 |                 | must also be    |
 |                  |                 |                 | \"true\"          |
 +------------------+-----------------+-----------------+-----------------+
 
@@ -1724,10 +1736,13 @@ Subscription filter attribute for use with ServiceSubscriptionFilter
 %feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttribute::Name """(str) The attribute name. Empty for no name"""
 %feature("docstring") RobotRaconteur::ServiceSubscriptionFilterAttribute::Value """(str) The string value for the attribute"""
 
-%feature("docstring") RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex(const std::string& regex_value) """
+%feature("docstring") RobotRaconteur::CreateServiceSubscriptionFilterAttributeRegex(const std::string& name, const std::string& regex_value) """
+CreateServiceSubscriptionFilterAttributeRegex([name,] regex_value)
 
 Create a ServiceSubscriptionFilterAttribute from a regex string
 
+:param name: (optional) The attribute name
+:type name: str
 :param regex_value: The regex string
 :type regex_value: str
 :return: The ServiceSubscriptionFilterAttribute
@@ -1775,7 +1790,7 @@ AND, OR, NOR, or NAND logic. Other groups can be nested, to allow for complex co
    the origin would be ``https://example.com``. For localhost, the origin is ``http://localhost:8080``,
    where 8080 is the port the web page is hosted on. The origin can be configured
    using the function TcpTransport.AddWebSocketAllowedOrigin(), or using
-   the ``--robotraconteur-tcp-ws-add-origin`` command line option if a node setup class is used.
+   the ``--robotraconteur-tcp-ws-add-origins`` command line option if a node setup class is used.
    If a local file is used to host the web page, the origin is ``null`` and no origin
    checking is performed.
 

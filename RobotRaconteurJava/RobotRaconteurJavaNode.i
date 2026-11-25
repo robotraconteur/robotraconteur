@@ -1303,6 +1303,7 @@ import java.util.*;
 		  catch (Exception e)
 		  {
 			  handler_func.action(new ServiceInfo2[0]);
+			  return;
 		  }
 
 		  handler_func.action(o2);
@@ -1349,6 +1350,7 @@ import java.util.*;
 		  catch (Exception e)
 		  {
 			  handler_func.action(new NodeInfo2[0]);
+			  return;
 		  }
 
 		  handler_func.action(o2);

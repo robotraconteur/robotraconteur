@@ -149,11 +149,16 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/RobotRaconteurPythonError.py
             $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME}>/)
 
-foreach(P ${RR_PY_SOURCES})
-    add_custom_command(
-        TARGET ${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy ${P} $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME}>/)
-endforeach(P)
+# Copy the Python sources in a target that runs on every build (copy_if_different), not in a POST_BUILD step of the
+# module: POST_BUILD only runs when the module is relinked, so a change to a .py file alone left a stale copy in the
+# output directory
+add_custom_target(
+    RobotRaconteurPython3_py_sources ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RR_PY_SOURCES}
+            $<TARGET_FILE_DIR:${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME}>/
+    DEPENDS ${RR_PY_SOURCES}
+    VERBATIM)
+add_dependencies(RobotRaconteurPython3_py_sources ${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME})
 
 if(NOT EMSCRIPTEN)
     configure_file("${PYTHON2_SOURCE_DIR}/setup.py.in" "${CMAKE_BINARY_DIR}/out/Python3/setup.py" @ONLY)
@@ -183,6 +188,7 @@ if(BUILD_PYTHON3_WHEEL)
         bdist_wheel
         ${PYTHON3_WHEEL_EXTRA_ARGS}
         DEPENDS ${SWIG_MODULE_RobotRaconteurPython3_REAL_NAME})
+    add_dependencies(RobotRaconteurPython3_Wheel RobotRaconteurPython3_py_sources)
     if(WIN32)
         set_target_properties(RobotRaconteurPython3_Wheel PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD_DEBUG TRUE)
     endif()

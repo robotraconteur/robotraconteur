@@ -8,6 +8,26 @@ public class RobotRaconteurTestServiceSupport
 {
     public RobotRaconteurTest_testroot testservice;
     public RobotRaconteurTest_testroot testservice_auth;
+    public RobotRaconteurTest_testroot testservice_auth_java;
+
+    // Java authenticator that forwards to a native authenticator, so that both directions of the credentials
+    // conversion between Java and the native library are used
+    static class ForwardingUserAuthenticator implements IUserAuthenticator
+    {
+        NativeUserAuthenticator inner;
+
+        ForwardingUserAuthenticator(NativeUserAuthenticator inner)
+        {
+            this.inner = inner;
+        }
+
+        @Override
+        public AuthenticatedUser authenticateUser(String username, java.util.Map<String, Object> credentials,
+                                                  ServerContext context)
+        {
+            return inner.authenticateUser(username, credentials, context);
+        }
+    }
 
     public final void RegisterServices(TcpTransport tcptransport)
     {
@@ -28,6 +48,11 @@ public class RobotRaconteurTestServiceSupport
 
         RobotRaconteurNode.s().registerService("RobotRaconteurTestService_auth",
                                                "com.robotraconteur.testing.TestService1", testservice_auth, s);
+
+        testservice_auth_java = new RobotRaconteurTest_testroot(tcptransport);
+        ServiceSecurityPolicy s2 = new ServiceSecurityPolicy(new ForwardingUserAuthenticator(p), policies);
+        RobotRaconteurNode.s().registerService("RobotRaconteurTestService_auth_java",
+                                               "com.robotraconteur.testing.TestService1", testservice_auth_java, s2);
     }
 
     public final void service_listener(ServerContext service, ServerServiceListenerEventType ev, Object parameter)
@@ -39,5 +64,6 @@ public class RobotRaconteurTestServiceSupport
     {
         RobotRaconteurNode.s().closeService("RobotRaconteurTestService");
         RobotRaconteurNode.s().closeService("RobotRaconteurTestService_auth");
+        RobotRaconteurNode.s().closeService("RobotRaconteurTestService_auth_java");
     }
 }

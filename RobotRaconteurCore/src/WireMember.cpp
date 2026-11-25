@@ -305,7 +305,7 @@ void WireConnectionBase::SetOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value)
     if (direction == MemberDefinition_Direction_readonly)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
-                                                "Attempt to get OutValue of read only wire");
+                                                "Attempt to set OutValue of read only wire");
         throw ReadOnlyMemberException("Read only member");
     }
 
@@ -1339,6 +1339,19 @@ void WireBroadcasterBase::ConnectionClosedBase(const RR_SHARED_PTR<detail::WireB
 void WireBroadcasterBase::ConnectionConnectedBase(const RR_SHARED_PTR<WireConnectionBase>& ep)
 {
     boost::mutex::scoped_lock lock(connected_wires_lock);
+
+    // A repeated WireConnectReq from a connected client reuses its connection, do not add it twice
+    for (std::list<RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> >::iterator ee = connected_wires.begin();
+         ee != connected_wires.end(); ++ee)
+    {
+        if ((*ee)->connection.lock() == ep)
+        {
+            ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, ep->GetEndpoint(), service_path, member_name,
+                                                    "WireBroadcaster wire already connected");
+            return;
+        }
+    }
+
     ep->SetIgnoreInValue(true);
 
     RR_SHARED_PTR<detail::WireBroadcaster_connected_connection> c =
@@ -1389,11 +1402,11 @@ void WireBroadcasterBase::SetOutValueBase(const RR_INTRUSIVE_PTR<RRValue>& value
                 ep_endpoint = c->GetEndpoint();
                 if (predicate)
                 {
-                    ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(
-                        node, Member, ep_endpoint, service_path, member_name,
-                        "WireBroadcaster skipping send out value: predicate is false");
                     if (!predicate(this_, c->GetEndpoint()))
                     {
+                        ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(
+                            node, Member, ep_endpoint, service_path, member_name,
+                            "WireBroadcaster skipping send out value: predicate is false");
                         ee++;
                         continue;
                     }

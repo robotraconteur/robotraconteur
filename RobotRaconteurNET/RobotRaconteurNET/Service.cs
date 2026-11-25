@@ -240,10 +240,7 @@ public class Pipe<T>
     ~Pipe()
     {
         if (innerpipe is WrappedPipeServer)
-        {
-            // ((WrappedPipeServer)innerpipe).SetRRDirector(null);
-            // RRObjectHeap.DeleteObject(director_id);
-        }
+        {}
     }
 
     /// <summary>
@@ -274,7 +271,7 @@ public class Pipe<T>
     /// <para>
     /// Creates a connected pipe endpoint pair, and returns the local endpoint. Use to create the streaming data
     /// connection to the service. Pipe endpoints are indexed, meaning that Connect() may be called multiple
-    /// times for the same client connection to create multple pipe endpoint pairs. For most cases Pipe.ANY_INDEX
+    /// times for the same client connection to create multiple pipe endpoint pairs. For most cases Pipe.ANY_INDEX
     /// (-1) can be used to automatically select an available index.
     /// </para>
     /// <para>
@@ -375,14 +372,6 @@ public class Pipe<T>
         AsyncConnectFunction(index, timeout, h, id);
         return await h.Task;
     }
-
-    // public delegate void PipeConnectCallbackFunction(PipeEndpoint newpipe);
-
-    // public delegate void PipeDisconnectCallbackFunction(PipeEndpoint closedpipe);
-
-    // public delegate void PipePacketReceivedCallbackFunction(PipeEndpoint e);
-
-    // public delegate void PipePacketAckReceivedCallbackFunction(PipeEndpoint e, uint packetnum);
 
     /// <summary>
     /// Set the pipe endpoint connected callback function
@@ -505,7 +494,6 @@ public class Pipe<T>
         public event Action<PipeEndpoint, uint> PacketAckReceivedEvent;
 
         directorclass director;
-        // int director_id;
 
         public PipeEndpoint(WrappedPipeEndpoint innerpipe)
         {
@@ -513,14 +501,10 @@ public class Pipe<T>
             director = new directorclass(this);
 
             innerpipe.SetRRDirector(director, RRObjectHeap.AddObject(this));
-            // director_id = RRObjectHeap.AddObject(innerpipe);
         }
 
         ~PipeEndpoint()
-        {
-            // innerpipe.SetRRDirector(null);
-            // RRObjectHeap.DeleteObject(director_id);
-        }
+        {}
 
         /// <summary>
         /// Get the pipe endpoint index used when endpoint connected
@@ -1003,7 +987,19 @@ public class PipeBroadcaster<T>
 
         public override bool Predicate(uint client_endpoint, int index)
         {
-            return f(client_endpoint, index);
+            try
+            {
+                return f(client_endpoint, index);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return false;
+                }
+            }
         }
     }
 
@@ -1242,17 +1238,13 @@ public class Wire<T>
     {
         this.innerwire = innerwire;
         m_Membername = innerwire.GetMemberName();
-        // director_id = RRObjectHeap.AddObject(director);
         direction = innerwire.Direction();
     }
 
     ~Wire()
     {
         if (innerwire is WrappedWireServer)
-        {
-            // ((WrappedWireServer)innerwire).SetRRDirector(null);
-            // RRObjectHeap.DeleteObject(director_id);
-        }
+        {}
     }
 
     /// <summary>
@@ -1655,10 +1647,22 @@ public class Wire<T>
 
         public override MessageElement PeekValue(uint ep)
         {
-            var value = cb(ep);
+            try
+            {
+                var value = cb(ep);
 
-            MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
-            return m;
+                MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
+                return m;
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return null;
+                }
+            }
         }
     }
 
@@ -1673,8 +1677,20 @@ public class Wire<T>
 
         public override void PokeValue(MessageElement el, TimeSpec ts, uint ep)
         {
-            T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
-            cb(value, ts, ep);
+            try
+            {
+                T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
+                cb(value, ts, ep);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return;
+                }
+            }
         }
     }
 
@@ -1842,27 +1858,19 @@ public class Wire<T>
         WrappedWireConnection innerwire;
 
         directorclass director;
-        // int director_id = 0;
 
         public WireConnection(WrappedWireConnection innerwire)
         {
             this.innerwire = innerwire;
             director = new directorclass(this);
-            // director_id = RRObjectHeap.AddObject(director);
-            // RRObjectHeap.AddObject(innerwire);
 
             innerwire.SetRRDirector(director, RRObjectHeap.AddObject(this));
         }
 
         ~WireConnection()
         {
-            /// innerwire.SetRRDirector(null);
-            // RRObjectHeap.DeleteObject(director_id);
             try
-            {
-
-                // innerwire.Close();
-            }
+            {}
             catch
             {}
         }
@@ -2330,7 +2338,19 @@ public class WireBroadcaster<T>
 
         public override bool Predicate(uint client_endpoint)
         {
-            return f(client_endpoint);
+            try
+            {
+                return f(client_endpoint);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return false;
+                }
+            }
         }
     }
 
@@ -2345,10 +2365,22 @@ public class WireBroadcaster<T>
 
         public override MessageElement PeekValue(uint ep)
         {
-            var value = cb(ep);
+            try
+            {
+                var value = cb(ep);
 
-            MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
-            return m;
+                MessageElement m = RobotRaconteurNode.s.PackAnyType<T>("value", ref value);
+                return m;
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return null;
+                }
+            }
         }
     }
 
@@ -2634,8 +2666,20 @@ public class WireUnicastReceiver<T>
             if (cb1 == null)
                 return;
 
-            T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
-            cb1.ValueChanged(value, ts, ep);
+            try
+            {
+                T value = RobotRaconteurNode.s.UnpackAnyType<T>(el);
+                cb1.ValueChanged(value, ts, ep);
+            }
+            catch (Exception e)
+            {
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return;
+                }
+            }
         }
     }
 
@@ -2733,12 +2777,22 @@ public class ClientServiceListenerDirectorNET : ClientServiceListenerDirector
 
     public override void Callback(int code)
     {
-        listener(stub, (ClientServiceListenerEventType)code, null);
+        try
+        {
+            listener(stub, (ClientServiceListenerEventType)code, null);
+        }
+        catch
+        {}
     }
 
     public override void Callback2(int code, string p)
     {
-        listener(stub, (ClientServiceListenerEventType)code, p);
+        try
+        {
+            listener(stub, (ClientServiceListenerEventType)code, p);
+        }
+        catch
+        {}
     }
 }
 
@@ -2781,17 +2835,32 @@ public partial class ServiceSecurityPolicy
         protected override AuthenticatedUser AuthenticateUser(string username, MessageElement credentials,
                                                               ServerContext context)
         {
-            using (credentials)
+            try
             {
-                IUserAuthenticator t = target;
-                if (t == null)
-                    throw new AuthenticationException("Authenticator internal error");
+                using (credentials)
+                {
+                    IUserAuthenticator t = target;
+                    if (t == null)
+                        throw new AuthenticationException("Authenticator internal error");
 
-                Dictionary<string, object> c2 =
-                    (Dictionary<string, object>)RobotRaconteurNode.s.UnpackMapType<string, object>(credentials);
+                    Dictionary<string, object> c2 =
+                        (Dictionary<string, object>)RobotRaconteurNode.s.UnpackMapType<string, object>(
+                            credentials.Data);
 
-                AuthenticatedUser ret = t.AuthenticateUser(username, c2, context);
-                return ret;
+                    AuthenticatedUser ret = t.AuthenticateUser(username, c2, context);
+                    return ret;
+                }
+            }
+            catch (Exception e)
+            {
+                // The authenticator rejects a login by throwing. Report it to the native caller
+                // instead of letting the exception leave the director callback
+                using (MessageEntry merr = new MessageEntry())
+                {
+                    RobotRaconteurExceptionUtil.ExceptionToMessageEntry(e, merr);
+                    RRDirectorExceptionHelper.SetError(merr, e.ToString());
+                    return null;
+                }
             }
         }
     }
@@ -2858,8 +2927,11 @@ public partial class NativeUserAuthenticator
     public virtual AuthenticatedUser AuthenticateUser(string username, Dictionary<string, object> credentials,
                                                       ServerContext context)
     {
-        MessageElement c = (MessageElement)RobotRaconteurNode.s.PackMapType<string, object>(credentials);
-        return _AuthenticateUser(username, c, context);
+        using (MessageElement c = MessageElementUtil.NewMessageElement(
+                   "credentials", RobotRaconteurNode.s.PackMapType<string, object>(credentials)))
+        {
+            return _AuthenticateUser(username, c, context);
+        }
     }
 }
 

@@ -20,8 +20,14 @@ else()
     find_package(Boost COMPONENTS date_time filesystem regex chrono random program_options REQUIRED)
 endif()
 
+set(ROBOTRACONTEUR_TEST_VECTORS_BIN "${CMAKE_CURRENT_SOURCE_DIR}/data/test_vectors.bin")
+
 add_subdirectory(robdef)
 add_subdirectory(lfsr)
+
+if(BUILD_GEN)
+    add_subdirectory(robotraconteurgen)
+endif()
 
 if(BUILD_CORE OR TEST_CORE)
     add_subdirectory(cpp)

@@ -123,9 +123,13 @@ PyAutoPtr<PyObject> stringToPyObject(const std::string& s)
         throw DataTypeException("Invalid string specified");
     return r;
 #else
-    PyObject* r = PyUnicode_DecodeUTF8(s.c_str(), s.size(), "Invalid string specified");
+    PyObject* r = PyUnicode_DecodeUTF8(s.c_str(), s.size(), NULL);
     if (!r)
+    {
+        // Clear the UnicodeDecodeError: the exception handler calls into Python to raise DataTypeException
+        PyErr_Clear();
         throw DataTypeException("Invalid string specified");
+    }
     return r;
 #endif
 }
@@ -138,9 +142,13 @@ PyAutoPtr<PyObject> stringToPyObject(boost::string_ref s)
         throw DataTypeException("Invalid string specified");
     return r;
 #else
-    PyObject* r = PyUnicode_DecodeUTF8(s.data(), s.size(), "Invalid string specified");
+    PyObject* r = PyUnicode_DecodeUTF8(s.data(), s.size(), NULL);
     if (!r)
+    {
+        // Clear the UnicodeDecodeError: the exception handler calls into Python to raise DataTypeException
+        PyErr_Clear();
         throw DataTypeException("Invalid string specified");
+    }
     return r;
 #endif
 }
@@ -428,10 +436,28 @@ PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<TypeDefinition>& type,
     return GetNumPyDescrForType(rr_cast<ServiceEntryDefinition>(n), obj, node);
 }
 
+static PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
+                                      const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                                      const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
+                                      std::vector<ServiceEntryDefinition*>& parents);
+
 PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
                                const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
                                const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node)
 {
+    std::vector<ServiceEntryDefinition*> parents;
+    return GetNumPyDescrForType(e, obj, node, parents);
+}
+
+static PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
+                                      const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,
+                                      const boost::shared_ptr<RobotRaconteur::RobotRaconteurNode>& node,
+                                      std::vector<ServiceEntryDefinition*>& parents)
+{
+    if (std::find(parents.begin(), parents.end(), e.get()) != parents.end())
+        throw DataTypeException("Recursive pod or namedarray detected in " + e->Name);
+    parents.push_back(e.get());
+
     PyAutoPtr<PyObject> decr_list(PyList_New(e->Members.size()));
     for (size_t i = 0; i < e->Members.size(); i++)
     {
@@ -448,7 +474,7 @@ PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
             std::vector<RR_SHARED_PTR<ServiceDefinition> > other_defs;
             RR_SHARED_PTR<ServiceEntryDefinition> f_def2 =
                 rr_cast<ServiceEntryDefinition>(f_def->ResolveNamedType(other_defs, node, obj));
-            PyAutoPtr<PyObject> f_desc(GetNumPyDescrForType(f_def2, obj, node));
+            PyAutoPtr<PyObject> f_desc(GetNumPyDescrForType(f_def2, obj, node, parents));
             PyTuple_SetItem(f.get(), 1, f_desc.detach());
         }
 
@@ -504,6 +530,7 @@ PyObject* GetNumPyDescrForType(const RR_SHARED_PTR<ServiceEntryDefinition>& e,
         throw DataTypeException("Could not create numpy dtype for Pod");
     }
 
+    parents.pop_back();
     return (PyObject*)descr_ret;
 }
 
@@ -1081,7 +1108,7 @@ class PackMessageElementImpl
                     std::vector<boost::intrusive_ptr<MessageElement> > map_vec;
                     if (!PyArray_Check((PyArrayObject*)data))
                     {
-                        throw new DataTypeException("Expected numpy.ndarray for pods and namedarrays");
+                        throw DataTypeException("Expected numpy.ndarray for pods and namedarrays");
                     }
 
                     int npy_dimcount = PyArray_NDIM((PyArrayObject*)data);
@@ -1162,11 +1189,12 @@ class PackMessageElementImpl
                 PyAutoPtr<PyObject> str1(PyUnicode_AsUTF8String(data));
                 if (!str1.get())
                 {
+                    PyErr_Clear();
                     throw DataTypeException("Invalid string");
                 }
                 char* str_dat;
                 Py_ssize_t str_len;
-                if (PyString_AsStringAndSize(data, &str_dat, &str_len) < 0)
+                if (PyString_AsStringAndSize(str1.get(), &str_dat, &str_len) < 0)
                 {
                     throw DataTypeException("Invalid string");
                 }
@@ -1343,12 +1371,11 @@ class UnpackMessageElementImpl
             throw DataTypeException("NamedArray must not be null");
         if (a->size() % s.get<1>() != 0)
             throw DataTypeException("Invalid length for NamedArray");
+        if (a->GetTypeID() != s.get<0>())
+            throw DataTypeException("Invalid NamedArray");
 
         if (type1)
         {
-            if (a->GetTypeID() != s.get<0>())
-                throw DataTypeException("Invalid NamedArray");
-
             uint32_t c = boost::accumulate(type1->ArrayLength, 1, std::multiplies<uint32_t>());
             if (!type1->ArrayLength.empty() && c != 0)
             {
@@ -1501,6 +1528,12 @@ class UnpackMessageElementImpl
                     el1 = (UnpackMessageElement(el, p1, stub, node));
                 }
 
+                if (p->Type->ArrayType != DataTypes_ArrayTypes_none && (!el1 || !PyArray_Check(el1)))
+                {
+                    Py_XDECREF(el1);
+                    throw DataTypeException("Invalid pod field " + p->Name);
+                }
+
                 if (p->Type->ArrayType == DataTypes_ArrayTypes_multidimarray)
                 {
                     std::vector<npy_intp> dims2(p->Type->ArrayLength.size());
@@ -1514,6 +1547,12 @@ class UnpackMessageElementImpl
                     dims3.len = (int)dims2.size();
 
                     PyAutoPtr<PyObject> el3(PyArray_Newshape((PyArrayObject*)el1, &dims3, NPY_FORTRANORDER));
+                    if (!el3.get())
+                    {
+                        PyErr_Clear();
+                        Py_XDECREF(el1);
+                        throw DataTypeException("Invalid pod field array dimensions");
+                    }
 
                     if (PyObject_SetItem(el2.get(), py_name.get(), el3.get()) != 0)
                     {
@@ -1538,7 +1577,6 @@ class UnpackMessageElementImpl
                         throw DataTypeException("Could not set pod field");
                     }
 
-                    // if (el->DataCount > 0)
                     {
 
                         PyArray_Dims el4_dims;
@@ -1782,6 +1820,11 @@ class UnpackMessageElementImpl
 
                             push_field_level("[" + boost::lexical_cast<std::string>(i) + "]", type2);
                             PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                            if (!el2.get())
+                            {
+                                PyErr_Clear();
+                                throw DataTypeException("Could not unpack container element");
+                            }
                             PyList_SetItem(ret.get(), i, el2.get());
                             Py_XINCREF(el2.get());
                             pop_field_level();
@@ -1820,7 +1863,13 @@ class UnpackMessageElementImpl
 
                             push_field_level("[" + boost::lexical_cast<std::string>(i2) + "]", type2);
                             PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
-                            PyDict_SetItem(ret.get(), PyLong_FromLong(i2), el2.get());
+                            if (!el2.get())
+                            {
+                                PyErr_Clear();
+                                throw DataTypeException("Could not unpack container element");
+                            }
+                            PyAutoPtr<PyObject> key(PyLong_FromLong(i2));
+                            PyDict_SetItem(ret.get(), key.get(), el2.get());
                             pop_field_level();
                         }
 
@@ -1843,6 +1892,11 @@ class UnpackMessageElementImpl
 
                             push_field_level("[\"" + el1->ElementName.str() + "\"]", type2);
                             PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                            if (!el2.get())
+                            {
+                                PyErr_Clear();
+                                throw DataTypeException("Could not unpack container element");
+                            }
                             PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName.str()).get(), el2.get());
                             pop_field_level();
                         }
@@ -1902,7 +1956,14 @@ class UnpackMessageElementImpl
         if (element->ElementType == DataTypes_string_t)
         {
             boost::intrusive_ptr<RRArray<char> > s1 = element->CastData<RRArray<char> >();
-            return PyUnicode_DecodeUTF8(s1->data(), s1->size(), "Invalid UTF-8 String");
+            // Strings unpack to unicode on Python 2 and 3 (stringToPyObject gives a byte string on Python 2)
+            PyObject* r = PyUnicode_DecodeUTF8(s1->data(), s1->size(), NULL);
+            if (!r)
+            {
+                PyErr_Clear();
+                throw DataTypeException("Invalid UTF-8 string");
+            }
+            return r;
         }
 
         if (element->ElementType == DataTypes_structure_t)
@@ -1975,6 +2036,11 @@ class UnpackMessageElementImpl
                 }
 
                 PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                if (!el2.get())
+                {
+                    PyErr_Clear();
+                    throw DataTypeException("Could not unpack container element");
+                }
                 PyList_SetItem(ret.get(), i, el2.get());
                 Py_XINCREF(el2.get());
                 pop_field_level();
@@ -2015,11 +2081,17 @@ class UnpackMessageElementImpl
 
                 push_field_level("[" + boost::lexical_cast<std::string>(i2) + "]", type2);
                 PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                if (!el2.get())
+                {
+                    PyErr_Clear();
+                    throw DataTypeException("Could not unpack container element");
+                }
 #if (PY_MAJOR_VERSION == 2)
-                PyDict_SetItem(ret.get(), PyInt_FromLong(i2), el2.get());
+                PyAutoPtr<PyObject> key(PyInt_FromLong(i2));
 #else
-                PyDict_SetItem(ret.get(), PyLong_FromLong(i2), el2.get());
+                PyAutoPtr<PyObject> key(PyLong_FromLong(i2));
 #endif
+                PyDict_SetItem(ret.get(), key.get(), el2.get());
                 pop_field_level();
             }
 
@@ -2046,6 +2118,11 @@ class UnpackMessageElementImpl
 
                 push_field_level("[" + el1->ElementName.str() + "]", type2);
                 PyAutoPtr<PyObject> el2(UnpackMessageElement(el1, type2, stub, node));
+                if (!el2.get())
+                {
+                    PyErr_Clear();
+                    throw DataTypeException("Could not unpack container element");
+                }
                 PyDict_SetItem(ret.get(), stringToPyObject(el1->ElementName.str()).get(), el2.get());
                 pop_field_level();
             }
@@ -2107,6 +2184,11 @@ class UnpackMessageElementImpl
             dims3.len = (int)dims2.size();
 
             PyAutoPtr<PyObject> ret2(PyArray_Newshape((PyArrayObject*)ret.get(), &dims3, NPY_FORTRANORDER));
+            if (!ret2.get())
+            {
+                PyErr_Clear();
+                throw DataTypeException("Invalid MultiDimArray dimensions");
+            }
 
             return ret2.detach();
         }
@@ -2152,6 +2234,11 @@ class UnpackMessageElementImpl
             dims3.len = (int)dims2.size();
 
             PyAutoPtr<PyObject> ret2(PyArray_Newshape((PyArrayObject*)ret.get(), &dims3, NPY_FORTRANORDER));
+            if (!ret2.get())
+            {
+                PyErr_Clear();
+                throw DataTypeException("Invalid MultiDimArray dimensions");
+            }
 
             return ret2.detach();
         }
@@ -2278,7 +2365,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_int(PyObject* array_,
     if (destrrarray)
     {
         array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
-        if (!array2)
+        if (!array2 || array2->size() != seq_len)
         {
             throw DataTypeException("Invalid destination array provided for PackToRRArray");
         }
@@ -2387,7 +2474,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_float(PyObject* array_,
     if (destrrarray)
     {
         array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
-        if (!array2)
+        if (!array2 || array2->size() != seq_len)
         {
             throw DataTypeException("Invalid destination array provided for PackToRRArray");
         }
@@ -2433,7 +2520,8 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_float(PyObject* array_,
             PyErr_Print();
             throw DataTypeException("Invalid value in list provided to PackRRArray");
         }
-        if (v2 < -std::numeric_limits<type2>::max() || v2 > std::numeric_limits<type2>::max())
+        if ((v2 < -std::numeric_limits<type2>::max() || v2 > std::numeric_limits<type2>::max()) &&
+            v2 != std::numeric_limits<double>::infinity() && v2 != -std::numeric_limits<double>::infinity())
             throw DataTypeException("Number outside of range limit for specified type");
         buf[i] = (type2)v2;
     }
@@ -2473,7 +2561,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_complex(PyObject* array_,
     if (destrrarray)
     {
         array2 = RR_DYNAMIC_POINTER_CAST<RRArray<type2> >(destrrarray);
-        if (!array2)
+        if (!array2 || array2->size() != seq_len)
         {
             throw DataTypeException("Invalid destination array provided for PackToRRArray");
         }
@@ -2509,7 +2597,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_complex(PyObject* array_,
             }
             else
             {
-                throw new InternalErrorException("");
+                throw InternalErrorException("");
             }
         }
         else
@@ -2542,7 +2630,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray1_bool(PyObject* array_,
     if (destrrarray)
     {
         array2 = RR_DYNAMIC_POINTER_CAST<RRArray<rr_bool> >(destrrarray);
-        if (!array2)
+        if (!array2 || array2->size() != seq_len)
         {
             throw DataTypeException("Invalid destination array provided for PackToRRArray");
         }
@@ -2591,6 +2679,23 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::s
 
     if (PyArray_Check(array_))
     {
+        // Apply the same declared-length checks as for sequences below
+        size_t np_size = (size_t)PyArray_SIZE((PyArrayObject*)array_);
+        if (type1->ArrayType == DataTypes_ArrayTypes_none && (np_size != 1))
+            throw DataTypeException("Invalid array length for PackToRRArray");
+        if (type1->ArrayType == DataTypes_ArrayTypes_array)
+        {
+            if (!type1->ArrayVarLength)
+            {
+                if (type1->ArrayLength.at(0) != boost::numeric_cast<int32_t>(np_size))
+                    throw DataTypeException("Invalid array length for PackToRRArray");
+            }
+            else if (type1->ArrayLength.at(0) != 0)
+            {
+                if (type1->ArrayLength.at(0) < boost::numeric_cast<int32_t>(np_size))
+                    throw DataTypeException("Array too long for PackToRRArray");
+            }
+        }
         return PackToRRArray_numpy(array_, type1, destrrarray);
     }
 
@@ -2654,7 +2759,7 @@ boost::intrusive_ptr<RRBaseArray> PackToRRArray(PyObject* array_, const boost::s
 
         if (destrrarray)
         {
-            if (destrrarray->GetTypeID() != DataTypes_uint8_t || bytearray_size == destrrarray->size())
+            if (destrrarray->GetTypeID() != DataTypes_uint8_t || bytearray_size != destrrarray->size())
             {
                 throw DataTypeException("Invalid destination array provided for PackToRRArray");
             }
@@ -2958,8 +3063,6 @@ boost::tuple<boost::intrusive_ptr<RRBaseArray>, boost::intrusive_ptr<RRBaseArray
 boost::intrusive_ptr<MessageElementNestedElementList> PackToRRMultiDimArray_numpy(
     PyObject* array_, const boost::shared_ptr<TypeDefinition>& type1)
 {
-    // if (!_NumPyAvailable) throw InvalidOperationException("NumPy is not available");
-
     if (PyArray_Check(array_))
     {
         PyArrayObject* array1 = (PyArrayObject*)array_;
@@ -3045,12 +3148,17 @@ PyObject* UnpackFromRRMultiDimArray_numpy(const boost::intrusive_ptr<MessageElem
 
     DataTypes rr_type = array->GetTypeID();
     std::vector<npy_intp> npy_dims(dims->size());
+    size_t count = 1;
     for (size_t i = 0; i < dims->size(); i++)
     {
-        if ((*dims)[i] < 0)
+        uint32_t d = (*dims)[i];
+        if (d != 0 && count > std::numeric_limits<size_t>::max() / d)
             throw DataTypeException("Invalid MultiDimArray");
-        npy_dims[i] = (npy_intp)(*dims)[i];
+        count *= d;
+        npy_dims[i] = boost::numeric_cast<npy_intp>(d);
     }
+    if (count != array->size())
+        throw DataTypeException("Array dimension mismatch");
 
     switch (rr_type)
     {
@@ -3151,32 +3259,6 @@ PyArray_Descr* RRTypeIdToNumPyDataType(DataTypes rr_type)
         throw DataTypeException("Unknown numpy data type");
     }
 }
-
-/*void RRInitPrimitiveTypes()
-{
-    PyAutoPtr<PyArray_Descr> bool_descr(PyArray_DescrFromType(NPY_UINT8));
-    int bool_code = PyArray_RegisterDataType(bool_descr.get());
-    if (PyErr_Occurred() != NULL)
-    {
-        return;
-    }
-
-    bool_numpy_dtype_code = bool_code;
-    bool_numpy_dtype = bool_descr.detach();
-
-    PyAutoPtr<PyObject> datetime_descr_list(PyList_New(2));
-    PyList_SetItem(datetime_descr_list.get(), 0, Py_BuildValue("(s,s)", "secs", "i8"));
-    PyList_SetItem(datetime_descr_list.get(), 1, Py_BuildValue("(s,s)", "nsecs", "i8"));
-    if (PyErr_Occurred() != NULL)
-    {
-        bool_numpy_dtype_code = -1;
-        bool_numpy_dtype = NULL;
-    }
-
-    PyAutoPtr<PyArray_Descr> datetime_descr(PyArray_DescrNew();
-
-
-}*/
 
 DataTypes GetNamedTypeEntryType(const boost::shared_ptr<RobotRaconteur::TypeDefinition>& type1,
                                 const boost::shared_ptr<RobotRaconteur::WrappedServiceStub>& obj,

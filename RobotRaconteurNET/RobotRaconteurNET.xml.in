@@ -238,8 +238,11 @@
     <member name="F:RobotRaconteur.RobotRaconteurNET.RR_VALUE_LIFESPAN_INFINITE">
       <summary>Set wire values to have infinite lifespan and will not expire</summary>
     </member>
-    <member name="P:RobotRaconteur.RobotRaconteurNET.TranspartCapabilityCode_PAGE_MASK">
+    <member name="P:RobotRaconteur.RobotRaconteurNET.TransportCapabilityCode_PAGE_MASK">
       <summary>Page mask for transport capability code</summary>
+    </member>
+    <member name="P:RobotRaconteur.RobotRaconteurNET.TranspartCapabilityCode_PAGE_MASK">
+      <summary>Page mask for transport capability code (deprecated misspelled name, use TransportCapabilityCode_PAGE_MASK)</summary>
     </member>
     <member name="P:RobotRaconteur.RobotRaconteurNET.TransportCapabilityCode_MESSAGE2_BASIC_PAGE">
       <summary>Message Version 2 transport capability page code</summary>
@@ -423,10 +426,10 @@
       <summary>Function member call response</summary>
     </member>
     <member name="F:RobotRaconteur.MessageEntryType.GeneratorNextReq">
-      <summary>Generater next call request</summary>
+      <summary>Generator next call request</summary>
     </member>
     <member name="F:RobotRaconteur.MessageEntryType.GeneratorNextRes">
-      <summary>Generater next call response</summary>
+      <summary>Generator next call response</summary>
     </member>
     <member name="F:RobotRaconteur.MessageEntryType.EventReq">
       <summary>Event member notification</summary>
@@ -805,7 +808,7 @@
       <summary>Robot Raconteur Node component</summary>
     </member>
     <member name="F:RobotRaconteur.LogComponent.LogComponent_Transport">
-      <summary>tranport component</summary>
+      <summary>transport component</summary>
     </member>
     <member name="F:RobotRaconteur.LogComponent.LogComponent_Message">
       <summary>message or message serialization component</summary>
@@ -877,7 +880,7 @@
         User level lock
       </summary>
       <remarks>
-        The object will be accesible for all client connections
+        The object will be accessible for all client connections
         authenticated by the current user
       </remarks>
     </member>
@@ -1150,7 +1153,7 @@
     <member name="T:RobotRaconteur.ProtocolException">
       <summary>
         Exception thrown when a protocol failure occurs on
-        a tranport connection
+        a transport connection
       </summary>
       <remarks>
         Error code MessageErrorType_ProtocolError (2) </remarks>
@@ -3384,7 +3387,7 @@
         Is the NodeID UUID all zeros
       </summary>
       <remarks>
-        The all zero UUID respresents "any" node, or an unset NodeID
+        The all zero UUID represents "any" node, or an unset NodeID
       </remarks>
       <returns>true The NodeID UUID is all zeros, representing any node, false The NodeID UUID is
         not all zeros</returns>

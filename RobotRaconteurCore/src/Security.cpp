@@ -175,6 +175,12 @@ RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser
     bool client_verified = false;
 
 #ifndef ROBOTRACONTEUR_EMSCRIPTEN
+    if (require_verified_client && !transport)
+    {
+        // The connection is gone or unknown, it cannot be verified
+        throw AuthenticationException("Client connection could not be verified. Check certificate or transport");
+    }
+
     if (require_verified_client && transport)
     {
         RR_SHARED_PTR<Transport> t = transport->GetTransport();
@@ -202,7 +208,7 @@ RR_SHARED_PTR<AuthenticatedUser> PasswordFileUserAuthenticator::AuthenticateUser
 
         if (!local_t && !intra_t && !tcp_t)
         {
-            throw AuthenticationException("Selected transport does not suppert client verification");
+            throw AuthenticationException("Selected transport does not support client verification");
         }
 
         if (!client_verified)
