@@ -71,6 +71,10 @@ void ThreadPool::SetThreadPoolCount(size_t count)
 
 void ThreadPool_post_wrapper(boost::function<void()> f, RR_WEAK_PTR<RobotRaconteurNode> node)
 {
+    // Keep the node, and with it this pool and its io_context, alive while the op runs, so the last other
+    // reference cannot destroy them under a running handler. A queued op that never runs only holds the weak
+    // pointer, so it does not keep the node alive.
+    RR_SHARED_PTR<RobotRaconteurNode> node1 = node.lock();
     try
     {
         if (f)

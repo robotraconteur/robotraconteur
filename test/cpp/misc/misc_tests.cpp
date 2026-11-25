@@ -811,6 +811,60 @@ TEST(RobotRaconteurMisc, ThreadPoolPostDoesNotKeepNodeAlive)
     pool->Shutdown();
 }
 
+namespace
+{
+struct ThreadPoolRunningOpState
+{
+    boost::mutex lock;
+    boost::condition_variable cv;
+    bool started;
+    bool released;
+    bool done;
+    bool node_alive;
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    ThreadPoolRunningOpState() : started(false), released(false), done(false), node_alive(false) {}
+};
+
+void ThreadPoolRunningOp(RR_SHARED_PTR<ThreadPoolRunningOpState> s)
+{
+    boost::mutex::scoped_lock lock(s->lock);
+    s->started = true;
+    s->cv.notify_all();
+    while (!s->released)
+        s->cv.wait(lock);
+    s->node_alive = !s->weak_node.expired();
+    s->done = true;
+    s->cv.notify_all();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, ThreadPoolPostKeepsNodeAliveWhileOpRuns)
+{
+    // Dropping the last other reference while a posted op runs must not destroy the node under the op
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    RR_SHARED_PTR<ThreadPoolRunningOpState> s = RR_MAKE_SHARED<ThreadPoolRunningOpState>();
+    s->weak_node = node;
+    RR_SHARED_PTR<ThreadPool> pool = RR_MAKE_SHARED<ThreadPool>(node);
+    pool->SetThreadPoolCount(1);
+    pool->Post(boost::bind(&ThreadPoolRunningOp, s));
+    {
+        boost::mutex::scoped_lock lock(s->lock);
+        while (!s->started)
+            s->cv.wait(lock);
+    }
+    node.reset();
+    {
+        boost::mutex::scoped_lock lock(s->lock);
+        s->released = true;
+        s->cv.notify_all();
+        while (!s->done)
+            s->cv.wait(lock);
+    }
+    EXPECT_TRUE(s->node_alive);
+    pool->Shutdown();
+    EXPECT_TRUE(s->weak_node.expired());
+}
+
 class CaptureLogRecordHandler : public LogRecordHandler
 {
   public:
