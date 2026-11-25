@@ -1,9 +1,7 @@
 name: MinGW
 
 # Builds Robot Raconteur core, RobotRaconteurGen and the C++ tests on Windows
-# with the MSYS2 MINGW64 (GCC, MinGW-w64) toolchain, and runs the tests that
-# do not use the network. The service tests are built but not run: their node
-# setups enable UDP node discovery announce/listening.
+# with the MSYS2 MINGW64 (GCC, MinGW-w64) toolchain, and runs the tests.
 
 on:
   push:
@@ -50,7 +48,4 @@ jobs:
       run: cmake --build build -j 4
     - name: test
       working-directory: build
-      # Generator, serialization, multidimarray, robdef and misc tests only (no network discovery)
-      run: >
-        ctest --output-on-failure --no-tests=error
-        -R "^(test_gen_|AsyncMessageReaderTest|AsyncMessageWriterTest|MessageElementCount|MessageNestingDepth|MessageSerializationUnit|MultiDimArray|RobDef|RobotRaconteurMisc|TcpTransport|UsbDescriptors|WebSocketStream|RobotRaconteurGen)"
+      run: ctest --output-on-failure --no-tests=error
