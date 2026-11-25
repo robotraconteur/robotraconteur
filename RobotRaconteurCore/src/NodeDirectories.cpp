@@ -600,7 +600,7 @@ bool NodeDirectoriesFD::read(std::string& data) // NOLINT(readability-make-membe
         return false;
     if (lseek(fd, 0, SEEK_SET) < 0)
         return false;
-    if (len > 16 * 1024)
+    if (len > 16384)
         return false;
 
     std::string ret;

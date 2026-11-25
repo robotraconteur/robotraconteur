@@ -50,7 +50,11 @@ class MessageReadNestedDepthGuard
     MessageReadNestedDepthGuard()
     {
         if (!message_read_nested_depth.get())
+        {
+            // NOLINTBEGIN(cppcoreguidelines-owning-memory)
             message_read_nested_depth.reset(new size_t(0));
+            // NOLINTEND(cppcoreguidelines-owning-memory)
+        }
         if (*message_read_nested_depth >= detail::MessageMaxNestingDepth)
             throw ProtocolException("Message element nesting depth exceeds maximum");
         (*message_read_nested_depth)++;

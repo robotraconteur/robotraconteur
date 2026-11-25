@@ -82,7 +82,7 @@ static void TcpTransport_set_send_timeout(const RR_SHARED_PTR<boost::asio::ip::t
 #else
     struct timeval send_timeout = {};
     send_timeout.tv_sec = timeout_ms / 1000;
-    send_timeout.tv_usec = (timeout_ms % 1000) * 1000;
+    send_timeout.tv_usec = static_cast<suseconds_t>(timeout_ms % 1000) * 1000;
 #endif
     setsockopt(socket->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&send_timeout),
                sizeof(send_timeout));
@@ -1033,7 +1033,9 @@ void TcpAcceptor::AcceptSocket(
         // Limit the time until the "RRAC" magic or a complete websocket handshake request has been received to
         // the receive timeout; the connection's own receive timeout only starts once it is attached
         boost::mutex::scoped_lock lock(accept_timer_lock);
+        // NOLINTBEGIN(cppcoreguidelines-owning-memory)
         accept_timer.reset(new boost::asio::deadline_timer(parent->GetNode()->GetThreadPool()->get_io_context()));
+        // NOLINTEND(cppcoreguidelines-owning-memory)
         accept_timer->expires_from_now(boost::posix_time::milliseconds(parent->GetDefaultReceiveTimeout()));
         RobotRaconteurNode::asio_async_wait(node, accept_timer,
                                             boost::bind(&TcpAcceptor::AcceptSocketTimeout, shared_from_this(),
@@ -4721,6 +4723,7 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
                 // With peer verification on, OpenSSL refuses to resume a session (as .NET clients do) unless a
                 // session id context is set
+                // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
                 static const unsigned char rr_tls_sid_ctx[] = "RobotRaconteurTcpTransport";
                 ::SSL_set_session_id_context(tls_socket->native_handle(), rr_tls_sid_ctx, sizeof(rr_tls_sid_ctx) - 1);
             }
@@ -4744,6 +4747,7 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
                 // With peer verification on, OpenSSL refuses to resume a session (as .NET clients do) unless a
                 // session id context is set
+                // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
                 static const unsigned char rr_tls_sid_ctx[] = "RobotRaconteurTcpTransport";
                 ::SSL_set_session_id_context(tls_websocket->native_handle(), rr_tls_sid_ctx,
                                              sizeof(rr_tls_sid_ctx) - 1);
@@ -4768,6 +4772,7 @@ void TcpTransportConnection::do_starttls8(const RR_SHARED_PTR<RobotRaconteurExce
                                  ::SSL_CTX_get_verify_callback(tls_context->GetServerCredentials()->native_handle()));
                 // With peer verification on, OpenSSL refuses to resume a session (as .NET clients do) unless a
                 // session id context is set
+                // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
                 static const unsigned char rr_tls_sid_ctx[] = "RobotRaconteurTcpTransport";
                 ::SSL_set_session_id_context(tls_wss_websocket->native_handle(), rr_tls_sid_ctx,
                                              sizeof(rr_tls_sid_ctx) - 1);

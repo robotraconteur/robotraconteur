@@ -179,12 +179,11 @@ uint32_t ServerContext_MonitorObjectSkel::GetLocalEndpoint() const { return loca
 bool ServerContext_MonitorObjectSkel::IsLocked() const { return monitor_acquired; }
 
 ServerContext_MonitorObjectSkel::ServerContext_MonitorObjectSkel(const RR_SHARED_PTR<ServiceSkel>& skel)
+    : monitor_acquired(false), maintain_lock(false)
 {
     wait_started = false;
     local_endpoint = 0;
     timeout = 0;
-    monitor_acquired = false;
-    maintain_lock = false;
     this->monitor_thread_event = skel->RRGetNode()->CreateAutoResetEvent();
     this->wait_event = skel->RRGetNode()->CreateAutoResetEvent();
     RR_SHARED_PTR<RRObject> obj = skel->GetUncastObject();

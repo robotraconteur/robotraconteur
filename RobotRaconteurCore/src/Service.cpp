@@ -158,6 +158,7 @@ RR_SHARED_PTR<RRObject> ServiceSkel::GetUncastObject() const
     // uncastobj is reset by ReleaseObject() while request threads read it. objectlock_lock (otherwise used for the
     // object lock state) also guards it: it is never held while calling into the object or GetUncastObject().
     // The initial set in Init() happens before the skel is reachable and is not guarded.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     boost::mutex::scoped_lock lock(const_cast<boost::mutex&>(objectlock_lock));
     return uncastobj;
 }

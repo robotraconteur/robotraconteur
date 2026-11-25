@@ -34,6 +34,7 @@ AsyncMessageReaderImpl::state_data::state_data()
 
 AsyncMessageReaderImpl::AsyncMessageReaderImpl()
 {
+    nested_depth = 0;
     AsyncMessageReaderImpl::Reset();
     buf = boost::shared_array<uint8_t>(new uint8_t[128]);
     buf_len = 128;

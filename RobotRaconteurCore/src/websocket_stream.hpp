@@ -112,7 +112,7 @@ class websocket_stream : private boost::noncopyable
         {
             boost::random::random_device rd;
             boost::array<uint32_t, 8> seed_data = {};
-            for (size_t i = 0; i < seed_data.size(); i++)
+            for (size_t i = 0; i < boost::array<uint32_t, 8>::static_size; i++)
             {
                 seed_data[i] = rd();
             }
@@ -157,6 +157,7 @@ class websocket_stream : private boost::noncopyable
     int64_t find_http_header_end(T& str)
     {
         // Use the earliest terminator, the line parser stops at the first empty line
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
         const char* terminators[] = {"\r\n\r\n", "\n\n", "\r\r", "\n\r\n\r"};
         int64_t end_pos = -1;
         for (size_t i = 0; i < sizeof(terminators) / sizeof(terminators[0]); i++)
@@ -655,8 +656,9 @@ class websocket_stream : private boost::noncopyable
     }
 
   protected:
-    void async_client_handshake2(const boost::system::error_code& ec, size_t n, boost::shared_ptr<std::string>(data),
-                                 const std::string& url, const std::string& protocol, const std::string& key,
+    void async_client_handshake2(const boost::system::error_code& ec, size_t n,
+                                 const boost::shared_ptr<std::string>& data, const std::string& url,
+                                 const std::string& protocol, const std::string& key,
                                  boost::function<void(const boost::system::error_code& ec)> handler)
     {
         if (ec || n == 0)
