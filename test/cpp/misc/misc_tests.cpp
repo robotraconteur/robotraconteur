@@ -355,6 +355,10 @@ TEST(RobotRaconteurMisc, WallRateDefaultNode)
     RR_SHARED_PTR<WallRate> rate;
     ASSERT_NO_THROW(rate = RR_MAKE_SHARED<WallRate>(1000.0));
     EXPECT_NO_THROW(rate->Sleep());
+    rate.reset();
+    // Shut the default node down here: if it is still running when the process exits, its thread pool
+    // can outlive objects destroyed during static destruction
+    RobotRaconteurNode::s()->Shutdown();
 }
 
 TEST(RobotRaconteurMisc, ParseConnectionURLTcpNoPath)
