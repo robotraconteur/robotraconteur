@@ -161,10 +161,11 @@ class websocket_stream : private boost::noncopyable
         int64_t end_pos = -1;
         for (size_t i = 0; i < sizeof(terminators) / sizeof(terminators[0]); i++)
         {
-            int64_t pos = str.find(terminators[i]);
-            if (pos != -1)
+            // Compare with npos, not -1: on 32-bit targets npos converted to int64_t is 4294967295
+            size_t pos = str.find(terminators[i]);
+            if (pos != T::npos)
             {
-                int64_t pos_end = pos + static_cast<int64_t>(strlen(terminators[i]));
+                int64_t pos_end = static_cast<int64_t>(pos) + static_cast<int64_t>(strlen(terminators[i]));
                 if (end_pos == -1 || pos_end < end_pos)
                 {
                     end_pos = pos_end;
