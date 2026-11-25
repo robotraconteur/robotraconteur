@@ -263,7 +263,7 @@ void WallTimer::Clear()
 // NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 WallRate::WallRate(double frequency, const RR_SHARED_PTR<RobotRaconteurNode>& node)
 #ifndef ROBOTRACONTEUR_WINDOWS
-    : timer(node->GetThreadPool()->get_io_context())
+    : timer((node ? node : RobotRaconteurNode::sp())->GetThreadPool()->get_io_context())
 #endif
 {
 #ifdef ROBOTRACONTEUR_LINUX

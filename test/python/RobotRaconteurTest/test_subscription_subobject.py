@@ -178,3 +178,25 @@ def test_subscription_subobject():
         sub5 = sub.SubscribeSubObject("*.subobj2.subobj3_3[someobj]")
         c8 = sub5.GetDefaultClient()
         assert c8.getf_service_path() == "test_service.subobj2.subobj3_3[someobj]"
+
+
+def test_subscription_subobject_try_no_client():
+
+    client_node = RR.RobotRaconteurNode()
+    client_node.Init()
+
+    client_node_setup = RR.RobotRaconteurNodeSetup(
+        "", 0, flags=intra_client_flags, node=client_node)
+
+    with client_node_setup:
+        sub = client_node.SubscribeServiceByType(
+            "experimental.subobject_sub_test_none.testobj")
+        sub2 = sub.SubscribeSubObject("*.subobj2")
+
+        # The Try functions must return False, not throw, when no client is connected
+        res, _ = sub2.TryGetDefaultClient()
+        assert not res
+        res, _ = sub2.TryGetDefaultClientWait(0.1)
+        assert not res
+
+        sub.Close()

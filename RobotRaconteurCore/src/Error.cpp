@@ -47,7 +47,9 @@ RobotRaconteurException::RobotRaconteurException(const std::string& message, std
     : std::runtime_error(message.c_str())
 {
     RR_UNUSED(innerexception);
-    ErrorCode = MessageErrorType_None;
+    ErrorCode = MessageErrorType_UnknownError;
+    Message = message;
+    what_string = RobotRaconteurException::ToString();
 }
 
 std::string RobotRaconteurException::ToString() { return "RobotRaconteurException: " + Error + ": " + Message; }

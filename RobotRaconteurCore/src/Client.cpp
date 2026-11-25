@@ -21,6 +21,7 @@
 #include "RobotRaconteur/Message.h"
 #include "RobotRaconteur/Error.h"
 #include <boost/algorithm/string.hpp>
+#include <set>
 #include "RobotRaconteur/RobotRaconteurNode.h"
 #include "RobotRaconteur/AutoResetEvent.h"
 #include "RobotRaconteur/DataTypes.h"
@@ -35,6 +36,27 @@
 
 namespace RobotRaconteur
 {
+namespace detail
+{
+// Service definitions received from a remote service are only parsed. Verify them before
+// creating dynamic service factories from them, as is done for locally registered types.
+static void ClientContext_VerifyPulledServiceDefinitions(const std::vector<RR_SHARED_PTR<ServiceDefinition> >& defs,
+                                                         const RR_WEAK_PTR<RobotRaconteurNode>& node, uint32_t ep)
+{
+    try
+    {
+        VerifyServiceDefinitions(defs);
+    }
+    catch (std::exception& exp)
+    {
+        RR_UNUSED(exp);
+        RR_UNUSED(ep);
+        ROBOTRACONTEUR_LOG_WARNING_COMPONENT(
+            node, Client, ep, "Service definitions received from service failed verification: " << exp.what());
+        throw;
+    }
+}
+} // namespace detail
 static void rr_context_emptyhandler(const RR_SHARED_PTR<RobotRaconteurException>&) {}
 
 static void rr_context_node_handler(const RR_SHARED_PTR<RobotRaconteurNode>& n,
@@ -469,6 +491,7 @@ void ClientContext::AsyncFindObjRef2(
                         }
                         if (!missingdefs.empty())
                         {
+                            detail::ClientContext_VerifyPulledServiceDefinitions(d, node, GetLocalEndpoint());
 
                             std::vector<std::string> missingdefs_str;
                             BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& ee, missingdefs)
@@ -1051,9 +1074,27 @@ void ClientContext::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
                                                    << " RemoteNodeName: " << m->header->SenderNodeName
                                                    << " RemoteEndpoint: " << m->header->SenderEndpoint);
 
-            SetRemoteEndpoint(m->header->SenderEndpoint);
-            SetRemoteNodeID(m->header->SenderNodeID);
-            SetRemoteNodeName(m->header->SenderNodeName.str());
+            // Accept the service's identity only from the first connect reply, and only if it matches the
+            // NodeID the connection URL asked for (when it asked for one)
+            NodeID expected_nodeid = GetRemoteNodeID();
+            if (GetRemoteEndpoint() != 0)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
+                                                   "Ignoring connect client response, client already connected");
+            }
+            else if (!expected_nodeid.IsAnyNode() && expected_nodeid != m->header->SenderNodeID)
+            {
+                ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
+                                                   "Ignoring connect client response from unexpected NodeID "
+                                                       << m->header->SenderNodeID.ToString()
+                                                       << " expected: " << expected_nodeid.ToString());
+            }
+            else
+            {
+                SetRemoteEndpoint(m->header->SenderEndpoint);
+                SetRemoteNodeID(m->header->SenderNodeID);
+                SetRemoteNodeName(m->header->SenderNodeName.str());
+            }
         }
 
         if (m->entries[0]->EntryType == MessageEntryType_EndpointCheckCapability)
@@ -1741,6 +1782,7 @@ void ClientContext::AsyncConnectService3(
                         type = objecttype;
                         AsyncConnectService4(d, RR_SHARED_PTR<RobotRaconteurException>(), username, credentials,
                                              objecttype, type, (handler));
+                        return;
                     }
                 }
 
@@ -1812,6 +1854,8 @@ void ClientContext::AsyncConnectService4(
                 }
                 if (!missingdefs.empty())
                 {
+                    detail::ClientContext_VerifyPulledServiceDefinitions(d->defs, node, GetLocalEndpoint());
+
                     std::vector<std::string> missingdefs_vec;
                     std::vector<std::string> missingdefs_names;
                     BOOST_FOREACH (RR_SHARED_PTR<ServiceDefinition>& e, missingdefs)
@@ -2089,11 +2133,15 @@ void ClientContext::AsyncConnectService7(
                 use_pulled_types = true;
 
                 std::vector<std::string> pulleddefs_str;
+                std::vector<RR_SHARED_PTR<ServiceDefinition> > pulleddefs;
                 BOOST_FOREACH (const RR_SHARED_PTR<ServiceDefinition>& ee,
                                pulled_service_defs | boost::adaptors::map_values)
                 {
                     pulleddefs_str.push_back(ee->ToString());
+                    pulleddefs.push_back(ee);
                 }
+
+                detail::ClientContext_VerifyPulledServiceDefinitions(pulleddefs, node, GetLocalEndpoint());
 
                 std::vector<RR_SHARED_PTR<ServiceFactory> > di2 =
                     GetNode()->GetDynamicServiceFactory()->CreateServiceFactories(pulleddefs_str);
@@ -2149,55 +2197,73 @@ bool ClientContext::VerifyObjectImplements2(boost::string_ref objecttype, boost:
     if (objecttype == implementstype)
         return true;
 
-    boost::tuple<boost::string_ref, boost::string_ref> s1 = SplitQualifiedName(objecttype);
+    // The pulled service definitions are not verified, so Implements may contain cycles (an object that implements
+    // itself, or a loop across definitions). Walk the graph iteratively with a visited set instead of recursing, and
+    // bound the number of object types examined.
+    std::set<std::string> visited;
+    std::list<std::string> pending;
+    pending.push_back(objecttype.to_string());
 
-    if (pulled_service_defs.find(s1.get<0>().to_string()) == pulled_service_defs.end())
+    while (!pending.empty())
     {
-        RR_SHARED_PTR<ServiceDefinition> d1 = PullServiceDefinition(s1.get<0>()).def;
-        pulled_service_defs.insert(std::make_pair(d1->Name, d1));
-    }
+        std::string objecttype1 = pending.front();
+        pending.pop_front();
 
-    std::map<std::string, RR_SHARED_PTR<ServiceDefinition> >::iterator e1 =
-        pulled_service_defs.find(s1.get<0>().to_string());
-    if (e1 == pulled_service_defs.end())
-        return false;
+        if (!visited.insert(objecttype1).second)
+            continue;
 
-    RR_SHARED_PTR<ServiceDefinition> d = e1->second;
+        if (visited.size() > 1024)
+            return false;
 
-    RR_SHARED_PTR<ServiceEntryDefinition> o;
+        boost::tuple<boost::string_ref, boost::string_ref> s1 = SplitQualifiedName(objecttype1);
 
-    BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& e, d->Objects)
-    {
-        if (e->Name == s1.get<1>())
-            o = e;
-    }
-
-    if (!o)
-        return false;
-
-    BOOST_FOREACH (std::string& e, o->Implements)
-    {
-        std::string deftype = d->Name;
-        std::string objtype;
-
-        if (!boost::contains(e, "."))
+        if (pulled_service_defs.find(s1.get<0>().to_string()) == pulled_service_defs.end())
         {
-            objtype = e;
-        }
-        else
-        {
-            boost::tuple<boost::string_ref, boost::string_ref> s2 = SplitQualifiedName(e);
-            deftype = s2.get<0>().to_string();
-            objtype = s2.get<1>().to_string();
+            RR_SHARED_PTR<ServiceDefinition> d1 = PullServiceDefinition(s1.get<0>()).def;
+            pulled_service_defs.insert(std::make_pair(d1->Name, d1));
         }
 
-        // NOLINTBEGIN(performance-inefficient-string-concatenation)
-        if ((deftype + "." + objtype) == implementstype)
-            return true;
+        std::map<std::string, RR_SHARED_PTR<ServiceDefinition> >::iterator e1 =
+            pulled_service_defs.find(s1.get<0>().to_string());
+        if (e1 == pulled_service_defs.end())
+            continue;
 
-        if (VerifyObjectImplements2(deftype + "." + objtype, implementstype))
-            return true;
-        // NOLINTEND(performance-inefficient-string-concatenation)
+        RR_SHARED_PTR<ServiceDefinition> d = e1->second;
+
+        RR_SHARED_PTR<ServiceEntryDefinition> o;
+
+        BOOST_FOREACH (RR_SHARED_PTR<ServiceEntryDefinition>& e, d->Objects)
+        {
+            if (e->Name == s1.get<1>())
+                o = e;
+        }
+
+        if (!o)
+            continue;
+
+        BOOST_FOREACH (std::string& e, o->Implements)
+        {
+            std::string deftype = d->Name;
+            std::string objtype;
+
+            if (!boost::contains(e, "."))
+            {
+                objtype = e;
+            }
+            else
+            {
+                boost::tuple<boost::string_ref, boost::string_ref> s2 = SplitQualifiedName(e);
+                deftype = s2.get<0>().to_string();
+                objtype = s2.get<1>().to_string();
+            }
+
+            // NOLINTBEGIN(performance-inefficient-string-concatenation)
+            if ((deftype + "." + objtype) == implementstype)
+                return true;
+
+            pending.push_back(deftype + "." + objtype);
+            // NOLINTEND(performance-inefficient-string-concatenation)
+        }
     }
 
     return false;
@@ -2236,7 +2302,14 @@ void ClientContext::AsyncClose(RR_MOVE_ARG(boost::function<void()>) handler)
     {
         boost::mutex::scoped_lock lock(m_Connected_lock);
         if (!m_Connected)
+        {
+            // Already closed: still complete the request, Close() waits for this handler
+            if (handler)
+            {
+                RobotRaconteurNode::TryPostToThreadPool(node, handler, true);
+            }
             return;
+        }
     }
     try
     {
@@ -2585,6 +2658,15 @@ void ClientContext::AsyncPullServiceDefinitionAndImports1(
             }
             else
             {
+                // servicetype is the import that was requested
+                if (pull_ret->def->Name != servicetype)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
+                                                       "Service returned definition \"" << pull_ret->def->Name
+                                                                                        << "\" when \"" << servicetype
+                                                                                        << "\" was requested");
+                    throw ServiceDefinitionException("Service returned unexpected service definition");
+                }
                 if (!TryFindByName(current2->defs, pull_ret->def->Name))
                 {
                     current2->defs.push_back(pull_ret->def);
@@ -2612,11 +2694,12 @@ void ClientContext::AsyncPullServiceDefinitionAndImports1(
             }
             else
             {
+                std::string next_def = *needed_defs.begin();
                 AsyncPullServiceDefinition(
-                    *needed_defs.begin(),
+                    next_def,
                     boost::bind(&ClientContext::AsyncPullServiceDefinitionAndImports1, shared_from_this(),
-                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), std::string(servicetype),
-                                current2, handler, timeout_time),
+                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2), next_def, current2, handler,
+                                timeout_time),
                     boost::numeric_cast<int32_t>((timeout_time - GetNode()->NowNodeTime()).total_milliseconds()));
                 return;
             }
@@ -2747,9 +2830,21 @@ void ClientContext::AsyncAuthenticateUser2(
         return;
     }
 
+    std::string res;
+    try
+    {
+        res = ret->FindElement("return")->CastDataToString();
+    }
+    catch (std::exception& exp)
+    {
+        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Client, GetLocalEndpoint(),
+                                           "AuthenticateUser failed, invalid reply: " << exp.what());
+        detail::InvokeHandlerWithException(node, handler, exp, MessageErrorType_ProtocolError);
+        return;
+    }
+
     m_AuthenticatedUsername = username;
     m_UserAuthenticated = true;
-    std::string res = ret->FindElement("return")->CastDataToString();
     RR_SHARED_PTR<std::string> res2 = RR_MAKE_SHARED<std::string>(res);
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
@@ -2928,7 +3023,9 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
         {
 
             RR_SHARED_PTR<ServiceStub> s = rr_cast<ServiceStub>(obj);
-            s->RRMutex->lock();
+            // Held until MonitorExit on success; released on any failure, including exceptions
+            // thrown by ProcessRequest (e.g. a service-side timeout or error).
+            boost::unique_lock<boost::recursive_mutex> rrmutex_lock(*s->RRMutex);
 
             bool keep_trying = true;
             RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_ClientSessionOpReq, "MonitorEnter");
@@ -2943,6 +3040,7 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
                                                    "MonitorEnter for successful for servicepath \"" << s->ServicePath
                                                                                                     << "\"");
+                rrmutex_lock.release();
                 return "OK";
             }
             if (retcode == "Continue")
@@ -2963,21 +3061,19 @@ std::string ClientContext::MonitorEnter(const RR_SHARED_PTR<RRObject>& obj, int3
                         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Client, GetLocalEndpoint(),
                                                            "MonitorEnter for successful for servicepath \""
                                                                << s->ServicePath << "\"");
+                        rrmutex_lock.release();
                         return "OK";
                     }
                     if (retcode1 != "Continue")
                     {
-                        s->RRMutex->unlock();
                         throw ProtocolException("Unknown return code");
                     }
                 }
             }
             else
             {
-                s->RRMutex->unlock();
                 throw ProtocolException("Unknown return code");
             }
-            s->RRMutex->unlock();
         }
 
         throw ProtocolException("Unknown return code");
@@ -3015,7 +3111,7 @@ void ClientContext::MonitorExit(const RR_SHARED_PTR<RRObject>& obj)
             std::string retcode = ret->FindElement("return")->CastDataToString();
             if (retcode != "OK")
             {
-                s->RRMutex->unlock();
+                // lock2 releases its own lock; the MonitorEnter lock is released below.
                 throw ProtocolException("Unknown return code");
             }
         }

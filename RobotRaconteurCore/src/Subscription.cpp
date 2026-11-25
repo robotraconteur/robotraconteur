@@ -431,7 +431,8 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
 
         if (e != clients.end())
         {
-            // If we are already dected, ignore
+            // If we are already detected, ignore this service and continue checking the
+            // other services advertised by the node
 
             ServiceInfo2& info2 = e->second->service_info2;
 
@@ -451,7 +452,7 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
 
             e->second->last_node_update = n->NowNodeTime();
 
-            return;
+            continue;
         }
 
         std::vector<std::string> urls;
@@ -521,9 +522,9 @@ void ServiceInfo2Subscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodes
                                                        << info1.Name << "\" on node " << info1.NodeID.ToString()
                                                        << " due to service no longer advertising");
 
-                RobotRaconteurNode::TryPostToThreadPool(
-                    node, boost::bind(&ServiceInfo2Subscription::fire_ServiceDetectedListener, shared_from_this(),
-                                      RR_MOVE(id1), RR_MOVE(info1)));
+                RobotRaconteurNode::TryPostToThreadPool(node,
+                                                        boost::bind(&ServiceInfo2Subscription::fire_ServiceLostListener,
+                                                                    shared_from_this(), RR_MOVE(id1), RR_MOVE(info1)));
             }
             else
             {
@@ -743,7 +744,7 @@ static RR_SHARED_PTR<detail::ServiceSubscription_client> ServiceSubscription_Fin
     const RR_SHARED_PTR<RRObject>& client)
 {
     RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
-    if (!client)
+    if (!s)
         throw InvalidArgumentException("Can only lock object opened through Robot Raconteur");
 
     RR_SHARED_PTR<ClientContext> c = s->GetContext();
@@ -901,7 +902,7 @@ void ServiceSubscription::InitServiceURL(const std::vector<std::string>& url, bo
 
     for (size_t i = 1; i < url.size(); i++)
     {
-        ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(0));
+        ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(i));
         if (url_res1.nodeid != url_res.nodeid || url_res1.nodename != url_res.nodename ||
             url_res1.service != url_res.service)
         {
@@ -989,9 +990,10 @@ void ServiceSubscription::NodeUpdated(RR_SHARED_PTR<detail::Discovery_nodestorag
 
         if (e != clients.end())
         {
-            // If we are already connected, ignore
+            // If we are already connected, ignore this service and continue checking the
+            // other services advertised by the node
             if (e->second->client.lock())
-                return;
+                continue;
         }
 
         std::vector<std::string> urls;
@@ -1263,6 +1265,8 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
     if (!this1)
         return;
     RR_SHARED_PTR<detail::ServiceSubscription_client> c2_1 = c2.lock();
+    if (!c2_1)
+        return;
     RR_SHARED_PTR<RobotRaconteurNode> n = this1->node.lock();
 
     if (c2_1->erase)
@@ -1273,9 +1277,6 @@ void ServiceSubscription::ClientEvent(RR_WEAK_PTR<ServiceSubscription> this_, co
 
     try
     {
-        if (!this1 || !c2_1)
-            return;
-
         boost::mutex::scoped_lock lock(this1->this_lock);
 
         if (evt == ClientServiceListenerEventType_ClientClosed ||
@@ -1673,7 +1674,7 @@ void ServiceSubscription::UpdateServiceURL(const std::vector<std::string>& url, 
 
     for (size_t i = 1; i < url.size(); i++)
     {
-        ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(0));
+        ParseConnectionURLResult url_res1 = ParseConnectionURL(url.at(i));
         if (url_res1.nodeid != url_res.nodeid || url_res1.nodename != url_res.nodename ||
             url_res1.service != url_res.service)
         {
@@ -1782,8 +1783,6 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
             info.Attributes = n->GetServiceAttributes(c2);
             info.ConnectionURL = c->urls;
 
-            c->erase.data() = true;
-
             std::vector<std::string> filter_res_urls;
             std::string filter_res;
             RR_SHARED_PTR<ServiceSubscriptionFilterNode> filter_node;
@@ -1797,6 +1796,8 @@ void ServiceSubscription::UpdateServiceByType(const std::vector<std::string>& se
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Subscription, -1,
                                                    "Service filtered by UpdateServiceByType: " << c->nodeid.ToString()
                                                                                                << "," << c->nodename);
+                // Only clients that no longer match the filter are dropped
+                c->erase.data() = true;
                 try
                 {
                     n->AsyncDisconnectService(c2, ServiceSubscription_close_handler);
@@ -2263,7 +2264,7 @@ void WireSubscription_connection::ClientConnected2(const RR_SHARED_PTR<WireConne
     {
         boost::mutex::scoped_lock lock(p->this_lock);
 
-        if (p->closed.data())
+        if (p->closed.data() || closed)
         {
             try
             {
@@ -2325,6 +2326,8 @@ void WireSubscription_connection::SetOutValue(const RR_INTRUSIVE_PTR<RRValue>& v
 
 void WireSubscription_connection::RetryConnect()
 {
+    if (closed)
+        return;
     RR_SHARED_PTR<WireSubscriptionBase> p = parent.lock();
     if (!p)
         return;
@@ -2364,6 +2367,8 @@ void WireSubscription_connection::RetryConnect1(const TimerEvent& ev)
 
     boost::mutex::scoped_lock lock(p->this_lock);
     retry_timer.reset();
+    if (closed)
+        return;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                             "ServiceSubscription begin retry connect wire");
@@ -2735,7 +2740,7 @@ bool PipeSubscriptionBase::isempty_PipePacketReceived() { return false; }
 
 namespace detail
 {
-PipeSubscription_connection::PipeSubscription_connection() {}
+PipeSubscription_connection::PipeSubscription_connection() : closed(false) {}
 
 void PipeSubscription_connection::Init(const RR_SHARED_PTR<PipeSubscriptionBase>& parent,
                                        const RR_SHARED_PTR<RRObject>& client)
@@ -2778,6 +2783,7 @@ void PipeSubscription_connection::ClientConnected1(const RR_SHARED_PTR<ServiceSt
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                                 "ServiceSubscription client connect pipe failed: Invalid service path");
+        boost::mutex::scoped_lock lock(p->this_lock);
         RetryConnect();
         return;
     }
@@ -2796,6 +2802,7 @@ void PipeSubscription_connection::ClientConnected1(const RR_SHARED_PTR<ServiceSt
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                                 "ServiceSubscription client connect pipe failed: " << exp.what());
 
+        boost::mutex::scoped_lock lock(p->this_lock);
         RetryConnect();
     }
 }
@@ -2815,6 +2822,7 @@ void PipeSubscription_connection::ClientConnected2(const RR_SHARED_PTR<PipeEndpo
     {
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                                 "ServiceSubscription client connect pipe failed: " << err->what());
+        boost::mutex::scoped_lock lock(p->this_lock);
         RetryConnect();
         return;
     }
@@ -2823,7 +2831,7 @@ void PipeSubscription_connection::ClientConnected2(const RR_SHARED_PTR<PipeEndpo
     {
         boost::mutex::scoped_lock lock(p->this_lock);
 
-        if (p->closed.data())
+        if (p->closed.data() || closed)
         {
             try
             {
@@ -2890,14 +2898,9 @@ void PipeSubscription_connection::PipePacketAckReceived(const RR_SHARED_PTR<Pipe
 
     try
     {
-        if (std::count(backlog.begin(), backlog.end(), pnum) == 0)
-        {
-            forward_backlog.push_back(pnum);
-        }
-        else
-        {
-            backlog.remove(pnum);
-        }
+        // backlog is never filled (pipe_packet_send_handler does not record packet numbers and the subscription
+        // does not request acks), so do not queue unmatched acks in forward_backlog: nothing would drain it
+        backlog.remove(pnum);
     }
     catch (std::exception&)
     {}
@@ -2965,6 +2968,8 @@ void PipeSubscription_connection::pipe_packet_send_handler(RR_WEAK_PTR<PipeSubsc
 
 void PipeSubscription_connection::RetryConnect()
 {
+    if (closed)
+        return;
     RR_SHARED_PTR<PipeSubscriptionBase> p = parent.lock();
     if (!p)
         return;
@@ -3004,6 +3009,8 @@ void PipeSubscription_connection::RetryConnect1(const TimerEvent& ev)
 
     boost::mutex::scoped_lock lock(p->this_lock);
     retry_timer.reset();
+    if (closed)
+        return;
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Subscription, -1, "", p->membername,
                                             "ServiceSubscription begin retry connect pipe");
@@ -3026,9 +3033,9 @@ void PipeSubscription_connection::RetryConnect1(const TimerEvent& ev)
 
 void PipeSubscription_connection::Close()
 {
+    closed = true;
     RR_SHARED_PTR<PipeEndpointBase> c = connection.lock();
-    if (!c)
-        return;
+    if (c)
     {
         connection.reset();
         try
@@ -3059,6 +3066,7 @@ RR_SHARED_PTR<PipeEndpointBase> PipeSubscription_send_iterator::Next()
 {
     if (connections_iterator == subscription->connections.end())
     {
+        current_connection = connections_iterator;
         return RR_SHARED_PTR<PipeEndpointBase>();
     }
     boost::unordered_map<ServiceSubscriptionClientID, RR_SHARED_PTR<PipeSubscription_connection> >::iterator c;
@@ -3066,7 +3074,8 @@ RR_SHARED_PTR<PipeEndpointBase> PipeSubscription_send_iterator::Next()
     {
         c = connections_iterator++;
         RR_SHARED_PTR<PipeEndpointBase> c2 = c->second->connection.lock();
-        if (c->second->DoSendPacket())
+        // Skip entries whose pipe is not connected (a null return means the end to callers)
+        if (c2 && c->second->DoSendPacket())
         {
             current_connection = c;
             return c2;
@@ -3074,6 +3083,7 @@ RR_SHARED_PTR<PipeEndpointBase> PipeSubscription_send_iterator::Next()
 
         if (connections_iterator == subscription->connections.end())
         {
+            current_connection = connections_iterator;
             return RR_SHARED_PTR<PipeEndpointBase>();
         }
     }
@@ -3357,7 +3367,7 @@ bool ServiceSubscriptionFilterAttributeGroup::IsMatch(boost::string_ref value) c
     else
     {
         std::vector<std::string> value_v;
-        boost::split(value_v, value, boost::is_any_of(","));
+        boost::split(value_v, value, boost::is_from_range(SplitStringDelimiter, SplitStringDelimiter));
         return IsMatch(value_v);
     }
 }
@@ -3648,7 +3658,9 @@ bool SubObjectSubscription::TryGetDefaultClientBase(RR_SHARED_PTR<RRObject>& cli
     if (!p)
         return false;
 
-    RR_SHARED_PTR<RRObject> client = p->GetDefaultClientBase();
+    RR_SHARED_PTR<RRObject> client;
+    if (!p->TryGetDefaultClientBase(client))
+        return false;
     RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
     if (!s)
     {
@@ -3706,7 +3718,9 @@ bool SubObjectSubscription::TryGetDefaultClientWaitBase(RR_SHARED_PTR<RRObject>&
     if (!p)
         return false;
 
-    RR_SHARED_PTR<RRObject> client = p->GetDefaultClientWaitBase(timeout);
+    RR_SHARED_PTR<RRObject> client;
+    if (!p->TryGetDefaultClientWaitBase(client, timeout))
+        return false;
     RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
     if (!s)
     {
@@ -3749,7 +3763,7 @@ static void SubObjectSubscription_AsyncGetDefaultClientBase2(
     try
     {
         RR_SHARED_PTR<ServiceStub> s = RR_DYNAMIC_POINTER_CAST<ServiceStub>(client);
-        if (!client)
+        if (!s)
         {
             ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Subscription, -1, "ServiceSubscription client cast failed");
             detail::InvokeHandlerWithException(
@@ -3943,9 +3957,9 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
                       (sub.subscription->use_service_url && !sub.subscription->service_url.empty());
     }
 
-    if (sub_running && !sub.details.Enabled)
+    if (!sub.details.Enabled)
     {
-        if (close)
+        if (sub_running && close)
         {
             sub.subscription->SoftClose();
         }
@@ -4014,6 +4028,13 @@ void ServiceSubscriptionManager::UpdateSubscription(detail::ServiceSubscriptionM
         default:
             throw InvalidArgumentException("Invalid connection method");
         }
+    }
+
+    // A subscription created disabled or empty is not yet known to discovery: register it so it receives
+    // NodeUpdated for nodes found later and is closed by Discovery::Shutdown
+    if (sub.details.Enabled)
+    {
+        d->AddSubscription(sub.subscription);
     }
 
     RR_SHARED_PTR<ThreadPool> tp;

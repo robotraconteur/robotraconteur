@@ -49,6 +49,14 @@ WrappedServiceFactory::WrappedServiceFactory(const boost::shared_ptr<RobotRacont
     servicedef = def;
 }
 
+// Keeps the original text of a definition registered from a string, so clients receive it as written
+WrappedServiceFactory::WrappedServiceFactory(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def,
+                                             const std::string& defstring)
+{
+    this->defstring = defstring;
+    servicedef = def;
+}
+
 std::string WrappedServiceFactory::GetServiceName() { return servicedef->Name; }
 
 std::string WrappedServiceFactory::DefString() { return defstring; }
@@ -192,13 +200,11 @@ WrappedServiceStub::WrappedServiceStub(boost::string_ref path, const RR_SHARED_P
     : RobotRaconteur::ServiceStub(path, c)
 {
     RR_objecttype = type;
-    // this->RR_Director=0;
     this->objectheapid = 0;
     director_closed = false;
 #ifdef RR_PYTHON
     pystub = NULL;
     pystub_closed = false;
-    // DIRECTOR_CALL2(Py_XINCREF(pystub));
 #endif
 }
 
@@ -492,7 +498,17 @@ void WrappedServiceStub::async_PropertyGet_handler(const RR_INTRUSIVE_PTR<RobotR
         DIRECTOR_CALL2(handler->handler(RR_INTRUSIVE_PTR<MessageElement>(), err2));
         return;
     }
-    RR_INTRUSIVE_PTR<MessageElement> ret = m->FindElement("value");
+    RR_INTRUSIVE_PTR<MessageElement> ret;
+    try
+    {
+        ret = m->FindElement("value");
+    }
+    catch (RobotRaconteurException& exp)
+    {
+        HandlerErrorInfo err2(exp);
+        DIRECTOR_CALL2(handler->handler(RR_INTRUSIVE_PTR<MessageElement>(), err2));
+        return;
+    }
     HandlerErrorInfo err3;
     DIRECTOR_CALL2(handler->handler(ret, err3));
 }
@@ -577,8 +593,18 @@ void WrappedServiceStub::async_GeneratorFunctionCall_handler(
     catch (std::exception&)
     {}
 
-    RR_SHARED_PTR<WrappedGeneratorClient> gen_ret = RR_MAKE_SHARED<WrappedGeneratorClient>(
-        FunctionName, RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >()), shared_from_this());
+    RR_SHARED_PTR<WrappedGeneratorClient> gen_ret;
+    try
+    {
+        gen_ret = RR_MAKE_SHARED<WrappedGeneratorClient>(
+            FunctionName, RRArrayToScalar(m->FindElement("index")->CastData<RRArray<int32_t> >()), shared_from_this());
+    }
+    catch (RobotRaconteurException& exp)
+    {
+        HandlerErrorInfo err2(exp);
+        DIRECTOR_CALL2(handler->handler(RR_SHARED_PTR<WrappedGeneratorClient>(), err2));
+        return;
+    }
 
     HandlerErrorInfo err3;
     DIRECTOR_CALL2(handler->handler(gen_ret, err3));
@@ -809,8 +835,6 @@ RR_SHARED_PTR<WireClientBase> WrappedServiceStub::RRGetWireClient(boost::string_
 
 void WrappedServiceStub::RRClose()
 {
-    // DIRECTOR_CALL2(DIRECTOR_DELETE( RR_Director));
-
     boost::shared_ptr<WrappedServiceStubDirector> director1;
 
     {
@@ -852,8 +876,6 @@ void WrappedServiceStub::RRClose()
             pystub = NULL;
         }
     }
-#else
-    // RR_Director=NULL;
 #endif
 }
 
@@ -870,13 +892,7 @@ std::string WrappedServiceStub::RRType()
     }
 }
 
-WrappedServiceStub::~WrappedServiceStub()
-{
-    // DIRECTOR_CALL2(DIRECTOR_DELETE( this->RR_Director));
-#ifdef RR_PYTHON
-    // DIRECTOR_CALL2(Py_XDECREF(pystub));
-#endif
-}
+WrappedServiceStub::~WrappedServiceStub() {}
 
 bool WrappedServiceStub::SetRRDirector(WrappedServiceStubDirector* director, int32_t id)
 {
@@ -976,14 +992,36 @@ WrappedTryReceivePacketWaitResult WrappedPipeEndpoint::TryReceivePacketWait(int3
     return res;
 }
 
+// Releases a director when it goes out of scope. Used after the closed callback, the last callback of a
+// pipe endpoint or wire connection, so the director (which usually references the wrapping object) does not
+// keep the endpoint alive when it was closed by the peer instead of by Close()
+template <typename T>
+class WrappedReleaseDirectorOnExit
+{
+  public:
+    WrappedReleaseDirectorOnExit(boost::shared_mutex& lock, boost::shared_ptr<T>& director)
+        : lock(lock), director(director)
+    {}
+    ~WrappedReleaseDirectorOnExit()
+    {
+        boost::shared_ptr<T> director1;
+        {
+            boost::unique_lock<boost::shared_mutex> lock1(lock);
+            director1.swap(director);
+        }
+    }
+
+  private:
+    boost::shared_mutex& lock;
+    boost::shared_ptr<T>& director;
+};
+
 WrappedPipeEndpoint::WrappedPipeEndpoint(const RR_SHARED_PTR<PipeBase>& parent, int32_t index, uint32_t endpoint,
                                          const RR_SHARED_PTR<TypeDefinition>& type, bool unreliable,
                                          MemberDefinition_Direction direction)
     : PipeEndpointBase(parent, index, endpoint, unreliable, direction)
 {
     this->Type = type;
-    // this->RR_Director=0;
-    // this->objectheapid=0;
 }
 
 void WrappedPipeEndpoint::fire_PipeEndpointClosedCallback()
@@ -1005,6 +1043,7 @@ void WrappedPipeEndpoint::fire_PipeEndpointClosedCallback()
     catch (std::exception&)
     {}
 
+    WrappedReleaseDirectorOnExit<WrappedPipeEndpointDirector> release_director(RR_Director_lock, RR_Director);
     DIRECTOR_CALL3(WrappedPipeEndpointDirector, RR_Director2->PipeEndpointClosedCallback());
 }
 
@@ -1100,10 +1139,7 @@ void WrappedPipeEndpoint::AsyncClose_handler(const RR_SHARED_PTR<RobotRaconteurE
     DIRECTOR_CALL2(handler->handler(err3));
 }
 
-WrappedPipeEndpoint::~WrappedPipeEndpoint()
-{
-    // DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
-}
+WrappedPipeEndpoint::~WrappedPipeEndpoint() {}
 
 void WrappedPipeEndpoint::SetPipeBroadcaster(const RR_SHARED_PTR<WrappedPipeBroadcaster>& broadcaster,
                                              const RR_SHARED_PTR<detail::PipeBroadcasterBase_connected_endpoint>& cep)
@@ -1188,14 +1224,9 @@ WrappedPipeServer::WrappedPipeServer(const std::string& name, const RR_SHARED_PT
 {
     this->Type = Type;
     this->rawelements = true;
-    // this->objectheapid=0;
-    // this->RR_Director=0;
 }
 
-WrappedPipeServer::~WrappedPipeServer()
-{
-    // DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
-}
+WrappedPipeServer::~WrappedPipeServer() {}
 
 void WrappedPipeServer::Shutdown()
 {
@@ -1333,8 +1364,6 @@ WrappedWireConnection::WrappedWireConnection(const RR_SHARED_PTR<WireBase>& pare
     : WireConnectionBase(parent, endpoint, direction)
 {
     this->Type = Type;
-    // this->RR_Director=0;
-    // this->objectheapid=0;
 }
 
 void WrappedWireConnection::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, TimeSpec time)
@@ -1382,6 +1411,7 @@ void WrappedWireConnection::fire_WireClosedCallback()
     catch (std::exception&)
     {}
 
+    WrappedReleaseDirectorOnExit<WrappedWireConnectionDirector> release_director(RR_Director_lock, RR_Director);
     DIRECTOR_CALL3(WrappedWireConnectionDirector, RR_Director2->WireConnectionClosedCallback());
 }
 
@@ -1403,10 +1433,7 @@ RR_SHARED_PTR<WrappedServiceStub> WrappedWireConnection::GetStub()
     return RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(w2->GetStub());
 }
 
-WrappedWireConnection::~WrappedWireConnection()
-{
-    // DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
-}
+WrappedWireConnection::~WrappedWireConnection() {}
 
 void WrappedWireConnection::Close()
 {
@@ -1651,14 +1678,9 @@ WrappedWireServer::WrappedWireServer(const std::string& name, const RR_SHARED_PT
 {
     this->Type = Type;
     this->rawelements = true;
-    // this->objectheapid=0;
-    // this->RR_Director=0;
 }
 
-WrappedWireServer::~WrappedWireServer()
-{
-    // DIRECTOR_CALL2(DIRECTOR_DELETE(RR_Director));
-}
+WrappedWireServer::~WrappedWireServer() {}
 
 RR_SHARED_PTR<WireConnectionBase> WrappedWireServer::CreateNewWireConnection(uint32_t endpoint,
                                                                              MemberDefinition_Direction direction)
@@ -2153,14 +2175,6 @@ void WrappedGeneratorServer::CallNext(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 RR_INTRUSIVE_PTR<RRBaseArray> WrappedArrayMemoryClientUtil::Read(const RR_SHARED_PTR<ArrayMemoryBase>& mem,
                                                                  uint64_t memorypos, uint64_t count)
 {
-    /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
-    if (i8)
-    {
-        RR_SHARED_PTR<RRArray<int8_t> > dat=AllocateRRArray<int8_t>(count);
-        i8->Read(memorypos,dat,bufferpos,count);
-        return dat;
-    }*/
-
     RR_WAMCU_READ_TYPE(int8_t);
     RR_WAMCU_READ_TYPE(uint8_t);
     RR_WAMCU_READ_TYPE(int16_t);
@@ -2190,13 +2204,6 @@ void WrappedArrayMemoryClientUtil::Write(const RR_SHARED_PTR<ArrayMemoryBase>& m
                                          const RR_INTRUSIVE_PTR<RRBaseArray>& buffer, uint64_t bufferpos,
                                          uint64_t count)
 {
-    /*RR_SHARED_PTR<ArrayMemory<int8_t> > i8=rr_cast<ArrayMemory<int8_t> >(mem);
-    if (i8)
-    {
-        i8->Write(memorypos,rr_cast<RRArray<int8_t> >(buffer),bufferpos,count);
-
-    }*/
-
     RR_WAMCU_WRITE_TYPE(int8_t);
     RR_WAMCU_WRITE_TYPE(uint8_t);
     RR_WAMCU_WRITE_TYPE(int16_t);
@@ -2271,34 +2278,6 @@ RR_SHARED_PTR<RRMultiDimArrayUntyped> WrappedMultiDimArrayMemoryClientUtil::Read
         elems *= boost::numeric_cast<size_t>(*e);
     }
 
-    /*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
-    if (i8)
-    {
-        RR_SHARED_PTR<RRArray<int8_t> > realdat=AllocateRRArray<int8_t>(elems);
-        RR_SHARED_PTR<RRArray<int8_t> > imagdat;
-        if (i8->Complex())
-        {
-            imagdat=AllocateRRArray<int8_t>(elems);
-        }
-
-        RR_SHARED_PTR<RRMultiDimArray<int8_t> > dat=RR_MAKE_SHARED<RRMultiDimArray<int8_t>
-    >(VectorToRRArray<int32_t>(count),realdat,imagdat);
-
-        std::vector<uint64_t> bufferpos(count.size());
-        std::fill(bufferpos.begin(),bufferpos.end(),0);
-
-        i8->Read(memorypos,dat,bufferpos,count);
-
-        RR_SHARED_PTR<RRMultiDimArrayUntyped> dat2=RR_MAKE_SHARED<RRMultiDimArrayUntyped>();
-        dat2->DimCount=dat->DimCount;
-        dat2->Dims=dat->Dims;
-        dat2->Complex=dat->Complex;
-        dat2->Real=dat->Real;
-        dat2->Imag=dat->Imag;
-
-        return dat2;
-    }*/
-
     RR_WMDAMCU_READ_TYPE(int8_t);
     RR_WMDAMCU_READ_TYPE(uint8_t);
     RR_WMDAMCU_READ_TYPE(int16_t);
@@ -2332,14 +2311,6 @@ void WrappedMultiDimArrayMemoryClientUtil::Write(const RR_SHARED_PTR<MultiDimArr
                                                  const RR_SHARED_PTR<RRMultiDimArrayUntyped>& buffer,
                                                  std::vector<uint64_t> bufferpos, std::vector<uint64_t> count)
 {
-    /*RR_SHARED_PTR<MultiDimArrayMemory<int8_t> > i8=rr_cast<MultiDimArrayMemory<int8_t> >(mem);
-    if (i8)
-    {
-        RR_SHARED_PTR<RRMultiDimArray<int8_t> > buffer2=RR_MAKE_SHARED<RRMultiDimArray<int8_t>
-    >(buffer->Dims,rr_cast<RRMultiDimArray<int8_t> >(buffer->Real),rr_cast<RRMultiDimArray<int8_t> >(buffer->Imag));
-        i8->Write(memorypos,buffer2,bufferpos,count);
-    }*/
-
     RR_WMDAMCU_WRITE_TYPE(int8_t);
     RR_WMDAMCU_WRITE_TYPE(uint8_t);
     RR_WMDAMCU_WRITE_TYPE(int16_t);
@@ -3043,7 +3014,6 @@ void WrappedServiceSkel::ReleaseCastObject()
     }
 
     DIRECTOR_CALL(WrappedServiceSkelDirector, RR_Director2->ReleaseCastObject());
-    // castobj.reset();
 }
 
 RR_SHARED_PTR<RobotRaconteur::WrappedPipeServer> WrappedServiceSkel::GetPipe(const std::string& membername)
@@ -3580,7 +3550,7 @@ uint64_t WrappedNamedMultiDimArrayMemory::DimCount()
     return l;
 }
 
-DataTypes WrappedNamedMultiDimArrayMemory::ElementTypeID() { return DataTypes_pod_t; }
+DataTypes WrappedNamedMultiDimArrayMemory::ElementTypeID() { return DataTypes_namedarray_t; }
 RR_INTRUSIVE_PTR<MessageElementNestedElementList> WrappedNamedMultiDimArrayMemory::Read(
     const std::vector<uint64_t>& memorypos, const std::vector<uint64_t>& bufferpos, const std::vector<uint64_t>& count)
 {
@@ -3622,7 +3592,6 @@ void WrappedNamedMultiDimArrayMemoryServiceSkel::DoWrite(const std::vector<uint6
 WrappedRRObject::WrappedRRObject(const std::string& type, WrappedServiceSkelDirector* RR_Director, int32_t id)
 {
     this->Type = type;
-    // std::cout  << "objid=" << id << std::endl;
     this->RR_Director.reset(RR_Director,
                             boost::bind(&ReleaseDirector<WrappedServiceSkelDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 }
@@ -3855,7 +3824,7 @@ void WrappedServiceInfo2Subscription::ServiceDetected1(const RR_SHARED_PTR<Servi
 {
     RR_SHARED_PTR<WrappedServiceInfo2Subscription> s = shared_from_this();
     ServiceInfo2Wrapped info2(info);
-    DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director->ServiceDetected(s, id, info2));
+    DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director2->ServiceDetected(s, id, info2));
 }
 
 void WrappedServiceInfo2Subscription::ServiceLost1(const RR_SHARED_PTR<ServiceInfo2Subscription>& subscription,
@@ -3863,7 +3832,7 @@ void WrappedServiceInfo2Subscription::ServiceLost1(const RR_SHARED_PTR<ServiceIn
 {
     RR_SHARED_PTR<WrappedServiceInfo2Subscription> s = shared_from_this();
     ServiceInfo2Wrapped info2(info);
-    DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director->ServiceLost(s, id, info2));
+    DIRECTOR_CALL3(WrappedServiceInfo2SubscriptionDirector, RR_Director2->ServiceLost(s, id, info2));
 }
 
 WrappedServiceSubscription::WrappedServiceSubscription(const RR_SHARED_PTR<ServiceSubscription>& subscription)
@@ -3899,6 +3868,26 @@ void WrappedServiceSubscription::Close()
     }
 
     subscription->Close();
+
+    std::vector<RR_WEAK_PTR<WrappedWireSubscription> > wire_subscriptions1;
+    std::vector<RR_WEAK_PTR<WrappedPipeSubscription> > pipe_subscriptions1;
+    {
+        boost::mutex::scoped_lock lock(member_subscriptions_lock);
+        wire_subscriptions1.swap(wire_subscriptions);
+        pipe_subscriptions1.swap(pipe_subscriptions);
+    }
+    BOOST_FOREACH (RR_WEAK_PTR<WrappedWireSubscription>& w, wire_subscriptions1)
+    {
+        RR_SHARED_PTR<WrappedWireSubscription> w1 = w.lock();
+        if (w1)
+            w1->ReleaseRRDirector();
+    }
+    BOOST_FOREACH (RR_WEAK_PTR<WrappedPipeSubscription>& p, pipe_subscriptions1)
+    {
+        RR_SHARED_PTR<WrappedPipeSubscription> p1 = p.lock();
+        if (p1)
+            p1->ReleaseRRDirector();
+    }
 }
 
 void WrappedServiceSubscription::ClaimClient(const RR_SHARED_PTR<WrappedServiceStub>& client)
@@ -3924,6 +3913,10 @@ RR_SHARED_PTR<WrappedWireSubscription> WrappedServiceSubscription::SubscribeWire
     RR_SHARED_PTR<WrappedWireSubscription> o =
         RR_MAKE_SHARED<WrappedWireSubscription>(subscription, membername, servicepath);
     detail::ServiceSubscription_custom_member_subscribers::SubscribeWire(subscription, o);
+    {
+        boost::mutex::scoped_lock lock(member_subscriptions_lock);
+        wire_subscriptions.push_back(o);
+    }
     return o;
 }
 
@@ -3934,6 +3927,10 @@ RR_SHARED_PTR<WrappedPipeSubscription> WrappedServiceSubscription::SubscribePipe
     RR_SHARED_PTR<WrappedPipeSubscription> o =
         RR_MAKE_SHARED<WrappedPipeSubscription>(subscription, membername, servicepath, max_recv_packets);
     detail::ServiceSubscription_custom_member_subscribers::SubscribePipe(subscription, o);
+    {
+        boost::mutex::scoped_lock lock(member_subscriptions_lock);
+        pipe_subscriptions.push_back(o);
+    }
     return o;
 }
 
@@ -4030,7 +4027,7 @@ void WrappedServiceSubscription::ClientConnected1(const RR_SHARED_PTR<ServiceSub
 {
     RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
     RR_SHARED_PTR<WrappedServiceStub> client2 = RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(client);
-    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientConnected(s, id, client2));
+    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director2->ClientConnected(s, id, client2));
 }
 void WrappedServiceSubscription::ClientDisconnected1(const RR_SHARED_PTR<ServiceSubscription>& subscription,
                                                      const ServiceSubscriptionClientID& id,
@@ -4038,7 +4035,7 @@ void WrappedServiceSubscription::ClientDisconnected1(const RR_SHARED_PTR<Service
 {
     RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
     RR_SHARED_PTR<WrappedServiceStub> client2 = RR_DYNAMIC_POINTER_CAST<WrappedServiceStub>(client);
-    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientDisconnected(s, id, client2));
+    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director2->ClientDisconnected(s, id, client2));
 }
 
 void WrappedServiceSubscription::ClientConnectFailed1(const boost::shared_ptr<ServiceSubscription>& subscription,
@@ -4048,7 +4045,7 @@ void WrappedServiceSubscription::ClientConnectFailed1(const boost::shared_ptr<Se
 {
     RR_SHARED_PTR<WrappedServiceSubscription> s = shared_from_this();
     HandlerErrorInfo err2(err);
-    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director->ClientConnectFailed(s, id, url, err2));
+    DIRECTOR_CALL3(WrappedServiceSubscriptionDirector, RR_Director2->ClientConnectFailed(s, id, url, err2));
 }
 
 boost::shared_ptr<RobotRaconteur::RobotRaconteurNode> WrappedServiceSubscription::GetNode()
@@ -4159,6 +4156,21 @@ void WrappedWireSubscription::SetRRDirector(WrappedWireSubscriptionDirector* dir
                       boost::bind(&ReleaseDirector<WrappedWireSubscriptionDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 }
 
+void WrappedWireSubscription::ReleaseRRDirector()
+{
+    RR_SHARED_PTR<WrappedWireSubscriptionDirector> director1;
+    {
+        boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1.swap(RR_Director);
+    }
+}
+
+void WrappedWireSubscription::Close()
+{
+    ReleaseRRDirector();
+    WireSubscriptionBase::Close();
+}
+
 void WrappedWireSubscription::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
                                                     const RR_SHARED_PTR<WireConnectionBase>& connection)
 {
@@ -4177,7 +4189,7 @@ void WrappedWireSubscription::fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRVal
         return;
     }
     RR_SHARED_PTR<WrappedWireSubscription> s = RR_STATIC_POINTER_CAST<WrappedWireSubscription>(shared_from_this());
-    DIRECTOR_CALL3(WrappedWireSubscriptionDirector, RR_Director->WireValueChanged(s, val, time));
+    DIRECTOR_CALL3(WrappedWireSubscriptionDirector, RR_Director2->WireValueChanged(s, val, time));
 }
 
 WrappedWireSubscription_send_iterator::WrappedWireSubscription_send_iterator(
@@ -4269,10 +4281,25 @@ void WrappedPipeSubscription::SetRRDirector(WrappedPipeSubscriptionDirector* dir
                       boost::bind(&ReleaseDirector<WrappedPipeSubscriptionDirector>, RR_BOOST_PLACEHOLDERS(_1), id));
 }
 
+void WrappedPipeSubscription::ReleaseRRDirector()
+{
+    RR_SHARED_PTR<WrappedPipeSubscriptionDirector> director1;
+    {
+        boost::unique_lock<boost::shared_mutex> lock(RR_Director_lock);
+        director1.swap(RR_Director);
+    }
+}
+
+void WrappedPipeSubscription::Close()
+{
+    ReleaseRRDirector();
+    PipeSubscriptionBase::Close();
+}
+
 void WrappedPipeSubscription::fire_PipePacketReceived()
 {
     RR_SHARED_PTR<WrappedPipeSubscription> s = RR_STATIC_POINTER_CAST<WrappedPipeSubscription>(shared_from_this());
-    DIRECTOR_CALL3(WrappedPipeSubscriptionDirector, RR_Director->PipePacketReceived(s));
+    DIRECTOR_CALL3(WrappedPipeSubscriptionDirector, RR_Director2->PipePacketReceived(s));
 }
 
 WrappedPipeSubscription_send_iterator::WrappedPipeSubscription_send_iterator(

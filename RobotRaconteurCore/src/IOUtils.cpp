@@ -159,6 +159,11 @@ void ArrayBinaryReader::ReadArray(RR_INTRUSIVE_PTR<RRBaseArray>& arr)
 
 MessageStringPtr ArrayBinaryReader::ReadString8(size_t length)
 {
+    // Check the length before allocating; Read() would only check it after the string was allocated
+    if (length > CurrentLimit() - position)
+    {
+        throw BufferLimitViolationException("Range outside of buffer");
+    }
     std::string strin;
     strin.resize(length);
     Read(&strin[0], 0, length);
@@ -596,7 +601,7 @@ size_t ArrayBinaryWriter::CurrentLimit() { return limits.back(); }
 void ArrayBinaryWriter::PushRelativeLimit(size_t limit)
 {
     if ((Position() + limit) > CurrentLimit())
-        throw BufferLimitViolationException("Binary reader error");
+        throw BufferLimitViolationException("Binary writer error");
 
     limits.push_back(Position() + limit);
 }
@@ -604,7 +609,7 @@ void ArrayBinaryWriter::PushRelativeLimit(size_t limit)
 void ArrayBinaryWriter::PushAbsoluteLimit(size_t limit)
 {
     if ((limit) > CurrentLimit())
-        throw BufferLimitViolationException("Binary reader error");
+        throw BufferLimitViolationException("Binary writer error");
     limits.push_back(limit);
 }
 

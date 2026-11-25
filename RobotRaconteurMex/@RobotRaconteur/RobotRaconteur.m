@@ -387,7 +387,7 @@ classdef RobotRaconteur
         %    nodes = RobotRaconteur.GetDetectedNodes() Get the detected
         %    nodes
         %
-        %    Robot Raconteur mantains a cache of the nodes detected on the
+        %    Robot Raconteur maintains a cache of the nodes detected on the
         %    local network. When a discovery or subscription request
         %    occurs, the nodes are interrogated to find what services are
         %    available. RobotRaconteur.GetDetectedNodes() returns the
@@ -798,7 +798,7 @@ classdef RobotRaconteur
         %                           service should be connected
         %
         %   The returned ServiceInfo2Subscription object allows the user
-        %   to retreive the information about detected services.
+        %   to retrieve the information about detected services.
         %
         %   Example:
         %

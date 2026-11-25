@@ -28,8 +28,8 @@ The following options are available:
 | `--robotraconteur-tcp-start-server=` | boolean | false | true | Start TCP transport server |
 | `--robotraconteur-tcp-listen-localhost=` | boolean | false | false | TCP transport server listen on localhost only |
 | `--robotraconteur-tcp-start-server-sharer=` | boolean | false | true | Start TCP transport server using port sharer |
-| `--robotraconteur-tcp-ws-add-origin=` | string |  |  | Comma separated list of WebSocket origins to add to TCP transport access control |
-| `--robotraconteur-tcp-ws-remove-origin=` | string |  |  | Comma separated list of WebSocket origins to remove from TCP transport access control |
+| `--robotraconteur-tcp-ws-add-origins=` | string |  |  | Comma separated list of WebSocket origins to add to TCP transport access control |
+| `--robotraconteur-tcp-ws-remove-origins=` | string |  |  | Comma separated list of WebSocket origins to remove from TCP transport access control |
 | `--robotraconteur-tcp-ipv4-discovery=` | boolean | false | false | Enable IPv4 discovery if discovery announce and/or listening is enabled |
 | `--robotraconteur-tcp-ipv6-discovery=` | boolean | true | true | Enable IPv6 discovery if discovery announce and/or listening is enabled |
 | `--robotraconteur-intra-start-server=` | boolean | false | true | Start Intra transport server |

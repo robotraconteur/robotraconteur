@@ -162,7 +162,7 @@ class ROBOTRACONTEUR_CORE_API NodeID : virtual public RRObject
     /**
      * @brief Is the NodeID UUID all zeros
      *
-     * The all zero UUID respresents "any" node, or an unset NodeID
+     * The all zero UUID represents "any" node, or an unset NodeID
      *
      * @return true The NodeID UUID is all zeros, representing any node
      * @return false The NodeID UUID is not all zeros

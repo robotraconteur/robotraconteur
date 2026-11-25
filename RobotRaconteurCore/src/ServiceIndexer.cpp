@@ -118,28 +118,6 @@ RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::Serv
 RR_INTRUSIVE_PTR<RobotRaconteur::RRMap<int32_t, RobotRaconteurServiceIndex::NodeInfo> > ServiceIndexer::GetRoutedNodes()
 {
     RR_INTRUSIVE_PTR<RRMap<int32_t, NodeInfo> > o = AllocateEmptyRRMap<int32_t, NodeInfo>();
-    /*if (GetNode()->IsMessageRouterAvailable())
-    {
-
-        std::vector<RR_INTRUSIVE_PTR<MessageRouter::Route> > r=GetNode()->GetMessageRouter()->GetActiveRoutes();
-
-        size_t len=r.size();
-
-
-
-        for (size_t i=0; i<len; i++)
-        {
-            RR_SHARED_PTR<NodeInfo> ii=RR_MAKE_SHARED<NodeInfo>();
-            ii->NodeID=VectorToRRArray<uint8_t>(r.at(i)->NodeID.ToByteArray());
-            ii->NodeName=r.at(i)->NodeName;
-
-            RR_INTRUSIVE_PTR<RRMap<int32_t,RRArray<char> > > curl=RR_MAKE_SHARED<RRMap<int32_t,RRArray<char> > >();
-            curl->map.insert(make_pair(0,stringToRRArray(r.at(i)->ConnectURL)));
-
-            ii->ServiceIndexConnectionURL=curl;
-            o->map.insert(make_pair((int32_t)i,ii));
-        }
-    }*/
 
     return o;
 }

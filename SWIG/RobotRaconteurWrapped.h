@@ -227,6 +227,8 @@ class WrappedServiceFactory : public virtual RobotRaconteur::ServiceFactory
   public:
     WrappedServiceFactory(const std::string& defstring);
     WrappedServiceFactory(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def);
+    WrappedServiceFactory(const boost::shared_ptr<RobotRaconteur::ServiceDefinition>& def,
+                          const std::string& defstring);
     RR_OVIRTUAL ~WrappedServiceFactory() RR_OVERRIDE {}
 
     RR_OVIRTUAL std::string GetServiceName() RR_OVERRIDE;
@@ -458,7 +460,6 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
     bool director_closed;
 
   public:
-    // WrappedServiceStubDirector* GetRRDirector();
     bool SetRRDirector(WrappedServiceStubDirector* director, int32_t id);
     boost::shared_ptr<WrappedDirectorLock> GetRRDirectorLock();
 
@@ -472,8 +473,6 @@ class WrappedServiceStub : public virtual RobotRaconteur::ServiceStub
     std::map<std::string, RR_SHARED_PTR<WrappedNamedMultiDimArrayMemoryClient> > namedarray_multidimarraymemories;
 
     int GetObjectHeapID();
-
-    // int32_t objectheapid;
 
 #ifdef RR_PYTHON
   protected:
@@ -599,11 +598,8 @@ class WrappedPipeEndpoint : public PipeEndpointBase
                                  const RR_SHARED_PTR<AsyncUInt32ReturnDirector>& handler);
 
   public:
-    // WrappedPipeEndpointDirector* GetRRDirector();
     void SetRRDirector(WrappedPipeEndpointDirector* director, int32_t id);
     RR_SHARED_PTR<WrappedServiceStub> GetStub();
-
-    // int32_t objectheapid;
 
     RR_OVIRTUAL void Close() RR_OVERRIDE;
     using PipeEndpointBase::AsyncClose;
@@ -632,8 +628,6 @@ class WrappedPipeClient : public virtual PipeClientBase
   public:
     RR_OVIRTUAL ~WrappedPipeClient() RR_OVERRIDE {}
 
-    // virtual boost::function<void(const RR_SHARED_PTR<WrappedPipeEndpoint>&)> GetPipeConnectCallback();
-    // virtual void SetPipeConnectCallback(boost::function<void(const RR_SHARED_PTR<WrappedPipeEndpoint>&)> function);
     RR_SHARED_PTR<WrappedPipeEndpoint> Connect(int32_t index);
     void AsyncConnect(int32_t index, int32_t timeout, AsyncPipeEndpointReturnDirector* handler, int32_t id);
     WrappedPipeClient(const std::string& name, const RR_SHARED_PTR<ServiceStub>& stub,
@@ -674,10 +668,7 @@ class WrappedPipeServer : public virtual PipeServerBase
     boost::mutex callback_lock;
 
   public:
-    // WrappedPipeServerDirector* GetRRDirector();
     void SetWrappedPipeConnectCallback(WrappedPipeServerConnectDirector* director, int32_t id);
-
-    // int32_t objectheapid;
 
     boost::function<void(const RR_SHARED_PTR<PipeEndpointBase>&)> GetPipeConnectCallback();
 
@@ -772,11 +763,9 @@ class WrappedWireConnection : public virtual WireConnectionBase
     boost::shared_mutex RR_Director_lock;
 
   public:
-    // WrappedWireConnectionDirector* GetRRDirector();
     void SetRRDirector(WrappedWireConnectionDirector* director, int32_t id);
     RR_SHARED_PTR<WrappedServiceStub> GetStub();
 
-    // int32_t objectheapid;
     RR_OVIRTUAL void Close() RR_OVERRIDE;
     using WireConnectionBase::AsyncClose;
     void AsyncClose(int32_t timeout, AsyncVoidReturnDirector* handler, int32_t id);
@@ -890,10 +879,7 @@ class WrappedWireServer : public WireServerBase
     RR_WEAK_PTR<IWrappedWirePeekPokeCallbacks> wrapped_peek_poke_callbacks;
 
   public:
-    // WrappedWireServerDirector* GetRRDirector();
     void SetWrappedWireConnectCallback(WrappedWireServerConnectDirector* director, int32_t id);
-
-    // int32_t objectheapid;
 
     void SetWireConnectCallback(boost::function<void(const RR_SHARED_PTR<WireConnectionBase>&)> function);
 
@@ -1354,9 +1340,6 @@ class WrappedServiceSkel : public virtual ServiceSkel
     boost::shared_mutex RR_Director_lock;
 
   public:
-    // WrappedServiceSkelDirector* GetRRDirector();
-    // void SetRRDirector(WrappedServiceSkelDirector* director, int32_t id);
-
     RR_SHARED_PTR<RobotRaconteur::WrappedPipeServer> GetPipe(const std::string& membername);
     RR_SHARED_PTR<RobotRaconteur::WrappedWireServer> GetWire(const std::string& membername);
 
@@ -1428,7 +1411,6 @@ class WrappedRRObject : public RRObject, public IRobotRaconteurMonitorObject
 
   public:
     boost::shared_ptr<WrappedServiceSkelDirector> GetRRDirector();
-    // void SetRRDirector(WrappedServiceSkelDirector* director, int32_t id);
 
     RR_OVIRTUAL void RobotRaconteurMonitorEnter() RR_OVERRIDE
     {
@@ -1474,7 +1456,6 @@ class WrappedArrayMemory : public virtual ArrayMemory<T>
 
     WrappedArrayMemory(WrappedArrayMemoryDirector* RR_Director)
     {
-        // this->RR_Director=0;
         if (!RR_Director)
             throw InvalidArgumentException("RR_Director cannot be null");
         this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedArrayMemoryDirector>,
@@ -1540,7 +1521,6 @@ class WrappedMultiDimArrayMemory : public virtual MultiDimArrayMemory<T>
     boost::shared_mutex RR_Director_lock;
     WrappedMultiDimArrayMemory(WrappedMultiDimArrayMemoryDirector* RR_Director)
     {
-        // this->RR_Director=0;
         if (!RR_Director)
             throw InvalidArgumentException("RR_Director cannot be null");
         this->RR_Director.reset(RR_Director, boost::bind(&ReleaseDirector<WrappedMultiDimArrayMemoryDirector>,
@@ -1999,6 +1979,10 @@ class WrappedServiceSubscription : public RR_ENABLE_SHARED_FROM_THIS<WrappedServ
 
   protected:
     RR_SHARED_PTR<ServiceSubscription> subscription;
+    // Wire and pipe subscriptions created by this subscription, to release their directors on Close()
+    boost::mutex member_subscriptions_lock;
+    std::vector<RR_WEAK_PTR<WrappedWireSubscription> > wire_subscriptions;
+    std::vector<RR_WEAK_PTR<WrappedPipeSubscription> > pipe_subscriptions;
     RR_SHARED_PTR<WrappedServiceSubscriptionDirector> RR_Director;
     boost::shared_mutex RR_Director_lock;
     boost::initialized<bool> events_connected;
@@ -2045,6 +2029,10 @@ class WrappedWireSubscription : public WireSubscriptionBase
     bool TryGetInValue(WrappedService_typed_packet& val, TimeSpec* time = NULL);
 
     void SetRRDirector(WrappedWireSubscriptionDirector* director, int32_t id);
+
+    // Releases the director, then closes the subscription
+    void Close();
+    void ReleaseRRDirector();
 
   protected:
     RR_OVIRTUAL void fire_WireValueChanged(const RR_INTRUSIVE_PTR<RRValue>& value, const TimeSpec& time,
@@ -2093,6 +2081,10 @@ class WrappedPipeSubscription : public PipeSubscriptionBase
                               bool peek = false);
 
     void SetRRDirector(WrappedPipeSubscriptionDirector* director, int32_t id);
+
+    // Releases the director, then closes the subscription
+    void Close();
+    void ReleaseRRDirector();
 
   protected:
     RR_OVIRTUAL void fire_PipePacketReceived() RR_OVERRIDE;

@@ -136,6 +136,9 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
 
   public:
     void DoUpdateAllDetectedServices(const RR_SHARED_PTR<IServiceSubscription>& s);
+
+    // Register a subscription created without SubscribeService / DoSubscribe (no-op if already registered)
+    void AddSubscription(const RR_SHARED_PTR<IServiceSubscription>& s);
 };
 
 class Discovery_updatediscoverednodes : public RR_ENABLE_SHARED_FROM_THIS<Discovery_updatediscoverednodes>

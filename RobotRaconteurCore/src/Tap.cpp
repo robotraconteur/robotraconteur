@@ -154,11 +154,25 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
         start_recv();
     }
 
-    void Close() { socket.reset(); }
+    void Close()
+    {
+        boost::mutex::scoped_lock lock(this_lock);
+        if (socket)
+        {
+            boost::system::error_code ec;
+            socket->socket->close(ec);
+        }
+        socket.reset();
+        send_queue.clear();
+    }
 
     void RecordMessage(const RR_INTRUSIVE_PTR<Message>& message)
     {
         boost::mutex::scoped_lock lock(this_lock);
+
+        // Closed
+        if (!socket)
+            return;
 
         if (sending)
         {
@@ -194,10 +208,20 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
     {
         if (ec)
         {
+            // The reader is gone. Drop the queue and the sending flag, otherwise every later message is queued
+            // forever.
+            boost::mutex::scoped_lock lock(this_lock);
+            send_queue.clear();
+            sending = false;
             return;
         }
 
         boost::mutex::scoped_lock lock(this_lock);
+        if (!socket)
+        {
+            sending = false;
+            return;
+        }
         message_pos += bytes_transferred;
         if (message_pos < message_len)
         {
@@ -239,6 +263,8 @@ class LocalMessageTapConnectionImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMes
         }
 
         boost::mutex::scoped_lock lock(this_lock);
+        if (!socket)
+            return;
         socket->socket->async_read_some(boost::asio::buffer(recv_buf.data(), sizeof(recv_buf)),
                                         boost::bind(&LocalMessageTapConnectionImpl::end_recv, shared_from_this(),
                                                     boost::asio::placeholders::error,
@@ -273,6 +299,7 @@ class LocalMessageTapImpl : public RR_ENABLE_SHARED_FROM_THIS<LocalMessageTapImp
         {
             NodeDirectories node_dirs = NodeDirectoriesUtil::GetDefaultNodeDirectories();
             boost::filesystem::path run_path = node_dirs.user_run_dir;
+            RobotRaconteur::detail::NodeDirectories_secure_tmp_user_run_dir(run_path);
             boost::filesystem::path tap_path = run_path / "tap";
             boost::filesystem::path all_tap_path = tap_path / "all";
             boost::filesystem::path log_tap_path = tap_path / "log";

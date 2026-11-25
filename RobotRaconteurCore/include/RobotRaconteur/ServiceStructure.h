@@ -239,10 +239,14 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
             typedef typename RRPrimUtil<type>::ElementArrayType element_type;                                          \
             RR_INTRUSIVE_PTR<MessageElementNestedElementList> m =                                                      \
                 MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_namedarray_array_t);             \
+            if (!m)                                                                                                    \
+                throw NullValueException("Unexpected null namedarray");                                                \
             if (m->TypeName != RRPrimUtil<type>::GetElementTypeString())                                               \
                 throw DataTypeException("Invalid namedarray");                                                         \
             RR_INTRUSIVE_PTR<RRArray<element_type> > a =                                                               \
                 MessageElement::FindElement(m->Elements, "array")->CastData<RRArray<element_type> >();                 \
+            if (!a)                                                                                                    \
+                throw NullValueException("Unexpected null namedarray");                                                \
             if (a->size() != RRPrimUtil<type>::GetElementArrayCount())                                                 \
                 throw DataTypeException("Invalid namedarray");                                                         \
             memcpy((void*)&v, a->void_ptr(), sizeof(v));                                                               \
@@ -270,8 +274,14 @@ void RRNamedArrayTo_pod_field_array(pod_field_array<T, N, varlength>& v, const R
             typedef RRPrimUtil<type>::ElementArrayType element_type;                                                   \
             RR_INTRUSIVE_PTR<MessageElementNestedElementList> a =                                                      \
                 MessageElement::FindElement(in, name)->CastDataToNestedList(DataTypes_namedarray_array_t);             \
+            if (!a)                                                                                                    \
+                throw NullValueException("Unexpected null namedarray");                                                \
             RR_INTRUSIVE_PTR<RRArray<element_type> > a1 =                                                              \
                 MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >();        \
+            if (!a1)                                                                                                   \
+                throw NullValueException("Unexpected null namedarray");                                                \
+            if (a1->size() % RRPrimUtil<type>::GetElementArrayCount() != 0)                                            \
+                throw DataTypeException("Invalid namedarray");                                                         \
             v.resize(a1->size() / RRPrimUtil<type>::GetElementArrayCount());                                           \
             memcpy((void*)&v, (void*)a1->data(), a1->size() * sizeof(element_type));                                   \
         }                                                                                                              \
@@ -453,6 +463,8 @@ RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > PodStub_UnpackPodMultiDimArray(
 
     RR_INTRUSIVE_PTR<RRPodMultiDimArray<T> > o = AllocateEmptyRRPodMultiDimArray<T>();
     o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<uint32_t> >());
+    if (!o->Dims)
+        throw NullValueException("Multidimarray dims must not be null");
     o->PodArray = PodStub_UnpackPodArray<T>(
         MessageElement::FindElement(m->Elements, "array")->CastDataToNestedList(DataTypes_pod_array_t));
     if (!o->PodArray)
@@ -589,6 +601,8 @@ void NamedArrayStub_UnpackNamedArrayFromArray(T& v, const RR_INTRUSIVE_PTR<Messa
         throw DataTypeException("Invalid namedarray array format");
     typename RR_INTRUSIVE_PTR<RRArray<element_type> > a1 =
         MessageElement::FindElement(a->Elements, "array")->template CastData<RRArray<element_type> >();
+    if (!a1)
+        throw NullValueException("NamedArray scalar array must not be null");
     if (a1->size() != sizeof(T) / sizeof(element_type))
         throw DataTypeException("Invalid scalar namedarray array format");
 
@@ -628,6 +642,8 @@ RR_INTRUSIVE_PTR<RRNamedArray<T> > NamedArrayStub_UnpackNamedArray(
         throw DataTypeException("Invalid namedarray type");
     typename RR_INTRUSIVE_PTR<RRArray<element_type> > a2 =
         MessageElement::FindElement(a->Elements, "array")->CastData<RRArray<element_type> >();
+    if (!a2)
+        throw NullValueException("NamedArray array must not be null");
     return new RRNamedArray<T>(a2); // NOLINT(cppcoreguidelines-owning-memory)
 }
 
@@ -659,6 +675,8 @@ RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > NamedArrayStub_UnpackNamedMultiDimArr
 
     typename RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> > o = AllocateEmptyRRNamedMultiDimArray<T>();
     o->Dims = (MessageElement::FindElement(m->Elements, "dims")->CastData<RRArray<uint32_t> >());
+    if (!o->Dims)
+        throw NullValueException("Multidimarray dims must not be null");
     o->NamedArray = NamedArrayStub_UnpackNamedArray<T>(
         MessageElement::FindElement(m->Elements, "array")->CastDataToNestedList(DataTypes_namedarray_array_t));
     if (!o->NamedArray)

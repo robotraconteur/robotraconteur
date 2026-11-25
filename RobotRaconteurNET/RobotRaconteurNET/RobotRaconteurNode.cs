@@ -142,8 +142,9 @@ public partial class RobotRaconteurNode
     {
         lock (servicetypes)
         {
-            servicetypes.Add(servicetype.GetServiceName(), servicetype);
+            // Register with the native node first, so a failed registration leaves no entry behind
             _RegisterServiceType(servicetype.ServiceDef());
+            servicetypes.Add(servicetype.GetServiceName(), servicetype);
         }
     }
 
@@ -1286,6 +1287,12 @@ public partial class RobotRaconteurNode
             return data;
         }
 
+        if (t == typeof(CDouble) || t == typeof(CSingle) ||
+            (is_array && (t.GetElementType() == typeof(CDouble) || t.GetElementType() == typeof(CSingle))))
+        {
+            return data;
+        }
+
         if (t == typeof(MultiDimArray))
         {
             return PackMultiDimArray((MultiDimArray)data);
@@ -1340,6 +1347,9 @@ public partial class RobotRaconteurNode
         case DataTypes.uint32_t:
         case DataTypes.int64_t:
         case DataTypes.uint64_t:
+        case DataTypes.cdouble_t:
+        case DataTypes.csingle_t:
+        case DataTypes.bool_t:
         case DataTypes.string_t:
             return me.Data;
         case DataTypes.multidimarray_t:
@@ -1467,7 +1477,7 @@ public partial class RobotRaconteurNode
     }
 
     /// <summary>
-    /// Release an excluse access lock previously locked with RequestObjectLock()
+    /// Release an exclusive access lock previously locked with RequestObjectLock()
     /// or AsyncRequestObjectLock()
     /// </summary>
     /// <remarks>
@@ -1514,7 +1524,7 @@ public partial class RobotRaconteurNode
     }
 
     /// <summary>
-    /// Asynchronously release an excluse access lock previously locked
+    /// Asynchronously release an exclusive access lock previously locked
     /// with RequestObjectLock() or AsyncRequestObjectLock()
     /// </summary>
     /// <remarks>
@@ -1610,6 +1620,7 @@ public partial class RobotRaconteurNode
         public ScopedMonitorLock(object obj, int timeout = -1)
         {
             RobotRaconteurNode.s.MonitorEnter(obj, timeout);
+            this.obj = obj;
             locked = true;
         }
 
@@ -1645,7 +1656,7 @@ public partial class RobotRaconteurNode
                 return;
             if (!locked)
                 throw new Exception("Not locked");
-            RobotRaconteurNode.s.MonitorExit(timeout);
+            RobotRaconteurNode.s.MonitorExit(obj);
             locked = false;
         }
 
@@ -1886,7 +1897,7 @@ public partial class RobotRaconteurNode
     public const int RR_TIMEOUT_INFINITE = -1;
 
     /// <summary>
-    /// Asynchronously use discovery to find availabe services by service type
+    /// Asynchronously use discovery to find available services by service type
     /// </summary>
     /// <remarks>
     ///  Same as FindServiceByType() but async

@@ -1,0 +1,19 @@
+service experimental.gen_test_java_pod_containers
+
+stdver 0.10
+
+pod testpod
+    field double a
+    field int32[2] b
+end
+
+struct teststruct
+    field testpod[2,2]{list} s1
+    field testpod[2,2]{int32} s2
+end
+
+object o1
+    property testpod[2,2]{list} p1
+    property testpod[2,2]{string} p2
+    property teststruct p3
+end

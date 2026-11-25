@@ -8,8 +8,6 @@ public class WrappedNamedMultiDimArrayMemoryDirectorJava<T> extends WrappedNamed
 
     NamedMultiDimArrayMemory<T> mem;
 
-    // public int memoryid = 0;
-
     private static long[] vector_uint64_to_long(vector_uint64_t v)
     {
         long[] o = new long[v.size()];

@@ -367,7 +367,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * @brief Get the default heartbeat period
      *
      * The heartbeat is used to keep the connection alive
-     * if no communication is occuring between nodes.
+     * if no communication is occurring between nodes.
      *
      * Default: 5 seconds
      *
@@ -378,7 +378,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * @brief Set the default heartbeat period
      *
      * The heartbeat is used to keep the connection alive
-     * if no communication is occuring between nodes.
+     * if no communication is occurring between nodes.
      *
      * Default: 5 seconds
      *
@@ -520,7 +520,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      *
      * Default: true
      *
-     * @return true The tranport will accept WebSocket connections
+     * @return true The transport will accept WebSocket connections
      * @return false The transport will reject WebSocket connections
      */
     virtual bool GetAcceptWebSockets();
@@ -560,10 +560,6 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * * (empty string)
      * * "null"
      * * "file://"
-     * * "http://robotraconteur.com"
-     * * "http://robotraconteur.com:80"
-     * * "http://(*).robotraconteur.com"
-     * * "http://(*).robotraconteur.com:80"
      * * "https://robotraconteur.com"
      * * "https://robotraconteur.com:443"
      * * "https://(*).robotraconteur.com"
@@ -574,7 +570,7 @@ class ROBOTRACONTEUR_CORE_API TcpTransport : public Transport, public RR_ENABLE_
      * The star symbol can be used for a subdomain wildcard when matching origins.
      *
      * Additional allowed origins can be added using this function, or the
-     * `--robotraconteur-tcp-ws-add-origin=` command line option if
+     * `--robotraconteur-tcp-ws-add-origins=` command line option if
      * the RobotRaconteurNodeSetup classes are being used.
      *
      *

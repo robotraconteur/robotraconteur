@@ -145,8 +145,7 @@ void intrusive_ptr_release(LibUsb_Transfer* p)
 {
     if (!p)
         return;
-    p->ref_count--;
-    if (p->ref_count == 0)
+    if (--p->ref_count == 0)
     {
         delete p; // NOLINT(cppcoreguidelines-owning-memory)
     }
@@ -423,7 +422,7 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
                     {
                         size_t p = 0;
 
-                        while (p < sysfs_bos_desc.size() - 3)
+                        while (p + 3 < sysfs_bos_desc.size())
                         {
                             struct libusb_bos_dev_capability_descriptor* cap =
                                 reinterpret_cast<libusb_bos_dev_capability_descriptor*>(&sysfs_bos_desc[p]);
@@ -533,8 +532,9 @@ std::list<UsbDeviceManager_detected_device> LibUsbDeviceManager::GetDetectedDevi
         if (rr_found)
         {
 
-            if (config_desc->interface[interface_].num_altsetting < 1)
+            if (interface_ >= config_desc->bNumInterfaces || config_desc->interface[interface_].num_altsetting < 1)
             {
+                f->libusb_free_config_descriptor(config_desc);
                 continue;
             }
 
@@ -680,6 +680,8 @@ void LibUsbDeviceManager::submit_transfer(boost::intrusive_ptr<LibUsb_Transfer>&
             transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
             RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer),
                                                     true);
+            // Drop the reference FillTransfer took for libusb, the transfer is never submitted
+            intrusive_ptr_release(transfer.get());
             return;
         }
 
@@ -691,6 +693,7 @@ void LibUsbDeviceManager::submit_transfer(boost::intrusive_ptr<LibUsb_Transfer>&
                 transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
                 RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer),
                                                         true);
+                intrusive_ptr_release(transfer.get());
                 return;
             }
         }
@@ -702,7 +705,9 @@ void LibUsbDeviceManager::submit_transfer(boost::intrusive_ptr<LibUsb_Transfer>&
     {
         transfer->transfer->actual_length = 0;
         transfer->transfer->status = LIBUSB_TRANSFER_ERROR;
-        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&LibUsb_Transfer::CompleteTransfer, transfer), true);
+        // libusb will not call the completion callback. Complete it here so the transfer is removed from
+        // manager_transfer_list, a pending DrawDownRequests is finished, and the libusb reference is released
+        transfer_complete(transfer->transfer);
     }
 }
 
@@ -924,7 +929,7 @@ UsbDeviceStatus LibUsbDevice_Initialize::ReadPipeSettings(const RR_SHARED_PTR<vo
 
     f->libusb_free_config_descriptor(config_desc);
 
-    if (!in_found && !out_found)
+    if (!in_found || !out_found)
     {
         return Error;
     }
@@ -1063,7 +1068,21 @@ UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
 
     if (current_config != settings->device_desired_config)
     {
-        f->libusb_set_configuration(dev_h1.get(), 0);
+        int res0 = f->libusb_set_configuration(dev_h1.get(), settings->device_desired_config);
+        if (res0 != 0)
+        {
+            if (res0 == LIBUSB_ERROR_BUSY)
+            {
+                return Busy;
+            }
+
+            if (res0 == LIBUSB_ERROR_ACCESS)
+            {
+                return Unauthorized;
+            }
+
+            return Error;
+        }
     }
 
     int res1 = f->libusb_claim_interface(dev_h1.get(), settings->interface_number);
@@ -1081,9 +1100,6 @@ UsbDeviceStatus LibUsbDevice_Claim::ClaimDevice(RR_SHARED_PTR<void>& dev_h)
 
         return Error;
     }
-
-    // f->libusb_clear_halt(dev_h1.get(), settings->in_pipe_id);
-    // f->libusb_clear_halt(dev_h1.get(), settings->out_pipe_id);
 
     device_handle = dev_h1;
     return Open;
@@ -1106,9 +1122,6 @@ void LibUsbDevice_Claim::DrawDownRequests(boost::function<void()> handler)
         return;
 
     // TODO: Draw down active requests
-
-    // f->libusb_(device_handle.get(), settings->in_pipe_id);
-    // f->WinUsb_AbortPipe(device_handle.get(), settings->out_pipe_id);
 
     RR_SHARED_PTR<LibUsbDeviceManager> m;
     try

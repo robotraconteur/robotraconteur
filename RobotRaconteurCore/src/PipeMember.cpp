@@ -345,7 +345,6 @@ void PipeEndpointBase::PipePacketReceived(const RR_INTRUSIVE_PTR<RRValue>& packe
                 {
                     recv_packets_wait.notify_all();
 
-                    // if (PacketReceivedEvent != 0)
                     {
                         try
                         {
@@ -360,6 +359,18 @@ void PipeEndpointBase::PipePacketReceived(const RR_INTRUSIVE_PTR<RRValue>& packe
             }
             else
             {
+                // Only queue packets a bounded distance ahead of the next expected one. Old or duplicate
+                // numbers (distance 0 or wrapped) and far-future numbers would never be delivered or freed
+                uint32_t ahead = packetnum - recv_packet_number;
+                if (ahead == 0 || ahead > 1024)
+                {
+                    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
+                                                            "Dropping out of window incoming packet "
+                                                                << packetnum << " expected "
+                                                                << increment_packet_number(recv_packet_number)
+                                                                << " pipe endpoint index " << index);
+                    return;
+                }
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Member, endpoint, service_path, member_name,
                                                         "Received out of order"
                                                             << "incoming packet " << recv_packet_number
@@ -640,6 +651,12 @@ void PipeClientBase::PipePacketReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                         }
 
                         if (!found)
+                        {
+                            continue;
+                        }
+
+                        // Each pending connect can create at most one endpoint before its reply arrives
+                        if (early_endpoints.size() >= connecting_endpoints.size())
                         {
                             continue;
                         }
@@ -1514,13 +1531,18 @@ void PipeBroadcasterBase::PacketAckReceivedBase(const RR_SHARED_PTR<detail::Pipe
     boost::mutex::scoped_lock lock(endpoints_lock);
     try
     {
-        if (std::count(ep->backlog.begin(), ep->backlog.end(), id) == 0)
+        // backlog and forward_backlog are only maintained when a maximum backlog is set (see handle_send);
+        // with the default of -1, acks would otherwise accumulate in forward_backlog forever
+        if (maximum_backlog > -1)
         {
-            ep->forward_backlog.push_back(id);
-        }
-        else
-        {
-            ep->backlog.remove(id);
+            if (std::count(ep->backlog.begin(), ep->backlog.end(), id) == 0)
+            {
+                ep->forward_backlog.push_back(id);
+            }
+            else
+            {
+                ep->backlog.remove(id);
+            }
         }
     }
     catch (std::exception&)

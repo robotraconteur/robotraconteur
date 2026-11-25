@@ -371,7 +371,11 @@ class BluetoothConnector : public RR_ENABLE_SHARED_FROM_THIS<BluetoothConnector<
                 {
                     std::string s;
                     if (data_h.get<1>() > 512)
+                    {
+                        // Skip the string, otherwise its contents are parsed as the next element header
+                        raw_record = raw_record + data_h.get<1>();
                         continue;
+                    }
                     s.resize(data_h.get<1>());
                     if (boost::asio::buffer_copy(boost::asio::buffer(&s[0], data_h.get<1>()), raw_record) !=
                         data_h.get<1>())

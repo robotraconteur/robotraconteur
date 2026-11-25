@@ -781,9 +781,7 @@ public abstract class ServiceStub
     }
 
     ~ServiceStub()
-    {
-        // rr_innerstub.RRClose();
-    }
+    {}
 
     public abstract void DispatchEvent(string membername, vectorptr_messageelement m);
 
@@ -984,7 +982,6 @@ public abstract class ServiceSkel : WrappedServiceSkelDirector
 
     public override void ReleaseCastObject()
     {
-        // RRObjectHeap.DeleteObject(innerskelid);
         innerskel = null;
     }
 
@@ -992,9 +989,6 @@ public abstract class ServiceSkel : WrappedServiceSkelDirector
     {
         throw new MemberNotFoundException("Callback " + membername + " not found");
     }
-
-    // public virtual MessageEntry CallMemoryFunction(MessageEntry m, Endpoint e) { throw new
-    // MemberNotFoundException("Memory " + m.MemberName + " not found"); }
 
     internal int innerskelid;
 

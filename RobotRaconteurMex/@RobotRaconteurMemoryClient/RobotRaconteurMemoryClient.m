@@ -16,7 +16,7 @@ function c=RobotRaconteurMemoryClient(objecttype,stubid,membername)
 %
 %    RobotRaconteurMemoryClient provides transparent access to the memory member.
 %    Standard array slicing operations can be used, as well as length, ndims,
-%    numel, and size operations. To retreive or assign the entire memory, use
+%    numel, and size operations. To retrieve or assign the entire memory, use
 %    the (:) slice operation. For example:
 %
 %        % Set entire memory to 1

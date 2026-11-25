@@ -71,7 +71,12 @@
 #endif
     if (PyLong_Check($input))
 	{
-		pyinputval=boost::lexical_cast<double>(PyLong_AsLong($input));
+		long pyinputlong=PyLong_AsLong($input);
+		if (pyinputlong == -1 && PyErr_Occurred())
+		{
+			return NULL;
+		}
+		pyinputval=boost::lexical_cast<double>(pyinputlong);
 	}
 	else if (PyFloat_Check($input))
 	{
@@ -83,7 +88,13 @@
 		return NULL;
 	}
 
-	pyinputval2=boost::lexical_cast<int64_t>(pyinputval*1000000.0);
+	pyinputval*=1000000.0;
+	if (!(std::fabs(pyinputval) < 9.0e18))
+	{
+		PyErr_SetString(PyExc_OverflowError,"Duration out of range");
+		return NULL;
+	}
+	pyinputval2=static_cast<int64_t>(std::floor(pyinputval + 0.5));
 	tmpDur=boost::posix_time::microseconds(pyinputval2);
 	$1=&tmpDur;
 

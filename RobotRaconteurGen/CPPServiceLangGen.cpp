@@ -30,7 +30,7 @@
 
 using namespace RobotRaconteur;
 
-// cSpell: ignore noteq, dforc
+// cSpell: ignore dforc
 
 // NOLINTBEGIN(bugprone-macro-parentheses)
 #define MEMBER_ITER(TYPE)                                                                                              \
@@ -124,19 +124,19 @@ std::string CPPServiceLangGen::fix_name(const std::string& name)
 
     // NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
     const char* res_str[] = {
-        "alignas",   "alignof",  "and",      "and_eq",    "asm",        "auto",          "bitand",
-        "bitor",     "bool",     "break",    "case",      "catch",      "char",          "char16_t",
-        "char32_t",  "class",    "compl",    "const",     "constnexpr", "const_cast",    "continue",
-        "decltype",  "default",  "delete",   "do",        "double",     "dynamic_cast",  "else",
-        "enum",      "explicit", "export",   "extern",    "false",      "float",         "for",
-        "friend",    "goto",     "if",       "inline",    "int",        "long",          "mutable",
-        "namespace", "new",      "noexcept", "not",       "noteq",      "nullptr",       "operator",
-        "or",        "or_eq",    "private",  "protected", "public",     "register",      "reinterpret_cast",
-        "return",    "short",    "signed",   "sizeof",    "static",     "static_assert", "static_cast",
-        "struct",    "switch",   "switch",   "template",  "this",       "thread_local",  "throw",
-        "true",      "try",      "typedef",  "typeid",    "typename",   "union",         "unsigned",
-        "using",     "virtual",  "void",     "volatile",  "wchar_t",    "while",         "xor",
-        "xor_eq",    "override", "final",    "uint8_t",   "int8_t",     "int16_t",       "uint16_t",
+        "alignas",   "alignof",  "and",      "and_eq",    "asm",       "auto",          "bitand",
+        "bitor",     "bool",     "break",    "case",      "catch",     "char",          "char16_t",
+        "char32_t",  "class",    "compl",    "const",     "constexpr", "const_cast",    "continue",
+        "decltype",  "default",  "delete",   "do",        "double",    "dynamic_cast",  "else",
+        "enum",      "explicit", "export",   "extern",    "false",     "float",         "for",
+        "friend",    "goto",     "if",       "inline",    "int",       "long",          "mutable",
+        "namespace", "new",      "noexcept", "not",       "not_eq",    "nullptr",       "operator",
+        "or",        "or_eq",    "private",  "protected", "public",    "register",      "reinterpret_cast",
+        "return",    "short",    "signed",   "sizeof",    "static",    "static_assert", "static_cast",
+        "struct",    "switch",   "switch",   "template",  "this",      "thread_local",  "throw",
+        "true",      "try",      "typedef",  "typeid",    "typename",  "union",         "unsigned",
+        "using",     "virtual",  "void",     "volatile",  "wchar_t",   "while",         "xor",
+        "xor_eq",    "override", "final",    "uint8_t",   "int8_t",    "int16_t",       "uint16_t",
         "int32_t",   "uint32_t", "int64_t",  "uint64_t",  "pascal"};
     // NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
@@ -1755,6 +1755,7 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     {
         std::string l = boost::replace_all_copy(*e, "\\", "\\\\");
         boost::replace_all(l, "\"", "\\\"");
+        boost::replace_all(l, "?", "\\?");
         boost::trim_if(l, boost::is_any_of("\r\n"));
         w2 << "\"" << l << "\\n\"" << std::endl;
     }
@@ -1770,7 +1771,6 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
     {
         w2 << "boost::tuple<boost::string_ref,boost::string_ref> res=RobotRaconteur::SplitQualifiedName(s);"
            << std::endl;
-        // w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
         w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     }
     for (std::vector<RR_SHARED_PTR<ServiceEntryDefinition> >::const_iterator e = d->Structures.begin();
@@ -1791,7 +1791,6 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    // w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->PackStructure(structin);" << std::endl;
     w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type);" << std::endl;
     w2 << "return stub->PackStructure(structin);" << std::endl;
@@ -1808,7 +1807,6 @@ void CPPServiceLangGen::GenerateServiceFactory(ServiceDefinition* d, std::ostrea
        << std::endl;
 
     w2 << "boost::string_ref servicetype=res.get<0>();" << std::endl;
-    // w2 << "boost::string_ref objecttype=res.get<1>();" << std::endl;
     w2 << "if (servicetype != \"" << d->Name << "\") return GetNode()->UnpackStructure(mstructin);" << std::endl;
     w2 << "RR_SHARED_PTR<RobotRaconteur::StructureStub> stub=FindStructureStub(type.str());" << std::endl;
     w2 << "return stub->UnpackStructure(mstructin);" << std::endl;
@@ -2584,7 +2582,9 @@ void CPPServiceLangGen::GenerateSkelHeader(ServiceDefinition* d,
 
 std::string dforc(const std::string& definition, const std::string& class_)
 {
-    std::string res1_1 = boost::replace_first_copy(definition, "virtual", "");
+    std::string res1_1 = boost::trim_copy(definition);
+    if (boost::starts_with(res1_1, "virtual "))
+        res1_1.erase(0, 7);
     std::string res1_2 = boost::replace_last_copy(res1_1, "RR_OVERRIDE", "");
     std::string res1 = boost::trim_copy(boost::replace_first_copy(res1_2, "RR_OVIRTUAL", ""));
 
@@ -3165,7 +3165,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
                << "{" << std::endl;
             w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
                   "m=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertyGetReq,\""
-               << fix_name(m->Name) << "\");" << std::endl;
+               << m->Name << "\");" << std::endl;
             w2 << "AsyncProcessRequest(m,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_get_"
                << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name)
                << "_stub>(shared_from_this()),RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2),rr_handler "
@@ -3215,7 +3215,7 @@ void CPPServiceLangGen::GenerateStubDefinition(ServiceDefinition* d,
                << "{" << std::endl;
             w2 << "RR_INTRUSIVE_PTR<RobotRaconteur::MessageEntry> "
                   "req=RobotRaconteur::CreateMessageEntry(RobotRaconteur::MessageEntryType_PropertySetReq,\""
-               << fix_name(m->Name) << "\");" << std::endl;
+               << m->Name << "\");" << std::endl;
             w2 << "req->AddElement(" << str_pack_message_element("value", "value", m->Type) << ");" << std::endl;
             w2 << "AsyncProcessRequest(req,boost::bind(&" << fix_name((*e)->Name) << "_stub::rrend_set_"
                << fix_name(m->Name) << ", RobotRaconteur::rr_cast<" << fix_name((*e)->Name)
@@ -3486,8 +3486,10 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
            << " > " << fix_name((*e)->Name) << "_skel::"
            << "get_obj()" << std::endl
            << "{" << std::endl;
+        w2 << "RR_SHARED_PTR<RobotRaconteur::RRObject> o=GetUncastObject();" << std::endl;
+        w2 << "if (!o) throw RobotRaconteur::InvalidOperationException(\"Object has been released\");" << std::endl;
         w2 << "return RobotRaconteur::rr_cast<" << boost::replace_all_copy(fix_name(d->Name), ".", "::")
-           << "::" << fix_name((*e)->Name) << " >(uncastobj);" << std::endl;
+           << "::" << fix_name((*e)->Name) << " >(o);" << std::endl;
         w2 << "}" << std::endl;
 
         w2 << "RR_SHARED_PTR<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::async_"
@@ -3495,7 +3497,7 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
            << "get_asyncobj()" << std::endl
            << "{" << std::endl;
         w2 << "return RR_DYNAMIC_POINTER_CAST<" << boost::replace_all_copy(fix_name(d->Name), ".", "::") << "::async_"
-           << fix_name((*e)->Name) << " >(uncastobj);" << std::endl;
+           << fix_name((*e)->Name) << " >(GetUncastObject());" << std::endl;
         w2 << "}" << std::endl;
 
         w2 << "void " << fix_name((*e)->Name) << "_skel::"
@@ -3870,14 +3872,14 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
            << "::" << fix_name((*e)->Name) << " >(rrobj1);" << std::endl;
         MEMBER_ITER(EventDefinition)
         std::vector<std::string> p;
-        p.push_back("&" + fix_name((*e)->Name) + "_skel::rr_" + m->Name + "_Handler");
+        p.push_back("&" + fix_name((*e)->Name) + "_skel::rr_" + fix_name(m->Name) + "_Handler");
         p.push_back("RobotRaconteur::rr_cast<" + fix_name((*e)->Name) + "_skel>(shared_from_this())");
         for (size_t i = 0; i < m->Parameters.size(); i++)
         {
             p.push_back("RR_BOOST_PLACEHOLDERS(_" + boost::lexical_cast<std::string>(i + 1) + ")");
         }
 
-        w2 << m->Name << "_rrconnection=obj->get_" << fix_name(m->Name) << "().connect(boost::bind("
+        w2 << fix_name(m->Name) << "_rrconnection=obj->get_" << fix_name(m->Name) << "().connect(boost::bind("
            << boost::join(p, ", ") << "));" << std::endl;
         MEMBER_ITER_END()
         w2 << "RobotRaconteur::ServiceSkel::RegisterEvents(rrobj1);" << std::endl;
@@ -3887,7 +3889,7 @@ void CPPServiceLangGen::GenerateSkelDefinition(ServiceDefinition* d,
            << "_skel::UnregisterEvents(const RR_SHARED_PTR<RobotRaconteur::RRObject>& rrobj1)" << std::endl
            << "{" << std::endl;
         MEMBER_ITER(EventDefinition)
-        w2 << m->Name << "_rrconnection.disconnect();" << std::endl;
+        w2 << fix_name(m->Name) << "_rrconnection.disconnect();" << std::endl;
         MEMBER_ITER_END()
         w2 << "RobotRaconteur::ServiceSkel::UnregisterEvents(rrobj1);" << std::endl;
         w2 << "}" << std::endl << std::endl;
@@ -4238,15 +4240,19 @@ static std::string CPPServiceLang_convert_constant_EscapeString_Formatter(const 
         return "\\r";
     if (i == "\t")
         return "\\t";
+    // Escape '?' so "??x" is not read as a trigraph
+    if (i == "?")
+        return "\\?";
 
     std::string& v = i;
 
+    // Fixed width octal escapes; a \x escape would also consume following hex digit characters
     std::stringstream v2;
-    v2 << std::hex << std::setfill('0');
+    v2 << std::oct << std::setfill('0');
     BOOST_FOREACH (const uint8_t& v3, v)
     {
         uint32_t v4 = v3;
-        v2 << std::setw(0) << "\\x" << std::setw(2) << v4;
+        v2 << std::setw(0) << "\\" << std::setw(3) << v4;
     }
 
     return v2.str();
@@ -4274,7 +4280,7 @@ std::string CPPServiceLangGen::convert_constant(ConstantDefinition* c,
     if (t->Type == DataTypes_string_t)
     {
         const std::string v1 = c->ValueToString();
-        boost::regex r_replace("(\"|\\\\|[\\x00-\\x1F]|\\x7F|[\\x80-\\xFF]+)");
+        boost::regex r_replace("(\"|\\\\|\\?|[\\x00-\\x1F]|\\x7F|[\\x80-\\xFF]+)");
 
         std::ostringstream t2(std::ios::out | std::ios::binary);
         std::ostream_iterator<char, char> oi(t2);
@@ -4768,14 +4774,14 @@ void CPPServiceLangGen::GenerateDefaultImplHeader(ServiceDefinition* d,
         if (m->Direction() == MemberDefinition_Direction_readonly)
         {
             get_variable_type_result t = get_variable_type(*m->Type);
-            w2 << "RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<" << t.cpp_type << " > > rrvar_" << m->Name << ";"
-               << std::endl;
+            w2 << "RR_SHARED_PTR<RobotRaconteur::WireBroadcaster<" << t.cpp_type << " > > rrvar_" << fix_name(m->Name)
+               << ";" << std::endl;
         }
         if (m->Direction() == MemberDefinition_Direction_writeonly)
         {
             get_variable_type_result t = get_variable_type(*m->Type);
-            w2 << "RR_SHARED_PTR<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << " > > rrvar_" << m->Name << ";"
-               << std::endl;
+            w2 << "RR_SHARED_PTR<RobotRaconteur::WireUnicastReceiver<" << t.cpp_type << " > > rrvar_"
+               << fix_name(m->Name) << ";" << std::endl;
         }
         MEMBER_ITER3_END()
 
@@ -4895,7 +4901,7 @@ void CPPServiceLangGen::GenerateDefaultImplDefinition(ServiceDefinition* d,
         MEMBER_ITER3(EventDefinition)
         w2 << dforc(EventDeclaration(m.get(), true), default_impl_name) << std::endl;
         w2 << "{" << std::endl;
-        w2 << "return rrvar_" << fix_name(m->Name) << ";" << std::endl;
+        w2 << "return rrvar_" << m->Name << ";" << std::endl;
         w2 << "}" << std::endl;
         MEMBER_ITER3_END()
 
@@ -5021,7 +5027,8 @@ void CPPServiceLangGen::GenerateDocString(const std::string& docstring, const st
     w2 << prefix << "/*" << std::endl;
     BOOST_FOREACH (const std::string& s, docstring_v)
     {
-        w2 << prefix << " * " << s << std::endl;
+        // Break up "*/" so a doc line cannot end the comment
+        w2 << prefix << " * " << boost::replace_all_copy(s, "*/", "* /") << std::endl;
     }
     w2 << prefix << " */" << std::endl;
 }

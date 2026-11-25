@@ -51,13 +51,18 @@ ServiceInfo2::ServiceInfo2(const RobotRaconteurServiceIndex::ServiceInfo& info,
         }
     }
 
-    Attributes = info.Attributes->GetStorageContainer();
+    if (info.Attributes)
+    {
+        Attributes = info.Attributes->GetStorageContainer();
+    }
     NodeID = RobotRaconteur::NodeID(RRArrayToArray<uint8_t, 16>(ninfo.NodeID));
     NodeName = ninfo.NodeName;
 }
 
 namespace detail
 {
+// Maximum number of candidate URLs stored per discovered node
+static const size_t max_DiscoveredNodeURLs = 64;
 
 Discovery_updatediscoverednodes::Discovery_updatediscoverednodes(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
@@ -188,6 +193,7 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
                     boost::bind(&Discovery_updatediscoverednodes::getdetectednodes_callback, shared_from_this(),
                                 RR_BOOST_PLACEHOLDERS(_1), key);
                 e->AsyncGetDetectedNodes(schemes, h, timeout1);
+                active.push_back(key);
             }
             catch (std::exception& exp)
             {
@@ -195,8 +201,6 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
                                                    "Begin GetDetectedNodes failed for transport "
                                                        << e->GetUrlSchemeString() << ": " << exp.what());
             }
-
-            active.push_back(key);
         }
     }
 
@@ -379,7 +383,7 @@ void Discovery_findservicebytype::serviceinfo_callback(const RR_INTRUSIVE_PTR<Me
 
                             this->ret->push_back(si);
                         }
-                        else
+                        else if (ii->RootObjectImplements)
                         {
                             BOOST_FOREACH (RR_INTRUSIVE_PTR<RRArray<char> >& impl,
                                            *ii->RootObjectImplements | boost::adaptors::map_values)
@@ -488,7 +492,7 @@ void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>
         {
 
             ROBOTRACONTEUR_LOG_TRACE_COMPONENT(
-                node, Discovery, -1, "FindServiceByType connectted to " << url << ", begin getting ServiceInfo2");
+                node, Discovery, -1, "FindServiceByType connected to " << url << ", begin getting ServiceInfo2");
 
             int32_t key2 = 0;
             {
@@ -606,6 +610,30 @@ void Discovery_findservicebytype::find2()
                                                    << boost::join(e, ", ") << " failed: " << exp2.what());
         }
     }
+
+    // If every candidate failed synchronously nothing else completes the search
+    {
+        boost::mutex::scoped_lock lock(active_lock);
+        if (!active.empty())
+            return;
+    }
+
+    if (!searching)
+        return;
+    searching = false;
+
+    {
+        boost::mutex::scoped_lock lock(timeout_timer_lock);
+
+        if (timeout_timer)
+            timeout_timer->TryStop();
+
+        timeout_timer.reset();
+    }
+
+    boost::mutex::scoped_lock lock(ret_lock);
+    ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Discovery, -1, "FindServiceByType all candidate connections failed");
+    detail::PostHandler(node, handler, ret, true);
 }
 
 void Discovery_findservicebytype::AsyncFindServiceByType(
@@ -797,6 +825,8 @@ void Discovery_updateserviceinfo::serviceinfo_handler(const RR_INTRUSIVE_PTR<Mes
             BOOST_FOREACH (RR_INTRUSIVE_PTR<RobotRaconteurServiceIndex::ServiceInfo>& e,
                            *ret | boost::adaptors::map_values)
             {
+                if (!e)
+                    continue;
                 ServiceInfo2 o1;
                 o1.NodeID = remote_nodeid;
                 o1.NodeName = remote_nodename;
@@ -804,7 +834,10 @@ void Discovery_updateserviceinfo::serviceinfo_handler(const RR_INTRUSIVE_PTR<Mes
                 o1.ConnectionURL = Discovery_updateserviceinfo_convertmap(e->ConnectionURL);
                 o1.RootObjectType = e->RootObjectType;
                 o1.RootObjectImplements = Discovery_updateserviceinfo_convertmap(e->RootObjectImplements);
-                o1.Attributes = e->Attributes->GetStorageContainer();
+                if (e->Attributes)
+                {
+                    o1.Attributes = e->Attributes->GetStorageContainer();
+                }
                 o->push_back(RR_MOVE(o1));
             }
         }
@@ -1167,6 +1200,11 @@ void Discovery::NodeDetected(const NodeDiscoveryInfo& info)
                 }
             }
 
+            if (info2->URLs.size() > max_DiscoveredNodeURLs)
+            {
+                info2->URLs.resize(max_DiscoveredNodeURLs);
+            }
+
             if (info2->URLs.empty())
             {
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
@@ -1225,6 +1263,15 @@ void Discovery::NodeDetected(const NodeDiscoveryInfo& info)
                 {
                     if (e.URL.size() > 256)
                     {
+                        continue;
+                    }
+                    if (i->URLs.size() >= max_DiscoveredNodeURLs)
+                    {
+                        ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Discovery, -1,
+                                                           "Node detected NodeID " << info.NodeID.ToString()
+                                                                                   << " has too many candidate URLs, "
+                                                                                      "ignoring URL: "
+                                                                                   << e.URL);
                         continue;
                     }
                     try
@@ -1977,6 +2024,17 @@ void Discovery::DoUpdateAllDetectedServices(const RR_SHARED_PTR<IServiceSubscrip
 
         s->NodeUpdated(n);
     }
+}
+
+void Discovery::AddSubscription(const RR_SHARED_PTR<IServiceSubscription>& s)
+{
+    boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
+    BOOST_FOREACH (RR_WEAK_PTR<IServiceSubscription>& e, subscriptions)
+    {
+        if (e.lock() == s)
+            return;
+    }
+    subscriptions.push_back(s);
 }
 
 void Discovery::SubscriptionClosed(const RR_SHARED_PTR<IServiceSubscription>& subscription)

@@ -79,7 +79,7 @@ enum RobotRaconteurObjectLockFlags
     /**
      * @brief User level lock
      *
-     * The object will be accesible for all client connections
+     * The object will be accessible for all client connections
      * authenticated by the current user
      */
     RobotRaconteurObjectLockFlags_USER_LOCK = 0,
@@ -827,7 +827,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     /**
      * @brief Set the timeout for transport activity in milliseconds
      *
-     * See GetTransportInactivityTimeout() for explanation of tranport
+     * See GetTransportInactivityTimeout() for explanation of transport
      * inactivity timeouts. Default value is 10 minutes.
      *
      * @param timeout The timeout in milliseconds
@@ -1472,7 +1472,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @brief Subscribe to a service using one or more URL. Used to create robust connections to services
      *
      * Creates a ServiceSubscription assigned to a service with one or more candidate connection URLs. The
-     * subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.
+     * subscription will attempt to maintain a persistent connection, reconnecting if the connection is lost.
      *
      * @param url One or more candidate connection urls
      * @param username An optional username for authentication
@@ -1490,7 +1490,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @brief Subscribe to a service using a URL. Used to create robust connections to services
      *
      * Creates a ServiceSubscription assigned to a service with a URL. The
-     * subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.
+     * subscription will attempt to maintain a persistent connection, reconnecting if the connection is lost.
      *
      * @param url The connection URL
      * @param username An optional username for authentication
@@ -1582,7 +1582,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
                                                 const std::vector<std::string>& transportschemes);
 
     /**
-     * @brief Asynchronously use discovery to find availabe services by service type
+     * @brief Asynchronously use discovery to find available services by service type
      *
      * Same as FindServiceByType() but returns asynchronously
      *
@@ -1684,7 +1684,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
         int32_t timeout = RR_TIMEOUT_INFINITE);
 
     /**
-     * @brief Release an excluse access lock previously locked with RequestObjectLock()
+     * @brief Release an exclusive access lock previously locked with RequestObjectLock()
      * or AsyncRequestObjectLock()
      *
      * Object must have previously been locked using RequestObjectLock() or
@@ -1698,7 +1698,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     std::string ReleaseObjectLock(const RR_SHARED_PTR<RRObject>& obj);
 
     /**
-     * @brief Asynchronously release an excluse access lock previously locked
+     * @brief Asynchronously release an exclusive access lock previously locked
      * with RequestObjectLock() or AsyncRequestObjectLock()
      *
      * Same as ReleaseObjectLock() but returns asynchronously
@@ -2003,7 +2003,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * @brief Sets the ThreadPool for the node
      *
      * This function must be called before a ThreadPool has been
-     * set, either through this fuction, or a ThreadPool is
+     * set, either through this function, or a ThreadPool is
      * created by GetThreadPool()
      *
      * @param pool The ThreadPool for the node
@@ -2255,7 +2255,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
     virtual TimeSpec NodeSyncTimeSpec();
 
   protected:
-    /** @internal @brief The tranport providing simulation time, or null if using system time */
+    /** @internal @brief The transport providing simulation time, or null if using system time */
     RR_WEAK_PTR<ITransportTimeProvider> time_provider;
     /** @internal  @brief time_provider mutex */
     boost::shared_mutex time_provider_lock;
@@ -2272,6 +2272,12 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * This function will normally return a WallTimer instance
      *
      * Start() must be called after timer creation
+     *
+     * The timer keeps the handler until the timer is destroyed or Timer::Clear() is called
+     * (a one-shot timer also releases it when it fires or is stopped). For a repeating timer,
+     * Timer::Stop(), Timer::TryStop() and node shutdown do not release it. If the handler refers
+     * to an object that owns the timer, bind a weak_ptr to the object or call Timer::Clear() when
+     * the timer is no longer needed, otherwise the object and the timer keep each other alive.
      *
      * @param period The period of the timer
      * @param handler The handler function to call when timer times out
@@ -2511,6 +2517,8 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * Must be one of the following values: DISABLE, FATAL, ERROR, WARNING, INFO, DEBUG, TRACE
      *
      * Defaults to WARNING
+     *
+     * Throws InvalidArgumentException if level is not one of these values
      *
      * @param level The desired log level
      * @return RobotRaconteur_LogLevel The log level

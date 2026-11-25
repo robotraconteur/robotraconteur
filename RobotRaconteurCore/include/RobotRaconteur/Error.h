@@ -75,7 +75,7 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurException : public std::runtime_erro
     /**
      * @brief Construct a RobotRaconteurException based on an existing exception
      *
-     * This will result in an exception with error code MessageErrorType_UnknownException
+     * This will result in an exception with error code MessageErrorType_UnknownError
      *
      * @param message A message to pass to the user
      * @param innerexception The existing exception
@@ -238,7 +238,7 @@ class ConnectionException : public RobotRaconteurException
 
 /**
  * @brief Exception thrown when a protocol failure occurs on
- * a tranport connection
+ * a transport connection
  *
  * Error code MessageErrorType_ProtocolError (2)
  *
@@ -551,7 +551,7 @@ class MessageEntryNotFoundException : public RobotRaconteurException
 };
 
 /**
- * @brief Exception thrown wen an expected MessageElement
+ * @brief Exception thrown when an expected MessageElement
  * is not found
  *
  * This exception is thrown when an expected field or parameter

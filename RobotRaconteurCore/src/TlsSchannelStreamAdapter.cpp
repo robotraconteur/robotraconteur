@@ -104,14 +104,6 @@ TlsSchannelAsyncStreamAdapterContext::TlsSchannelAsyncStreamAdapterContext(const
     if (!r2)
         throw InternalErrorException("Internal error");
 
-    // PCCERT_CONTEXT rootcert2015 = CertFindCertificateInStore(root, X509_ASN_ENCODING, 0, CERT_FIND_EXISTING,
-    // rootcert2015_1, NULL); if (!rootcert2015) throw InternalErrorException("Internal error"); rootcertificate2015 =
-    // rootcert2015;
-
-    // PCCERT_CONTEXT rootcert2020 = CertFindCertificateInStore(root, X509_ASN_ENCODING, 0, CERT_FIND_EXISTING,
-    // rootcert2020_1, NULL); if (!rootcert2020) throw InternalErrorException("Internal error"); rootcertificate2020 =
-    // rootcert2020;
-
     char default_env[256];
     char default_env_2015[256];
     char default_env_2020[256];
@@ -279,11 +271,8 @@ CredHandle TlsSchannelAsyncStreamAdapterContext::GetServerCredentials()
 
         SchannelCred.dwFlags |= SCH_CRED_MANUAL_CRED_VALIDATION;
 
-        // SchannelCred.dwFlags |= SCH_CRED_NO_DEFAULT_CREDS ;
-        // SchannelCred.dwFlags |= SCH_CRED_MANUAL_CRED_VALIDATION | SCH_SEND_ROOT_CERT;
         SchannelCred.cCreds = 1;
         SchannelCred.paCred = &activecertificate;
-        // SchannelCred.hRootStore=store;
 
         CredHandle phCreds;
         ZeroMemory(&phCreds, sizeof(CredHandle));
@@ -325,10 +314,7 @@ CredHandle TlsSchannelAsyncStreamAdapterContext::GetClientCredentials()
             //
         }
         else
-        {
-            // SchannelCred.dwFlags |= SCH_CRED_USE_DEFAULT_CREDS;
-        }
-        // SchannelCred.hRootStore=store;
+        {}
         CredHandle phCreds;
         ZeroMemory(&phCreds, sizeof(CredHandle));
         TimeStamp tsExpiry_cred;
@@ -495,7 +481,15 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteNodeCertificate(PCCERT_CO
 
     bool valid = true;
 
-    if ((status.dwError & (~(CRYPT_E_NO_REVOCATION_CHECK | CRYPT_E_REVOCATION_OFFLINE | CERT_E_UNTRUSTEDROOT))) != 0)
+    // dwError is a single HRESULT, not a set of flags
+    if (!cv_res)
+    {
+        valid = false;
+    }
+
+    if (status.dwError != 0 && status.dwError != static_cast<DWORD>(CRYPT_E_NO_REVOCATION_CHECK) &&
+        status.dwError != static_cast<DWORD>(CRYPT_E_REVOCATION_OFFLINE) &&
+        status.dwError != static_cast<DWORD>(CERT_E_UNTRUSTEDROOT))
     {
         valid = false;
     }
@@ -588,7 +582,6 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCER
     ZeroMemory(&cec, sizeof(cec));
     cec.cbSize = sizeof(cec);
     cec.cAdditionalStore = 0;
-    // cec.rghAdditionalStore=&store;
 
     HCERTCHAINENGINE hc;
     if (!CertCreateCertificateChainEngine(&cec, &hc))
@@ -643,7 +636,7 @@ bool TlsSchannelAsyncStreamAdapterContext::VerifyRemoteHostnameCertificate(PCCER
 
     bool valid = true;
 
-    if (status.dwError != 0)
+    if (!cv_res || status.dwError != 0)
     {
         valid = false;
     }
@@ -772,6 +765,12 @@ void TlsSchannelAsyncStreamAdapter::async_handshake(boost::function<void(const b
 
         if (OutBuffers[0].cbBuffer != 0 && OutBuffers[0].pvBuffer != NULL)
         {
+            if (OutBuffers[0].cbBuffer > static_cast<unsigned long>(max_tls_record_size))
+            {
+                FreeContextBuffer(OutBuffers[0].pvBuffer);
+                OutBuffers[0].pvBuffer = NULL;
+                throw SystemResourceException("TLS handshake token too large");
+            }
             memcpy(send_buffer.get(), OutBuffers[0].pvBuffer, OutBuffers[0].cbBuffer);
             send_buffer_end_pos = OutBuffers[0].cbBuffer;
 
@@ -1023,6 +1022,16 @@ void TlsSchannelAsyncStreamAdapter::do_handshake3(const boost::system::error_cod
     {
         if (OutBuffers[0].cbBuffer != 0 && OutBuffers[0].pvBuffer != NULL)
         {
+            if (OutBuffers[0].cbBuffer > static_cast<unsigned long>(max_tls_record_size))
+            {
+                // The token does not fit in send_buffer (for example a very long local certificate chain)
+                FreeContextBuffer(OutBuffers[0].pvBuffer);
+                OutBuffers[0].pvBuffer = NULL;
+                handshaking = false;
+                boost::system::error_code ec(boost::system::errc::message_size, boost::system::generic_category());
+                do_handshake6(ec, handler);
+                return;
+            }
             memcpy(send_buffer.get(), OutBuffers[0].pvBuffer, OutBuffers[0].cbBuffer);
             send_buffer_end_pos = OutBuffers[0].cbBuffer;
             FreeContextBuffer(OutBuffers[0].pvBuffer);
@@ -1164,7 +1173,7 @@ void TlsSchannelAsyncStreamAdapter::do_handshake4(const boost::system::error_cod
         const_buffers send_b;
         send_b.push_back(boost::asio::const_buffer(send_buffer.get() + send_buffer_transfer_pos,
                                                    send_buffer_end_pos - send_buffer_transfer_pos));
-        _async_write_some(send_b, boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake1, shared_from_this(),
+        _async_write_some(send_b, boost::bind(&TlsSchannelAsyncStreamAdapter::do_handshake4, shared_from_this(),
                                               boost::asio::placeholders::error,
                                               boost::asio::placeholders::bytes_transferred, boost::protect(handler)));
         return;
@@ -1210,8 +1219,11 @@ void TlsSchannelAsyncStreamAdapter::do_handshake5(boost::function<void(const boo
     {
         if (recv_buffer_end_pos != 0)
         {
+            // do_handshake3 adds bytes_transferred to recv_buffer_end_pos
+            uint32_t r = recv_buffer_end_pos;
+            recv_buffer_end_pos = 0;
             boost::system::error_code ec2;
-            do_handshake3(ec2, recv_buffer_end_pos, boost::protect(handler), true);
+            do_handshake3(ec2, r, boost::protect(handler), true);
         }
         else
         {
@@ -1844,6 +1856,14 @@ void TlsSchannelAsyncStreamAdapter::do_shutdown1()
 
     pbMessage = OutBuffers[0].pvBuffer;
     cbMessage = OutBuffers[0].cbBuffer;
+
+    if (cbMessage > static_cast<unsigned long>(max_tls_record_size))
+    {
+        FreeContextBuffer(pbMessage);
+        boost::system::error_code ec1(boost::system::errc::message_size, boost::system::generic_category());
+        do_shutdown3(ec1);
+        return;
+    }
 
     // Send the close notify message to the server.
     memcpy(send_buffer.get(), pbMessage, cbMessage);

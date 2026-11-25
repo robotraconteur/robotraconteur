@@ -1,0 +1,20 @@
+service experimental.gen_test_java_constants
+
+stdver 0.10
+
+constant single f1 1.5
+constant single[] f2 {1.5, 2.5, -3}
+constant double d1 2.5
+constant int64 i1 -9223372036854775807
+constant int64[] i2 {9223372036854775807, -1, 0x10}
+constant uint8 u0 7
+constant uint16 u1 65535
+constant uint16[] u2 {65535, 1}
+constant uint32 u3 4294967295
+constant uint32[] u4 {0xFFFFFFFF, 2}
+constant uint64 u5 18446744073709551615
+constant uint64[] u6 {0, 0xFFFFFFFFFFFFFFFF}
+
+object o1
+    property double p1
+end

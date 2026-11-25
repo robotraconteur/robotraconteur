@@ -170,9 +170,9 @@ class ArrayMemory : public virtual ArrayMemoryBase
     virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
 
         memcpy(buffer->data() + bufferpos, memory->data() + memorypos, boost::numeric_cast<size_t>(count * sizeof(T)));
@@ -196,9 +196,9 @@ class ArrayMemory : public virtual ArrayMemoryBase
                        uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
         memcpy(memory->data() + memorypos, buffer->data() + bufferpos, boost::numeric_cast<size_t>(count * sizeof(T)));
     }
@@ -581,6 +581,8 @@ class ArrayMemoryClient : public virtual ArrayMemoryClientBase, public virtual A
                                       uint64_t count) RR_OVERRIDE
     {
         RR_INTRUSIVE_PTR<RRArray<T> > data = rr_cast<RRArray<T> >(res);
+        if (!data || data->size() != count)
+            throw DataTypeException("Invalid memory read result length");
         RR_INTRUSIVE_PTR<RRArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRArray<T> >*>(buffer);
         memcpy(buffer1->data() + bufferpos, data->data(), boost::numeric_cast<size_t>(count * sizeof(T)));
     }
@@ -819,9 +821,9 @@ class PodArrayMemory : public virtual ArrayMemoryBase
     virtual void Read(uint64_t memorypos, RR_INTRUSIVE_PTR<RRPodArray<T> >& buffer, uint64_t bufferpos, uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
 
         for (size_t i = 0; i < count; i++)
@@ -836,9 +838,9 @@ class PodArrayMemory : public virtual ArrayMemoryBase
                        uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
         for (size_t i = 0; i < count; i++)
         {
@@ -1135,7 +1137,7 @@ class PodMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSkelB
   public:
     PodMultiDimArrayMemoryServiceSkel(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
                                       size_t element_size, MemberDefinition_Direction direction)
-        : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_structure_t, element_size, direction)
+        : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
     {}
 
     RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> DoRead(
@@ -1243,9 +1245,9 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
                       uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
 
         for (size_t i = 0; i < count; i++)
@@ -1260,9 +1262,9 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
                        uint64_t count)
     {
         boost::mutex::scoped_lock lock(memory_lock);
-        if (memorypos + count > memory->size())
+        if (memorypos > memory->size() || count > memory->size() - memorypos)
             throw OutOfRangeException("Index out of range");
-        if (bufferpos + count > buffer->size())
+        if (bufferpos > buffer->size() || count > buffer->size() - bufferpos)
             throw OutOfRangeException("Index out of range");
         for (size_t i = 0; i < count; i++)
         {
@@ -1271,7 +1273,7 @@ class NamedArrayMemory : public virtual ArrayMemoryBase
         }
     }
 
-    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE { return DataTypes_pod_t; }
+    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE { return DataTypes_namedarray_t; }
 };
 
 template <typename T>
@@ -1280,7 +1282,7 @@ class NamedArrayMemoryServiceSkel : public ArrayMemoryServiceSkelBase
   public:
     NamedArrayMemoryServiceSkel(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
                                 size_t element_size, MemberDefinition_Direction direction)
-        : ArrayMemoryServiceSkelBase(membername, skel, DataTypes_pod_t, element_size, direction)
+        : ArrayMemoryServiceSkelBase(membername, skel, DataTypes_namedarray_t, element_size, direction)
     {}
 
     RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> DoRead(uint64_t memorypos, uint64_t bufferpos, uint64_t count,
@@ -1344,6 +1346,8 @@ class NamedArrayMemoryClient : public virtual ArrayMemoryClientBase, public virt
         RR_INTRUSIVE_PTR<RRNamedArray<T> >& buffer1 = *static_cast<RR_INTRUSIVE_PTR<RRNamedArray<T> >*>(buffer);
         RR_INTRUSIVE_PTR<RRNamedArray<T> > res1 =
             NamedArrayStub_UnpackNamedArray<T>(rr_cast<RobotRaconteur::MessageElementNestedElementList>(res));
+        if (!res1 || res1->size() != count)
+            throw DataTypeException("Invalid memory read result length");
 
         for (size_t i = 0; i < count; i++)
         {
@@ -1481,7 +1485,7 @@ class NamedMultiDimArrayMemory : public virtual MultiDimArrayMemoryBase
                                     detail::ConvertVectorType<uint32_t>(count));
     }
 
-    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE { return DataTypes_pod_t; }
+    RR_OVIRTUAL DataTypes ElementTypeID() RR_OVERRIDE { return DataTypes_namedarray_t; }
 };
 
 template <typename T>
@@ -1491,7 +1495,7 @@ class NamedMultiDimArrayMemoryClient : public virtual NamedMultiDimArrayMemory<T
   public:
     NamedMultiDimArrayMemoryClient(boost::string_ref membername, const RR_SHARED_PTR<ServiceStub>& stub,
                                    size_t element_size, MemberDefinition_Direction direction)
-        : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_pod_t, element_size, direction)
+        : MultiDimArrayMemoryClientBase(membername, stub, DataTypes_namedarray_t, element_size, direction)
     {}
 
     RR_OVIRTUAL void Attach(const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<T> >& memory) RR_OVERRIDE
@@ -1559,7 +1563,7 @@ class NamedMultiDimArrayMemoryServiceSkel : public MultiDimArrayMemoryServiceSke
   public:
     NamedMultiDimArrayMemoryServiceSkel(boost::string_ref membername, const RR_SHARED_PTR<ServiceSkel>& skel,
                                         size_t element_size, MemberDefinition_Direction direction)
-        : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_structure_t, element_size, direction)
+        : MultiDimArrayMemoryServiceSkelBase(membername, skel, DataTypes_namedarray_t, element_size, direction)
     {}
 
     RR_OVIRTUAL RR_INTRUSIVE_PTR<MessageElementData> DoRead(

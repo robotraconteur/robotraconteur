@@ -179,12 +179,11 @@ uint32_t ServerContext_MonitorObjectSkel::GetLocalEndpoint() const { return loca
 bool ServerContext_MonitorObjectSkel::IsLocked() const { return monitor_acquired; }
 
 ServerContext_MonitorObjectSkel::ServerContext_MonitorObjectSkel(const RR_SHARED_PTR<ServiceSkel>& skel)
+    : monitor_acquired(false), maintain_lock(false)
 {
     wait_started = false;
     local_endpoint = 0;
     timeout = 0;
-    monitor_acquired = false;
-    maintain_lock = false;
     this->monitor_thread_event = skel->RRGetNode()->CreateAutoResetEvent();
     this->wait_event = skel->RRGetNode()->CreateAutoResetEvent();
     RR_SHARED_PTR<RRObject> obj = skel->GetUncastObject();
@@ -226,7 +225,7 @@ std::string ServerContext_MonitorObjectSkel::MonitorEnter(uint32_t local_endpoin
     {
         maintain_lock = false;
 
-        throw monitor_acquire_exception;
+        RobotRaconteurExceptionUtil::DownCastAndThrowException(monitor_acquire_exception);
     }
 
     return (monitor_acquired ? "OK" : "Continue");
@@ -241,7 +240,7 @@ std::string ServerContext_MonitorObjectSkel::MonitorContinueEnter(uint32_t local
     if (monitor_acquire_exception != 0)
     {
         maintain_lock = false;
-        throw monitor_acquire_exception;
+        RobotRaconteurExceptionUtil::DownCastAndThrowException(monitor_acquire_exception);
     }
 
     RR_SHARED_PTR<ServiceSkel> s1 = skel.lock();
@@ -255,7 +254,7 @@ std::string ServerContext_MonitorObjectSkel::MonitorContinueEnter(uint32_t local
     if (monitor_acquire_exception != 0)
     {
         maintain_lock = false;
-        throw monitor_acquire_exception;
+        RobotRaconteurExceptionUtil::DownCastAndThrowException(monitor_acquire_exception);
     }
 
     return (monitor_acquired ? "OK" : "Continue");
@@ -305,7 +304,7 @@ void ServerContext_MonitorObjectSkel::thread_func()
     }
     catch (std::exception& e)
     {
-        monitor_acquire_exception = RR_MAKE_SHARED<std::exception>(e);
+        monitor_acquire_exception = RobotRaconteurExceptionUtil::ExceptionToSharedPtr(e);
         wait_event->Set();
 
         {
@@ -327,7 +326,7 @@ void ServerContext_MonitorObjectSkel::thread_func()
         {
             if (!monitor_thread_event->WaitOne(30000))
             {
-                // Timout occurred in the lock
+                // Timeout occurred in the lock
                 maintain_lock = false;
             }
         }
@@ -363,7 +362,7 @@ void ServerContext_MonitorObjectSkel::thread_func()
             }
             catch (std::exception& e)
             {
-                monitor_acquire_exception = RR_MAKE_SHARED<std::exception>(e);
+                monitor_acquire_exception = RobotRaconteurExceptionUtil::ExceptionToSharedPtr(e);
             }
             monitor_acquired = false;
             wait_event->Set();

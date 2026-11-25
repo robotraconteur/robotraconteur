@@ -31,7 +31,7 @@ def FindServiceByType(self,servicetype,transportschemes):
 
 def AsyncFindServiceByType(self,servicetype,transportschemes,handler,timeout=5):
 	"""
-	Asynchronously use discovery to find availabe services by service type
+	Asynchronously use discovery to find available services by service type
 
 	Same as FindServiceByType() but returns asynchronously
 
@@ -63,7 +63,7 @@ def AsyncFindServiceByType(self,servicetype,transportschemes,handler,timeout=5):
 		ts2.push_back(t)
 
 	from .RobotRaconteurPythonUtil import async_call, adjust_timeout
-	return async_call(AsyncWrappedFindServiceByType,(self,servicetype,ts2,adjust_timeout(timeout)),ServiceInfo2Director,handler,False)
+	return async_call(AsyncWrappedFindServiceByType,(self,servicetype,ts2,adjust_timeout(timeout)),ServiceInfo2Director,handler,True)
 
 %}
 }
@@ -154,7 +154,7 @@ def AsyncFindNodeByID(self,id,transportschemes,handler,timeout=5):
 		ts2.push_back(t)
 
 	from .RobotRaconteurPythonUtil import async_call, adjust_timeout
-	return async_call(AsyncWrappedFindNodeByID,(self,id,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,False)
+	return async_call(AsyncWrappedFindNodeByID,(self,id,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,True)
 
 def AsyncFindNodeByName(self,name,transportschemes,handler,timeout=5):
 	"""
@@ -189,7 +189,7 @@ def AsyncFindNodeByName(self,name,transportschemes,handler,timeout=5):
 		ts2.push_back(t)
 
 	from .RobotRaconteurPythonUtil import async_call, adjust_timeout
-	return async_call(AsyncWrappedFindNodeByName,(self,name,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,False)
+	return async_call(AsyncWrappedFindNodeByName,(self,name,ts2,adjust_timeout(timeout)),NodeInfo2Director,handler,True)
 
 def UpdateDetectedNodes(self, schemes):
 	"""

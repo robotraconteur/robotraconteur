@@ -73,6 +73,8 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
     rrconfiguretest(test_net_loopback "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback")
     rrconfiguretest(test_net_loopback2 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback2")
     rrconfiguretest(test_net_loopback3 "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} loopback3")
+    rrconfiguretest(test_net_messageelement_scalar "${RR_NET_TEST_CMD}" "test_prog" ARGS
+                    "${RR_NET_TEST_CMD_ARGS} messageelement_scalar")
 
     if(WIN32 AND (MSVC_VERSION GREATER 1900))
         add_custom_target(
@@ -90,3 +92,19 @@ if(NOT RR_NET_BUILD_NATIVE_ONLY)
     endif()
 
 endif()
+
+rrconfiguretest(test_net_monitor_lock "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} monitor_lock")
+
+rrconfiguretest(test_net_subscription_release_client "${RR_NET_TEST_CMD}" "test_prog" ARGS
+                "${RR_NET_TEST_CMD_ARGS} subscription_release_client")
+
+rrconfiguretest(test_net_varvalue_bool_complex "${RR_NET_TEST_CMD}" "test_prog" ARGS
+                "${RR_NET_TEST_CMD_ARGS} varvalue_bool_complex")
+
+rrconfiguretest(test_net_version_equals "${RR_NET_TEST_CMD}" "test_prog" ARGS "${RR_NET_TEST_CMD_ARGS} version_equals")
+
+rrconfiguretest(test_net_custom_authenticator "${RR_NET_TEST_CMD}" "test_prog" ARGS
+                "${RR_NET_TEST_CMD_ARGS} custom_authenticator")
+
+rrconfiguretest(test_net_nodesetup_preregistered "${RR_NET_TEST_CMD}" "test_prog" ARGS
+                "${RR_NET_TEST_CMD_ARGS} nodesetup_preregistered")

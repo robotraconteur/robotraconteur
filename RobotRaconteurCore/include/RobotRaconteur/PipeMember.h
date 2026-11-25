@@ -32,7 +32,7 @@
 #include <boost/call_traits.hpp>
 #include <list>
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #pragma warning(disable : 4996)
@@ -703,7 +703,7 @@ class Pipe : public virtual PipeBase
      *
      * Creates a connected pipe endpoint pair, and returns the local endpoint. Use to create the streaming data
      * connection to the service. Pipe endpoints are indexed, meaning that Connect() may be called multiple
-     * times for the same client connection to create multple pipe endpoint pairs. For most cases Pipe::ANY_INDEX
+     * times for the same client connection to create multiple pipe endpoint pairs. For most cases Pipe::ANY_INDEX
      * (-1) can be used to automatically select an available index.
      *
      * Only valid on clients. Will throw InvalidOperationException on the service side.
@@ -1304,6 +1304,6 @@ using PipeBroadcasterPtr = RR_SHARED_PTR<PipeBroadcaster<T> >;
 #endif
 } // namespace RobotRaconteur
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif

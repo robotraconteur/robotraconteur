@@ -14,7 +14,15 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
     std::string log_level_str = config->GetOptionOrDefaultAsString("log-level");
     if (!log_level_str.empty())
     {
-        node->SetLogLevelFromString(log_level_str);
+        try
+        {
+            node->SetLogLevelFromString(log_level_str);
+        }
+        catch (InvalidArgumentException&)
+        {
+            ROBOTRACONTEUR_LOG_WARNING_COMPONENT(node, NodeSetup, -1,
+                                                 "Invalid log level specified on command line: " << log_level_str);
+        }
     }
 
     if (config->GetOptionOrDefaultAsBool("local-tap-enable"))
@@ -238,7 +246,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
             catch (std::exception&)
             {
                 ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1,
-                                                   "Invalid tcp-ws-add-origin specified: " << ws_add_origin);
+                                                   "Invalid tcp-ws-add-origins specified: " << ws_add_origin);
             }
 
             BOOST_FOREACH (const std::string& ws_origin, ws_add_origin_split)
@@ -250,7 +258,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
                 catch (std::exception& exp)
                 {
                     ROBOTRACONTEUR_LOG_ERROR_COMPONENT(
-                        node, NodeSetup, -1, "Adding tcp-ws-add-origin failed " << ws_origin << ": " << exp.what());
+                        node, NodeSetup, -1, "Adding tcp-ws-add-origins failed " << ws_origin << ": " << exp.what());
                 }
             }
         }
@@ -266,7 +274,7 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
             catch (std::exception&)
             {
                 ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1,
-                                                   "Invalid tcp-ws-remove-origin specified: " << ws_remove_origin);
+                                                   "Invalid tcp-ws-remove-origins specified: " << ws_remove_origin);
             }
 
             BOOST_FOREACH (const std::string& ws_origin, ws_remove_origin_split)
@@ -278,8 +286,8 @@ void RobotRaconteurNodeSetup::DoSetup(const RR_SHARED_PTR<RobotRaconteurNode>& n
                 catch (std::exception& exp)
                 {
                     ROBOTRACONTEUR_LOG_ERROR_COMPONENT(node, NodeSetup, -1,
-                                                       "Removing tcp-ws-remove-origin failed " << ws_origin << ": "
-                                                                                               << exp.what());
+                                                       "Removing tcp-ws-remove-origins failed " << ws_origin << ": "
+                                                                                                << exp.what());
                 }
             }
         }
@@ -622,7 +630,7 @@ void CommandLineConfigParser::FillOptionsDescription(boost::program_options::opt
     h.add<bool>("require-tls", "require TLS for network communication", RobotRaconteurNodeSetupFlags_REQUIRE_TLS);
 
     h.add<std::string>("nodename", "node name to use for node", RobotRaconteurNodeSetupFlags_NODENAME_OVERRIDE);
-    h.add<std::string>("nodeid", "node id to use fore node", RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE);
+    h.add<std::string>("nodeid", "node id to use for node", RobotRaconteurNodeSetupFlags_NODEID_OVERRIDE);
     h.add<int32_t>("tcp-port", "port to listen on for TCP server", RobotRaconteurNodeSetupFlags_TCP_PORT_OVERRIDE);
 
     h.add<std::string>("log-level", "log level for node");

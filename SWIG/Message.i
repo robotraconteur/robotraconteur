@@ -252,14 +252,14 @@ public:
 	static void RRBaseArrayComplexToDoubles(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, double* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_cdouble_t) throw InvalidArgumentException("RRArray error");
-		if (static_cast<int32_t>(rrarray->size())!=len/2) throw InvalidArgumentException("RRArray error");
+		if (len%2!=0 || static_cast<int32_t>(rrarray->size())!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(double));
 	}
 
 	static void RRBaseArrayComplexToFloats(const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray, float* array_out, int32_t len)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_csingle_t) throw InvalidArgumentException("RRArray error");
-		if (static_cast<int32_t>(rrarray->size())!=len/2) throw InvalidArgumentException("RRArray error");
+		if (len%2!=0 || static_cast<int32_t>(rrarray->size())!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(array_out,rrarray->void_ptr(),len*sizeof(float));
 	}
 
@@ -447,14 +447,14 @@ public:
 	static void DoublesToComplexRRBaseArray(double* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_cdouble_t) throw InvalidArgumentException("RRArray error");
-		if (static_cast<int32_t>(rrarray->size())!=len/2) throw InvalidArgumentException("RRArray error");
+		if (len%2!=0 || static_cast<int32_t>(rrarray->size())!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(double));
 	}
 
 	static void FloatsToComplexRRBaseArray(float* array_in, int32_t len,const boost::intrusive_ptr<RobotRaconteur::RRBaseArray>& rrarray)
 	{
 		if (rrarray->GetTypeID()!=DataTypes_csingle_t) throw InvalidArgumentException("RRArray error");
-		if (static_cast<int32_t>(rrarray->size())!=len/2) throw InvalidArgumentException("RRArray error");
+		if (len%2!=0 || static_cast<int32_t>(rrarray->size())!=len/2) throw InvalidArgumentException("RRArray error");
 		memcpy(rrarray->void_ptr(),array_in,len*sizeof(float));
 	}
 

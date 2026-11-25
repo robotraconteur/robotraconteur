@@ -29,7 +29,7 @@
 #include "RobotRaconteur/AsyncUtils.h"
 #include <boost/call_traits.hpp>
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #pragma warning(disable : 4996)
@@ -649,8 +649,8 @@ class ROBOTRACONTEUR_CORE_API WireBase : public RR_ENABLE_SHARED_FROM_THIS<WireB
  * the user does not need to configure the callbacks when these classes are used.
  *
  * Wires can be declared *readonly* or *writeonly*. If neither is specified, the wire is assumed
- * to be full duplex. *readonly* pipes may only send values from service to client, ie OutValue
- * on service side and InValue on client side. *writeonly* pipes may only send values from
+ * to be full duplex. *readonly* wires may only send values from service to client, ie OutValue
+ * on service side and InValue on client side. *writeonly* wires may only send values from
  * client to service, ie OutValue on client side and InValue on service side. Use Direction()
  * to determine the direction of the wire.
  *
@@ -1478,7 +1478,7 @@ class ROBOTRACONTEUR_CORE_API WireBroadcasterBase : public RR_ENABLE_SHARED_FROM
     /**
      * @brief Get the current predicate callback function
      *
-     * @return boost::function<bool(RR_SHARED_PTR<PipeBroadcasterBase>&, uint32_t, int32_t) > The predicate callback
+     * @return boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> The predicate callback
      * function
      */
     boost::function<bool(RR_SHARED_PTR<WireBroadcasterBase>&, uint32_t)> GetPredicate();
@@ -1832,6 +1832,10 @@ class WireUnicastReceiverBase : public RR_ENABLE_SHARED_FROM_THIS<WireUnicastRec
         boost::mutex::scoped_lock lock(this_lock);
         if (!in_value_valid)
             throw ValueNotSetException("Value not set");
+        if (detail::WireConnectionBase_IsValueExpired(node, in_value_lasttime_local, in_value_lifespan))
+        {
+            throw ValueNotSetException("Value expired");
+        }
         return in_value;
     }
 
@@ -1934,6 +1938,6 @@ using WireUnicastReceiverPtr = RR_SHARED_PTR<WireUnicastReceiver<T> >;
 
 } // namespace RobotRaconteur
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif

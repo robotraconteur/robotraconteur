@@ -1,0 +1,7 @@
+service experimental.gen_test_cpp_events
+
+stdver 0.10
+
+object testobj
+    event throw(double volatile)
+end

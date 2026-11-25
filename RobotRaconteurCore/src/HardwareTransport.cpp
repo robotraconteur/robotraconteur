@@ -476,11 +476,7 @@ void HardwareTransport::AsyncCreateTransportConnection(
 #ifdef ROBOTRACONTEUR_ANDROID
         if (transport == "bluetooth")
         {
-            // detail::AndroidHardwareDirector::ConnectBluetooth(shared_from_this(), url_res, noden,
-            // ep->GetLocalEndpoint(), boost::bind(&HardwareTransport::AsyncCreateTransportConnection2,
-            // shared_from_this(), noden, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2),
-            // boost::protect(callback)));
-            return;
+            throw ConnectionException("Bluetooth transport not supported on Android");
         }
 
 #endif

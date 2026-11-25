@@ -134,6 +134,21 @@ TEST(MessageSerializationUnit, Test4_2)
     CompareMessage(m, m2);
 }
 
+TEST(MessageSerializationUnit, StringTableNullNestedData)
+{
+    RR_INTRUSIVE_PTR<Message> m = CreateMessage();
+    m->header = CreateMessageHeader();
+    RR_INTRUSIVE_PTR<MessageEntry> me = CreateMessageEntry(MessageEntryType_PropertyGetRes, "test_member");
+    RR_INTRUSIVE_PTR<MessageElement> el = CreateMessageElement("value", RR_INTRUSIVE_PTR<MessageElementData>());
+    el->ElementType = DataTypes_structure_t;
+    me->elements.push_back(el);
+    m->entries.push_back(me);
+
+    RR_SHARED_PTR<RobotRaconteur::detail::StringTable> string_table =
+        RR_MAKE_SHARED<RobotRaconteur::detail::StringTable>(false);
+    EXPECT_NO_THROW(string_table->MessageReplaceCodesWithStrings(m));
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

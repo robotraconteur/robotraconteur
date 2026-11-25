@@ -38,10 +38,9 @@ UsbDeviceClaim_create_request::UsbDeviceClaim_create_request(
     boost::function<void(const RR_SHARED_PTR<ITransportConnection>&, const RR_SHARED_PTR<RobotRaconteurException>&)>&
         handler)
 {
-    RR_UNUSED(noden);
     this->url_res = url_res;
     this->endpoint = endpoint;
-    this->endpoint = endpoint;
+    this->noden = noden.to_string();
     this->handler = handler;
 }
 // End UsbDeviceClaim_create_request
@@ -496,7 +495,7 @@ UsbDeviceStatus UsbDevice_Initialize::ParseRRDescriptors(const std::vector<uint8
 
         const robotraconteur_interface_common_descriptor* h2 =
             reinterpret_cast<const robotraconteur_interface_common_descriptor*>(&rr_descriptors[pos]);
-        if (remaining < h2->wLength)
+        if (h2->wLength < sizeof(robotraconteur_interface_common_descriptor) || remaining < h2->wLength)
         {
             return Error;
         }
@@ -508,6 +507,12 @@ UsbDeviceStatus UsbDevice_Initialize::ParseRRDescriptors(const std::vector<uint8
             {
                 const robotraconteur_interface_descriptor* h3 =
                     reinterpret_cast<const robotraconteur_interface_descriptor*>(h2);
+                const size_t protocols_offset = offsetof(robotraconteur_interface_descriptor, wProtocols);
+                if (h2->wLength < protocols_offset ||
+                    (h2->wLength - protocols_offset) / sizeof(uint16_t) < h3->wNumProtocols)
+                {
+                    return Error;
+                }
                 if (h3->wVersion != 0x0100)
                 {
                     return Invalid;
@@ -549,7 +554,13 @@ void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec
     boost::mutex::scoped_lock lock(this_lock);
 
     RR_SHARED_PTR<UsbDevice_Settings> settings1 = settings;
-    ParseRRDescriptors(rr_descriptors, settings1);
+    UsbDeviceStatus res2 = ParseRRDescriptors(rr_descriptors, settings1);
+    if (res2 != Open)
+    {
+        lock.unlock();
+        InitializeDevice_err(handler, res2);
+        return;
+    }
 
     if (boost::range::count(settings->supported_protocols, 0x0101) == 0)
     {
@@ -559,6 +570,12 @@ void UsbDevice_Initialize::InitializeDevice2(const boost::system::error_code& ec
     }
 
     UsbDeviceStatus res3 = ReadPipeSettings(dev_h, settings1);
+    if (res3 == Open && (settings1->in_pipe_buffer_size < sizeof(subpacket_header) ||
+                         settings1->out_pipe_buffer_size < sizeof(subpacket_header)))
+    {
+        // The subpacket header is written into buffers of this size
+        res3 = Error;
+    }
     if (res3 != Open)
     {
         lock.unlock();
@@ -1010,8 +1027,9 @@ void UsbDevice_Claim::AsyncCreateTransportConnection2(
         {
             boost::mutex::scoped_lock lock(this_lock);
             stream_connection_in_progress--;
+            // Also fails the queued requests and releases the claim, so the status does not stay Claiming
+            AsyncCreateTransportConnection_err(handler);
         }
-        handler(RR_SHARED_PTR<ITransportConnection>(), RR_MAKE_SHARED<ConnectionException>("USB Device Error"));
         return;
     }
 
@@ -1439,6 +1457,7 @@ void UsbDevice_Claim::EndRead(const boost::system::error_code& ec, size_t bytes_
 
     if (c < (read_last_complete + 1))
     {
+        lock.unlock();
         DeviceError(boost::asio::error::fault);
         return;
     }
@@ -1520,8 +1539,9 @@ void UsbDevice_Claim::EndRead2(size_t bytes_transferred, const boost::shared_arr
     }
     else if (h->flags == RR_USB_SUBPACKET_FLAG_COMMAND)
     {
+        // Called with this_lock held, Close() locks it again
         this->status = Error;
-        Close();
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&UsbDevice_Claim::Close, shared_from_this()), true);
     }
     else if (h->flags == RR_USB_SUBPACKET_FLAG_NOTIFICATION)
     {
@@ -1576,7 +1596,7 @@ void UsbDevice_Claim::EndRead2(size_t bytes_transferred, const boost::shared_arr
     else
     {
         status = Error;
-        Close();
+        RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(&UsbDevice_Claim::Close, shared_from_this()), true);
         return;
     }
 }
@@ -1813,7 +1833,7 @@ void UsbDevice::AsyncCreateTransportConnection(
         }
     }
 
-    if (!settings || (status != Busy && status != Ready && status != Error && status != Closed && status != Error))
+    if (!settings || (status != Busy && status != Ready && status != Error && status != Closed))
     {
         RobotRaconteurNode::TryPostToThreadPool(
             node,
@@ -1843,7 +1863,10 @@ void UsbDevice::Close()
         RR_SHARED_PTR<UsbDevice_Claim> c = claim.lock();
         if (c)
         {
+            // UsbDevice_Claim::Close calls DeviceClaimReleased, which locks this_lock
+            lock.unlock();
             c->Close();
+            lock.lock();
             claim.reset();
         }
     }

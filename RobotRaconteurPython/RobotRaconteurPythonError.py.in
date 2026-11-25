@@ -76,20 +76,25 @@ class RobotRaconteurExceptionUtil:
         if errorparam is not None:
             from .RobotRaconteurPythonUtil import PackMessageElement
             param2 = PackMessageElement(errorparam,"varvalue")
-            error_info.errorparam = param2
+            error_info.param_ = param2
 
         return error_info
 
 _generated_exceptions=dict()
 _generated_exceptions_lock=threading.Lock()
 
+try:
+    _exception_name_types = (str, unicode)
+except NameError:
+    _exception_name_types = (str,)
+
 def _ExceptionFactory(name):
     def __init__(self,message,subname=None,param_=None):
-        super(self.__class__,self).__init__(name,message,subname,param_)
+        RobotRaconteurRemoteException.__init__(self,name,message,subname,param_)
     return type(name, (RobotRaconteurRemoteException,), {"__init__": __init__})
 
 def GetExceptionType(exception_name):
-    if (not (isinstance(exception_name,str) or isinstance(exception_name,unicode))):
+    if (not isinstance(exception_name,_exception_name_types)):
         return Exception
     ex1=exception_name.replace('.','__')
     ex2=''.join([x for x in ex1 if x in (string.ascii_letters + string.digits + "_")])

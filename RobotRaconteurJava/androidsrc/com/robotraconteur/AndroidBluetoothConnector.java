@@ -21,7 +21,7 @@ class AndroidBluetoothConnector implements Runnable
         this.p = p;
 
         t = new Thread(this);
-        t.run();
+        t.start();
     }
 
     public void run()
@@ -170,19 +170,27 @@ class AndroidBluetoothConnector implements Runnable
 
                 byte[] v3 = new byte[4096];
 
-                int v3_l = s.getInputStream().read(v3);
+                int v3_l = 0;
                 while (v3_l < 8)
                 {
-                    v3_l += s.getInputStream().read(v3, v3_l, v3.length - v3_l);
+                    int n = s.getInputStream().read(v3, v3_l, v3.length - v3_l);
+                    if (n < 0)
+                        throw new IOException("Bluetooth connection closed");
+                    v3_l += n;
                 }
 
                 ByteBuffer b = ByteBuffer.wrap(v3, 0, v3_l);
                 b.order(ByteOrder.LITTLE_ENDIAN);
                 int v3_l_1 = b.getInt(4);
+                if (v3_l_1 > v3.length)
+                    throw new IOException("Bluetooth node info message too long");
 
                 while (v3_l < v3_l_1)
                 {
-                    v3_l += s.getInputStream().read(v3, v3_l, v3.length - v3_l);
+                    int n = s.getInputStream().read(v3, v3_l, v3.length - v3_l);
+                    if (n < 0)
+                        throw new IOException("Bluetooth connection closed");
+                    v3_l += n;
                 }
 
                 vector_int8_t v4 = new vector_int8_t(v3_l);

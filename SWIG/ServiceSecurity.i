@@ -36,7 +36,16 @@ class UserAuthenticator
 		if (!context) throw InvalidArgumentException("Context cannot be null");
 		if (!credentials) throw InvalidArgumentException("Credentials cannot be null");
 		boost::intrusive_ptr<RRMap<std::string,RRValue> > r=rr_cast<RRMap<std::string,RRValue> >(context->GetNode()->UnpackMapType<std::string,RRValue>(credentials->CastData<MessageElementNestedElementList >()));
-		return $self->AuthenticateUser(username,r->GetStorageContainer(),context,RR_SHARED_PTR<RobotRaconteur::ITransportConnection>());
+		// The language-side authenticator is called synchronously while the service processes the
+		// client's AuthenticateUser request, so the current endpoint identifies the client connection.
+		// Pass its transport so that require_verified_client is evaluated.
+		RR_SHARED_PTR<RobotRaconteur::ITransportConnection> tc;
+		try
+		{
+			tc = ServerEndpoint::GetCurrentEndpoint()->GetTransportConnection();
+		}
+		catch (std::exception&) {}
+		return $self->AuthenticateUser(username,r->GetStorageContainer(),context,tc);
 	}
 	}
 

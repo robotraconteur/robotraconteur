@@ -1,0 +1,11 @@
+service experimental.gen_test_string_escape
+
+stdver 0.10
+
+## Doc line with a trigraph sequence ??/
+constant string escape_hex "\u0001abc"
+constant string escape_trigraph "what??/"
+
+object testobj
+    property double d1
+end

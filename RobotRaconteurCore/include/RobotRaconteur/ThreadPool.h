@@ -127,7 +127,7 @@ class ROBOTRACONTEUR_CORE_API ThreadPool : public RR_ENABLE_SHARED_FROM_THIS<Thr
      *
      * @param function The function to execute
      * @return true The function was posted to the thread pool
-     * @return false An error ocurred and the function was not posted
+     * @return false An error occurred and the function was not posted
      */
     virtual bool TryPost(boost::function<void()> function);
 

@@ -105,7 +105,7 @@ def AsyncConnectService(self, url, username, credentials, listener, handler, tim
         listener2=WrappedClientServiceListenerDirector(listener)
         listener2.__disown__()
 
-    return async_call(self._AsyncConnectService,(url, username, credentials, listener2, "", adjust_timeout(timeout)), AsyncStubReturnDirectorImpl, handler)
+    return async_call(self._AsyncConnectService,(url, username, credentials, listener2, "", adjust_timeout(timeout)), AsyncStubReturnDirectorImpl, handler, directorargs=(listener2,))
 
 def DisconnectService(self, stub):
     """
@@ -293,7 +293,7 @@ def GetStructureType(self,structtype,obj=None):
     :param obj: The client connection object reference to be used with this structure.
       This is necessary because each client maintains type information.  A client must be provided from
       which type information can be queried. For services this parameter is unnecessary.
-    :return: The constructer for the structure type
+    :return: The constructor for the structure type
     :rtype: Callable[[],<structtype>]
     """
     from .RobotRaconteurPythonUtil import GetStructureType
@@ -390,8 +390,10 @@ class ScopedMonitorLock(object):
     def __enter__(self):
         self.node.MonitorEnter(self.obj,self.timeout)
         self.locked=True
+        return self
     def __exit__(self,type, value, traceback):
-        self.node.MonitorExit(self.obj)
+        if self.obj is not None and self.locked:
+            self.node.MonitorExit(self.obj)
         self.locked=False
     def lock(self,timeout):
         """
@@ -407,8 +409,8 @@ class ScopedMonitorLock(object):
         """
         Releases the monitor lock
 
-        The ScopedMonitorLock destructor will release
-        the lock automatically, so in most cases it is
+        The lock is released automatically when the
+        ``with`` block exits, so in most cases it is
         not necessary to call this function
         """
         self.node.MonitorExit(self.obj,)
@@ -442,7 +444,7 @@ def RequestObjectLock(self,obj,flags):
 
 def ReleaseObjectLock(self,obj):
     """
-    Release an excluse access lock previously locked with RequestObjectLock()
+    Release an exclusive access lock previously locked with RequestObjectLock()
     or AsyncRequestObjectLock()
 
     Object must have previously been locked using RequestObjectLock() or
@@ -482,7 +484,6 @@ def MonitorExit(self,obj):
 
     :param obj: The object previously locked by MonitorEnter()
     """
-    #obj.rrlock.release()
     self._MonitorExit(obj.rrinnerstub)
 
 def AsyncRequestObjectLock(self,obj,flags,handler,timeout=RR_TIMEOUT_INFINITE):
@@ -506,7 +507,7 @@ def AsyncRequestObjectLock(self,obj,flags,handler,timeout=RR_TIMEOUT_INFINITE):
 
 def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE):
     """
-    Asynchronously release an excluse access lock previously locked
+    Asynchronously release an exclusive access lock previously locked
     with RequestObjectLock() or AsyncRequestObjectLock()
 
     Same as ReleaseObjectLock() but returns asynchronously
@@ -517,7 +518,7 @@ def AsyncReleaseObjectLock(self,obj,handler,timeout=RR_TIMEOUT_INFINITE):
     :param handler: Handler to call on completion
     :type handler: Callable[[str,Exception],None]
     :param timeout: Timeout in seconds, or -1 for infinite
-    :type timout: float
+    :type timeout: float
     """
     from .RobotRaconteurPythonUtil import async_call, adjust_timeout, AsyncStringReturnDirectorImpl
     return async_call(self._AsyncReleaseObjectLock,(obj.rrinnerstub,adjust_timeout(timeout)),AsyncStringReturnDirectorImpl,handler)
@@ -669,7 +670,7 @@ ThreadPoolCount = property(lambda self: self._GetThreadPoolCount(), lambda self,
     (int) The size of the native thread pool. May be configured dynamically.
     """)
 
-RequestTimeout = property(lambda self : self._GetRequestTimeout()/1000.0, lambda self,t : self._SetRequestTimeout(t*1000),
+RequestTimeout = property(lambda self : self._GetRequestTimeout()/1000.0, lambda self,t : self._SetRequestTimeout(int(t*1000)),
     doc = """
     (float) The timeout for requests in seconds
 
@@ -678,7 +679,7 @@ RequestTimeout = property(lambda self : self._GetRequestTimeout()/1000.0, lambda
     are all requests. All other Robot Raconteur functions that call the remote
     node and expect a response are requests. Default timeout is 15 seconds.
     """)
-TransportInactivityTimeout = property(lambda self : self._GetTransportInactivityTimeout()/1000.0, lambda self,t : self._SetTransportInactivityTimeout(t*1000),
+TransportInactivityTimeout = property(lambda self : self._GetTransportInactivityTimeout()/1000.0, lambda self,t : self._SetTransportInactivityTimeout(int(t*1000)),
     doc = """
     (float) The timeout for transport activity in seconds
 
@@ -686,7 +687,7 @@ TransportInactivityTimeout = property(lambda self : self._GetTransportInactivity
     is sent or received on the transport for the specified time,
     the transport is closed. Default timeout is 10 minutes.
     """)
-EndpointInactivityTimeout = property(lambda self : self._GetEndpointInactivityTimeout()/1000.0, lambda self,t : self._SetEndpointInactivityTimeout(t*1000),
+EndpointInactivityTimeout = property(lambda self : self._GetEndpointInactivityTimeout()/1000.0, lambda self,t : self._SetEndpointInactivityTimeout(int(t*1000)),
     doc = """
     (float) The timeout for endpoint activity in seconds
 
@@ -720,7 +721,7 @@ def GetConstants(self,servicetype, obj=None):
 
     :param servicetype: The name of the service definition
     :type servicetype: str
-    :param obj: The client connection object reference to be used with to retrive service types.
+    :param obj: The client connection object reference to be used with to retrieve service types.
             This is necessary because each client maintains type information.  A client must be provided from
             which type information can be queried. For services this parameter is unnecessary.
     :rtype: Dict[str,Any]
@@ -739,7 +740,7 @@ def GetExceptionType(self, exceptionname, obj=None):
 
     :param exceptionname: The fully qualified name of the exception type
     :type exceptionname: str
-    :param obj: The client connection object reference to be used with to retrive service types.
+    :param obj: The client connection object reference to be used with to retrieve service types.
             This is necessary because each client maintains type information.  A client must be provided from
             which type information can be queried. For services this parameter is unnecessary.
     :return: Exception type
@@ -997,7 +998,7 @@ def SubscribeService(self,*args):
     Subscribe to a service using one or more URL. Used to create robust connections to services
 
     Creates a ServiceSubscription assigned to a service with one or more candidate connection URLs. The
-    subscription will attempt to maintain a peristent connection, reconnecting if the connection is lost.
+    subscription will attempt to maintain a persistent connection, reconnecting if the connection is lost.
 
     :param url: One or more candidate connection urls
     :type url: Union[str,List[str]]

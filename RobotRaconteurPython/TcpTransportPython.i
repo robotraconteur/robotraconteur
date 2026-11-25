@@ -9,7 +9,7 @@
 {
 %pythoncode
 %{
-	DefaultReceiveTimeout = property(lambda self: self._GetDefaultReceiveTimeout()/1000.0, lambda self, timeout: self._SetDefaultReceiveTimeout(timeout*1000),
+	DefaultReceiveTimeout = property(lambda self: self._GetDefaultReceiveTimeout()/1000.0, lambda self, timeout: self._SetDefaultReceiveTimeout(int(timeout*1000)),
 		doc = """
 		Set the default receive timeout in seconds
 
@@ -20,7 +20,7 @@
 
 		:rtype: float
 		""")
-	DefaultConnectTimeout = property(lambda self: self._GetDefaultConnectTimeout()/1000.0, lambda self, timeout: self._SetDefaultConnectTimeout(timeout*1000),
+	DefaultConnectTimeout = property(lambda self: self._GetDefaultConnectTimeout()/1000.0, lambda self, timeout: self._SetDefaultConnectTimeout(int(timeout*1000)),
 		doc = """
 		Set the default connect timeout in seconds
 
@@ -32,12 +32,12 @@
 		:rtype: float
 		"""
 	)
-	DefaultHeartbeatPeriod = property(lambda self: self._GetDefaultHeartbeatPeriod()/1000.0, lambda self, timeout: self._SetDefaultHeartbeatPeriod(timeout*1000),
+	DefaultHeartbeatPeriod = property(lambda self: self._GetDefaultHeartbeatPeriod()/1000.0, lambda self, timeout: self._SetDefaultHeartbeatPeriod(int(timeout*1000)),
 		doc = """
 		Set the default heartbeat period in seconds
 
 		The heartbeat is used to keep the connection alive
-		if no communication is occuring between nodes.
+		if no communication is occurring between nodes.
 
 		Default: 5 seconds
 
@@ -116,7 +116,7 @@
 		:rtype: bool
 		""")
 
-	NodeAnnouncePeriod = property(lambda self: self._GetNodeAnnouncePeriod()/1000.0, lambda self, timeout: self._SetNodeAnnouncePeriod(timeout*1000),
+	NodeAnnouncePeriod = property(lambda self: self._GetNodeAnnouncePeriod()/1000.0, lambda self, timeout: self._SetNodeAnnouncePeriod(int(timeout*1000)),
 		doc = """
 		Set the period between node announce in seconds
 

@@ -75,7 +75,10 @@ class HardwareTransport_discovery
         {
             RR_SHARED_PTR<usb_manager> m = usb.lock();
             if (!m)
+            {
+                handler(RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >());
                 return;
+            }
 
             m->UpdateDevices(boost::bind(&HardwareTransport_discovery::GetUsbDevices1, this->shared_from_this(),
                                          boost::protect(handler)));
@@ -180,7 +183,17 @@ class HardwareTransport_discovery
 
         if (op->count == 0)
         {
-            RobotRaconteurNode::TryPostToThreadPool(n, boost::bind(op->handler, op->ret), true);
+            // No asynchronous source was started: complete now, and keep the timer from calling the handler again
+            op->handled = true;
+            boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)> f = op->handler;
+            op->handler.clear();
+            if (op->timer)
+            {
+                boost::system::error_code ec1;
+                op->timer->cancel(ec1);
+            }
+            op->timer.reset();
+            RobotRaconteurNode::TryPostToThreadPool(n, boost::bind(f, op->ret), true);
         }
     }
 
@@ -193,7 +206,10 @@ class HardwareTransport_discovery
             RR_SHARED_PTR<RobotRaconteurNode> node = GetParent()->GetNode();
             RR_SHARED_PTR<usb_manager> m = usb.lock();
             if (!m)
+            {
+                handler(o);
                 return;
+            }
 
             std::list<boost::tuple<NodeID, std::string> > usb_dev = m->GetDetectedDevices();
             typedef boost::tuple<NodeID, std::string> e_type;
@@ -230,8 +246,15 @@ class HardwareTransport_discovery
                 continue;
 
             NodeDiscoveryInfo n;
-            n.NodeID = NodeID(*e.nodeid_str);
-            n.NodeName = *e.nodeid_str;
+            try
+            {
+                n.NodeID = NodeID(*e.nodeid_str);
+            }
+            catch (std::exception&)
+            {
+                continue;
+            }
+            n.NodeName = *e.nodename_str;
             NodeDiscoveryInfoURL n1;
             n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";
             n1.LastAnnounceTime = node->NowNodeTime();
@@ -254,6 +277,12 @@ class HardwareTransport_discovery
     {
         RR_SHARED_PTR<RobotRaconteurNode> n = GetParent()->GetNode();
         RR_SHARED_PTR<ThreadPool> p = n->GetThreadPool();
+
+        if (!bt)
+        {
+            GetAll1(RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >(), op);
+            return;
+        }
 
         std::list<typename bluetooth_connector::btaddr_type> addr = bt->GetDeviceAddresses();
 
@@ -290,7 +319,14 @@ class HardwareTransport_discovery
                 continue;
 
             NodeDiscoveryInfo n;
-            n.NodeID = NodeID(*e.nodeid_str);
+            try
+            {
+                n.NodeID = NodeID(*e.nodeid_str);
+            }
+            catch (std::exception&)
+            {
+                continue;
+            }
             n.NodeName = *e.nodename_str;
             NodeDiscoveryInfoURL n1;
             n1.URL = "rr+bluetooth:///?nodeid=" + n.NodeID.ToString("D") + "&service=RobotRaconteurServiceIndex";

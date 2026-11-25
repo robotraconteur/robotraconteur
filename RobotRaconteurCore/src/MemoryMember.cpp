@@ -48,6 +48,10 @@ ROBOTRACONTEUR_CORE_API void CalculateMatrixBlocks(uint32_t element_size, std::v
             {
                 split_dim = boost::numeric_cast<uint32_t>(i);
                 split_dim_block = max_elems / split_elem_count;
+                if (split_dim_block == 0)
+                {
+                    throw InvalidArgumentException("Could not split array into blocks");
+                }
                 split_dim_found = true;
                 block_count[i] = split_dim_block;
                 splits_count = boost::numeric_cast<uint32_t>(count[i] / split_dim_block);
@@ -95,6 +99,7 @@ ArrayMemoryServiceSkelBase::ArrayMemoryServiceSkelBase(boost::string_ref membern
     this->direction = direction;
     this->element_type = element_type;
     this->element_size = element_size;
+    this->service_path = skel->GetServicePath();
 }
 
 ArrayMemoryServiceSkelBase::~ArrayMemoryServiceSkelBase() {}
@@ -116,6 +121,11 @@ RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(co
 
             uint64_t memorypos = RRArrayToScalar(m->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
             uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
+            // Enforce MaxTransferSize on the server before allocating: a client could otherwise request an
+            // arbitrary count and make DoRead allocate count*element_size before the memory object is consulted
+            uint32_t max_transfer_size = GetNode()->GetMemoryMaxTransferSize();
+            if (element_size == 0 || count > static_cast<uint64_t>(max_transfer_size) / element_size)
+                throw InvalidArgumentException("Memory read count exceeds maximum transfer size");
             RR_INTRUSIVE_PTR<MessageElementData> data = DoRead(memorypos, 0, boost::numeric_cast<size_t>(count), mem);
             RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
             ret->AddElement("memorypos", ScalarToRRArray(memorypos));
@@ -140,9 +150,12 @@ RR_INTRUSIVE_PTR<MessageEntry> ArrayMemoryServiceSkelBase::CallMemoryFunction(co
 
             uint64_t memorypos = RRArrayToScalar(m->FindElement("memorypos")->CastData<RRArray<uint64_t> >());
             uint64_t count = RRArrayToScalar(m->FindElement("count")->CastData<RRArray<uint64_t> >());
+            uint32_t max_transfer_size = GetNode()->GetMemoryMaxTransferSize();
+            if (element_size == 0 || count > static_cast<uint64_t>(max_transfer_size) / element_size)
+                throw InvalidArgumentException("Memory write count exceeds maximum transfer size");
             RR_INTRUSIVE_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
             DoWrite(memorypos, data, 0, boost::numeric_cast<size_t>(count), mem);
-            RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
+            RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryWriteRet, GetMemberName());
             ret->AddElement("memorypos", ScalarToRRArray(memorypos));
             ret->AddElement("count", ScalarToRRArray(count));
             return ret;
@@ -236,9 +249,19 @@ RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFun
             RR_INTRUSIVE_PTR<RRArray<uint64_t> > memorypos =
                 m->FindElement("memorypos")->CastData<RRArray<uint64_t> >();
             RR_INTRUSIVE_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
-            uint32_t elemcount = 1;
+            uint64_t elemcount64 = 1;
             for (size_t i = 0; i < count->size(); i++)
-                elemcount *= boost::numeric_cast<uint32_t>((*count)[i]);
+            {
+                elemcount64 *= boost::numeric_cast<uint32_t>((*count)[i]);
+                if (elemcount64 > std::numeric_limits<uint32_t>::max())
+                    throw InvalidArgumentException("Memory request count too large");
+            }
+            uint32_t elemcount = static_cast<uint32_t>(elemcount64);
+
+            // Enforce MaxTransferSize on the server before allocating elemcount elements in DoRead
+            uint32_t max_transfer_size = GetNode()->GetMemoryMaxTransferSize();
+            if (element_size == 0 || elemcount > max_transfer_size / element_size)
+                throw InvalidArgumentException("Memory read count exceeds maximum transfer size");
 
             RR_INTRUSIVE_PTR<MessageElementData> data =
                 DoRead(RRArrayToVector<uint64_t>(memorypos), std::vector<uint64_t>(count->size()),
@@ -246,7 +269,7 @@ RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFun
 
             RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
             ret->AddElement("memorypos", memorypos);
-            ret->AddElement("count", memorypos);
+            ret->AddElement("count", count);
             ret->AddElement("data", data);
             return ret;
         }
@@ -268,15 +291,20 @@ RR_INTRUSIVE_PTR<MessageEntry> MultiDimArrayMemoryServiceSkelBase::CallMemoryFun
             RR_INTRUSIVE_PTR<RRArray<uint64_t> > memorypos =
                 m->FindElement("memorypos")->CastData<RRArray<uint64_t> >();
             RR_INTRUSIVE_PTR<RRArray<uint64_t> > count = m->FindElement("count")->CastData<RRArray<uint64_t> >();
-            uint32_t elemcount = 1;
+            uint64_t elemcount64 = 1;
             for (size_t i = 0; i < count->size(); i++)
-                elemcount *= boost::numeric_cast<uint32_t>((*count)[i]);
+            {
+                elemcount64 *= boost::numeric_cast<uint32_t>((*count)[i]);
+                if (elemcount64 > std::numeric_limits<uint32_t>::max())
+                    throw InvalidArgumentException("Memory request count too large");
+            }
+            uint32_t elemcount = static_cast<uint32_t>(elemcount64);
 
             RR_INTRUSIVE_PTR<MessageElementData> data = m->FindElement("data")->CastData<MessageElementData>();
 
             DoWrite(RRArrayToVector<uint64_t>(memorypos), data, std::vector<uint64_t>(count->size()),
                     RRArrayToVector<uint64_t>(count), elemcount, mem);
-            RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryReadRet, GetMemberName());
+            RR_INTRUSIVE_PTR<MessageEntry> ret = CreateMessageEntry(MessageEntryType_MemoryWriteRet, GetMemberName());
             ret->AddElement("memorypos", memorypos);
             ret->AddElement("count", count);
 
@@ -402,6 +430,7 @@ uint32_t ArrayMemoryClientBase::GetMaxTransferSize()
             m->AddElement("parameter", stringToRRArray("MaxTransferSize"));
             RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
             remote_max_size = RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint32_t> >());
+            max_size_read = true;
         }
         uint32_t my_max_size = GetNode()->GetMemoryMaxTransferSize();
         if (remote_max_size > my_max_size)
@@ -455,6 +484,9 @@ void ArrayMemoryClientBase::ReadBase(uint64_t memorypos, void* buffer, uint64_t 
     }
     else
     {
+        if (max_elems == 0)
+            throw InvalidOperationException("Memory MaxTransferSize is smaller than the element size");
+
         uint64_t blocks = count / boost::numeric_cast<uint64_t>(max_elems);
         uint64_t blockrem = count % boost::numeric_cast<uint64_t>(max_elems);
 
@@ -522,6 +554,9 @@ void ArrayMemoryClientBase::WriteBase(uint64_t memorypos, const void* buffer, ui
     }
     else
     {
+        if (max_elems == 0)
+            throw InvalidOperationException("Memory MaxTransferSize is smaller than the element size");
+
         if ((boost::numeric_cast<int64_t>(GetBufferLength(buffer)) - boost::numeric_cast<int64_t>(bufferpos)) <
             boost::numeric_cast<int64_t>(count))
             throw OutOfRangeException("Invalid buffer length");
@@ -630,6 +665,7 @@ uint32_t MultiDimArrayMemoryClientBase::GetMaxTransferSize()
             m->AddElement("parameter", stringToRRArray("MaxTransferSize"));
             RR_INTRUSIVE_PTR<MessageEntry> ret = GetStub()->ProcessRequest(m);
             remote_max_size = RRArrayToScalar(ret->FindElement("return")->CastData<RRArray<uint32_t> >());
+            max_size_read = true;
         }
         uint32_t my_max_size = GetNode()->GetMemoryMaxTransferSize();
         if (remote_max_size > my_max_size)
@@ -754,26 +790,19 @@ void MultiDimArrayMemoryClientBase::ReadBase(const std::vector<uint64_t>& memory
             }
             else
             {
-                current_pos[split_dim + 1]++;
-                if (current_pos[split_dim + 1] >= count[split_dim + 1])
+                // Advance the dimensions above the split dimension, carrying into the next dimension
+                size_t j = split_dim + 1;
+                current_pos[j]++;
+                while (current_pos[j] >= count[j])
                 {
-                    if (split_dim + 1 == boost::numeric_cast<uint32_t>(count.size() - 1))
+                    if (j == count.size() - 1)
                     {
                         done = true;
+                        break;
                     }
-                    else
-                    {
-                        current_pos[split_dim + 1] = 0;
-                        for (size_t j = split_dim + 2; j < count.size(); j++)
-                        {
-                            if (current_pos[j - 1] >= count[j - 1])
-                            {
-                                current_pos[j]++;
-                            }
-                        }
-                        if (current_pos[count.size() - 1] >= count[count.size() - 1])
-                            done = true;
-                    }
+                    current_pos[j] = 0;
+                    j++;
+                    current_pos[j]++;
                 }
             }
         }
@@ -882,26 +911,19 @@ void MultiDimArrayMemoryClientBase::WriteBase(const std::vector<uint64_t>& memor
             }
             else
             {
-                current_pos[split_dim + 1]++;
-                if (current_pos[split_dim + 1] >= count[split_dim + 1])
+                // Advance the dimensions above the split dimension, carrying into the next dimension
+                size_t j = split_dim + 1;
+                current_pos[j]++;
+                while (current_pos[j] >= count[j])
                 {
-                    if (split_dim + 1 == boost::numeric_cast<uint32_t>(count.size() - 1))
+                    if (j == count.size() - 1)
                     {
                         done = true;
+                        break;
                     }
-                    else
-                    {
-                        current_pos[split_dim + 1] = 0;
-                        for (size_t j = split_dim + 2; j < count.size(); j++)
-                        {
-                            if (current_pos[j - 1] >= count[j - 1])
-                            {
-                                current_pos[j]++;
-                            }
-                        }
-                        if (current_pos[count.size() - 1] >= count[count.size() - 1])
-                            done = true;
-                    }
+                    current_pos[j] = 0;
+                    j++;
+                    current_pos[j]++;
                 }
             }
         }

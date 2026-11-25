@@ -1,0 +1,10 @@
+service experimental.gen_test_docstring
+
+stdver 0.10
+
+## Object doc */ rr_injected_object_doc /*
+## Unicode escape \u002a\u002f rr_injected_unicode_doc /*
+object testobj
+    ## Property doc */ rr_injected_property_doc /*
+    property double d1
+end

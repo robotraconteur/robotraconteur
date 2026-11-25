@@ -64,4 +64,12 @@ class NodeDirectoriesFD
     size_t file_len();
 };
 
+namespace detail
+{
+// Creates the /tmp/robotraconteur-run-<uid> fallback user run directory with mode 0700 and verifies that it is a
+// directory (not a symlink) owned by the current user, so another local user cannot pre-create it. No-op for any
+// other user run directory.
+void NodeDirectories_secure_tmp_user_run_dir(const boost::filesystem::path& user_run_dir);
+} // namespace detail
+
 } // namespace RobotRaconteur

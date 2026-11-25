@@ -29,7 +29,30 @@ namespace RobotRaconteur
 
 }
 
+%rename(_WaitOne) RobotRaconteur::AutoResetEvent::WaitOne;
+
 %include "Timer.i"
+
+%extend RobotRaconteur::AutoResetEvent
+{
+%pythoncode %{
+def WaitOne(self, timeout=-1):
+    """
+    Block the current thread until Set() is called, or timeout
+    expires
+
+    :param timeout: The timeout in seconds, or -1 (the default) to wait without timeout
+    :type timeout: float
+    :return: True if event was set, False if not
+    :rtype: bool
+    """
+    from .RobotRaconteurPythonUtil import adjust_timeout
+    if timeout < 0:
+        self._WaitOne()
+        return True
+    return self._WaitOne(adjust_timeout(timeout))
+%}
+}
 
 // cSpell: ignore sphandler
 
