@@ -1077,18 +1077,20 @@ void TcpAcceptor::CloseSocket()
     socket_handed_off = true;
     try
     {
+        // The websocket stream only references the socket. After a failed handshake the accept handlers release
+        // the socket while the acceptor (and accept_websocket) can still be alive, so lock the socket first and
+        // keep it alive while the websocket closes it.
+        RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket1 = accept_socket.lock();
+        if (!socket1)
+            return;
         if (accept_websocket)
         {
             // Takes the websocket's next layer lock, so the close is serialized with the handshake operations
             accept_websocket->close();
             return;
         }
-        RR_SHARED_PTR<boost::asio::ip::tcp::socket> socket1 = accept_socket.lock();
-        if (socket1)
-        {
-            boost::system::error_code ec;
-            socket1->close(ec);
-        }
+        boost::system::error_code ec;
+        socket1->close(ec);
     }
     catch (std::exception&)
     {}
