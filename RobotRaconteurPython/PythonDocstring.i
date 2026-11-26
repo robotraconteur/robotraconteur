@@ -1001,7 +1001,7 @@ rrs+wss Websocket with RobotRaconteur TLS over HTTPS Client Only
 The different combinations of TLS and HTTPS for websockets are used for different scenarios.
 Robot Raconteur Core can initiate HTTPS connections, but cannot accept them. Accepting
 HTTPS connections requires a certificate issued by an authority like GoDaddy or Digicert,
-and is typically used with an HTTP server running RobotRaconteurWeb.
+and is typically used with an HTTP server running RobotRaconteur.Sharp.
 
 TLS certificates for Robot Raconteur nodes are issued by Wason Technology, LLC using
 a root certificate that is \"burned in\" to Robot Raconteur Core. All devices running

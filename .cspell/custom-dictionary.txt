@@ -16,6 +16,7 @@ rrconfiguretest
 wason
 subsasgn
 SQOS
+Blazor
 Bluez
 skel
 innerskel

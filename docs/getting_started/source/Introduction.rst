@@ -19,7 +19,8 @@ several major segments:
   which define the overall architecture, behavior, protocols, and data formats.
 * The official implementations of the Robot Raconteur framework, including
   `Robot Raconteur Core <https://github.com/robotraconteur/robotraconteur>`_,
-  `Robot Raconteur Web <https://github.com/robotraconteur/RobotRaconteurWeb>`_,
+  `RobotRaconteur.Sharp <https://github.com/robotraconteur/RobotRaconteur.Sharp>`_ (formerly RobotRaconteurWeb),
+  `Robot Raconteur TypeScript <https://github.com/robotraconteur/robotraconteur_typescript>`_,
   and `Robot Raconteur Lite <https://github.com/robotraconteur/robotraconteurlite>`_.
 
 * `Standard Service Definitions <https://github.com/robotraconteur/robotraconteur_standard_robdef>`_ and
@@ -98,8 +99,8 @@ Robot Raconteur currently supports the following platforms:
 * iOS
 * FreeBSD
 * WebAssembly (Robot Raconteur Core with Emscripten)
-* Web Browser (Robot Raconteur Web)
-* ASP.NET Server (Robot Raconteur Web)
+* Web Browser (Robot Raconteur TypeScript, or RobotRaconteur.Sharp with Blazor WebAssembly)
+* ASP.NET Core Server (RobotRaconteur.Sharp)
 * Arduino (specialized demo)
 
 Support is planned for VxWorks and QNX.
@@ -112,23 +113,24 @@ The following computer languages are supported:
 * C#
 * Java
 * LabView
+* `Go <https://github.com/robotraconteur/robotraconteur_go>`_
+* TypeScript and JavaScript (`Robot Raconteur TypeScript <https://github.com/robotraconteur/robotraconteur_typescript>`_)
 * ANSI C (under development)
-* JavaScript (under development)
 
-Support is planned for `Rust <https://github.com/robotraconteur/robotraconteur/issues/86>`_,
-`Go <https://github.com/robotraconteur/robotraconteur/issues/87>`_, and
+Support is planned for `Rust <https://github.com/robotraconteur/robotraconteur/issues/86>`_ and
 `Lua <https://github.com/robotraconteur/robotraconteur/issues/88>`_.
 
 .. Note::
    Most applications will use the Robot Raconteur Core implementation. Supported languages for the core library are
-   C++, Python, MATLAB, C#, Java, and LabView. The LabView implementation is a commercial add-on available from
+   C++, Python, MATLAB, C#, Java, LabView, and Go. The Go bindings are available in the
+   `robotraconteur_go <https://github.com/robotraconteur/robotraconteur_go>`_ repository. The LabView implementation is a commercial add-on available from
    Wason Technology, LLC. See the
    `Installation <https://github.com/robotraconteur/robotraconteur/blob/master/docs/common/installation.md>`_ page for
    instructions of how to obtain the LabView add-on.
 
 Robot Raconteur has these additional differentiating features:
 
-* Compatibility: 22 platforms/architectures, 7 languages, 6 transport technologies
+* Compatibility: 22 platforms/architectures, 9 languages, 6 transport technologies
 * Client-service model
 * “Augmented Object-Oriented” model
 * Forward and backwards compatibility using polymorphism
