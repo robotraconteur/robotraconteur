@@ -27,8 +27,8 @@
 #include <set>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
-#include <IPHlpApi.h>
-#include <Shlobj.h>
+#include <iphlpapi.h>
+#include <shlobj.h>
 #define SHUT_RDWR SD_BOTH
 #undef SendMessage
 #else

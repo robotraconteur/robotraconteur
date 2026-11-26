@@ -1228,7 +1228,8 @@ static BOOL DoRegisterBluetoothRadioToHwd(const RR_SHARED_PTR<void>& f, HWND hWn
         return FALSE;
     }
 
-    deviceInfo_sp = RR_SHARED_PTR<void>(deviceInfo_sp, setupapi_f->SetupDiDestroyDeviceInfoList);
+    deviceInfo_sp = RR_SHARED_PTR<void>(deviceInfo, boost::bind(&SetupApi_Functions_SetupDiDestroyDeviceInfoList,
+                                                                setupapi_f, RR_BOOST_PLACEHOLDERS(_1)));
 
     interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 
@@ -1448,7 +1449,7 @@ void HardwareTransport_win_discovery::OnBluetoothChanged_win(GUID guid, DWORD ev
             SOCKADDR_BTH addr;
             ZeroMemory(&addr, sizeof(addr));
             addr.addressFamily = AF_BTH;
-            addr.btAddr = *reinterpret_cast<PBTH_ADDR>(buf);
+            addr.btAddr = *reinterpret_cast<BTH_ADDR*>(buf);
 
             return;
         }
@@ -1542,7 +1543,8 @@ std::list<boost::tuple<NodeID, std::string> > HardwareTransport_win_find_devicei
         return o;
     }
 
-    deviceInfo_sp = RR_SHARED_PTR<void>(deviceInfo_sp, f1->SetupDiDestroyDeviceInfoList);
+    deviceInfo_sp = RR_SHARED_PTR<void>(
+        deviceInfo, boost::bind(&SetupApi_Functions_SetupDiDestroyDeviceInfoList, f1, RR_BOOST_PLACEHOLDERS(_1)));
 
     interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 

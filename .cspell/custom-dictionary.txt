@@ -314,3 +314,5 @@ Reauthentication
 rrmutex
 rrtest
 vnull
+secur
+sddl

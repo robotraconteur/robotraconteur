@@ -32,7 +32,7 @@
 #include <boost/assign/list_of.hpp>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
-#include <Shlobj.h>
+#include <shlobj.h>
 #else
 #include <unistd.h>
 #include <sys/file.h>

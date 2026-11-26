@@ -19,7 +19,7 @@
 #include "RobotRaconteur/AutoResetEvent.h"
 
 #ifdef ROBOTRACONTEUR_WINDOWS
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 namespace RobotRaconteur

@@ -19,9 +19,9 @@
 #include "HardwareTransport_bluetoothcommon_private.h"
 #include "HardwareTransport_discoverycommon_private.h"
 
-#include <Ws2bth.h>
+#include <ws2bth.h>
 #include <windows.h>
-#include <Devpropdef.h>
+#include <devpropdef.h>
 #pragma once
 
 // Begin SetupApi dynamic loading

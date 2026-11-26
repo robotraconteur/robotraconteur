@@ -32,8 +32,8 @@
 #include <string>
 
 #ifdef ROBOTRACONTEUR_WINDOWS
-#include <Windows.h>
-#include <WinCrypt.h>
+#include <windows.h>
+#include <wincrypt.h>
 #else
 
 #include <openssl/conf.h>

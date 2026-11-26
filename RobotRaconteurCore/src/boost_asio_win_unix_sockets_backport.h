@@ -6,7 +6,7 @@
 #define BOOST_ASIO_HAS_LOCAL_SOCKETS 1
 
 #ifdef _WIN32
-#include <WinSock2.h>
+#include <winsock2.h>
 
 #ifdef IO_REPARSE_TAG_AF_UNIX
 #include <afunix.h>
