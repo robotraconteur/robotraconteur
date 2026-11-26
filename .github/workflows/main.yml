@@ -2103,6 +2103,34 @@ jobs:
         podman run -v ${{github.workspace}}/src:/work/src -w /work --rm
         ${{matrix.config.container}} /work/src/robotraconteur/tools/build_files/old_ubuntu_build/old_ubuntu_build.sh
 
+  build-sid-i386-slow:
+    # 32-bit x86 Debian sid. Builds at full speed, then runs the tests on one core limited to a quarter of a CPU with
+    # the Java JIT disabled (like the interpreted Zero JVM on armhf), to catch 32-bit bugs and timing-dependent tests.
+    runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        path: src/robotraconteur
+    - name: apt update
+      run: sudo apt update
+    - name: apt
+      run: |
+        sudo apt-get install podman -qq
+    - name: build
+      run: |
+        sudo podman run --platform linux/386 --name rr-sid-i386-build -v ${{github.workspace}}:/work -w /work \
+          docker.io/i386/debian:sid /work/src/robotraconteur/tools/build_files/sid_i386_build/sid_i386_build.sh build
+        sudo podman commit rr-sid-i386-build rr-sid-i386-build-image
+        sudo podman rm rr-sid-i386-build
+    - name: test (slow single core)
+      run: |
+        # Rootful: rootless podman on the hosted runners has no cpuset cgroup controller
+        sudo podman run --platform linux/386 --rm --cpuset-cpus=0 --cpu-period=10000 --cpu-quota=2500 \
+          -e JAVA_TOOL_OPTIONS=-Xint -v ${{github.workspace}}:/work -w /work rr-sid-i386-build-image \
+          /work/src/robotraconteur/tools/build_files/sid_i386_build/sid_i386_build.sh test
+
   test-ros-package-python-path:
     runs-on: ubuntu-latest
     container: ros:${{ matrix.ROS_DISTRO }}
