@@ -670,6 +670,7 @@ void ServiceSubscription::Close()
     }
 
     wire_subscriptions.clear();
+    pipe_subscriptions.clear();
     clients.clear();
 
     connect_listeners.disconnect_all_slots();
@@ -2624,12 +2625,10 @@ void PipeSubscriptionBase::Close()
     BOOST_FOREACH (const RR_SHARED_PTR<detail::PipeSubscription_connection>& connection,
                    connections1 | boost::adaptors::map_values)
     {
-        RR_SHARED_PTR<PipeEndpointBase> pipe = connection->connection.lock();
-        if (!pipe)
-            continue;
+        // Also marks the connection closed and stops its retry timer
         try
         {
-            pipe->AsyncClose(&PipeSubscriptionBase_emptyhandler, 5000);
+            connection->Close();
         }
         catch (std::exception&)
         {}
