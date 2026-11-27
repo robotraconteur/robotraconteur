@@ -2194,7 +2194,7 @@ TEST(RobotRaconteurMisc, NodeShutdownEndsPendingConnect)
         std::string url =
             "rr+tcp://127.0.0.1:" + boost::lexical_cast<std::string>(port) + "/?service=RobotRaconteurServiceIndex";
         node->AsyncConnectService(
-            url, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "",
+            url, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "",
             boost::bind(&ConnectorShutdown_handler, evt, errors, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
             30000);
         boost::this_thread::sleep(boost::posix_time::milliseconds(200));
