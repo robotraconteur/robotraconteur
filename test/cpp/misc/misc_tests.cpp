@@ -1712,6 +1712,47 @@ TEST(RobotRaconteurMisc, LocalTransportPrivateSocketMode)
 }
 #endif
 
+namespace
+{
+// A ClientContext that claims to be connected but is not registered with the node, so sending throws
+class ClientContextSendFails : public ClientContext
+{
+  public:
+    ClientContextSendFails(const RR_SHARED_PTR<RobotRaconteurNode>& node) : ClientContext(node) { m_Connected = true; }
+};
+
+void ClientContextSendFails_handler(const RR_SHARED_PTR<boost::atomic<int> >& count,
+                                    const RR_INTRUSIVE_PTR<MessageEntry>& ret,
+                                    const RR_SHARED_PTR<RobotRaconteurException>& err)
+{
+    RR_UNUSED(ret);
+    RR_UNUSED(err);
+    (*count)++;
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, AsyncProcessRequestThrowDoesNotInvokeHandler)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    {
+        RR_SHARED_PTR<ClientContextSendFails> c = RR_MAKE_SHARED<ClientContextSendFails>(node);
+        RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_FunctionCallReq, "func");
+        EXPECT_ANY_THROW(c->AsyncProcessRequest(
+            m,
+            boost::bind(&ClientContextSendFails_handler, count, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+            100));
+    }
+
+    // The connection test (50 ms) and the request timeout (100 ms) must not invoke the handler after the throw
+    boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+    EXPECT_EQ(count->load(), 0);
+
+    node->Shutdown();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

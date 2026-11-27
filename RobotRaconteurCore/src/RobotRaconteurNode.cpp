@@ -476,6 +476,8 @@ void RobotRaconteurNode::Shutdown()
                 }
             }
 
+            // Pool threads still look up transports (DeleteEndpoint) while the transports close
+            boost::unique_lock<boost::shared_mutex> lock(transports_lock);
             transports.clear();
         }
 
@@ -622,7 +624,13 @@ void RobotRaconteurNode::SendMessage(const RR_INTRUSIVE_PTR<Message>& m)
         RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Endpoint> >::iterator e1 = endpoints.find(m->header->SenderEndpoint);
         if (e1 == endpoints.end())
         {
-            if (is_shutdown)
+            bool node_is_shutdown = false;
+            {
+                // is_shutdown is written under thread_pool_lock
+                boost::shared_lock<boost::shared_mutex> lock2(thread_pool_lock);
+                node_is_shutdown = is_shutdown;
+            }
+            if (node_is_shutdown)
             {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1, "Attempt to send message after node shutdown");
                 throw InvalidEndpointException("Attempt to send message after node shutdown");
@@ -679,7 +687,13 @@ void RobotRaconteurNode::AsyncSendMessage(
         RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Endpoint> >::iterator e1 = endpoints.find(m->header->SenderEndpoint);
         if (e1 == endpoints.end())
         {
-            if (is_shutdown)
+            bool node_is_shutdown = false;
+            {
+                // is_shutdown is written under thread_pool_lock
+                boost::shared_lock<boost::shared_mutex> lock2(thread_pool_lock);
+                node_is_shutdown = is_shutdown;
+            }
+            if (node_is_shutdown)
             {
                 ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1, "Attempt to send message after node shutdown");
                 throw InvalidOperationException("Attempt to send message after node shutdown");
@@ -1868,7 +1882,13 @@ void RobotRaconteurNode::CheckConnection(uint32_t endpoint)
         RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<Endpoint> >::iterator e1 = endpoints.find(endpoint);
         if (e1 == endpoints.end())
         {
-            if (is_shutdown)
+            bool node_is_shutdown = false;
+            {
+                // is_shutdown is written under thread_pool_lock
+                boost::shared_lock<boost::shared_mutex> lock2(thread_pool_lock);
+                node_is_shutdown = is_shutdown;
+            }
+            if (node_is_shutdown)
             {
                 throw InvalidOperationException("Node has been shut down");
             }
@@ -2662,13 +2682,12 @@ bool RobotRaconteurNode::TryGetThreadPool(RR_SHARED_PTR<ThreadPool>& pool)
 
 void RobotRaconteurNode::SetThreadPool(const RR_SHARED_PTR<ThreadPool>& pool)
 {
-
+    boost::unique_lock<boost::shared_mutex> lock(thread_pool_lock);
     if (is_shutdown)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1, "Attempt to set thread pool after node shutdown");
         throw InvalidOperationException("Node has been shutdown");
     }
-    boost::unique_lock<boost::shared_mutex> lock(thread_pool_lock);
     if (thread_pool)
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(weak_this, Node, -1, "Thread pool already set");

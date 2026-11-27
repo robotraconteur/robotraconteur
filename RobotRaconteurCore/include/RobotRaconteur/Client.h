@@ -301,7 +301,7 @@ class ROBOTRACONTEUR_CORE_API ClientContext : public Endpoint, public RR_ENABLE_
 
   protected:
     bool m_Connected;
-    boost::mutex m_Connected_lock;
+    mutable boost::mutex m_Connected_lock;
     boost::mutex close_lock;
 
   private:
