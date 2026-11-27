@@ -1928,6 +1928,75 @@ TEST(RobotRaconteurMisc, PeriodicCleanupTaskNotStartedBeforeShutdownReleasesNode
     EXPECT_TRUE(weak_node.expired());
 }
 
+namespace
+{
+struct DefaultClientWaitHandler
+{
+    RR_SHARED_PTR<AutoResetEvent> ev;
+    RR_SHARED_PTR<boost::atomic<int> > errors;
+    DefaultClientWaitHandler() : ev(RR_MAKE_SHARED<AutoResetEvent>()), errors(RR_MAKE_SHARED<boost::atomic<int> >(0)) {}
+    void operator()(const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& err)
+    {
+        RR_UNUSED(obj);
+        if (err)
+            (*errors)++;
+        ev->Set();
+    }
+};
+} // namespace
+
+TEST(RobotRaconteurMisc, SubscriptionCloseFailsPendingDefaultClientWait)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+
+    std::vector<std::string> service_types;
+    service_types.push_back("com.robotraconteur.testing.TestService1.testroot");
+    RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeServiceByType(service_types);
+
+    // No client ever connects, so the wait only ends when the subscription closes
+    DefaultClientWaitHandler h1;
+    sub->AsyncGetDefaultClient<RRObject>(h1, RR_TIMEOUT_INFINITE);
+    DefaultClientWaitHandler h2;
+    sub->AsyncGetDefaultClient<RRObject>(h2, 10000);
+    EXPECT_FALSE(h1.ev->WaitOne(100));
+
+    // Both waits fail right away, not when the 10 s timeout fires
+    sub->Close();
+    EXPECT_TRUE(h1.ev->WaitOne(1000));
+    EXPECT_EQ(h1.errors->load(), 1);
+    EXPECT_TRUE(h2.ev->WaitOne(1000));
+    EXPECT_EQ(h2.errors->load(), 1);
+
+    // A wait started after Close fails too
+    DefaultClientWaitHandler h3;
+    sub->AsyncGetDefaultClient<RRObject>(h3, RR_TIMEOUT_INFINITE);
+    EXPECT_TRUE(h3.ev->WaitOne(5000));
+    EXPECT_EQ(h3.errors->load(), 1);
+
+    node->Shutdown();
+}
+
+TEST(RobotRaconteurMisc, NodeShutdownFailsPendingDefaultClientWait)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    // Nodes with transports always have a thread pool; this one has none, so create it
+    node->GetThreadPool();
+
+    std::vector<std::string> service_types;
+    service_types.push_back("com.robotraconteur.testing.TestService1.testroot");
+    RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeServiceByType(service_types);
+
+    DefaultClientWaitHandler h;
+    sub->AsyncGetDefaultClient<RRObject>(h, RR_TIMEOUT_INFINITE);
+
+    // Shutdown closes the subscription; the wait must still be failed although the node is shutting down
+    node->Shutdown();
+    EXPECT_TRUE(h.ev->WaitOne(1000));
+    EXPECT_EQ(h.errors->load(), 1);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

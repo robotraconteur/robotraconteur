@@ -135,6 +135,10 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
                      const RR_SHARED_PTR<IServiceSubscription>& subscription);
 
   public:
+    // Fired by SubscriptionClosed with the subscription that closed. WORKAROUND for pending default client waits
+    // (C++ core only, do not port), see AsyncGetDefaultClientBase_impl::WatchClose in Subscription.cpp
+    boost::signals2::signal<void(const RR_SHARED_PTR<IServiceSubscription>&)> subscription_closed;
+
     void DoUpdateAllDetectedServices(const RR_SHARED_PTR<IServiceSubscription>& s);
 
     // Register a subscription created without SubscribeService / DoSubscribe (no-op if already registered)

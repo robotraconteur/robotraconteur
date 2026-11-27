@@ -2054,6 +2054,8 @@ void Discovery::AddSubscription(const RR_SHARED_PTR<IServiceSubscription>& s)
 
 void Discovery::SubscriptionClosed(const RR_SHARED_PTR<IServiceSubscription>& subscription)
 {
+    subscription_closed(subscription);
+
     boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "Subscription closed");
