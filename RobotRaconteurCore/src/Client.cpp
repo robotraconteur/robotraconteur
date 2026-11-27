@@ -691,6 +691,35 @@ void ClientContext::AsyncFindObjectType1(
     }
 }
 
+namespace
+{
+// Closed marker in outstanding_requests. Request ids wrap to 0 before reaching it, so it is never a real id.
+// Close, connection loss and node shutdown clear the map and insert it under outstanding_requests_lock; requests
+// check for it under the same lock, so none can be added after the map has been cleared.
+const uint32_t ClientContext_closed_request_id = std::numeric_limits<uint32_t>::max();
+
+template <typename RequestMap>
+void ClientContext_clear_requests_closed(RequestMap& requests)
+{
+    // A request's timeout timer holds the ClientContext; a stopped one-shot timer releases its handler
+    BOOST_FOREACH (typename RequestMap::value_type& e, requests)
+    {
+        if (e.second->timer)
+            e.second->timer->TryStop();
+    }
+    requests.clear();
+    typename RequestMap::mapped_type closed_marker = RR_MAKE_SHARED<typename RequestMap::mapped_type::element_type>();
+    closed_marker->evt = RR_MAKE_SHARED<AutoResetEvent>();
+    requests.insert(std::make_pair(ClientContext_closed_request_id, closed_marker));
+}
+
+template <typename RequestMap>
+bool ClientContext_requests_closed(const RequestMap& requests)
+{
+    return requests.find(ClientContext_closed_request_id) != requests.end();
+}
+} // namespace
+
 RR_INTRUSIVE_PTR<MessageEntry> ClientContext::ProcessRequest(const RR_INTRUSIVE_PTR<MessageEntry>& m)
 {
 
@@ -710,6 +739,9 @@ RR_INTRUSIVE_PTR<MessageEntry> ClientContext::ProcessRequest(const RR_INTRUSIVE_
         t->evt = GetNode()->CreateAutoResetEvent();
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
+
+            if (ClientContext_requests_closed(outstanding_requests))
+                throw ConnectionException("Service client not connected");
 
             do
             {
@@ -854,6 +886,9 @@ void ClientContext::AsyncProcessRequest(
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
 
+            if (ClientContext_requests_closed(outstanding_requests))
+                throw ConnectionException("Service client not connected");
+
             do
             {
                 request_number++;
@@ -948,12 +983,13 @@ void ClientContext::connection_test(const TimerEvent& ev)
                     handlers.push_back(boost::make_tuple(e.first, e.second->handler));
             }
 
-            outstanding_requests.clear();
+            ClientContext_clear_requests_closed(outstanding_requests);
 
             if (connection_test_timer)
             {
 
                 connection_test_timer->TryStop();
+                connection_test_timer->Clear();
                 connection_test_timer.reset();
             }
         }
@@ -1213,6 +1249,8 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
 
             RR_SHARED_PTR<outstanding_request> t;
             uint32_t requestid = m->RequestID;
+            if (requestid == ClientContext_closed_request_id)
+                return;
             try
             {
                 boost::mutex::scoped_lock lock(outstanding_requests_lock);
@@ -1260,6 +1298,7 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
                                     {
 
                                         connection_test_timer->TryStop();
+                                        connection_test_timer->Clear();
                                         connection_test_timer.reset();
                                     }
                                 }
@@ -1583,6 +1622,13 @@ void ClientContext::AsyncConnectService(
 
     try
     {
+        // Fail the outstanding requests and mark the context closed when the node shuts down. Shutdown stops the
+        // thread pool without running the replies, timeouts or close handlers that would otherwise release them.
+        // The node has removed its endpoints by then, so connection_test fails them with "Node has been shut down".
+        GetNode()->AddShutdownListener(
+            boost::signals2::signal<void()>::slot_type(boost::bind(&ClientContext::connection_test, this, TimerEvent()))
+                .track(shared_from_this()));
+
         this->connecttransport = c;
         this->connecturl = url.to_string();
 
@@ -2398,12 +2444,13 @@ void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
                     handlers.push_back(e->handler);
             }
 
-            outstanding_requests.clear();
+            ClientContext_clear_requests_closed(outstanding_requests);
 
             if (connection_test_timer)
             {
 
                 connection_test_timer->TryStop();
+                connection_test_timer->Clear();
                 connection_test_timer.reset();
             }
         }
@@ -2456,7 +2503,7 @@ void ClientContext::AsyncClose1(const RR_INTRUSIVE_PTR<MessageEntry>& m,
         }
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
-            outstanding_requests.clear();
+            ClientContext_clear_requests_closed(outstanding_requests);
         }
 
         try
