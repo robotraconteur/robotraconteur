@@ -2177,7 +2177,7 @@ TEST(RobotRaconteurMisc, NodeShutdownEndsPendingConnect)
 {
     // A listening socket that is never accepted: the TCP connect completes in the kernel, but the Robot Raconteur
     // handshake is never answered, so the connect stays pending
-    boost::asio::io_context io;
+    RR_BOOST_ASIO_IO_CONTEXT io;
     boost::asio::ip::tcp::acceptor acceptor(io,
                                             boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::loopback(), 0));
     uint16_t port = acceptor.local_endpoint().port();
