@@ -108,15 +108,16 @@ to allow access to the library from other languages. Additional
 supported languages include C#, Java, Python, and MATLAB. (The LabView
 bindings are available as a commercial product from Wason Technology, LLC)
 
-Two additional implementations are available for use in a web browser
-written in JavaScript and for use in an ASP.NET server written in pure
-C#. These implementations take advantage of the support for
+Robot Raconteur can also run in web browsers and web servers. These
+options take advantage of the support for
 WebSockets:raw-latex:`\cite{websocket}` over TCP to allow for
-compatibility with existing web infrastructure. The HTML5/Javascript
-implementation has been tested with Chrome, Firefox, Internet Explorer,
-Edge, and Safari. The pure C# implementation (Called
-RobotRaconteurWeb) has been tested with IIS and allows RR to run
-inside a web server.
+compatibility with existing web infrastructure. In a web browser,
+clients can use Robot Raconteur TypeScript, a pure TypeScript client,
+or Robot Raconteur Core compiled to WebAssembly using Emscripten (also
+available in Python through Pyodide). RobotRaconteur.Sharp (formerly
+RobotRaconteurWeb) is a pure C# implementation that runs as a normal
+.NET library, in a web browser using Blazor WebAssembly, or inside an
+ASP.NET Core web server.
 
 Robot Raconteur communication is based on a simple message passing
 system with a well defined format that is simple enough that a fully

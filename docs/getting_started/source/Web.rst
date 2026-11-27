@@ -75,20 +75,40 @@ and provides a simple user interface:
         :linenos:
 
 |
-Robot Raconteur Web Browser Clients using Robot Raconteur Web
-=============================================================
+Robot Raconteur Web Browser Clients using Robot Raconteur TypeScript
+====================================================================
 
-Robot Raconteur clients can be implemented in Java Script using Robot Raconteur Web and the H5 C\# to
-JavaScript compiler. See the `Robot Raconteur Web <https://github.com/robotraconteur/robotraconteurweb>`_
+`Robot Raconteur TypeScript <https://github.com/robotraconteur/robotraconteur_typescript>`_ is a small,
+dependency-free TypeScript client that runs in the browser and communicates over Web Sockets. It is
+installed from npm using ``npm install robotraconteur``, and can also be used from plain JavaScript.
+See the `Robot Raconteur TypeScript <https://github.com/robotraconteur/robotraconteur_typescript>`_
+repository for more information and examples.
+
+Robot Raconteur Web Browser Clients using Emscripten
+====================================================
+
+Robot Raconteur Core can be compiled to WebAssembly using `Emscripten <https://emscripten.org/>`_.
+The Emscripten build uses Web Sockets for communication and only supports clients. The Pyodide
+package described above is built this way.
+
+Robot Raconteur Web Browser Clients using RobotRaconteur.Sharp and Blazor
+=========================================================================
+
+`RobotRaconteur.Sharp <https://github.com/robotraconteur/RobotRaconteur.Sharp>`_ (formerly RobotRaconteurWeb)
+is a pure C\# implementation of Robot Raconteur. It can run in a web browser using
+`Blazor WebAssembly <https://learn.microsoft.com/aspnet/core/blazor/>`_, which allows browser clients to be
+written in C\#. See the
+`RobotRaconteur.Sharp <https://github.com/robotraconteur/RobotRaconteur.Sharp>`_
 repository for more information.
 
 Robot Raconteur Web Servers
 ===========================
 
-Robot Raconteur Web is a pure C\# implementation of the Robot Raconteur transport system that can be used
+RobotRaconteur.Sharp is a pure C\# implementation of the Robot Raconteur transport system that can be used
 inside an ASP.NET Core web server. This allows for Robot Raconteur clients to connect to standard
 web servers without any specialized infrastructure. See the
-`Robot Raconteur Web <https://github.com/robotraconteur/robotraconteurweb>`_
+`ASP.NET Core server example <https://github.com/robotraconteur/RobotRaconteur.Sharp/tree/master/examples/aspnet_server>`_
+in the `RobotRaconteur.Sharp <https://github.com/robotraconteur/RobotRaconteur.Sharp>`_
 repository for more information.
 
 The ``rr+wss://wstest2.wasontech.com/``
