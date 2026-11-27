@@ -1903,21 +1903,27 @@ TEST(RobotRaconteurMisc, PeriodicCleanupTaskNotStartedBeforeShutdownReleasesNode
         node->Init();
         weak_node = node;
 
-        // Keep the only thread busy, so the task that starts the periodic cleanup timer is still queued at shutdown
-        RR_SHARED_PTR<AutoResetEvent> started = RR_MAKE_SHARED<AutoResetEvent>();
-        RR_SHARED_PTR<AutoResetEvent> release = RR_MAKE_SHARED<AutoResetEvent>();
+        // Keep both threads busy, so the task that starts the periodic cleanup timer is still queued at shutdown.
+        // Shutdown requires a multithreaded pool. One event per thread: AutoResetEvent::Set releases one waiter
+        std::vector<RR_SHARED_PTR<AutoResetEvent> > release;
         {
             RR_SHARED_PTR<ThreadPool> pool = RR_MAKE_SHARED<ThreadPool>(node);
-            pool->SetThreadPoolCount(1);
-            pool->Post(boost::bind(&PeriodicCleanupStart_block, started, release));
-            ASSERT_TRUE(started->WaitOne(5000));
+            pool->SetThreadPoolCount(2);
+            for (int i = 0; i < 2; i++)
+            {
+                RR_SHARED_PTR<AutoResetEvent> started = RR_MAKE_SHARED<AutoResetEvent>();
+                release.push_back(RR_MAKE_SHARED<AutoResetEvent>());
+                pool->Post(boost::bind(&PeriodicCleanupStart_block, started, release.back()));
+                ASSERT_TRUE(started->WaitOne(5000));
+            }
             node->SetThreadPool(pool);
         }
 
-        // Shutdown stops the thread pool and waits for its thread
+        // Shutdown stops the thread pool and waits for its threads
         boost::thread shutdown_thread(boost::bind(&PeriodicCleanupStart_shutdown, node));
         boost::this_thread::sleep(boost::posix_time::milliseconds(200));
-        release->Set();
+        for (size_t i = 0; i < release.size(); i++)
+            release[i]->Set();
         shutdown_thread.join();
     }
 
