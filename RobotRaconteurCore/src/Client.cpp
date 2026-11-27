@@ -1452,7 +1452,11 @@ void ClientContext::MessageEntryReceived(const RR_INTRUSIVE_PTR<MessageEntry>& m
 
 std::string ClientContext::GetServiceName() const { return m_ServiceName; }
 
-bool ClientContext::GetConnected() const { return m_Connected; }
+bool ClientContext::GetConnected() const
+{
+    boost::mutex::scoped_lock lock(m_Connected_lock);
+    return m_Connected;
+}
 
 RR_SHARED_PTR<RRObject> ClientContext::ConnectService(const RR_SHARED_PTR<Transport>& c, boost::string_ref url,
                                                       boost::string_ref username,
@@ -1619,7 +1623,10 @@ void ClientContext::AsyncConnectService(
         SetTransportConnection(tc);
         SetRemoteEndpoint(0);
 
-        m_Connected = true;
+        {
+            boost::mutex::scoped_lock lock(m_Connected_lock);
+            m_Connected = true;
+        }
 
         try
         {
