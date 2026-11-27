@@ -2053,6 +2053,54 @@ TEST(RobotRaconteurMisc, NodeShutdownClosesWireSubscription)
     t.join();
 }
 
+// Transport whose node discovery query never replies
+class NcDiscoveryNoReplyTransport : public NcDiscoveryThrowTransport
+{
+  public:
+    NcDiscoveryNoReplyTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : NcDiscoveryThrowTransport(node) {}
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncdiscnoreply"; }
+    RR_OVIRTUAL void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout) RR_OVERRIDE
+    {
+        RR_UNUSED(schemes);
+        RR_UNUSED(handler);
+        RR_UNUSED(timeout);
+    }
+};
+
+TEST(RobotRaconteurMisc, NodeShutdownEndsPendingUpdateDetectedNodes)
+{
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        node->GetThreadPool();
+        weak_node = node;
+        node->RegisterTransport(RR_MAKE_SHARED<NcDiscoveryNoReplyTransport>(node));
+
+        std::vector<std::string> schemes;
+        schemes.push_back("rr+ncdiscnoreply");
+        node->AsyncUpdateDetectedNodes(schemes, boost::bind(&UpdateDetectedNodesNoTransports_handler, count), 10000);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+        EXPECT_EQ(count->load(), 0);
+
+        // Shutdown must end the update (a synchronous UpdateDetectedNodes would otherwise wait forever) and must not
+        // leave its timeout keeping the node alive
+        node->Shutdown();
+        EXPECT_EQ(count->load(), 1);
+    }
+
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
+    EXPECT_EQ(count->load(), 1);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

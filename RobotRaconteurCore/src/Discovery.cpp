@@ -99,6 +99,32 @@ void Discovery_updatediscoverednodes::timeout_timer_callback(const TimerEvent& e
     }
 }
 
+void Discovery_updatediscoverednodes::node_shutdown()
+{
+    boost::function<void()> h;
+    RR_SHARED_PTR<RobotRaconteurNode> n;
+    {
+        boost::mutex::scoped_lock lock(work_lock);
+        if (!searching)
+            return;
+        searching = false;
+
+        {
+            boost::mutex::scoped_lock lock2(timeout_timer_lock);
+            if (timeout_timer)
+                timeout_timer->TryStop();
+            timeout_timer.reset();
+        }
+
+        h.swap(handler);
+        // Callbacks still queued in the stopped thread pool hold this object; they check searching before using node
+        n.swap(node);
+    }
+
+    // On the shutdown thread before the thread pool stops: invoke directly, a post could be discarded
+    detail::InvokeHandler(n, h);
+}
+
 void Discovery_updatediscoverednodes::getdetectednodes_callback(
     const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& ret, int32_t key)
 {
@@ -162,6 +188,17 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
     this->handler = handler;
     this->schemes = schemes;
     searching = true;
+
+    // The timeout timer and the transports' callbacks hold this object, which holds the node. Node shutdown can leave
+    // them queued forever, so end the search from the shutdown thread
+    try
+    {
+        node->AddShutdownListener(boost::signals2::signal<void()>::slot_type(
+                                      boost::bind(&Discovery_updatediscoverednodes::node_shutdown, this))
+                                      .track(shared_from_this()));
+    }
+    catch (std::exception&)
+    {}
 
     if (timeout != RR_TIMEOUT_INFINITE)
     {

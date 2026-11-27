@@ -168,6 +168,8 @@ class Discovery_updatediscoverednodes : public RR_ENABLE_SHARED_FROM_THIS<Discov
 
     void timeout_timer_callback(const TimerEvent& e);
 
+    void node_shutdown();
+
     void getdetectednodes_callback(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& ret, int32_t key);
 
     void UpdateDiscoveredNodes(const std::vector<std::string>& schemes,
