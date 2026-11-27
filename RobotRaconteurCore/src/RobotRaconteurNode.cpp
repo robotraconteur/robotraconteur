@@ -476,6 +476,8 @@ void RobotRaconteurNode::Shutdown()
                 }
             }
 
+            // Pool threads still look up transports (DeleteEndpoint) while the transports close
+            boost::unique_lock<boost::shared_mutex> lock(transports_lock);
             transports.clear();
         }
 
