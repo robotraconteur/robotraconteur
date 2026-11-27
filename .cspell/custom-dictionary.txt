@@ -317,3 +317,7 @@ rrtest
 vnull
 secur
 sddl
+emsdk
+lwebsocket
+DHAVE
+embind

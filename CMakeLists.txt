@@ -145,6 +145,13 @@ if(BUILD_CORE)
             DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
     install(FILES ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
             DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+    if(NOT BUILD_GEN)
+        # Cross builds (such as Emscripten) run a native RobotRaconteurGen, but still need the thunk function
+        configure_file(${CMAKE_SOURCE_DIR}/RobotRaconteurGen/cmake/RobotRaconteurGenerateThunk.cmake
+                       ${CMAKE_BINARY_DIR}/RobotRaconteurGenerateThunk.cmake @ONLY)
+        install(FILES ${CMAKE_BINARY_DIR}/RobotRaconteurGenerateThunk.cmake
+                DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+    endif()
 endif()
 
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/\.git/")

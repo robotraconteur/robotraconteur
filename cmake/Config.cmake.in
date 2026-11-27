@@ -3,12 +3,20 @@
 include("${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurCoreTargets.cmake")
 if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurGenTargets.cmake")
     include("${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurGenTargets.cmake")
-	include("${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurGenerateThunk.cmake")
+endif()
+# Installed even without RobotRaconteurGen, for cross builds such as Emscripten
+# that run a native RobotRaconteurGen set with RobotRaconteurGen_EXECUTABLE
+if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurGenerateThunk.cmake")
+    include("${CMAKE_CURRENT_LIST_DIR}/RobotRaconteurGenerateThunk.cmake")
 endif()
 
 include(CMakeFindDependencyMacro)
 
+if(EMSCRIPTEN)
+find_package(Boost COMPONENTS date_time filesystem regex chrono random program_options REQUIRED)
+else()
 find_package(Boost COMPONENTS date_time filesystem regex chrono atomic thread random program_options REQUIRED)
+endif()
 
 if(NOT WIN32)
 find_package(OpenSSL REQUIRED)

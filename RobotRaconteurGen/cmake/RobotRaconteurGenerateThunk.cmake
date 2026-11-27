@@ -137,7 +137,8 @@ function(ROBOTRACONTEUR_GENERATE_THUNK SRCS)
 
     if(NOT RobotRaconteurGen_EXECUTABLE)
         if(NOT TARGET RobotRaconteurGen)
-            message(FATAL_ERROR "RobotRaconteurGen not found")
+            message(FATAL_ERROR "RobotRaconteurGen not found. Set RobotRaconteurGen_EXECUTABLE to a native "
+                                "RobotRaconteurGen when cross compiling.")
         endif()
         set(RobotRaconteurGen_EXECUTABLE "$<TARGET_FILE:RobotRaconteurGen>")
         set(RR_GEN_DEPENDS RobotRaconteurGen)
