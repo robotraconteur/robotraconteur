@@ -1202,30 +1202,34 @@ RR_SHARED_PTR<RobotRaconteur::RRObject> RobotRaconteurTest_testroot::get_o6()
 
 void RobotRaconteurTest_testroot::o6_op(int32_t op)
 {
-    boost::mutex::scoped_lock lock(o6_lock);
+    RR_SHARED_PTR<RobotRaconteur::RRObject> new_o6;
+    switch (op)
+    {
+    case 0:
+        new_o6 = RR_MAKE_SHARED<sub1_impl>();
+        break;
+    case 1:
+        new_o6 = RR_MAKE_SHARED<sub2_impl>();
+        break;
+    case 2:
+        new_o6 = RR_MAKE_SHARED<TestService2SubObj>();
+        break;
+    default:
+        throw std::exception();
+    }
+
+    {
+        boost::mutex::scoped_lock lock(o6_lock);
+        o6 = new_o6;
+    }
+
+    // Release outside o6_lock: ReleaseServicePath takes skels_lock, which GetObjectSkel holds while it calls get_o6()
     try
     {
         ServerContext::GetCurrentServerContext()->ReleaseServicePath(ServerContext::GetCurrentServicePath() + ".o6");
     }
     catch (std::exception&)
-    {
-        // std::cout << "Error: " << e.what() << std::endl;
-    };
-
-    switch (op)
-    {
-    case 0:
-        o6 = RR_MAKE_SHARED<sub1_impl>();
-        break;
-    case 1:
-        o6 = RR_MAKE_SHARED<sub2_impl>();
-        break;
-    case 2:
-        o6 = RR_MAKE_SHARED<TestService2SubObj>();
-        break;
-    default:
-        throw std::exception();
-    }
+    {}
 }
 
 RR_SHARED_PTR<RobotRaconteur::Pipe<RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > > > RobotRaconteurTest_testroot::
