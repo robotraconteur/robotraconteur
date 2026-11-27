@@ -570,6 +570,12 @@ void Discovery_findservicebytype::find2()
     if (urls.empty())
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Discovery, -1, "FindServiceByType could not find any candidate URLs");
+        searching = false;
+        {
+            // The timer was never started, and its handler holds this object
+            boost::mutex::scoped_lock lock4(timeout_timer_lock);
+            timeout_timer.reset();
+        }
         RR_SHARED_PTR<std::vector<ServiceInfo2> > ret = RR_MAKE_SHARED<std::vector<ServiceInfo2> >();
         detail::PostHandler(node, handler, ret, true);
         return;
@@ -656,8 +662,7 @@ void Discovery_findservicebytype::AsyncFindServiceByType(
                                           boost::bind(&Discovery_findservicebytype::timeout_timer_callback,
                                                       shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
                                           true);
-        // TODO: check this
-        // timeout_timer->Start();
+        // Started by find2 once candidate URLs are found
     }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "FindServiceByType begin update detected nodes");

@@ -1753,6 +1753,50 @@ TEST(RobotRaconteurMisc, AsyncProcessRequestThrowDoesNotInvokeHandler)
     node->Shutdown();
 }
 
+namespace
+{
+void FindServiceByTypeNoCandidates_handler(const RR_SHARED_PTR<AutoResetEvent>& evt,
+                                           const RR_SHARED_PTR<boost::atomic<int> >& count,
+                                           const RR_SHARED_PTR<std::vector<ServiceInfo2> >& res)
+{
+    if (res)
+        (*count) += static_cast<int>(res->size());
+    evt->Set();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, FindServiceByTypeNoCandidatesReleasesNode)
+{
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        weak_node = node;
+
+        // No transports, so the search finds no candidate URLs
+        std::vector<std::string> schemes;
+        schemes.push_back("rr+tcp");
+        RR_SHARED_PTR<AutoResetEvent> evt = RR_MAKE_SHARED<AutoResetEvent>();
+        RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+        node->AsyncFindServiceByType(
+            "com.robotraconteur.testing.TestService1.testroot", schemes,
+            boost::bind(&FindServiceByTypeNoCandidates_handler, evt, count, RR_BOOST_PLACEHOLDERS(_1)), 400);
+        EXPECT_TRUE(evt->WaitOne(5000));
+        EXPECT_EQ(count->load(), 0);
+
+        // Let the node discovery update timeout (400 / 4 ms) pass, so only the search object can hold the node
+        boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+        node->Shutdown();
+    }
+
+    // The search object holds the node, so it must not be kept alive by its unstarted timeout timer
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
