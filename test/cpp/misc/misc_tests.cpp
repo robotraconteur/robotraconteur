@@ -1838,7 +1838,7 @@ TEST(RobotRaconteurMisc, FindServiceByTypeNoCandidatesReleasesNode)
         node->Shutdown();
     }
 
-    // The search object holds the node, so it must not be kept alive by its unstarted timeout timer
+    // The search object holds the node, so it must not be kept alive by its timeout timer, which was never started
     for (int i = 0; i < 100 && !weak_node.expired(); i++)
     {
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
