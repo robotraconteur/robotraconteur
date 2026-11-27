@@ -1997,6 +1997,25 @@ TEST(RobotRaconteurMisc, NodeShutdownFailsPendingDefaultClientWait)
     EXPECT_EQ(h.errors->load(), 1);
 }
 
+namespace
+{
+void AddShutdownListener_handler(const RR_SHARED_PTR<boost::atomic<int> >& count) { (*count)++; }
+} // namespace
+
+TEST(RobotRaconteurMisc, AddShutdownListenerAfterShutdownThrows)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    node->AddShutdownListener(boost::bind(&AddShutdownListener_handler, count));
+    node->Shutdown();
+    EXPECT_EQ(count->load(), 1);
+
+    // A listener added now would never be called
+    EXPECT_THROW(node->AddShutdownListener(boost::bind(&AddShutdownListener_handler, count)),
+                 InvalidOperationException);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
