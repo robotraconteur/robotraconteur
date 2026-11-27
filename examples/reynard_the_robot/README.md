@@ -17,3 +17,4 @@ The examples are broken down by language:
 - [Matlab](matlab) - Matlab examples
 - [LabView](labview) - NI LabView examples
 - [Pyodide](pyodide) - Web Browser client example using Pyodide (Python in the Browser)
+- [Emscripten](emscripten) - Web Browser client example using C++ compiled to WebAssembly with Emscripten

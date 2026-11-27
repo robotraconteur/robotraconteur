@@ -1370,6 +1370,73 @@ jobs:
       with:
         name: 'pyodide-package-logs'
         path: pyodide_recipes_src/packages/build-logs/*
+  build-emscripten:
+    runs-on: ubuntu-24.04
+    container: emscripten/emsdk:4.0.10
+    env:
+      BOOST_VERSION: 1.86.0
+      OPENSSL_VERSION: 3.0.15
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        path: robotraconteur
+    - name: apt
+      run: |
+        apt-get update
+        DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends build-essential libboost-all-dev \
+          libssl-dev libdbus-1-dev libbluetooth-dev libusb-1.0-0-dev zlib1g-dev ninja-build python3-venv
+    - name: build boost wasm
+      run: |
+        mkdir -p deps-src && cd deps-src
+        curl -fsSL https://archives.boost.io/release/${BOOST_VERSION}/source/boost_${BOOST_VERSION//./_}.tar.gz | tar xz
+        cd boost_${BOOST_VERSION//./_}
+        ./bootstrap.sh
+        ./b2 toolset=emscripten link=static address-model=32 variant=release threading=single \
+          cxxflags="-fwasm-exceptions" cflags="-fwasm-exceptions" \
+          --with-date_time --with-filesystem --with-regex --with-chrono --with-random --with-program_options \
+          --with-system --prefix=$GITHUB_WORKSPACE/wasm/boost -j4 -d0 install
+    - name: build openssl wasm
+      run: |
+        mkdir -p deps-src && cd deps-src
+        curl -fsSL https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz | tar xz
+        cd openssl-${OPENSSL_VERSION}
+        emconfigure ./Configure linux-generic32 no-asm no-threads no-shared no-dso no-engine no-tests no-ui-console \
+          -DHAVE_FORK=0 -DOPENSSL_NO_SECURE_MEMORY -DNO_SYSLOG --prefix=$GITHUB_WORKSPACE/wasm/openssl --libdir=lib
+        sed -i 's!^CROSS_COMPILE=.*!CROSS_COMPILE=!g' Makefile
+        emmake make -j4 build_generated libcrypto.a libssl.a
+        emmake make install_dev
+    - name: build native RobotRaconteurGen
+      run: |
+        cmake -G Ninja -S robotraconteur -B build-native -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+        cmake --build build-native --target RobotRaconteurGen
+    - name: build core wasm
+      run: |
+        W=$GITHUB_WORKSPACE/wasm
+        emcmake cmake -G Ninja -S robotraconteur -B build-wasm -DCMAKE_BUILD_TYPE=Release -DBUILD_GEN=OFF \
+          -DBUILD_TESTING=OFF -DBoost_ROOT=$W/boost -DOPENSSL_ROOT_DIR=$W/openssl -DOPENSSL_USE_STATIC_LIBS=ON \
+          -DCMAKE_FIND_ROOT_PATH="$W/boost;$W/openssl" \
+          -DCMAKE_CXX_FLAGS="-fwasm-exceptions -DBOOST_SP_DISABLE_THREADS=1 -DBOOST_BIND_GLOBAL_PLACEHOLDERS=1" \
+          -DCMAKE_INSTALL_PREFIX=$W/robotraconteur
+        cmake --build build-wasm
+        cmake --install build-wasm
+    - name: build example
+      run: |
+        W=$GITHUB_WORKSPACE/wasm
+        emcmake cmake -G Ninja -S robotraconteur/examples/reynard_the_robot/emscripten -B build-example \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_ROOT_PATH="$W/robotraconteur;$W/boost;$W/openssl" \
+          -DBoost_ROOT=$W/boost -DOPENSSL_ROOT_DIR=$W/openssl -DOPENSSL_USE_STATIC_LIBS=ON \
+          -DRobotRaconteur_DIR=$W/robotraconteur/lib/cmake/RobotRaconteur \
+          -DRobotRaconteurGen_EXECUTABLE=$GITHUB_WORKSPACE/build-native/out/bin/RobotRaconteurGen
+        cmake --build build-example
+    - name: test
+      run: |
+        python3 -m venv venv
+        venv/bin/pip install reynard-the-robot playwright
+        venv/bin/playwright install --with-deps chromium
+        venv/bin/python robotraconteur/test/emscripten/test_reynard_client_emscripten.py build-example
   build-matlab-toolbox:
     needs:
     - build-win
