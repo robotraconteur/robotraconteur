@@ -19,8 +19,21 @@ char** my_argv;
 
 TEST(RobotRaconteurTestServer, Server)
 {
-    ServerNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES, "testprog", 22222, my_argc, my_argv);
-    c = node_setup.GetTcpTransport();
+    RR_SHARED_PTR<ServerNodeSetup> node_setup;
+    try
+    {
+        node_setup = RR_MAKE_SHARED<ServerNodeSetup>(ROBOTRACONTEUR_SERVICE_TYPES, "testprog", 22222, my_argc, my_argv);
+    }
+    catch (std::exception&)
+    {
+        // A failed setup (e.g. the TCP port is in use) leaves the node running; shut it down before exiting
+        if (detail::ThreadPool_IsNodeMultithreaded(RobotRaconteurNode::sp()))
+        {
+            RobotRaconteurNode::s()->Shutdown();
+        }
+        throw;
+    }
+    c = node_setup->GetTcpTransport();
 
     RobotRaconteurTestServiceSupport s;
     s.RegisterServices(c);
