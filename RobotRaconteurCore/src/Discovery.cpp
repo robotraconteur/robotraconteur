@@ -687,6 +687,7 @@ Discovery_updateserviceinfo::Discovery_updateserviceinfo(RR_WEAK_PTR<RobotRacont
     this->node = node;
     retry_count = 0;
     backoff = 0;
+    shutdown = false;
 }
 
 void Discovery_updateserviceinfo::handle_error(const RR_SHARED_PTR<RobotRaconteurException>& err)
@@ -706,6 +707,9 @@ void Discovery_updateserviceinfo::handle_error(const RR_SHARED_PTR<RobotRaconteu
     }
 
     client.reset();
+
+    if (shutdown)
+        return;
 
     retry_count++;
     if (retry_count < 3)
@@ -975,6 +979,8 @@ void Discovery_updateserviceinfo::backoff_timer_handler(const TimerEvent& evt)
     RR_UNUSED(evt);
     boost::mutex::scoped_lock lock(this_lock);
     timeout_timer.reset();
+    if (shutdown)
+        return;
 
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
     if (!n)
@@ -1040,6 +1046,19 @@ void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(
     if (!n)
         return;
 
+    // The backoff timer and the connect handlers hold this object. Node shutdown can leave them queued forever, so
+    // stop the timer and further retries from the shutdown thread
+    try
+    {
+        n->AddShutdownListener(
+            boost::signals2::signal<void()>::slot_type(boost::bind(&Discovery_updateserviceinfo::node_shutdown, this))
+                .track(shared_from_this()));
+    }
+    catch (std::exception&)
+    {
+        return;
+    }
+
     backoff = n->GetRandomInt(100, 600) + extra_backoff;
     RR_SHARED_PTR<Timer> t = n->CreateTimer(
         boost::posix_time::milliseconds(backoff),
@@ -1050,6 +1069,18 @@ void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(
     timeout_timer = t;
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
                                        "Begin UpdateServiceInfo using " << backoff << " ms backoff");
+}
+
+void Discovery_updateserviceinfo::node_shutdown()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    shutdown = true;
+    if (timeout_timer)
+    {
+        timeout_timer->TryStop();
+        timeout_timer.reset();
+    }
+    handler.clear();
 }
 
 // class Discovery

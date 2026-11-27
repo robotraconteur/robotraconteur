@@ -239,6 +239,7 @@ class Discovery_updateserviceinfo : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
     NodeID remote_nodeid;
     std::string remote_nodename;
     std::string service_nonce;
+    bool shutdown;
 
   public:
     static void rr_empty_handler();
@@ -253,6 +254,8 @@ class Discovery_updateserviceinfo : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
     void connect_handler(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void backoff_timer_handler(const TimerEvent& evt);
+
+    void node_shutdown();
 
     void AsyncUpdateServiceInfo(
         const RR_SHARED_PTR<Discovery_nodestorage>& storage, boost::string_ref service_nonce,
