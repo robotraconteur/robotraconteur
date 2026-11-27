@@ -699,13 +699,14 @@ RR_INTRUSIVE_PTR<MessageEntry> ClientContext::ProcessRequest(const RR_INTRUSIVE_
     RR_INTRUSIVE_PTR<MessageEntry> rec_message;
 
     uint32_t myrequestid = 0;
+    RR_SHARED_PTR<outstanding_request> t;
 
     try
     {
         if (!GetConnected())
             throw ConnectionException("Service client not connected");
 
-        RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
+        t = RR_MAKE_SHARED<outstanding_request>();
         t->evt = GetNode()->CreateAutoResetEvent();
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
@@ -773,6 +774,15 @@ RR_INTRUSIVE_PTR<MessageEntry> ClientContext::ProcessRequest(const RR_INTRUSIVE_
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Client, GetLocalEndpoint(), m->ServicePath, m->MemberName,
                                                 "Error during ProcessRequest: " << exp.what());
+        if (t)
+        {
+            // Do not leave the request registered when sending or the connection check throws
+            boost::mutex::scoped_lock lock(outstanding_requests_lock);
+            RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<outstanding_request> >::iterator e1 =
+                outstanding_requests.find(myrequestid);
+            if (e1 != outstanding_requests.end() && e1->second == t)
+                outstanding_requests.erase(e1);
+        }
         throw;
     }
 
