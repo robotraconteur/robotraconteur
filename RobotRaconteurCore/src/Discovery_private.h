@@ -219,6 +219,8 @@ class Discovery_findservicebytype : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
 
     void find2();
 
+    void node_shutdown();
+
     void AsyncFindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& schemes,
                                 RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<std::vector<ServiceInfo2> >&)>)
                                     handler,

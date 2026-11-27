@@ -575,9 +575,40 @@ void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>
     }
 }
 
+void Discovery_findservicebytype::node_shutdown()
+{
+    boost::function<void(const RR_SHARED_PTR<std::vector<ServiceInfo2> >&)> h;
+    RR_SHARED_PTR<std::vector<ServiceInfo2> > ret1;
+    {
+        boost::recursive_mutex::scoped_lock lock2(work_lock);
+        if (!searching)
+            return;
+        searching = false;
+
+        {
+            boost::mutex::scoped_lock lock(timeout_timer_lock);
+            if (timeout_timer)
+                timeout_timer->TryStop();
+            timeout_timer.reset();
+        }
+
+        h.swap(handler);
+        boost::mutex::scoped_lock lock(ret_lock);
+        ret1 = ret;
+    }
+
+    // On the shutdown thread before the thread pool stops: invoke directly with the services found so far, a post
+    // could be discarded
+    detail::InvokeHandler(node, h, ret1);
+}
+
 void Discovery_findservicebytype::find2()
 {
     boost::recursive_mutex::scoped_lock lock2(work_lock);
+
+    // Already completed by the timeout or by node shutdown
+    if (!searching)
+        return;
 
     std::list<std::vector<std::string> > urls;
 
@@ -701,6 +732,18 @@ void Discovery_findservicebytype::AsyncFindServiceByType(
     this->timeout = timeout;
 
     this->servicetype = RR_MOVE(servicetype.to_string());
+
+    // A search pending at node shutdown would otherwise never complete, and its timeout timer keeps this object
+    // alive. End it from the shutdown thread
+    try
+    {
+        node->AddShutdownListener(
+            boost::signals2::signal<void()>::slot_type(boost::bind(&Discovery_findservicebytype::node_shutdown, this))
+                .track(shared_from_this()));
+    }
+    catch (std::exception&)
+    {}
+
     if (timeout != RR_TIMEOUT_INFINITE)
     {
         timeout_timer = node->CreateTimer(boost::posix_time::milliseconds(timeout),

@@ -2101,6 +2101,59 @@ TEST(RobotRaconteurMisc, NodeShutdownEndsPendingUpdateDetectedNodes)
     EXPECT_EQ(count->load(), 1);
 }
 
+namespace
+{
+// Transport whose node discovery query never replies
+class NcFindNoReplyTransport : public NcDiscoveryThrowTransport
+{
+  public:
+    NcFindNoReplyTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : NcDiscoveryThrowTransport(node) {}
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncfindnoreply"; }
+    RR_OVIRTUAL void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout) RR_OVERRIDE
+    {
+        RR_UNUSED(schemes);
+        RR_UNUSED(handler);
+        RR_UNUSED(timeout);
+    }
+};
+
+void FindServiceByTypeShutdown_handler(const RR_SHARED_PTR<AutoResetEvent>& evt,
+                                       const RR_SHARED_PTR<boost::atomic<int> >& count,
+                                       const RR_SHARED_PTR<std::vector<ServiceInfo2> >& res)
+{
+    RR_UNUSED(res);
+    (*count)++;
+    evt->Set();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, NodeShutdownEndsPendingFindServiceByType)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->GetThreadPool();
+    node->RegisterTransport(RR_MAKE_SHARED<NcFindNoReplyTransport>(node));
+
+    // The node discovery update never completes, so only the 10 s timeout or node shutdown ends the search
+    std::vector<std::string> schemes;
+    schemes.push_back("rr+ncfindnoreply");
+    RR_SHARED_PTR<AutoResetEvent> evt = RR_MAKE_SHARED<AutoResetEvent>();
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    node->AsyncFindServiceByType("com.robotraconteur.testing.TestService1.testroot", schemes,
+                                 boost::bind(&FindServiceByTypeShutdown_handler, evt, count, RR_BOOST_PLACEHOLDERS(_1)),
+                                 10000);
+    boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+    EXPECT_EQ(count->load(), 0);
+
+    // A synchronous FindServiceByType would otherwise wait forever
+    node->Shutdown();
+    EXPECT_TRUE(evt->WaitOne(1000));
+    EXPECT_EQ(count->load(), 1);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
