@@ -886,7 +886,24 @@ void ClientContext::AsyncProcessRequest(
 
         boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h = boost::bind(
             &ClientContext::AsyncProcessRequest_err, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1), myrequestid);
-        AsyncSendMessage(m, h);
+        try
+        {
+            AsyncSendMessage(m, h);
+        }
+        catch (std::exception&)
+        {
+            // The caller gets the exception, so the handler must not also be invoked later
+            {
+                boost::mutex::scoped_lock lock(outstanding_requests_lock);
+                RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<outstanding_request> >::iterator e1 =
+                    outstanding_requests.find(myrequestid);
+                if (e1 != outstanding_requests.end() && e1->second == t)
+                    outstanding_requests.erase(e1);
+            }
+            if (t->timer)
+                t->timer->TryStop();
+            throw;
+        }
     }
     catch (std::exception& exp)
     {
