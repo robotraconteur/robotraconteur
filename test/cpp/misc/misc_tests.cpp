@@ -2154,6 +2154,59 @@ TEST(RobotRaconteurMisc, NodeShutdownEndsPendingFindServiceByType)
     EXPECT_EQ(count->load(), 1);
 }
 
+namespace
+{
+void ConnectorShutdown_handler(const RR_SHARED_PTR<AutoResetEvent>& evt,
+                               const RR_SHARED_PTR<boost::atomic<int> >& errors, const RR_SHARED_PTR<RRObject>& obj,
+                               const RR_SHARED_PTR<RobotRaconteurException>& err)
+{
+    RR_UNUSED(obj);
+    if (err)
+        (*errors)++;
+    evt->Set();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, NodeShutdownEndsPendingConnect)
+{
+    // A listening socket that is never accepted: the TCP connect completes in the kernel, but the Robot Raconteur
+    // handshake is never answered, so the connect stays pending
+    boost::asio::io_context io;
+    boost::asio::ip::tcp::acceptor acceptor(io,
+                                            boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::loopback(), 0));
+    uint16_t port = acceptor.local_endpoint().port();
+
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    RR_SHARED_PTR<AutoResetEvent> evt = RR_MAKE_SHARED<AutoResetEvent>();
+    RR_SHARED_PTR<boost::atomic<int> > errors = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        weak_node = node;
+        node->RegisterTransport(RR_MAKE_SHARED<TcpTransport>(node));
+
+        std::string url =
+            "rr+tcp://127.0.0.1:" + boost::lexical_cast<std::string>(port) + "/?service=RobotRaconteurServiceIndex";
+        node->AsyncConnectService(
+            url, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), NULL, "",
+            boost::bind(&ConnectorShutdown_handler, evt, errors, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+            30000);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+        EXPECT_FALSE(evt->WaitOne(0));
+
+        // A synchronous ConnectService would otherwise wait for the 30 s timeout, or forever
+        node->Shutdown();
+        EXPECT_TRUE(evt->WaitOne(1000));
+        EXPECT_EQ(errors->load(), 1);
+    }
+
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

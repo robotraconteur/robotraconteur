@@ -1685,6 +1685,7 @@ void RobotRaconteurNode::AsyncConnectService(
 
     RR_SHARED_PTR<detail::RobotRaconteurNode_connector> connector =
         RR_MAKE_SHARED<detail::RobotRaconteurNode_connector>(shared_from_this());
+    connector->watch_node_shutdown(handler);
     GetThreadPool()->Post(boost::bind(&detail::RobotRaconteurNode_connector::connect, connector, connectors,
                                       username.to_string(), credentials, RR_MOVE(listener), objecttype.to_string(),
                                       boost::protect(RR_MOVE(handler)), timeout));
