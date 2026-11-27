@@ -674,8 +674,10 @@ void Discovery_findservicebytype::AsyncFindServiceByType(
     }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "FindServiceByType begin update detected nodes");
+    // RR_TIMEOUT_INFINITE / 4 would be a 0 ms timeout
+    int32_t update_timeout = (timeout == RR_TIMEOUT_INFINITE) ? RR_TIMEOUT_INFINITE : (timeout / 4);
     node->AsyncUpdateDetectedNodes(schemes, boost::bind(&Discovery_findservicebytype::find2, shared_from_this()),
-                                   timeout / 4);
+                                   update_timeout);
 }
 
 // class Discovery_updateserviceinfo

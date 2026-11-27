@@ -1191,6 +1191,55 @@ class NcDiscoveryThrowTransport : public Transport
     }
 };
 
+// Transport whose node discovery query records the timeout it was given and returns no nodes
+class NcDiscoveryTimeoutTransport : public NcDiscoveryThrowTransport
+{
+  public:
+    RR_SHARED_PTR<boost::atomic<int32_t> > timeout_seen;
+    NcDiscoveryTimeoutTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node)
+        : NcDiscoveryThrowTransport(node), timeout_seen(RR_MAKE_SHARED<boost::atomic<int32_t> >(12345))
+    {}
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncdisctimeout"; }
+    RR_OVIRTUAL void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout) RR_OVERRIDE
+    {
+        RR_UNUSED(schemes);
+        timeout_seen->store(timeout);
+        RobotRaconteurNode::TryPostToThreadPool(
+            node, boost::bind(handler, RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >()), true);
+    }
+};
+
+struct NcFindServiceByTypeHandler
+{
+    RR_SHARED_PTR<AutoResetEvent> ev;
+    NcFindServiceByTypeHandler() : ev(RR_MAKE_SHARED<AutoResetEvent>()) {}
+    void operator()(const RR_SHARED_PTR<std::vector<ServiceInfo2> >& res)
+    {
+        RR_UNUSED(res);
+        ev->Set();
+    }
+};
+
+// FindServiceByType with an infinite timeout must not update the detected nodes with a 0 ms timeout
+TEST(RobotRaconteurMisc, FindServiceByTypeInfiniteTimeoutUpdatesNodes)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    RR_SHARED_PTR<NcDiscoveryTimeoutTransport> t = RR_MAKE_SHARED<NcDiscoveryTimeoutTransport>(node);
+    node->RegisterTransport(t);
+
+    NcFindServiceByTypeHandler h;
+    std::vector<std::string> schemes;
+    schemes.push_back("rr+ncdisctimeout");
+    node->AsyncFindServiceByType("com.robotraconteur.testing.TestService1.testroot", schemes, h, RR_TIMEOUT_INFINITE);
+    EXPECT_TRUE(h.ev->WaitOne(5000));
+    EXPECT_EQ(t->timeout_seen->load(), RR_TIMEOUT_INFINITE);
+    node->Shutdown();
+}
+
 struct NcUpdateDetectedNodesHandler
 {
     RR_SHARED_PTR<AutoResetEvent> ev;
