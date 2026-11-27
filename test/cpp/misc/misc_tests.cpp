@@ -2016,6 +2016,43 @@ TEST(RobotRaconteurMisc, AddShutdownListenerAfterShutdownThrows)
                  InvalidOperationException);
 }
 
+namespace
+{
+void WireSubscriptionShutdown_wait(const RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RRArray<double> > > >& w,
+                                   const RR_SHARED_PTR<AutoResetEvent>& done)
+{
+    w->WaitInValueValid(-1);
+    done->Set();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, NodeShutdownClosesWireSubscription)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->GetThreadPool();
+
+    std::vector<std::string> service_types;
+    service_types.push_back("com.robotraconteur.testing.TestService1.testroot");
+    RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeServiceByType(service_types);
+    RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RRArray<double> > > > w =
+        sub->SubscribeWire<RR_INTRUSIVE_PTR<RRArray<double> > >("w1");
+
+    // WaitInValueValid only returns early when the wire subscription is closed
+    RR_SHARED_PTR<AutoResetEvent> done = RR_MAKE_SHARED<AutoResetEvent>();
+    boost::thread t(boost::bind(&WireSubscriptionShutdown_wait, w, done));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+
+    node->Shutdown();
+    if (!done->WaitOne(2000))
+    {
+        ADD_FAILURE() << "Node shutdown did not close the wire subscription";
+        std::cerr << "Node shutdown did not close the wire subscription" << std::endl;
+        std::_Exit(1);
+    }
+    t.join();
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

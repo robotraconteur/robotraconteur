@@ -1411,6 +1411,21 @@ void ServiceSubscription::SubscribeWire1(const RR_SHARED_PTR<WireSubscriptionBas
     }
     wire_subscriptions.insert(s);
 
+    // Close passes the wire close to the thread pool, and at node shutdown that post may never run. Close the wire
+    // subscription directly from the shutdown thread instead
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (n)
+    {
+        try
+        {
+            n->AddShutdownListener(
+                boost::signals2::signal<void()>::slot_type(boost::bind(&WireSubscriptionBase::Close, s.get()))
+                    .track(s));
+        }
+        catch (std::exception&)
+        {}
+    }
+
     BOOST_FOREACH (const RR_SHARED_PTR<detail::ServiceSubscription_client>& client,
                    clients | boost::adaptors::map_values)
     {
@@ -1448,6 +1463,21 @@ void ServiceSubscription::SubscribePipe1(const RR_SHARED_PTR<PipeSubscriptionBas
         }
     }
     pipe_subscriptions.insert(s);
+
+    // Close passes the pipe close to the thread pool, and at node shutdown that post may never run. Close the pipe
+    // subscription directly from the shutdown thread instead
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (n)
+    {
+        try
+        {
+            n->AddShutdownListener(
+                boost::signals2::signal<void()>::slot_type(boost::bind(&PipeSubscriptionBase::Close, s.get()))
+                    .track(s));
+        }
+        catch (std::exception&)
+        {}
+    }
 
     BOOST_FOREACH (const RR_SHARED_PTR<detail::ServiceSubscription_client>& client,
                    clients | boost::adaptors::map_values)
