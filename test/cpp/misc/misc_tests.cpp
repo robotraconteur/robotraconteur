@@ -1797,6 +1797,43 @@ TEST(RobotRaconteurMisc, FindServiceByTypeNoCandidatesReleasesNode)
     EXPECT_TRUE(weak_node.expired());
 }
 
+namespace
+{
+void UpdateDetectedNodesNoTransports_handler(const RR_SHARED_PTR<boost::atomic<int> >& count) { (*count)++; }
+} // namespace
+
+TEST(RobotRaconteurMisc, UpdateDetectedNodesNoTransportsInvokesHandlerOnce)
+{
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        weak_node = node;
+
+        // No transports, so the update completes immediately
+        std::vector<std::string> schemes;
+        schemes.push_back("rr+tcp");
+        node->AsyncUpdateDetectedNodes(schemes, boost::bind(&UpdateDetectedNodesNoTransports_handler, count), 100);
+        EXPECT_EQ(count->load(), 1);
+
+        // The timeout (100 ms) must not invoke the handler again
+        boost::this_thread::sleep(boost::posix_time::milliseconds(300));
+        EXPECT_EQ(count->load(), 1);
+
+        // A pending timeout at shutdown must not keep the node alive
+        node->AsyncUpdateDetectedNodes(schemes, boost::bind(&UpdateDetectedNodesNoTransports_handler, count), 10000);
+        node->Shutdown();
+    }
+
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
+    EXPECT_EQ(count->load(), 2);
+}
+
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

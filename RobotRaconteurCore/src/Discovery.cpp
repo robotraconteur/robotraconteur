@@ -213,6 +213,14 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
 
     if (done)
     {
+        searching = false;
+        {
+            // Otherwise the timeout invokes the handler a second time
+            boost::mutex::scoped_lock lock2(timeout_timer_lock);
+            if (timeout_timer)
+                timeout_timer->TryStop();
+            timeout_timer.reset();
+        }
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "No transports available for node discovery");
         detail::InvokeHandler(node, handler);
     }
