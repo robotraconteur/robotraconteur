@@ -360,6 +360,16 @@ void ServiceSkel::ReleaseObject()
     }
     // The object is destroyed (if this was the last reference) outside the lock
     o.reset();
+
+    // Open generators hold their ServerEndpoint, which holds the ServerContext that holds this skel. Release them
+    // with the object, or the cycle is only broken by the generator idle timeout, which never runs after the service
+    // is closed or the node shuts down.
+    boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> > generators_storage;
+    {
+        boost::mutex::scoped_lock lock(generators_lock);
+        generators.swap(generators_storage);
+    }
+    generators_storage.clear();
 }
 
 void ServiceSkel::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
@@ -1604,18 +1614,24 @@ void ServerContext::Close()
         client_endpoints.clear();
     }
 
+    // Drop the skels and release them outside skels_lock. Releasing destroys the service objects and generators (user
+    // code), and a skel holds its generators, which hold their ServerEndpoint and so this context, so a closed context
+    // must not keep its skels: an async generator call that completes after ReleaseObject can still add a generator.
+    RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> > skels_storage;
     {
         boost::mutex::scoped_lock lock(skels_lock);
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceSkel>& s, skels | boost::adaptors::map_values)
-        {
-            try
-            {
-                s->ReleaseObject();
-            }
-            catch (std::exception&)
-            {};
-        }
+        skels.swap(skels_storage);
     }
+    BOOST_FOREACH (RR_SHARED_PTR<ServiceSkel>& s, skels_storage | boost::adaptors::map_values)
+    {
+        try
+        {
+            s->ReleaseObject();
+        }
+        catch (std::exception&)
+        {};
+    }
+    skels_storage.clear();
 
     {
         boost::mutex::scoped_lock lock(monitor_thread_pool_lock);
@@ -2246,6 +2262,8 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
         throw ServiceException("Root object cannot be released");
     }
 
+    // Released skels are released after the locks: releasing destroys the service objects and generators (user code)
+    std::vector<RR_SHARED_PTR<ServiceSkel> > released_skels;
     {
         boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
         boost::mutex::scoped_lock lock(skels_lock);
@@ -2279,7 +2297,7 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
                     boost::mutex::scoped_lock lock2(s->objectlock_lock);
                     RR_SHARED_PTR<ServerContext_ObjectLock> lock = s->objectlock.lock();
                     if (!lock)
-                        return;
+                        break;
                     if (lock->GetRootServicePath() == path1)
                     {
                         active_object_locks.erase(path1);
@@ -2295,9 +2313,14 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
             }
 
             skels.erase(path1);
-            s->ReleaseObject();
-            ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, path, "", "Object released");
+            released_skels.push_back(s);
         }
+    }
+
+    BOOST_FOREACH (RR_SHARED_PTR<ServiceSkel>& s, released_skels)
+    {
+        s->ReleaseObject();
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, path, "", "Object released");
     }
 }
 
