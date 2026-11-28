@@ -73,6 +73,8 @@ class ASIOStreamBaseTransport : public ITransportConnection, public RR_ENABLE_SH
 
     boost::atomic<boost::posix_time::ptime> tlastsend;
     boost::atomic<boost::posix_time::ptime> tlastrecv;
+    // When the last heartbeat was queued (tlastsend only changes when a send completes)
+    boost::atomic<boost::posix_time::ptime> tlastheartbeat;
 
     boost::array<uint8_t, 8> streammagic;
     uint32_t recv_message_size;

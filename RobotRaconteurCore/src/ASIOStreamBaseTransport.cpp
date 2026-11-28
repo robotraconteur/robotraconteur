@@ -62,6 +62,7 @@ ASIOStreamBaseTransport::ASIOStreamBaseTransport(const RR_SHARED_PTR<RobotRacont
 
     tlastrecv.store(node->NowNodeTime());
     tlastsend.store(node->NowNodeTime());
+    tlastheartbeat.store(node->NowNodeTime());
 
     this->ReceiveTimeout = 15000;
     this->SendHeartbeat = true;
@@ -1757,13 +1758,17 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
 
         try
         {
-            boost::posix_time::ptime t = tlastsend.load();
-            boost::posix_time::time_duration heartbeat_period3 = boost::posix_time::milliseconds(heartbeat_period2);
+            boost::posix_time::time_duration heartbeat_interval = boost::posix_time::milliseconds(heartbeat_period2);
 
-            // Compare at full precision: the reschedule below does, and a time between heartbeat_period2 and
-            // heartbeat_period2 + 1 ms would otherwise skip the heartbeat here and still be treated as due below
-            bool heartbeat_sent = false;
-            if ((GetNode()->NowNodeTime() - t) > heartbeat_period3 && SendHeartbeat)
+            // Send a heartbeat if no message was sent and no heartbeat was queued within the heartbeat period.
+            // tlastsend only changes when a send completes, so a queued heartbeat counts from when it was queued.
+            // Load before reading the clock: a send that completes in between then only makes since_last_send
+            // larger. A time in the future means the clock stepped back: send rather than wait for it to catch up.
+            boost::posix_time::ptime tlast = std::max(tlastsend.load(), tlastheartbeat.load());
+            boost::posix_time::ptime now = GetNode()->NowNodeTime();
+            boost::posix_time::time_duration since_last_send = now - tlast;
+            bool heartbeat_queued = false;
+            if (SendHeartbeat && (since_last_send >= heartbeat_interval || since_last_send.is_negative()))
             {
                 RR_INTRUSIVE_PTR<Message> m = CreateMessage();
                 m->header = CreateMessageHeader();
@@ -1774,8 +1779,9 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
                 boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h = boost::bind(
                     &ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
                     RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
+                tlastheartbeat.store(now);
+                heartbeat_queued = true;
                 AsyncSendMessage(m, h);
-                heartbeat_sent = true;
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Heartbeat request sent");
             }
 
@@ -1793,27 +1799,25 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
                 if (!heartbeat_timer)
                     return;
 
-                boost::posix_time::time_duration t;
-                if (heartbeat_sent || !SendHeartbeat)
+                // Wake when the next heartbeat is due: one period after a heartbeat was queued, otherwise one
+                // period after the last send, at least 10 ms and never more than one period. Without heartbeats,
+                // wake once per period for the receive timeout check.
+                boost::posix_time::time_duration next_wake = heartbeat_interval;
+                if (SendHeartbeat && !heartbeat_queued)
                 {
-                    // tlastsend is only updated when a send completes, so after queuing a heartbeat (or with
-                    // heartbeats disabled) it can be older than the heartbeat period. Wait one period instead of
-                    // spinning on a negative delay
-                    t = heartbeat_period3;
-                }
-                else
-                {
-                    // No heartbeat was due, so this is at least 10 ms. Do not wait a whole period here: that would
-                    // delay the next heartbeat to about twice the period and let the peer's receive timeout expire
-                    t = boost::posix_time::milliseconds(heartbeat_period2 + 10) -
-                        (GetNode()->NowNodeTime() - tlastsend);
-                    if (t < boost::posix_time::milliseconds(10))
+                    boost::posix_time::time_duration since_last = GetNode()->NowNodeTime() - tlast;
+                    next_wake = heartbeat_interval - since_last;
+                    if (next_wake > heartbeat_interval)
                     {
-                        t = boost::posix_time::milliseconds(10);
+                        next_wake = heartbeat_interval;
+                    }
+                    if (next_wake < boost::posix_time::milliseconds(10))
+                    {
+                        next_wake = boost::posix_time::milliseconds(10);
                     }
                 }
 
-                heartbeat_timer->expires_from_now(t);
+                heartbeat_timer->expires_from_now(next_wake);
                 heartbeat_timer->async_wait(
                     boost::bind(&ASIOStreamBaseTransport::heartbeat_timer_func,
                                 RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()),
