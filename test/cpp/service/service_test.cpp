@@ -1,4 +1,5 @@
 #include <boost/shared_array.hpp>
+#include <boost/atomic.hpp>
 
 #include <gtest/gtest.h>
 #include <boost/assign/list_of.hpp>
@@ -1058,6 +1059,63 @@ TEST_F(ServiceTest, ObjectLockRequiresAllowObjectLockPolicy)
 
     EXPECT_NO_THROW(RobotRaconteurNode::s()->DisconnectService(r));
     EXPECT_NO_THROW(test_server_node_config->node->CloseService("RobotRaconteurTestService_nolockpolicy"));
+}
+
+static void heartbeat_test_client_listener(boost::atomic<int>* closed_count, const RR_SHARED_PTR<ClientContext>&,
+                                           ClientServiceListenerEventType ev, const RR_SHARED_PTR<void>&)
+{
+    if (ev == ClientServiceListenerEventType_ClientClosed ||
+        ev == ClientServiceListenerEventType_TransportConnectionClosed)
+    {
+        (*closed_count)++;
+    }
+}
+
+TEST(ServiceTestHeartbeat, ListenOnlyClientStaysConnected)
+{
+    // A client that only receives (here a wire the service streams to) sends nothing but heartbeats, and the
+    // service is always sending, so it sends none of its own. The client's heartbeats are all that keeps the
+    // service's receive timeout from expiring. The heartbeat timer skipped a heartbeat when it fired up to 1 ms
+    // after the period and then waited a whole period, so heartbeats went out about every two periods and the
+    // service closed the connection. Use the default ratio of heartbeat period to receive timeout (10 s / 15 s),
+    // scaled down.
+    TestServerNodeConfig cfg("unit_heartbeat_listen_only_test");
+    if (!cfg.node)
+        return; // external test server (ROBOTRACONTEUR_TEST_SERVER_URL), its timeouts cannot be set
+    cfg.server->GetTcpTransport()->SetDefaultReceiveTimeout(3000);
+    // The service checks its receive timeout when its heartbeat timer fires. It is always sending, so it sends no
+    // heartbeats of its own; a short period only makes it check often enough to see a late client heartbeat
+    cfg.server->GetTcpTransport()->SetDefaultHeartbeatPeriod(200);
+    std::string url = cfg.GetServiceURL("RobotRaconteurTestService");
+
+    RR_SHARED_PTR<RobotRaconteurNode> cnode = RR_MAKE_SHARED<RobotRaconteurNode>();
+    cnode->Init();
+    {
+        ClientNodeSetup csetup(cnode, ROBOTRACONTEUR_SERVICE_TYPES, "",
+                               RobotRaconteurNodeSetupFlags_CLIENT_DEFAULT &
+                                   ~RobotRaconteurNodeSetupFlags_LOCAL_TRANSPORT_START_SERVER);
+        csetup.GetTcpTransport()->SetDefaultHeartbeatPeriod(2000);
+
+        boost::atomic<int> closed_count(0);
+        RR_SHARED_PTR<com::robotraconteur::testing::TestService1::testroot> r;
+        ASSERT_NO_THROW(r = rr_cast<com::robotraconteur::testing::TestService1::testroot>(cnode->ConnectService(
+                            url, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(),
+                            boost::bind(&heartbeat_test_client_listener, &closed_count, RR_BOOST_PLACEHOLDERS(_1),
+                                        RR_BOOST_PLACEHOLDERS(_2), RR_BOOST_PLACEHOLDERS(_3)))));
+        RR_SHARED_PTR<WireConnection<double> > w;
+        ASSERT_NO_THROW(w = r->get_broadcastwire()->Connect());
+
+        // Listen only for several receive timeouts
+        boost::this_thread::sleep(boost::posix_time::seconds(16));
+
+        EXPECT_EQ(closed_count.load(), 0) << "listen-only client connection was closed";
+        EXPECT_NO_THROW(r->get_d1());
+        double v = 0;
+        TimeSpec ts;
+        EXPECT_TRUE(w->TryGetInValue(v, ts));
+        cnode->Shutdown();
+    }
+    cfg.Shutdown();
 }
 
 int main(int argc, char* argv[])
