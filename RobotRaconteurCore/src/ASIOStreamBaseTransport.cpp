@@ -1758,8 +1758,12 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
         try
         {
             boost::posix_time::ptime t = tlastsend.load();
+            boost::posix_time::time_duration heartbeat_period3 = boost::posix_time::milliseconds(heartbeat_period2);
 
-            if ((GetNode()->NowNodeTime() - t).total_milliseconds() > heartbeat_period2 && SendHeartbeat)
+            // Compare at full precision: the reschedule below does, and a time between heartbeat_period2 and
+            // heartbeat_period2 + 1 ms would otherwise skip the heartbeat here and still be treated as due below
+            bool heartbeat_sent = false;
+            if ((GetNode()->NowNodeTime() - t) > heartbeat_period3 && SendHeartbeat)
             {
                 RR_INTRUSIVE_PTR<Message> m = CreateMessage();
                 m->header = CreateMessageHeader();
@@ -1771,6 +1775,7 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
                     &ASIOStreamBaseTransport::SimpleAsyncEndSendMessage,
                     RR_STATIC_POINTER_CAST<ASIOStreamBaseTransport>(shared_from_this()), RR_BOOST_PLACEHOLDERS(_1));
                 AsyncSendMessage(m, h);
+                heartbeat_sent = true;
                 ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Transport, GetLocalEndpoint(), "Heartbeat request sent");
             }
 
@@ -1788,13 +1793,24 @@ void ASIOStreamBaseTransport::heartbeat_timer_func(const boost::system::error_co
                 if (!heartbeat_timer)
                     return;
 
-                boost::posix_time::time_duration t =
-                    boost::posix_time::milliseconds(heartbeat_period2 + 10) - (GetNode()->NowNodeTime() - tlastsend);
-                // tlastsend is only updated when a send completes; if it is older than the heartbeat period (a
-                // heartbeat was just queued, or sends are stalled) the delay is negative and the timer would spin
-                if (t < boost::posix_time::milliseconds(10))
+                boost::posix_time::time_duration t;
+                if (heartbeat_sent || !SendHeartbeat)
                 {
-                    t = boost::posix_time::milliseconds(heartbeat_period2);
+                    // tlastsend is only updated when a send completes, so after queuing a heartbeat (or with
+                    // heartbeats disabled) it can be older than the heartbeat period. Wait one period instead of
+                    // spinning on a negative delay
+                    t = heartbeat_period3;
+                }
+                else
+                {
+                    // No heartbeat was due, so this is at least 10 ms. Do not wait a whole period here: that would
+                    // delay the next heartbeat to about twice the period and let the peer's receive timeout expire
+                    t = boost::posix_time::milliseconds(heartbeat_period2 + 10) -
+                        (GetNode()->NowNodeTime() - tlastsend);
+                    if (t < boost::posix_time::milliseconds(10))
+                    {
+                        t = boost::posix_time::milliseconds(10);
+                    }
                 }
 
                 heartbeat_timer->expires_from_now(t);
