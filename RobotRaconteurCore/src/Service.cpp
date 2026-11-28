@@ -360,6 +360,16 @@ void ServiceSkel::ReleaseObject()
     }
     // The object is destroyed (if this was the last reference) outside the lock
     o.reset();
+
+    // Open generators hold their ServerEndpoint, which holds the ServerContext that holds this skel. Release them
+    // with the object, or the cycle is only broken by the generator idle timeout, which never runs after the service
+    // is closed or the node shuts down.
+    boost::unordered_map<int32_t, RR_SHARED_PTR<GeneratorServerBase> > generators_storage;
+    {
+        boost::mutex::scoped_lock lock(generators_lock);
+        generators.swap(generators_storage);
+    }
+    generators_storage.clear();
 }
 
 void ServiceSkel::AsyncSendPipeMessage(const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e, bool unreliable,
@@ -647,6 +657,32 @@ std::string ServerContext::GetRootObjectType(const RobotRaconteurVersion& client
 {
     return GetObjectType(m_ServiceName, client_version);
 }
+
+namespace
+{
+// Marks outstanding_requests as closed. Never a real request id: request numbers wrap before reaching it
+const uint32_t ServerContext_closed_request_id = std::numeric_limits<uint32_t>::max();
+
+template <typename RequestMap>
+void ServerContext_clear_requests_closed(RequestMap& requests)
+{
+    BOOST_FOREACH (typename RequestMap::value_type& e, requests)
+    {
+        if (e.second->timer)
+            e.second->timer->TryStop();
+    }
+    requests.clear();
+    typename RequestMap::mapped_type closed_marker = RR_MAKE_SHARED<typename RequestMap::mapped_type::element_type>();
+    closed_marker->evt = RR_MAKE_SHARED<AutoResetEvent>();
+    requests.insert(std::make_pair(ServerContext_closed_request_id, closed_marker));
+}
+
+template <typename RequestMap>
+bool ServerContext_requests_closed(const RequestMap& requests)
+{
+    return requests.find(ServerContext_closed_request_id) != requests.end();
+}
+} // namespace
 
 ServerContext::ServerContext(const RR_SHARED_PTR<ServiceFactory>& f, const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
@@ -1274,6 +1310,8 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessMessageEntry(const RR_INTRU
             noreturn = true;
             RR_SHARED_PTR<outstanding_request> t;
             uint32_t requestid = m->RequestID;
+            if (requestid == ServerContext_closed_request_id)
+                return ret;
             {
 
                 boost::mutex::scoped_lock lock(outstanding_requests_lock);
@@ -1447,6 +1485,9 @@ void ServerContext::AsyncProcessCallbackRequest(
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
 
+            if (ServerContext_requests_closed(outstanding_requests))
+                throw ConnectionException("Service closed");
+
             do
             {
                 request_number++;
@@ -1477,7 +1518,24 @@ void ServerContext::AsyncProcessCallbackRequest(
         boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)> h =
             boost::bind(&ServerContext::AsyncProcessCallbackRequest_err, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1),
                         endpoint, myrequestid);
-        AsyncSendMessage(m, endpoint, h);
+        try
+        {
+            AsyncSendMessage(m, endpoint, h);
+        }
+        catch (std::exception&)
+        {
+            // The caller gets the exception, so the handler must not also be invoked later
+            {
+                boost::mutex::scoped_lock lock(outstanding_requests_lock);
+                RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<outstanding_request> >::iterator e1 =
+                    outstanding_requests.find(myrequestid);
+                if (e1 != outstanding_requests.end() && e1->second == t)
+                    outstanding_requests.erase(e1);
+            }
+            if (t->timer)
+                t->timer->TryStop();
+            throw;
+        }
     }
     catch (std::exception& exp)
     {
@@ -1569,17 +1627,26 @@ void ServerContext::Close()
     catch (std::exception&)
     {};
 
+    std::vector<boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>& ret,
+                                     const RR_SHARED_PTR<RobotRaconteurException>& error)> >
+        handlers;
     {
         boost::mutex::scoped_lock lock(outstanding_requests_lock);
         BOOST_FOREACH (const RR_SHARED_PTR<outstanding_request>& e, outstanding_requests | boost::adaptors::map_values)
         {
             e->evt->Set();
+            if (e->handler)
+                handlers.push_back(e->handler);
         }
+
+        ServerContext_clear_requests_closed(outstanding_requests);
     }
 
+    BOOST_FOREACH (boost::function<void(const RR_INTRUSIVE_PTR<MessageEntry>& ret,
+                                        const RR_SHARED_PTR<RobotRaconteurException>& error)>& h,
+                   handlers)
     {
-        boost::mutex::scoped_lock lock(outstanding_requests_lock);
-        outstanding_requests.clear();
+        detail::InvokeHandlerWithException(node, h, RR_MAKE_SHARED<ConnectionException>("Service closed"));
     }
 
     RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<ServerEndpoint> > endpoints;
@@ -1604,18 +1671,24 @@ void ServerContext::Close()
         client_endpoints.clear();
     }
 
+    // Drop the skels and release them outside skels_lock. Releasing destroys the service objects and generators (user
+    // code), and a skel holds its generators, which hold their ServerEndpoint and so this context, so a closed context
+    // must not keep its skels: an async generator call that completes after ReleaseObject can still add a generator.
+    RR_UNORDERED_MAP<MessageStringPtr, RR_SHARED_PTR<ServiceSkel> > skels_storage;
     {
         boost::mutex::scoped_lock lock(skels_lock);
-        BOOST_FOREACH (RR_SHARED_PTR<ServiceSkel>& s, skels | boost::adaptors::map_values)
-        {
-            try
-            {
-                s->ReleaseObject();
-            }
-            catch (std::exception&)
-            {};
-        }
+        skels.swap(skels_storage);
     }
+    BOOST_FOREACH (RR_SHARED_PTR<ServiceSkel>& s, skels_storage | boost::adaptors::map_values)
+    {
+        try
+        {
+            s->ReleaseObject();
+        }
+        catch (std::exception&)
+        {};
+    }
+    skels_storage.clear();
 
     {
         boost::mutex::scoped_lock lock(monitor_thread_pool_lock);
@@ -2246,6 +2319,8 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
         throw ServiceException("Root object cannot be released");
     }
 
+    // Released skels are released after the locks: releasing destroys the service objects and generators (user code)
+    std::vector<RR_SHARED_PTR<ServiceSkel> > released_skels;
     {
         boost::mutex::scoped_lock lock3(ClientLockOp_lockobj);
         boost::mutex::scoped_lock lock(skels_lock);
@@ -2279,7 +2354,7 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
                     boost::mutex::scoped_lock lock2(s->objectlock_lock);
                     RR_SHARED_PTR<ServerContext_ObjectLock> lock = s->objectlock.lock();
                     if (!lock)
-                        return;
+                        break;
                     if (lock->GetRootServicePath() == path1)
                     {
                         active_object_locks.erase(path1);
@@ -2295,9 +2370,14 @@ void ServerContext::ReleaseServicePath1(const std::string& path)
             }
 
             skels.erase(path1);
-            s->ReleaseObject();
-            ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, path, "", "Object released");
+            released_skels.push_back(s);
         }
+    }
+
+    BOOST_FOREACH (RR_SHARED_PTR<ServiceSkel>& s, released_skels)
+    {
+        s->ReleaseObject();
+        ROBOTRACONTEUR_LOG_TRACE_COMPONENT_PATH(node, Service, -1, path, "", "Object released");
     }
 }
 
@@ -2385,6 +2465,7 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(const RR_IN
 
     RR_INTRUSIVE_PTR<MessageEntry> rec_message;
     uint32_t myrequestid = 0;
+    RR_SHARED_PTR<outstanding_request> t;
 
     try
     {
@@ -2397,11 +2478,14 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(const RR_IN
             e = e1->second;
         }
 
-        RR_SHARED_PTR<outstanding_request> t = RR_MAKE_SHARED<outstanding_request>();
+        t = RR_MAKE_SHARED<outstanding_request>();
         t->evt = GetNode()->CreateAutoResetEvent();
         t->endpoint = endpointid;
         {
             boost::mutex::scoped_lock lock(outstanding_requests_lock);
+
+            if (ServerContext_requests_closed(outstanding_requests))
+                throw ConnectionException("Service closed");
 
             do
             {
@@ -2430,6 +2514,8 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(const RR_IN
                 boost::mutex::scoped_lock lock(outstanding_requests_lock);
                 if (t->ret)
                     break;
+                if (ServerContext_requests_closed(outstanding_requests))
+                    throw ConnectionException("Service closed");
             }
             GetNode()->CheckConnection(e->GetLocalEndpoint());
 
@@ -2461,6 +2547,15 @@ RR_INTRUSIVE_PTR<MessageEntry> ServerContext::ProcessCallbackRequest(const RR_IN
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT_PATH(node, Service, endpointid, m->ServicePath, m->MemberName,
                                                 "Error during ProcessCallbackRequest: " << exp.what());
+        if (t)
+        {
+            // Do not leave the request registered when sending or the connection check throws
+            boost::mutex::scoped_lock lock(outstanding_requests_lock);
+            RR_UNORDERED_MAP<uint32_t, RR_SHARED_PTR<outstanding_request> >::iterator e1 =
+                outstanding_requests.find(myrequestid);
+            if (e1 != outstanding_requests.end() && e1->second == t)
+                outstanding_requests.erase(e1);
+        }
         throw;
     }
 

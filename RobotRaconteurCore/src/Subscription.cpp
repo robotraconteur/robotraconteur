@@ -670,6 +670,7 @@ void ServiceSubscription::Close()
     }
 
     wire_subscriptions.clear();
+    pipe_subscriptions.clear();
     clients.clear();
 
     connect_listeners.disconnect_all_slots();
@@ -1410,6 +1411,21 @@ void ServiceSubscription::SubscribeWire1(const RR_SHARED_PTR<WireSubscriptionBas
     }
     wire_subscriptions.insert(s);
 
+    // Close passes the wire close to the thread pool, and at node shutdown that post may never run. Close the wire
+    // subscription directly from the shutdown thread instead
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (n)
+    {
+        try
+        {
+            n->AddShutdownListener(
+                boost::signals2::signal<void()>::slot_type(boost::bind(&WireSubscriptionBase::Close, s.get()))
+                    .track(s));
+        }
+        catch (std::exception&)
+        {}
+    }
+
     BOOST_FOREACH (const RR_SHARED_PTR<detail::ServiceSubscription_client>& client,
                    clients | boost::adaptors::map_values)
     {
@@ -1447,6 +1463,21 @@ void ServiceSubscription::SubscribePipe1(const RR_SHARED_PTR<PipeSubscriptionBas
         }
     }
     pipe_subscriptions.insert(s);
+
+    // Close passes the pipe close to the thread pool, and at node shutdown that post may never run. Close the pipe
+    // subscription directly from the shutdown thread instead
+    RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+    if (n)
+    {
+        try
+        {
+            n->AddShutdownListener(
+                boost::signals2::signal<void()>::slot_type(boost::bind(&PipeSubscriptionBase::Close, s.get()))
+                    .track(s));
+        }
+        catch (std::exception&)
+        {}
+    }
 
     BOOST_FOREACH (const RR_SHARED_PTR<detail::ServiceSubscription_client>& client,
                    clients | boost::adaptors::map_values)
@@ -1509,6 +1540,9 @@ class AsyncGetDefaultClientBase_impl : public RR_ENABLE_SHARED_FROM_THIS<AsyncGe
     boost::mutex this_lock;
     RR_WEAK_PTR<RobotRaconteurNode> node;
     ServiceSubscription::event_connection evt_connection;
+    RR_WEAK_PTR<ServiceSubscription> subscription;
+    boost::signals2::connection closed_connection;
+    RobotRaconteurNode::shutdown_listener_connection shutdown_connection;
 
   public:
     void Init(RR_WEAK_PTR<RobotRaconteurNode> node, const RR_SHARED_PTR<ServiceSubscription>& subscription,
@@ -1531,6 +1565,7 @@ class AsyncGetDefaultClientBase_impl : public RR_ENABLE_SHARED_FROM_THIS<AsyncGe
 
         this->node = node;
         this->handler = handler;
+        this->subscription = subscription;
 
         if (timeout >= 0)
         {
@@ -1549,7 +1584,9 @@ class AsyncGetDefaultClientBase_impl : public RR_ENABLE_SHARED_FROM_THIS<AsyncGe
 
     void timeout_handler(const TimerEvent& evt)
     {
-        RR_UNUSED(evt);
+        // Stopped by node shutdown: node_shutdown fails the wait
+        if (evt.stopped)
+            return;
         boost::mutex::scoped_lock lock(this_lock);
         if (!handler)
         {
@@ -1558,9 +1595,7 @@ class AsyncGetDefaultClientBase_impl : public RR_ENABLE_SHARED_FROM_THIS<AsyncGe
 
         detail::PostHandlerWithException(node, handler,
                                          RR_MAKE_SHARED<ConnectionException>("Subscription default client timed out"));
-        handler.clear();
-        timer.reset();
-        evt_connection.disconnect();
+        release();
     }
 
     void connect_handler(const RR_SHARED_PTR<RRObject>& obj)
@@ -1572,9 +1607,101 @@ class AsyncGetDefaultClientBase_impl : public RR_ENABLE_SHARED_FROM_THIS<AsyncGe
         }
 
         detail::PostHandler(node, handler, obj);
+        release();
+    }
+
+    // WORKAROUND (C++ core only, do not port): ServiceSubscription::Close disconnects connect_handler, and the
+    // exported ServiceSubscription class cannot gain a member to track pending waits without breaking the ABI, so
+    // the wait watches Discovery's subscription_closed signal and the node shutdown listeners instead. Other
+    // implementations should keep the pending default client waits in the subscription and fail them in Close.
+    void WatchClose(const RR_SHARED_PTR<Discovery>& discovery, const RR_SHARED_PTR<ServiceSubscription>& s)
+    {
+        boost::mutex::scoped_lock lock(this_lock);
+        if (!handler)
+            return;
+        if (discovery)
+        {
+            closed_connection = discovery->subscription_closed.connect(
+                boost::signals2::signal<void(const RR_SHARED_PTR<IServiceSubscription>&)>::slot_type(
+                    boost::bind(&AsyncGetDefaultClientBase_impl::subscription_closed, shared_from_this(),
+                                RR_BOOST_PLACEHOLDERS(_1), false))
+                    .track(s));
+        }
+        RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
+        if (n)
+        {
+            try
+            {
+                shutdown_connection = n->AddShutdownListener(
+                    boost::signals2::signal<void()>::slot_type(
+                        boost::bind(&AsyncGetDefaultClientBase_impl::node_shutdown, shared_from_this()))
+                        .track(s));
+            }
+            catch (std::exception&)
+            {
+                // The caller gets the exception, so the handler must not also be invoked later
+                release();
+                throw;
+            }
+        }
+    }
+
+    void subscription_closed(const RR_SHARED_PTR<IServiceSubscription>& closed, bool invoke_if_shutdown)
+    {
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> h;
+        RR_SHARED_PTR<RobotRaconteurException> err =
+            RR_MAKE_SHARED<ConnectionException>("Subscription has been closed");
+        {
+            boost::mutex::scoped_lock lock(this_lock);
+            if (!handler)
+                return;
+            RR_SHARED_PTR<ServiceSubscription> s = subscription.lock();
+            if (s && s != closed)
+                return;
+
+            if (RobotRaconteurNode::TryPostToThreadPool(node, boost::bind(handler, RR_SHARED_PTR<RRObject>(), err)))
+            {
+                release();
+                return;
+            }
+
+            // Refused because the node is shutting down. Node shutdown closes subscriptions before it calls the
+            // shutdown listeners, so node_shutdown fails the wait on the shutdown thread. Only a wait started after
+            // shutdown is failed here
+            if (!invoke_if_shutdown)
+                return;
+            h = handler;
+            release();
+        }
+        detail::InvokeHandlerWithException(node, h, err);
+    }
+
+    // Called on the shutdown thread before the thread pool stops, so invoke the handler directly: a post could be
+    // discarded by the stopping thread pool
+    void node_shutdown()
+    {
+        boost::function<void(const RR_SHARED_PTR<RRObject>&, const RR_SHARED_PTR<RobotRaconteurException>&)> h;
+        {
+            boost::mutex::scoped_lock lock(this_lock);
+            if (!handler)
+                return;
+            h = handler;
+            release();
+        }
+        detail::InvokeHandlerWithException(node, h, RR_MAKE_SHARED<ConnectionException>("Node has been shut down"));
+    }
+
+  private:
+    // Call with this_lock held
+    void release()
+    {
         handler.clear();
+        if (timer)
+            timer->TryStop();
         timer.reset();
         evt_connection.disconnect();
+        closed_connection.disconnect();
+        shutdown_connection.disconnect();
     }
 };
 } // namespace detail
@@ -1586,6 +1713,17 @@ void ServiceSubscription::AsyncGetDefaultClientBase(
     RR_SHARED_PTR<detail::AsyncGetDefaultClientBase_impl> impl =
         RR_MAKE_SHARED<detail::AsyncGetDefaultClientBase_impl>();
     impl->Init(node, shared_from_this(), handler, timeout);
+
+    // WORKAROUND, see AsyncGetDefaultClientBase_impl::WatchClose. Watch before checking active: Close clears active
+    // before notifying Discovery
+    impl->WatchClose(parent.lock(), shared_from_this());
+    bool closed = false;
+    {
+        boost::mutex::scoped_lock lock(this_lock);
+        closed = !active;
+    }
+    if (closed)
+        impl->subscription_closed(shared_from_this(), true);
 }
 
 RR_SHARED_PTR<RRObject> ServiceSubscription::GetDefaultClientWaitBase(int32_t timeout)
@@ -2624,12 +2762,10 @@ void PipeSubscriptionBase::Close()
     BOOST_FOREACH (const RR_SHARED_PTR<detail::PipeSubscription_connection>& connection,
                    connections1 | boost::adaptors::map_values)
     {
-        RR_SHARED_PTR<PipeEndpointBase> pipe = connection->connection.lock();
-        if (!pipe)
-            continue;
+        // Also marks the connection closed and stops its retry timer
         try
         {
-            pipe->AsyncClose(&PipeSubscriptionBase_emptyhandler, 5000);
+            connection->Close();
         }
         catch (std::exception&)
         {}

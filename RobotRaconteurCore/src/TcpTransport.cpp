@@ -5214,8 +5214,14 @@ void TcpTransportConnection::MessageReceived(const RR_INTRUSIVE_PTR<Message>& m)
             }
         }
 
-        boost::asio::ip::address addr = socket->local_endpoint().address();
-        uint16_t port = socket->local_endpoint().port();
+        boost::asio::ip::tcp::endpoint socket_local_ep;
+        {
+            // Close() may be closing the socket on another thread
+            boost::mutex::scoped_lock lock1(socket_lock);
+            socket_local_ep = socket->local_endpoint();
+        }
+        boost::asio::ip::address addr = socket_local_ep.address();
+        uint16_t port = socket_local_ep.port();
 
         std::string scheme = "rr+tcp";
 

@@ -43,7 +43,7 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
     RR_SHARED_PTR<boost::asio::deadline_timer> connect_timer;
     boost::mutex connect_timer_lock;
 
-    RR_SHARED_PTR<RobotRaconteurNode> node;
+    RR_WEAK_PTR<RobotRaconteurNode> node;
 
     boost::mutex handler_lock;
     RR_SHARED_PTR<boost::asio::deadline_timer> connect_backoff_timer;
@@ -53,7 +53,7 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
       public:
         boost::mutex eplock;
         RR_SHARED_PTR<ClientContext> ep;
-        RR_SHARED_PTR<RobotRaconteurNode> node;
+        RR_WEAK_PTR<RobotRaconteurNode> node;
 
         endpoint_cleanup(const RR_SHARED_PTR<ClientContext>& ep, const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
@@ -85,7 +85,15 @@ class RobotRaconteurNode_connector : public RR_ENABLE_SHARED_FROM_THIS<RobotRaco
 
     void start_connect_timer();
 
+    void node_shutdown();
+
+    RR_SHARED_PTR<RobotRaconteurNode> GetNode();
+
   public:
+    // Call before posting connect: the node can shut down before connect runs
+    void watch_node_shutdown(const boost::function<void(const RR_SHARED_PTR<RRObject>&,
+                                                        const RR_SHARED_PTR<RobotRaconteurException>&)>& handler);
+
     void connect(
         const std::map<std::string, RR_WEAK_PTR<Transport> >& connectors, boost::string_ref username,
         const RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >& credentials,

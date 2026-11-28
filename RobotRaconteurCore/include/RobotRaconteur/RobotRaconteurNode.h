@@ -701,12 +701,19 @@ class ROBOTRACONTEUR_CORE_API RobotRaconteurNode : boost::noncopyable,
      * Adds a listener handler function that will be called when the
      * node is shutting down.
      *
+     * Throws InvalidOperationException if the node is already shutting down
+     * or shut down, since the listener would never be called.
+     *
      * @tparam Handler
      * @return shutdown_listener_connection
      */
     template <typename Handler>
     shutdown_listener_connection AddShutdownListener(BOOST_ASIO_MOVE_ARG(Handler) h)
     {
+        // Hold the lock across the connect: Shutdown sets is_shutdown under it before calling the listeners
+        boost::shared_lock<boost::shared_mutex> l(thread_pool_lock);
+        if (is_shutdown)
+            throw InvalidOperationException("Node has been shut down");
         return shutdown_listeners.connect(h);
     }
 

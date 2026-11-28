@@ -135,6 +135,10 @@ class Discovery : public RR_ENABLE_SHARED_FROM_THIS<Discovery>
                      const RR_SHARED_PTR<IServiceSubscription>& subscription);
 
   public:
+    // Fired by SubscriptionClosed with the subscription that closed. WORKAROUND for pending default client waits
+    // (C++ core only, do not port), see AsyncGetDefaultClientBase_impl::WatchClose in Subscription.cpp
+    boost::signals2::signal<void(const RR_SHARED_PTR<IServiceSubscription>&)> subscription_closed;
+
     void DoUpdateAllDetectedServices(const RR_SHARED_PTR<IServiceSubscription>& s);
 
     // Register a subscription created without SubscribeService / DoSubscribe (no-op if already registered)
@@ -163,6 +167,8 @@ class Discovery_updatediscoverednodes : public RR_ENABLE_SHARED_FROM_THIS<Discov
     Discovery_updatediscoverednodes(const RR_SHARED_PTR<RobotRaconteurNode>& node);
 
     void timeout_timer_callback(const TimerEvent& e);
+
+    void node_shutdown();
 
     void getdetectednodes_callback(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& ret, int32_t key);
 
@@ -213,6 +219,8 @@ class Discovery_findservicebytype : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
 
     void find2();
 
+    void node_shutdown();
+
     void AsyncFindServiceByType(boost::string_ref servicetype, const std::vector<std::string>& schemes,
                                 RR_MOVE_ARG(boost::function<void(const RR_SHARED_PTR<std::vector<ServiceInfo2> >&)>)
                                     handler,
@@ -235,6 +243,7 @@ class Discovery_updateserviceinfo : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
     NodeID remote_nodeid;
     std::string remote_nodename;
     std::string service_nonce;
+    bool shutdown;
 
   public:
     static void rr_empty_handler();
@@ -249,6 +258,8 @@ class Discovery_updateserviceinfo : public RR_ENABLE_SHARED_FROM_THIS<Discovery_
     void connect_handler(const RR_SHARED_PTR<RRObject>& client, const RR_SHARED_PTR<RobotRaconteurException>& err);
 
     void backoff_timer_handler(const TimerEvent& evt);
+
+    void node_shutdown();
 
     void AsyncUpdateServiceInfo(
         const RR_SHARED_PTR<Discovery_nodestorage>& storage, boost::string_ref service_nonce,

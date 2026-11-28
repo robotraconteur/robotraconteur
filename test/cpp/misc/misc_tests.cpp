@@ -1191,6 +1191,55 @@ class NcDiscoveryThrowTransport : public Transport
     }
 };
 
+// Transport whose node discovery query records the timeout it was given and returns no nodes
+class NcDiscoveryTimeoutTransport : public NcDiscoveryThrowTransport
+{
+  public:
+    RR_SHARED_PTR<boost::atomic<int32_t> > timeout_seen;
+    NcDiscoveryTimeoutTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node)
+        : NcDiscoveryThrowTransport(node), timeout_seen(RR_MAKE_SHARED<boost::atomic<int32_t> >(12345))
+    {}
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncdisctimeout"; }
+    RR_OVIRTUAL void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout) RR_OVERRIDE
+    {
+        RR_UNUSED(schemes);
+        timeout_seen->store(timeout);
+        RobotRaconteurNode::TryPostToThreadPool(
+            node, boost::bind(handler, RR_MAKE_SHARED<std::vector<NodeDiscoveryInfo> >()), true);
+    }
+};
+
+struct NcFindServiceByTypeHandler
+{
+    RR_SHARED_PTR<AutoResetEvent> ev;
+    NcFindServiceByTypeHandler() : ev(RR_MAKE_SHARED<AutoResetEvent>()) {}
+    void operator()(const RR_SHARED_PTR<std::vector<ServiceInfo2> >& res)
+    {
+        RR_UNUSED(res);
+        ev->Set();
+    }
+};
+
+// FindServiceByType with an infinite timeout must not update the detected nodes with a 0 ms timeout
+TEST(RobotRaconteurMisc, FindServiceByTypeInfiniteTimeoutUpdatesNodes)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    RR_SHARED_PTR<NcDiscoveryTimeoutTransport> t = RR_MAKE_SHARED<NcDiscoveryTimeoutTransport>(node);
+    node->RegisterTransport(t);
+
+    NcFindServiceByTypeHandler h;
+    std::vector<std::string> schemes;
+    schemes.push_back("rr+ncdisctimeout");
+    node->AsyncFindServiceByType("com.robotraconteur.testing.TestService1.testroot", schemes, h, RR_TIMEOUT_INFINITE);
+    EXPECT_TRUE(h.ev->WaitOne(5000));
+    EXPECT_EQ(t->timeout_seen->load(), RR_TIMEOUT_INFINITE);
+    node->Shutdown();
+}
+
 struct NcUpdateDetectedNodesHandler
 {
     RR_SHARED_PTR<AutoResetEvent> ev;
@@ -1751,6 +1800,417 @@ TEST(RobotRaconteurMisc, AsyncProcessRequestThrowDoesNotInvokeHandler)
     EXPECT_EQ(count->load(), 0);
 
     node->Shutdown();
+}
+
+namespace
+{
+void FindServiceByTypeNoCandidates_handler(const RR_SHARED_PTR<AutoResetEvent>& evt,
+                                           const RR_SHARED_PTR<boost::atomic<int> >& count,
+                                           const RR_SHARED_PTR<std::vector<ServiceInfo2> >& res)
+{
+    if (res)
+        (*count) += static_cast<int>(res->size());
+    evt->Set();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, FindServiceByTypeNoCandidatesReleasesNode)
+{
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        weak_node = node;
+
+        // No transports, so the search finds no candidate URLs
+        std::vector<std::string> schemes;
+        schemes.push_back("rr+tcp");
+        RR_SHARED_PTR<AutoResetEvent> evt = RR_MAKE_SHARED<AutoResetEvent>();
+        RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+        node->AsyncFindServiceByType(
+            "com.robotraconteur.testing.TestService1.testroot", schemes,
+            boost::bind(&FindServiceByTypeNoCandidates_handler, evt, count, RR_BOOST_PLACEHOLDERS(_1)), 400);
+        EXPECT_TRUE(evt->WaitOne(5000));
+        EXPECT_EQ(count->load(), 0);
+
+        // Let the node discovery update timeout (400 / 4 ms) pass, so only the search object can hold the node
+        boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+        node->Shutdown();
+    }
+
+    // The search object holds the node, so it must not be kept alive by its timeout timer, which was never started
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
+}
+
+namespace
+{
+void UpdateDetectedNodesNoTransports_handler(const RR_SHARED_PTR<boost::atomic<int> >& count) { (*count)++; }
+} // namespace
+
+TEST(RobotRaconteurMisc, UpdateDetectedNodesNoTransportsInvokesHandlerOnce)
+{
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        weak_node = node;
+
+        // No transports, so the update completes immediately
+        std::vector<std::string> schemes;
+        schemes.push_back("rr+tcp");
+        node->AsyncUpdateDetectedNodes(schemes, boost::bind(&UpdateDetectedNodesNoTransports_handler, count), 100);
+        EXPECT_EQ(count->load(), 1);
+
+        // The timeout (100 ms) must not invoke the handler again
+        boost::this_thread::sleep(boost::posix_time::milliseconds(300));
+        EXPECT_EQ(count->load(), 1);
+
+        // A pending timeout at shutdown must not keep the node alive
+        node->AsyncUpdateDetectedNodes(schemes, boost::bind(&UpdateDetectedNodesNoTransports_handler, count), 10000);
+        node->Shutdown();
+    }
+
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
+    EXPECT_EQ(count->load(), 2);
+}
+
+namespace
+{
+void PeriodicCleanupStart_block(const RR_SHARED_PTR<AutoResetEvent>& started,
+                                const RR_SHARED_PTR<AutoResetEvent>& release)
+{
+    started->Set();
+    release->WaitOne(10000);
+}
+
+void PeriodicCleanupStart_shutdown(const RR_SHARED_PTR<RobotRaconteurNode>& node) { node->Shutdown(); }
+} // namespace
+
+TEST(RobotRaconteurMisc, PeriodicCleanupTaskNotStartedBeforeShutdownReleasesNode)
+{
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        weak_node = node;
+
+        // Keep both threads busy, so the task that starts the periodic cleanup timer is still queued at shutdown.
+        // Shutdown requires a multithreaded pool. One event per thread: AutoResetEvent::Set releases one waiter
+        std::vector<RR_SHARED_PTR<AutoResetEvent> > release;
+        {
+            RR_SHARED_PTR<ThreadPool> pool = RR_MAKE_SHARED<ThreadPool>(node);
+            pool->SetThreadPoolCount(2);
+            for (int i = 0; i < 2; i++)
+            {
+                RR_SHARED_PTR<AutoResetEvent> started = RR_MAKE_SHARED<AutoResetEvent>();
+                release.push_back(RR_MAKE_SHARED<AutoResetEvent>());
+                pool->Post(boost::bind(&PeriodicCleanupStart_block, started, release.back()));
+                ASSERT_TRUE(started->WaitOne(5000));
+            }
+            node->SetThreadPool(pool);
+        }
+
+        // Shutdown stops the thread pool and waits for its threads
+        boost::thread shutdown_thread(boost::bind(&PeriodicCleanupStart_shutdown, node));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+        for (size_t i = 0; i < release.size(); i++)
+            release[i]->Set();
+        shutdown_thread.join();
+    }
+
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
+}
+
+namespace
+{
+struct DefaultClientWaitHandler
+{
+    RR_SHARED_PTR<AutoResetEvent> ev;
+    RR_SHARED_PTR<boost::atomic<int> > errors;
+    DefaultClientWaitHandler() : ev(RR_MAKE_SHARED<AutoResetEvent>()), errors(RR_MAKE_SHARED<boost::atomic<int> >(0)) {}
+    void operator()(const RR_SHARED_PTR<RRObject>& obj, const RR_SHARED_PTR<RobotRaconteurException>& err)
+    {
+        RR_UNUSED(obj);
+        if (err)
+            (*errors)++;
+        ev->Set();
+    }
+};
+} // namespace
+
+TEST(RobotRaconteurMisc, SubscriptionCloseFailsPendingDefaultClientWait)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+
+    std::vector<std::string> service_types;
+    service_types.push_back("com.robotraconteur.testing.TestService1.testroot");
+    RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeServiceByType(service_types);
+
+    // No client ever connects, so the wait only ends when the subscription closes
+    DefaultClientWaitHandler h1;
+    sub->AsyncGetDefaultClient<RRObject>(h1, RR_TIMEOUT_INFINITE);
+    DefaultClientWaitHandler h2;
+    sub->AsyncGetDefaultClient<RRObject>(h2, 10000);
+    EXPECT_FALSE(h1.ev->WaitOne(100));
+
+    // Both waits fail right away, not when the 10 s timeout fires
+    sub->Close();
+    EXPECT_TRUE(h1.ev->WaitOne(1000));
+    EXPECT_EQ(h1.errors->load(), 1);
+    EXPECT_TRUE(h2.ev->WaitOne(1000));
+    EXPECT_EQ(h2.errors->load(), 1);
+
+    // A wait started after Close fails too
+    DefaultClientWaitHandler h3;
+    sub->AsyncGetDefaultClient<RRObject>(h3, RR_TIMEOUT_INFINITE);
+    EXPECT_TRUE(h3.ev->WaitOne(5000));
+    EXPECT_EQ(h3.errors->load(), 1);
+
+    node->Shutdown();
+}
+
+TEST(RobotRaconteurMisc, NodeShutdownFailsPendingDefaultClientWait)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    // Nodes with transports always have a thread pool; this one has none, so create it
+    node->GetThreadPool();
+
+    std::vector<std::string> service_types;
+    service_types.push_back("com.robotraconteur.testing.TestService1.testroot");
+    RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeServiceByType(service_types);
+
+    DefaultClientWaitHandler h;
+    sub->AsyncGetDefaultClient<RRObject>(h, RR_TIMEOUT_INFINITE);
+
+    // Shutdown closes the subscription; the wait must still be failed although the node is shutting down
+    node->Shutdown();
+    EXPECT_TRUE(h.ev->WaitOne(1000));
+    EXPECT_EQ(h.errors->load(), 1);
+}
+
+namespace
+{
+void AddShutdownListener_handler(const RR_SHARED_PTR<boost::atomic<int> >& count) { (*count)++; }
+} // namespace
+
+TEST(RobotRaconteurMisc, AddShutdownListenerAfterShutdownThrows)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    node->AddShutdownListener(boost::bind(&AddShutdownListener_handler, count));
+    node->Shutdown();
+    EXPECT_EQ(count->load(), 1);
+
+    // A listener added now would never be called
+    EXPECT_THROW(node->AddShutdownListener(boost::bind(&AddShutdownListener_handler, count)),
+                 InvalidOperationException);
+}
+
+namespace
+{
+void WireSubscriptionShutdown_wait(const RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RRArray<double> > > >& w,
+                                   const RR_SHARED_PTR<AutoResetEvent>& done)
+{
+    w->WaitInValueValid(-1);
+    done->Set();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, NodeShutdownClosesWireSubscription)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->GetThreadPool();
+
+    std::vector<std::string> service_types;
+    service_types.push_back("com.robotraconteur.testing.TestService1.testroot");
+    RR_SHARED_PTR<ServiceSubscription> sub = node->SubscribeServiceByType(service_types);
+    RR_SHARED_PTR<WireSubscription<RR_INTRUSIVE_PTR<RRArray<double> > > > w =
+        sub->SubscribeWire<RR_INTRUSIVE_PTR<RRArray<double> > >("w1");
+
+    // WaitInValueValid only returns early when the wire subscription is closed
+    RR_SHARED_PTR<AutoResetEvent> done = RR_MAKE_SHARED<AutoResetEvent>();
+    boost::thread t(boost::bind(&WireSubscriptionShutdown_wait, w, done));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+
+    node->Shutdown();
+    if (!done->WaitOne(2000))
+    {
+        ADD_FAILURE() << "Node shutdown did not close the wire subscription";
+        std::cerr << "Node shutdown did not close the wire subscription" << std::endl;
+        std::_Exit(1);
+    }
+    t.join();
+}
+
+// Transport whose node discovery query never replies
+class NcDiscoveryNoReplyTransport : public NcDiscoveryThrowTransport
+{
+  public:
+    NcDiscoveryNoReplyTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : NcDiscoveryThrowTransport(node) {}
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncdiscnoreply"; }
+    RR_OVIRTUAL void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout) RR_OVERRIDE
+    {
+        RR_UNUSED(schemes);
+        RR_UNUSED(handler);
+        RR_UNUSED(timeout);
+    }
+};
+
+TEST(RobotRaconteurMisc, NodeShutdownEndsPendingUpdateDetectedNodes)
+{
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        node->GetThreadPool();
+        weak_node = node;
+        node->RegisterTransport(RR_MAKE_SHARED<NcDiscoveryNoReplyTransport>(node));
+
+        std::vector<std::string> schemes;
+        schemes.push_back("rr+ncdiscnoreply");
+        node->AsyncUpdateDetectedNodes(schemes, boost::bind(&UpdateDetectedNodesNoTransports_handler, count), 10000);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+        EXPECT_EQ(count->load(), 0);
+
+        // Shutdown must end the update (a synchronous UpdateDetectedNodes would otherwise wait forever) and must not
+        // leave its timeout keeping the node alive
+        node->Shutdown();
+        EXPECT_EQ(count->load(), 1);
+    }
+
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
+    EXPECT_EQ(count->load(), 1);
+}
+
+namespace
+{
+// Transport whose node discovery query never replies
+class NcFindNoReplyTransport : public NcDiscoveryThrowTransport
+{
+  public:
+    NcFindNoReplyTransport(const RR_SHARED_PTR<RobotRaconteurNode>& node) : NcDiscoveryThrowTransport(node) {}
+    RR_OVIRTUAL std::string GetUrlSchemeString() const RR_OVERRIDE { return "rr+ncfindnoreply"; }
+    RR_OVIRTUAL void AsyncGetDetectedNodes(
+        const std::vector<std::string>& schemes,
+        const boost::function<void(const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >&)>& handler,
+        int32_t timeout) RR_OVERRIDE
+    {
+        RR_UNUSED(schemes);
+        RR_UNUSED(handler);
+        RR_UNUSED(timeout);
+    }
+};
+
+void FindServiceByTypeShutdown_handler(const RR_SHARED_PTR<AutoResetEvent>& evt,
+                                       const RR_SHARED_PTR<boost::atomic<int> >& count,
+                                       const RR_SHARED_PTR<std::vector<ServiceInfo2> >& res)
+{
+    RR_UNUSED(res);
+    (*count)++;
+    evt->Set();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, NodeShutdownEndsPendingFindServiceByType)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    node->GetThreadPool();
+    node->RegisterTransport(RR_MAKE_SHARED<NcFindNoReplyTransport>(node));
+
+    // The node discovery update never completes, so only the 10 s timeout or node shutdown ends the search
+    std::vector<std::string> schemes;
+    schemes.push_back("rr+ncfindnoreply");
+    RR_SHARED_PTR<AutoResetEvent> evt = RR_MAKE_SHARED<AutoResetEvent>();
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    node->AsyncFindServiceByType("com.robotraconteur.testing.TestService1.testroot", schemes,
+                                 boost::bind(&FindServiceByTypeShutdown_handler, evt, count, RR_BOOST_PLACEHOLDERS(_1)),
+                                 10000);
+    boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+    EXPECT_EQ(count->load(), 0);
+
+    // A synchronous FindServiceByType would otherwise wait forever
+    node->Shutdown();
+    EXPECT_TRUE(evt->WaitOne(1000));
+    EXPECT_EQ(count->load(), 1);
+}
+
+namespace
+{
+void ConnectorShutdown_handler(const RR_SHARED_PTR<AutoResetEvent>& evt,
+                               const RR_SHARED_PTR<boost::atomic<int> >& errors, const RR_SHARED_PTR<RRObject>& obj,
+                               const RR_SHARED_PTR<RobotRaconteurException>& err)
+{
+    RR_UNUSED(obj);
+    if (err)
+        (*errors)++;
+    evt->Set();
+}
+} // namespace
+
+TEST(RobotRaconteurMisc, NodeShutdownEndsPendingConnect)
+{
+    // A listening socket that is never accepted: the TCP connect completes in the kernel, but the Robot Raconteur
+    // handshake is never answered, so the connect stays pending
+    RR_BOOST_ASIO_IO_CONTEXT io;
+    boost::asio::ip::tcp::acceptor acceptor(io,
+                                            boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::loopback(), 0));
+    uint16_t port = acceptor.local_endpoint().port();
+
+    RR_WEAK_PTR<RobotRaconteurNode> weak_node;
+    RR_SHARED_PTR<AutoResetEvent> evt = RR_MAKE_SHARED<AutoResetEvent>();
+    RR_SHARED_PTR<boost::atomic<int> > errors = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    {
+        RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        weak_node = node;
+        node->RegisterTransport(RR_MAKE_SHARED<TcpTransport>(node));
+
+        std::string url =
+            "rr+tcp://127.0.0.1:" + boost::lexical_cast<std::string>(port) + "/?service=RobotRaconteurServiceIndex";
+        node->AsyncConnectService(
+            url, "", RR_INTRUSIVE_PTR<RRMap<std::string, RRValue> >(), RR_NULL_FN, "",
+            boost::bind(&ConnectorShutdown_handler, evt, errors, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+            30000);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+        EXPECT_FALSE(evt->WaitOne(0));
+
+        // A synchronous ConnectService would otherwise wait for the 30 s timeout, or forever
+        node->Shutdown();
+        EXPECT_TRUE(evt->WaitOne(1000));
+        EXPECT_EQ(errors->load(), 1);
+    }
+
+    for (int i = 0; i < 100 && !weak_node.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_node.expired());
 }
 
 int main(int argc, char* argv[])

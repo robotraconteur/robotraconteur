@@ -1,5 +1,6 @@
 #include <boost/shared_array.hpp>
 #include <cstdlib>
+#include <boost/atomic.hpp>
 
 #include <gtest/gtest.h>
 #include <RobotRaconteur/ServiceDefinition.h>
@@ -237,6 +238,113 @@ TEST(NamedArray, MemoryElementTypeID)
     RR_SHARED_PTR<NamedMultiDimArrayMemory<vector3> > m2 =
         RR_MAKE_SHARED<NamedMultiDimArrayMemory<vector3> >(AllocateEmptyRRNamedMultiDimArray<vector3>(dims));
     EXPECT_EQ(m2->ElementTypeID(), DataTypes_namedarray_t);
+}
+
+namespace
+{
+// A ServerContext whose callback request sends either throw or are dropped without a reply
+class ServerContextSendStub : public ServerContext
+{
+  public:
+    bool fail_send;
+    ServerContextSendStub(const RR_SHARED_PTR<ServiceFactory>& f, const RR_SHARED_PTR<RobotRaconteurNode>& node)
+        : ServerContext(f, node), fail_send(false)
+    {}
+    using ServerContext::AsyncSendMessage;
+    RR_OVIRTUAL void AsyncSendMessage(
+        const RR_INTRUSIVE_PTR<MessageEntry>& m, uint32_t e,
+        const boost::function<void(const RR_SHARED_PTR<RobotRaconteurException>&)>& callback) RR_OVERRIDE
+    {
+        RR_UNUSED(m);
+        RR_UNUSED(e);
+        RR_UNUSED(callback);
+        if (fail_send)
+            throw ConnectionException("Not connected");
+    }
+};
+
+void ServerContextSendStub_handler(const RR_SHARED_PTR<boost::atomic<int> >& count,
+                                   const RR_INTRUSIVE_PTR<MessageEntry>& ret,
+                                   const RR_SHARED_PTR<RobotRaconteurException>& err)
+{
+    RR_UNUSED(ret);
+    RR_UNUSED(err);
+    (*count)++;
+}
+
+RR_SHARED_PTR<RobotRaconteurNode> ServerContextSendStub_node()
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = RR_MAKE_SHARED<RobotRaconteurNode>();
+    node->Init();
+    std::vector<RR_SHARED_PTR<ServiceFactory> > types = ROBOTRACONTEUR_SERVICE_TYPES;
+    BOOST_FOREACH (RR_SHARED_PTR<ServiceFactory>& f, types)
+    {
+        node->RegisterServiceType(f);
+    }
+    return node;
+}
+} // namespace
+
+TEST(ServiceTest3Node, CallbackRequestSendThrowDoesNotInvokeHandler)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = ServerContextSendStub_node();
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    {
+        RR_SHARED_PTR<ServerContextSendStub> c = RR_MAKE_SHARED<ServerContextSendStub>(
+            node->GetServiceType("com.robotraconteur.testing.TestService5"), node);
+        c->fail_send = true;
+        RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_CallbackCallReq, "cb");
+        EXPECT_ANY_THROW(c->AsyncProcessCallbackRequest(
+            m, 1,
+            boost::bind(&ServerContextSendStub_handler, count, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+            100));
+    }
+
+    // The request timeout (100 ms) must not invoke the handler after the throw
+    boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+    EXPECT_EQ(count->load(), 0);
+
+    node->Shutdown();
+}
+
+TEST(ServiceTest3Node, CallbackRequestCloseInvokesPendingHandler)
+{
+    RR_SHARED_PTR<RobotRaconteurNode> node = ServerContextSendStub_node();
+    RR_SHARED_PTR<boost::atomic<int> > count = RR_MAKE_SHARED<boost::atomic<int> >(0);
+    RR_WEAK_PTR<ServerContext> weak_c;
+    {
+        RR_SHARED_PTR<ServerContextSendStub> c = RR_MAKE_SHARED<ServerContextSendStub>(
+            node->GetServiceType("com.robotraconteur.testing.TestService5"), node);
+        weak_c = c;
+        RR_INTRUSIVE_PTR<MessageEntry> m = CreateMessageEntry(MessageEntryType_CallbackCallReq, "cb");
+        c->AsyncProcessCallbackRequest(
+            m, 1,
+            boost::bind(&ServerContextSendStub_handler, count, RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+            10000);
+        EXPECT_EQ(count->load(), 0);
+
+        // Close fails the pending request instead of dropping its handler
+        c->Close();
+        EXPECT_EQ(count->load(), 1);
+
+        // A request after Close is refused, and its handler is never invoked
+        RR_INTRUSIVE_PTR<MessageEntry> m2 = CreateMessageEntry(MessageEntryType_CallbackCallReq, "cb");
+        EXPECT_THROW(c->AsyncProcessCallbackRequest(m2, 1,
+                                                    boost::bind(&ServerContextSendStub_handler, count,
+                                                                RR_BOOST_PLACEHOLDERS(_1), RR_BOOST_PLACEHOLDERS(_2)),
+                                                    10000),
+                     ConnectionException);
+    }
+
+    // The pending request's timeout timer must not keep the closed ServerContext alive
+    for (int i = 0; i < 100 && !weak_c.expired(); i++)
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    EXPECT_TRUE(weak_c.expired());
+    EXPECT_EQ(count->load(), 1);
+
+    node->Shutdown();
 }
 
 int main(int argc, char* argv[])

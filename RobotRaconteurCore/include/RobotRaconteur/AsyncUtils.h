@@ -237,7 +237,8 @@ class async_timeout_wrapper : public RR_ENABLE_SHARED_FROM_THIS<async_timeout_wr
     {
         if (err.value() == boost::system::errc::timed_out)
             handle_error(timeout_exception_);
-        handle_error(RR_MAKE_SHARED<ConnectionException>(err.message()));
+        else
+            handle_error(RR_MAKE_SHARED<ConnectionException>(err.message()));
     }
 
   private:

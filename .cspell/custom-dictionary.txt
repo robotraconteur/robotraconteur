@@ -307,7 +307,10 @@ myhex
 myint
 myneg
 mystr
+ncdiscnoreply
 ncdiscthrow
+ncdisctimeout
+ncfindnoreply
 ncfastfail
 nopen
 nosuch

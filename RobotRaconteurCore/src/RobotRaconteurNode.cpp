@@ -1685,6 +1685,7 @@ void RobotRaconteurNode::AsyncConnectService(
 
     RR_SHARED_PTR<detail::RobotRaconteurNode_connector> connector =
         RR_MAKE_SHARED<detail::RobotRaconteurNode_connector>(shared_from_this());
+    connector->watch_node_shutdown(handler);
     GetThreadPool()->Post(boost::bind(&detail::RobotRaconteurNode_connector::connect, connector, connectors,
                                       username.to_string(), credentials, RR_MOVE(listener), objecttype.to_string(),
                                       boost::protect(RR_MOVE(handler)), timeout));
@@ -2624,9 +2625,22 @@ RR_SHARED_PTR<ServiceFactory> RobotRaconteurNode::GetPulledServiceType(const RR_
     return s->GetContext()->GetPulledServiceType(type);
 }
 
+static RR_SHARED_PTR<RobotRaconteurNode> RobotRaconteurNode_lock_weak(const RR_WEAK_PTR<RobotRaconteurNode>& node)
+{
+    return node.lock();
+}
+
 void RobotRaconteurNode::StartPeriodicCleanupTask(const RR_SHARED_PTR<RobotRaconteurNode>& node)
 {
+    if (!node)
+        return;
     boost::unique_lock<boost::shared_mutex> lock(node->PeriodicCleanupTask_timer_lock);
+    {
+        // Shutdown already cleared the timer, so a timer created now would never be released
+        boost::shared_lock<boost::shared_mutex> lock2(node->thread_pool_lock);
+        if (node->is_shutdown)
+            return;
+    }
     node->PeriodicCleanupTask_timer =
         node->CreateTimer(boost::posix_time::seconds(5),
                           boost::bind(&RobotRaconteurNode::PeriodicCleanupTask, node, RR_BOOST_PLACEHOLDERS(_1)));
@@ -2701,7 +2715,10 @@ void RobotRaconteurNode::SetThreadPool(const RR_SHARED_PTR<ThreadPool>& pool)
     if (!PeriodicCleanupTask_timerstarted)
     {
         PeriodicCleanupTask_timerstarted = true;
-        thread_pool->Post(boost::bind(&StartPeriodicCleanupTask, shared_from_this()));
+        // Hold the node weakly: if the node shuts down first, the task stays in the stopped thread pool
+        thread_pool->Post(
+            boost::bind(&StartPeriodicCleanupTask, boost::bind(&RobotRaconteurNode_lock_weak,
+                                                               RR_WEAK_PTR<RobotRaconteurNode>(shared_from_this()))));
     }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_this, Node, -1, "ThreadPool set");
@@ -2770,7 +2787,10 @@ bool RobotRaconteurNode::InitThreadPool(int32_t thread_count)
     if (!PeriodicCleanupTask_timerstarted)
     {
         PeriodicCleanupTask_timerstarted = true;
-        thread_pool->Post(boost::bind(&StartPeriodicCleanupTask, shared_from_this()));
+        // Hold the node weakly: if the node shuts down first, the task stays in the stopped thread pool
+        thread_pool->Post(
+            boost::bind(&StartPeriodicCleanupTask, boost::bind(&RobotRaconteurNode_lock_weak,
+                                                               RR_WEAK_PTR<RobotRaconteurNode>(shared_from_this()))));
     }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(weak_this, Node, -1,

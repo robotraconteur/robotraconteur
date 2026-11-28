@@ -99,6 +99,32 @@ void Discovery_updatediscoverednodes::timeout_timer_callback(const TimerEvent& e
     }
 }
 
+void Discovery_updatediscoverednodes::node_shutdown()
+{
+    boost::function<void()> h;
+    RR_SHARED_PTR<RobotRaconteurNode> n;
+    {
+        boost::mutex::scoped_lock lock(work_lock);
+        if (!searching)
+            return;
+        searching = false;
+
+        {
+            boost::mutex::scoped_lock lock2(timeout_timer_lock);
+            if (timeout_timer)
+                timeout_timer->TryStop();
+            timeout_timer.reset();
+        }
+
+        h.swap(handler);
+        // Callbacks still queued in the stopped thread pool hold this object; they check searching before using node
+        n.swap(node);
+    }
+
+    // On the shutdown thread before the thread pool stops: invoke directly, a post could be discarded
+    detail::InvokeHandler(n, h);
+}
+
 void Discovery_updatediscoverednodes::getdetectednodes_callback(
     const RR_SHARED_PTR<std::vector<NodeDiscoveryInfo> >& ret, int32_t key)
 {
@@ -163,6 +189,17 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
     this->schemes = schemes;
     searching = true;
 
+    // The timeout timer and the transports' callbacks hold this object, which holds the node. Node shutdown can leave
+    // them queued forever, so end the search from the shutdown thread
+    try
+    {
+        node->AddShutdownListener(boost::signals2::signal<void()>::slot_type(
+                                      boost::bind(&Discovery_updatediscoverednodes::node_shutdown, this))
+                                      .track(shared_from_this()));
+    }
+    catch (std::exception&)
+    {}
+
     if (timeout != RR_TIMEOUT_INFINITE)
     {
         boost::mutex::scoped_lock lock2(timeout_timer_lock);
@@ -213,6 +250,14 @@ void Discovery_updatediscoverednodes::UpdateDiscoveredNodes(const std::vector<st
 
     if (done)
     {
+        searching = false;
+        {
+            // Otherwise the timeout invokes the handler a second time
+            boost::mutex::scoped_lock lock2(timeout_timer_lock);
+            if (timeout_timer)
+                timeout_timer->TryStop();
+            timeout_timer.reset();
+        }
         ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "No transports available for node discovery");
         detail::InvokeHandler(node, handler);
     }
@@ -530,9 +575,40 @@ void Discovery_findservicebytype::connect_callback(const RR_SHARED_PTR<RRObject>
     }
 }
 
+void Discovery_findservicebytype::node_shutdown()
+{
+    boost::function<void(const RR_SHARED_PTR<std::vector<ServiceInfo2> >&)> h;
+    RR_SHARED_PTR<std::vector<ServiceInfo2> > ret1;
+    {
+        boost::recursive_mutex::scoped_lock lock2(work_lock);
+        if (!searching)
+            return;
+        searching = false;
+
+        {
+            boost::mutex::scoped_lock lock(timeout_timer_lock);
+            if (timeout_timer)
+                timeout_timer->TryStop();
+            timeout_timer.reset();
+        }
+
+        h.swap(handler);
+        boost::mutex::scoped_lock lock(ret_lock);
+        ret1 = ret;
+    }
+
+    // On the shutdown thread before the thread pool stops: invoke directly with the services found so far, a post
+    // could be discarded
+    detail::InvokeHandler(node, h, ret1);
+}
+
 void Discovery_findservicebytype::find2()
 {
     boost::recursive_mutex::scoped_lock lock2(work_lock);
+
+    // Already completed by the timeout or by node shutdown
+    if (!searching)
+        return;
 
     std::list<std::vector<std::string> > urls;
 
@@ -570,6 +646,12 @@ void Discovery_findservicebytype::find2()
     if (urls.empty())
     {
         ROBOTRACONTEUR_LOG_DEBUG_COMPONENT(node, Discovery, -1, "FindServiceByType could not find any candidate URLs");
+        searching = false;
+        {
+            // The timer was never started, and its handler holds this object
+            boost::mutex::scoped_lock lock4(timeout_timer_lock);
+            timeout_timer.reset();
+        }
         RR_SHARED_PTR<std::vector<ServiceInfo2> > ret = RR_MAKE_SHARED<std::vector<ServiceInfo2> >();
         detail::PostHandler(node, handler, ret, true);
         return;
@@ -650,19 +732,32 @@ void Discovery_findservicebytype::AsyncFindServiceByType(
     this->timeout = timeout;
 
     this->servicetype = RR_MOVE(servicetype.to_string());
+
+    // A search pending at node shutdown would otherwise never complete, and its timeout timer keeps this object
+    // alive. End it from the shutdown thread
+    try
+    {
+        node->AddShutdownListener(
+            boost::signals2::signal<void()>::slot_type(boost::bind(&Discovery_findservicebytype::node_shutdown, this))
+                .track(shared_from_this()));
+    }
+    catch (std::exception&)
+    {}
+
     if (timeout != RR_TIMEOUT_INFINITE)
     {
         timeout_timer = node->CreateTimer(boost::posix_time::milliseconds(timeout),
                                           boost::bind(&Discovery_findservicebytype::timeout_timer_callback,
                                                       shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)),
                                           true);
-        // TODO: check this
-        // timeout_timer->Start();
+        // Started by find2 once candidate URLs are found
     }
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "FindServiceByType begin update detected nodes");
+    // RR_TIMEOUT_INFINITE / 4 would be a 0 ms timeout
+    int32_t update_timeout = (timeout == RR_TIMEOUT_INFINITE) ? RR_TIMEOUT_INFINITE : (timeout / 4);
     node->AsyncUpdateDetectedNodes(schemes, boost::bind(&Discovery_findservicebytype::find2, shared_from_this()),
-                                   timeout / 4);
+                                   update_timeout);
 }
 
 // class Discovery_updateserviceinfo
@@ -672,6 +767,7 @@ Discovery_updateserviceinfo::Discovery_updateserviceinfo(RR_WEAK_PTR<RobotRacont
     this->node = node;
     retry_count = 0;
     backoff = 0;
+    shutdown = false;
 }
 
 void Discovery_updateserviceinfo::handle_error(const RR_SHARED_PTR<RobotRaconteurException>& err)
@@ -691,6 +787,9 @@ void Discovery_updateserviceinfo::handle_error(const RR_SHARED_PTR<RobotRaconteu
     }
 
     client.reset();
+
+    if (shutdown)
+        return;
 
     retry_count++;
     if (retry_count < 3)
@@ -960,6 +1059,8 @@ void Discovery_updateserviceinfo::backoff_timer_handler(const TimerEvent& evt)
     RR_UNUSED(evt);
     boost::mutex::scoped_lock lock(this_lock);
     timeout_timer.reset();
+    if (shutdown)
+        return;
 
     RR_SHARED_PTR<RobotRaconteurNode> n = node.lock();
     if (!n)
@@ -1025,6 +1126,19 @@ void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(
     if (!n)
         return;
 
+    // The backoff timer and the connect handlers hold this object. Node shutdown can leave them queued forever, so
+    // stop the timer and further retries from the shutdown thread
+    try
+    {
+        n->AddShutdownListener(
+            boost::signals2::signal<void()>::slot_type(boost::bind(&Discovery_updateserviceinfo::node_shutdown, this))
+                .track(shared_from_this()));
+    }
+    catch (std::exception&)
+    {
+        return;
+    }
+
     backoff = n->GetRandomInt(100, 600) + extra_backoff;
     RR_SHARED_PTR<Timer> t = n->CreateTimer(
         boost::posix_time::milliseconds(backoff),
@@ -1035,6 +1149,18 @@ void Discovery_updateserviceinfo::AsyncUpdateServiceInfo(
     timeout_timer = t;
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1,
                                        "Begin UpdateServiceInfo using " << backoff << " ms backoff");
+}
+
+void Discovery_updateserviceinfo::node_shutdown()
+{
+    boost::mutex::scoped_lock lock(this_lock);
+    shutdown = true;
+    if (timeout_timer)
+    {
+        timeout_timer->TryStop();
+        timeout_timer.reset();
+    }
+    handler.clear();
 }
 
 // class Discovery
@@ -2039,6 +2165,8 @@ void Discovery::AddSubscription(const RR_SHARED_PTR<IServiceSubscription>& s)
 
 void Discovery::SubscriptionClosed(const RR_SHARED_PTR<IServiceSubscription>& subscription)
 {
+    subscription_closed(subscription);
+
     boost::mutex::scoped_lock lock(m_DiscoveredNodes_lock);
 
     ROBOTRACONTEUR_LOG_TRACE_COMPONENT(node, Discovery, -1, "Subscription closed");
